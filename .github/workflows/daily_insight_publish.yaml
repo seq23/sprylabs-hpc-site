@@ -1,0 +1,45 @@
+name: Daily Insight Publish
+
+on:
+  schedule:
+    # Daily at 9:15 UTC (adjust later if you want)
+    - cron: "15 9 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install
+        run: npm ci
+
+      - name: Release one draft (if any)
+        run: node scripts/release_one_draft.js
+
+      - name: Build insights
+        run: node scripts/build_insights.js
+
+      - name: Commit & push if changed
+        run: |
+          if git diff --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git config user.name "spry-bot"
+          git config user.email "spry-bot@users.noreply.github.com"
+          git add -A
+          git commit -m "Daily publish: release one insight"
+          git push
