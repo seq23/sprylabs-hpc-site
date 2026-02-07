@@ -1,9 +1,8 @@
-name: Daily Insight Publish
+name: Daily Insights Publish
 
 on:
   schedule:
-    # Daily at 9:15 UTC (adjust later if you want)
-    - cron: "15 9 * * *"
+    - cron: "15 13 * * *" # daily 13:15 UTC (adjust later)
   workflow_dispatch: {}
 
 permissions:
@@ -23,10 +22,7 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Install
-        run: npm ci
-
-      - name: Release one draft (if any)
+      - name: Release one draft
         run: node scripts/release_one_draft.js
 
       - name: Build insights
@@ -34,12 +30,8 @@ jobs:
 
       - name: Commit & push if changed
         run: |
-          if git diff --quiet; then
-            echo "No changes to commit."
-            exit 0
-          fi
-          git config user.name "spry-bot"
-          git config user.email "spry-bot@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "Daily publish: release one insight"
+          git commit -m "Daily insight publish" || echo "No changes to commit"
           git push
