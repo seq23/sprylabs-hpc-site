@@ -25,16 +25,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
-
-      # Install deps (prefer npm ci if lockfile exists, else npm install)
-      - name: Install dependencies
-        run: |
-          if [ -f package-lock.json ]; then
-            npm ci --no-audit --no-fund
-          else
-            npm install --no-audit --no-fund
-          fi
 
       - name: Release one draft
         run: node scripts/release_one_draft.js
@@ -42,15 +32,8 @@ jobs:
       - name: Build insights + topics + sitemap
         run: node scripts/build_insights.js
 
-      # v3: ensure absolute canonical / og:url / JSON-LD @id everywhere (answers, topics, etc.)
       - name: Normalize canonical / og:url / JSON-LD
         run: node scripts/patch_set_canonical_base.js
-
-      # Prevent committing node_modules + lockfile churn if they appear on the runner
-      - name: Ensure node_modules is not committed
-        run: |
-          echo "node_modules/" >> .gitignore
-          rm -rf node_modules || true
 
       - name: Commit & push if changed
         run: |
