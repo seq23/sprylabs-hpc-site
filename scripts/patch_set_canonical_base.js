@@ -1,113 +1,85 @@
 #!/usr/bin/env node
-const fs = require("fs");
-const path = require("path");
+/* eslint-disable no-console */
 
-const BASE = "https://spryexecutiveos.com";
+const fs = require('fs');
+const path = require('path');
 
-function die(msg) {
-  console.error("ERROR:", msg);
-  process.exit(1);
+const ROOT = path.resolve(__dirname, '..');
+const BASE = 'https://spryexecutiveos.com';
+
+const read = (p) => fs.readFileSync(p, 'utf8');
+const write = (p, s) => fs.writeFileSync(p, s, 'utf8');
+
+function abs(p) {
+  if (!p) return p;
+  if (/^https?:\/\//i.test(p)) return p.replace(/https?:\/\/SpryExecutiveOS\.com/gi, BASE).replace(/https?:\/\/spryexecutiveos\.com/gi, BASE);
+  const pp = p.startsWith('/') ? p : '/' + p;
+  return BASE + pp;
 }
 
-function listHtmlFiles(dir) {
+function listHtml(dir) {
   const out = [];
-  const walk = (d) => {
-    for (const ent of fs.readdirSync(d, { withFileTypes: true })) {
-      const p = path.join(d, ent.name);
-      if (ent.isDirectory()) walk(p);
-      else if (ent.isFile() && ent.name.endsWith(".html")) out.push(p);
+  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+    const fp = path.join(dir, e.name);
+    if (e.isDirectory()) {
+      if (e.name === 'node_modules' || e.name === '.git') continue;
+      out.push(...listHtml(fp));
+    } else if (e.isFile() && e.name.toLowerCase().endsWith('.html')) {
+      out.push(fp);
     }
-  };
-  walk(dir);
+  }
   return out;
 }
 
-function routeForFile(filePath) {
-  const rel = filePath.replace(/\\/g, "/");
-  if (rel === "index.html") return "/";
-  return "/" + rel;
+function routeFor(filePath) {
+  const rel = path.relative(ROOT, filePath).split(path.sep).join('/');
+  if (rel === 'index.html') return '/';
+  return '/' + rel;
 }
 
-function abs(urlPath) {
-  if (!urlPath.startsWith("/")) urlPath = "/" + urlPath;
-  return BASE + urlPath;
-}
+function patchFile(fp) {
+  let s = read(fp);
+  const orig = s;
 
-function patchHtml(filePath) {
-  const rel = filePath.replace(/\\/g, "/");
-  const urlPath = routeForFile(rel);
-  const canonicalAbs = abs(urlPath);
+  // normalize any existing spry domain casing
+  s = s.replace(/https?:\/\/SpryExecutiveOS\.com/gi, BASE).replace(/https?:\/\/spryexecutiveos\.com/gi, BASE);
 
-  let src = fs.readFileSync(filePath, "utf8");
-  const before = src;
+  const canonical = abs(routeFor(fp));
 
-  // og:url
-  if (/<meta\s+property=["']og:url["']/i.test(src)) {
-    src = src.replace(
-      /<meta\s+property=["']og:url["']\s+content=["'][^"']*["']\s*\/?>/i,
-      `<meta property="og:url" content="${canonicalAbs}">`
-    );
-  }
+  // og:url (property then content)
+  s = s.replace(/<meta([^>]*?)\bproperty\s*=\s*['\"]og:url['\"]([^>]*?)\bcontent\s*=\s*['\"][^'\"]*['\"]([^>]*)>/gi,
+    (_m, a, b, c) => `<meta${a}property="og:url"${b}content="${canonical}"${c}>`);
+  // og:url (content then property)
+  s = s.replace(/<meta([^>]*?)\bcontent\s*=\s*['\"][^'\"]*['\"]([^>]*?)\bproperty\s*=\s*['\"]og:url['\"]([^>]*)>/gi,
+    (_m, a, b, c) => `<meta${a}content="${canonical}"${b}property="og:url"${c}>`);
 
-  // canonical link
-  if (/<link\s+rel=["']canonical["']/i.test(src)) {
-    src = src.replace(
-      /<link\s+rel=["']canonical["']\s+href=["'][^"']*["']\s*\/?>/i,
-      `<link rel="canonical" href="${canonicalAbs}">`
-    );
-  }
+  // canonical link (rel then href)
+  s = s.replace(/<link([^>]*?)\brel\s*=\s*['\"]canonical['\"]([^>]*?)\bhref\s*=\s*['\"][^'\"]*['\"]([^>]*)>/gi,
+    (_m, a, b, c) => `<link${a}rel="canonical"${b}href="${canonical}"${c}>`);
+  // canonical link (href then rel)
+  s = s.replace(/<link([^>]*?)\bhref\s*=\s*['\"][^'\"]*['\"]([^>]*?)\brel\s*=\s*['\"]canonical['\"]([^>]*)>/gi,
+    (_m, a, b, c) => `<link${a}href="${canonical}"${b}rel="canonical"${c}>`);
 
-  // JSON-LD mainEntityOfPage @id to absolute (and any other "@id": "/...")
-  src = src.replace(
-    /"mainEntityOfPage"\s*:\s*\{\s*"@type"\s*:\s*"WebPage"\s*,\s*"@id"\s*:\s*"\/([^"]+)"\s*\}/g,
-    (_m, p1) =>
-      `"mainEntityOfPage": {"@type": "WebPage", "@id": "${abs("/" + p1)}"}`
-  );
-  src = src.replace(/"@id"\s*:\s*"\/([^"]+)"/g, (_m, p1) => `"@id": "${abs("/" + p1)}"`);
+  // JSON-LD: any @id or url that is relative should become absolute
+  s = s.replace(/"@id"\s*:\s*"\/(.*?)"/g, (_m, p1) => `"@id":"${abs('/' + p1)}"`);
+  s = s.replace(/"url"\s*:\s*"\/(.*?)"/g, (_m, p1) => `"url":"${abs('/' + p1)}"`);
 
-  if (src !== before) {
-    fs.writeFileSync(filePath, src, "utf8");
+  // normalize again in case JSON-LD had different casing
+  s = s.replace(/https?:\/\/SpryExecutiveOS\.com/gi, BASE).replace(/https?:\/\/spryexecutiveos\.com/gi, BASE);
+
+  if (s !== orig) {
+    write(fp, s);
     return true;
   }
   return false;
 }
-
-function patchJson(filePath) {
-  let src = fs.readFileSync(filePath, "utf8");
-  const before = src;
-
-  src = src.replace(/"url"\s*:\s*"\/([^"]+)"/g, (_m, p1) => `"url": "${abs("/" + p1)}"`);
-
-  if (src !== before) {
-    fs.writeFileSync(filePath, src, "utf8");
-    return true;
-  }
-  return false;
-}
-
-if (!fs.existsSync("scripts")) die("scripts/ directory missing (expected).");
 
 let changed = 0;
-
-const htmlFiles = listHtmlFiles(".")
-  .filter((p) => p.endsWith(".html"))
-  .filter((p) => !p.includes(`${path.sep}.git${path.sep}`))
-  .filter((p) => !p.includes("node_modules"));
-
-for (const f of htmlFiles) {
-  if (patchHtml(f)) {
-    console.log("UPDATED:", f);
+for (const fp of listHtml(ROOT)) {
+  if (patchFile(fp)) {
+    console.log('UPDATED:', path.relative(ROOT, fp));
     changed++;
   }
 }
-
-for (const jf of ["answers.json", "atlas.json"]) {
-  if (fs.existsSync(jf)) {
-    if (patchJson(jf)) {
-      console.log("UPDATED:", jf);
-      changed++;
-    }
-  }
-}
-
 console.log(`\nDone. Updated ${changed} file(s).`);
+console.log('\n✅ OK: canonical base normalized to https://spryexecutiveos.com');
