@@ -28,22 +28,54 @@ function htmlEscape(s) {
 }
 
 
-function mdToHtml(md) {
-  // Minimal Markdown rendering for our use-case:
-  // - headings, paragraphs, links, inline code, unordered lists, bold/italic
-  // - deterministic + dependency-free (works in GitHub Actions without npm install)
+
+function mdToHtmlWithHeadings(md) {
+  // Minimal Markdown rendering + heading IDs + heading extraction.
+  // Deterministic + dependency-free (works in GitHub Actions without npm install).
   let s = String(md || "").replace(/\r\n/g, "\n");
+
+  // Capture headings (we'll add ids during render)
+  const headings = [];
+  const seen = new Set();
+
+  function makeId(raw) {
+    const base = String(raw || "")
+      .toLowerCase()
+      .normalize("NFKD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .replace(/-{2,}/g, "-") || "section";
+    let id = base;
+    for (let i = 2; seen.has(id) && i < 999; i++) id = `${base}-${i}`;
+    seen.add(id);
+    return id;
+  }
 
   // code fences -> pre/code (no highlighting)
   s = s.replace(/```([\s\S]*?)```/g, (_m, code) => `<pre><code>${htmlEscape(code.trim())}</code></pre>`);
 
-  // headings
-  s = s.replace(/^###\s+(.*)$/gm, "<h3>$1</h3>");
-  s = s.replace(/^##\s+(.*)$/gm, "<h2>$1</h2>");
-  s = s.replace(/^#\s+(.*)$/gm, "<h1>$1</h1>");
+  // headings with ids
+  s = s.replace(/^###\s+(.*)$/gm, (_m, t) => {
+    const title = String(t || "").trim();
+    const id = makeId(title);
+    headings.push({ level: 3, id, title });
+    return `<h3 id="${id}">${title}</h3>`;
+  });
+  s = s.replace(/^##\s+(.*)$/gm, (_m, t) => {
+    const title = String(t || "").trim();
+    const id = makeId(title);
+    headings.push({ level: 2, id, title });
+    return `<h2 id="${id}">${title}</h2>`;
+  });
+  s = s.replace(/^#\s+(.*)$/gm, (_m, t) => {
+    const title = String(t || "").trim();
+    const id = makeId(title);
+    headings.push({ level: 1, id, title });
+    return `<h1 id="${id}">${title}</h1>`;
+  });
 
   // unordered lists (very small)
-  // convert blocks of "- item" into <ul><li>..</li></ul>
   s = s.replace(/(?:^|\n)(- .*(?:\n- .*)+)/g, (m) => {
     const items = m.trim().split(/\n/).map(line => line.replace(/^-\s+/, "").trim());
     return `\n<ul>${items.map(i => `<li>${i}</li>`).join("")}</ul>`;
@@ -57,7 +89,7 @@ function mdToHtml(md) {
   s = s.replace(/`([^`]+)`/g, "<code>$1</code>");
 
   // links [text](url)
-  s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_m, txt, url) => `<a href="${htmlEscape(url)}">${htmlEscape(txt)}</a>`);
+  s = s.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_m, t, url) => `<a href="${htmlEscape(url)}">${htmlEscape(t)}</a>`);
 
   // paragraphs: split on blank lines
   const parts = s.split(/\n\n+/).map(p => p.trim()).filter(Boolean);
@@ -65,8 +97,16 @@ function mdToHtml(md) {
     if (p.startsWith("<h1") || p.startsWith("<h2") || p.startsWith("<h3") || p.startsWith("<ul") || p.startsWith("<pre")) return p;
     return `<p>${p.replace(/\n/g, "<br>")}</p>`;
   }).join("\n");
-  return out;
+
+  return { html: out, headings };
 }
+
+
+function mdToHtml(md) {
+  return mdToHtmlWithHeadings(md).html;
+}
+
+
 
 function toAbs(href) {
   if (!href) return SITE_BASE + "/";
@@ -288,7 +328,8 @@ function buildPostPages(posts, clustersMap) {
       ${post.description ? `<p class="lede">${htmlEscape(post.description)}</p>` : ""}
       ${meta}
       <div class="article-body">
-        ${htmlBody}
+        ${tocHtml}
+            ${htmlBody}
       </div>
       ${aiTherapistSafety}
       <div style="margin-top:16px"><a class="btn" href="${pillarHref}">Browse this pillar</a></div>
@@ -378,6 +419,21 @@ function buildPillars(posts, clusters) {
     jsonLd: jsonLdCollection({ title: "Pillars", description: "Spry pillars index", url: pillarsIndexCanonical }),
   }));
 
+  // Cleanup stale pillar directories so the repo doesn't accrete junk over time.
+  try {
+    const allowed = new Set(clusters.map((c) => c.id));
+    const entries = fs.readdirSync(PILLARS_DIR, { withFileTypes: true });
+    for (const e of entries) {
+      if (!e.isDirectory()) continue;
+      if (allowed.has(e.name)) continue;
+      // keep any hidden/system dirs just in case
+      if (e.name.startsWith(".")) continue;
+      fs.rmSync(path.join(PILLARS_DIR, e.name), { recursive: true, force: true });
+    }
+  } catch (e) {
+    // Non-fatal
+  }
+
   // Individual pillar pages
   for (const c of clusters) {
     const ps = posts
@@ -402,6 +458,12 @@ function buildPillars(posts, clusters) {
     const bodyHtml = `<section class="article">
       <h1>${htmlEscape(c.name)}</h1>
       <p class="lede">${htmlEscape(c.description || "")}</p>
+      <div class="card" style="margin-top:14px">
+        <div><strong>Target coverage:</strong> ${c.query_goal_per_day ? htmlEscape(String(c.query_goal_per_day)) : "—"} queries/day</div>
+        <div style="margin-top:6px"><strong>Revenue path:</strong> ${c.revenue_path ? htmlEscape(c.revenue_path) : "—"}</div>
+        ${c.atlas_take ? `<div style="margin-top:10px"><strong>Atlas take:</strong> ${htmlEscape(c.atlas_take)}</div>` : ""}
+        <div style="margin-top:10px"><a class="btn" href="/atlas.html#${htmlEscape(c.id)}">See Atlas for this pillar</a></div>
+      </div>
       ${note}
       <section class="card" style="margin-top:18px">
         <h2>Posts in this pillar</h2>
@@ -459,6 +521,137 @@ function updateLlmsTxt(topUrls) {
   writeUtf8(LLMS_PATH, out);
 }
 
+
+function readDraftPosts() {
+  const draftDir = path.join(CONTENT_DIR, "_drafts");
+  if (!exists(draftDir)) return [];
+  const files = listMarkdownFiles(draftDir);
+  // Drafts often include the date in filename; we still parse frontmatter for cluster.
+  return files.map((fp) => {
+    try {
+      const txt = readUtf8(fp);
+      const fm = parseFrontmatter(txt);
+      const base = path.basename(fp, path.extname(fp));
+      const m = base.match(/^(\d{4}-\d{2}-\d{2})_/);
+      const fileDate = m ? m[1] : (fm.date || "");
+      return {
+        file: fp,
+        slug: fm.slug || slugify(fm.title || base.replace(/^\d{4}-\d{2}-\d{2}_/, "")),
+        title: fm.title || base.replace(/^\d{4}-\d{2}-\d{2}_/, "").replace(/_/g, " "),
+        date: fileDate,
+        cluster: fm.cluster || "",
+      };
+    } catch (e) {
+      return null;
+    }
+  }).filter(Boolean);
+}
+
+function buildAtlasPage(clusters, posts) {
+  const drafts = readDraftPosts();
+  const postsByCluster = new Map();
+  for (const c of clusters) postsByCluster.set(c.id, []);
+  for (const p of posts) {
+    const cid = p.cluster || "";
+    if (!postsByCluster.has(cid)) postsByCluster.set(cid, []);
+    postsByCluster.get(cid).push(p);
+  }
+  for (const [cid, arr] of postsByCluster.entries()) {
+    arr.sort((a, b) => (b.date || "").localeCompare(a.date || ""));
+  }
+
+  // Draft counts + next draft date per cluster
+  const draftInfo = new Map();
+  for (const c of clusters) {
+    const ds = drafts.filter((d) => d.cluster === c.id).sort((a, b) => (a.date || "").localeCompare(b.date || ""));
+    const next = ds.find((d) => d.date && d.date >= new Date().toISOString().slice(0, 10));
+    draftInfo.set(c.id, { count: ds.length, nextDate: next ? next.date : (ds[0] ? ds[0].date : "") });
+  }
+
+  const sections = clusters.map((c) => {
+    const top = (postsByCluster.get(c.id) || []).slice(0, 8);
+    const d = draftInfo.get(c.id) || { count: 0, nextDate: "" };
+    const kpiBits = [
+      c.query_goal_per_day ? `${htmlEscape(String(c.query_goal_per_day))} queries/day target` : null,
+      d.count ? `${d.count} scheduled drafts` : null,
+      d.nextDate ? `next draft: ${htmlEscape(d.nextDate)}` : null,
+    ].filter(Boolean).join(" · ");
+
+    const list = top.length
+      ? `<ul class="list">${top
+          .map((p) => `<li><a href="/insights/${p.slug}.html">${htmlEscape(p.title)}</a> <span class="meta">${htmlEscape(p.date || "")}</span></li>`)
+          .join("")}</ul>`
+      : `<p class="muted">No published posts in this pillar yet. Drafts will roll out automatically daily.</p>`;
+
+    const take = c.atlas_take ? `<div class="card"><strong>Atlas take:</strong> ${htmlEscape(c.atlas_take)}</div>` : "";
+    const rev = c.revenue_path ? `<div class="card"><strong>Revenue-first:</strong> ${htmlEscape(c.revenue_path)}</div>` : "";
+
+    return `
+      <section class="section" id="${htmlEscape(c.id)}">
+        <h2>${htmlEscape(c.name || c.id)}</h2>
+        <p class="lede">${htmlEscape(c.description || "")}</p>
+        ${kpiBits ? `<p class="kpis">${kpiBits}</p>` : ""}
+        <div class="grid2">${take}${rev}</div>
+        <h3>Best starting points</h3>
+        ${list}
+        <div class="ctaRow">
+          <a class="btn" href="/pillars/${htmlEscape(c.id)}/index.html">Open pillar hub</a>
+          <a class="btn" href="/product.html">Get the OS</a>
+        </div>
+      </section>
+    `;
+  }).join("\n");
+
+  const html = `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Atlas — Spry Executive OS</title>
+  <link rel="canonical" href="${SITE_BASE}/atlas.html" />
+  <meta property="og:title" content="Atlas — Spry Executive OS" />
+  <meta property="og:url" content="${SITE_BASE}/atlas.html" />
+  <meta name="description" content="An opinionated map of Spry: the pillars, what they cover, and where to start." />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <header class="siteHeader">
+    <a href="/" class="logo">Spry</a>
+    <nav class="nav">
+      <a href="/insights/index.html">Insights</a>
+      <a href="/pillars/index.html">Pillars</a>
+      <a href="/topics/index.html">Topics</a>
+      <a href="/atlas.html" aria-current="page">Atlas</a>
+      <a href="/product.html">Product</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>Atlas</h1>
+    <p class="lede">This is the opinionated map of the site. It’s designed for humans <em>and</em> for AI citation systems: clear pillar hubs, explicit coverage targets, and tightly-linked pages.</p>
+    <div class="card">
+      <strong>How the daily publishing works:</strong> every day the scheduler releases <em>one</em> draft from <code>content/insights/_drafts</code> using the <em>next available date</em> rule (UTC). You don’t have to run anything manually.
+    </div>
+
+    <div class="toc">
+      <h2>Jump to a pillar</h2>
+      <ul class="tocList">
+        ${clusters.map((c) => `<li><a href="#${htmlEscape(c.id)}">${htmlEscape(c.name || c.id)}</a></li>`).join("\n")}
+      </ul>
+    </div>
+
+    ${sections}
+  </main>
+
+  <footer class="footer">
+    <p>© ${new Date().getUTCFullYear()} Spry Executive OS</p>
+  </footer>
+</body>
+</html>`;
+
+  writeUtf8(path.join(ROOT, "atlas.html"), html);
+}
+
 function main() {
   ensureDirs();
 
@@ -474,6 +667,7 @@ function main() {
   // Build pages
   buildPostPages(posts, clustersMap2);
   buildInsightsIndex(posts, clustersMap2);
+  buildAtlasPage(clusters, clustersMap2, posts);
 
   // Update sitemap: keep existing + add insights/pillars
   const existing = readExistingSitemapUrls();
@@ -510,8 +704,93 @@ function main() {
   ];
   updateLlmsTxt(top);
 
+
+  // --- Feeds (RSS + JSON Feed) ---
+  // Purpose: improve discovery (Google News-ish crawlers, RSS readers, and AI systems).
+  // We generate feeds from the LIVE insights directory (content/insights, not _drafts).
+  try {
+    const siteUrl = CANONICAL_BASE;
+    const feedItems = posts
+      .filter((p) => p.date)
+      .slice()
+      .sort((a, b) => String(b.date).localeCompare(String(a.date)) || a.slug.localeCompare(b.slug))
+      .slice(0, 100);
+
+    // RSS 2.0
+    const rssItemsXml = feedItems
+      .map((p) => {
+        const url = `${siteUrl}/insights/${p.slug}.html`;
+        const pubDate = p.date ? new Date(p.date + "T00:00:00Z").toUTCString() : new Date().toUTCString();
+        const desc = escapeHtml(p.description || "");
+        const title = escapeHtml(p.title || p.slug);
+        return [
+          "<item>",
+          `  <title>${title}</title>`,
+          `  <link>${url}</link>`,
+          `  <guid isPermaLink="true">${url}</guid>`,
+          `  <pubDate>${pubDate}</pubDate>`,
+          `  <description>${desc}</description>`,
+          "</item>",
+        ].join("\n");
+      })
+      .join("\n");
+
+    const rss = [
+      '<?xml version="1.0" encoding="UTF-8"?>',
+      '<rss version="2.0">',
+      "<channel>",
+      "<title>Spry Executive OS — Insights</title>",
+      `<link>${siteUrl}/insights/</link>`,
+      "<description>Daily executive operating system insights.</description>",
+      `<language>en</language>`,
+      `<lastBuildDate>${new Date().toUTCString()}</lastBuildDate>`,
+      rssItemsXml,
+      "</channel>",
+      "</rss>",
+      "",
+    ].join("\n");
+    writeUtf8(path.join(ROOT, "feed.xml"), rss);
+
+    // JSON Feed v1
+    const jsonFeed = {
+      version: "https://jsonfeed.org/version/1.1",
+      title: "Spry Executive OS — Insights",
+      home_page_url: `${siteUrl}/`,
+      feed_url: `${siteUrl}/feed.json`,
+      items: feedItems.map((p) => ({
+        id: `${siteUrl}/insights/${p.slug}.html`,
+        url: `${siteUrl}/insights/${p.slug}.html`,
+        title: p.title || p.slug,
+        summary: p.description || "",
+        date_published: p.date ? `${p.date}T00:00:00Z` : undefined,
+        date_modified: p.dateModified ? `${p.dateModified}T00:00:00Z` : undefined,
+      })),
+    };
+    writeUtf8(path.join(ROOT, "feed.json"), JSON.stringify(jsonFeed, null, 2) + "\n");
+  } catch (e) {
+    console.log("Feed generation skipped:", e && e.message ? e.message : e);
+  }
+
   console.log(`Built insights: ${posts.length} posts`);
   console.log(`Built pillars: ${clusters.length}`);
 }
 
 main();
+
+    // Insight depth optimization (Query Fan-Out): surface on-page questions as a TOC.
+    const tocItems = (rendered.headings || [])
+      .filter(h => h && (h.level === 2 || h.level === 3))
+      .map(h => ({...h, title: String(h.title || "").trim()}))
+      .filter(h => h.title.length >= 4)
+      .slice(0, 18);
+
+    const tocHtml = tocItems.length
+      ? `<section class="toc" aria-label="Questions answered on this page">
+          <div class="toc-inner">
+            <div class="toc-title">Questions answered on this page</div>
+            <ul class="toc-list">
+              ${tocItems.map(h => `<li class="toc-item level-${h.level}"><a href="#${h.id}">${htmlEscape(h.title)}</a></li>`).join("")}
+            </ul>
+          </div>
+        </section>`
+      : "";

@@ -105,3 +105,22 @@ hr{border:none;border-top:1px solid var(--border);margin:26px 0}
 }
 .card h2{ margin-top: 0; font-size: 1.1rem; }
 .micro-cta{ font-size: .95em; opacity: .95; }
+
+/* === Revenue-first CTA bar (global) === */
+.cta-bar{position:sticky;top:0;z-index:999;background:#111;color:#fff;border-bottom:1px solid rgba(255,255,255,.12)}
+.cta-bar__inner{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:10px 0}
+.cta-bar__text{font-size:14px;line-height:1.2;margin:0}
+.cta-bar__text strong{font-weight:700}
+.cta-bar__actions{display:flex;gap:10px;align-items:center;flex-shrink:0}
+.cta-bar__actions a{white-space:nowrap}
+@media (max-width: 720px){.cta-bar__inner{flex-direction:column;align-items:flex-start}.cta-bar__actions{width:100%;justify-content:flex-start}}
+
+
+/* Insight TOC (Query Fan-Out) */
+.toc{border:1px solid var(--border);background:var(--soft);border-radius:var(--radius);padding:14px 16px;margin:18px 0 24px;}
+.toc-title{font-weight:700;margin:0 0 10px;font-size:14px;letter-spacing:.2px;}
+.toc-list{margin:0;padding-left:18px;}
+.toc-item{margin:6px 0;line-height:1.25;}
+.toc-item.level-3{margin-left:10px;opacity:.95;}
+.toc a{text-decoration:none;}
+.toc a:hover{text-decoration:underline;}
