@@ -2,6 +2,10 @@
 title: "How to build a personal knowledge system that actually gets used"
 description: "How to build a personal knowledge system that actually gets used A practical, calm framework you can apply today—built for high-pressure people."
 date: "2026-02-04"
+cluster: executive-os
+tags: ["executive operating system", "weekly review", "daily planning"]
+primary_kw: executive operating system
+intent: INFO
 ---
 
 # How to build a personal knowledge system that actually gets used

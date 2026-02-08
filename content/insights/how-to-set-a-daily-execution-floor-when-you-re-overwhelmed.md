@@ -6,6 +6,8 @@ cluster: "execution"
 pillar: "daily execution"
 tags: "execution, floor, overwhelm"
 publish_on: "2026-02-05"
+primary_kw: executive operating system
+intent: INFO
 ---
 
 # How to set a daily execution floor when you’re overwhelmed

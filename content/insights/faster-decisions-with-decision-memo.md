@@ -2,6 +2,10 @@
 title: "How to make decisions faster with a decision memo"
 description: "How to make decisions faster with a decision memo A practical, calm framework you can apply today—built for high-pressure people."
 date: "2026-02-04"
+cluster: systems-decisions
+tags: ["systems thinking", "decision making", "constraints"]
+primary_kw: systems thinking
+intent: INFO
 ---
 
 # How to make decisions faster with a decision memo

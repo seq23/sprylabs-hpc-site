@@ -2,6 +2,10 @@
 title: "The power loop: sleep, movement, and output"
 description: "The power loop: sleep, movement, and output A practical, calm framework you can apply today—built for high-pressure people."
 date: "2026-02-04"
+cluster: executive-os
+tags: ["executive operating system", "weekly review", "daily planning"]
+primary_kw: executive operating system
+intent: INFO
 ---
 
 # The power loop: sleep, movement, and output

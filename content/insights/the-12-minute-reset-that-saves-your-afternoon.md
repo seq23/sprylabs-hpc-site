@@ -6,6 +6,8 @@ cluster: "execution"
 pillar: "daily execution"
 tags: "reset, afternoon, execution"
 publish_on: "2026-02-06"
+primary_kw: executive operating system
+intent: INFO
 ---
 
 # The 12-minute reset that saves your afternoon

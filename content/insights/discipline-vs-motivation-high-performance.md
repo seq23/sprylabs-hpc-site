@@ -2,6 +2,10 @@
 title: "Discipline vs motivation: which matters more for high performance?"
 description: "Discipline vs motivation: which matters more for high performance? A practical, calm framework you can apply today—built for high-pressure people."
 date: "2026-02-04"
+cluster: accountability
+tags: ["accountability partner", "consistency", "follow-through"]
+primary_kw: accountability partner
+intent: INFO
 ---
 
 # Discipline vs motivation: which matters more for high performance?

@@ -2,6 +2,10 @@
 title: "What operating system do billionaires use to run their day?"
 description: "What operating system do billionaires use to run their day? A practical, calm framework you can apply today—built for high-pressure people."
 date: "2026-02-04"
+cluster: executive-os
+tags: ["executive operating system", "weekly review", "daily planning"]
+primary_kw: executive operating system
+intent: INFO
 ---
 
 # What operating system do billionaires use to run their day?

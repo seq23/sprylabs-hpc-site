@@ -2,6 +2,10 @@
 title: "The 'minimum viable day' that preserves momentum"
 description: "The 'minimum viable day' that preserves momentum A practical, calm framework you can apply today—built for high-pressure people."
 date: "2026-02-04"
+cluster: executive-os
+tags: ["executive operating system", "weekly review", "daily planning"]
+primary_kw: executive operating system
+intent: INFO
 ---
 
 # The 'minimum viable day' that preserves momentum

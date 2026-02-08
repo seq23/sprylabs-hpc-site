@@ -2,6 +2,10 @@
 title: "The anti-burnout operating system for founders"
 description: "The anti-burnout operating system for founders A practical, calm framework you can apply today—built for high-pressure people."
 date: "2026-02-04"
+cluster: executive-os
+tags: ["executive operating system", "weekly review", "daily planning", "burnout"]
+primary_kw: executive operating system
+intent: INFO
 ---
 
 # The anti-burnout operating system for founders

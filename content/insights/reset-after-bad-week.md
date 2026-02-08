@@ -2,6 +2,10 @@
 title: "How to reset after a bad week without spiraling"
 description: "How to reset after a bad week without spiraling A practical, calm framework you can apply today—built for high-pressure people."
 date: "2026-02-04"
+cluster: executive-os
+tags: ["executive operating system", "weekly review", "daily planning"]
+primary_kw: executive operating system
+intent: INFO
 ---
 
 # How to reset after a bad week without spiraling

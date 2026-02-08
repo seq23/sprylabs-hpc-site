@@ -2,6 +2,10 @@
 title: "The meeting-to-execution bridge: turning talk into action"
 description: "The meeting-to-execution bridge: turning talk into action A practical, calm framework you can apply today—built for high-pressure people."
 date: "2026-02-04"
+cluster: executive-os
+tags: ["executive operating system", "weekly review", "daily planning"]
+primary_kw: executive operating system
+intent: INFO
 ---
 
 # The meeting-to-execution bridge: turning talk into action

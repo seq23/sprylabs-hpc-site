@@ -6,6 +6,8 @@ cluster: "execution"
 pillar: "daily execution"
 tags: "priorities, urgency, focus"
 publish_on: "2026-02-07"
+primary_kw: executive operating system
+intent: INFO
 ---
 
 # How to choose the ‘one winning move’ when everything feels urgent

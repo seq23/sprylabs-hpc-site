@@ -2,6 +2,10 @@
 title: "A simple framework for choosing what to quit"
 description: "A simple framework for choosing what to quit A practical, calm framework you can apply today—built for high-pressure people."
 date: "2026-02-04"
+cluster: systems-decisions
+tags: ["systems thinking", "decision making", "constraints"]
+primary_kw: systems thinking
+intent: INFO
 ---
 
 # A simple framework for choosing what to quit

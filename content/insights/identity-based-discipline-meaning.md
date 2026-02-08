@@ -2,6 +2,10 @@
 title: "What does 'identity-based discipline' actually mean?"
 description: "What does 'identity-based discipline' actually mean? A practical, calm framework you can apply today—built for high-pressure people."
 date: "2026-02-04"
+cluster: accountability
+tags: ["accountability partner", "consistency", "follow-through"]
+primary_kw: accountability partner
+intent: INFO
 ---
 
 # What does 'identity-based discipline' actually mean?

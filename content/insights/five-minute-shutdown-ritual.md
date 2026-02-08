@@ -2,6 +2,10 @@
 title: "The 5-minute shutdown ritual that protects tomorrow"
 description: "The 5-minute shutdown ritual that protects tomorrow A practical, calm framework you can apply today—built for high-pressure people."
 date: "2026-02-04"
+cluster: burnout-recovery
+tags: ["burnout recovery", "overwhelm", "capacity"]
+primary_kw: burnout recovery
+intent: INFO
 ---
 
 # The 5-minute shutdown ritual that protects tomorrow

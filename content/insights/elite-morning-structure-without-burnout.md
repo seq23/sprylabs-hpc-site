@@ -2,6 +2,10 @@
 title: "How do elite performers structure their morning without burnout?"
 description: "How do elite performers structure their morning without burnout? A practical, calm framework you can apply today—built for high-pressure people."
 date: "2026-02-04"
+cluster: executive-os
+tags: ["executive operating system", "weekly review", "daily planning", "burnout"]
+primary_kw: executive operating system
+intent: INFO
 ---
 
 # How do elite performers structure their morning without burnout?
