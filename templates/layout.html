@@ -7,19 +7,13 @@
   <title>{{title}}</title>
   <meta name="description" content="{{description}}" />
 
-  <!-- Canonical -->
   <link rel="canonical" href="{{canonical}}" />
   <meta property="og:url" content="{{canonical}}" />
-
-  <!-- OpenGraph -->
   <meta property="og:title" content="{{title}}" />
   <meta property="og:description" content="{{description}}" />
 
-  <!-- Core CSS (absolute so it always works from any nested page) -->
+  <!-- Your repo uses assets/styles.css -->
   <link rel="stylesheet" href="/assets/styles.css" />
-
-  <!-- Structured data (Article/WebPage JSON-LD) -->
-  {{jsonld}}
 </head>
 
 <body>
@@ -31,9 +25,7 @@
         <strong>Billionaire High-Performance Coach</strong> — the system behind this site.
       </p>
       <div class="cta-bar__actions">
-        <a class="btn btn--primary" href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach">
-          Get the OS
-        </a>
+        <a class="btn btn--primary" href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach">Get the Billionaire-Grade Life System</a>
         <a class="btn" href="/start.html">Start here</a>
       </div>
     </div>
@@ -57,7 +49,9 @@
   </header>
 
   <!-- ===== OPTIONAL ATLAS SUB NAV ===== -->
-  {{atlas_nav}}
+  <div class="container">
+    {{atlas_nav}}
+  </div>
 
   <!-- ===== MAIN CONTENT ===== -->
   <main class="container main">
@@ -66,8 +60,11 @@
 
   <!-- ===== FOOTER ===== -->
   <footer class="footer">
-    <div class="container">
-      <p class="small">
+    <div class="footer__row">
+      <p class="footer__checkout">
+        <a href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach">Get the Billionaire-Grade Life System →</a>
+      </p>
+      <p class="footer__disclaimer">
         © Spry Labs · Educational content only · No guarantees of results.
       </p>
     </div>
