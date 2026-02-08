@@ -26,7 +26,7 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Release one draft
+      - name: Release one draft (next available date)
         run: node scripts/release_one_draft.js
 
       - name: Build insights + topics + sitemap
@@ -35,14 +35,6 @@ jobs:
       - name: Normalize canonical / og:url / JSON-LD
         run: node scripts/patch_set_canonical_base.js
 
-<<<<<<< HEAD
-      - name: Ensure node_modules is not committed
-        run: |
-          echo "node_modules/" >> .gitignore
-          rm -rf node_modules || true
-
-=======
->>>>>>> ebb92cf9d87240119b41eff2b0c0d13cb5499700
       - name: Commit & push if changed
         run: |
           if [[ -n "$(git status --porcelain)" ]]; then
