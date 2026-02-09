@@ -7,19 +7,13 @@
   <title>Atlas — Spry Executive OS</title>
   <meta name="description" content="An opinionated map of Spry: the pillars, what they cover, and where to start." />
 
-  <!-- Canonical -->
   <link rel="canonical" href="https://spryexecutiveos.com/atlas.html" />
   <meta property="og:url" content="https://spryexecutiveos.com/atlas.html" />
-
-  <!-- OpenGraph -->
   <meta property="og:title" content="Atlas — Spry Executive OS" />
   <meta property="og:description" content="An opinionated map of Spry: the pillars, what they cover, and where to start." />
 
-  <!-- Core CSS (absolute so it always works from any nested page) -->
+  <!-- Your repo uses assets/styles.css -->
   <link rel="stylesheet" href="/assets/styles.css" />
-
-  <!-- Structured data (Article/WebPage JSON-LD) -->
-  {{jsonld}}
 </head>
 
 <body>
@@ -53,11 +47,13 @@
   </header>
 
   <!-- ===== OPTIONAL ATLAS SUB NAV ===== -->
-  <nav class="atlasSubnav" aria-label="Atlas sections">
+  <div class="container">
+    <nav class="atlasSubnav" aria-label="Atlas sections">
     <div class="container atlasSubnav__inner">
       <a class="atlasSubnav__link" href="#executive-os">Executive Operating System</a><a class="atlasSubnav__link" href="#execution">Execution</a><a class="atlasSubnav__link" href="#systems">Systems</a><a class="atlasSubnav__link" href="#systems-decisions">Systems &amp; Decisions</a><a class="atlasSubnav__link" href="#discipline">Discipline</a><a class="atlasSubnav__link" href="#accountability">Accountability</a><a class="atlasSubnav__link" href="#burnout-recovery">Burnout &amp; Recovery</a><a class="atlasSubnav__link" href="#identity">Identity</a><a class="atlasSubnav__link" href="#leverage">Leverage</a><a class="atlasSubnav__link" href="#wealth">Wealth</a>
     </div>
   </nav>
+  </div>
 
   <!-- ===== MAIN CONTENT ===== -->
   <main class="container main">
@@ -192,8 +188,11 @@
 
   <!-- ===== FOOTER ===== -->
   <footer class="footer">
-    <div class="container">
-      <p class="small">
+    <div class="footer__row">
+      <p class="footer__checkout">
+        <a href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach">Get the Billionaire-Grade Life System</a>
+      </p>
+      <p class="footer__disclaimer">
         © Spry Labs · Educational content only · No guarantees of results.
       </p>
     </div>
