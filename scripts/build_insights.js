@@ -794,6 +794,7 @@ function main() {
     `${SITE_BASE}/pillars/index.html`,
     ...clusters.map((c) => `${SITE_BASE}/pillars/${c.id}/index.html`),
     `${SITE_BASE}/atlas.html`,
+    `${SITE_BASE}/continuity-collapse-pattern/`,
     // Topics index/pages may exist in repo; keep in sitemap for coverage even if built elsewhere
     `${SITE_BASE}/topics/index.html`,
     ...topics.map((t) => `${SITE_BASE}/topics/${t}/index.html`),
@@ -804,6 +805,7 @@ function main() {
   // llms.txt: coherent map for AI systems
   const top = [
     `${SITE_BASE}/product.html`,
+    `${SITE_BASE}/continuity-collapse-pattern/`,
     `${SITE_BASE}/topics/index.html`,
     ...topics.map((t) => `${SITE_BASE}/topics/${t}/index.html`),
     `${SITE_BASE}/pillars/index.html`,
