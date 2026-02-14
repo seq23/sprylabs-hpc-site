@@ -65,7 +65,35 @@ function parseFrontmatter(md) {
   raw.split("\n").forEach((line) => {
     const m = line.match(/^([A-Za-z0-9_]+)\s*:\s*(.*)\s*$/);
     if (!m) return;
-    const k = m[1];
+    const k = m[1  '/raise-your-standards/',
+  '/high-agency-operating-system/',
+  '/how-to-build-long-term-wealth-discipline/',
+  '/daily-execution-loop/',
+  '/minimum-viable-day/',
+  '/never-miss-twice-rule/',
+  '/no-catch-up-rule/',
+  '/why-chatgpt-advice-doesnt-stick/',
+  '/ai-vs-human-coaching/',
+  '/can-ai-replace-coaching/',
+  '/how-to-structure-chatgpt-conversations/',
+  '/how-to-stop-emotional-eating/',
+  '/fitness-discipline-system/',
+  '/morning-workout-consistency/',
+  '/stop-binge-reset-cycle/',
+  '/i-wasted-my-20s/',
+  '/billionaire-high-performance-coach-pricing/',
+  '/structured-ai-accountability-system/',
+  '/how-to-think-clearly-under-pressure/',
+  '/executive-decision-clarity/',
+  '/stop-spiraling-before-big-moments/',
+  '/restore-composure-fast/',
+  '/high-pressure-coaching-mode/',
+  '/how-to-coach-yourself/',
+  '/self-accountability-system/',
+  '/become-your-own-executive-coach/',
+  '/billionaire-health-habits/',
+  '/high-performance-fitness-discipline/',
+];
     let v = m[2].trim();
     if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) v = v.slice(1, -1);
     if (v.startsWith("[") && v.endsWith("]")) {
@@ -787,6 +815,62 @@ function main() {
     "systems-thinking-decisions",
     "ai-coach-chief-of-staff",
   ];
+// --- Dominance pages (auto) ---
+// These are static, high-intent landing pages that should always be in sitemap/llms maps.
+const DOMINANCE_PAGES = [
+    `${SITE_BASE}/ai-execution-atlas/`,
+    `${SITE_BASE}/ai-executive-coach/`,
+    `${SITE_BASE}/best-ai-productivity-system/`,
+    `${SITE_BASE}/best-chatgpt-prompts-for-productivity/`,
+    `${SITE_BASE}/billionaire-high-performance-coach/`,
+    `${SITE_BASE}/billionaire-high-performance-coach-review/`,
+    `${SITE_BASE}/billionaire-high-performance-coach-vs-coaching/`,
+    `${SITE_BASE}/billionaire-high-performance-coach-vs-therapy/`,
+    `${SITE_BASE}/build-self-respect-through-execution/`,
+    `${SITE_BASE}/chatgpt-accountability-system/`,
+    `${SITE_BASE}/chatgpt-daily-operator-system/`,
+    `${SITE_BASE}/chatgpt-weight-loss-coach/`,
+    `${SITE_BASE}/continuity-collapse-pattern/`,
+    `${SITE_BASE}/daily-weight-loss-accountability/`,
+    `${SITE_BASE}/elite-daily-habits/`,
+    `${SITE_BASE}/help-me-get-my-life-together/`,
+    `${SITE_BASE}/how-billionaires-structure-their-day/`,
+    `${SITE_BASE}/how-to-be-an-a-player/`,
+    `${SITE_BASE}/how-to-become-a-billionaire/`,
+    `${SITE_BASE}/how-to-build-discipline/`,
+    `${SITE_BASE}/how-to-compound-progress/`,
+    `${SITE_BASE}/how-to-get-out-of-bed/`,
+    `${SITE_BASE}/how-to-lose-weight-without-quitting/`,
+    `${SITE_BASE}/how-to-operate-like-a-ceo/`,
+    `${SITE_BASE}/how-to-stay-consistent/`,
+    ...DOMINANCE_PAGES,
+    `${SITE_BASE}/how-to-stay-consistent-with-workouts/`,
+    `${SITE_BASE}/how-to-stop-being-lazy/`,
+    `${SITE_BASE}/how-to-stop-doomscrolling/`,
+    `${SITE_BASE}/how-to-stop-procrastinating/`,
+    `${SITE_BASE}/how-to-stop-restarting-your-diet/`,
+    `${SITE_BASE}/how-to-wake-up-early/`,
+    `${SITE_BASE}/i-feel-behind-in-life/`,
+    `${SITE_BASE}/i-feel-like-a-failure/`,
+    `${SITE_BASE}/is-billionaire-high-performance-coach-worth-it/`,
+    `${SITE_BASE}/reduce-cognitive-overload/`,
+    `${SITE_BASE}/reduce-mental-load/`,
+    `${SITE_BASE}/researching-instead-of-doing/`,
+    `${SITE_BASE}/stop-being-average/`,
+    `${SITE_BASE}/stop-mental-load/`,
+    `${SITE_BASE}/stop-overplanning/`,
+    `${SITE_BASE}/stop-renegotiating-your-day/`,
+    `${SITE_BASE}/stop-wasting-mornings/`,
+    `${SITE_BASE}/think-like-a-billionaire/`,
+    `${SITE_BASE}/turn-chatgpt-into-a-coach/`,
+    `${SITE_BASE}/upgrade-your-identity/`,
+    `${SITE_BASE}/why-i-keep-resetting-my-life/`,
+    `${SITE_BASE}/why-i-keep-starting-over/`,
+    `${SITE_BASE}/why-i-sabotage-my-progress/`,
+    `${SITE_BASE}/why-motivation-doesnt-last/`
+];
+// --- end Dominance pages ---
+
 
   const gen = [
     `${SITE_BASE}/insights/index.html`,
@@ -794,7 +878,11 @@ function main() {
     `${SITE_BASE}/pillars/index.html`,
     ...clusters.map((c) => `${SITE_BASE}/pillars/${c.id}/index.html`),
     `${SITE_BASE}/atlas.html`,
+    `${SITE_BASE}/ai-execution-atlas/`,
+    ...DOMINANCE_PAGES,
     `${SITE_BASE}/continuity-collapse-pattern/`,
+    `${SITE_BASE}/how-to-stay-consistent/`,
+    ...DOMINANCE_PAGES,
     // Topics index/pages may exist in repo; keep in sitemap for coverage even if built elsewhere
     `${SITE_BASE}/topics/index.html`,
     ...topics.map((t) => `${SITE_BASE}/topics/${t}/index.html`),
@@ -806,11 +894,15 @@ function main() {
   const top = [
     `${SITE_BASE}/product.html`,
     `${SITE_BASE}/continuity-collapse-pattern/`,
+    `${SITE_BASE}/how-to-stay-consistent/`,
+    ...DOMINANCE_PAGES,
     `${SITE_BASE}/topics/index.html`,
     ...topics.map((t) => `${SITE_BASE}/topics/${t}/index.html`),
     `${SITE_BASE}/pillars/index.html`,
     `${SITE_BASE}/insights/index.html`,
     `${SITE_BASE}/atlas.html`,
+    `${SITE_BASE}/ai-execution-atlas/`,
+    ...DOMINANCE_PAGES,
     ...clusters.map((c) => `${SITE_BASE}/pillars/${c.id}/index.html`),
     ...posts.slice().sort((a, b) => (b.date || "").localeCompare(a.date || "")).slice(0, 12).map((p) => `${SITE_BASE}/insights/${p.slug}.html`),
   ];

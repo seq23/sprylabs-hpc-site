@@ -135,3 +135,59 @@ hr{border:none;border-top:1px solid var(--border);margin:26px 0}
   margin-bottom: 1.5rem;
 }
 
+
+
+/* ===== Readability Overrides (v6 audit pass) ===== */
+:root{
+  --readable-max: 72ch;
+}
+body{
+  font-size: 18px;
+  line-height: 1.65;
+}
+main, .main, .content, .container, .page, .article{
+  max-width: var(--readable-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+p{
+  margin-top: 0.85em;
+  margin-bottom: 0.85em;
+}
+h1{
+  margin-top: 0.8em;
+  margin-bottom: 0.4em;
+  line-height: 1.2;
+}
+h2{
+  margin-top: 1.6em;
+  margin-bottom: 0.5em;
+  line-height: 1.25;
+}
+h3{
+  margin-top: 1.2em;
+  margin-bottom: 0.4em;
+}
+ul, ol{
+  margin-top: 0.6em;
+  margin-bottom: 0.9em;
+}
+li{
+  margin-bottom: 0.35em;
+}
+blockquote{
+  margin: 1.2em 0;
+  padding: 0.8em 1em;
+}
+/* prevent super-wide hero sections from breaking readability */
+header, footer, nav{
+  padding-left: 16px;
+  padding-right: 16px;
+}
+/* mobile tightening */
+@media (max-width: 480px){
+  body{ font-size: 17px; }
+  h1{ font-size: 1.8em; }
+}
