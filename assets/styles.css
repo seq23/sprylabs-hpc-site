@@ -191,3 +191,229 @@ header, footer, nav{
   body{ font-size: 17px; }
   h1{ font-size: 1.8em; }
 }
+
+
+/* ===== Phase 2: Enterprise Nav + Overflow Hardening ===== */
+*{ box-sizing: border-box; }
+html, body{ max-width: 100%; overflow-x: hidden; }
+img, svg, video{ max-width: 100%; height: auto; }
+pre, code{ max-width: 100%; }
+pre{
+  overflow-x: auto;
+  padding: 12px 14px;
+  border-radius: 10px;
+}
+/* Nav */
+.site-header{
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #fff;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+.nav-shell{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 12px 16px;
+}
+.brand{
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.nav-links{
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.nav-links a{
+  text-decoration: none;
+  opacity: 0.9;
+}
+.nav-links a:hover{ text-decoration: underline; }
+.nav-cta{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  white-space: nowrap;
+}
+/* Breadcrumb */
+.breadcrumb{
+  margin-top: 10px;
+  margin-bottom: 18px;
+  font-size: 0.95em;
+  opacity: 0.85;
+}
+.breadcrumb a{ text-decoration: none; }
+.breadcrumb a:hover{ text-decoration: underline; }
+.breadcrumb .sep{ padding: 0 6px; opacity: 0.6; }
+/* Main spacing */
+main{
+  padding-top: 10px;
+}
+/* Buttons: ensure consistent look without relying on random borders */
+a.primary-btn, .primary-btn, .nav-cta{
+  background: #111;
+  color: #fff;
+}
+a.primary-btn:hover, .primary-btn:hover, .nav-cta:hover{
+  filter: brightness(1.08);
+}
+/* Mobile nav stack */
+@media (max-width: 720px){
+  .nav-shell{ flex-wrap: wrap; }
+  .nav-links{ width: 100%; gap: 12px; }
+}
+
+
+/* ===== Phase 3: Enterprise Typography + Layout Rhythm ===== */
+:root{
+  --text: #111;
+  --muted: rgba(0,0,0,0.72);
+  --border: rgba(0,0,0,0.10);
+  --bg: #fff;
+  --soft: rgba(0,0,0,0.04);
+  --max-prose: 74ch;
+}
+body{
+  color: var(--text);
+  background: var(--bg);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  letter-spacing: -0.01em;
+}
+main, .main, .content, .container, .page, .article{
+  max-width: var(--max-prose);
+}
+/* Headings */
+h1{
+  font-size: clamp(1.75rem, 2.5vw, 2.35rem);
+  font-weight: 750;
+  letter-spacing: -0.02em;
+}
+h2{
+  font-size: clamp(1.25rem, 1.6vw, 1.55rem);
+  font-weight: 700;
+}
+h3{
+  font-size: 1.08rem;
+  font-weight: 650;
+}
+/* Paragraph + lead */
+p{ color: var(--text); }
+p strong{ font-weight: 700; }
+.lead, .subhead{
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+/* Links */
+a{ color: inherit; }
+main a{
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+main a:hover{
+  opacity: 0.88;
+}
+/* Lists */
+ul, ol{ padding-left: 1.15em; }
+li{ color: var(--text); }
+/* Blocks */
+blockquote{
+  border-left: 3px solid var(--border);
+  background: var(--soft);
+}
+hr{
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 28px 0;
+}
+/* Buttons */
+.primary-btn, .nav-cta, a.primary-btn{
+  border: 1px solid rgba(0,0,0,0.18);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.04);
+}
+/* Cardy callouts (used by various pages if class exists) */
+.callout, .note, .panel{
+  border: 1px solid var(--border);
+  background: var(--soft);
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+/* Footer */
+footer{
+  border-top: 1px solid var(--border);
+  margin-top: 40px;
+  padding-top: 18px;
+  opacity: 0.9;
+}
+/* Ensure nothing clips */
+main{ padding-bottom: 28px; }
+
+
+/* ===== Phase 4: Stripe/Linear/Vercel-style Prose System ===== */
+:root{
+  --max-prose-px: 760px; /* 720–780 target */
+}
+body{
+  line-height: 1.68; /* 1.6–1.7 target */
+}
+main, .main, .content, .container, .page, .article{
+  max-width: min(var(--max-prose), var(--max-prose-px));
+  padding-left: 20px;
+  padding-right: 20px;
+}
+@media (max-width: 480px){
+  main, .main, .content, .container, .page, .article{
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+/* Section rhythm */
+h2{
+  margin-top: 44px;
+  margin-bottom: 14px;
+}
+h3{
+  margin-top: 28px;
+  margin-bottom: 10px;
+}
+/* Tighten accidental double spacing */
+p + p{ margin-top: 0.9em; }
+p{ margin-bottom: 0.9em; }
+/* Bullet blocks used for transformed long paragraphs */
+.para-bullets{
+  margin: 14px 0 18px 0;
+  padding-left: 1.15em;
+}
+.para-bullets li{
+  margin-bottom: 0.55em;
+  color: var(--text);
+}
+/* Docs-style code blocks */
+pre{
+  border: 1px solid var(--border);
+  background: rgba(0,0,0,0.03);
+}
+/* Tables */
+table{
+  width: 100%;
+  border-collapse: collapse;
+  margin: 18px 0;
+}
+th, td{
+  border: 1px solid var(--border);
+  padding: 10px 12px;
+  vertical-align: top;
+}
+th{ background: rgba(0,0,0,0.03); }
+/* Anchor spacing */
+[id]{ scroll-margin-top: 86px; }
