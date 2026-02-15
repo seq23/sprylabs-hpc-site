@@ -59,24 +59,20 @@ function parseFrontmatter(md) {
   if (!md.startsWith("---")) return { data: {}, body: md };
   const end = md.indexOf("\n---", 3);
   if (end === -1) return { data: {}, body: md };
-
   const raw = md.slice(3, end).trim();
   const body = md.slice(end + 4).replace(/^\s+/, "");
   const data = {};
-
   raw.split("\n").forEach((line) => {
     const m = line.match(/^([A-Za-z0-9_]+)\s*:\s*(.*)\s*$/);
     if (!m) return;
-    const k = m[1]; // ✅ FIXED
+    const k = m[1];
     let v = m[2].trim();
-
     if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) v = v.slice(1, -1);
     if (v.startsWith("[") && v.endsWith("]")) {
       try { data[k] = JSON.parse(v); return; } catch (_) {}
     }
     data[k] = v;
   });
-
   return { data, body };
 }
 
@@ -93,6 +89,8 @@ function listMarkdownFiles(dir) {
 
 // --- markdown -> html with headings + toc ---
 function mdToHtmlWithHeadings(md) {
+  // Minimal Markdown rendering + heading IDs + heading extraction.
+  // Deterministic + dependency-free (works in GitHub Actions without npm install).
   let s = String(md || "").replace(/\r\n/g, "\n");
 
   const headings = [];
@@ -201,6 +199,7 @@ const HEADER_HTML = readNavFromIndex();
 const FOOTER_HTML = readFooterFromIndex();
 
 function stylesheetHref(activePath) {
+  // activePath is site-root relative: "/insights/foo.html" or "/pillars/<slug>/index.html"
   if (activePath.startsWith("/pillars/")) return "../../assets/site.css";
   if (activePath.startsWith("/insights/")) return "../assets/site.css";
   if (activePath.startsWith("/topics/")) return "../../assets/site.css";
@@ -210,6 +209,7 @@ function stylesheetHref(activePath) {
 function loadLayoutTemplate() {
   if (!exists(LAYOUT_PATH)) return null;
   const tpl = readUtf8(LAYOUT_PATH);
+  // sanity: must include {{content}} at minimum
   if (!tpl.includes("{{content}}")) return null;
   return tpl;
 }
@@ -246,6 +246,11 @@ function renderPage({ title, description, canonical, activePath, contentHtml, at
   const cssHref = stylesheetHref(activePath);
   const url = canonical;
 
+  // If a layout template exists, use it.
+  // Required placeholders supported:
+  // {{title}} {{description}} {{canonical}} {{content}} {{atlas_nav}}
+  // Extra placeholders supported if present:
+  // {{css_href}} {{header}} {{footer}} {{json_ld}} {{og_url}}
   if (LAYOUT_TEMPLATE) {
     let page = LAYOUT_TEMPLATE;
 
@@ -268,6 +273,7 @@ function renderPage({ title, description, canonical, activePath, contentHtml, at
     return page;
   }
 
+  // Fallback: built-in wrapper (works without templates/layout.html)
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -302,6 +308,7 @@ function loadClusters() {
   if (exists(CLUSTERS_PATH)) {
     try { return JSON.parse(readUtf8(CLUSTERS_PATH)); } catch {}
   }
+  // fallback
   return [
     { id: "executive-os", name: "Executive OS & Planning", description: "Constraint-based planning, weekly rhythm, life operations." },
   ];
@@ -334,7 +341,7 @@ function parsePost(fp) {
 }
 
 function buildRelated(posts, post, max = 8) {
-  return posts
+  const scores = posts
     .filter((p) => p.slug !== post.slug)
     .map((p) => {
       let score = 0;
@@ -347,9 +354,11 @@ function buildRelated(posts, post, max = 8) {
     .sort((a, b) => b.score - a.score || a.p.slug.localeCompare(b.p.slug))
     .slice(0, max)
     .map((x) => x.p);
+  return scores;
 }
 
 function buildPillars(posts, clusters) {
+  // Pillars index
   const pillarCards = clusters.map((c) => {
     const count = posts.filter((p) => p.cluster === c.id).length;
     return `<li class="list-item">
@@ -376,7 +385,7 @@ function buildPillars(posts, clusters) {
     jsonLd: jsonLdCollection({ title: "Pillars", description: "Spry pillars index", url: pillarsIndexCanonical }),
   }));
 
-  // Cleanup stale pillar dirs
+  // Cleanup stale pillar directories
   try {
     const allowed = new Set(clusters.map((c) => c.id));
     const entries = fs.readdirSync(PILLARS_DIR, { withFileTypes: true });
@@ -388,8 +397,8 @@ function buildPillars(posts, clusters) {
     }
   } catch (_) {}
 
+  // Individual pillar pages
   const clustersMap = clusterById(clusters);
-
   for (const c of clusters) {
     const ps = posts
       .filter((p) => p.cluster === c.id)
@@ -445,6 +454,7 @@ function buildPostPages(posts, clustersMap) {
 
     const rendered = mdToHtmlWithHeadings(post.bodyMd);
     const tocHtml = buildTocHtml(rendered.headings);
+    const htmlBody = rendered.html;
 
     const clusterObj = clustersMap.get(post.cluster);
     const pillarHref = clusterObj ? `../pillars/${clusterObj.id}/index.html` : "../pillars/index.html";
@@ -464,7 +474,7 @@ function buildPostPages(posts, clustersMap) {
 
     const cta = `<section class="card" style="margin-top:20px">
       <h2>Want the full system?</h2>
-      <p>If this framing helps, you can review the full Spry Executive OS on the <a href="/product.html">product page</a>.</p>
+      <p>If this framing helps, you can review the full Spry Executive OS on the <a href="/product.html">product page</a>. It’s designed to be calm, non-spammy, and usable on bad weeks.</p>
       <p style="margin-top:10px"><a class="btn btn--primary" href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach" rel="noopener">Get the OS</a></p>
     </section>`;
 
@@ -482,7 +492,7 @@ function buildPostPages(posts, clustersMap) {
       ${meta}
       <div class="article-body">
         ${tocHtml}
-        ${rendered.html}
+        ${htmlBody}
       </div>
       ${aiTherapistSafety}
       <div style="margin-top:16px"><a class="btn" href="${pillarHref}">Browse this pillar</a></div>
@@ -490,7 +500,7 @@ function buildPostPages(posts, clustersMap) {
       ${relatedHtml}
     </article>`;
 
-    writeUtf8(path.join(OUT_DIR, `${post.slug}.html`), renderPage({
+    const page = renderPage({
       title: `${post.title} — Spry Executive OS`,
       description: post.description || "Calm, operator-grade guidance for planning, consistency, recovery, and high-performance execution.",
       canonical,
@@ -504,7 +514,9 @@ function buildPostPages(posts, clustersMap) {
         datePublished: post.date || new Date().toISOString().slice(0, 10),
         dateModified: post.dateModified || post.date || new Date().toISOString().slice(0, 10),
       }),
-    }));
+    });
+
+    writeUtf8(path.join(OUT_DIR, `${post.slug}.html`), page);
   }
 }
 
@@ -530,7 +542,7 @@ function buildInsightsIndex(posts, clustersMap) {
   </section>`;
 
   const canonical = `${SITE_BASE}/insights/index.html`;
-  writeUtf8(path.join(OUT_DIR, "index.html"), renderPage({
+  const page = renderPage({
     title: "Insights — Spry Executive OS",
     description: "Operator-grade guidance on planning, consistency, recovery, decision-making, coaching, and practical AI support.",
     canonical,
@@ -538,7 +550,9 @@ function buildInsightsIndex(posts, clustersMap) {
     contentHtml: bodyHtml,
     atlasNavHtml: "",
     jsonLd: jsonLdCollection({ title: "Insights", description: "Spry insights index", url: canonical }),
-  }));
+  });
+
+  writeUtf8(path.join(OUT_DIR, "index.html"), page);
 }
 
 // --- drafts (for Atlas KPI line) ---
@@ -583,6 +597,7 @@ function buildAtlasPage(clusters, posts) {
 
   const today = new Date().toISOString().slice(0, 10);
 
+  // Draft counts + next draft date per cluster
   const draftInfo = new Map();
   for (const c of clusters) {
     const ds = drafts.filter((d) => d.cluster === c.id).sort((a, b) => (a.date || "").localeCompare(b.date || ""));
@@ -638,15 +653,17 @@ function buildAtlasPage(clusters, posts) {
   ${sections}`;
 
   const canonical = `${SITE_BASE}/atlas.html`;
-  writeUtf8(path.join(ROOT, "atlas.html"), renderPage({
+  const page = renderPage({
     title: "Atlas — Spry Executive OS",
     description: "An opinionated map of Spry: the pillars, what they cover, and where to start.",
     canonical,
     activePath: "/atlas.html",
     contentHtml,
-    atlasNavHtml,
+    atlasNavHtml, // subtle and non-broken (no margin overflow) if CSS supports it
     jsonLd: jsonLdCollection({ title: "Atlas", description: "Spry Atlas page", url: canonical }),
-  }));
+  });
+
+  writeUtf8(path.join(ROOT, "atlas.html"), page);
 }
 
 // --- sitemap + llms.txt ---
@@ -690,6 +707,7 @@ function buildFeeds(posts) {
       .sort((a, b) => String(b.date).localeCompare(String(a.date)) || a.slug.localeCompare(b.slug))
       .slice(0, 100);
 
+    // RSS 2.0
     const rssItemsXml = feedItems.map((p) => {
       const url = `${siteUrl}/insights/${p.slug}.html`;
       const pubDate = p.date ? new Date(p.date + "T00:00:00Z").toUTCString() : new Date().toUTCString();
@@ -722,6 +740,7 @@ function buildFeeds(posts) {
     ].join("\n");
     writeUtf8(path.join(ROOT, "feed.xml"), rss);
 
+    // JSON Feed v1.1
     const jsonFeed = {
       version: "https://jsonfeed.org/version/1.1",
       title: "Spry Executive OS — Insights",
@@ -747,16 +766,30 @@ function main() {
 
   const clusters = loadClusters();
 
+  // Load published posts (content/insights excluding _drafts/*)
   const files = listMarkdownFiles(CONTENT_DIR);
   const posts = files.map(parsePost);
 
+  // Build pillars + pages
   const clustersMap = buildPillars(posts, clusters);
   buildPostPages(posts, clustersMap);
   buildInsightsIndex(posts, clustersMap);
   buildAtlasPage(clusters, posts);
 
-  // ✅ Define dominance pages ONCE (no self-spread)
-  const DOMINANCE_PAGES = [
+  // Sitemap: keep existing + add insights/pillars (+ optional topics references)
+  const existing = readExistingSitemapUrls();
+  const topics = [
+    "high-performance-coaching",
+    "overwhelm-executive-dysfunction",
+    "accountability-consistency",
+    "productivity-systems",
+    "burnout-recovery",
+    "systems-thinking-decisions",
+    "ai-coach-chief-of-staff",
+  ];
+// --- Dominance pages (auto) ---
+// These are static, high-intent landing pages that should always be in sitemap/llms maps.
+const DOMINANCE_PAGES = [
     `${SITE_BASE}/ai-execution-atlas/`,
     `${SITE_BASE}/ai-executive-coach/`,
     `${SITE_BASE}/best-ai-productivity-system/`,
@@ -806,19 +839,9 @@ function main() {
     `${SITE_BASE}/why-i-keep-starting-over/`,
     `${SITE_BASE}/why-i-sabotage-my-progress/`,
     `${SITE_BASE}/why-motivation-doesnt-last/`
-  ];
+];
+// --- end Dominance pages ---
 
-  const existing = readExistingSitemapUrls();
-
-  const topics = [
-    "high-performance-coaching",
-    "overwhelm-executive-dysfunction",
-    "accountability-consistency",
-    "productivity-systems",
-    "burnout-recovery",
-    "systems-thinking-decisions",
-    "ai-coach-chief-of-staff",
-  ];
 
   const gen = [
     `${SITE_BASE}/insights/index.html`,
@@ -826,27 +849,33 @@ function main() {
     `${SITE_BASE}/pillars/index.html`,
     ...clusters.map((c) => `${SITE_BASE}/pillars/${c.id}/index.html`),
     `${SITE_BASE}/atlas.html`,
+    `${SITE_BASE}/ai-execution-atlas/`,
+    `${SITE_BASE}/continuity-collapse-pattern/`,
+    `${SITE_BASE}/how-to-stay-consistent/`,
+    // Topics index/pages may exist in repo; keep in sitemap for coverage even if built elsewhere
     `${SITE_BASE}/topics/index.html`,
     ...topics.map((t) => `${SITE_BASE}/topics/${t}/index.html`),
-    ...DOMINANCE_PAGES,
   ];
-
   const merged = Array.from(new Set([...existing, ...gen])).sort();
   updateSitemap(merged);
 
+  // llms.txt: coherent map for AI systems
   const top = [
     `${SITE_BASE}/product.html`,
+    `${SITE_BASE}/continuity-collapse-pattern/`,
+    `${SITE_BASE}/how-to-stay-consistent/`,
+    `${SITE_BASE}/topics/index.html`,
+    ...topics.map((t) => `${SITE_BASE}/topics/${t}/index.html`),
     `${SITE_BASE}/pillars/index.html`,
     `${SITE_BASE}/insights/index.html`,
     `${SITE_BASE}/atlas.html`,
-    `${SITE_BASE}/topics/index.html`,
-    ...topics.map((t) => `${SITE_BASE}/topics/${t}/index.html`),
+    `${SITE_BASE}/ai-execution-atlas/`,
     ...clusters.map((c) => `${SITE_BASE}/pillars/${c.id}/index.html`),
-    ...DOMINANCE_PAGES,
     ...posts.slice().sort((a, b) => (b.date || "").localeCompare(a.date || "")).slice(0, 12).map((p) => `${SITE_BASE}/insights/${p.slug}.html`),
   ];
   updateLlmsTxt(top);
 
+  // Feeds
   buildFeeds(posts);
 
   console.log(`Built insights: ${posts.length} posts`);

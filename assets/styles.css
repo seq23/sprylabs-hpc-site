@@ -107,7 +107,7 @@ hr{border:none;border-top:1px solid var(--border);margin:26px 0}
 .micro-cta{ font-size: .95em; opacity: .95; }
 
 /* === Revenue-first CTA bar (global) === */
-.cta-bar{position:sticky;top:0;z-index:999;background:#111;color:#fff;border-bottom:1px solid rgba(255,255,255,.12)}
+.cta-bar{position: relative;z-index: 1;background:#111;color:#fff;border-bottom:1px solid rgba(255,255,255,.12)}
 .cta-bar__inner{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:10px 0}
 .cta-bar__text{font-size:14px;line-height:1.2;margin:0}
 .cta-bar__text strong{font-weight:700}
@@ -205,7 +205,7 @@ pre{
 }
 /* Nav */
 .site-header{
-  position: sticky;
+  position: relative;
   top: 0;
   z-index: 50;
   background: #fff;
@@ -417,3 +417,13 @@ th, td{
 th{ background: rgba(0,0,0,0.03); }
 /* Anchor spacing */
 [id]{ scroll-margin-top: 86px; }
+
+/* --- Atlas refactor v2: utility-first page blocks --- */
+.section { margin-top: 44px; }
+.section:first-of-type { margin-top: 28px; }
+.steps { margin: 14px 0 0 0; padding-left: 22px; }
+.steps li { margin: 10px 0; line-height: 1.65; }
+.para-bullets { margin: 12px 0 0 0; padding-left: 22px; }
+.para-bullets li { margin: 8px 0; line-height: 1.65; }
+.inline-cta { font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.callout { margin-top: 44px; }

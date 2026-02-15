@@ -6,8 +6,8 @@
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>{{title}}</title>
 <meta content="{{description}}" name="description"/>
-<link href="https://spryexecutiveos.com/templates/layout.html" rel="canonical"/>
-<meta content="https://spryexecutiveos.com/templates/layout.html" property="og:url"/>
+<link href="{{canonical_url}}" rel="canonical"/>
+<meta content="{{canonical_url}}" property="og:url"/>
 <meta content="{{title}}" property="og:title"/>
 <meta content="{{description}}" property="og:description"/>
 <!-- Your repo uses assets/styles.css -->
@@ -52,7 +52,11 @@
       <a href="/continuity-collapse-pattern/">Continuity Collapse Pattern (White Paper)</a>.
     </div>
 </section>
-<section><h2>If you searched something like…</h2><ul class="para-bullets"><li>“templates”</li><li>“How do I templates?”</li><li>“I feel stuck—what do I do today?”</li><li>“Can ChatGPT help me execute instead of overthinking?”</li><li>“I can’t get my life together—where do I start?”</li></ul></section><section><h2>Related</h2><ul class="para-bullets"><li><a href="/ai-execution-atlas/">Parent hub</a></li><li><a href="/chatgpt-daily-operator-system/">Daily Structure Engine</a></li><li><a href="/accountability-system/">AI Accountability System</a></li></ul></section></main>
+
+    {{search_block}}
+    {{related_block}}
+
+</main>
 <!-- ===== FOOTER ===== -->
 <footer class="footer">
 <div class="footer__row">
