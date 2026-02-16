@@ -2,12 +2,12 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>Stop Overplanning | Spry Executive OS</title>
-<meta content="Practical, execution-first answer for: Stop Overplanning." name="description"/>
-<link href="https://spryexecutiveos.com/stop-overplanning/" rel="canonical"/>
-<meta content="https://spryexecutiveos.com/stop-overplanning/" property="og:url"/>
-<meta content="Stop Overplanning | Spry Executive OS" property="og:title"/>
-<meta content="Practical, execution-first answer for: Stop Overplanning." property="og:description"/>
+<title>Insights | Spry Executive OS</title>
+<meta content="Short, practical essays on execution, accountability, and staying consistent." name="description"/>
+<link href="https://spryexecutiveos.com/insights/" rel="canonical"/>
+<meta content="https://spryexecutiveos.com/insights/" property="og:url"/>
+<meta content="Insights | Spry Executive OS" property="og:title"/>
+<meta content="Short, practical essays on execution, accountability, and staying consistent." property="og:description"/>
 <link href="/assets/styles.css" rel="stylesheet"/>
 </head>
 <body>
@@ -44,6 +44,15 @@
       </ul>
       <p class="cta-inline"><strong>Want the full daily accountability system (copy‑paste prompts + the daily loop + recovery after misses)?</strong><br/>
 <a class="btn btn--primary" href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach">Get the System</a>.</p>
+
+      <h2>All Daily Actions</h2>
+      <p class="micro-cta">This index auto-populates from the live sitemap. New daily actions appear here automatically after publish.</p>
+      <div id="insights-cards" class="card-grid" aria-live="polite">
+        <div class="card"><strong>Loading…</strong> If this doesn’t load, your browser may be blocking sitemap requests.</div>
+      </div>
+      <noscript>
+        <p><strong>JavaScript is required</strong> to auto-list insights on this page. You can still browse insights directly via the site map.</p>
+      </noscript>
     </div>
   </section>
 </main>
@@ -56,6 +65,95 @@
 <p class="footer__disclaimer">© Spry Labs · Educational content only · No guarantees of results.</p>
 </div>
 </footer>
+<script>
+  (function(){
+    const ROOT_SITEMAP = '/sitemap.xml';
+    const container = document.getElementById('insights-cards');
+    if (!container) return;
+
+    function esc(s){
+      return String(s)
+        .replaceAll('&','&amp;')
+        .replaceAll('<','&lt;')
+        .replaceAll('>','&gt;')
+        .replaceAll('"','&quot;')
+        .replaceAll("'",'&#39;');
+    }
+
+    function titleFromSlug(slug){
+      // Clean common suffixes like "-2".
+      slug = slug.replace(/-\d+$/,'');
+      return slug
+        .split('-')
+        .filter(Boolean)
+        .map(w => w.charAt(0).toUpperCase() + w.slice(1))
+        .join(' ');
+    }
+
+    function formatDate(iso){
+      if (!iso) return '';
+      const d = new Date(iso);
+      if (Number.isNaN(d.getTime())) return '';
+      return d.toLocaleDateString(undefined, {year:'numeric', month:'short', day:'numeric'});
+    }
+
+    async function load(){
+      try{
+        const res = await fetch(ROOT_SITEMAP, {cache:'no-store'});
+        if (!res.ok) throw new Error('sitemap fetch failed: ' + res.status);
+        const xmlText = await res.text();
+        const doc = new DOMParser().parseFromString(xmlText, 'application/xml');
+
+        const urls = Array.from(doc.querySelectorAll('url')).map(u => {
+          const loc = u.querySelector('loc')?.textContent?.trim() || '';
+          const lastmod = u.querySelector('lastmod')?.textContent?.trim() || '';
+          return {loc, lastmod};
+        }).filter(({loc}) => {
+          if (!loc) return false;
+          if (!loc.includes('/insights/')) return false;
+          return !loc.endsWith('/insights/') && !loc.endsWith('/insights/index.html');
+        });
+
+        urls.sort((a,b) => {
+          const ta = a.lastmod ? Date.parse(a.lastmod) : 0;
+          const tb = b.lastmod ? Date.parse(b.lastmod) : 0;
+          if (tb !== ta) return tb - ta;
+          return (b.loc || '').localeCompare(a.loc || '');
+        });
+
+        if (!urls.length){
+          container.innerHTML = '<div class="card"><strong>No insights found.</strong> This usually means the sitemap is missing /insights/ URLs.</div>';
+          return;
+        }
+
+        const cards = urls.map(({loc,lastmod}) => {
+          let href = loc;
+          try{
+            const u = new URL(loc);
+            href = u.pathname + (u.search || '') + (u.hash || '');
+          }catch(e){}
+          const slug = href.split('/insights/')[1] || '';
+          const cleaned = slug.replace(/\.html$/,'').replace(/^\//,'');
+          const title = titleFromSlug(cleaned);
+          const date = formatDate(lastmod);
+          return `\
+            <article class="card">\
+              <h2><a href="${esc(href)}">${esc(title)}</a></h2>\
+              ${date ? `<p class="micro-cta">Updated: ${esc(date)}</p>` : ''}\
+            </article>\
+          `;
+        }).join('');
+
+        container.innerHTML = cards;
+      }catch(err){
+        console.error(err);
+        container.innerHTML = '<div class="card"><strong>Could not load insights.</strong> Confirm /sitemap.xml is accessible and includes /insights/ URLs.</div>';
+      }
+    }
+
+    load();
+  })();
+</script>
 <script type="application/ld+json">{
   "@context":"https://schema.org",
   "@type":"CollectionPage",
