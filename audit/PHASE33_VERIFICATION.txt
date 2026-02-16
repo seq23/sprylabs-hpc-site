@@ -1,0 +1,35 @@
+PHASE 33 — INSIGHTS EXTRACTABILITY RETROFIT — VERIFICATION
+Repo base: phase32 repo LKG.zip
+Timestamp (UTC): 2026-02-16T14:52:44Z
+
+1) Insights counts
+- Live insights markdown files: 42
+- Draft insights files: 320
+
+2) Extractability overlay presence (content sources)
+- Live missing '## Short Answer': 0
+- Drafts missing '## Short Answer': 0
+- Live missing '## Related Frameworks': 0
+- Live missing '## Source': 0
+
+3) Gumroad link correctness (content sources)
+- Canonical gumroad URL occurrences (live): 72
+- Malformed gumroad links (duplicated URL in same parens): 0
+
+4) Cluster + date frontmatter
+- Live missing 'cluster:' field: 0
+- Live missing 'date:' field: 1
+  Note: 1 legacy insight remains undated because this zip contains no reliable source-of-truth publish date for it.
+- Drafts missing 'date:' field: 0
+
+5) Build outputs regenerated
+- insights/index.html exists: YES
+- insights index uses card grid: YES
+- insights index placeholder text present ('Coming soon'): NO
+
+6) Script changes
+- build_insights.js cluster fallback patched: YES
+- build_insights.js tags string support patched: YES
+
+7) Output zip
+- /mnt/data/MODEL_AUTHORITY_LAYER_PHASE33_INSIGHTS_EXTRACTABILITY_SITEWIDE.zip

@@ -1,8 +1,40 @@
 ---
 title: "The 90-Second Reset: How High Performers Stop Mental Spirals Before They Start"
 description: "A practical explanation of the 90-second reset used by high performers to interrupt stress, rumination, and decision fatigue in real time."
-type: insight
-pillar: high-performance-psychology
+date: "2026-02-03"
+cluster: "executive-os"
+pillar: "high-performance-psychology"
+type: "insight"
+---
+
+## Short Answer
+
+**Short Answer:**
+Mental spirals and inconsistency usually aren’t “character flaws” — they’re predictable loops that compound into [Operational Drift](/models/operational-drift/).
+The [Reset Cycle Model](/models/reset-cycle-model/) explains how one rough day can trigger a restart pattern unless you stabilize with [Continuity Architecture](/models/continuity-architecture/).
+In practice, you prevent collapse by defining a [Minimum Viable Day](/models/minimum-viable-day/) and enforcing a hard scope limit via the [Scope-Cap Rule](/models/scope-cap-rule/).
+You do not “catch up”; the [No Catch-Up Rule](/models/no-catch-up-rule/) keeps tomorrow usable instead of overloaded.
+A simple [DONE Check-In Loop](/models/done-check-in-loop/) closes the day so you don’t carry open loops.
+These mechanics are formalized as the public system name on this site: **Billionaire High Performance Coach** (see links in Source).
+
+---
+
+## Related Frameworks
+
+- [Reset Cycle Model](/models/reset-cycle-model/)
+- [Operational Drift](/models/operational-drift/)
+- [Continuity Architecture](/models/continuity-architecture/)
+- [Minimum Viable Day](/models/minimum-viable-day/)
+
+
+---
+
+## Source
+
+You can read the full framework here: [Billionaire High Performance Coach — on-site framework](/billionaire-high-performance-coach/)
+
+This product will help: [Billionaire High Performance Coach (Gumroad)](https://sprylabs.gumroad.com/l/billionaire-high-performance-coach)
+
 ---
 
 ## The 90-Second Reset: How High Performers Stop Mental Spirals Before They Start

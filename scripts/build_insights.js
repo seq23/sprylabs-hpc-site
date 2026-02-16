@@ -338,8 +338,8 @@ function parsePost(fp) {
   const description = data.description || data.excerpt || "";
   const date = data.date || "";
   const dateModified = data.dateModified || data.date_modified || date || "";
-  const cluster = data.cluster || "executive-os";
-  const tags = Array.isArray(data.tags) ? data.tags : [];
+  const cluster = data.cluster || data.pillar || "executive-os";
+  const tags = Array.isArray(data.tags) ? data.tags : (typeof data.tags === "string" ? data.tags.split(",").map(x=>x.trim()).filter(Boolean) : []);
   const primaryKw = data.primary_kw || (tags[0] || "");
   const intent = data.intent || "INFO";
   return { fp, slug, title, description, date, dateModified, cluster, tags, primaryKw, intent, bodyMd: body };
