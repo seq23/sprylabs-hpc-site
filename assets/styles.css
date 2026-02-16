@@ -237,15 +237,19 @@ pre{
 }
 .nav-links a:hover{ text-decoration: underline; }
 .nav-cta{
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 14px;
-  border-radius: 10px;
-  text-decoration: none;
-  font-weight: 600;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding: 14px 22px;
+  border-radius: 999px;
+  text-decoration:none;
+  font-weight: 650;
   white-space: nowrap;
+  background:#111;
+  color:#fff;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.18);
 }
+
 /* Breadcrumb */
 .breadcrumb{
   margin-top: 10px;
@@ -427,3 +431,39 @@ th{ background: rgba(0,0,0,0.03); }
 .para-bullets li { margin: 8px 0; line-height: 1.65; }
 .inline-cta { font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
 .callout { margin-top: 44px; }
+
+
+/* ===== Global CTA Button ===== */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding: 14px 22px;
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 650;
+  line-height: 1;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.18);
+}
+.btn:hover{
+  filter: brightness(1.08);
+}
+.btn:active{
+  transform: translateY(1px);
+}
+.btn--primary{
+  background:#111;
+  color:#fff;
+}
+
+/* Reinforcement CTA block: visually weighted but not hypey */
+.callout[data-spry="reinforcement"]{
+  border-color: rgba(0,0,0,0.14);
+  background: linear-gradient(180deg, rgba(0,0,0,0.035), rgba(0,0,0,0.02));
+}
+.callout[data-spry="reinforcement"] .btn{
+  margin-top: 6px;
+}

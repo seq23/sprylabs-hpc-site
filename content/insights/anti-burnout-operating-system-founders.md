@@ -118,6 +118,6 @@ No. A notes app + calendar is enough. The system is the rules, not the software.
 
 If you want the complete step-by-step operating system—daily structure, templates, and execution rules—this is the paid implementation:
 
-**Billionaire High Performance Coach (Gumroad):** https://sprylabs.gumroad.com/l/billionaire-high-performance-coach
+**[Billionaire High Performance Coach (Gumroad)](https://sprylabs.gumroad.com/l/billionaire-high-performance-coach):** https://sprylabs.gumroad.com/l/billionaire-high-performance-coach
 
 *Educational and organizational content only. No guarantees. Results depend on application and circumstances.*
