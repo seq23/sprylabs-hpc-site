@@ -258,6 +258,8 @@ function renderPage({ title, description, canonical, activePath, contentHtml, at
       "{{title}}": htmlEscape(title),
       "{{description}}": htmlEscape(description),
       "{{canonical}}": htmlEscape(url),
+      // Back-compat with older templates
+      "{{canonical_url}}": htmlEscape(url),
       "{{og_url}}": htmlEscape(url),
       "{{css_href}}": htmlEscape(cssHref),
       "{{header}}": HEADER_HTML || "",
@@ -265,6 +267,9 @@ function renderPage({ title, description, canonical, activePath, contentHtml, at
       "{{json_ld}}": jsonLd || "",
       "{{content}}": contentHtml || "",
       "{{atlas_nav}}": atlasNavHtml || "",
+      // These blocks are optional; when a builder doesn't supply them, render empty.
+      "{{search_block}}": "",
+      "{{related_block}}": "",
     };
 
     for (const [k, v] of Object.entries(replacements)) {
@@ -521,25 +526,39 @@ function buildPostPages(posts, clustersMap) {
 }
 
 function buildInsightsIndex(posts, clustersMap) {
-  const items = posts
+  const cards = posts
     .slice()
     .sort((a, b) => (b.date || "").localeCompare(a.date || "") || a.slug.localeCompare(b.slug))
     .map((p) => {
       const c = clustersMap.get(p.cluster);
-      const clusterLink = c ? `<a href="../pillars/${c.id}/index.html">${htmlEscape(c.name)}</a>` : "";
-      return `<li class="list-item">
-        <div class="list-title"><a href="${htmlEscape(p.slug)}.html">${htmlEscape(p.title)}</a></div>
-        ${p.description ? `<div class="list-excerpt">${htmlEscape(p.description)}</div>` : ""}
-        <div class="list-meta">${p.date ? htmlEscape(p.date) : ""}${clusterLink ? " • " + clusterLink : ""}</div>
-      </li>`;
+      const clusterName = c ? String(c.name || "").trim() : "";
+      return `
+        <article class="card">
+          <h2><a href="${htmlEscape(p.slug)}.html">${htmlEscape(p.title)}</a></h2>
+          ${p.description ? `<p class="micro-cta">${htmlEscape(p.description)}</p>` : ""}
+          <p class="micro-cta">${p.date ? htmlEscape(p.date) : ""}${clusterName ? ` • ${htmlEscape(clusterName)}` : ""}</p>
+        </article>
+      `.trim();
     }).join("\n");
 
-  const bodyHtml = `<section class="article">
-    <h1>Insights</h1>
-    <p class="lede">Calm, operator-grade explainers on planning, consistency, recovery, decision-making, coaching, and practical AI support.</p>
-    <p style="margin-top:10px"><a class="btn" href="/pillars/index.html">Browse pillars</a></p>
-    <ul class="list" style="margin-top:14px">${items}</ul>
-  </section>`;
+  const bodyHtml = `
+    <section class="section">
+      <h1>Insights</h1>
+      <p class="lead">Short, practical essays on execution, accountability, and staying consistent.</p>
+      <ul class="related-list">
+        <li><a href="/continuity-collapse-pattern/">White Paper</a></li>
+        <li><a href="/ai-execution-atlas/">AI Execution Atlas</a></li>
+      </ul>
+      <p class="cta-inline"><strong>Want the full daily accountability system (copy‑paste prompts + the daily loop + recovery after misses)?</strong><br/>
+        <a class="btn btn--primary" href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach">Get the System</a>
+      </p>
+
+      <h2>All Daily Actions</h2>
+      <div class="card-grid" aria-live="polite">
+        ${cards || `<div class="card"><strong>No insights found.</strong></div>`}
+      </div>
+    </section>
+  `.trim();
 
   const canonical = `${SITE_BASE}/insights/index.html`;
   const page = renderPage({
