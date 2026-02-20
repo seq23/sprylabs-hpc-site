@@ -25,11 +25,11 @@ jobs:
         env:
           INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
         run: |
-          if [ -n "$INDEXNOW_KEY" ]; then
+          if [ -n "${INDEXNOW_KEY:-}" ]; then
             printf "%s" "$INDEXNOW_KEY" > indexnow.txt
-            echo "indexnow.txt written"
+            echo "Wrote indexnow.txt"
           else
-            echo "INDEXNOW_KEY not set; skipping"
+            echo "INDEXNOW_KEY secret not set; skipping indexnow.txt"
           fi
 
       - name: Setup Node
