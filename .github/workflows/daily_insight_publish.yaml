@@ -21,6 +21,11 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Write indexnow.txt (optional)
+        if: ${{ secrets.INDEXNOW_KEY != '' }}
+        run: |
+          echo "${{ secrets.INDEXNOW_KEY }}" > indexnow.txt
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
