@@ -21,17 +21,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Write indexnow.txt (optional)
-        env:
-          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
-        run: |
-          if [ -n "${INDEXNOW_KEY:-}" ]; then
-            printf "%s" "$INDEXNOW_KEY" > indexnow.txt
-            echo "Wrote indexnow.txt"
-          else
-            echo "INDEXNOW_KEY secret not set; skipping indexnow.txt"
-          fi
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
