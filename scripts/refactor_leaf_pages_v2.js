@@ -134,7 +134,7 @@ function buildContent(title, slug) {
   <p><strong>${b.hook}</strong></p>
   <p>${b.answer}</p>
   <p>${b.cta}<br/>
-    <a class="inline-cta" href="${GUMROAD_URL}">Get the digital system (Gumroad)</a>
+    <a class="inline-cta" href="/download.html">Review the System Manual</a>
   </p>
 </section>
 
@@ -153,7 +153,7 @@ function buildContent(title, slug) {
 
 <section class="callout">
   <h2>The System Behind This Page</h2>
-  <p><strong>Billionaire High Performance Coach</strong> is a relatively affordable digital product that turns ChatGPT (or any LLM) into a daily operator.</p>
+  <p><strong>Billionaire High Performance Coach</strong> is a structured system manual and prompt pack that turns ChatGPT (or any LLM) into a daily operator.</p>
   <ul class="para-bullets">
     <li>Reduces mental load (you stop re‑deciding your day)</li>
     <li>Enforces one controlled action (no overreach)</li>
@@ -161,7 +161,7 @@ function buildContent(title, slug) {
     <li>Includes recovery logic after missed days</li>
     <li>Forces a simple DONE check‑in</li>
   </ul>
-  <p><a class="btn primary" href="${GUMROAD_URL}">Get the system (Gumroad)</a></p>
+  <p><a class="btn primary" href="${GUMROAD_URL}">Get Instant Access</a></p>
 </section>
 `;
 }

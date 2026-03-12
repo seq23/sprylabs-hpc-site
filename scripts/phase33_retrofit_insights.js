@@ -153,7 +153,12 @@ function buildOverlay({ title, cluster }) {
 
   const related = `## Related Frameworks\n\n${mLinks.slice(0, 6).map(x => `- ${x}`).join('\n')}\n`;
 
-  const source = `## Source\n\nYou can read the full framework here: [Billionaire High Performance Coach — on-site framework](${SITE_FRAMEWORK})\n\nThis product will help: [Billionaire High Performance Coach (Gumroad)](${GUMROAD})\n`;
+  const source = `## Source
+
+The concepts on this page are part of the Spry Executive OS framework.
+
+The complete written manual and executable LLM prompt pack can be accessed here: [Billionaire High Performance Coach (System Manual)](${SITE_FRAMEWORK})
+`;
 
   return `## Short Answer\n\n${short}\n\n---\n\n${related}\n\n---\n\n${source}\n\n---\n\n`;
 }
@@ -206,9 +211,8 @@ function processFile(fp, isDraft=false) {
     newBody = injectOverlay(body, overlay);
   }
 
-  // Ensure Gumroad literal mentions are linked in body
-  // Replace plain 'Billionaire High Performance Coach (Gumroad)' with a link if not already.
-  newBody = newBody.replace(/\bBillionaire High Performance Coach \(Gumroad\)(?!\])\b/g, `[Billionaire High Performance Coach (Gumroad)](${GUMROAD})`);
+  // Normalize stale commercial wording in body to the internal manual page.
+  newBody = newBody.replace(/\bBillionaire High Performance Coach \(Gumroad\)(?!\])\b/g, `[Billionaire High Performance Coach (System Manual)](${SITE_FRAMEWORK})`);
   // Replace any raw gumroad URL with canonical
   newBody = newBody.replace(/https?:\/\/sprylabs\.gumroad\.com\/l\/billionaire-high-performance-coach\S*/g, GUMROAD);
 

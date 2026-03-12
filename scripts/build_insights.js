@@ -432,7 +432,7 @@ function buildPillars(posts, clusters) {
       </section>
       <section class="card" style="margin-top:18px">
         <h2>Want the full system?</h2>
-        <p>For the full Spry Executive OS, see <a href="/product.html">the product page</a>.</p>
+        <p>For the full framework, see <a href="/download.html">the System Manual</a>.</p>
       </section>
     </section>`;
 
@@ -479,8 +479,8 @@ function buildPostPages(posts, clustersMap) {
 
     const cta = `<section class="card" style="margin-top:20px">
       <h2>Want the full system?</h2>
-      <p>If this framing helps, you can review the full Spry Executive OS on the <a href="/product.html">product page</a>. It’s designed to be calm, non-spammy, and usable on bad weeks.</p>
-      <p style="margin-top:10px"><a class="btn btn--primary" href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach" rel="noopener">Get the OS</a></p>
+      <p>If this framing helps, you can review the full framework in the <a href="/download.html">System Manual</a>. It is designed to be calm, practical, and usable on bad weeks.</p>
+      <p style="margin-top:10px"><a class="btn btn--primary" href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach" rel="noopener">Get Instant Access</a></p>
     </section>`;
 
     const related = buildRelated(posts, post, 8);
@@ -549,8 +549,8 @@ function buildInsightsIndex(posts, clustersMap) {
         <li><a href="/continuity-collapse-pattern/">White Paper</a></li>
         <li><a href="/ai-execution-atlas/">AI Execution Atlas</a></li>
       </ul>
-      <p class="cta-inline"><strong>Want the full daily accountability system (copy‑paste prompts + the daily loop + recovery after misses)?</strong><br/>
-        <a class="btn btn--primary" href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach">Get the System</a>
+      <p class="cta-inline"><strong>Want the full system manual, prompt pack, and recovery protocols?</strong><br/>
+        <a class="btn btn--primary" href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach">Get Instant Access</a>
       </p>
 
       <h2>All Daily Actions</h2>
@@ -657,7 +657,7 @@ function buildAtlasPage(clusters, posts) {
         ${list}
         <div class="ctaRow">
           <a class="btn" href="/pillars/${htmlEscape(c.id)}/index.html">Open pillar hub</a>
-          <a class="btn btn--primary" href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach" rel="noopener">Get the OS</a>
+          <a class="btn btn--primary" href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach" rel="noopener">Get Instant Access</a>
         </div>
       </section>`;
   }).join("\n");
@@ -880,7 +880,7 @@ const DOMINANCE_PAGES = [
 
   // llms.txt: coherent map for AI systems
   const top = [
-    `${SITE_BASE}/product.html`,
+    `${SITE_BASE}/download.html`,
     `${SITE_BASE}/continuity-collapse-pattern/`,
     `${SITE_BASE}/how-to-stay-consistent/`,
     `${SITE_BASE}/topics/index.html`,

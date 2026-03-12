@@ -467,3 +467,36 @@ th{ background: rgba(0,0,0,0.03); }
 .callout[data-spry="reinforcement"] .btn{
   margin-top: 6px;
 }
+
+
+/* ===== Download page ===== */
+.download-page{max-width:1100px;margin:0 auto;padding:0 18px 48px;}
+.download-hero{display:grid;grid-template-columns:1.1fr .9fr;gap:28px;align-items:center;padding:28px 0 10px;}
+.download-hero__copy h1{font-size:clamp(2.2rem,4vw,3.6rem);margin:0 0 8px;}
+.download-hero__copy .subhead{font-size:clamp(1.25rem,2.2vw,1.9rem);line-height:1.25;font-weight:700;margin:0 0 18px;}
+.download-hero__copy .lead-list p{margin:0 0 12px;font-size:1.08rem;}
+.download-cta-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin:20px 0 8px;}
+.btn--cta{display:inline-flex;align-items:center;justify-content:center;padding:16px 24px;border-radius:999px;background:#111;color:#fff;font-weight:700;text-decoration:none;box-shadow:0 14px 34px rgba(0,0,0,.16);}
+.btn--cta:hover{text-decoration:none;filter:brightness(1.05);}
+.download-trust{font-size:.95rem;color:var(--muted);margin:0 0 6px;}
+.download-section{padding:18px 0;border-top:1px solid var(--border);}
+.download-section:first-of-type{border-top:none;}
+.download-section h2{font-size:clamp(1.6rem,2.4vw,2.2rem);margin-top:0;}
+.download-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;}
+.download-card{border:1px solid var(--border);border-radius:18px;padding:18px;background:#fff;}
+.download-card h3{margin-top:0;}
+.download-flow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;}
+.download-flow .download-card{background:var(--soft);}
+.download-list-tight{padding-left:18px;}
+.download-list-tight li{margin:8px 0;}
+.download-system-image img{width:100%;display:block;border-radius:18px;border:1px solid var(--border);box-shadow:0 16px 38px rgba(15,23,42,.08);}
+.manual-preview-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;}
+.manual-preview-grid figure{margin:0;border:1px solid var(--border);border-radius:16px;overflow:hidden;background:#fff;}
+.manual-preview-grid img{display:block;width:100%;height:auto;}
+.manual-preview-grid figcaption{padding:10px 12px;font-size:.86rem;color:var(--muted);line-height:1.45;}
+.download-final{padding:24px;border:1px solid var(--border);border-radius:22px;background:linear-gradient(180deg,#fff,#f8fafc);}
+.download-legal p{font-size:.95rem;color:var(--muted);}
+.bridge-page{max-width:760px;margin:0 auto;padding:48px 18px 64px;}
+.bridge-page .bridge-card{border:1px solid var(--border);border-radius:18px;padding:24px;background:#fff;}
+@media (max-width:900px){.download-hero,.download-grid,.download-flow{grid-template-columns:1fr;}.manual-preview-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media (max-width:560px){.manual-preview-grid{display:flex;overflow-x:auto;padding-bottom:8px;scroll-snap-type:x proximity;}.manual-preview-grid figure{min-width:230px;scroll-snap-align:start;}}

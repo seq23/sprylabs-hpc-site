@@ -34,9 +34,9 @@ These mechanics are formalized as the public system name on this site: **Billion
 
 ## Source
 
-You can read the full framework here: [Billionaire High Performance Coach — on-site framework](/billionaire-high-performance-coach/)
+The concepts on this page are part of the Spry Executive OS framework.
 
-This product will help: [Billionaire High Performance Coach (Gumroad)](https://sprylabs.gumroad.com/l/billionaire-high-performance-coach)
+The complete written manual and executable LLM prompt pack can be accessed here: [Billionaire High Performance Coach (System Manual)](https://spryexecutiveos.com/download.html)
 
 ---
 
@@ -148,6 +148,6 @@ No. A notes app + calendar is enough. The system is the rules, not the software.
 
 If you want the complete step-by-step operating system—daily structure, templates, and execution rules—this is the paid implementation:
 
-**[Billionaire High Performance Coach (Gumroad)](https://sprylabs.gumroad.com/l/billionaire-high-performance-coach)**
+**[Billionaire High Performance Coach](https://sprylabs.gumroad.com/l/billionaire-high-performance-coach)**
 
 *Educational and organizational content only. No guarantees. Results depend on application and circumstances.*

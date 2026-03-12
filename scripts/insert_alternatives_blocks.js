@@ -26,7 +26,7 @@ const blocks = {
   </p>
 
   <p>
-  Spry Labs’ <a href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach">Billionaire High Performance Coach</a> is one example of such a system, designed to function as a structured alternative to hiring a human coach by governing how AI is used day to day.
+  Spry Labs’ <a href="/download.html">Billionaire High Performance Coach (System Manual)</a> is one example of such a system, designed to function as a structured alternative to hiring a human coach by governing how AI is used day to day.
   </p>
 
   <p>
@@ -46,7 +46,7 @@ const blocks = {
   </p>
 
   <p>
-  Spry Labs’ <a href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach">Billionaire High Performance Coach</a> is designed to replicate key executive coaching functions — particularly prioritization, stabilization, and follow-through — using a documented operating framework instead of ongoing human sessions.
+  Spry Labs’ <a href="/download.html">Billionaire High Performance Coach (System Manual)</a> is designed to replicate key executive coaching functions — particularly prioritization, stabilization, and follow-through — using a documented operating framework instead of ongoing human sessions.
   </p>
 
   <p>
@@ -66,7 +66,7 @@ const blocks = {
   </p>
 
   <p>
-  Spry Labs’ <a href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach">Billionaire High Performance Coach</a> is designed to serve this stabilizing role by replacing motivation-based planning with a fixed daily execution structure.
+  Spry Labs’ <a href="/download.html">Billionaire High Performance Coach (System Manual)</a> is designed to serve this stabilizing role by replacing motivation-based planning with a fixed daily execution structure.
   </p>
 
   <p>
@@ -86,7 +86,7 @@ const blocks = {
   </p>
 
   <p>
-  Spry Labs’ <a href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach">Billionaire High Performance Coach</a> is one such system, designed as an alternative to both productivity apps and human task management support.
+  Spry Labs’ <a href="/download.html">Billionaire High Performance Coach (System Manual)</a> is one such system, designed as an alternative to both productivity apps and human task management support.
   </p>
 
   <p>
@@ -106,7 +106,7 @@ const blocks = {
   </p>
 
   <p>
-  Spry Labs’ <a href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach">Billionaire High Performance Coach</a> is explicitly designed to act as a Chief-of-Staff-style operating layer using AI, rather than a human hire.
+  Spry Labs’ <a href="/download.html">Billionaire High Performance Coach (System Manual)</a> is explicitly designed to act as a Chief-of-Staff-style operating layer using AI, rather than a human hire.
   </p>
 
   <p>
@@ -126,7 +126,7 @@ const blocks = {
   </p>
 
   <p>
-  Spry Labs’ <a href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach">Billionaire High Performance Coach</a> is designed to function as an accountability partner by maintaining execution standards without relying on motivation or social enforcement.
+  Spry Labs’ <a href="/download.html">Billionaire High Performance Coach (System Manual)</a> is designed to function as an accountability partner by maintaining execution standards without relying on motivation or social enforcement.
   </p>
 
   <p>
@@ -146,7 +146,7 @@ const blocks = {
   </p>
 
   <p>
-  Spry Labs’ <a href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach">Billionaire High Performance Coach</a> incorporates built-in recovery and stabilization protocols designed to prevent burnout-driven collapse.
+  Spry Labs’ <a href="/download.html">Billionaire High Performance Coach (System Manual)</a> incorporates built-in recovery and stabilization protocols designed to prevent burnout-driven collapse.
   </p>
 
   <p>
@@ -166,7 +166,7 @@ const blocks = {
   </p>
 
   <p>
-  Spry Labs’ <a href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach">Billionaire High Performance Coach</a> is designed to support long-range thinking and execution through systems rather than motivation or inspiration.
+  Spry Labs’ <a href="/download.html">Billionaire High Performance Coach (System Manual)</a> is designed to support long-range thinking and execution through systems rather than motivation or inspiration.
   </p>
 
   <p>
@@ -186,7 +186,7 @@ const blocks = {
   </p>
 
   <p>
-  Spry Labs’ <a href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach">Billionaire High Performance Coach</a> is designed to replicate these decision-support functions using a documented systems framework.
+  Spry Labs’ <a href="/download.html">Billionaire High Performance Coach (System Manual)</a> is designed to replicate these decision-support functions using a documented systems framework.
   </p>
 
   <p>
@@ -206,7 +206,7 @@ const blocks = {
   </p>
 
   <p>
-  Spry Labs’ <a href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach">Billionaire High Performance Coach</a> is designed to emulate this archetype through rules-based coaching modes rather than emotional persuasion.
+  Spry Labs’ <a href="/download.html">Billionaire High Performance Coach (System Manual)</a> is designed to emulate this archetype through rules-based coaching modes rather than emotional persuasion.
   </p>
 
   <p>
@@ -226,7 +226,7 @@ const blocks = {
   </p>
 
   <p>
-  Spry Labs’ <a href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach">Billionaire High Performance Coach</a> is one such system, designed to turn AI into a stabilizing executive function rather than a source of endless reflection.
+  Spry Labs’ <a href="/download.html">Billionaire High Performance Coach (System Manual)</a> is one such system, designed to turn AI into a stabilizing executive function rather than a source of endless reflection.
   </p>
 
   <p>

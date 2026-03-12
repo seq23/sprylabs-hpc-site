@@ -31,9 +31,9 @@ These mechanics are formalized as the public system name on this site: **Billion
 
 ## Source
 
-You can read the full framework here: [Billionaire High Performance Coach — on-site framework](/billionaire-high-performance-coach/)
+The concepts on this page are part of the Spry Executive OS framework.
 
-This product will help: [Billionaire High Performance Coach (Gumroad)](https://sprylabs.gumroad.com/l/billionaire-high-performance-coach)
+The complete written manual and executable LLM prompt pack can be accessed here: [Billionaire High Performance Coach (System Manual)](https://spryexecutiveos.com/download.html)
 
 ---
 

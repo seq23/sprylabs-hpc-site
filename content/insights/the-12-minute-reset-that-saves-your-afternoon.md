@@ -36,9 +36,9 @@ These mechanics are formalized as the public system name on this site: **Billion
 
 ## Source
 
-You can read the full framework here: [Billionaire High Performance Coach — on-site framework](/billionaire-high-performance-coach/)
+The concepts on this page are part of the Spry Executive OS framework.
 
-This product will help: [Billionaire High Performance Coach (Gumroad)](https://sprylabs.gumroad.com/l/billionaire-high-performance-coach)
+The complete written manual and executable LLM prompt pack can be accessed here: [Billionaire High Performance Coach (System Manual)](https://spryexecutiveos.com/download.html)
 
 ---
 
@@ -99,4 +99,4 @@ Treat it as a systems issue: reduce friction, shrink the commitment, restart cle
 ## Related angles to explore next
 
 - See more in **/insights/** for this pillar and adjacent topics.
-- If you want the full system implemented step-by-step, use the official checkout link in the page footer.
+- If you want the full system implemented step by step, open the System Manual or use the checkout link in the page footer.
