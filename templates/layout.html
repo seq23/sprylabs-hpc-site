@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>{{title}}</title>
+<meta content="{{description}}" name="description"/>
+<link href="/templates/layout.html" rel="canonical"/>
+<meta content="/templates/layout.html" property="og:url"/>
+<meta content="{{title}}" property="og:title"/>
+<meta content="{{description}}" property="og:description"/>
+<!-- Your repo uses assets/styles.css -->
+<link href="/assets/styles.css" rel="stylesheet"/>
+<script src="/assets/domain-context.js" defer></script>
+</head>
+<body>
+<!-- ===== GLOBAL CTA BAR ===== -->
+<div class="cta-bar">
+<div class="container cta-bar__inner">
+<p class="cta-bar__text">
+<strong>Billionaire High-Performance Coach</strong> — the system behind this site.
+      </p>
+<div class="cta-bar__actions">
+<a class="btn btn--primary" href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach">Get Instant Access</a></div>
+</div>
+</div>
+<!-- ===== GLOBAL HEADER ===== -->
+<header class="site-header">
+<div class="nav-shell">
+<a class="brand" href="/">Spry Labs</a>
+<nav aria-label="Primary" class="nav-links">
+<a href="/ai-execution-atlas/">AI Execution Atlas</a>
+<a href="/continuity-collapse-pattern/">White Paper</a>
+<a href="/alternatives-to-hiring.html">Comparisons</a>
+<a href="/faq.html">FAQ</a>
+</nav>
+<a class="nav-cta" href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach">Get Instant Access</a>
+</div>
+</header>
+<!-- ===== OPTIONAL ATLAS SUB NAV ===== -->
+<div class="container">
+    {{atlas_nav}}
+  </div>
+<!-- ===== MAIN CONTENT ===== -->
+<main class="container main">
+    {{content}}
+
+  <section aria-label="Continuity Collapse Pattern white paper" class="callout">
+<div class="callout__title">Read the white paper</div>
+<div class="callout__body">
+      If this theme resonates, read the full framework:
+      <a href="/continuity-collapse-pattern/">Continuity Collapse Pattern (White Paper)</a>.
+    </div>
+</section>
+
+    {{search_block}}
+    {{related_block}}
+
+</main>
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+<div class="footer__row">
+<p class="footer__checkout">
+<a href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach" rel="noopener">Get Instant Access</a>
+</p>
+<p class="footer__links">
+<a href="/how-to-stay-consistent/">How to Stay Consistent (Atlas)</a> · <a href="/continuity-collapse-pattern/">Continuity Collapse Pattern (White Paper)</a>
+<a href="/ai-execution-atlas/">AI Execution Atlas</a> ·
+</p>
+<p class="footer__disclaimer">
+        © Spry Labs · Educational content only · No guarantees of results.
+      </p>
+</div>
+</footer>
+{{json_ld}}
+</body>
+</html>

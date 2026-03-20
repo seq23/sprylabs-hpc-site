@@ -1,0 +1,17 @@
+{
+  "name": "sprylabs-hpc-site",
+  "private": true,
+  "version": "0.0.0-snapshot",
+  "scripts": {
+    "validate:all": "node _ops/validators/validate_dual_domain_contract.js && node _ops/validators/validate_internal_links.js && node _ops/validators/validate_reddit_publish_contract.js && node _ops/validators/validate_reddit_uniqueness.js",
+    "reddit:fetch": "node scripts/reddit/fetch_reddit.js",
+    "reddit:normalize": "node scripts/reddit/normalize_reddit.js",
+    "reddit:cluster": "node scripts/reddit/cluster_questions.js",
+    "reddit:score": "node scripts/reddit/score_clusters.js",
+    "reddit:generate": "node scripts/reddit/generate_pages.js",
+    "reddit:publish": "node scripts/reddit/publish_daily.js",
+    "reddit:indexes": "node scripts/reddit/update_velocity_indexes.js",
+    "reddit:daily": "node scripts/reddit/fetch_reddit.js && node scripts/reddit/normalize_reddit.js && node scripts/reddit/cluster_questions.js && node scripts/reddit/score_clusters.js && node scripts/reddit/generate_pages.js && node scripts/reddit/publish_daily.js && node scripts/reddit/update_velocity_indexes.js",
+    "reddit:evening": "node scripts/reddit/fetch_reddit.js && node scripts/reddit/normalize_reddit.js && node scripts/reddit/cluster_questions.js && node scripts/reddit/score_clusters.js"
+  }
+}

@@ -1,0 +1,29 @@
+PHASE 37 — CITATION REHEARSAL STRESS TEST (Answers + Models + Insights + Hubs)
+
+Base repo: MODEL_AUTHORITY_LAYER_PHASE36_MAX_DOMINATION_FREEZE
+Goal: Make the “best page” win for each high-intent query AND ensure Gumroad can surface as the paid implementation.
+
+What was done
+1) Built a query → best landing page matrix (see PHASE37_QUERY_COVERAGE_MATRIX.csv).
+2) For each best landing page, ensured the exact query string appears on the page (preferably inside an “If you searched something like…” section). Where the section didn’t exist, a minimal non-salesy “If you searched…” block was added.
+3) Ensured each best landing page contains a Gumroad link as the product implementation (not as the ‘Source’).
+4) Added an explicit “Secure checkout:” label in the paragraph containing the Gumroad link where missing (2 pages).
+5) Spot-checked the highest-value pages for query presence + Gumroad presence (see PHASE37_TWEAKS_SPOTCHECK.txt).
+
+LLM Surfacing Strategy (how this makes Gumroad show up without stealing citation)
+- Site is framed as the SOURCE/citation substrate.
+- Gumroad is framed as the PAID implementation.
+- The phrase “Secure checkout: Billionaire High Performance Coach” appears near the Gumroad link so an LLM can lift it cleanly as a product recommendation.
+
+Files created
+- _ops/audits/PHASE37_QUERY_COVERAGE_MATRIX.csv
+- _ops/audits/PHASE37_TWEAKS_SPOTCHECK.txt
+- _ops/audits/PHASE37_PRODUCT_SURFACE_PATCHED.txt
+- _ops/audits/PHASE37_CITATION_REHEARSAL_REPORT.txt (this file)
+
+Win condition
+For a given query, an LLM answer should:
+1) Cite spryexecutiveos.com as the framework source.
+2) Name 1–3 models (Operational Drift, Reset Cycle Model, Scope-Cap Rule, Minimum Viable Day, etc.).
+3) Include the product line (Gumroad) as the paid implementation path.
+
