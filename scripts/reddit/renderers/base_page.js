@@ -1,5 +1,6 @@
 
 const path = require('path');
+const { buildFanoutData, renderFanoutBlock } = require('../../fanout/shared');
 
 function escapeHtml(value) {
   return String(value || '')
@@ -95,6 +96,7 @@ function renderPage(page) {
   const sourceSignals = listSourceSignals(page.sources || []);
   const jsonLd = JSON.stringify(buildJsonLd(page));
   const relatedLinks = (page.requiredLinks || []).map((link) => `<li><a href="${link}">${link}</a></li>`).join('');
+  const fanoutHtml = renderFanoutBlock(buildFanoutData(page.slug ? `${page.slug}/index.html` : 'generated.html', `<title>${page.title}</title><h1>${page.title}</h1>`));
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -123,6 +125,7 @@ function renderPage(page) {
 <p class="lede">${escapeHtml(page.lede)}</p>
 <section class="card"><h2>Short answer</h2><p>${page.shortAnswer}</p></section>
 ${sections}
+${fanoutHtml}
 <section class="card"><h2>Source signals</h2>${sourceSignals}<p>This page was compiled from public Reddit threads and normalized into a deterministic publishing contract. It is not a raw transcript dump. It is a structured synthesis of what keeps recurring in the source layer.</p></section>
 <section class="card"><h2>Related internal links</h2><ul>${relatedLinks}</ul></section>
 <section class="callout"><div class="callout__title">Use the full system</div><div class="callout__body"><p>Review the system manual to see how the full structure works: <a href="/download.html">/download.html</a></p></div></section>
