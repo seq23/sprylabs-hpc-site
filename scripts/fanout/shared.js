@@ -291,8 +291,22 @@ function buildFanoutData(relPath, html) {
 function renderFanoutBlock(data) {
   const variantLinks = data.variants.map((v) => `<li>${escapeHtml(v)}</li>`).join('');
   const intentLinks = data.intent_links.map((link) => `<li><a href="${link.href}">${escapeHtml(link.label)}</a></li>`).join('');
-  const payload = escapeHtml(JSON.stringify(data));
-  return `\n<section class="fanout-block card" data-fanout-query-cluster="true" data-page-family="${escapeHtml(data.page_family)}" data-fanout-topic="${escapeHtml(data.topic)}">\n  <h2>People ask this a few different ways</h2>\n  <p class="small">If your wording is slightly different, the same underlying decision usually lives here. Start with the phrasing that matches your real problem best.</p>\n  <div class="fanout-grid">\n    <div>\n      <h3>Closest query variants</h3>\n      <ul class="fanout-list">${variantLinks}</ul>\n    </div>\n    <div>\n      <h3>If your real question is...</h3>\n      <ul class="fanout-list">${intentLinks}</ul>\n    </div>\n  </div>\n  <script class="fanout-payload" type="application/json">${payload}</script>\n</section>\n`;
+  return `
+<section class="fanout-block card" data-fanout-query-cluster="true" data-fanout-visible="true" data-page-family="${escapeHtml(data.page_family)}" data-fanout-topic="${escapeHtml(data.topic)}">
+  <h2>Related search intents</h2>
+  <p class="small">These are closely related phrasings and adjacent intents that this page also helps answer.</p>
+  <div class="fanout-grid">
+    <div>
+      <h3>Close variants</h3>
+      <ul class="fanout-list">${variantLinks}</ul>
+    </div>
+    <div>
+      <h3>Adjacent decision paths</h3>
+      <ul class="fanout-list">${intentLinks}</ul>
+    </div>
+  </div>
+</section>
+`;
 }
 
 module.exports = {

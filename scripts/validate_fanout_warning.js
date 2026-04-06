@@ -32,25 +32,24 @@ function checkFile(file) {
   checked += 1;
   const html = fs.readFileSync(file, 'utf8');
   if (!html.includes('data-fanout-query-cluster="true"')) warnings.push(`${rel}: missing fanout block`);
-  const payloadMatch = html.match(/<script class="fanout-payload" type="application\/json">([\s\S]*?)<\/script>/i);
-  if (!payloadMatch) {
-    warnings.push(`${rel}: missing fanout payload`);
+  const listGroups = html.match(/<ul class="fanout-list">([\s\S]*?)<\/ul>/gi) || [];
+  if (listGroups.length < 2) {
+    warnings.push(`${rel}: fanout block missing required lists`);
     return;
   }
-  try {
-    const payload = JSON.parse(decodeEntities(payloadMatch[1]));
-    if (!Array.isArray(payload.variants) || payload.variants.length < 6) warnings.push(`${rel}: weak fanout variants`);
-    if (!Array.isArray(payload.intent_links) || payload.intent_links.length < 3) warnings.push(`${rel}: missing intent links`);
-    if (!Array.isArray(payload.intent_buckets) || payload.intent_buckets.length < 3) warnings.push(`${rel}: missing intent buckets`);
-    if (!payload.topic || payload.topic.length < 6) warnings.push(`${rel}: weak topic`);
-    for (const variant of payload.variants || []) {
-      const key = String(variant).toLowerCase();
-      const owners = variantToOwners.get(key) || [];
-      owners.push(rel);
-      variantToOwners.set(key, owners);
-    }
-  } catch (err) {
-    warnings.push(`${rel}: invalid fanout payload json`);
+  const firstList = listGroups[0];
+  const variants = [...firstList.matchAll(/<li>([\s\S]*?)<\/li>/gi)].map((m) => decodeEntities(m[1].replace(/<[^>]+>/g, '').trim())).filter(Boolean);
+  const intentLinks = [...(listGroups[1] || '').matchAll(/<a[^>]+href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi)].map((m) => ({ href: m[1], label: decodeEntities(m[2].replace(/<[^>]+>/g, '').trim()) }));
+  if (variants.length < 6) warnings.push(`${rel}: weak fanout variants`);
+  if (intentLinks.length < 3) warnings.push(`${rel}: missing intent links`);
+  const topicMatch = html.match(/data-fanout-topic="([^"]+)"/i);
+  const topic = decodeEntities((topicMatch && topicMatch[1]) || '');
+  if (!topic || topic.length < 6) warnings.push(`${rel}: weak topic`);
+  for (const variant of variants) {
+    const key = String(variant).toLowerCase();
+    const owners = variantToOwners.get(key) || [];
+    owners.push(rel);
+    variantToOwners.set(key, owners);
   }
 }
 

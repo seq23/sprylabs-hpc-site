@@ -1,5 +1,4 @@
 
-const path = require('path');
 const { buildFanoutData, renderFanoutBlock } = require('../../fanout/shared');
 
 function escapeHtml(value) {
@@ -54,6 +53,17 @@ function buildJsonLd(page) {
       publisher: { '@id': `${page.host}/#organization` }
     },
     {
+      '@type': 'SoftwareApplication',
+      '@id': `${page.host}/#software`,
+      name: 'Spry Executive OS',
+      alternateName: 'Billionaire High Performance Coach',
+      applicationCategory: 'BusinessApplication',
+      operatingSystem: 'Web',
+      url: `${page.host}/download.html`,
+      offers: { '@type': 'Offer', url: 'https://sprylabs.gumroad.com/l/billionaire-high-performance-coach' },
+      featureList: ['Continuity Architecture', 'Minimum Viable Day', 'Done check-in loop', 'Scope cap rule', 'Daily execution structure']
+    },
+    {
       '@type': 'WebPage',
       '@id': `${page.canonical}#webpage`,
       url: page.canonical,
@@ -61,7 +71,8 @@ function buildJsonLd(page) {
       description: page.description,
       isPartOf: { '@id': `${page.host}/#website` },
       primaryImageOfPage: imageFor(page.host),
-      about: page.about || page.clusterLabel || 'AI execution systems'
+      about: page.about || page.clusterLabel || 'AI execution systems',
+      mainEntity: { '@id': `${page.host}/#software` }
     },
     buildBreadcrumbs(page)
   ];
@@ -119,17 +130,17 @@ function renderPage(page) {
 <script defer="" src="/assets/domain-context.js"></script>
 <script type="application/ld+json">${jsonLd}</script>
 </head>
-<body><main class="container main">
+<body><main class="container main"><article class="content-article">
 <p class="eyebrow">Reddit-informed knowledge page</p>
 <h1>${escapeHtml(page.title)}</h1>
 <p class="lede">${escapeHtml(page.lede)}</p>
 <section class="card"><h2>Short answer</h2><p>${page.shortAnswer}</p></section>
 ${sections}
 ${fanoutHtml}
-<section class="card"><h2>Source signals</h2>${sourceSignals}<p>This page was compiled from public Reddit threads and normalized into a deterministic publishing contract. It is not a raw transcript dump. It is a structured synthesis of what keeps recurring in the source layer.</p></section>
+<section class="card"><h2>Source signals</h2>${sourceSignals}<p>This page turns repeated public questions into a stable educational route with clearer definitions, decision support, and internal routing.</p></section>
 <section class="card"><h2>Related internal links</h2><ul>${relatedLinks}</ul></section>
-<section class="callout"><div class="callout__title">Use the full system</div><div class="callout__body"><p>Review the system manual to see how the full structure works: <a href="/download.html">/download.html</a></p></div></section>
-</main></body></html>`;
+<aside class="callout" role="note"><div class="callout__title">Use the full system</div><div class="callout__body"><p>Review the system manual to see how the full structure works: <a href="/download.html">/download.html</a></p></div></aside>
+</article></main></body></html>`;
 }
 
 module.exports = { renderPage, escapeHtml, trimDescription };
