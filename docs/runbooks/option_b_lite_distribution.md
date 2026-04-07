@@ -25,3 +25,8 @@ It does **not** add `sitemap-fresh.xml`.
 ## What stays manual
 
 In Google Search Console, manually request indexing for 5-10 highest-priority URLs only.
+
+
+## IndexNow batching
+
+The repo splits IndexNow submissions by hostname and submits them in chunks using `indexnow.chunk_size` from `distribution.config.json`. This prevents mixed-host payloads and reduces 403 failures on large submissions.

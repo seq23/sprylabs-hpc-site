@@ -23,5 +23,25 @@ def read_urls(path: str | Path) -> list[str]:
     return [line.strip() for line in p.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
+def normalize_host(host: str) -> str:
+    return host.strip().lower()
+
+
 def filter_urls_for_host(urls: list[str], host: str) -> list[str]:
-    return [url for url in urls if urlparse(url).netloc.lower() == host.lower()]
+    wanted = normalize_host(host)
+    return [url for url in urls if normalize_host(urlparse(url).netloc) == wanted]
+
+
+def split_urls_by_host(urls: list[str], hosts: list[str]) -> dict[str, list[str]]:
+    wanted = {normalize_host(h): [] for h in hosts}
+    for url in urls:
+        host = normalize_host(urlparse(url).netloc)
+        if host in wanted:
+            wanted[host].append(url)
+    return wanted
+
+
+def chunked(items: list[str], size: int) -> list[list[str]]:
+    if size <= 0:
+        raise ValueError("chunk size must be positive")
+    return [items[i:i+size] for i in range(0, len(items), size)]

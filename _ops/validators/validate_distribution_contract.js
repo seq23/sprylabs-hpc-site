@@ -25,6 +25,8 @@ const config = JSON.parse(fs.readFileSync(path.join(root, 'distribution.config.j
 for (const host of ['spryexecutiveos.com', 'billionairehighperformancecoach.com']) {
   if (!config.indexnow.hosts.includes(host)) fail(`missing host ${host}`);
 }
+const chunkSize = Number(config.indexnow.chunk_size || 0);
+if (!Number.isInteger(chunkSize) || chunkSize <= 0) fail('indexnow.chunk_size must be a positive integer');
 for (const site of config.gsc.sites) {
   if (!site.host || !site.site_url || !Array.isArray(site.sitemaps) || !site.sitemaps.length) fail('invalid gsc.sites entry');
 }
@@ -46,4 +48,4 @@ if (key && keyFile) {
   const content = fs.readFileSync(keyPath, 'utf8').trim();
   if (content !== key) fail(`configured key file mismatch: ${keyFile}`);
 }
-console.log(`DISTRIBUTION CONTRACT PASS: priority=${priority.length} batch=${batch.length}`);
+console.log(`DISTRIBUTION CONTRACT PASS: priority=${priority.length} batch=${batch.length} chunk_size=${chunkSize}`);
