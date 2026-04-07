@@ -1,8 +1,10 @@
-Option B-lite distribution artifacts for sprylabs-hpc-site-main.
+Option B Lite distribution artifacts
 
-Generated child sitemaps: sitemap-spry.xml, sitemap-bhpc.xml
-Priority URL count: 32
-Batch URL count: 355
+Priority URLs: 32
+Batch URLs: 355
 
-Run distribution_scripts/deploy_distribution.sh after deploy.
-Manual Google Request Indexing remains limited to a small priority set.
+Files:
+- .build/indexnow-priority.txt
+- .build/indexnow-batch.txt
+- .build/distribution-priority-urls.txt
+- .build/distribution-manifest.json

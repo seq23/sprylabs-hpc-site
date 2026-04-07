@@ -1,39 +1,27 @@
-# Option B-lite distribution runbook
+# Option B Lite distribution
 
-## Purpose
-
-This repo uses a lighter distribution layer around the existing dual-domain sitemap setup. It does not add `sitemap-fresh.xml`.
-
-## Existing sitemap architecture
+This repo keeps the existing sitemap architecture:
 
 - `sitemap.xml`
 - `sitemap-spry.xml`
 - `sitemap-bhpc.xml`
 
-## Prepare artifacts
+It does **not** add `sitemap-fresh.xml`.
 
-```bash
-npm run distribution:prepare
-```
+## Day-0 setup
 
-This writes:
+1. Run `bash distribution_scripts/bootstrap_distribution.sh`
+2. Commit and deploy the generated root key file.
+3. Edit `distribution.config.json` and add your Search Console service-account JSON path.
+4. Run `npm run distribution:prepare`
+5. Run `bash distribution_scripts/deploy_distribution.sh`
 
-- `.build/indexnow-priority.txt`
-- `.build/indexnow-batch.txt`
-- `.build/distribution-priority-urls.txt`
-- `.build/distribution-readme.txt`
-- `.build/distribution-manifest.json`
+## What runs automatically
 
-## Distribution command
+- GSC sitemap submission for both domain properties
+- IndexNow submission for both hosts
+- URL inspection status checks for the priority set
 
-```bash
-./distribution_scripts/deploy_distribution.sh \
-  spryexecutiveos.com \
-  YOUR_INDEXNOW_KEY \
-  service-account.json \
-  "sc-domain:spryexecutiveos.com"
-```
+## What stays manual
 
-## What remains manual
-
-Google Request Indexing remains manual and should be limited to a small priority set.
+In Google Search Console, manually request indexing for 5-10 highest-priority URLs only.

@@ -1,48 +1,25 @@
 #!/usr/bin/env bash
 set -euo pipefail
+ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$ROOT_DIR"
 
-PRIMARY_HOST="${1:?Missing primary host, e.g. spryexecutiveos.com}"
-INDEXNOW_KEY="${2:?Missing IndexNow key}"
-GSC_CREDS="${3:?Missing service account json path}"
-GSC_SITE_URL="${4:?Missing GSC siteUrl, e.g. sc-domain:spryexecutiveos.com}"
-SPRY_CANONICAL_HOST="${5:-spryexecutiveos.com}"
-BHPC_CANONICAL_HOST="${6:-billionairehighperformancecoach.com}"
+npm run distribution:prepare
 
-echo "== 1) Prepare distribution artifacts =="
-node scripts/prepare_distribution_artifacts.js
+python3 - <<'PY'
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path('distribution_scripts').resolve()))
+from distribution_common import load_config
+config = load_config()
+if not config['indexnow'].get('key', '').strip():
+    raise SystemExit('ERROR: IndexNow key missing. Run: bash distribution_scripts/bootstrap_distribution.sh')
+print('CONFIG_OK')
+PY
 
-echo
-echo "== 2) Submit Google sitemaps =="
-python3 distribution_scripts/gsc_submit_sitemaps.py \
-  "$GSC_CREDS" \
-  "$GSC_SITE_URL" \
-  "https://${SPRY_CANONICAL_HOST}/sitemap.xml" \
-  "https://${SPRY_CANONICAL_HOST}/sitemap-spry.xml" \
-  "https://${BHPC_CANONICAL_HOST}/sitemap-bhpc.xml"
-
-echo
-echo "== 3) Submit IndexNow priority URLs =="
-./distribution_scripts/indexnow_submit.sh \
-  "$PRIMARY_HOST" \
-  "$INDEXNOW_KEY" \
-  ".build/indexnow-priority.txt"
+python3 distribution_scripts/gsc_submit_sitemaps.py
+bash distribution_scripts/indexnow_submit.sh
+python3 distribution_scripts/gsc_inspect_urls.py
 
 echo
-echo "== 4) Submit IndexNow batch URLs =="
-./distribution_scripts/indexnow_submit.sh \
-  "$PRIMARY_HOST" \
-  "$INDEXNOW_KEY" \
-  ".build/indexnow-batch.txt"
-
-echo
-echo "== 5) Inspect priority URLs in GSC API =="
-python3 distribution_scripts/gsc_inspect_urls.py \
-  "$GSC_CREDS" \
-  "$GSC_SITE_URL" \
-  ".build/distribution-priority-urls.txt" \
-  ".build/inspection-results.json"
-
-echo
-echo "Done."
-echo "Manual Google Request Indexing remains limited to a small priority set."
-echo "Recommended manual set: homepage, download, faq, answers hub, comparisons hub, and 5-10 current priority pages."
+echo 'DONE'
+echo 'Manual step: in Search Console, request indexing for 5-10 highest-priority URLs only.'

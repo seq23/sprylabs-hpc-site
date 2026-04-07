@@ -14,7 +14,10 @@
     "reddit:daily": "node scripts/reddit/fetch_reddit.js && node scripts/reddit/normalize_reddit.js && node scripts/reddit/cluster_questions.js && node scripts/reddit/score_clusters.js && node scripts/reddit/generate_pages.js && node scripts/reddit/publish_daily.js && node scripts/reddit/update_velocity_indexes.js",
     "reddit:evening": "node scripts/reddit/fetch_reddit.js && node scripts/reddit/normalize_reddit.js && node scripts/reddit/cluster_questions.js && node scripts/reddit/score_clusters.js",
     "fanout:apply": "node scripts/apply_fanout.js",
-    "distribution:prepare": "node scripts/prepare_distribution_artifacts.js"
+    "distribution:prepare": "node scripts/prepare_distribution_artifacts.js",
+    "distribution:bootstrap": "bash distribution_scripts/bootstrap_distribution.sh",
+    "distribution:indexnow": "bash distribution_scripts/indexnow_submit.sh",
+    "distribution:deploy": "bash distribution_scripts/deploy_distribution.sh"
   },
   "engines": {
     "node": ">=24.0.0"
