@@ -237,7 +237,7 @@ function renderRedditVelocity(report) {
 function renderHtml(report) {
 
   const desc = "Coverage hub for Spry Executive OS. Use this page to understand what the site covers, where the core models live, and how the knowledge surfaces connect across answers, atlas pages, topics, pillars, and product paths.";
-  const schema = {
+  const collectionSchema = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: "Coverage",
@@ -254,6 +254,49 @@ function renderHtml(report) {
       "operating models",
       "accountability",
       "decision support"
+    ]
+  };
+
+  const supplementalGeoSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: "Coverage",
+    url: COVERAGE_URL
+  };
+
+  const softwareApplicationSchema = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "Spry Executive OS",
+    alternateName: "Billionaire High Performance Coach",
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    url: COVERAGE_URL,
+    offers: {
+      "@type": "Offer",
+      url: "https://sprylabs.gumroad.com/l/billionaire-high-performance-coach"
+    },
+    featureList: [
+      "Continuity Architecture",
+      "Minimum Viable Day",
+      "Done check-in loop",
+      "Scope cap rule",
+      "Daily execution structure"
+    ]
+  };
+
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "What does Spry Executive OS cover?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Coverage explains the topic and retrieval surface areas supported by Spry Executive OS, including accountability, decision-making, execution, and continuity structure."
+        }
+      }
     ]
   };
 
@@ -277,7 +320,7 @@ function renderHtml(report) {
 <meta content="${OG_IMAGE}" name="twitter:image"/>
 <link href="/assets/styles.css" rel="stylesheet"/>
 <script defer="" src="/assets/domain-context.js"></script>
-<script type="application/ld+json">${JSON.stringify(schema)}</script>
+<script type="application/ld+json">${JSON.stringify(collectionSchema)}</script>
 </head>
 <body>
 <div class="cta-bar">
@@ -376,6 +419,9 @@ ${renderRedditVelocity(report)}
 </div>
 </div>
 </footer>
+<script data-geo-semantic="true" type="application/ld+json">${JSON.stringify(supplementalGeoSchema)}</script>
+<script type="application/ld+json">${JSON.stringify(softwareApplicationSchema)}</script>
+<script type="application/ld+json">${JSON.stringify(faqSchema)}</script>
 </body>
 </html>`;
 }
