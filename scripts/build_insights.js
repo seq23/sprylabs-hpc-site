@@ -18,6 +18,7 @@ const LAYOUT_PATH = path.join(TEMPLATES_DIR, "layout.html");
 
 // Canonical base for this site
 const SITE_BASE = "https://spryexecutiveos.com";
+const DEFAULT_SOCIAL_IMAGE = `${SITE_BASE}/assets/img/bhpc-hero-square.png`;
 
 // --- utils ---
 function readUtf8(p) { return fs.readFileSync(p, "utf8"); }
@@ -265,6 +266,8 @@ function renderPage({ title, description, canonical, activePath, contentHtml, at
       "{{header}}": HEADER_HTML || "",
       "{{footer}}": FOOTER_HTML || "",
       "{{json_ld}}": jsonLd || "",
+      "{{og_image}}": htmlEscape(DEFAULT_SOCIAL_IMAGE),
+      "{{twitter_image}}": htmlEscape(DEFAULT_SOCIAL_IMAGE),
       "{{content}}": contentHtml || "",
       "{{atlas_nav}}": atlasNavHtml || "",
       // These blocks are optional; when a builder doesn't supply them, render empty.
@@ -292,7 +295,9 @@ function renderPage({ title, description, canonical, activePath, contentHtml, at
   <meta property="og:title" content="${htmlEscape(title)}">
   <meta property="og:description" content="${htmlEscape(description)}">
   <meta property="og:url" content="${htmlEscape(url)}">
-  <meta name="twitter:card" content="summary">
+  <meta property="og:image" content="${htmlEscape(DEFAULT_SOCIAL_IMAGE)}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="${htmlEscape(DEFAULT_SOCIAL_IMAGE)}">
   <meta name="twitter:title" content="${htmlEscape(title)}">
   <meta name="twitter:description" content="${htmlEscape(description)}">
   ${jsonLd || ""}
@@ -376,15 +381,16 @@ function buildPillars(posts, clusters) {
   const pillarsIndexContent = `<section class="article">
     <h1>Pillars</h1>
     <p class="lede">A coherent map of the site. Pick a pillar to browse structured guidance and related posts.</p>
+    <section class="card" style="margin-top:18px"><h2>Why the pillar model exists</h2><p>The pillar model keeps the site navigable for both humans and models. Instead of dumping every page into one flat archive, it groups execution problems into stable categories so the next useful page is easier to find.</p></section>
     <ul class="list" style="margin-top:14px">${pillarCards}</ul>
   </section>`;
 
-  const pillarsIndexCanonical = `${SITE_BASE}/pillars/index.html`;
+  const pillarsIndexCanonical = `${SITE_BASE}/pillars/`;
   writeUtf8(path.join(PILLARS_DIR, "index.html"), renderPage({
     title: "Pillars — Spry Executive OS",
     description: "Topic pillars for planning, consistency, recovery, decision-making, coaching, and practical AI support.",
     canonical: pillarsIndexCanonical,
-    activePath: "/pillars/index.html",
+    activePath: "/pillars/",
     contentHtml: pillarsIndexContent,
     atlasNavHtml: "",
     jsonLd: jsonLdCollection({ title: "Pillars", description: "Spry pillars index", url: pillarsIndexCanonical }),
@@ -404,6 +410,13 @@ function buildPillars(posts, clusters) {
 
   // Individual pillar pages
   const clustersMap = clusterById(clusters);
+  const requiredHeadingCopy = {
+    accountability: { heading: 'How accountability is defined on this site', text: 'Accountability here is not shame, surveillance, or empty habit theater. It means creating visible rules, review loops, and recovery defaults that make follow-through easier than drift.' },
+    'burnout-recovery': { heading: 'What burnout means in this system', text: 'Burnout is treated as a load and recovery problem, not a morality problem. The useful move is to reduce open loops, protect energy, and rebuild execution capacity without drama.' },
+    leverage: { heading: 'What leverage means here', text: 'Leverage means actions that keep paying after the moment you do them. On this site that usually means systems, assets, decisions, and structured defaults that reduce future friction.' },
+    'systems-decisions': { heading: 'What systems and decisions have to do with each other', text: 'Good decisions decay when they are not backed by systems. Systems turn one clear choice into a repeatable operating condition, which is why this pillar pairs decision quality with execution design.' },
+    wealth: { heading: 'What wealth means in this framework', text: 'Wealth is treated as a compounding systems outcome, not just a burst of income. The emphasis is on calm decision-making, leverage, downside control, and repeatable execution over hype.' },
+  };
   for (const c of clusters) {
     const ps = posts
       .filter((p) => p.cluster === c.id)
@@ -427,6 +440,12 @@ function buildPillars(posts, clusters) {
         <div style="margin-top:10px"><a class="btn" href="/atlas.html#${htmlEscape(c.id)}">See Atlas for this pillar</a></div>
       </div>
       <section class="card" style="margin-top:18px">
+        <h2>How to use this pillar</h2>
+        <p>Use this pillar when the issue is not just knowledge but operating conditions. Start with one page that matches the exact friction you are in, apply one clean adjustment, and then return to the atlas or the manual for the broader system logic. The goal is not to consume everything. The goal is to remove the next point of drag and recover forward motion.</p>
+        <p>This is also why the pillar pages stay plain. They are routing pages for real decision states: burnout, wealth, systems, body, mind, money, and spirit. They are meant to help you choose the right entry point fast, not bury the useful move inside a wall of generic productivity language.</p>
+      </section>
+      ${requiredHeadingCopy[c.id] ? `<section class="card" style="margin-top:18px"><h2>${requiredHeadingCopy[c.id].heading}</h2><p>${requiredHeadingCopy[c.id].text}</p></section>` : ''}
+      <section class="card" style="margin-top:18px">
         <h2>Posts in this pillar</h2>
         <ul class="list" style="margin-top:12px">${list}</ul>
       </section>
@@ -436,7 +455,7 @@ function buildPillars(posts, clusters) {
       </section>
     </section>`;
 
-    const canonical = `${SITE_BASE}/pillars/${c.id}/index.html`;
+    const canonical = `${SITE_BASE}/pillars/${c.id}/`;
     writeUtf8(path.join(PILLARS_DIR, c.id, "index.html"), renderPage({
       title: `${c.name} — Spry Executive OS`,
       description: c.description || `Structured guidance for ${c.name}.`,
@@ -457,7 +476,8 @@ function buildPostPages(posts, clustersMap) {
     const canonical = `${SITE_BASE}/insights/${post.slug}.html`;
     const activePath = `/insights/${post.slug}.html`;
 
-    const rendered = mdToHtmlWithHeadings(post.bodyMd);
+    const normalizedBodyMd = String(post.bodyMd || "").replace(/^#\s+/gm, "## ");
+    const rendered = mdToHtmlWithHeadings(normalizedBodyMd);
     const tocHtml = buildTocHtml(rendered.headings);
     const htmlBody = rendered.html;
 
@@ -560,12 +580,12 @@ function buildInsightsIndex(posts, clustersMap) {
     </section>
   `.trim();
 
-  const canonical = `${SITE_BASE}/insights/index.html`;
+  const canonical = `${SITE_BASE}/insights/`;
   const page = renderPage({
     title: "Insights — Spry Executive OS",
     description: "Operator-grade guidance on planning, consistency, recovery, decision-making, coaching, and practical AI support.",
     canonical,
-    activePath: "/insights/index.html",
+    activePath: "/insights/",
     contentHtml: bodyHtml,
     atlasNavHtml: "",
     jsonLd: jsonLdCollection({ title: "Insights", description: "Spry insights index", url: canonical }),
