@@ -11,7 +11,7 @@ It does **not** add `sitemap-fresh.xml`.
 ## Day-0 setup
 
 1. Run `bash distribution_scripts/bootstrap_distribution.sh`
-2. Commit and deploy the generated root key file.
+2. If bootstrap returns `BOOTSTRAP_OK`, commit and deploy the committed root key file.
 3. Edit `distribution.config.json` and add your Search Console service-account JSON path.
 4. Run `npm run distribution:prepare`
 5. Run `bash distribution_scripts/deploy_distribution.sh`
@@ -26,11 +26,13 @@ It does **not** add `sitemap-fresh.xml`.
 
 In Google Search Console, manually request indexing for 5-10 highest-priority URLs only.
 
-
 ## IndexNow batching
 
 The repo splits IndexNow submissions by hostname and submits them in chunks using `indexnow.chunk_size` from `distribution.config.json`. This prevents mixed-host payloads and reduces 403 failures on large submissions.
 
+## Permanent key behavior
 
-## Snapshot update note
-Baseline snapshot ZIPs do not include a live IndexNow key file. After any snapshot update, run `npm run distribution:bootstrap`, commit the generated key file, and deploy before running `npm run distribution:deploy`.
+- Baseline snapshot ZIPs must include the committed IndexNow key file named in `distribution.config.json`.
+- Normal snapshot updates should not require re-bootstrap.
+- `bash distribution_scripts/bootstrap_distribution.sh` now preserves the committed key by default and returns `BOOTSTRAP_NOOP` when the configured key file already matches.
+- Only rotate intentionally with `INDEXNOW_ROTATE=1 npm run distribution:bootstrap` or `bash distribution_scripts/bootstrap_distribution.sh --rotate`.

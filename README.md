@@ -2,7 +2,6 @@
 
 Baseline snapshot package for snapshot-mode repo update.
 
-
 ## Velocity engine
 
 This repo includes a seeded 50-page expansion set plus a Reddit-driven clustering/publish pipeline under `scripts/reddit/` and `docs/runbooks/`.
@@ -14,11 +13,14 @@ This repo uses the existing dual-sitemap architecture and does **not** add `site
 Day-0 setup:
 
 1. Run `bash distribution_scripts/bootstrap_distribution.sh`
-2. Commit + deploy so the generated IndexNow key file is live at repo root on both domains.
+2. If bootstrap returns `BOOTSTRAP_OK`, commit + deploy so the committed IndexNow key file is live at repo root on both domains.
 3. Add your Search Console service-account JSON path to `distribution.config.json`.
 4. Run `npm run distribution:prepare`
 5. Run `bash distribution_scripts/deploy_distribution.sh`
 
+### Permanent IndexNow key lifecycle
 
-### Distribution bootstrap note
-After applying a new baseline snapshot, rerun `npm run distribution:bootstrap`, commit the generated root key file, deploy it live, and only then run `npm run distribution:deploy`.
+- The repo now uses a committed stable IndexNow key by default.
+- Future full baseline ZIPs must include the configured root key file and `distribution.config.json` with matching `indexnow.key` + `indexnow.key_file`.
+- Snapshot updates should **not** require re-bootstrap unless you explicitly want to rotate the key.
+- To rotate intentionally, run `INDEXNOW_ROTATE=1 npm run distribution:bootstrap` or `bash distribution_scripts/bootstrap_distribution.sh --rotate`, then commit + deploy the new key file.
