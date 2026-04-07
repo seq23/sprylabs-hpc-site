@@ -18,3 +18,7 @@ Day-0 setup:
 3. Add your Search Console service-account JSON path to `distribution.config.json`.
 4. Run `npm run distribution:prepare`
 5. Run `bash distribution_scripts/deploy_distribution.sh`
+
+
+### Distribution bootstrap note
+After applying a new baseline snapshot, rerun `npm run distribution:bootstrap`, commit the generated root key file, deploy it live, and only then run `npm run distribution:deploy`.

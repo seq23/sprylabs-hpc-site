@@ -30,3 +30,7 @@ In Google Search Console, manually request indexing for 5-10 highest-priority UR
 ## IndexNow batching
 
 The repo splits IndexNow submissions by hostname and submits them in chunks using `indexnow.chunk_size` from `distribution.config.json`. This prevents mixed-host payloads and reduces 403 failures on large submissions.
+
+
+## Snapshot update note
+Baseline snapshot ZIPs do not include a live IndexNow key file. After any snapshot update, run `npm run distribution:bootstrap`, commit the generated key file, and deploy before running `npm run distribution:deploy`.
