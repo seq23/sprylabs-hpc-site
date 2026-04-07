@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0-snapshot",
   "scripts": {
-    "validate:all": "node _ops/validators/validate_dual_domain_contract.js && node _ops/validators/validate_internal_links.js && node _ops/validators/validate_reddit_publish_contract.js && node _ops/validators/validate_reddit_uniqueness.js && node scripts/validate_fanout_warning.js && node scripts/validate_geo_semantics.js",
+    "validate:all": "node scripts/prepare_distribution_artifacts.js && node _ops/validators/validate_distribution_contract.js && node _ops/validators/validate_dual_domain_contract.js && node _ops/validators/validate_internal_links.js && node _ops/validators/validate_reddit_publish_contract.js && node _ops/validators/validate_reddit_uniqueness.js && node scripts/validate_fanout_warning.js && node scripts/validate_geo_semantics.js",
     "reddit:fetch": "node scripts/reddit/fetch_reddit.js",
     "reddit:normalize": "node scripts/reddit/normalize_reddit.js",
     "reddit:cluster": "node scripts/reddit/cluster_questions.js",
@@ -13,7 +13,8 @@
     "reddit:indexes": "node scripts/reddit/update_velocity_indexes.js",
     "reddit:daily": "node scripts/reddit/fetch_reddit.js && node scripts/reddit/normalize_reddit.js && node scripts/reddit/cluster_questions.js && node scripts/reddit/score_clusters.js && node scripts/reddit/generate_pages.js && node scripts/reddit/publish_daily.js && node scripts/reddit/update_velocity_indexes.js",
     "reddit:evening": "node scripts/reddit/fetch_reddit.js && node scripts/reddit/normalize_reddit.js && node scripts/reddit/cluster_questions.js && node scripts/reddit/score_clusters.js",
-    "fanout:apply": "node scripts/apply_fanout.js"
+    "fanout:apply": "node scripts/apply_fanout.js",
+    "distribution:prepare": "node scripts/prepare_distribution_artifacts.js"
   },
   "engines": {
     "node": ">=24.0.0"
