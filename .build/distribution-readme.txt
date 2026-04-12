@@ -1,7 +1,7 @@
 Option B Lite distribution artifacts
 
 Priority URLs: 32
-Batch URLs: 355
+Batch URLs: 358
 
 Files:
 - .build/indexnow-priority.txt
