@@ -42,4 +42,6 @@ jobs:
             exit 0
           fi
           git commit -m "chore: release daily insight"
+          git fetch origin main
+          git pull --rebase origin main
           git push origin HEAD:main

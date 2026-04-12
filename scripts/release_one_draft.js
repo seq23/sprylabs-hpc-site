@@ -5,11 +5,12 @@ Release EXACTLY ONE draft from content/insights/_drafts into content/insights.
 Selection rule (deterministic):
 1) Consider only drafts named like: YYYY-MM-DD_<anything>.md (or .txt)
 2) Let today = current UTC date (YYYY-MM-DD)
-3) If any draft date >= today, pick the smallest such date ("next available date")
-4) Else, pick the smallest date overall ("oldest remaining")
+3) Prefer the smallest draft date >= today ("next available date")
+4) Else use the smallest draft date overall ("oldest remaining")
+5) Skip any draft whose resulting live slug already exists.
 
-Never "publish nothing" if eligible drafts exist.
-If no eligible dated drafts exist, fallback to earliest filename sort (legacy behavior).
+This repo forbids duplicate live insight pages with -2 suffixes.
+If all candidate drafts would collide with an existing live slug, release nothing.
 */
 
 const fs = require("fs");
@@ -41,18 +42,7 @@ function ensureDir(p) {
   if (!fs.existsSync(p)) fs.mkdirSync(p, { recursive: true });
 }
 
-function uniqueTargetPath(dir, baseSlug, ext) {
-  let candidate = path.join(dir, `${baseSlug}${ext}`);
-  if (!fs.existsSync(candidate)) return candidate;
-  for (let i = 2; i < 999; i++) {
-    candidate = path.join(dir, `${baseSlug}-${i}${ext}`);
-    if (!fs.existsSync(candidate)) return candidate;
-  }
-  throw new Error("Could not find unique filename for " + baseSlug + ext);
-}
-
 function parseDatedDraft(filename) {
-  // matches: 2026-02-08_title.md
   const m = filename.match(/^(\d{4}-\d{2}-\d{2})_(.+)\.(md|txt)$/i);
   if (!m) return null;
   return {
@@ -61,6 +51,17 @@ function parseDatedDraft(filename) {
     ext: "." + m[3].toLowerCase(),
     filename,
   };
+}
+
+function draftToSlug(filename) {
+  const ext = path.extname(filename).toLowerCase();
+  const base = path.basename(filename, ext);
+  const stripped = base.replace(/^\d{4}-\d{2}-\d{2}_/, "");
+  return slugify(stripped || base);
+}
+
+function liveSlugExists(dir, slug) {
+  return [".md", ".txt"].some((ext) => fs.existsSync(path.join(dir, `${slug}${ext}`)));
 }
 
 function main() {
@@ -78,34 +79,46 @@ function main() {
   }
 
   const dated = all.map(parseDatedDraft).filter(Boolean);
-
-  let pickFile = null;
+  let ordered = [];
 
   if (dated.length > 0) {
     const today = utcTodayYYYYMMDD();
-
-    // sort by date, then filename for deterministic tie-breaks
     dated.sort((a, b) => (a.date.localeCompare(b.date) || a.filename.localeCompare(b.filename)));
-
-    const next = dated.find((d) => d.date >= today);
-    pickFile = (next ? next.filename : dated[0].filename);
+    const futureOrToday = dated.filter((d) => d.date >= today).map((d) => d.filename);
+    const past = dated.filter((d) => d.date < today).map((d) => d.filename);
+    ordered = futureOrToday.concat(past);
   } else {
-    // Fallback: legacy behavior (earliest filename)
-    pickFile = all.slice().sort()[0];
+    ordered = all.slice().sort();
   }
 
-  const ext = path.extname(pickFile).toLowerCase();
-  const base = path.basename(pickFile, ext);
+  const skipped = [];
+  let picked = null;
 
-  // Strip YYYY-MM-DD_ prefix if present
-  const stripped = base.replace(/^\d{4}-\d{2}-\d{2}_/, "");
-  const slug = slugify(stripped || base);
+  for (const filename of ordered) {
+    const slug = draftToSlug(filename);
+    const ext = path.extname(filename).toLowerCase();
+    if (liveSlugExists(LIVE_DIR, slug)) {
+      skipped.push({ filename, slug });
+      continue;
+    }
+    picked = { filename, slug, ext };
+    break;
+  }
 
-  const from = path.join(DRAFT_DIR, pickFile);
-  const to = uniqueTargetPath(LIVE_DIR, slug, ext);
+  for (const item of skipped) {
+    console.log(`Skipping duplicate draft slug already live: ${item.filename} -> ${item.slug}`);
+  }
+
+  if (!picked) {
+    console.log("No releasable drafts found. Nothing to release.");
+    process.exit(0);
+  }
+
+  const from = path.join(DRAFT_DIR, picked.filename);
+  const to = path.join(LIVE_DIR, `${picked.slug}${picked.ext}`);
 
   fs.renameSync(from, to);
-  console.log(`Released: ${pickFile} -> ${path.relative(ROOT, to)}`);
+  console.log(`Released: ${picked.filename} -> ${path.relative(ROOT, to)}`);
 }
 
 main();
