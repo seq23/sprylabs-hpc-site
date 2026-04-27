@@ -13,23 +13,6 @@ function walk(dir, acc = []) {
   return acc;
 }
 
-function collectTypes(node, acc = new Set()) {
-  if (!node || typeof node !== 'object') return acc;
-  if (Array.isArray(node)) {
-    for (const item of node) collectTypes(item, acc);
-    return acc;
-  }
-  const typeValue = node['@type'];
-  if (Array.isArray(typeValue)) {
-    for (const item of typeValue) if (typeof item === 'string') acc.add(item);
-  } else if (typeof typeValue === 'string') {
-    acc.add(typeValue);
-  }
-  if (Array.isArray(node['@graph'])) collectTypes(node['@graph'], acc);
-  for (const value of Object.values(node)) collectTypes(value, acc);
-  return acc;
-}
-
 function getSchemaInfo(html) {
   const scriptRe = /<script([^>]*)type=["']application\/ld\+json["']([^>]*)>([\s\S]*?)<\/script>/gi;
   let m;
@@ -38,13 +21,16 @@ function getSchemaInfo(html) {
   while ((m = scriptRe.exec(html)) !== null) {
     const attrs = `${m[1]} ${m[2]}`;
     if (/data-geo-semantic\s*=\s*["']true["']/i.test(attrs)) supplementalTagged = true;
-    const raw = m[3].trim();
-    if (!raw) continue;
-    try {
-      const parsed = JSON.parse(raw);
-      collectTypes(parsed, allTypes);
-    } catch (_) {
-      // Ignore malformed JSON-LD here.
+    const raw = m[3] || '';
+    const typeRe = /"@type"\s*:\s*("([^"]+)"|\[([^\]]+)\])/g;
+    let t;
+    while ((t = typeRe.exec(raw)) !== null) {
+      if (t[2]) allTypes.add(t[2]);
+      if (t[3]) {
+        const innerRe = /"([^"]+)"/g;
+        let inner;
+        while ((inner = innerRe.exec(t[3])) !== null) allTypes.add(inner[1]);
+      }
     }
   }
   return { supplementalTagged, allTypes };
