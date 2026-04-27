@@ -71,3 +71,5 @@ if (errors.length) {
   process.exit(1);
 }
 console.log('validate_geo_semantics: OK');
+
+process.exit(0);

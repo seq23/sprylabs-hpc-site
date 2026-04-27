@@ -18,6 +18,7 @@ const LAYOUT_PATH = path.join(TEMPLATES_DIR, "layout.html");
 
 // Canonical base for this site
 const SITE_BASE = "https://spryexecutiveos.com";
+const { ensureContract } = require("./render/content_contract");
 const DEFAULT_SOCIAL_IMAGE = `${SITE_BASE}/assets/img/bhpc-hero-square.png`;
 
 // --- utils ---

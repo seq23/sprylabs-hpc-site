@@ -1,0 +1,47 @@
+name: Weekly Synthesis Builder
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "45 14 * * 1"
+
+permissions:
+  contents: write
+
+jobs:
+  synthesis:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: true
+      - name: Setup Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Update content clusters
+        run: npm run clusters:update
+      - name: Build synthesis articles
+        run: npm run synthesis:build
+      - name: Build admin page
+        env:
+          SPRY_ADMIN_PASSWORD: ${{ secrets.SPRY_ADMIN_PASSWORD || 'aplayer' }}
+        run: npm run admin:build
+      - name: Validate
+        run: npm run validate:all
+      - name: Commit synthesis updates
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -A
+            git commit -m "Build weekly synthesis layer"
+            git pull --rebase origin main
+            git push
+          else
+            echo "No synthesis updates to commit."
+          fi

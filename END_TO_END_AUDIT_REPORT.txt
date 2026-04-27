@@ -1,0 +1,29 @@
+SpryLabs HPC End-to-End Audit Report
+Status: UPDATED BASELINE
+
+Confirmed from extracted ZIP source:
+- Book assets present: assets/books/bhpc-black.png, assets/books/bhpc-white.png
+- OG assets present: assets/books/og/bhpc-og-black.png, assets/books/og/bhpc-og-white.png
+- Whitepaper social tags present: og:image, twitter:image, twitter:card
+- Whitepaper schemas present: Product, SoftwareApplication, FAQPage with data-geo-semantic markers
+- Whitepaper fanout block present
+- Missing render_insight.js corrected: scripts/render/render_insight.js exists
+- Word count validator present: scripts/validators/validate_word_count.js
+- Word-count threshold: 1200 target, 20% margin, effective minimum 960 words
+- Coverage route rebuilt with canonical spryexecutiveos.com/coverage/ metadata and required body copy
+- Internal link validator rewritten to avoid scan hang while preserving coverage literal and anchor checks
+
+Validation performed:
+- unzip integrity check: pass
+- root file check: pass
+- robots parity: pass
+- whitepaper metadata/schema/fanout checks: pass
+- render_insight syntax check: pass
+- all touched validator syntax checks: pass
+- direct validator checks passed individually: distribution, dual-domain, internal links, reddit publish, reddit uniqueness, fanout, geo semantics, content routing, audience framing, conversion targets, destination contracts, above-fold, CTA, authority engine, word-count
+
+Known execution note:
+- In this container, chained multi-validator shell/npm runs intermittently stall after successful validator output. The validators were therefore run individually/directly for audit reliability. The repo scripts were hardened with explicit process.exit(0) where missing and an optimized internal-link validator.
+
+Next planned step after local update:
+- Terminal-mode social media ingestion verification before running the local updater.

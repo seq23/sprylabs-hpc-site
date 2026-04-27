@@ -1,0 +1,37 @@
+{
+  "version": "1.0",
+  "role": "query_discovery_only",
+  "core_question": "Does this help us win a citation for a real query?",
+  "pipeline": [
+    "collect_signals",
+    "extract_queries",
+    "dedupe_queries",
+    "expand_fanout_queries",
+    "classify_intent",
+    "map_to_pages",
+    "detect_gaps",
+    "generate_patch_plan",
+    "apply_patch",
+    "validate"
+  ],
+  "allowed_page_families": [
+    "answers",
+    "insights",
+    "comparisons",
+    "whitepapers"
+  ],
+  "removed_systems": [
+    "reddit page system",
+    "standalone FAQ pages",
+    "automated product auto-editing"
+  ],
+  "social_ingestion": "query discovery and patch-system input only",
+  "product_page_rule": {
+    "protected_files": [
+      "product.html",
+      "download.html"
+    ],
+    "automated_edits": "forbidden",
+    "static_manual_blocks": "explicit only"
+  }
+}

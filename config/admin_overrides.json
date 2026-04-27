@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "policy": "Admin override layer for PASS 2. This file is the operator control plane for force/suppress actions. Overrides are applied by scripts/admin/apply_overrides.js before admin/build steps.",
+  "defaults": {
+    "conversion_url": "https://aplayermode.com/download",
+    "canonical_domain": "https://billionairehighperformancecoach.com"
+  },
+  "overrides": [
+    {
+      "id": "example-force-ai-executive-coaching",
+      "enabled": false,
+      "action": "force_publish",
+      "target_type": "cluster",
+      "target_id": "ai-executive-coaching",
+      "destination": "synthesis",
+      "status": "queued",
+      "reason": "Example disabled override. Set enabled true to force queue status for this cluster."
+    },
+    {
+      "id": "example-suppress-missed-day-productivity-system",
+      "enabled": false,
+      "action": "suppress_topic",
+      "target_type": "cluster",
+      "target_id": "missed-a-day-productivity-system",
+      "destination": "all",
+      "status": "suppressed",
+      "reason": "Example disabled override. Set enabled true to suppress this cluster across supported queues."
+    }
+  ]
+}

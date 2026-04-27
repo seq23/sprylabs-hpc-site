@@ -1,0 +1,27 @@
+PASS 4 — Routing + Validator Hard-Fail Enforcement
+
+Source baseline used: sprylabs-hpc-site-main_BASELINE_04-26-26_7d2c9a4.zip
+Note: local PASS 3 ZIP was not present after container reset, so PASS 3 content-contract prerequisites were reconstructed before PASS 4 validation hooks were applied.
+
+Changes:
+- Added scripts/validators/validate_destination_contracts.js
+- Added scripts/validators/validate_above_fold.js
+- Added scripts/validators/validate_cta_presence.js
+- Added package script validate:content-contracts
+- Wired validate:authority-routing to run content-contract validators
+- Reconstructed content contract render layer required by PASS 3
+- Enforced above-fold direct answer + CTA contract on existing insight/comparison/whitepaper/synthesis HTML pages
+
+Validation performed from working root before packaging:
+- validate_destination_contracts.js: PASS
+- validate_above_fold.js: PASS
+- validate_cta_presence.js: PASS
+
+ZIP-level validation performed after package/reopen:
+- required root files present
+- package.json content-contract scripts present
+- validator files present
+- both robots.txt files present and identical
+- above-fold validator passed
+- CTA validator passed
+- destination contract validator passed

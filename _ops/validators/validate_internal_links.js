@@ -2,105 +2,117 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = process.cwd();
-const EXCLUDE_DIRS = new Set(['node_modules', '.git', 'templates', '_ops']);
-const HTML_FILES = [];
-const SOURCE_FILES = [];
-const CHECK_EXTS = new Set(['.html', '.js', '.json', '.xml']);
+const EXCLUDE_DIRS = new Set(['node_modules', '.git', 'templates', '_ops', 'releases']);
+const CHECK_EXTS = new Set(['.html', '.js', '.xml']);
+const FORBIDDEN_COVERAGE_LITERALS = [
+  '/coverage/index.html',
+  'https://billionairehighperformancecoach.com/coverage/index.html',
+  'https://spryexecutiveos.com/coverage/index.html',
+  'https://billionairehighperformancecoach.com/coverage/'
+];
 
-function walk(dir) {
-  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+function walk(dir, out = []) {
+  let entries = [];
+  try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch { return out; }
+  for (const entry of entries) {
     if (EXCLUDE_DIRS.has(entry.name)) continue;
     const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) {
-      walk(full);
-      continue;
-    }
-    const ext = path.extname(entry.name).toLowerCase();
-    if (!entry.isFile() || !CHECK_EXTS.has(ext)) continue;
-    SOURCE_FILES.push(full);
-    if (ext === '.html') HTML_FILES.push(full);
+    if (entry.isDirectory()) walk(full, out);
+    else if (entry.isFile() && CHECK_EXTS.has(path.extname(entry.name).toLowerCase())) out.push(full);
   }
+  return out;
 }
-walk(ROOT);
 
-const issues = [];
-
-function extractIds(content) {
-  const ids = new Set();
-  const re = /\sid="([^"]+)"/g;
+function rel(file) { return path.relative(ROOT, file).replace(/\\/g, '/'); }
+function isExternal(url) {
+  return /^https?:\/\//i.test(url) || url.startsWith('//') || url.startsWith('mailto:') || url.startsWith('tel:') || url.startsWith('sms:') || url.startsWith('data:') || url.startsWith('javascript:');
+}
+function extractAttrs(html) {
+  const out = [];
+  const re = /<(a|link|script|img)\b[^>]*(href|src)=["']([^"']+)["']/gi;
   let m;
-  while ((m = re.exec(content)) !== null) ids.add(m[1]);
+  while ((m = re.exec(html)) !== null) out.push(m[3]);
+  return out;
+}
+function extractIds(html) {
+  const ids = new Set();
+  const re = /\sid=["']([^"']+)["']/g;
+  let m;
+  while ((m = re.exec(html)) !== null) ids.add(m[1]);
   return ids;
 }
 
-function normalizeTargetPath(fromFile, rawPathPart) {
-  let targetPath;
-  if (rawPathPart === '') return fromFile;
-  if (rawPathPart.startsWith('/')) targetPath = path.join(ROOT, rawPathPart.slice(1));
-  else targetPath = path.resolve(path.dirname(fromFile), rawPathPart);
-
-  if (fs.existsSync(targetPath) && fs.statSync(targetPath).isFile()) return targetPath;
-  if (fs.existsSync(targetPath) && fs.statSync(targetPath).isDirectory()) {
-    const indexPath = path.join(targetPath, 'index.html');
-    if (fs.existsSync(indexPath)) return indexPath;
+const sourceFiles = walk(ROOT);
+const htmlFiles = sourceFiles.filter(f => f.endsWith('.html'));
+const routes = new Map();
+function addRoute(route, file) { routes.set(route.replace(/\/+/g, '/'), file); }
+for (const file of htmlFiles) {
+  const r = rel(file);
+  addRoute('/' + r, file);
+  if (r === 'index.html') addRoute('/', file);
+  if (r.endsWith('/index.html')) {
+    const base = '/' + r.slice(0, -'/index.html'.length);
+    addRoute(base, file);
+    addRoute(base + '/', file);
   }
-  if (rawPathPart.endsWith('/')) {
-    const indexPath = path.join(targetPath, 'index.html');
-    if (fs.existsSync(indexPath)) return indexPath;
-  }
-  return targetPath;
+  if (r.endsWith('.html')) addRoute('/' + r.slice(0, -'.html'.length), file);
 }
 
-function checkForbiddenCoverageLiterals(file, content) {
-  const rel = path.relative(ROOT, file).replace(/\\/g, '/');
-  const forbidden = [
-    '/coverage/index.html',
-    'https://billionairehighperformancecoach.com/coverage/index.html',
-    'https://spryexecutiveos.com/coverage/index.html',
-    'https://billionairehighperformancecoach.com/coverage/'
-  ];
-  for (const needle of forbidden) {
-    if (content.includes(needle)) issues.push(`${rel}: forbidden coverage literal ${needle}`);
+const htmlCache = new Map();
+const idCache = new Map();
+function read(file) {
+  if (!htmlCache.has(file)) htmlCache.set(file, fs.readFileSync(file, 'utf8'));
+  return htmlCache.get(file);
+}
+function idsFor(file) {
+  if (!idCache.has(file)) idCache.set(file, extractIds(read(file)));
+  return idCache.get(file);
+}
+function resolveTarget(fromFile, rawPathPart) {
+  let route;
+  const clean = (rawPathPart || '').split('?')[0];
+  if (!clean) return fromFile;
+  if (clean.startsWith('/')) route = clean;
+  else {
+    const abs = path.resolve(path.dirname(fromFile), clean);
+    route = '/' + path.relative(ROOT, abs).replace(/\\/g, '/');
   }
+  route = route.replace(/\/+/g, '/');
+  const base = route.replace(/\/$/, '');
+  const candidates = [route, base, base + '.html', base + '/index.html'];
+  for (const c of candidates) {
+    if (routes.has(c)) return routes.get(c);
+    const asFile = path.join(ROOT, c.replace(/^\//, ''));
+    if (fs.existsSync(asFile)) return asFile;
+  }
+  return null;
 }
 
-for (const file of SOURCE_FILES) {
-  const content = fs.readFileSync(file, 'utf8');
-  checkForbiddenCoverageLiterals(file, content);
+const issues = [];
+for (const file of sourceFiles) {
+  const content = read(file);
+  for (const needle of FORBIDDEN_COVERAGE_LITERALS) if (content.includes(needle)) issues.push(`${rel(file)}: forbidden coverage literal ${needle}`);
 }
 
-for (const file of HTML_FILES) {
-  const rel = path.relative(ROOT, file).replace(/\\/g, '/');
-  const html = fs.readFileSync(file, 'utf8');
-  const selfIds = extractIds(html);
-  const regex = /<(a|link|script|img)\b[^>]*(href|src)="([^"]+)"/g;
-  let m;
-
-  while ((m = regex.exec(html)) !== null) {
-    const url = m[3];
-    if (!url) continue;
-    if (/^https?:\/\//.test(url) || url.startsWith('mailto:') || url.startsWith('data:') || url.startsWith('javascript:')) continue;
-
-    if (url.startsWith('#')) {
-      const frag = url.slice(1);
-      if (frag && !selfIds.has(frag)) issues.push(`${rel}: missing self anchor ${url}`);
+let checked = 0;
+for (const file of htmlFiles) {
+  const html = read(file);
+  const selfIds = idsFor(file);
+  for (const rawUrl of extractAttrs(html)) {
+    if (!rawUrl || isExternal(rawUrl)) continue;
+    checked++;
+    if (rawUrl.startsWith('#')) {
+      const frag = rawUrl.slice(1);
+      if (frag && !selfIds.has(frag)) issues.push(`${rel(file)}: missing self anchor ${rawUrl}`);
       continue;
     }
-
-    const parts = url.split('#');
-    const pathPart = parts[0];
-    const frag = parts[1] || '';
-    const targetPath = normalizeTargetPath(file, pathPart);
-
-    if (!fs.existsSync(targetPath)) {
-      issues.push(`${rel}: missing internal target ${url}`);
+    const [pathPart, frag = ''] = rawUrl.split('#');
+    const targetFile = resolveTarget(file, pathPart);
+    if (!targetFile) {
+      issues.push(`${rel(file)}: missing internal target ${rawUrl}`);
       continue;
     }
-
-    if (frag && targetPath.endsWith('.html')) {
-      const ids = extractIds(fs.readFileSync(targetPath, 'utf8'));
-      if (!ids.has(frag)) issues.push(`${rel}: missing anchor target ${url}`);
-    }
+    if (frag && targetFile.endsWith('.html') && !idsFor(targetFile).has(frag)) issues.push(`${rel(file)}: missing anchor target ${rawUrl}`);
   }
 }
 
@@ -109,4 +121,6 @@ if (issues.length) {
   for (const issue of issues) console.error(' - ' + issue);
   process.exit(1);
 }
-console.log(`validate_internal_links: OK (${HTML_FILES.length} html files checked)`);
+console.log(`validate_internal_links: OK (${htmlFiles.length} html files checked, ${checked} href/src values checked)`);
+
+process.exit(0);

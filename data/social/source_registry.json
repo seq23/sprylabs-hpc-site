@@ -1,0 +1,79 @@
+{
+  "version": "1.1",
+  "policy": "query discovery only; collect signals, extract queries, feed patch planning; never auto-publish pages or edit product/download surfaces",
+  "audiences": [
+    "professionals",
+    "entrepreneurs",
+    "athletes",
+    "parents/caregivers",
+    "multi-project operators"
+  ],
+  "sources": [
+    {
+      "platform": "youtube",
+      "source_key": "youtube_hpc_search",
+      "status": "active",
+      "access_method": "public_search_page_no_auth",
+      "weight": 0.65,
+      "search_terms": [
+        "discipline system",
+        "life coach accountability",
+        "AI accountability coach",
+        "decision fatigue productivity",
+        "juggling multiple projects"
+      ]
+    },
+    {
+      "platform": "x",
+      "source_key": "x_hpc_manual_or_api",
+      "status": "manual_or_api_required",
+      "access_method": "api_or_manual_import",
+      "weight": 0.7,
+      "search_terms": [
+        "discipline system",
+        "accountability coach",
+        "decision fatigue",
+        "executive operating system",
+        "life coach alternative"
+      ]
+    },
+    {
+      "platform": "manual",
+      "source_key": "manual_high_intent_social",
+      "status": "active",
+      "access_method": "manual_import",
+      "weight": 0.8,
+      "search_terms": [
+        "customer language",
+        "sales calls",
+        "social comments",
+        "email replies"
+      ]
+    },
+    {
+      "platform": "manual",
+      "source_key": "manual_customer_demand_capture",
+      "status": "active",
+      "access_method": "manual_import",
+      "weight": 0.9,
+      "search_terms": [
+        "AI executive coach alternative",
+        "executive coach replacement",
+        "daily accountability system",
+        "AI accountability system vs coach"
+      ]
+    }
+  ],
+  "pipeline_role": "demand-capture-query-discovery",
+  "allowed_outputs": [
+    "raw_signal_records",
+    "candidate_queries",
+    "source_health"
+  ],
+  "prohibited_outputs": [
+    "new_page_generation",
+    "standalone_faq_generation",
+    "product_page_edits",
+    "download_page_edits"
+  ]
+}

@@ -49,3 +49,5 @@ if (content !== key) fail(`configured key file mismatch: ${keyFile}`);
 const bootstrapSource = fs.readFileSync(path.join(root, 'distribution_scripts', 'bootstrap_distribution.sh'), 'utf8');
 if (!bootstrapSource.includes('BOOTSTRAP_NOOP')) fail('bootstrap script must preserve committed IndexNow keys by default');
 console.log(`DISTRIBUTION CONTRACT PASS: priority=${priority.length} batch=${batch.length} chunk_size=${chunkSize} key_file=${keyFile}`);
+
+process.exit(0);

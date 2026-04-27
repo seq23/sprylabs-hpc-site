@@ -43,3 +43,5 @@ if (errors.length) {
 }
 
 console.log(`validate_reddit_uniqueness: OK (${(published.items || []).length} published pages checked)`);
+
+process.exit(0);

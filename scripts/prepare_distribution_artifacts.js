@@ -72,3 +72,5 @@ const readme = [
 ].join('\n');
 fs.writeFileSync(path.join(buildDir, 'distribution-readme.txt'), readme + '\n');
 console.log(`distribution artifacts prepared: priority=${priorityUrls.length} batch=${batchUrls.length}`);
+
+process.exit(0);
