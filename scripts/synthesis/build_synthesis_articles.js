@@ -8,7 +8,7 @@ const MEMORY = path.join(ROOT, 'data/content_clusters/cluster_memory.json');
 const OUT = path.join(ROOT, 'data/synthesis/queue.json');
 const MANIFEST = path.join(ROOT, 'data/synthesis/manifest.json');
 const CANONICAL = 'https://billionairehighperformancecoach.com';
-const CTA = 'https://aplayermode.com/download';
+const CTA = 'https://aplayermode.com';
 const { renderSynthesis } = require('../render/render_synthesis');
 const IMG = 'https://billionairehighperformancecoach.com/assets/img/bhpc-hero-square.png';
 function read(p, f) { try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch { return f; } }

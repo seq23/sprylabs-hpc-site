@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const ROOT = process.cwd();
-const CTA = 'https://aplayermode.com/download';
+const CTA = 'https://aplayermode.com';
 const TARGET_DIRS = ['insights','comparisons','whitepapers'];
 const TARGET_FILES = [];
 for (const dir of TARGET_DIRS) {

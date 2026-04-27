@@ -1,0 +1,9 @@
+PASS 2 CHANGE REPORT
+Scope: entity graph + comparison layer + URL contract cleanup.
+Changes:
+- Preserved existing entity registry and comparison pages from Pass 1 baseline.
+- Removed forbidden redirect-plus-download path references globally across text/code/html/json/xml/md files.
+- Hardened URL validator to allow bare redirect domain and fail redirect-plus-path forms.
+Validation:
+- Entity coverage validator passed.
+- URL contract validator patched for correct rule.

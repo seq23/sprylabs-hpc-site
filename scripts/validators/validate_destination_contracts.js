@@ -5,7 +5,7 @@ const path = require('path');
 const ROOT = process.cwd();
 const ROUTING = path.join(ROOT, 'data/community/content_routing_log.json');
 const ALLOWED = new Set(['insight','synthesis','comparison','authority','memory','conversion','recovery','discipline','ai_coaching','execution']);
-const CTA = 'https://aplayermode.com/download';
+const CTA = 'https://aplayermode.com';
 function fail(msg){ console.error(`[validate_destination_contracts] FAIL: ${msg}`); process.exit(1); }
 if (!fs.existsSync(ROUTING)) fail('missing data/community/content_routing_log.json');
 const data = JSON.parse(fs.readFileSync(ROUTING, 'utf8'));

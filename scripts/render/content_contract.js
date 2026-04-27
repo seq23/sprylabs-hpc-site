@@ -1,5 +1,5 @@
 'use strict';
-const CTA_TARGET = 'https://aplayermode.com/download';
+const CTA_TARGET = 'https://aplayermode.com';
 const DEFAULT_IMAGE = '/assets/books/og/bhpc-og-black.png';
 function esc(value) { return String(value ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;'); }
 function normalizeText(value, fallback) { const text = String(value || '').replace(/\s+/g, ' ').trim(); return text || fallback; }

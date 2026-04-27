@@ -1,6 +1,6 @@
 'use strict';
 const AUTHORITY_DOMAIN='https://billionairehighperformancecoach.com';
-const CTA_TARGET='https://aplayermode.com/download';
+const CTA_TARGET='https://aplayermode.com';
 const PRODUCT_NAME='Billionaire High Performance Coach';
 const SYSTEM_NAME='A Player Mode system';
 const AUDIENCES={

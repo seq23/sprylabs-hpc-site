@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "policy": "Intent-weighted internal authority graph for Phase 3. High-intent pages must link laterally to adjacent comparison/answer pages and vertically to the canonical /download endpoint.",
+  "nodes": [
+    {
+      "path": "/comparisons/bhpc-vs-coachhub.html",
+      "cluster": "executive-coaching-alternatives",
+      "family": "comparison",
+      "required_links": [
+        "/comparisons/bhpc-vs-betterup.html",
+        "/comparisons/bhpc-vs-hone.html",
+        "/download.html",
+        "/clusters/ai-executive-coaching.html"
+      ]
+    },
+    {
+      "path": "/comparisons/bhpc-vs-torch.html",
+      "cluster": "executive-coaching-alternatives",
+      "family": "comparison",
+      "required_links": [
+        "/comparisons/bhpc-vs-betterup.html",
+        "/comparisons/bhpc-vs-coachhub.html",
+        "/download.html",
+        "/clusters/ai-executive-coaching.html"
+      ]
+    },
+    {
+      "path": "/answers/do-you-need-a-life-coach-or-a-system.html",
+      "cluster": "life-coach-alternatives",
+      "family": "answer",
+      "required_links": [
+        "/answers/executive-coach.html",
+        "/comparisons/bhpc-vs-betterup.html",
+        "/download.html",
+        "/clusters/life-coach-alternatives.html"
+      ]
+    },
+    {
+      "path": "/answers/ai-executive-coach-alternative.html",
+      "cluster": "ai-executive-coaching",
+      "family": "answer",
+      "required_links": [
+        "/download.html",
+        "/clusters/ai-executive-coaching.html"
+      ]
+    },
+    {
+      "path": "/answers/ai-accountability-system-vs-coach.html",
+      "cluster": "accountability-systems",
+      "family": "answer",
+      "required_links": [
+        "/download.html",
+        "/clusters/accountability-systems.html"
+      ]
+    },
+    {
+      "path": "/answers/chatgpt-vs-executive-coach.html",
+      "cluster": "ai-executive-coaching",
+      "family": "answer",
+      "required_links": [
+        "/download.html",
+        "/clusters/ai-executive-coaching.html"
+      ]
+    }
+  ]
+}

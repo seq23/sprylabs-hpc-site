@@ -8,7 +8,7 @@ const MEMORY = path.join(ROOT, 'data/content_clusters/cluster_memory.json');
 const COVERAGE = path.join(ROOT, 'data/query_coverage_map.json');
 const SOCIAL_RUNS = path.join(ROOT, 'data/social/runs');
 const REDDIT_QUERIES = path.join(ROOT, 'data/reddit/queries.json');
-const CONVERSION_URL = 'https://aplayermode.com/download';
+const CONVERSION_URL = 'https://aplayermode.com';
 const CANONICAL_DOMAIN = 'https://billionairehighperformancecoach.com';
 const AUDIENCES = ['professionals','entrepreneurs','athletes','moms/caregivers','multi-project operators'];
 function readJson(file, fallback){ try { return JSON.parse(fs.readFileSync(file,'utf8')); } catch { return fallback; } }

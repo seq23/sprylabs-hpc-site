@@ -1,0 +1,35 @@
+PASS 1 — AUTHOR TRUST + ENTITY REGISTRY
+STATUS: PARTIAL ROADMAP / COMPLETE PASS
+
+Changed source files:
+- author.html
+- about.html
+- download.html
+- assets/styles.css
+- data/entities/author_profile.json
+- data/entities/org_profile.json
+- data/entities/entity_registry.json
+- scripts/validators/validate_author_trust.js
+- scripts/validate_all.sh
+
+Validation performed:
+- prepare_distribution_artifacts.js: PASS
+- build_coverage_map.js: PASS
+- validate_distribution_contract.js: PASS
+- validate_dual_domain_contract.js: PASS
+- validate_internal_links.js: PASS
+- validate_reddit_publish_contract.js: PASS
+- validate_reddit_uniqueness.js: PASS
+- validate_fanout_warning.js: PASS
+- validate_geo_semantics.js: PASS
+- validate_content_routing.js: PASS
+- validate_audience_framing.js: PASS
+- validate_conversion_targets.js: PASS
+- validate_destination_contracts.js: PASS
+- validate_above_fold.js: PASS
+- validate_cta_presence.js: PASS
+- validate_authority_engine.js: PASS
+- validate_word_count.js: PASS
+- validate_author_trust.js: PASS
+
+Note: full validate_all timed out in container after validate_dual_domain_contract due environment timeout, so validators were rerun in bounded batches and passed.
