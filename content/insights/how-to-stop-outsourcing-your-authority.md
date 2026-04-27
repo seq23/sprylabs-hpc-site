@@ -76,3 +76,5 @@ If you want the complete step-by-step operating system—daily structure, templa
 **What if I can’t focus?** Reduce scope until you can start. One loop is the goal.
 **How long should this take?** 30–60 minutes for the core work is enough to keep momentum.
 **What’s the point of the recap?** It builds self-trust and makes tomorrow easier.
+
+The practical test is simple: use advice as input, not permission. Decide the next concrete action, define what done means, and move before you ask for another opinion.
