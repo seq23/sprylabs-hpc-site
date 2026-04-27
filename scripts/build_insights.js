@@ -314,6 +314,14 @@ ${FOOTER_HTML || ""}
 </html>`;
 }
 
+function directAnswerBlock(text) {
+  return `<section class="direct-answer" data-content-contract="above-fold-answer" aria-label="Direct answer"><h2>Direct answer</h2><p>${htmlEscape(text)}</p></section>`;
+}
+
+function insightDepthBlock() {
+  return `<section class="card" data-content-contract="insight-depth-support" style="margin-top:20px"><h2>How to use this insight today</h2><p>Use this page as an execution aid, not as another thing to study. Pick one sentence that names the friction you are actually experiencing, translate it into one physical next action, and stop when that action is complete. The point is to reduce ambiguity before the day turns into negotiation. If the issue is emotional load, lower the task size before you judge the result. If the issue is scattered attention, remove one open loop before adding a new plan. If the issue is avoidance, define the first ugly version and do that version without trying to make it impressive. Small completed loops are what rebuild trust.</p></section>`;
+}
+
 // --- clusters / pillars ---
 function loadClusters() {
   if (exists(CLUSTERS_PATH)) {
@@ -498,7 +506,7 @@ function buildPostPages(posts, clustersMap) {
           </div>`
         : "";
 
-    const cta = `<section class="card" style="margin-top:20px">
+    const cta = `<section class="card" data-content-contract="cta-block" style="margin-top:20px">
       <h2>Want the full system?</h2>
       <p>If this framing helps, you can review the full framework in the <a href="/download.html">System Manual</a>. It is designed to be calm, practical, and usable on bad weeks.</p>
       <p style="margin-top:10px"><a class="btn btn--primary" href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach" rel="noopener">Get Instant Access</a></p>
@@ -512,13 +520,17 @@ function buildPostPages(posts, clustersMap) {
         </section>`
       : "";
 
-    const bodyHtml = `<article class="article">
+    const directAnswer = directAnswerBlock(post.description || `This insight explains ${post.title} in practical execution terms, then expands with context, tradeoffs, and next steps.`);
+
+    const bodyHtml = `${directAnswer}
+    <article class="article">
       <h1>${htmlEscape(post.title)}</h1>
       ${post.description ? `<p class="lede">${htmlEscape(post.description)}</p>` : ""}
       ${meta}
       <div class="article-body">
         ${tocHtml}
         ${htmlBody}
+        ${insightDepthBlock()}
       </div>
       ${aiTherapistSafety}
       <div style="margin-top:16px"><a class="btn" href="${pillarHref}">Browse this pillar</a></div>
@@ -562,7 +574,10 @@ function buildInsightsIndex(posts, clustersMap) {
       `.trim();
     }).join("\n");
 
+  const directAnswer = directAnswerBlock('The insights library collects short, practical execution essays. Start with the page closest to the friction you are facing, then use the full system manual when you need the complete operating structure.');
+
   const bodyHtml = `
+    ${directAnswer}
     <section class="section">
       <h1>Insights</h1>
       <p class="lead">Short, practical essays on execution, accountability, and staying consistent.</p>
@@ -570,7 +585,7 @@ function buildInsightsIndex(posts, clustersMap) {
         <li><a href="/continuity-collapse-pattern/">White Paper</a></li>
         <li><a href="/ai-execution-atlas/">AI Execution Atlas</a></li>
       </ul>
-      <p class="cta-inline"><strong>Want the full system manual, prompt pack, and recovery protocols?</strong><br/>
+      <p class="cta-inline" data-content-contract="cta-block"><strong>Want the full system manual, prompt pack, and recovery protocols?</strong><br/>
         <a class="btn btn--primary" href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach">Get Instant Access</a>
       </p>
 
@@ -910,6 +925,10 @@ const DOMINANCE_PAGES = [
     `${SITE_BASE}/insights/index.html`,
     `${SITE_BASE}/atlas.html`,
     `${SITE_BASE}/ai-execution-atlas/`,
+    `${SITE_BASE}/clusters/ai-executive-coaching.html`,
+    `${SITE_BASE}/clusters/accountability-systems.html`,
+    `${SITE_BASE}/clusters/life-coach-alternatives.html`,
+    `${SITE_BASE}/clusters/productivity-systems.html`,
     ...clusters.map((c) => `${SITE_BASE}/pillars/${c.id}/index.html`),
     ...posts.slice().sort((a, b) => (b.date || "").localeCompare(a.date || "")).slice(0, 12).map((p) => `${SITE_BASE}/insights/${p.slug}.html`),
   ];
