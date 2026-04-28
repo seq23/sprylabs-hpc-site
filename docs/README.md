@@ -1,0 +1,10 @@
+# Repo Documentation Index
+
+Read these first:
+
+1. OPERATIONS.md
+2. SYSTEM_CAPABILITIES.md
+3. AUTOMATION_MAP.md
+4. VALIDATOR_INVENTORY.md
+5. VA_RUNBOOK.md
+6. NEXT_EXECUTION_BACKLOG.md
