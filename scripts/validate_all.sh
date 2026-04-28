@@ -14,6 +14,7 @@ node scripts/answer_surface/update_score_history.js
 node scripts/validators/validate_answer_surface_history.js
 node scripts/answer_surface/build_weakness_backlog.js
 node scripts/validators/validate_answer_surface_weakness_backlog.js
+node scripts/validators/validate_answer_surface_dashboard_gates.js
 node scripts/validators/validate_cannibalization.js
 node scripts/validators/validate_intake_taxonomy_contract.js
 node scripts/validators/validate_query_universe_contract.js
