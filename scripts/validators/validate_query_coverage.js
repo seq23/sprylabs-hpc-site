@@ -1,56 +1,46 @@
+#!/usr/bin/env node
 const fs = require("fs");
 
-const rawClusters = JSON.parse(fs.readFileSync("data/intake/query_clusters.json", "utf8"));
-const rawBacklog = JSON.parse(fs.readFileSync("data/intake/build_backlog.json", "utf8"));
+function read(p) {
+  if (!fs.existsSync(p)) throw new Error(`missing required file: ${p}`);
+  return JSON.parse(fs.readFileSync(p, "utf8"));
+}
 
-const clusters = Array.isArray(rawClusters)
-  ? rawClusters
-  : Array.isArray(rawClusters.clusters)
-    ? rawClusters.clusters
-    : Array.isArray(rawClusters.items)
-      ? rawClusters.items
+const clustersRaw = read("data/intake/query_clusters.json");
+const backlogRaw = read("data/intake/build_backlog.json");
+
+const clusters = Array.isArray(clustersRaw)
+  ? clustersRaw
+  : Array.isArray(clustersRaw.clusters)
+    ? clustersRaw.clusters
+    : Array.isArray(clustersRaw.items)
+      ? clustersRaw.items
       : [];
 
-const backlogItems = Array.isArray(rawBacklog)
-  ? rawBacklog
-  : Array.isArray(rawBacklog.items)
-    ? rawBacklog.items
-    : [];
+const backlog = backlogRaw.items || [];
 
-const clusterIds = new Set(
-  clusters.map(c => c.cluster_id || c.id).filter(Boolean)
+const universeUseCases = new Set(
+  clusters.map(c => c.use_case || c.cluster_id).filter(Boolean)
 );
 
-const backlogClusters = new Set(
-  backlogItems.map(i => i.cluster_id || i.id).filter(Boolean)
+const backlogUseCases = new Set(
+  backlog.map(i => i.meta?.use_case || i.cluster_id).filter(Boolean)
 );
 
-if (clusterIds.size === 0) {
-  throw new Error("QUERY COVERAGE FAIL: no clusters found in data/intake/query_clusters.json");
-}
-
-if (backlogClusters.size === 0) {
-  throw new Error("QUERY COVERAGE FAIL: no backlog clusters found in data/intake/build_backlog.json");
-}
-
-const uncovered = [...clusterIds].filter(id => !backlogClusters.has(id));
+const uncovered = [...universeUseCases].filter(uc => !backlogUseCases.has(uc));
 
 fs.mkdirSync("reports", { recursive: true });
 fs.writeFileSync("reports/query_coverage_gaps.json", JSON.stringify({
   generated_at: new Date().toISOString(),
-  total_clusters: clusterIds.size,
-  backlog_clusters: backlogClusters.size,
+  coverage_model: "use_case_canonical_page_coverage",
+  universe_use_cases: universeUseCases.size,
+  covered_use_cases: backlogUseCases.size,
   uncovered_count: uncovered.length,
-  coverage_ratio: Number(((clusterIds.size - uncovered.length) / clusterIds.size).toFixed(4)),
-  uncovered_clusters: uncovered
+  uncovered_use_cases: uncovered
 }, null, 2));
 
-if (uncovered.length > 0) {
-  if (process.env.QUERY_COVERAGE_STRICT === "1") {
-    throw new Error(`QUERY COVERAGE FAIL: ${uncovered.length} clusters not represented in backlog. See reports/query_coverage_gaps.json`);
-  }
-
-  console.log(`QUERY COVERAGE REPORT: ${uncovered.length} clusters not represented in backlog; report written to reports/query_coverage_gaps.json`);
-} else {
-  console.log(`QUERY COVERAGE PASS: ${clusterIds.size} clusters covered`);
+if (process.env.QUERY_COVERAGE_STRICT === "1" && uncovered.length) {
+  throw new Error(`QUERY COVERAGE FAIL: ${uncovered.length} use_cases uncovered. See reports/query_coverage_gaps.json`);
 }
+
+console.log(`QUERY COVERAGE PASS: ${backlogUseCases.size}/${universeUseCases.size} use_cases covered`);

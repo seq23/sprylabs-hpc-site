@@ -64,7 +64,8 @@
     "fanout:auto": "node scripts/fanout/auto_expand_fanout.js",
     "repair:all": "npm run intake && npm run scoring && npm run backlog && npm run fanout:auto",
     "validate:backlog": "node scripts/validators/validate_backlog_contract.js && node scripts/validators/validate_prebuild.js",
-    "Validate:machine-readability": "node scripts/validators/validate_machine_readability_contract.js && node scripts/validators/validate_social_firehose_contract.js && node scripts/validators/validate_throttle_contract.js && node scripts/validators/validate_vertical_keys.js"
+    "Validate:machine-readability": "node scripts/validators/validate_machine_readability_contract.js && node scripts/validators/validate_social_firehose_contract.js && node scripts/validators/validate_throttle_contract.js && node scripts/validators/validate_vertical_keys.js",
+    "execution:strict": "node scripts/execution/run_full_execution.js"
   },
   "engines": {
     "node": ">=24.0.0"

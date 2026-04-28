@@ -45,7 +45,7 @@ run node scripts/validators/validate_author_trust.js
 run node scripts/validators/validate_entity_coverage.js
 run node scripts/validators/validate_query_metadata.js
 run node scripts/validators/validate_query_traceability.js
-node scripts/validators/validate_query_coverage.js
+QUERY_COVERAGE_STRICT=1 node scripts/validators/validate_query_coverage.js
 run node scripts/authority/compute_authority_scores.js
 node scripts/validators/validate_authority_scores.js
 node scripts/internal/build_link_graph.js
