@@ -23,9 +23,11 @@ jobs:
 
       - run: npm ci --ignore-scripts
       - run: npm run reddit:daily
-      - run: npm run fanout:apply
+      - run: npm run authority:fanout
       - run: npm run distribution:prepare
       - run: npm run validate:all
+      - run: npm run validate:critical
+      - run: npm run validate:warnings
 
       - name: Commit and push if changed
         env:

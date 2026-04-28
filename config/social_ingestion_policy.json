@@ -33,5 +33,14 @@
     ],
     "automated_edits": "forbidden",
     "static_manual_blocks": "explicit only"
-  }
+  },
+  "max_items_per_source_per_run": 25,
+  "max_clusters_per_run": 10,
+  "max_pages_generated_per_run": 5,
+  "max_pages_published_per_day": 3,
+  "require_cluster_score_minimum": true,
+  "dedupe_before_publish": true,
+  "publish_mode": "queued",
+  "approval_required_for_publish": true,
+  "firehose_prevention": "enabled"
 }

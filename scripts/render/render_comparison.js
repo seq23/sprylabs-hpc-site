@@ -42,6 +42,9 @@ function renderComparison(c = {}) {
 <li>personal operating system</li>
 <li>ChatGPT productivity prompts</li>
 <li>executive coaching alternative</li>
+<li>self-guided executive operating system</li>
+<li>AI coaching platform alternative</li>
+<li>BetterUp alternative for founders</li>
 </ul>
 <h3>Adjacent decision paths</h3>
 <ul class="fanout-list">

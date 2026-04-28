@@ -23,6 +23,8 @@ jobs:
 
       - run: npm ci --ignore-scripts
       - run: npm run reddit:evening
+      - run: npm run validate:critical
+      - run: npm run validate:warnings
 
       - name: Commit and push if changed
         env:

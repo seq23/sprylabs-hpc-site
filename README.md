@@ -24,3 +24,7 @@ Day-0 setup:
 - Future full baseline ZIPs must include the configured root key file and `distribution.config.json` with matching `indexnow.key` + `indexnow.key_file`.
 - Snapshot updates should **not** require re-bootstrap unless you explicitly want to rotate the key.
 - To rotate intentionally, run `INDEXNOW_ROTATE=1 npm run distribution:bootstrap` or `bash distribution_scripts/bootstrap_distribution.sh --rotate`, then commit + deploy the new key file.
+
+## LLM Bait System Layer
+
+This repo includes machine-readable entry points (`llms.txt`, `answers.json`, `coverage.json`, query maps, entity registry, and internal authority graph), a strict backlog-controlled generation layer, social/reddit firehose controls, answer-surface monitoring outputs, distribution artifacts, and validators for crawl, sitemap, CTA, schema, entity, query, authority, and conversion contracts.

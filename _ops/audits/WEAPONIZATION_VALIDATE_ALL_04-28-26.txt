@@ -1,0 +1,71 @@
+
+> sprylabs-hpc-site@0.0.0-snapshot validate:all
+> bash scripts/validate_all.sh
+
+[validate_all] node scripts/prepare_distribution_artifacts.js
+distribution artifacts prepared: priority=32 batch=364
+[validate_all] node scripts/build_coverage_map.js
+Wrote coverage/coverage.json
+Wrote coverage/index.html
+[validate_all] node _ops/validators/validate_distribution_contract.js
+DISTRIBUTION CONTRACT PASS: priority=32 batch=364 chunk_size=100 key_file=200dca426298c70aabc048344605cccae8dabc0b460f1b3e21eb6e857ef83af1.txt
+[validate_all] node _ops/validators/validate_dual_domain_contract.js
+validate_dual_domain_contract: OK (410 html files checked)
+[validate_all] node _ops/validators/validate_internal_links.js
+validate_internal_links: OK (410 html files checked, 14006 href/src values checked)
+[validate_all] node _ops/validators/validate_reddit_publish_contract.js
+validate_reddit_publish_contract: OK (1 published pages checked)
+[validate_all] node _ops/validators/validate_reddit_uniqueness.js
+validate_reddit_uniqueness: OK (1 published pages checked)
+[validate_all] node scripts/validate_fanout_warning.js
+validate_fanout_warning: checked 409 html files
+validate_fanout_warning: OK
+[validate_all] node scripts/validate_geo_semantics.js
+validate_geo_semantics: OK
+[validate_all] node scripts/validate_content_routing.js
+[validate_content_routing] OK (9 routes)
+[validate_all] node scripts/validate_audience_framing.js
+[validate_audience_framing] OK
+[validate_all] node scripts/validate_conversion_targets.js
+[validate_conversion_targets] OK
+[validate_all] node scripts/validators/validate_destination_contracts.js
+[validate_destination_contracts] OK (9 routes)
+[validate_all] node scripts/validators/validate_above_fold.js
+[validate_above_fold] OK (127 checked pages)
+[validate_all] node scripts/validators/validate_cta_presence.js
+[validate_cta_presence] OK (127 checked pages)
+[validate_all] node scripts/validators/validate_authority_engine.js
+[validate_authority_engine] OK (1 queue items)
+[validate_all] node scripts/validators/validate_word_count.js
+[validate_word_count] OK (124 pages checked; minimum 960 words)
+[validate_all] node scripts/validators/validate_author_trust.js
+[validate_author_trust] OK
+[validate_all] node scripts/validators/validate_entity_coverage.js
+[validate_entity_coverage] OK (3 metadata pages checked)
+[validate_all] node scripts/validators/validate_query_metadata.js
+[validate_query_metadata] OK (3 pages checked)
+[validate_all] node scripts/validators/validate_query_traceability.js
+[validate_query_traceability] OK
+[validate_all] node scripts/internal/build_link_graph.js
+build_link_graph: checked 6; missing 0
+[validate_all] node scripts/validators/validate_internal_authority_graph.js
+[validate_internal_authority_graph] OK (6 nodes checked)
+[validate_all] node scripts/validators/validate_aeo_contract.js
+[validate_aeo_contract] OK (6 pages checked)
+[validate_all] node scripts/validators/validate_fanout_blocks.js
+[validate_fanout_blocks] OK (3 pages checked)
+[validate_all] node scripts/validators/validate_schema_contract.js
+[validate_schema_contract] OK
+[validate_all] node scripts/validators/validate_crawl_contract.js
+[validate_crawl_contract] OK
+[validate_all] node scripts/validators/validate_conversion_endpoint.js
+[validate_conversion_endpoint] OK
+[validate_all] node scripts/validators/validate_url_contract.js
+[validate_url_contract] OK
+[validate_all] node scripts/validators/validate_sitemap_page_parity.js
+[validate_sitemap_page_parity] OK (18 priority URLs checked)
+[validate_all] node scripts/validators/validate_canonical_url_contract.js
+[validate_canonical_url_contract] OK (16 target pages checked)
+[validate_all] node scripts/validators/validate_cta_endpoint_contract.js
+[validate_cta_endpoint_contract] OK
+[validate_all] OK

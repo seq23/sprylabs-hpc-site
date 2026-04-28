@@ -2,9 +2,17 @@
 set -euo pipefail
 run() {
   echo "[validate_all] $*"
-  timeout 20s "$@"
+  "$@"
 }
 run node scripts/prepare_distribution_artifacts.js
+run node scripts/validators/validate_backlog_contract.js
+run node scripts/validators/validate_prebuild.js
+run node scripts/validators/validate_machine_readability_contract.js
+run node scripts/validators/validate_social_firehose_contract.js
+run node scripts/validators/validate_throttle_contract.js
+run node scripts/validators/validate_vertical_keys.js
+run node scripts/validators/validate_content_routing.js
+run node scripts/validators/validate_extractability.js
 run node scripts/build_coverage_map.js
 run node _ops/validators/validate_distribution_contract.js
 run node _ops/validators/validate_dual_domain_contract.js

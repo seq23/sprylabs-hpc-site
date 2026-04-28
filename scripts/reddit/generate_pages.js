@@ -4,6 +4,7 @@ const path = require('path');
 const renderQuestionPage = require('./renderers/question_template');
 const renderRoundupPage = require('./renderers/roundup_template');
 const renderPatternPage = require('./renderers/pattern_template');
+const { assertBacklogApproved } = require('../lib/strict_backlog_gate');
 
 const ROOT = process.cwd();
 const queue = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/reddit/publish_queue.json'), 'utf8'));
@@ -118,6 +119,7 @@ function buildCopy(item) {
 function main() {
   const generated = [];
   for (const item of (queue.items || [])) {
+    assertBacklogApproved(item);
     const renderer = pickRenderer(item.page_type);
     const page = buildCopy(item);
     const html = renderer(page);

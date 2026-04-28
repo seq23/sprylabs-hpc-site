@@ -21,8 +21,11 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts
       - run: npm run whitepaper:semiannual
+      - run: npm run velocity:sync
       - run: npm run distribution:prepare
       - run: npm run validate:all
+      - run: npm run validate:critical
+      - run: npm run validate:warnings
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"

@@ -27,12 +27,18 @@ jobs:
         run: npm run clusters:update
       - name: Build synthesis articles
         run: npm run synthesis:build
+      - name: Sync velocity layer
+        run: npm run velocity:sync
       - name: Build admin page
         env:
           SPRY_ADMIN_PASSWORD: ${{ secrets.SPRY_ADMIN_PASSWORD || 'aplayer' }}
         run: npm run admin:build
       - name: Validate
         run: npm run validate:all
+      - name: Validate velocity critical surface
+        run: npm run validate:critical
+      - name: Report velocity warnings
+        run: npm run validate:warnings
       - name: Commit synthesis updates
         run: |
           if [ -n "$(git status --porcelain)" ]; then
