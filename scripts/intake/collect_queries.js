@@ -1,9 +1,88 @@
-#!/usr/bin/env node
-const fs = require('fs'); const path = require('path');
-const ROOT = process.cwd();
-function read(file, fb){ try { return fs.existsSync(file) ? JSON.parse(fs.readFileSync(file,'utf8')) : fb; } catch { return fb; } }
-function write(file, data){ fs.mkdirSync(path.dirname(file), {recursive:true}); fs.writeFileSync(file, JSON.stringify(data,null,2)+'\n'); }
-const meta = read(path.join(ROOT,'data/query_metadata.json'), {items:[]});
-const queries = (meta.items || []).map((item, i) => ({ id:`query_${String(i+1).padStart(3,'0')}`, query:item.query_target || item.query || item.path, cluster:item.query_cluster || item.cluster || 'general', target_page:item.path || item.target_page, content_type:item.content_family || 'answer', source:'data/query_metadata.json', funnel_stage:'consideration', entity_target:'Billionaire High Performance Coach', cta_target:'/download' })).filter(x => x.query && x.target_page);
-write(path.join(ROOT,'data/intake/query_corpus.json'), {generated_at:new Date().toISOString(), count:queries.length, queries});
+const fs = require("fs");
+
+function readJson(file, fallback) {
+  try {
+    if (!fs.existsSync(file)) return fallback;
+    return JSON.parse(fs.readFileSync(file, "utf8"));
+  } catch {
+    return fallback;
+  }
+}
+
+function normalizeItem(item) {
+  return {
+    id: item.id || String(item.query || "").toLowerCase().replace(/[^a-z0-9]+/g, "_").replace(/^_|_$/g, ""),
+    query: item.query,
+    product_role: item.product_role || "unknown",
+    audience: item.audience || "unknown",
+    use_case: item.use_case || item.cluster || "unknown",
+    source_type: item.source_type || item.source || "existing_repo",
+    intent: item.intent || "solution_seeking",
+    content_type: item.content_type || "answer",
+    authority_target: item.authority_target || item.use_case || item.cluster || "unknown",
+    conversion_path: item.conversion_path || "https://aplayermode.com",
+    source_count: item.source_count || 1
+  };
+}
+
+const universe = readJson("data/intake/query_universe.json", { queries: [] }).queries || [];
+const existing = readJson("data/intake/query_corpus.json", { queries: [] }).queries || [];
+
+const legacySeeds = [
+  {
+    query: "how to use ai as an executive coach",
+    product_role: "executive_coach",
+    audience: "upwardly_mobile_executives",
+    use_case: "decision_making",
+    source_type: "existing_repo",
+    intent: "instructional",
+    content_type: "answer",
+    authority_target: "decision_making",
+    conversion_path: "https://aplayermode.com"
+  },
+  {
+    query: "ai accountability partner for consistency",
+    product_role: "accountability_partner",
+    audience: "consistency_strugglers",
+    use_case: "habit_consistency",
+    source_type: "existing_repo",
+    intent: "solution_seeking",
+    content_type: "answer",
+    authority_target: "habit_consistency",
+    conversion_path: "https://aplayermode.com"
+  },
+  {
+    query: "chief of staff ai system for people with many projects",
+    product_role: "chief_of_staff",
+    audience: "multi_project_people",
+    use_case: "multi_project_management",
+    source_type: "existing_repo",
+    intent: "solution_seeking",
+    content_type: "answer",
+    authority_target: "multi_project_management",
+    conversion_path: "https://aplayermode.com"
+  }
+];
+
+const merged = new Map();
+
+for (const item of [...universe, ...existing, ...legacySeeds]) {
+  if (!item.query) continue;
+  const normalized = normalizeItem(item);
+  const key = `${normalized.query.toLowerCase()}|${normalized.source_type}`;
+  if (!merged.has(key)) merged.set(key, normalized);
+}
+
+const queries = [...merged.values()];
+
+fs.mkdirSync("data/intake", { recursive: true });
+fs.writeFileSync("data/intake/query_corpus.json", JSON.stringify({
+  generated_at: new Date().toISOString(),
+  source: "taxonomy_universe_plus_existing_signals",
+  counts: {
+    queries: queries.length
+  },
+  queries
+}, null, 2));
+
 console.log(`intake: collected ${queries.length} queries`);

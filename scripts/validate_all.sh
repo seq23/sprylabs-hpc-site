@@ -10,6 +10,7 @@ run node scripts/validators/validate_prebuild.js
 node scripts/validators/validate_signal_floor.js
 node scripts/validators/validate_scoring_contract.js
 node scripts/validators/validate_intake_taxonomy_contract.js
+node scripts/validators/validate_query_universe_contract.js
 run node scripts/validators/validate_conversion_contract.js
 node scripts/validators/validate_machine_readability_contract.js
 run node scripts/validators/validate_social_firehose_contract.js
