@@ -8,6 +8,8 @@ run node scripts/prepare_distribution_artifacts.js
 run node scripts/validators/validate_backlog_contract.js
 run node scripts/validators/validate_prebuild.js
 node scripts/validators/validate_signal_floor.js
+node scripts/validators/validate_scoring_contract.js
+node scripts/validators/validate_intake_taxonomy_contract.js
 run node scripts/validators/validate_conversion_contract.js
 node scripts/validators/validate_machine_readability_contract.js
 run node scripts/validators/validate_social_firehose_contract.js

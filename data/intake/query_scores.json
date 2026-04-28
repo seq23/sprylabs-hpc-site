@@ -1,28 +1,51 @@
 {
-  "generated_at": "2026-04-28T12:19:48.197Z",
-  "count": 2,
-  "scores": [
+  "generated_at": "2026-04-28T13:23:26.535Z",
+  "scoring_model": "weighted_conversion_authority_extractability_v1",
+  "items": [
     {
-      "cluster_id": "executive-coaching-alternatives",
-      "volume_score": 0.4,
-      "intent_score": 0.85,
-      "monetization_score": 0.9,
-      "competition_score": 0.65,
-      "coverage_gap_score": 0.25,
-      "score": 0.628,
-      "threshold": 0.55,
-      "approved": true
+      "id": "executive-coaching-alternatives",
+      "query": "",
+      "target_page": null,
+      "score": 42,
+      "approved": false,
+      "breakdown": {
+        "source_frequency": 40,
+        "conversion_proximity": 80,
+        "coverage_gap": 85,
+        "authority_graph": 45,
+        "extractability": 45,
+        "fanout": 85,
+        "freshness": 55,
+        "competition_opportunity": 55,
+        "cannibalization_risk": 0,
+        "penalty": 20,
+        "penalty_reasons": [
+          "missing_authority_target"
+        ]
+      }
     },
     {
-      "cluster_id": "life-coach-alternatives",
-      "volume_score": 0.2,
-      "intent_score": 0.85,
-      "monetization_score": 0.9,
-      "competition_score": 0.65,
-      "coverage_gap_score": 0.25,
-      "score": 0.578,
-      "threshold": 0.55,
-      "approved": true
+      "id": "life-coach-alternatives",
+      "query": "",
+      "target_page": null,
+      "score": 19,
+      "approved": false,
+      "breakdown": {
+        "source_frequency": 20,
+        "conversion_proximity": 80,
+        "coverage_gap": 85,
+        "authority_graph": 45,
+        "extractability": 45,
+        "fanout": 85,
+        "freshness": 55,
+        "competition_opportunity": 55,
+        "cannibalization_risk": 0,
+        "penalty": 40,
+        "penalty_reasons": [
+          "thin_signal",
+          "missing_authority_target"
+        ]
+      }
     }
   ]
 }
