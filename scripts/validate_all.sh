@@ -41,6 +41,7 @@ run node scripts/validators/validate_query_metadata.js
 run node scripts/validators/validate_query_traceability.js
 run node scripts/internal/build_link_graph.js
 run node scripts/validators/validate_internal_authority_graph.js
+node scripts/validators/validate_money_link_floor.js
 run node scripts/validators/validate_aeo_contract.js
 run node scripts/validators/validate_fanout_blocks.js
 run node scripts/validators/validate_schema_contract.js
