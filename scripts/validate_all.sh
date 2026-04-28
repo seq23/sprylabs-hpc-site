@@ -59,4 +59,5 @@ run node scripts/validators/validate_url_contract.js
 run node scripts/validators/validate_sitemap_page_parity.js
 run node scripts/validators/validate_canonical_url_contract.js
 run node scripts/validators/validate_cta_endpoint_contract.js
+node scripts/validators/validate_page_type_conversion_floor.js
 echo "[validate_all] OK"
