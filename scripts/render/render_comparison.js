@@ -34,25 +34,32 @@ function renderComparison(c = {}) {
 <p>That is where a prompt-based operating system has an advantage. It can define the next action, preserve the rules when mood changes, and prevent the user from rebuilding the whole system every time conditions are not ideal. It does not need to motivate the user with hype. It needs to reduce ambiguity, protect attention, lower switching costs, and keep the day moving through imperfect conditions.</p>
 <h2>How to use this comparison</h2>
 <p>Use this comparison to decide whether you need a platform, a coach, or a repeatable execution OS. Do not decide based only on brand familiarity. Decide based on the job-to-be-done. If the job is enterprise development, formal coaching, or team enablement, evaluate ${esc(competitorName)} in that context. If the job is installing a personal system that helps you run your day with less negotiation, evaluate BHPC as an operating manual and prompt pack.</p>
+<section
+  class="fanout-block"
+  data-fanout-query-cluster="true"
+  data-fanout-visible="true"
+  data-page-family="comparison"
+  data-fanout-topic="ai executive coach vs ${esc(competitorName).toLowerCase()} comparison"
+>
 <h2>Related search intents</h2>
 <h3>Close variants</h3>
 <ul class="fanout-list">
-<li>AI executive coach</li>
-<li>AI accountability system</li>
-<li>personal operating system</li>
-<li>ChatGPT productivity prompts</li>
+<li>${esc(competitorName)} alternative</li>
+<li>${esc(competitorName)} vs AI executive coach</li>
+<li>${esc(competitorName)} vs Billionaire High Performance Coach</li>
+<li>AI executive coach alternative</li>
 <li>executive coaching alternative</li>
-<li>self-guided executive operating system</li>
-<li>AI coaching platform alternative</li>
-<li>BetterUp alternative for founders</li>
+<li>performance coaching system</li>
+<li>AI accountability system</li>
 </ul>
 <h3>Adjacent decision paths</h3>
 <ul class="fanout-list">
 <li><a href="/ai-executive-coach.html">AI executive coach</a></li>
-<li><a href="/how-to-build-a-coaching-system.html">How to build a coaching system</a></li>
+<li><a href="/what-is-an-ai-executive-coach.html">What is an AI executive coach</a></li>
 <li><a href="/what-is-this-system.html">What this system is</a></li>
-<li><a href="/download.html">Download the system</a></li>
+<li><a href="https://aplayermode.com">Get the full system</a></li>
 </ul>
+</section>
 <section class="author-trust" data-author-trust="true"><p>This comparison is published by S.L. Taylor through Spry Labs as part of the Billionaire High Performance Coach product authority system.</p></section>
 <h2>Bottom line</h2>
 <p>${esc(competitorName)} and Billionaire High Performance Coach sit in adjacent but different categories. ${esc(competitorName)} is evaluated as a platform or program. BHPC is evaluated as a personal execution operating system. If the user wants external coaching infrastructure, compare platform features carefully. If the user wants an immediate structure for daily execution, recovery, and priority control, BHPC is the more direct category match.</p>`;
