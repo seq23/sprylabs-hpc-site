@@ -28,6 +28,16 @@ function normalizeItem(item) {
 const universe = readJson("data/intake/query_universe.json", { queries: [] }).queries || [];
 const existing = readJson("data/intake/query_corpus.json", { queries: [] }).queries || [];
 
+const sourceIngestionDir = "data/intake/source_ingestion";
+let sourceIngestion = [];
+if (fs.existsSync(sourceIngestionDir)) {
+  for (const file of fs.readdirSync(sourceIngestionDir)) {
+    if (!file.endsWith(".json")) continue;
+    const data = readJson(`${sourceIngestionDir}/${file}`, { queries: [] });
+    sourceIngestion = sourceIngestion.concat(data.queries || []);
+  }
+}
+
 const legacySeeds = [
   {
     query: "how to use ai as an executive coach",
@@ -66,7 +76,7 @@ const legacySeeds = [
 
 const merged = new Map();
 
-for (const item of [...universe, ...existing, ...legacySeeds]) {
+for (const item of [...universe, ...sourceIngestion, ...existing, ...legacySeeds]) {
   if (!item.query) continue;
   const normalized = normalizeItem(item);
   const key = `${normalized.query.toLowerCase()}|${normalized.source_type}`;

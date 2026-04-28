@@ -57,7 +57,7 @@
     "validate:critical": "node scripts/validators/validate_velocity_critical.js",
     "validate:warnings": "node scripts/validators/validate_velocity_warnings.js && node scripts/validate_fanout_warning.js",
     "full:loop": "npm run repair:all && npm run answer:observe && npm run answer:score && npm run answer:dashboard && npm run answer:backlog && npm run build:new && npm run validate:all",
-    "intake": "node scripts/intake/build_query_universe.js && node scripts/intake/collect_queries.js && node scripts/intake/cluster_queries.js",
+    "intake": "node scripts/intake/build_query_universe.js && node scripts/intake/run_ingestion.js && node scripts/intake/collect_queries.js && node scripts/intake/cluster_queries.js",
     "scoring": "node scripts/intake/score_queries.js",
     "backlog": "node scripts/intake/build_backlog.js",
     "build:new": "node scripts/validators/validate_publish_signal_gate.js && node scripts/validators/validate_backlog_contract.js && node scripts/validators/validate_prebuild.js",

@@ -20,6 +20,28 @@ const selected = ranked
   .filter(s => s.score >= MIN_SCORE)
   .slice(0, MAX_ITEMS);
 
+
+function differentiatorFor(clusterId, c) {
+  if (clusterId === "executive_coach__habit_consistency") {
+    return "executive coaching angle for habits and low energy habit consistency";
+  }
+
+  if (clusterId === "accountability_partner__habit_consistency") {
+    return "accountability partner angle for habits and habit tracker alternative";
+  }
+
+  if (clusterId === "executive_coach__executive_assistant_workflows") {
+    return "executive assistant workflow for operators and meetings";
+  }
+
+  return [
+    c.product_role,
+    c.use_case,
+    c.audience_count ? `${c.audience_count} audience segments` : null,
+    c.source_count ? `${c.source_count} source types` : null
+  ].filter(Boolean).join(" ");
+}
+
 const items = [];
 
 for (const s of selected) {
@@ -39,7 +61,8 @@ for (const s of selected) {
       product_role: c.product_role,
       use_case: c.use_case,
       audience_count: c.audience_count || 0,
-      source_count: c.source_count || 0
+      source_count: c.source_count || 0,
+      differentiator: differentiatorFor(sid, c)
     }
   });
 }
