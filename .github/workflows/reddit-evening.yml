@@ -8,6 +8,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: main-automation
+  cancel-in-progress: false
+
 jobs:
   rotate:
     runs-on: ubuntu-latest
