@@ -1,0 +1,42 @@
+{
+  "version": "1.0",
+  "purpose": "Prevent duplicate intent pages and internal competition before new content is generated.",
+  "rules": {
+    "max_collision_score_for_publish": 79,
+    "require_unique_differentiator": true,
+    "compare_against_existing_html": true,
+    "compare_against_backlog": true
+  },
+  "intent_families": [
+    {
+      "id": "ai_executive_coach",
+      "terms": ["ai executive coach", "ai coaching", "executive coach alternative", "chatgpt executive coach"],
+      "allowed_differentiators": ["comparison", "review", "pricing", "founders", "weekly review", "chief of staff"]
+    },
+    {
+      "id": "accountability_system",
+      "terms": ["accountability system", "accountability partner", "chatgpt accountability", "ai accountability"],
+      "allowed_differentiators": ["entrepreneurs", "busy parents", "athletes", "missed day", "habit tracker", "weight loss"]
+    },
+    {
+      "id": "daily_planning",
+      "terms": ["daily planning", "daily plan", "planning system", "ai planner"],
+      "allowed_differentiators": ["founders", "parents", "executives", "overplanning", "calendar"]
+    },
+    {
+      "id": "consistency_recovery",
+      "terms": ["consistency", "missed day", "fall off", "restart", "stay consistent"],
+      "allowed_differentiators": ["weight loss", "fitness", "habits", "workout", "nutrition", "low energy"]
+    },
+    {
+      "id": "chief_of_staff",
+      "terms": ["chief of staff", "ai chief of staff", "assistant", "executive assistant"],
+      "allowed_differentiators": ["projects", "calendar", "meetings", "busy parents", "operators"]
+    },
+    {
+      "id": "behavioral_self_regulation",
+      "terms": ["behavioral", "self regulation", "emotional reset", "reframe", "overthinking"],
+      "allowed_differentiators": ["not therapy", "structure", "next action", "missed day", "decision fatigue"]
+    }
+  ]
+}

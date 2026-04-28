@@ -9,6 +9,7 @@ run node scripts/validators/validate_backlog_contract.js
 run node scripts/validators/validate_prebuild.js
 node scripts/validators/validate_signal_floor.js
 node scripts/validators/validate_scoring_contract.js
+node scripts/validators/validate_cannibalization.js
 node scripts/validators/validate_intake_taxonomy_contract.js
 node scripts/validators/validate_query_universe_contract.js
 run node scripts/validators/validate_conversion_contract.js
