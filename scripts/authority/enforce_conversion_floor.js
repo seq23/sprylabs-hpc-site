@@ -1,35 +1,35 @@
 const fs = require("fs");
 const path = require("path");
 
-function walk(dir) {
-  let results = [];
-  for (const file of fs.readdirSync(dir)) {
-    const full = path.join(dir, file);
-    if (fs.statSync(full).isDirectory()) {
-      if (["node_modules",".git","scripts","data","reports","coverage"].includes(file)) continue;
-      results = results.concat(walk(full));
-    } else if (full.endsWith(".html")) {
-      results.push(full);
-    }
+const CTA = "https://aplayermode.com";
+
+function walk(dir, out = []) {
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    if ([".git","node_modules","scripts","data","reports","coverage",".build","config"].includes(entry.name)) continue;
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) walk(full, out);
+    else if (entry.isFile() && entry.name.endsWith(".html")) out.push(full);
   }
-  return results;
+  return out;
 }
 
-const pages = walk(".");
-
+const files = walk(".");
 let patched = 0;
 
-for (const file of pages) {
+for (const file of files) {
   let html = fs.readFileSync(file, "utf8");
 
-  if (!html.includes("https://aplayermode.com")) {
-    html = html.replace(
-      "</body>",
-      `<div class="cta"><a href="https://aplayermode.com">Get Instant Access</a></div>\n</body>`
-    );
-    fs.writeFileSync(file, html);
-    patched++;
-  }
+  if (/noindex,nofollow/i.test(html)) continue;
+  if (html.includes(CTA)) continue;
+
+  const block = `<p class="conversion-path"><a href="${CTA}">Get Instant Access</a></p>\n`;
+
+  if (html.includes("</main>")) html = html.replace("</main>", block + "</main>");
+  else if (html.includes("</body>")) html = html.replace("</body>", block + "</body>");
+  else html += "\n" + block;
+
+  fs.writeFileSync(file, html);
+  patched++;
 }
 
 console.log(`CONVERSION FLOOR ENFORCED: ${patched} pages patched`);
