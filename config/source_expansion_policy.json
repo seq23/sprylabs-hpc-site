@@ -1,0 +1,25 @@
+{
+  "version": "1.0",
+  "purpose": "Approved signal sources for taxonomy-driven query universe expansion without automatic publishing.",
+  "publish_mode": "queued",
+  "sources": [
+    { "source_type": "reddit", "enabled": true, "weight": 0.30, "max_items_per_run": 25 },
+    { "source_type": "youtube", "enabled": true, "weight": 0.15, "max_items_per_run": 25 },
+    { "source_type": "tiktok", "enabled": true, "weight": 0.10, "max_items_per_run": 20 },
+    { "source_type": "x_twitter", "enabled": true, "weight": 0.10, "max_items_per_run": 20 },
+    { "source_type": "quora", "enabled": true, "weight": 0.10, "max_items_per_run": 20 },
+    { "source_type": "forums", "enabled": true, "weight": 0.10, "max_items_per_run": 20 },
+    { "source_type": "google_paa", "enabled": true, "weight": 0.10, "max_items_per_run": 25 },
+    { "source_type": "competitor_pages", "enabled": true, "weight": 0.10, "max_items_per_run": 25 },
+    { "source_type": "llm_citation_checks", "enabled": true, "weight": 0.05, "max_items_per_run": 15 }
+  ],
+  "rules": {
+    "collection_is_not_publishing": true,
+    "dedupe_before_backlog": true,
+    "score_before_generation": true,
+    "require_conversion_path": true,
+    "require_product_role": true,
+    "require_audience": true,
+    "primary_conversion_path": "https://aplayermode.com"
+  }
+}

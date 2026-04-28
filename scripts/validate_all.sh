@@ -7,7 +7,19 @@ run() {
 run node scripts/prepare_distribution_artifacts.js
 run node scripts/validators/validate_backlog_contract.js
 run node scripts/validators/validate_prebuild.js
-run node scripts/validators/validate_machine_readability_contract.js
+node scripts/validators/validate_signal_floor.js
+node scripts/validators/validate_scoring_contract.js
+node scripts/validators/validate_answer_surface_strength.js
+node scripts/answer_surface/update_score_history.js
+node scripts/validators/validate_answer_surface_history.js
+node scripts/answer_surface/build_weakness_backlog.js
+node scripts/validators/validate_answer_surface_weakness_backlog.js
+node scripts/validators/validate_answer_surface_dashboard_gates.js
+node scripts/validators/validate_cannibalization.js
+node scripts/validators/validate_intake_taxonomy_contract.js
+node scripts/validators/validate_query_universe_contract.js
+run node scripts/validators/validate_conversion_contract.js
+node scripts/validators/validate_machine_readability_contract.js
 run node scripts/validators/validate_social_firehose_contract.js
 run node scripts/validators/validate_throttle_contract.js
 run node scripts/validators/validate_vertical_keys.js
@@ -33,8 +45,12 @@ run node scripts/validators/validate_author_trust.js
 run node scripts/validators/validate_entity_coverage.js
 run node scripts/validators/validate_query_metadata.js
 run node scripts/validators/validate_query_traceability.js
-run node scripts/internal/build_link_graph.js
+node scripts/validators/validate_query_coverage.js
+run node scripts/authority/compute_authority_scores.js
+node scripts/validators/validate_authority_scores.js
+node scripts/internal/build_link_graph.js
 run node scripts/validators/validate_internal_authority_graph.js
+node scripts/validators/validate_money_link_floor.js
 run node scripts/validators/validate_aeo_contract.js
 run node scripts/validators/validate_fanout_blocks.js
 run node scripts/validators/validate_schema_contract.js
@@ -44,4 +60,5 @@ run node scripts/validators/validate_url_contract.js
 run node scripts/validators/validate_sitemap_page_parity.js
 run node scripts/validators/validate_canonical_url_contract.js
 run node scripts/validators/validate_cta_endpoint_contract.js
+node scripts/validators/validate_page_type_conversion_floor.js
 echo "[validate_all] OK"
