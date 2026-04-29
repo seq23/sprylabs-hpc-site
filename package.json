@@ -60,14 +60,16 @@
     "intake": "node scripts/intake/build_query_universe.js && node scripts/intake/run_ingestion.js && node scripts/intake/collect_queries.js && node scripts/intake/cluster_queries.js",
     "scoring": "node scripts/intake/score_queries.js",
     "backlog": "node scripts/intake/build_backlog.js",
-    "build:new": "node scripts/validators/validate_publish_signal_gate.js && node scripts/validators/validate_backlog_contract.js && node scripts/validators/validate_prebuild.js",
+    "build:new": "node scripts/validators/validate_signal_floor.js && node scripts/validators/validate_publish_signal_gate.js && node scripts/validators/validate_backlog_contract.js && node scripts/validators/validate_prebuild.js",
     "fanout:auto": "node scripts/fanout/auto_expand_fanout.js",
     "repair:all": "npm run intake && npm run scoring && npm run backlog && npm run fanout:auto",
     "validate:backlog": "node scripts/validators/validate_backlog_contract.js && node scripts/validators/validate_prebuild.js",
     "Validate:machine-readability": "node scripts/validators/validate_machine_readability_contract.js && node scripts/validators/validate_social_firehose_contract.js && node scripts/validators/validate_throttle_contract.js && node scripts/validators/validate_vertical_keys.js",
     "execution:strict": "node scripts/execution/run_full_execution.js",
     "validate:repo-hygiene": "node scripts/validators/validate_no_patch_artifacts.js",
-    "guardrails:all": "npm run validate:repo-hygiene && npm run full:loop"
+    "guardrails:all": "npm run validate:repo-hygiene && npm run prebuild:coverage && npm run full:loop",
+    "contract:query-coverage": "QUERY_COVERAGE_STRICT=1 node scripts/validators/validate_query_coverage.js",
+    "prebuild:coverage": "npm run intake && npm run scoring && npm run backlog && npm run contract:query-coverage"
   },
   "engines": {
     "node": ">=24.0.0"

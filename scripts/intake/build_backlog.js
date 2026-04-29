@@ -153,11 +153,23 @@ for (const slug of ['bhpc-vs-betterup', 'bhpc-vs-culture-amp', 'bhpc-vs-hone']) 
   }
 }
 
-const canonicalUseCases = new Set(clusters.map(useCaseOf).filter(Boolean));
+const taxonomy = readJson(path.join(ROOT, 'data/intake/use_case_taxonomy.json'), { required_use_cases: [] });
+const canonicalUseCases = new Set((taxonomy.required_use_cases || []).map(uc => uc && uc.id).filter(Boolean));
+if (!canonicalUseCases.size) {
+  throw new Error('BACKLOG COVERAGE BUILD FAIL: no required_use_cases[].id found in data/intake/use_case_taxonomy.json');
+}
 const coveredUseCases = new Set(items.map(i => i.meta?.use_case).filter(uc => canonicalUseCases.has(uc)));
-const uncovered = [...canonicalUseCases].filter(uc => !coveredUseCases.has(uc)).sort();
+const uncovered = [...canonicalUseCases].filter(uc => !coveredUseCases.has(uc));
 if (uncovered.length) {
-  throw new Error(`BACKLOG COVERAGE BUILD FAIL: ${uncovered.length} canonical use_cases uncovered: ${uncovered.join(', ')}`);
+  fs.mkdirSync(path.join(ROOT, 'reports'), { recursive: true });
+  fs.writeFileSync(path.join(ROOT, 'reports/query_coverage_gaps.json'), JSON.stringify({
+    source: 'scripts/intake/build_backlog.js',
+    stage: 'prewrite',
+    canonical_use_cases: canonicalUseCases.size,
+    covered_use_cases: coveredUseCases.size,
+    missing: uncovered
+  }, null, 2) + '\n');
+  throw new Error(`BACKLOG COVERAGE BUILD FAIL: refusing to write backlog; ${uncovered.length} canonical use_cases uncovered: ${uncovered.join(', ')}`);
 }
 
 const output = {
