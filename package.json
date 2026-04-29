@@ -65,7 +65,9 @@
     "repair:all": "npm run intake && npm run scoring && npm run backlog && npm run fanout:auto",
     "validate:backlog": "node scripts/validators/validate_backlog_contract.js && node scripts/validators/validate_prebuild.js",
     "Validate:machine-readability": "node scripts/validators/validate_machine_readability_contract.js && node scripts/validators/validate_social_firehose_contract.js && node scripts/validators/validate_throttle_contract.js && node scripts/validators/validate_vertical_keys.js",
-    "execution:strict": "node scripts/execution/run_full_execution.js"
+    "execution:strict": "node scripts/execution/run_full_execution.js",
+    "validate:repo-hygiene": "node scripts/validators/validate_no_patch_artifacts.js",
+    "guardrails:all": "npm run validate:repo-hygiene && npm run full:loop"
   },
   "engines": {
     "node": ">=24.0.0"
