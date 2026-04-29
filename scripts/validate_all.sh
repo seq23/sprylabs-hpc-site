@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+run node scripts/validators/validate_use_case_taxonomy_mapping.js
+run node scripts/validators/validate_no_patch_artifacts.js
 set -euo pipefail
 run() {
   echo "[validate_all] $*"

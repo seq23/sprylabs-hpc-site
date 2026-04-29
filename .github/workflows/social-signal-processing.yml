@@ -26,7 +26,7 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm run social:collect
       - run: npm run velocity:sync
-      - run: npm run validate:all
+      - run: npm run guardrails:all
       - run: npm run validate:critical
       - run: npm run validate:warnings
       - name: Commit and push if changed

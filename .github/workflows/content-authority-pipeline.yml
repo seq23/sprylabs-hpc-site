@@ -30,7 +30,7 @@ jobs:
       - name: Run content authority pipeline
         run: npm run full:loop
       - name: Validate
-        run: npm run validate:all
+        run: npm run guardrails:all
       - name: Commit generated authority updates
         run: |
           if [ -n "$(git status --porcelain)" ]; then

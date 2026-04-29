@@ -38,7 +38,7 @@ jobs:
           SPRY_ADMIN_PASSWORD: ${{ secrets.SPRY_ADMIN_PASSWORD || 'aplayer' }}
         run: npm run admin:build
       - name: Validate
-        run: npm run validate:all
+        run: npm run guardrails:all
       - name: Validate velocity critical surface
         run: npm run validate:critical
       - name: Report velocity warnings
