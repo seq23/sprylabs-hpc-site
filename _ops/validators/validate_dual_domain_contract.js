@@ -28,6 +28,10 @@ const publishedManifestPath = path.join(root, 'data/reddit/published_manifest.js
 const publishedManifest = fs.existsSync(publishedManifestPath) ? JSON.parse(fs.readFileSync(publishedManifestPath, 'utf8')) : { items: [] };
 const publishedHostOverrides = new Map((publishedManifest.items || []).map((item) => [item.route, item.canonical_host]));
 
+const generatedOnly = process.env.DUAL_DOMAIN_GENERATED_ONLY === '1';
+const GENERATED_MIN_WORDS = Number(process.env.GENERATED_PAGE_MIN_WORDS || 300);
+const GENERATED_MAX_WORDS = Number(process.env.GENERATED_PAGE_MAX_WORDS || 650);
+
 function hostFor(route) {
   if (publishedHostOverrides.has(route)) return publishedHostOverrides.get(route);
   const productRoutes = new Set(['/', '/download.html', '/what-is-this-system.html', '/faq.html', '/start-here.html', '/legal.html', '/product.html', '/sequoia-taylor.html', '/spry-labs.html', '/billionaire-high-performance-coach.html', '/work-with-spry.html', '/ai-executive-coach.html', '/ai-coach-vs-human-coach.html', '/chatgpt-vs-executive-coach.html', '/best-ai-coaching-tools.html', '/how-to-build-a-coaching-system.html', '/is-ai-coaching-effective.html', '/what-is-an-ai-executive-coach.html', '/how-do-you-use-chatgpt-as-an-executive-coach.html', '/can-ai-replace-an-executive-coach.html', '/ai-executive-coach-for-founders.html', '/what-reddit-keeps-asking-about-ai-executive-coaching.html', '/chatgpt-accountability-partner.html', '/can-ai-keep-you-accountable.html', '/why-accountability-systems-fail.html', '/how-to-build-an-accountability-system-with-ai.html', '/what-reddit-keeps-asking-about-accountability-and-ai.html', '/why-do-i-overplan-and-do-nothing.html', '/how-to-stop-overplanning-with-ai.html', '/why-productivity-systems-collapse-after-missed-days.html', '/what-is-a-minimum-viable-day.html', '/what-reddit-keeps-asking-about-overplanning.html', '/what-should-a-daily-planning-system-include.html', '/how-founders-can-use-ai-for-daily-planning.html', '/how-to-build-a-daily-execution-loop.html', '/why-daily-plans-fail.html', '/what-reddit-keeps-asking-about-daily-planning.html', '/can-chatgpt-help-with-decision-making.html', '/how-to-use-ai-for-prioritization.html', '/decision-fatigue-and-structured-ai-support.html', '/why-better-prompts-do-not-fix-bad-decision-conditions.html', '/what-reddit-keeps-asking-about-decision-fatigue.html', '/ai-coach-vs-human-coach-for-founders.html', '/chatgpt-vs-a-productivity-app.html', '/ai-accountability-system-vs-habit-tracker.html', '/prompt-library-vs-operating-system.html', '/what-reddit-keeps-asking-when-comparing-ai-coaching-tools.html', '/how-to-recover-after-missing-a-day.html', '/how-to-stay-consistent-when-energy-is-low.html', '/why-all-or-nothing-planning-fails.html', '/burnout-recovery-and-execution-systems.html', '/what-reddit-keeps-asking-about-consistency.html', '/ai-workflow-for-founders.html', '/how-operators-use-chatgpt-with-structure.html', '/how-to-run-a-weekly-review-with-ai.html', '/how-to-use-ai-like-a-chief-of-staff.html', '/what-reddit-keeps-asking-about-founder-workflows.html', '/what-makes-an-ai-coaching-tool-good.html', '/why-most-ai-productivity-tools-feel-generic.html', '/how-to-evaluate-an-ai-execution-system.html', '/what-is-the-difference-between-ai-assistant-and-ai-operating-system.html', '/what-reddit-keeps-asking-about-the-best-ai-coaching-tools.html', '/what-is-continuity-architecture.html', '/what-is-the-scope-cap-rule.html', '/what-is-the-done-check-in-loop.html', '/what-is-low-resistance-execution.html', '/what-reddit-keeps-asking-about-structured-ai-systems.html' ]);
@@ -82,6 +86,29 @@ const minWordChecks = new Map([
 const generatedPagesPath = path.join(root, 'data/reddit/generated_pages.json');
 const generatedPages = fs.existsSync(generatedPagesPath) ? JSON.parse(fs.readFileSync(generatedPagesPath, 'utf8')) : [];
 const generatedRouteMap = new Map(generatedPages.map(p => [p.slug + '.html', p]));
+
+if (generatedOnly) {
+  for (const file of htmlFiles) {
+    const rel = path.relative(root, file).replace(/\\/g, '/');
+    if (!generatedRouteMap.has(rel)) continue;
+    const html = fs.readFileSync(file, 'utf8');
+    const page = generatedRouteMap.get(rel);
+    const words = stripText(html).split(/\s+/).filter(Boolean).length;
+    if (words < GENERATED_MIN_WORDS || words > GENERATED_MAX_WORDS) errors.push(`${rel}: generated page word count out of range ${words}`);
+    for (const requiredLink of page.required_links || []) {
+      if (!html.includes(`href="${requiredLink}"`) && !html.includes(`href='${requiredLink}'`)) errors.push(`${rel}: missing required internal link ${requiredLink}`);
+    }
+    if (!html.includes('Review the system manual to see how the full structure works')) errors.push(`${rel}: missing canonical CTA copy`);
+  }
+  if (errors.length) {
+    console.error('validate_dual_domain_contract failed:');
+    for (const err of errors) console.error(' - ' + err);
+    process.exit(1);
+  }
+  console.log(`validate_dual_domain_contract: OK generated precheck (${generatedPages.length} generated pages checked)`);
+  process.exit(0);
+}
+
 const requiredHeadings = new Map([
   ['pillars/leverage/index.html', ['What leverage means here']],
   ['pillars/systems-decisions/index.html', ['What systems and decisions have to do with each other']],
@@ -135,7 +162,7 @@ for (const file of htmlFiles) {
   if (generatedRouteMap.has(rel)) {
     const page = generatedRouteMap.get(rel);
     const words = stripText(html).split(/\s+/).filter(Boolean).length;
-    if (words < 300 || words > 650) errors.push(`${rel}: generated page word count out of range ${words}`);
+    if (words < GENERATED_MIN_WORDS || words > GENERATED_MAX_WORDS) errors.push(`${rel}: generated page word count out of range ${words}`);
     for (const requiredLink of page.required_links || []) {
       if (!html.includes(`href="${requiredLink}"`) && !html.includes(`href='${requiredLink}'`)) errors.push(`${rel}: missing required internal link ${requiredLink}`);
     }
