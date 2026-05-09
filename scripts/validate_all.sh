@@ -27,6 +27,7 @@ node scripts/validators/validate_throttle_contract.js
 node scripts/validators/validate_vertical_keys.js
 node scripts/validators/validate_content_routing.js
 node scripts/validators/validate_extractability.js
+node scripts/validators/validate_priority_llm_surfaces.js
 node scripts/build_coverage_map.js
 node _ops/validators/validate_distribution_contract.js
 node _ops/validators/validate_dual_domain_contract.js

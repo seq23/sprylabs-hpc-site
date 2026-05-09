@@ -70,7 +70,8 @@
     "guardrails:all": "npm run validate:repo-hygiene && npm run prebuild:coverage && npm run full:loop",
     "contract:query-coverage": "QUERY_COVERAGE_STRICT=1 node scripts/validators/validate_query_coverage.js",
     "prebuild:coverage": "npm run intake && npm run scoring && npm run backlog && npm run contract:use-case-mapping && npm run contract:query-coverage",
-    "contract:use-case-mapping": "node scripts/validators/validate_use_case_taxonomy_mapping.js"
+    "contract:use-case-mapping": "node scripts/validators/validate_use_case_taxonomy_mapping.js",
+    "validate:priority-llm-surfaces": "node scripts/validators/validate_priority_llm_surfaces.js"
   },
   "engines": {
     "node": ">=24.0.0"
