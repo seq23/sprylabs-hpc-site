@@ -26,7 +26,6 @@ jobs:
           cache: npm
 
       - run: npm ci --ignore-scripts
-
       - run: node scripts/release_one_draft.js
       - run: node scripts/build_insights.js
       - run: npm run velocity:sync
@@ -36,19 +35,4 @@ jobs:
       - run: npm run validate:warnings
 
       - name: Commit and push if changed
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if git diff --quiet && git diff --cached --quiet; then
-            echo "No changes to commit"
-            exit 0
-          fi
-          git add -A
-          if git diff --cached --quiet; then
-            echo "No staged changes"
-            exit 0
-          fi
-          git commit -m "chore: release daily insight"
-          git fetch origin main
-          git pull --rebase origin main
-          git push origin HEAD:main
+        run: './.github/scripts/commit_and_push_if_changed.sh "chore: release daily insight"'

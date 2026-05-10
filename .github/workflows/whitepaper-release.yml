@@ -31,12 +31,4 @@ jobs:
       - run: npm run validate:critical
       - run: npm run validate:warnings
       - name: Commit and push if changed
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if git diff --quiet && git diff --cached --quiet; then echo "No changes to commit"; exit 0; fi
-          git add -A
-          git commit -m "chore: release scheduled white paper" || echo "No changes to commit"
-          git fetch origin main
-          git pull --rebase origin main
-          git push origin HEAD:main
+        run: './.github/scripts/commit_and_push_if_changed.sh "chore: release scheduled white paper"'

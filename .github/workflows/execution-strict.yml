@@ -17,32 +17,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
 
       - run: npm ci
-
       - run: npm run execution:strict
 
-      - name: Remove noisy generated artifacts before commit
-        run: |
-          git restore .build coverage reports || true
-
       - name: Commit execution outputs if changed
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          if [[ -n "$(git status --porcelain)" ]]; then
-            git add -A
-            git commit -m "auto: strict execution refresh"
-            git push
-          else
-            echo "No execution changes to commit"
-          fi
+        env:
+          GIT_RESTORE_TARGETS: ".build coverage reports"
+        run: './.github/scripts/commit_and_push_if_changed.sh "auto: strict execution refresh"'
