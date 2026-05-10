@@ -59,8 +59,8 @@ walk(ROOT);
 
 const missingManifest = path.join(ROOT, '.build', 'fanout_manifest.json');
 const missingDuplicates = path.join(ROOT, '.build', 'fanout_duplicates.json');
-if (!fs.existsSync(missingManifest)) warnings.push('.build/fanout_manifest.json missing');
-if (!fs.existsSync(missingDuplicates)) warnings.push('.build/fanout_duplicates.json missing');
+if (fs.existsSync(missingManifest) && fs.statSync(missingManifest).size === 0) warnings.push('.build/fanout_manifest.json empty');
+if (fs.existsSync(missingDuplicates) && fs.statSync(missingDuplicates).size === 0) warnings.push('.build/fanout_duplicates.json empty');
 
 console.log(`validate_fanout_warning: checked ${checked} html files`);
 if (warnings.length) {

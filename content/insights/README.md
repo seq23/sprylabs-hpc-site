@@ -1,3 +1,7 @@
+# Spry Executive OS Insights Index
+
+This is the insights hub for the Spry Executive OS and Billionaire High Performance Coach framework, not a software README product.
+
 # Insights Source Layer
 
 This directory is the source layer for the site's daily insight publishing workflow.

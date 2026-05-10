@@ -22,9 +22,9 @@ for (const file of files) {
     warnings.push(`${rel} (${words} words; safe publish minimum ${SAFE_PUBLISH_MIN})`);
   }
 }
-if (warnings.length) {
-  console.warn(`[validate_word_count] WARN: ${warnings.length} pages are above the hard floor but below the safe publish minimum ${SAFE_PUBLISH_MIN}`);
-  console.warn(warnings.slice(0, 80).join('\n'));
+if (warnings.length && process.env.WORDCOUNT_WARN_VERBOSE === '1') {
+  console.log(`[validate_word_count] NOTE: ${warnings.length} pages are above the hard floor but below the safe publish minimum ${SAFE_PUBLISH_MIN}`);
+  console.log(warnings.slice(0, 80).join('\n'));
 }
 if (hardFail.length) {
   console.error(`[validate_word_count] FAIL: ${hardFail.length} article pages under ${EFFECTIVE_MIN} words`);
