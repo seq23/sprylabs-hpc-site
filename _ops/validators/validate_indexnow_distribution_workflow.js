@@ -22,10 +22,15 @@ const required = [
   'distribution.config.json',
   '.build/indexnow-priority.txt',
   '.build/indexnow-batch.txt',
-  '.build/distribution-manifest.json',
-  'reports/indexnow-submit-report.json'
+  '.build/distribution-manifest.json'
 ];
 required.forEach(requireFile);
+
+// Do not require reports/indexnow-submit-report.json during this pre-submit validator.
+// In CI the validator runs after distribution:prepare but before distribution:deploy,
+// and distribution:deploy is the step that creates the submit report. This contract
+// verifies the report lane exists; the upload step captures the report after submit.
+const submitReportPath = 'reports/indexnow-submit-report.json';
 
 includes('.github/workflows/deploy-distribution.yml', 'branches: [main]', 'push-to-main trigger');
 includes('.github/workflows/deploy-distribution.yml', 'workflow_dispatch', 'manual dispatch trigger');
@@ -97,6 +102,9 @@ const report = {
   priorityCount: priority.length,
   batchCount: batch.length,
   hosts: Array.from(new Set([...priority, ...batch].map(u => { try { return new URL(u).host; } catch { return 'invalid'; } }))).sort(),
+  submitReportPath,
+  submitReportExistsAtValidationTime: exists(submitReportPath),
+  note: 'reports/indexnow-submit-report.json is produced by distribution:deploy after this pre-submit validator runs.',
   failures
 };
 fs.writeFileSync(reportPath, JSON.stringify(report, null, 2) + '\n');
