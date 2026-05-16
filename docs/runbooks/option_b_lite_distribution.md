@@ -1,38 +1,105 @@
-# Option B Lite distribution
+# Option B Lite Distribution Runbook
 
-This repo keeps the existing sitemap architecture:
+## Purpose
 
-- `sitemap.xml`
-- `sitemap-spry.xml`
-- `sitemap-bhpc.xml`
+This repo has two public host surfaces:
 
-It does **not** add `sitemap-fresh.xml`.
+- `spryexecutiveos.com`
+- `billionairehighperformancecoach.com`
 
-## Day-0 setup
+The distribution lane prepares priority and batch URL files, submits them to IndexNow, and writes a report that proves whether submission ran live or in dry-run mode.
 
-1. Run `bash distribution_scripts/bootstrap_distribution.sh`
-2. If bootstrap returns `BOOTSTRAP_OK`, commit and deploy the committed root key file.
-3. Edit `distribution.config.json` and add your Search Console service-account JSON path.
-4. Run `npm run distribution:prepare`
-5. Run `bash distribution_scripts/deploy_distribution.sh`
+## Workflow
 
-## What runs automatically
+File:
 
-- GSC sitemap submission for both domain properties
-- IndexNow submission for both hosts
-- URL inspection status checks for the priority set
+```text
+.github/workflows/deploy-distribution.yml
+```
 
-## What stays manual
+Triggers:
 
-In Google Search Console, manually request indexing for 5-10 highest-priority URLs only.
+```text
+push to main
+workflow_dispatch
+```
 
-## IndexNow batching
+Data trace:
 
-The repo splits IndexNow submissions by hostname and submits them in chunks using `indexnow.chunk_size` from `distribution.config.json`. This prevents mixed-host payloads and reduces 403 failures on large submissions.
+```text
+push to main / manual dispatch
+→ .github/workflows/deploy-distribution.yml
+→ npm ci
+→ npm run distribution:prepare
+→ scripts/prepare_distribution_artifacts.js
+→ reads sitemap-spry.xml and sitemap-bhpc.xml
+→ writes .build/indexnow-priority.txt
+→ writes .build/indexnow-batch.txt
+→ writes .build/distribution-priority-urls.txt
+→ writes .build/distribution-manifest.json
+→ npm run validate:indexnow-workflow
+→ validates mixed-host workflow, artifacts, config, key file, and report lane
+→ npm run distribution:deploy
+→ distribution_scripts/deploy_distribution.sh
+→ submits priority URLs through distribution_scripts/indexnow_submit.sh
+→ submits batch URLs through distribution_scripts/indexnow_submit.sh
+→ writes reports/indexnow-submit-report.json
+→ optionally submits GSC sitemap if credentials exist
+→ optionally inspects priority URLs through GSC if credentials exist
+→ uploads .build and reports/indexnow-submit-report.json as workflow artifacts
+```
 
-## Permanent key behavior
+## Secrets
 
-- Baseline snapshot ZIPs must include the committed IndexNow key file named in `distribution.config.json`.
-- Normal snapshot updates should not require re-bootstrap.
-- `bash distribution_scripts/bootstrap_distribution.sh` now preserves the committed key by default and returns `BOOTSTRAP_NOOP` when the configured key file already matches.
-- Only rotate intentionally with `INDEXNOW_ROTATE=1 npm run distribution:bootstrap` or `bash distribution_scripts/bootstrap_distribution.sh --rotate`.
+Required for live IndexNow submission:
+
+```text
+INDEXNOW_KEY
+```
+
+Current committed key file:
+
+```text
+200dca426298c70aabc048344605cccae8dabc0b460f1b3e21eb6e857ef83af1.txt
+```
+
+Secret value should match the file contents exactly:
+
+```text
+200dca426298c70aabc048344605cccae8dabc0b460f1b3e21eb6e857ef83af1
+```
+
+Optional GSC secrets/config are intentionally non-blocking. Missing GSC must not prevent IndexNow submission.
+
+## Manual dry-run
+
+```bash
+npm run distribution:prepare
+INDEXNOW_DRY_RUN=1 npm run distribution:deploy -- --artifact-dir .build --allow-mixed
+npm run validate:indexnow-workflow
+```
+
+## Live manual submit
+
+```bash
+INDEXNOW_KEY="200dca426298c70aabc048344605cccae8dabc0b460f1b3e21eb6e857ef83af1" npm run distribution:deploy -- --artifact-dir .build --allow-mixed
+```
+
+## Report
+
+```text
+reports/indexnow-submit-report.json
+```
+
+The report contains:
+
+- hosts detected
+- priority URL count
+- batch URL count
+- dry-run/live status
+- per-host chunk attempts
+- failures, if any
+
+## GSC boundary
+
+Google Search Console sitemap submission and URL Inspection checks are optional and non-blocking in this lane. The workflow may report GSC as skipped if credentials are not present. That is intentional. IndexNow remains the guaranteed lane.

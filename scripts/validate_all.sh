@@ -12,6 +12,10 @@ node scripts/validators/validate_prebuild.js
 node scripts/validators/validate_signal_floor.js
 node scripts/validators/validate_scoring_contract.js
 node scripts/validators/validate_answer_surface_strength.js
+# Build answer-surface reports before validators consume them. This prevents fresh
+# GitHub snapshots from failing only because generated report files were absent.
+node scripts/answer_surface/score.js
+node scripts/answer_surface/build_expansion_backlog.js
 node scripts/answer_surface/update_score_history.js
 node scripts/validators/validate_answer_surface_history.js
 node scripts/answer_surface/build_weakness_backlog.js
