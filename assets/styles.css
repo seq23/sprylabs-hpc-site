@@ -528,3 +528,279 @@ html.system-domain .domain-system { display:block; }
 .fanout-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;}
 .fanout-list{margin:8px 0 0;padding-left:18px;}
 .fanout-list li{margin:6px 0;}
+
+/* ===== BHPC DOWNLOAD UX PATCH: premium continuity sales page ===== */
+.bhpc-download-body{background:radial-gradient(circle at 20% 0%,rgba(52,74,111,.34),transparent 34%),linear-gradient(180deg,#05070b 0%,#0b0f18 38%,#111827 100%);color:#f7f1e8;}
+.bhpc-download-body .cta-bar{background:rgba(3,5,10,.92);border-bottom:1px solid rgba(255,255,255,.12);backdrop-filter:blur(12px);}
+.bhpc-download-body .cta-bar__text{color:#f7f1e8;}
+.bhpc-site-header{background:rgba(5,7,11,.84);border-bottom:1px solid rgba(255,255,255,.10);backdrop-filter:blur(14px);}
+.bhpc-site-header .brand,.bhpc-site-header .nav-links a,.bhpc-site-header .nav-cta{color:#f7f1e8;}
+.bhpc-site-header .nav-links a{opacity:.76;}
+.bhpc-site-header .nav-links a:hover{opacity:1;color:#fff;}
+.bhpc-download{max-width:1120px;padding-top:26px;}
+.bhpc-download .content-article{max-width:none;}
+.bhpc-download p,.bhpc-download li{color:#d8deea;}
+.bhpc-download strong{color:#fff;}
+.bhpc-download h1,.bhpc-download h2,.bhpc-download h3{color:#fff;letter-spacing:-.035em;}
+.bhpc-hero{min-height:620px;gap:44px;padding:76px 0 52px;border-top:none;}
+.bhpc-kicker{display:inline-flex;align-items:center;width:max-content;padding:8px 12px;border:1px solid rgba(224,214,192,.28);border-radius:999px;background:rgba(255,255,255,.06);color:#e7d7b8;text-transform:uppercase;letter-spacing:.14em;font-size:12px;}
+.bhpc-hero__copy h1{font-size:clamp(3rem,7vw,6.6rem);line-height:.9;margin:18px 0 22px;max-width:850px;}
+.bhpc-hero__copy .subhead{font-size:clamp(1.12rem,2vw,1.55rem);font-weight:500;line-height:1.45;color:#e6ebf5;max-width:720px;}
+.bhpc-hero-points{margin:26px 0 0;display:grid;gap:8px;}
+.bhpc-hero-points p{margin:0;color:#f7f1e8;font-size:1.05rem;}
+.bhpc-primary-cta,.bhpc-download .btn--cta{background:linear-gradient(135deg,#f4e7c9,#b7c7e8);color:#080b12!important;border:0;box-shadow:0 18px 50px rgba(196,214,255,.22);}
+.bhpc-primary-cta:hover,.bhpc-download .btn--cta:hover{filter:brightness(1.05);text-decoration:none;}
+.bhpc-download .download-trust{color:#aeb8ca;}
+.bhpc-hero-figure{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:28px;box-shadow:0 30px 90px rgba(0,0,0,.38);}
+.bhpc-hero-figure figcaption{color:#b8c2d4;background:rgba(5,7,11,.72);}
+.bhpc-download .download-section{border-top:1px solid rgba(255,255,255,.12);padding:54px 0;}
+.bhpc-download .download-section h2{font-size:clamp(2rem,4vw,3.55rem);line-height:1.02;margin-bottom:22px;}
+.bhpc-identity-panel{padding:34px!important;border:1px solid rgba(255,255,255,.16)!important;border-radius:30px;background:linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.035));box-shadow:0 24px 80px rgba(0,0,0,.28);}
+.bhpc-download .download-card{background:rgba(255,255,255,.065);border:1px solid rgba(255,255,255,.14);border-radius:24px;padding:22px;box-shadow:0 18px 60px rgba(0,0,0,.18);}
+.bhpc-download .download-card h3{color:#f7e5bc;margin-bottom:8px;}
+.bhpc-card-muted{background:rgba(255,255,255,.045)!important;}
+.bhpc-card-highlight{background:linear-gradient(135deg,rgba(244,231,201,.16),rgba(183,199,232,.10))!important;border-color:rgba(244,231,201,.30)!important;}
+.bhpc-architecture .download-card h3:before{content:"✦ ";color:#b7c7e8;}
+.bhpc-download .download-grid{gap:18px;}
+.bhpc-download .download-flow{gap:20px;}
+.bhpc-download .download-table-wrap{overflow-x:auto;border:1px solid rgba(255,255,255,.14);border-radius:22px;background:rgba(255,255,255,.045);}
+.bhpc-download .download-comparison-table{width:100%;border-collapse:collapse;}
+.bhpc-download .download-comparison-table th,.bhpc-download .download-comparison-table td{padding:16px;border-bottom:1px solid rgba(255,255,255,.12);color:#d8deea;vertical-align:top;}
+.bhpc-download .download-comparison-table th{color:#fff;text-align:left;background:rgba(255,255,255,.06);}
+.bhpc-faq{display:grid;gap:16px;}
+.bhpc-final{background:linear-gradient(135deg,rgba(244,231,201,.16),rgba(70,96,142,.18));border:1px solid rgba(244,231,201,.26);border-radius:32px;text-align:center;padding:44px 28px;}
+.bhpc-final h2{margin-top:0;}
+.bhpc-download .download-legal p{color:#aeb8ca;font-size:.95rem;}
+.bhpc-machine-block{opacity:.68;filter:saturate(.65);}
+.bhpc-download-body .trust-card,.bhpc-download-body .footer{background:#06080d;border-top:1px solid rgba(255,255,255,.10);color:#aeb8ca;}
+.bhpc-download-body .trust-card p,.bhpc-download-body .footer__checkout,.bhpc-download-body .footer__disclaimer,.bhpc-download-body .footer__nav{color:#aeb8ca;}
+.bhpc-download-body a{color:#d9e6ff;}
+@media (max-width:900px){.bhpc-hero{min-height:auto;padding:42px 0 30px;}.bhpc-hero__copy h1{font-size:clamp(2.6rem,15vw,4.6rem);}.bhpc-download .download-section{padding:38px 0;}.bhpc-identity-panel{padding:24px!important;}}
+
+
+/* ===== BHPC SURGICAL HUMANIZATION PATCH: preserve original /download structure ===== */
+.bhpc-preserve-structure .download-page.bhpc-preserve{max-width:1120px;}
+.bhpc-preserve-structure .download-hero{border-top:0;padding-top:52px;}
+.bhpc-preserve-structure .bhpc-human-hook{font-size:clamp(1.25rem,2.2vw,1.8rem);line-height:1.25;color:#f4e7c9;margin:10px 0 20px;}
+.bhpc-preserve-structure .lead-list p:first-child{font-size:1.18rem;}
+.bhpc-preserve-structure .download-section{scroll-margin-top:92px;}
+.bhpc-preserve-structure .download-section > p strong{color:#fff;}
+.bhpc-preserve-structure .download-card{transition:transform .18s ease,border-color .18s ease,background .18s ease;}
+.bhpc-preserve-structure .download-card:hover{transform:translateY(-2px);border-color:rgba(244,231,201,.32);}
+.bhpc-preserve-structure .download-final{border:1px solid rgba(244,231,201,.26);border-radius:28px;padding:34px;background:linear-gradient(135deg,rgba(244,231,201,.10),rgba(52,74,111,.12));}
+.bhpc-preserve-structure .fanout-block{opacity:.72;}
+
+/* ===== BHPC IDENTITY MIRROR PATCH: AskHi-style identity recognition, structure preserved ===== */
+.bhpc-preserve-structure .bhpc-identity-mirror{
+  border:1px solid rgba(244,231,201,.30);
+  border-radius:30px;
+  padding:34px;
+  background:
+    radial-gradient(circle at 12% 0%,rgba(244,231,201,.16),transparent 32%),
+    linear-gradient(135deg,rgba(255,255,255,.085),rgba(52,74,111,.12));
+  box-shadow:0 24px 80px rgba(0,0,0,.24);
+}
+.bhpc-preserve-structure .bhpc-identity-mirror h2{margin-top:0;}
+.bhpc-preserve-structure .bhpc-identity-mirror p{font-size:1.08rem;}
+.bhpc-preserve-structure .bhpc-identity-mirror p:nth-of-type(1),
+.bhpc-preserve-structure .bhpc-identity-mirror p:nth-of-type(2){
+  color:#f4e7c9;
+  font-weight:700;
+}
+
+/* ===== BHPC DOWNLOAD CLEANUP PATCH ===== */
+.bhpc-preserve-structure .cta-bar__text{letter-spacing:normal;}
+
+/* ===== BHPC DOWNLOAD FINAL CLEANUP PATCH ===== */
+/* Keep global Gumroad CTA markup for validator/schema expectations, but remove it from /download visual flow. */
+.bhpc-preserve-structure > .cta-bar{
+  min-height:0;
+  height:0;
+  overflow:hidden;
+  border:0!important;
+  padding:0!important;
+}
+.bhpc-preserve-structure > .cta-bar .cta-bar__inner{
+  display:none;
+}
+
+/* Preserve original hero structure while giving the book mockup a stronger right-side product presence. */
+.bhpc-preserve-structure .download-hero{
+  display:grid;
+  grid-template-columns:minmax(0,1.1fr) minmax(280px,.9fr);
+  align-items:center;
+  gap:clamp(28px,5vw,68px);
+}
+.bhpc-preserve-structure .download-hero__copy{
+  min-width:0;
+}
+.bhpc-preserve-structure .bhpc-book-hero{
+  justify-self:center;
+  max-width:min(420px,100%);
+  margin:0;
+  padding:22px;
+  border:1px solid rgba(244,231,201,.22);
+  border-radius:30px;
+  background:
+    radial-gradient(circle at 50% 10%,rgba(244,231,201,.13),transparent 38%),
+    linear-gradient(145deg,rgba(255,255,255,.07),rgba(52,74,111,.12));
+  box-shadow:0 28px 90px rgba(0,0,0,.35);
+}
+.bhpc-preserve-structure .bhpc-book-hero img{
+  width:100%;
+  max-height:520px;
+  object-fit:contain;
+  display:block;
+  filter:drop-shadow(0 26px 34px rgba(0,0,0,.34));
+}
+.bhpc-preserve-structure .bhpc-book-hero figcaption{
+  margin-top:14px;
+  color:#b9c2d4;
+}
+@media (max-width:900px){
+  .bhpc-preserve-structure .download-hero{
+    display:block;
+  }
+  .bhpc-preserve-structure .bhpc-book-hero{
+    margin:28px auto 0;
+    max-width:340px;
+  }
+}
+
+
+/* ===== BHPC IMAGE RAIL PATCH: original hero + one white book in right margin ===== */
+.bhpc-preserve-structure .bhpc-original-hero{
+  justify-self:center;
+}
+.bhpc-preserve-structure .bhpc-original-hero img{
+  width:100%;
+  max-height:520px;
+  object-fit:contain;
+  display:block;
+}
+.bhpc-preserve-structure .bhpc-right-rail-book{
+  position:absolute;
+  right:max(22px, calc((100vw - 1120px)/2 - 210px));
+  top:150px;
+  width:clamp(240px, 20vw, 360px);
+  z-index:1;
+  pointer-events:none;
+  opacity:.96;
+  filter:drop-shadow(0 28px 42px rgba(0,0,0,.42));
+}
+.bhpc-preserve-structure .bhpc-right-rail-book img{
+  display:block;
+  width:100%;
+  height:auto;
+}
+@media (max-width:1280px){
+  .bhpc-preserve-structure .bhpc-right-rail-book{
+    display:none;
+  }
+}
+
+/* ===== BHPC HERO BOOK SCALE PATCH ===== */
+/* Make the approved black book asset dominant in the right hero space. */
+.bhpc-preserve-structure{
+  position:relative;
+}
+.bhpc-preserve-structure .download-hero{
+  position:relative;
+  overflow:visible;
+}
+.bhpc-preserve-structure .bhpc-right-rail-book{
+  position:absolute!important;
+  right:clamp(18px, 5vw, 72px)!important;
+  top:86px!important;
+  width:clamp(390px, 31vw, 560px)!important;
+  max-width:42vw!important;
+  z-index:2!important;
+  pointer-events:none!important;
+  opacity:1!important;
+  filter:drop-shadow(0 34px 54px rgba(0,0,0,.52))!important;
+}
+.bhpc-preserve-structure .bhpc-right-rail-book img{
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  object-fit:contain!important;
+}
+@media (max-width:1320px){
+  .bhpc-preserve-structure .bhpc-right-rail-book{
+    width:clamp(330px, 28vw, 460px)!important;
+    right:22px!important;
+  }
+}
+@media (max-width:1100px){
+  .bhpc-preserve-structure .bhpc-right-rail-book{
+    position:relative!important;
+    top:auto!important;
+    right:auto!important;
+    width:min(520px, 92vw)!important;
+    max-width:92vw!important;
+    margin:24px auto 0!important;
+  }
+}
+
+/* ===== BHPC BRIDGE CLARITY COMPACT PATCH ===== */
+.bhpc-preserve-structure [data-content-contract="bridge-clarity"]{
+  max-width:760px;
+  margin:44px 0 56px;
+  padding:18px 20px;
+  border:1px solid rgba(244,231,201,.14);
+  border-radius:18px;
+  background:rgba(255,255,255,.025);
+}
+.bhpc-preserve-structure [data-content-contract="bridge-clarity"] h2{
+  font-size:clamp(24px,3vw,38px);
+  margin:0 0 10px;
+}
+.bhpc-preserve-structure [data-content-contract="bridge-clarity"] p,
+.bhpc-preserve-structure [data-content-contract="bridge-clarity"] li{
+  font-size:15px;
+  line-height:1.55;
+}
+.bhpc-preserve-structure [data-content-contract="bridge-clarity"] ul{
+  margin:12px 0 0;
+}
+
+/* ===== BHPC BOTTOM UTILITY STRIPS PATCH ===== */
+.bhpc-preserve-structure [data-content-contract="bridge-clarity"],
+.bhpc-download-body .trust-card[data-author-trust="true"]{
+  max-width:1120px;
+  margin:10px auto;
+  padding:10px 14px;
+  border:1px solid rgba(244,231,201,.12);
+  border-radius:14px;
+  background:rgba(255,255,255,.025);
+}
+.bhpc-preserve-structure [data-content-contract="bridge-clarity"] h2{
+  display:inline;
+  font-size:13px;
+  margin:0 8px 0 0;
+  letter-spacing:.02em;
+}
+.bhpc-preserve-structure [data-content-contract="bridge-clarity"] h2::after{
+  content:":";
+}
+.bhpc-preserve-structure [data-content-contract="bridge-clarity"] p,
+.bhpc-preserve-structure [data-content-contract="bridge-clarity"] li,
+.bhpc-download-body .trust-card[data-author-trust="true"] p{
+  display:inline;
+  font-size:12px;
+  line-height:1.45;
+  color:#aeb8ca;
+  margin:0;
+}
+.bhpc-preserve-structure [data-content-contract="bridge-clarity"] ul{
+  display:inline;
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+.bhpc-preserve-structure [data-content-contract="bridge-clarity"] li + li::before,
+.bhpc-download-body .trust-card[data-author-trust="true"] p + p::before{
+  content:" · ";
+  color:#6f7b91;
+}
+
