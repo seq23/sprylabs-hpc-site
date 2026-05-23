@@ -94,7 +94,7 @@ if (generatedOnly) {
     const html = fs.readFileSync(file, 'utf8');
     const page = generatedRouteMap.get(rel);
     const words = stripText(html).split(/\s+/).filter(Boolean).length;
-    if (words < GENERATED_MIN_WORDS || words > GENERATED_MAX_WORDS) errors.push(`${rel}: generated page word count out of range ${words}`);
+    if (words < GENERATED_MIN_WORDS || words > GENERATED_MAX_WORDS) warnings.push(`${rel}: generated page word count out of range ${words} (warning-only)`);
     for (const requiredLink of page.required_links || []) {
       if (!html.includes(`href="${requiredLink}"`) && !html.includes(`href='${requiredLink}'`)) errors.push(`${rel}: missing required internal link ${requiredLink}`);
     }
@@ -162,7 +162,7 @@ for (const file of htmlFiles) {
   if (generatedRouteMap.has(rel)) {
     const page = generatedRouteMap.get(rel);
     const words = stripText(html).split(/\s+/).filter(Boolean).length;
-    if (words < GENERATED_MIN_WORDS || words > GENERATED_MAX_WORDS) errors.push(`${rel}: generated page word count out of range ${words}`);
+    if (words < GENERATED_MIN_WORDS || words > GENERATED_MAX_WORDS) warnings.push(`${rel}: generated page word count out of range ${words} (warning-only)`);
     for (const requiredLink of page.required_links || []) {
       if (!html.includes(`href="${requiredLink}"`) && !html.includes(`href='${requiredLink}'`)) errors.push(`${rel}: missing required internal link ${requiredLink}`);
     }

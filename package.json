@@ -72,7 +72,10 @@
     "prebuild:coverage": "npm run intake && npm run scoring && npm run backlog && npm run contract:use-case-mapping && npm run contract:query-coverage",
     "contract:use-case-mapping": "node scripts/validators/validate_use_case_taxonomy_mapping.js",
     "validate:priority-llm-surfaces": "node scripts/validators/validate_priority_llm_surfaces.js",
-    "validate:indexnow-workflow": "node _ops/validators/validate_indexnow_distribution_workflow.js"
+    "validate:indexnow-workflow": "node _ops/validators/validate_indexnow_distribution_workflow.js",
+    "citation:build": "node scripts/citation/build_citation_opportunities.js",
+    "citation:warn": "node scripts/validators/validate_citation_readiness_warning.js",
+    "citation:all": "npm run citation:build && npm run citation:warn"
   },
   "engines": {
     "node": ">=24.0.0"

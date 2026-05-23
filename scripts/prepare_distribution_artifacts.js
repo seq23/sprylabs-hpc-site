@@ -32,7 +32,28 @@ function pickByIncludes(urls, includes, limit) {
   }
   return out;
 }
+
+function readCitationPriorityUrls() {
+  const file = path.join(root, 'data/citation_opportunities/bhpc_priority_queries.json');
+  if (!fs.existsSync(file)) return [];
+  try {
+    const data = JSON.parse(fs.readFileSync(file, 'utf8'));
+    const urls = [];
+    for (const item of data.items || []) {
+      if (item.intended_winner_url) urls.push(item.intended_winner_url);
+      if (item.answer_page) urls.push(`https://spryexecutiveos.com/${item.answer_page}`);
+    }
+    return Array.from(new Set(urls));
+  } catch (err) {
+    console.log(`distribution citation priority warning: ${err.message}`);
+    return [];
+  }
+}
+
 const priority = [];
+for (const url of readCitationPriorityUrls()) {
+  if (!priority.includes(url)) priority.push(url);
+}
 for (const url of highValueOrder) {
   if (allUrls.includes(url) && !priority.includes(url)) priority.push(url);
 }
