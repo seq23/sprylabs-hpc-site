@@ -1,17 +1,13 @@
-name: social signal processing
-
+name: Social Signal Processing
 on:
   schedule:
     - cron: '45 13 * * 1-5'
   workflow_dispatch:
-
 permissions:
   contents: write
-
 concurrency:
   group: main-automation
   cancel-in-progress: false
-
 jobs:
   social:
     runs-on: ubuntu-latest
@@ -25,9 +21,7 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts
       - run: npm run social:collect
-      - run: npm run velocity:sync
-      - run: npm run guardrails:all
-      - run: npm run validate:critical
+      - run: npm run release:prepush:container
       - run: npm run validate:warnings
       - name: Commit and push if changed
         run: './.github/scripts/commit_and_push_if_changed.sh "chore: social signal refresh"'

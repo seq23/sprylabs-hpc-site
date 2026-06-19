@@ -6,7 +6,7 @@ const root = process.cwd();
 const dataPath = path.join(root, 'data/citation_opportunities/bhpc_priority_queries.json');
 if (!fs.existsSync(dataPath)) {
   console.log('[citation:warn] WARN: data/citation_opportunities/bhpc_priority_queries.json not found; citation readiness skipped');
-  process.exit(0);
+  process.exit(warnings.length ? 1 : 0);
 }
 const items = JSON.parse(fs.readFileSync(dataPath, 'utf8')).items || [];
 const warnings = [];
@@ -47,4 +47,4 @@ if (warnings.length) {
 } else {
   console.log(`[citation:warn] OK: ${items.length} priority citation rows have direct answers, answer pages, schema markers, and llms.txt entries`);
 }
-process.exit(0);
+process.exit(warnings.length ? 1 : 0);

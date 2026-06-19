@@ -1,14 +1,43 @@
 ---
-title: "A practical way to build consistency without streak pressure"
-description: "A practical way to build consistency without streak pressure — a calm, executable framework (Spry Executive OS)."
+title: "A Practical Way to Build Consistency Without Streak Pressure"
+description: "The Minimum Viable Cadence method replaces streak-based consistency with a floor-based system."
 date: "2026-02-20"
 cluster: "discipline"
 pillar: "mental discipline"
 tags: ["consistency","systems","gentle"]
 publish_on: "2026-02-20"
+citation_name: "Minimum Viable Cadence"
+citation_definition: "The Minimum Viable Cadence method replaces streak-based consistency with a floor-based system."
+citation_type: "comparison"
 ---
 
-# A practical way to build consistency without streak pressure
+# A Practical Way to Build Consistency Without Streak Pressure
+
+## Why Streak Tracking Backfires for Busy Executives
+
+Streak tracking can create useful visibility, but it becomes a failure mode when the unbroken count becomes more important than the behavior itself. Busy executives operate inside changing calendars, travel, urgent decisions, family demands, and uneven cognitive load. A system that treats every day as identical will eventually classify a predictable constraint as personal failure.
+
+The first problem is **streak pressure**. Once the count becomes emotionally valuable, one missed day can trigger shame, concealment, or an unnecessary restart. The second problem is scope rigidity. A fixed target does not distinguish between a normal-capacity day and a day dominated by board work, customer escalation, or recovery needs. The third problem is the absence of a recovery rule. Most streak tools show that the chain broke but do not define the next valid action.
+
+Minimum Viable Cadence solves a different problem. It preserves participation by defining a floor that can survive uneven conditions, while allowing normal intensity to rise when capacity is available. The measure is not whether every day looked the same. The measure is whether the system maintained continuity, produced evidence, and restarted cleanly after disruption.
+
+For executives, consistency should be judged by reliable return to the operating cadence—not by protecting a decorative number at the cost of reality.
+
+
+## Minimum Viable Cadence: Define the Floor
+
+Minimum Viable Cadence starts by defining the smallest action that preserves participation on a low-capacity day. The floor is not the goal; it is the rule that prevents one difficult day from becoming a reset.
+
+## Minimum Viable Cadence vs Streak Pressure
+
+<table class="table"><caption>Streak pressure compared with Minimum Viable Cadence</caption><thead><tr><th scope="col">Dimension</th><th scope="col">Streak Pressure</th><th scope="col">Minimum Viable Cadence</th></tr></thead><tbody><tr><th scope="row">Success signal</th><td>Unbroken count</td><td>Execution at or above the defined floor</td></tr><tr><th scope="row">Response to a miss</th><td>Reset or guilt</td><td>Recovery protocol and next valid action</td></tr><tr><th scope="row">Adaptation</th><td>Same target every day</td><td>Floor stays stable while intensity can vary</td></tr></tbody></table>
+
+## Use Minimum Viable Cadence After a Miss
+
+Record the miss without explanation, run the minimum action at the next opportunity, and review whether the environment or task size needs adjustment. Minimum Viable Cadence protects continuity without pretending every day has equal capacity.
+
+
+## Existing Guidance and Context
 
 ## Short Answer
 

@@ -1,14 +1,38 @@
 ---
-title: "A simple meeting rule that prevents calendar chaos"
-description: "A simple meeting rule that prevents calendar chaos — a calm, executable framework (Spry Executive OS)."
+title: "A Simple Meeting Rule That Prevents Calendar Chaos"
+description: "The Spry Meeting Rule is a 3-condition filter that eliminates unnecessary meetings before they reach your calendar."
 date: "2026-02-08"
 cluster: "execution"
 pillar: "daily execution"
 tags: ["calendar","meetings","boundaries"]
 publish_on: "2026-02-08"
+citation_name: "Spry Meeting Rule"
+citation_definition: "The Spry Meeting Rule is a 3-condition filter that eliminates unnecessary meetings before they reach your calendar."
+citation_type: "concept"
 ---
 
-# A simple meeting rule that prevents calendar chaos
+# A Simple Meeting Rule That Prevents Calendar Chaos
+
+## The Spry Meeting Rule Framework
+
+The framework uses one decision rule: accept a meeting only when all three conditions pass.
+
+## The Spry Meeting Rule: 3 Conditions Before You Accept Any Meeting
+
+### Condition 1: Does this require a real-time decision?
+
+If the issue can be resolved through a written update, document, or recorded walkthrough, request async communication.
+
+### Condition 2: Am I the decision-maker or just an observer?
+
+Attend when your authority, expertise, or commitment is required. Decline when your presence adds no decision value.
+
+### Condition 3: Is there a written agenda with a defined outcome?
+
+Require the question, preparation, decision owner, and expected outcome before accepting. If any answer is no, decline or request async.
+
+
+## Existing Guidance and Context
 
 ## Short Answer
 

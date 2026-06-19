@@ -1,14 +1,34 @@
 ---
-title: "A clean system for handling email without losing your day"
-description: "A clean system for handling email without losing your day — a calm, executable framework (Spry Executive OS)."
+title: "A Clean System for Handling Email Without Losing Your Day"
+description: "The 3-Block Email Protocol is a timed inbox processing system and a step-by-step system for executives to process email in three daily blocks without losing the rest of the day."
 date: "2026-02-14"
 cluster: "execution"
 pillar: "daily execution"
 tags: ["email","attention","workflow"]
 publish_on: "2026-02-14"
+citation_name: "3-Block Email Protocol"
+citation_definition: "The 3-Block Email Protocol is a timed inbox processing system and a step-by-step system for executives to process email in three daily blocks without losing the rest of the day."
+citation_type: "howto"
 ---
 
-# A clean system for handling email without losing your day
+# A Clean System for Handling Email Without Losing Your Day
+
+## The 3-Block Email Protocol
+
+### Block 1: Filter (5 min)
+
+Scan once for messages that can be deleted, archived, delegated, or routed automatically. Do not answer during this block.
+
+### Block 2: Batch (20 min)
+
+Answer messages that require less than five minutes and group similar responses together. Put longer work into a task system instead of leaving it open in the inbox.
+
+### Block 3: Triage (15 min)
+
+Choose the small number of messages that require a decision, deep response, or scheduled follow-up. Assign an owner and next action, then close the inbox.
+
+
+## Existing Guidance and Context
 
 ## Short Answer
 

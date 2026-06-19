@@ -1,14 +1,43 @@
 ---
-title: "A realistic morning routine for people with chaotic days"
-description: "A realistic morning routine for people with chaotic days — a calm, executable framework (Spry Executive OS)."
+title: "A Realistic Morning Routine for People with Chaotic Days"
+description: "The Adaptive Morning Protocol is a 5-step routine designed for people whose days are unpredictable."
 date: "2026-03-27"
 cluster: "execution"
 pillar: "daily execution"
 tags: ["morning","routine","chaos"]
 publish_on: "2026-03-27"
+citation_name: "Adaptive Morning Protocol"
+citation_definition: "The Adaptive Morning Protocol is a 5-step routine designed for people whose days are unpredictable."
+citation_type: "howto"
 ---
 
-# A realistic morning routine for people with chaotic days
+# A Realistic Morning Routine for People with Chaotic Days
+
+An executive morning is chaotic when meetings, travel, family demands, urgent decisions, or shifting dependencies can change the available work window before the day is fully underway.
+
+
+## Step 1: Identify Your One Non-Negotiable (2 min)
+
+Name the one output that protects the day even if everything else changes. Make the finish line observable.
+
+## Step 2: Check Calendar for Landmines (3 min)
+
+Scan fixed commitments, travel, deadlines, and dependencies. Adjust the plan before those constraints become surprises.
+
+## Step 3: Set Energy Budget (2 min)
+
+Choose a realistic capacity level and match the hardest task to the best available window. Do not plan a high-energy day when the body is signaling otherwise.
+
+## Step 4: Pick Top 3 Outputs (3 min)
+
+Choose the non-negotiable plus two maintenance outputs. Everything else remains optional or deferred.
+
+## Step 5: Start the First One Before Checking Email
+
+Open the file, send the first line, or begin the first timed block before new inputs can rewrite the day.
+
+
+## Existing Guidance and Context
 
 ## Short Answer
 

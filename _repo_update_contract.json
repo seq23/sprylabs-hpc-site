@@ -1,0 +1,29 @@
+{
+  "schema_version": "3.1",
+  "repo_name": "sprylabs-hpc-site",
+  "expected_remote": "seq23/sprylabs-hpc-site",
+  "expected_branch": "main",
+  "package_manager": "npm",
+  "node_version": "24",
+  "update_mode": "baseline",
+  "prepush_command": "npm run release:prepush",
+  "container_prepush_command": "npm run release:prepush:container",
+  "local_prepush_command": "npm run release:prepush:local",
+  "postpush_command": "npm run release:postpush",
+  "baseline_naming": "sprylabs-hpc-site-main_BASELINE_MM-DD-YY_<sha>.zip",
+  "zip_root_policy": "single repository wrapper containing package.json",
+  "dirty_repo_policy": "refuse",
+  "deletion_safety": {
+    "enabled": true,
+    "maximum_percent": 35
+  },
+  "evidence_root": "~/repo-validation-evidence/sprylabs-hpc-site/<run-id>/",
+  "completion_status_before_local_browser": "STRUCTURALLY CHECKED \u2014 LOCAL VALIDATION REQUIRED",
+  "commands": {
+    "prepush": "npm run release:prepush",
+    "prepush_local": "npm run release:prepush:local",
+    "postpush": "npm run release:postpush",
+    "live_proof": "NOT_APPLICABLE",
+    "cleanup": "NOT_APPLICABLE"
+  }
+}

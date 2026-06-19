@@ -10,6 +10,9 @@ if (!fs.existsSync(generatedPagesPath)) {
 }
 
 const generatedPages = JSON.parse(fs.readFileSync(generatedPagesPath, 'utf8'));
+const citationRegistryPath = path.join(root, 'data/citation/citable_pages.json');
+const citationRegistry = fs.existsSync(citationRegistryPath) ? JSON.parse(fs.readFileSync(citationRegistryPath, 'utf8')) : { pages: [] };
+const citationPriorityPages = new Set((citationRegistry.pages || []).filter(page => page.priority === true).map(page => page.path));
 const MIN_WORDS = Number(process.env.GENERATED_PAGE_MIN_WORDS || 300);
 const MAX_WORDS = Number(process.env.GENERATED_PAGE_MAX_WORDS || 650);
 const report = [];
@@ -36,6 +39,12 @@ for (const page of generatedPages) {
   const html = fs.readFileSync(full, 'utf8');
   const words = wordCount(html);
   const entry = { file: rel, before: words, after: words, status: 'ok' };
+
+  if (citationPriorityPages.has(rel)) {
+    entry.status = 'citation-priority-exempt';
+    report.push(entry);
+    continue;
+  }
 
   if (words < MIN_WORDS) {
     const injection = `\n<section class="card" data-content-contract="generated-range-repair"><h2>Founder context</h2><p>This page is written for founders comparing operating conditions, not just labels. The useful choice depends on whether the bottleneck is daily execution, leadership judgment, emotional complexity, or the need for repeated follow-through across the week. That is why this comparison focuses on workflow, tradeoffs, and where each option is strongest in practice.</p></section>`;

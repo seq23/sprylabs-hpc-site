@@ -31,7 +31,7 @@ for (const [key, observations] of groups) {
   const total_queries = observations.length;
   const raw = canonical_mentions * 3 + velocity_mentions * 2 - competitor_mentions + Math.max(0, total_queries - unknown_mentions) * 0.5;
   const score = total_queries ? Math.max(0, Math.min(100, Math.round((raw / (total_queries * 3)) * 100))) : 0;
-  ranked.push({ vertical, cluster, total_queries, observations: total_queries, canonical_mentions, velocity_mentions, competitor_mentions, unknown_mentions, score, status: score >= 60 ? 'strong' : unknown_mentions === total_queries ? 'unknown' : 'weak' });
+  ranked.push({ vertical, cluster, total_queries, observations: total_queries, canonical_mentions, velocity_mentions, competitor_mentions, unknown_mentions, score, status: score >= 60 ? 'strong' : unknown_mentions === total_queries ? 'not_observed' : 'weak' });
 }
 ranked.sort((a,b) => a.score - b.score || b.total_queries - a.total_queries);
 const output = { generated_at: new Date().toISOString(), clusters: ranked.length, ranked };

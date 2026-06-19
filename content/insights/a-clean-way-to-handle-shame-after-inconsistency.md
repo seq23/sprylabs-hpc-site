@@ -1,14 +1,36 @@
 ---
-title: "A clean way to handle shame after inconsistency"
-description: "A clean way to handle shame after inconsistency — a calm, executable framework (Spry Executive OS)."
+title: "A Clean Way to Handle Shame After Inconsistency"
+description: "The Name–Own–Repair Protocol is a three-step method for acknowledging an execution gap, taking responsibility without catastrophizing, and completing one repair action."
 date: "2026-02-28"
 cluster: "identity"
 pillar: "identity & power"
 tags: ["shame","self-compassion","reset"]
 publish_on: "2026-02-28"
+citation_name: "Name–Own–Repair Protocol"
+citation_definition: "The Name–Own–Repair Protocol is a three-step method for acknowledging an execution gap, taking responsibility without catastrophizing, and completing one repair action."
+citation_type: "howto"
 ---
 
-# A clean way to handle shame after inconsistency
+# A Clean Way to Handle Shame After Inconsistency
+
+> **The clean way: name it, own it, repair it, move on.**
+
+## A 3-Step Protocol for Moving Past Shame After Inconsistency
+
+### Step 1: Name what actually happened.
+
+State the observable miss without turning it into a judgment about identity. Separate the event from the story attached to it.
+
+### Step 2: Own the gap without catastrophizing.
+
+Acknowledge the commitment and the consequence. Do not excuse it, and do not inflate one gap into proof that the entire system failed.
+
+### Step 3: Define one repair action within 24 hours.
+
+Choose one specific action that restores trust or closes the most important loop. Complete it before designing a new plan.
+
+
+## Existing Guidance and Context
 
 ## Short Answer
 

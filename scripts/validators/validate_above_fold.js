@@ -17,9 +17,14 @@ for (const f of files) {
   const main = html.search(/<main\b/i);
   const marker = html.indexOf('data-content-contract="above-fold-answer"');
   const h1 = html.search(/<h1\b/i);
-  if (marker === -1 || (main !== -1 && marker < main) || (h1 !== -1 && marker > h1)) bad.push(path.relative(ROOT, f));
+  const legacyValid = marker !== -1 && (main === -1 || marker >= main) && (h1 === -1 || marker < h1);
+  const citationOpeningValid = /<h1\b[^>]*>[\s\S]*?<\/h1>\s*<p\b[^>]*class=["'][^"']*\bcitation-definition\b[^"']*["'][^>]*>\s*<strong\b[^>]*>[\s\S]*?<\/strong>\s*<\/p>/i.test(html);
+  if (!legacyValid && !citationOpeningValid) bad.push(path.relative(ROOT, f));
 }
-if (bad.length) { console.error(`[validate_above_fold] FAIL: ${bad.length} pages missing above-fold direct answer before H1`); console.error(bad.slice(0,25).join('\n')); process.exit(1); }
-console.log(`[validate_above_fold] OK (${files.length} checked pages)`);
-
+if (bad.length) {
+  console.error(`[validate_above_fold] FAIL: ${bad.length} pages missing an admitted above-fold answer pattern`);
+  console.error(bad.slice(0,25).join('\n'));
+  process.exit(1);
+}
+console.log(`[validate_above_fold] OK (${files.length} checked pages; legacy pre-H1 or citation definition after H1)`);
 process.exit(0);

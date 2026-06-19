@@ -1,17 +1,13 @@
-name: daily insight
-
+name: Daily Insight
 on:
   schedule:
     - cron: '20 14 * * *'
   workflow_dispatch:
-
 permissions:
   contents: write
-
 concurrency:
   group: main-automation
   cancel-in-progress: false
-
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -19,20 +15,13 @@ jobs:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-
       - uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: npm
-
       - run: npm ci --ignore-scripts
       - run: node scripts/release_one_draft.js
-      - run: node scripts/build_insights.js
-      - run: npm run velocity:sync
-      - run: npm run distribution:prepare
-      - run: npm run guardrails:all
-      - run: npm run validate:critical
+      - run: npm run release:prepush:container
       - run: npm run validate:warnings
-
       - name: Commit and push if changed
         run: './.github/scripts/commit_and_push_if_changed.sh "chore: release daily insight"'

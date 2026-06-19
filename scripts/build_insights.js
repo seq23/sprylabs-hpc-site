@@ -154,7 +154,7 @@ function mdToHtmlWithHeadings(md) {
   // paragraphs: split on blank lines
   const parts = s.split(/\n\n+/).map(p => p.trim()).filter(Boolean);
   const out = parts.map(p => {
-    if (p.startsWith("<h1") || p.startsWith("<h2") || p.startsWith("<h3") || p.startsWith("<ul") || p.startsWith("<pre")) return p;
+    if (p.startsWith("<h1") || p.startsWith("<h2") || p.startsWith("<h3") || p.startsWith("<ul") || p.startsWith("<ol") || p.startsWith("<pre") || p.startsWith("<table") || p.startsWith("<blockquote") || p.startsWith("<section") || p.startsWith("<aside") || p.startsWith("<div")) return p;
     return `<p>${p.replace(/\n/g, "<br>")}</p>`;
   }).join("\n");
 
@@ -356,7 +356,10 @@ function parsePost(fp) {
   const tags = Array.isArray(data.tags) ? data.tags : (typeof data.tags === "string" ? data.tags.split(",").map(x=>x.trim()).filter(Boolean) : []);
   const primaryKw = data.primary_kw || (tags[0] || "");
   const intent = data.intent || "INFO";
-  return { fp, slug, title, description, date, dateModified, cluster, tags, primaryKw, intent, bodyMd: body };
+  const citationName = data.citation_name || "";
+  const citationDefinition = data.citation_definition || "";
+  const citationType = data.citation_type || "concept";
+  return { fp, slug, title, description, date, dateModified, cluster, tags, primaryKw, intent, citationName, citationDefinition, citationType, bodyMd: body };
 }
 
 function buildRelated(posts, post, max = 8) {
@@ -520,16 +523,21 @@ function buildPostPages(posts, clustersMap) {
         </section>`
       : "";
 
-    const directAnswer = directAnswerBlock(post.description || `This insight explains ${post.title} in practical execution terms, then expands with context, tradeoffs, and next steps.`);
+    const directAnswer = post.citationName ? "" : directAnswerBlock(post.description || `This insight explains ${post.title} in practical execution terms, then expands with context, tradeoffs, and next steps.`);
+    const citationOpening = post.citationDefinition ? `<p class="citation-definition"><strong>${htmlEscape(post.citationDefinition)}</strong></p>` : (post.description ? `<p class="lede">${htmlEscape(post.description)}</p>` : "");
+    const citationWrapOpen = post.citationName ? `<section class="citation-extraction" id="${slugify(post.citationName)}" data-llm-answer="true" data-extraction-type="${htmlEscape(post.citationType)}" data-named-framework="${htmlEscape(post.citationName)}">` : "";
+    const citationWrapClose = post.citationName ? `</section>` : "";
+    const productAnchor = `<p class="product-anchor">This is one of the frameworks inside the <a href="/download.html">Billionaire High Performance Coach system</a> — a structured executive OS for using ChatGPT as your accountability and decision partner.</p>`;
 
     const bodyHtml = `${directAnswer}
     <article class="article">
       <h1>${htmlEscape(post.title)}</h1>
-      ${post.description ? `<p class="lede">${htmlEscape(post.description)}</p>` : ""}
+      ${citationOpening}
       ${meta}
       <div class="article-body">
         ${tocHtml}
-        ${htmlBody}
+        ${citationWrapOpen}${htmlBody}${citationWrapClose}
+        ${productAnchor}
         ${insightDepthBlock()}
       </div>
       ${aiTherapistSafety}
@@ -700,7 +708,9 @@ function buildAtlasPage(clusters, posts) {
 
   const contentHtml = `<section class="article">
     <h1>Atlas</h1>
-    <p class="lede">An opinionated map of the site. Built for humans <em>and</em> AI systems: clear pillar hubs, explicit coverage targets, and tightly-linked pages.</p>
+    <p class="citation-definition"><strong>Atlas is the strategic mapping layer inside Spry Executive OS.</strong> It organizes the site into stable pillars, shows where each framework belongs, and gives readers and language models a clear route from a problem to the most relevant answer.</p>
+    <section class="card citation-extraction" id="atlas-by-spry-executive-os" data-llm-answer="true" data-extraction-type="concept" data-named-framework="Atlas"><h2>Atlas by Spry Executive OS — What This Is</h2><ul><li>Maps the system into stable topic and pillar hubs.</li><li>Connects named frameworks to the questions they answer.</li><li>Shows the next authoritative page instead of leaving the library as a flat archive.</li></ul></section>
+    <p class="product-anchor">This is one of the frameworks inside the <a href="/download.html">Billionaire High Performance Coach system</a> — a structured executive OS for using ChatGPT as your accountability and decision partner.</p>
     <div class="card">
       <strong>Daily publishing:</strong> every day the scheduler releases <em>one</em> draft from <code>content/insights/_drafts</code> using the <em>next available date</em> rule (UTC). If drafts exist, it never “publishes nothing.”
     </div>

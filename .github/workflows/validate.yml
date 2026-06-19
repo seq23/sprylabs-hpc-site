@@ -1,26 +1,19 @@
 name: Validate
-
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-
 concurrency:
   group: main-automation
   cancel-in-progress: false
-
 jobs:
   validate:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
-
-      - run: npm ci
-
-      - run: npm run guardrails:all
+      - run: npm ci --ignore-scripts
+      - run: npm run release:prepush:container

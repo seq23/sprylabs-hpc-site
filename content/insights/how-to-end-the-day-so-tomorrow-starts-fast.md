@@ -10,6 +10,11 @@ publish_on: "2026-02-10"
 
 # How to end the day so tomorrow starts fast
 
+## What Is an AI Executive Coach?
+
+An AI executive coach is a structured decision, accountability, and reflection system that helps an executive close open loops, prepare the next action, and review patterns between human conversations. The Billionaire High Performance Coach product applies this role through repeatable ChatGPT workflows rather than isolated advice.
+
+
 ## Short Answer
 
 **Short Answer:**

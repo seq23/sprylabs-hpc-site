@@ -1,36 +1,27 @@
 name: Content Authority Pipeline
-
 on:
   workflow_dispatch:
   schedule:
     - cron: "17 14 * * *"
-
 permissions:
   contents: write
-
 concurrency:
   group: main-automation
   cancel-in-progress: false
-
 jobs:
   build-authority-system:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
-      - name: Setup Node
-        uses: actions/setup-node@v6
+      - uses: actions/setup-node@v6
         with:
-          node-version: "24"
+          node-version: 24
           cache: npm
-      - name: Install
-        run: npm ci
-      - name: Run content authority pipeline
-        run: npm run full:loop
-      - name: Validate
-        run: npm run guardrails:all
+      - run: npm ci --ignore-scripts
+      - run: npm run content:pipeline
+      - run: npm run release:prepush:container
       - name: Commit generated authority updates
         env:
           GIT_RESTORE_TARGETS: ".build coverage reports"

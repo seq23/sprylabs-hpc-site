@@ -1,0 +1,1463 @@
+{
+  "schema_version": "1.0",
+  "governance": "All validators, release stages, and CI workflows enter through this registry before matrix activation.",
+  "records": [
+    {
+      "validation_id": "VAL-001",
+      "status": "ADMITTED",
+      "name": "build:all",
+      "check_type": "build",
+      "owning_lane": "build",
+      "risk_prevented": "Prevents unproven or inconsistent build behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run build:all",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/build-all/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-001"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-002",
+      "status": "ADMITTED",
+      "name": "build:generated-content",
+      "check_type": "build",
+      "owning_lane": "build",
+      "risk_prevented": "Prevents unproven or inconsistent build behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run build:generated-content",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/build-generated-content/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-002"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-003",
+      "status": "ADMITTED",
+      "name": "citation:all",
+      "check_type": "validator",
+      "owning_lane": "citation-contract",
+      "risk_prevented": "Prevents unproven or inconsistent citation-contract behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run citation:all",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/citation/pass.txt",
+      "negative_fixture": "fixtures/validation/citation/fail.txt",
+      "evidence_output": "artifacts/diagnostics/<run-id>/citation-all/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-003"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-004",
+      "status": "ADMITTED",
+      "name": "citation:build",
+      "check_type": "validator",
+      "owning_lane": "citation-contract",
+      "risk_prevented": "Prevents unproven or inconsistent citation-contract behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run citation:build",
+      "implementation_path": "scripts/citation/build_citation_opportunities.js",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/citation/pass.txt",
+      "negative_fixture": "fixtures/validation/citation/fail.txt",
+      "evidence_output": "artifacts/diagnostics/<run-id>/citation-build/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-004"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-005",
+      "status": "ADMITTED",
+      "name": "citation:warn",
+      "check_type": "validator",
+      "owning_lane": "citation-contract",
+      "risk_prevented": "Prevents unproven or inconsistent citation-contract behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run citation:warn",
+      "implementation_path": "scripts/validators/validate_citation_readiness_warning.js",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/citation/pass.txt",
+      "negative_fixture": "fixtures/validation/citation/fail.txt",
+      "evidence_output": "artifacts/diagnostics/<run-id>/citation-warn/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-005"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-006",
+      "status": "ADMITTED",
+      "name": "full:loop",
+      "check_type": "release-stage",
+      "owning_lane": "release",
+      "risk_prevented": "Prevents unproven or inconsistent release behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run full:loop",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/full-loop/summary.json",
+      "runtime_budget_seconds": 3600,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-006"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-007",
+      "status": "ADMITTED",
+      "name": "guardrails:all",
+      "check_type": "release-stage",
+      "owning_lane": "release",
+      "risk_prevented": "Prevents unproven or inconsistent release behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run guardrails:all",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/guardrails-all/summary.json",
+      "runtime_budget_seconds": 3600,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-007"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-008",
+      "status": "NOT_APPLICABLE",
+      "name": "postcleanup:integrity",
+      "check_type": "release-stage",
+      "owning_lane": "release",
+      "risk_prevented": "Prevents unproven or inconsistent release behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "NOT_APPLICABLE",
+      "command": "npm run postcleanup:integrity",
+      "implementation_path": "scripts/release/not_applicable.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/postcleanup-integrity/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Not applicable: No live proof fixtures require cleanup verification.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-008"
+      ],
+      "not_applicable_reason": "No live proof fixtures require cleanup verification."
+    },
+    {
+      "validation_id": "VAL-009",
+      "status": "NOT_APPLICABLE",
+      "name": "postdeploy:authenticated-click-audit",
+      "check_type": "release-stage",
+      "owning_lane": "deployed-runtime",
+      "risk_prevented": "Prevents unproven or inconsistent deployed-runtime behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "NOT_APPLICABLE",
+      "command": "npm run postdeploy:authenticated-click-audit",
+      "implementation_path": "scripts/release/not_applicable.mjs",
+      "environment": "deployed",
+      "proof_tier": 4,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/postdeploy-authenticated-click-audit/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Not applicable: Public static site has no authenticated routes.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-009"
+      ],
+      "not_applicable_reason": "Public static site has no authenticated routes."
+    },
+    {
+      "validation_id": "VAL-010",
+      "status": "ADMITTED",
+      "name": "postdeploy:click-audit:all",
+      "check_type": "release-stage",
+      "owning_lane": "deployed-runtime",
+      "risk_prevented": "Prevents unproven or inconsistent deployed-runtime behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run postdeploy:click-audit:all",
+      "implementation_path": "package.json",
+      "environment": "deployed",
+      "proof_tier": 4,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/postdeploy-click-audit-all/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-010"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-011",
+      "status": "ADMITTED",
+      "name": "postdeploy:public-click-audit",
+      "check_type": "release-stage",
+      "owning_lane": "deployed-runtime",
+      "risk_prevented": "Prevents unproven or inconsistent deployed-runtime behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run postdeploy:public-click-audit",
+      "implementation_path": "tests/public-routes.spec.mjs",
+      "environment": "deployed",
+      "proof_tier": 4,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/postdeploy-public-click-audit/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-011"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-012",
+      "status": "NOT_APPLICABLE",
+      "name": "postdeploy:role-click-audit",
+      "check_type": "release-stage",
+      "owning_lane": "deployed-runtime",
+      "risk_prevented": "Prevents unproven or inconsistent deployed-runtime behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "NOT_APPLICABLE",
+      "command": "npm run postdeploy:role-click-audit",
+      "implementation_path": "scripts/release/not_applicable.mjs",
+      "environment": "deployed",
+      "proof_tier": 4,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/postdeploy-role-click-audit/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Not applicable: Public static site has no roles.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-012"
+      ],
+      "not_applicable_reason": "Public static site has no roles."
+    },
+    {
+      "validation_id": "VAL-013",
+      "status": "NOT_APPLICABLE",
+      "name": "release:cleanup",
+      "check_type": "release-stage",
+      "owning_lane": "release",
+      "risk_prevented": "Prevents unproven or inconsistent release behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "NOT_APPLICABLE",
+      "command": "npm run release:cleanup",
+      "implementation_path": "scripts/release/not_applicable.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/release-cleanup/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Not applicable: No live proof fixtures are created.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-013"
+      ],
+      "not_applicable_reason": "No live proof fixtures are created."
+    },
+    {
+      "validation_id": "VAL-014",
+      "status": "ADMITTED",
+      "name": "release:close-lifecycle",
+      "check_type": "release-stage",
+      "owning_lane": "deployed-runtime",
+      "risk_prevented": "Prevents unproven or inconsistent deployed-runtime behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run release:close-lifecycle",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/release-close-lifecycle/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-014"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-015",
+      "status": "NOT_APPLICABLE",
+      "name": "release:live-proof",
+      "check_type": "release-stage",
+      "owning_lane": "release",
+      "risk_prevented": "Prevents unproven or inconsistent release behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "NOT_APPLICABLE",
+      "command": "npm run release:live-proof",
+      "implementation_path": "scripts/release/not_applicable.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/release-live-proof/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Not applicable: No live provider mutation or persistence exists.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-015"
+      ],
+      "not_applicable_reason": "No live provider mutation or persistence exists."
+    },
+    {
+      "validation_id": "VAL-016",
+      "status": "ADMITTED",
+      "name": "release:local-visual-proof",
+      "check_type": "release-stage",
+      "owning_lane": "browser",
+      "risk_prevented": "Prevents unproven or inconsistent browser behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run release:local-visual-proof",
+      "implementation_path": "tests/public-routes.spec.mjs",
+      "environment": "local",
+      "proof_tier": 3,
+      "positive_fixture": "fixtures/validation/browser/pass.json",
+      "negative_fixture": "fixtures/validation/browser/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/release-local-visual-proof/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-016"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-017",
+      "status": "ADMITTED",
+      "name": "release:package-baseline",
+      "check_type": "release-stage",
+      "owning_lane": "artifact",
+      "risk_prevented": "Prevents unproven or inconsistent artifact behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run release:package-baseline",
+      "implementation_path": "scripts/release/package_baseline.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/artifact/pass.json",
+      "negative_fixture": "fixtures/validation/artifact/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/release-package-baseline/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-017"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-018",
+      "status": "ADMITTED",
+      "name": "release:postpush",
+      "check_type": "release-stage",
+      "owning_lane": "deployed-runtime",
+      "risk_prevented": "Prevents unproven or inconsistent deployed-runtime behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run release:postpush",
+      "implementation_path": "scripts/release/postpush.mjs",
+      "environment": "deployed",
+      "proof_tier": 4,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/release-postpush/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-018"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-019",
+      "status": "ADMITTED",
+      "name": "release:prepush",
+      "check_type": "release-stage",
+      "owning_lane": "release",
+      "risk_prevented": "Prevents unproven or inconsistent release behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run release:prepush",
+      "implementation_path": "scripts/release/prepush_router.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/release-prepush/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-019"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-020",
+      "status": "ADMITTED",
+      "name": "release:prepush:container",
+      "check_type": "release-stage",
+      "owning_lane": "release",
+      "risk_prevented": "Prevents unproven or inconsistent release behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run release:prepush:container",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/release-prepush-container/summary.json",
+      "runtime_budget_seconds": 3600,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-020"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-021",
+      "status": "ADMITTED",
+      "name": "release:prepush:local",
+      "check_type": "release-stage",
+      "owning_lane": "release",
+      "risk_prevented": "Prevents unproven or inconsistent release behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run release:prepush:local",
+      "implementation_path": "package.json",
+      "environment": "local",
+      "proof_tier": 3,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/release-prepush-local/summary.json",
+      "runtime_budget_seconds": 3600,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-021"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-022",
+      "status": "ADMITTED",
+      "name": "release:report",
+      "check_type": "release-stage",
+      "owning_lane": "release",
+      "risk_prevented": "Prevents unproven or inconsistent release behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run release:report",
+      "implementation_path": "scripts/release/report.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/release-report/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-022"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-023",
+      "status": "ADMITTED",
+      "name": "validate:all",
+      "check_type": "validator",
+      "owning_lane": "release",
+      "risk_prevented": "Prevents unproven or inconsistent release behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:all",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-all/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-023"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-024",
+      "status": "ADMITTED",
+      "name": "validate:artifact-source-parity",
+      "check_type": "validator",
+      "owning_lane": "artifact",
+      "risk_prevented": "Prevents unproven or inconsistent artifact behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:artifact-source-parity",
+      "implementation_path": "scripts/validation/validate_artifact_source_parity.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/artifact/pass.json",
+      "negative_fixture": "fixtures/validation/artifact/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-artifact-source-parity/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-024"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-025",
+      "status": "ADMITTED",
+      "name": "validate:browser-suite-contract",
+      "check_type": "validator",
+      "owning_lane": "browser",
+      "risk_prevented": "Prevents unproven or inconsistent browser behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:browser-suite-contract",
+      "implementation_path": "scripts/validation/validate_browser_suite_contract.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/browser/pass.json",
+      "negative_fixture": "fixtures/validation/browser/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-browser-suite-contract/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-025"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-026",
+      "status": "ADMITTED",
+      "name": "validate:citation-contract",
+      "check_type": "validator",
+      "owning_lane": "citation-contract",
+      "risk_prevented": "Prevents weak citation surfaces, normalized query collisions, malformed encoding, prose blocks longer than three sentences, registry drift, and extraction blocks that do not match their declared page type.",
+      "existing_coverage_gap": "No other admitted lane jointly verifies visible definitions, normalized query ownership, page-type extraction structure, product anchors, schema parity, paragraph boundaries, and machine-readable discovery parity.",
+      "scope": [
+        "registered-citable-pages",
+        "query-registry",
+        "framework-registry",
+        "llms.txt",
+        "answers.json"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:citation-contract",
+      "implementation_path": "scripts/validation/validate_citation_contract.py",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/citation/pass.txt",
+      "negative_fixture": "fixtures/validation/citation/fail.txt",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-citation-contract/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted and strengthened during hostile verification on 2026-06-18; expanded inside the existing lane instead of adding validator bloat.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-026"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-027",
+      "status": "ADMITTED",
+      "name": "validate:content",
+      "check_type": "validator",
+      "owning_lane": "content",
+      "risk_prevented": "Prevents unproven or inconsistent content behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:content",
+      "implementation_path": "scripts/validation/validate_legacy_contracts.sh",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-content/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-027"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-028",
+      "status": "ADMITTED",
+      "name": "validate:distribution",
+      "check_type": "validator",
+      "owning_lane": "distribution",
+      "risk_prevented": "Prevents unproven or inconsistent distribution behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:distribution",
+      "implementation_path": "scripts/validation/validate_distribution.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-distribution/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-028"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-029",
+      "status": "ADMITTED",
+      "name": "validate:graph",
+      "check_type": "validator",
+      "owning_lane": "graph",
+      "risk_prevented": "Prevents unproven or inconsistent graph behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:graph",
+      "implementation_path": "scripts/validation/validate_graph.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-graph/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-029"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-030",
+      "status": "ADMITTED",
+      "name": "validate:reopened-baseline",
+      "check_type": "validator",
+      "owning_lane": "artifact",
+      "risk_prevented": "Prevents unproven or inconsistent artifact behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:reopened-baseline",
+      "implementation_path": "scripts/validation/validate_reopened_baseline.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/artifact/pass.json",
+      "negative_fixture": "fixtures/validation/artifact/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-reopened-baseline/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-030"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-031",
+      "status": "ADMITTED",
+      "name": "validate:repo",
+      "check_type": "validator",
+      "owning_lane": "repo-governance",
+      "risk_prevented": "Prevents unproven or inconsistent repo-governance behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:repo",
+      "implementation_path": "scripts/validation/validate_repo.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/registry/pass.json",
+      "negative_fixture": "fixtures/validation/registry/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-repo/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-031"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-032",
+      "status": "ADMITTED",
+      "name": "validate:ui-test-parity",
+      "check_type": "validator",
+      "owning_lane": "browser",
+      "risk_prevented": "Prevents unproven or inconsistent browser behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:ui-test-parity",
+      "implementation_path": "scripts/validation/validate_ui_test_parity.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/browser/pass.json",
+      "negative_fixture": "fixtures/validation/browser/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-ui-test-parity/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-032"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-033",
+      "status": "ADMITTED",
+      "name": "validate:validation-registry",
+      "check_type": "validator",
+      "owning_lane": "repo-governance",
+      "risk_prevented": "Prevents unproven or inconsistent repo-governance behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:validation-registry",
+      "implementation_path": "scripts/validation/validate_validation_registry.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/registry/pass.json",
+      "negative_fixture": "fixtures/validation/registry/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-validation-registry/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-033"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-034",
+      "status": "ADMITTED",
+      "name": "validate:warnings",
+      "check_type": "validator",
+      "owning_lane": "observability",
+      "risk_prevented": "Prevents unproven or inconsistent observability behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "INFO",
+      "command": "npm run validate:warnings",
+      "implementation_path": "scripts/validators/validate_velocity_warnings.js",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-warnings/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-034"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-035",
+      "status": "ADMITTED",
+      "name": "content-authority-pipeline",
+      "check_type": "workflow",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents CI or scheduled publishing from bypassing the canonical build and validation lifecycle.",
+      "existing_coverage_gap": "Workflow wiring is an external execution surface and must be governed independently of package scripts.",
+      "scope": [
+        "github-actions"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/content-authority-pipeline.yml",
+      "implementation_path": ".github/workflows/content-authority-pipeline.yml",
+      "environment": "ci",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
+      "runtime_budget_seconds": 7200,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted CI workflow using Node 24 and canonical gates.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-035"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-036",
+      "status": "ADMITTED",
+      "name": "daily-insight",
+      "check_type": "workflow",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents CI or scheduled publishing from bypassing the canonical build and validation lifecycle.",
+      "existing_coverage_gap": "Workflow wiring is an external execution surface and must be governed independently of package scripts.",
+      "scope": [
+        "github-actions"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/daily-insight.yml",
+      "implementation_path": ".github/workflows/daily-insight.yml",
+      "environment": "ci",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
+      "runtime_budget_seconds": 7200,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted CI workflow using Node 24 and canonical gates.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-036"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-037",
+      "status": "ADMITTED",
+      "name": "deploy-distribution",
+      "check_type": "workflow",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents CI or scheduled publishing from bypassing the canonical build and validation lifecycle.",
+      "existing_coverage_gap": "Workflow wiring is an external execution surface and must be governed independently of package scripts.",
+      "scope": [
+        "github-actions"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/deploy-distribution.yml",
+      "implementation_path": ".github/workflows/deploy-distribution.yml",
+      "environment": "ci",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
+      "runtime_budget_seconds": 7200,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted CI workflow using Node 24 and canonical gates.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-037"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-038",
+      "status": "ADMITTED",
+      "name": "execution-strict",
+      "check_type": "workflow",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents CI or scheduled publishing from bypassing the canonical build and validation lifecycle.",
+      "existing_coverage_gap": "Workflow wiring is an external execution surface and must be governed independently of package scripts.",
+      "scope": [
+        "github-actions"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/execution-strict.yml",
+      "implementation_path": ".github/workflows/execution-strict.yml",
+      "environment": "ci",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
+      "runtime_budget_seconds": 7200,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted CI workflow using Node 24 and canonical gates.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-038"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-039",
+      "status": "ADMITTED",
+      "name": "reddit-daily",
+      "check_type": "workflow",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents CI or scheduled publishing from bypassing the canonical build and validation lifecycle.",
+      "existing_coverage_gap": "Workflow wiring is an external execution surface and must be governed independently of package scripts.",
+      "scope": [
+        "github-actions"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/reddit-daily.yml",
+      "implementation_path": ".github/workflows/reddit-daily.yml",
+      "environment": "ci",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
+      "runtime_budget_seconds": 7200,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted CI workflow using Node 24 and canonical gates.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-039"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-040",
+      "status": "ADMITTED",
+      "name": "reddit-evening",
+      "check_type": "workflow",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents CI or scheduled publishing from bypassing the canonical build and validation lifecycle.",
+      "existing_coverage_gap": "Workflow wiring is an external execution surface and must be governed independently of package scripts.",
+      "scope": [
+        "github-actions"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/reddit-evening.yml",
+      "implementation_path": ".github/workflows/reddit-evening.yml",
+      "environment": "ci",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
+      "runtime_budget_seconds": 7200,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted CI workflow using Node 24 and canonical gates.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-040"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-041",
+      "status": "ADMITTED",
+      "name": "social-signal-processing",
+      "check_type": "workflow",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents CI or scheduled publishing from bypassing the canonical build and validation lifecycle.",
+      "existing_coverage_gap": "Workflow wiring is an external execution surface and must be governed independently of package scripts.",
+      "scope": [
+        "github-actions"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/social-signal-processing.yml",
+      "implementation_path": ".github/workflows/social-signal-processing.yml",
+      "environment": "ci",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
+      "runtime_budget_seconds": 7200,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted CI workflow using Node 24 and canonical gates.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-041"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-042",
+      "status": "ADMITTED",
+      "name": "synthesis-weekly",
+      "check_type": "workflow",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents CI or scheduled publishing from bypassing the canonical build and validation lifecycle.",
+      "existing_coverage_gap": "Workflow wiring is an external execution surface and must be governed independently of package scripts.",
+      "scope": [
+        "github-actions"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/synthesis-weekly.yml",
+      "implementation_path": ".github/workflows/synthesis-weekly.yml",
+      "environment": "ci",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
+      "runtime_budget_seconds": 7200,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted CI workflow using Node 24 and canonical gates.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-042"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-043",
+      "status": "ADMITTED",
+      "name": "validate",
+      "check_type": "workflow",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents CI or scheduled publishing from bypassing the canonical build and validation lifecycle.",
+      "existing_coverage_gap": "Workflow wiring is an external execution surface and must be governed independently of package scripts.",
+      "scope": [
+        "github-actions"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/validate.yml",
+      "implementation_path": ".github/workflows/validate.yml",
+      "environment": "ci",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
+      "runtime_budget_seconds": 7200,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted CI workflow using Node 24 and canonical gates.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-043"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-044",
+      "status": "ADMITTED",
+      "name": "whitepaper-release",
+      "check_type": "workflow",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents CI or scheduled publishing from bypassing the canonical build and validation lifecycle.",
+      "existing_coverage_gap": "Workflow wiring is an external execution surface and must be governed independently of package scripts.",
+      "scope": [
+        "github-actions"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/whitepaper-release.yml",
+      "implementation_path": ".github/workflows/whitepaper-release.yml",
+      "environment": "ci",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
+      "runtime_budget_seconds": 7200,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted CI workflow using Node 24 and canonical gates.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-044"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-RETIRED-001",
+      "status": "RETIRED",
+      "name": "legacy-flat-validate-all",
+      "check_type": "validator",
+      "owning_lane": "content",
+      "risk_prevented": "Historical flat validation runner.",
+      "existing_coverage_gap": "Superseded by admitted lane orchestration.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "bash scripts/validate_all.sh",
+      "implementation_path": "scripts/validate_all.sh",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "none",
+      "runtime_budget_seconds": 0,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:content",
+        "validate:all"
+      ],
+      "retirement_offset": null,
+      "decision": "Retired because it mixed generation and validation and enabled fail-fast too late.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [],
+      "superseded_by": [
+        "VAL-001"
+      ],
+      "retirement_date": "2026-06-18",
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-045",
+      "status": "ADMITTED",
+      "name": "validate:priority-citation-pages",
+      "check_type": "validator",
+      "owning_lane": "citation-contract",
+      "risk_prevented": "Prevents the 24 owner-specified citation page requirements from drifting behind generic registry validation.",
+      "existing_coverage_gap": "The global citation validator proves universal structure but does not encode every page-specific heading, table row, callout, or prompt requirement from the approved scope.",
+      "scope": [
+        "24 priority citation pages"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:priority-citation-pages",
+      "implementation_path": "scripts/validation/validate_priority_citation_pages.py",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/citation/pass.txt",
+      "negative_fixture": "fixtures/validation/citation/fail.txt",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-priority-citation-pages/summary.json",
+      "runtime_budget_seconds": 30,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements validate:citation-contract by enforcing the owner-approved exact requirements."
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted to bind the 24 approved page fixes to executable validation.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-045"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-046",
+      "status": "ADMITTED",
+      "name": "validate:release-portability",
+      "check_type": "validator",
+      "owning_lane": "release",
+      "risk_prevented": "Prevents internal registry URLs, undeclared Python dependencies, browser-video dependencies, Node-version drift, and missing release-critical files from reaching the local updater.",
+      "existing_coverage_gap": "Prior gates validated repository behavior but did not prove that a fresh operator machine could install and execute the packaged artifact without hidden container dependencies.",
+      "scope": [
+        "packaged release portability"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:release-portability",
+      "implementation_path": "scripts/validation/validate_release_portability.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-release-portability/summary.json",
+      "runtime_budget_seconds": 30,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements repo and artifact validators by checking cross-environment dependency portability."
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted after repeated local-updater failures exposed undeclared environment dependencies.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-046"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-047",
+      "status": "ADMITTED",
+      "name": "validate:agent-recommendations",
+      "check_type": "validator",
+      "owning_lane": "citation-contract",
+      "risk_prevented": "Prevents the complete BHPC agent recommendation set from drifting after implementation, including existing-page fixes, exact-query opportunity pages, and explicit low-relevance skips.",
+      "existing_coverage_gap": "The universal citation contract proves common structure but does not encode the agent-specific sections, worked examples, competitor framing, exact query inventory, or skip decisions.",
+      "scope": [
+        "21 unique existing-page fixes",
+        "30 active opportunity pages",
+        "5 explicit low-relevance skips"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:agent-recommendations",
+      "implementation_path": "scripts/validation/validate_agent_recommendations.py",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/citation/pass.txt",
+      "negative_fixture": "fixtures/validation/citation/fail.txt",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-agent-recommendations/summary.json",
+      "runtime_budget_seconds": 45,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements validate:citation-contract and validate:priority-citation-pages with the broader agent recommendation inventory."
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted to make the full agent recommendation dump executable and prevent partial implementation claims.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-047"
+      ],
+      "not_applicable_reason": null
+    }
+  ]
+}

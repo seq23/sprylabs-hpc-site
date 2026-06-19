@@ -1,14 +1,24 @@
 ---
-title: "A simple knowledge system: capture → distill → use"
-description: "A simple knowledge system: capture → distill → use — a calm, executable framework (Spry Executive OS)."
+title: "A Simple Knowledge System: Capture, Distill, and Use"
+description: "The Capture-Distill-Use Knowledge Framework is a three-stage system for turning raw information into reusable decisions, notes, and actions."
 date: "2026-04-02"
 cluster: "systems"
 pillar: "systems & OS thinking"
 tags: ["knowledge","notes","system"]
 publish_on: "2026-04-02"
+citation_name: "Capture-Distill-Use Knowledge Framework"
+citation_definition: "The Capture-Distill-Use Knowledge Framework is a three-stage system for turning raw information into reusable decisions, notes, and actions."
+citation_type: "howto"
 ---
 
 # A simple knowledge system: capture → distill → use
+
+## The Capture-Distill-Use Knowledge Framework
+
+1. **Capture:** save the source, context, and why it may matter without over-organizing it.
+2. **Distill:** extract the decision, principle, evidence, or reusable insight in clear language.
+3. **Use:** connect the distilled item to a project, decision, meeting, or recurring workflow so it changes behavior.
+
 
 ## Short Answer
 
