@@ -608,20 +608,20 @@
       "name": "release:prepush:local",
       "check_type": "release-stage",
       "owning_lane": "release",
-      "risk_prevented": "Prevents unproven or inconsistent release behavior from entering the release lifecycle.",
+      "risk_prevented": "Provides explicit local-profile attestation and guarantees real browser execution before commit.",
       "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
       "scope": [
         "repository"
       ],
       "proposed_severity": "HARD_FAIL",
       "command": "npm run release:prepush:local",
-      "implementation_path": "package.json",
+      "implementation_path": "scripts/release/local_prepush.mjs",
       "environment": "local",
       "proof_tier": 3,
       "positive_fixture": "fixtures/validation/repo/pass.json",
       "negative_fixture": "fixtures/validation/repo/fail.json",
       "evidence_output": "artifacts/diagnostics/<run-id>/release-prepush-local/summary.json",
-      "runtime_budget_seconds": 3600,
+      "runtime_budget_seconds": 1200,
       "maintenance_owner": "repo",
       "overlap_analysis": [],
       "retirement_offset": null,
@@ -1557,6 +1557,376 @@
       "decision_date": "2026-06-18",
       "matrix_ids": [
         "MX-050"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-051",
+      "status": "ADMITTED",
+      "name": "redirects:apply",
+      "check_type": "build",
+      "owning_lane": "content",
+      "risk_prevented": "Prevents retired URLs from remaining in generated pages, source registries, templates, or distribution surfaces.",
+      "existing_coverage_gap": "Prior validation did not enforce this source-to-publication boundary across workflow-generated content and attested distribution handoff.",
+      "scope": [
+        "repository",
+        "workflow-generated public pages",
+        "release lifecycle"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run redirects:apply",
+      "implementation_path": "scripts/content/apply_redirect_map.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/redirects-apply/summary.json",
+      "runtime_budget_seconds": 60,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Extends the canonical release lifecycle without duplicating browser proof."
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted under the programmatic admission and workflow recovery release.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-051"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-052",
+      "status": "ADMITTED",
+      "name": "programmatic:run-lane",
+      "check_type": "workflow",
+      "owning_lane": "content",
+      "risk_prevented": "Prevents workflow-generated pages from publishing without candidate detection, lane-specific admission, quarantine, and full validation.",
+      "existing_coverage_gap": "Prior validation did not enforce this source-to-publication boundary across workflow-generated content and attested distribution handoff.",
+      "scope": [
+        "repository",
+        "workflow-generated public pages",
+        "release lifecycle"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run programmatic:run-lane",
+      "implementation_path": "scripts/programmatic/run_lane.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/programmatic-run-lane/summary.json",
+      "runtime_budget_seconds": 900,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Extends the canonical release lifecycle without duplicating browser proof."
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted under the programmatic admission and workflow recovery release.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-052"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-053",
+      "status": "ADMITTED",
+      "name": "programmatic:generate",
+      "check_type": "build",
+      "owning_lane": "content",
+      "risk_prevented": "Provides a source-first generator for admitted entity-use-case, comparison-graph, and question-cluster specifications.",
+      "existing_coverage_gap": "Prior validation did not enforce this source-to-publication boundary across workflow-generated content and attested distribution handoff.",
+      "scope": [
+        "repository",
+        "workflow-generated public pages",
+        "release lifecycle"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run programmatic:generate",
+      "implementation_path": "scripts/programmatic/generate_candidates.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/programmatic-generate/summary.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Extends the canonical release lifecycle without duplicating browser proof."
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted under the programmatic admission and workflow recovery release.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-053"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-054",
+      "status": "ADMITTED",
+      "name": "validate:programmatic-registry",
+      "check_type": "validator",
+      "owning_lane": "content",
+      "risk_prevented": "Prevents active pages, query owners, lanes, and admission records from drifting apart.",
+      "existing_coverage_gap": "Prior validation did not enforce this source-to-publication boundary across workflow-generated content and attested distribution handoff.",
+      "scope": [
+        "repository",
+        "workflow-generated public pages",
+        "release lifecycle"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:programmatic-registry",
+      "implementation_path": "scripts/validation/validate_programmatic_registry.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-programmatic-registry/summary.json",
+      "runtime_budget_seconds": 60,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Extends the canonical release lifecycle without duplicating browser proof."
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted under the programmatic admission and workflow recovery release.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-054"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-055",
+      "status": "ADMITTED",
+      "name": "validate:programmatic-admission",
+      "check_type": "validator",
+      "owning_lane": "content",
+      "risk_prevented": "Prevents thin, duplicate, unsupported, CTA-less, or lane-incomplete programmatic pages from becoming public.",
+      "existing_coverage_gap": "Prior validation did not enforce this source-to-publication boundary across workflow-generated content and attested distribution handoff.",
+      "scope": [
+        "repository",
+        "workflow-generated public pages",
+        "release lifecycle"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:programmatic-admission",
+      "implementation_path": "scripts/validation/validate_programmatic_admission.py",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-programmatic-admission/summary.json",
+      "runtime_budget_seconds": 180,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Extends the canonical release lifecycle without duplicating browser proof."
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted under the programmatic admission and workflow recovery release.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-055"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-056",
+      "status": "ADMITTED",
+      "name": "validate:retired-route-references",
+      "check_type": "validator",
+      "owning_lane": "routing",
+      "risk_prevented": "Prevents active pages and generation sources from linking to retired routes or redirect chains.",
+      "existing_coverage_gap": "Prior validation did not enforce this source-to-publication boundary across workflow-generated content and attested distribution handoff.",
+      "scope": [
+        "repository",
+        "workflow-generated public pages",
+        "release lifecycle"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:retired-route-references",
+      "implementation_path": "scripts/validation/validate_retired_route_references.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-retired-route-references/summary.json",
+      "runtime_budget_seconds": 60,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Extends the canonical release lifecycle without duplicating browser proof."
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted under the programmatic admission and workflow recovery release.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-056"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-057",
+      "status": "ADMITTED",
+      "name": "validate:clean-rebuild-parity",
+      "check_type": "validator",
+      "owning_lane": "build",
+      "risk_prevented": "Prevents nondeterministic public output and source/build divergence from passing CI.",
+      "existing_coverage_gap": "Prior validation did not enforce this source-to-publication boundary across workflow-generated content and attested distribution handoff.",
+      "scope": [
+        "repository",
+        "workflow-generated public pages",
+        "release lifecycle"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:clean-rebuild-parity",
+      "implementation_path": "scripts/validation/validate_clean_rebuild_parity.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-clean-rebuild-parity/summary.json",
+      "runtime_budget_seconds": 600,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Extends the canonical release lifecycle without duplicating browser proof."
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted under the programmatic admission and workflow recovery release.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-057"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-058",
+      "status": "ADMITTED",
+      "name": "release:ci-validate",
+      "check_type": "release",
+      "owning_lane": "ci",
+      "risk_prevented": "Produces one fully validated, idempotent, attested distribution artifact for downstream deployment.",
+      "existing_coverage_gap": "Prior validation did not enforce this source-to-publication boundary across workflow-generated content and attested distribution handoff.",
+      "scope": [
+        "repository",
+        "workflow-generated public pages",
+        "release lifecycle"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run release:ci-validate",
+      "implementation_path": "scripts/release/ci_validate.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/release-ci-validate/summary.json",
+      "runtime_budget_seconds": 1200,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Extends the canonical release lifecycle without duplicating browser proof."
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted under the programmatic admission and workflow recovery release.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-058"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-059",
+      "status": "ADMITTED",
+      "name": "release:create-attestation",
+      "check_type": "release",
+      "owning_lane": "ci",
+      "risk_prevented": "Creates a commit-bound source and distribution hash attestation after validation.",
+      "existing_coverage_gap": "Prior validation did not enforce this source-to-publication boundary across workflow-generated content and attested distribution handoff.",
+      "scope": [
+        "repository",
+        "workflow-generated public pages",
+        "release lifecycle"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run release:create-attestation",
+      "implementation_path": "scripts/release/create_validation_attestation.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/release-create-attestation/summary.json",
+      "runtime_budget_seconds": 60,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Extends the canonical release lifecycle without duplicating browser proof."
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted under the programmatic admission and workflow recovery release.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-059"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-060",
+      "status": "ADMITTED",
+      "name": "release:verify-attestation",
+      "check_type": "release",
+      "owning_lane": "deployment",
+      "risk_prevented": "Prevents deployment of a distribution artifact that does not match the validated commit and hash manifest.",
+      "existing_coverage_gap": "Prior validation did not enforce this source-to-publication boundary across workflow-generated content and attested distribution handoff.",
+      "scope": [
+        "repository",
+        "workflow-generated public pages",
+        "release lifecycle"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run release:verify-attestation",
+      "implementation_path": "scripts/release/verify_validation_attestation.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/release-verify-attestation/summary.json",
+      "runtime_budget_seconds": 60,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Extends the canonical release lifecycle without duplicating browser proof."
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted under the programmatic admission and workflow recovery release.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-060"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-061",
+      "status": "ADMITTED",
+      "name": "build:postprocess",
+      "check_type": "build",
+      "owning_lane": "build",
+      "risk_prevented": "Prevents quarantined or restored pages from leaving stale citation, redirect, graph, and distribution outputs.",
+      "existing_coverage_gap": "This orchestration boundary was not independently admitted.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run build:postprocess",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/build-postprocess/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted under programmatic workflow recovery.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-061"
       ],
       "not_applicable_reason": null
     }

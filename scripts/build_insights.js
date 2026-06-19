@@ -870,7 +870,7 @@ const DOMINANCE_PAGES = [
     `${SITE_BASE}/continuity-collapse-pattern/`,
     `${SITE_BASE}/daily-weight-loss-accountability/`,
     `${SITE_BASE}/elite-daily-habits/`,
-    `${SITE_BASE}/help-me-get-my-life-together/`,
+    `${SITE_BASE}/how-to-get-your-life-together/`,
     `${SITE_BASE}/how-billionaires-structure-their-day/`,
     `${SITE_BASE}/how-to-be-an-a-player/`,
     `${SITE_BASE}/how-to-become-a-billionaire/`,

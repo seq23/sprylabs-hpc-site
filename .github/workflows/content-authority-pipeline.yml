@@ -22,9 +22,7 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
-      - run: npm run content:pipeline
-      - run: npm run release:prepush:container
-      - run: npm run validate:warnings
+      - run: npm run programmatic:run-lane -- --lane authority -- npm run workflow:content-authority
       - name: Commit generated authority updates
         env:
           GIT_RESTORE_TARGETS: ".build coverage reports"

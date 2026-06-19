@@ -29,7 +29,8 @@ const mutationWorkflows = new Set([
 const allowedActions = new Set([
   'actions/checkout@v6',
   'actions/setup-node@v6',
-  'actions/upload-artifact@v4',
+  'actions/upload-artifact@v7',
+  'actions/download-artifact@v8',
 ]);
 const pkg = readJson('package.json');
 const packageScripts = pkg.scripts || {};
@@ -100,25 +101,27 @@ for (const name of actualWorkflows) {
       errors.push(`${name}: mutating workflow must serialize through main-automation`);
     }
     if (!/fetch-depth:\s*0\b/.test(text)) errors.push(`${name}: mutating workflow requires fetch-depth: 0`);
-    const prepush = indexOrError(text, 'npm run release:prepush:container', 'canonical container prepush', name);
-    const warnings = indexOrError(text, 'npm run validate:warnings', 'warning report', name);
+    const laneRunner = indexOrError(text, 'npm run programmatic:run-lane', 'programmatic lane runner', name);
     const commit = indexOrError(text, '.github/scripts/commit_and_push_if_changed.sh', 'safe commit helper', name);
-    if (prepush >= 0 && warnings >= 0 && warnings < prepush) errors.push(`${name}: validate:warnings must run after container prepush`);
-    if (prepush >= 0 && commit >= 0 && commit < prepush) errors.push(`${name}: commit helper runs before container prepush`);
-    if (warnings >= 0 && commit >= 0 && commit < warnings) errors.push(`${name}: commit helper runs before warning report`);
+    if (laneRunner >= 0 && commit >= 0 && commit < laneRunner) errors.push(`${name}: commit helper runs before programmatic admission and canonical validation`);
+    if (!/--lane\s+[a-z_]+\s+--\s+npm\s+run\s+workflow:[\w-]+/.test(text)) errors.push(`${name}: mutation command must be wrapped in a named admitted programmatic lane`);
   }
 
   if (name === 'deploy-distribution.yml') {
-    if (!/permissions:\s*\n\s{2}contents:\s*read/m.test(text)) errors.push(`${name}: deployment workflow must remain read-only`);
-    const prepush = indexOrError(text, 'npm run release:prepush:container', 'canonical container prepush', name);
-    const warnings = indexOrError(text, 'npm run validate:warnings', 'warning report', name);
+    if (!/permissions:\s*\n\s{2}contents:\s*read\s*\n\s{2}actions:\s*read/m.test(text)) errors.push(`${name}: deployment workflow must declare contents: read and actions: read`);
+    if (!text.includes('workflow_run:') || !text.includes('workflows: ["Validate"]')) errors.push(`${name}: deployment must be triggered by successful Validate workflow completion`);
+    const download = indexOrError(text, 'actions/download-artifact@v8', 'validated artifact download', name);
+    const verify = indexOrError(text, 'npm run release:verify-attestation', 'attestation verification', name);
     const deploy = indexOrError(text, 'npm run distribution:deploy', 'distribution deployment command', name);
-    if (prepush >= 0 && deploy >= 0 && deploy < prepush) errors.push(`${name}: distribution can run before full validation`);
-    if (warnings >= 0 && deploy >= 0 && deploy < warnings) errors.push(`${name}: distribution can run before warning report`);
+    if (download >= 0 && verify >= 0 && verify < download) errors.push(`${name}: attestation verification runs before artifact download`);
+    if (verify >= 0 && deploy >= 0 && deploy < verify) errors.push(`${name}: distribution can run before attestation verification`);
+    if (!text.includes('npm run release:ci-validate')) errors.push(`${name}: manual dispatch must validate and attest before deployment`);
   }
 
   if (name === 'validate.yml') {
-    if (!text.includes('npm run release:prepush:container')) errors.push(`${name}: push/PR validation must run canonical container prepush`);
+    if (!text.includes('npm run release:ci-validate')) errors.push(`${name}: push/PR validation must run release:ci-validate`);
+    if (!text.includes('actions/upload-artifact@v7')) errors.push(`${name}: validated distribution artifact must be uploaded`);
+    if (!text.includes('reports/validation-attestation.json')) errors.push(`${name}: validation attestation must be uploaded`);
     if (!/permissions:\s*\n\s{2}contents:\s*read/m.test(text)) errors.push(`${name}: validation workflow must declare contents: read`);
   }
 
@@ -134,6 +137,18 @@ for (const name of actualWorkflows) {
 const helper = '.github/scripts/commit_and_push_if_changed.sh';
 if (!requiredFiles.has(helper)) errors.push(`${helper}: missing from baseline critical-file parity`);
 if (!requiredFiles.has('scripts/validation/validate_workflow_contract.mjs')) errors.push('workflow validator missing from baseline critical-file parity');
+for (const critical of ['scripts/programmatic/run_lane.mjs','scripts/release/ci_validate.mjs','scripts/release/create_validation_attestation.mjs','scripts/release/verify_validation_attestation.mjs']) if (!requiredFiles.has(critical)) errors.push(`${critical}: missing from baseline critical-file parity`);
+
+const laneRunner='scripts/programmatic/run_lane.mjs';
+if (fs.existsSync(laneRunner)) {
+  const laneText=fs.readFileSync(laneRunner,'utf8');
+  for (const token of ['build:all','validate_programmatic_admission.py','rejection_backlog.json','validate:all','validate:warnings','build:postprocess']) if (!laneText.includes(token)) errors.push(`${laneRunner}: missing required orchestration token ${token}`);
+}
+const ciRunner='scripts/release/ci_validate.mjs';
+if (fs.existsSync(ciRunner)) {
+  const ciText=fs.readFileSync(ciRunner,'utf8');
+  for (const token of ['release:prepush:container','validate:warnings','validate:clean-rebuild-parity','release:create-attestation']) if (!ciText.includes(token)) errors.push(`${ciRunner}: missing required CI attestation stage ${token}`);
+}
 if (!fs.existsSync(helper)) errors.push(`missing ${helper}`);
 else {
   const helperText = fs.readFileSync(helper, 'utf8');

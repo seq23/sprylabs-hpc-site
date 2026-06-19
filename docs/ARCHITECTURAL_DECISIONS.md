@@ -59,3 +59,36 @@
 * **Risks Accepted:** Live GitHub-hosted execution still depends on GitHub availability and repository secrets; local simulation cannot prove those external services.
 * **Validation Impact:** `validate:workflow-contract` is registered as VAL-050/MX-050; all ten workflow mutation commands and the distribution dry-run are exercised before packaging.
 * **Future Reversal Conditions:** Retire the custom workflow contract only if an equally strict admitted workflow linter and race-safe release mechanism replace it.
+
+## ADR — Unified programmatic page admission
+
+**Date:** 2026-06-18  
+**Status:** Accepted
+
+All workflow-generated public pages are candidates until they pass a lane-specific programmatic admission profile. The permanent registry is `data/content/page_admission_registry.json`; rejected candidates are removed from public output and recorded in `data/programmatic/rejection_backlog.json`. The manual 55-page corpus remains the full-quality reference set, while baseline legacy pages remain registered without being falsely represented as newly reviewed programmatic pages.
+
+## ADR — Registry-driven redirect normalization
+
+**Date:** 2026-06-18  
+**Status:** Accepted
+
+`data/content/manual_redirects.json` is the only redirect source. `scripts/content/apply_redirect_map.mjs` normalizes absolute, root-relative, and file-relative internal references after content generation. `validate:retired-route-references` prevents active source or final output from linking to redirect sources, chains, loops, or missing targets.
+
+## ADR — Single validated distribution artifact
+
+**Date:** 2026-06-18  
+**Status:** Accepted
+
+Validate builds once, runs the complete CI profile, verifies build idempotence, and uploads a commit-bound artifact with a hash attestation. Deploy Distribution is triggered by the successful Validate run and verifies that artifact before IndexNow submission. Manual deployment executes the same validation profile first.
+
+### Decision ID: ADM-2026-06-18-06
+* **Date:** 2026-06-18
+* **Status:** Accepted
+* **Context:** The first unified programmatic gate declared three strategic axes but did not fully enforce their hardest distinctions. Entity/use-case pages could still be entity-swapped clones, comparison pages could omit official-source mapping and conflict disclosure, question pages could publish equivalent direct answers, and build parity was tested only inside one workspace.
+* **Decision:** Keep one programmatic admission command, but enforce axis-specific rules inside it: entity-substitution similarity, query and alias collision checks, comparison entity/source mapping, visible conflict disclosure, verified dates, and direct-answer equivalence. Upgrade clean-rebuild parity to compare the canonical validated full build with a second full build in an isolated copied source tree.
+* **Alternatives Considered:** Add three separate validators; rely on manual review; preserve same-workspace idempotence as sufficient proof.
+* **Reasoning:** One admitted validator avoids permanent validator sprawl while turning the declared programmatic policies into executable release law. An isolated source copy is the closest artifact-safe equivalent to a clean clone when the delivery ZIP intentionally contains no `.git` directory.
+* **Tradeoffs:** Candidate records require more evidence fields, comparison generation requires visible review/disclosure metadata, and CI performs one additional isolated build after the canonical validated build.
+* **Risks Accepted:** CI can verify official-source mapping and freshness metadata but cannot prove every provider claim remains current without the scheduled research refresh process.
+* **Validation Impact:** `validate:programmatic-admission` hard-fails entity swaps, unsourced comparisons, answer-equivalent question pages, and query collisions. `validate:clean-rebuild-parity` hard-fails either validated-tree/clean-copy drift or second-build nondeterminism.
+* **Future Reversal Conditions:** Split the validator only if one axis becomes operationally independent enough to justify its own admitted lifecycle and maintenance cost.

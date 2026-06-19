@@ -1,0 +1,128 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-06-18",
+  "lanes": {
+    "manual": {
+      "minimum_word_count": 900,
+      "required_artifacts": true,
+      "worked_example": true,
+      "cta_profile": "full",
+      "source_floor": 0
+    },
+    "entity_use_case": {
+      "minimum_word_count": 900,
+      "required_artifacts": true,
+      "worked_example": true,
+      "cta_profile": "full",
+      "source_floor": 1,
+      "required_fields": [
+        "entity",
+        "use_case",
+        "unique_atom"
+      ],
+      "entity_substitution_similarity_max": 0.65
+    },
+    "comparison_graph": {
+      "minimum_word_count": 1000,
+      "required_artifacts": true,
+      "worked_example": true,
+      "cta_profile": "full",
+      "source_floor": 2,
+      "required_fields": [
+        "comparison_entities",
+        "comparison_methodology",
+        "unique_atom",
+        "official_sources",
+        "conflict_disclosure",
+        "verified_at"
+      ],
+      "official_source_floor": 2,
+      "official_source_distinct_host_floor": 2
+    },
+    "question_cluster": {
+      "minimum_word_count": 800,
+      "required_artifacts": true,
+      "worked_example": true,
+      "cta_profile": "full",
+      "source_floor": 0,
+      "direct_answer_max_words": 70,
+      "same_answer_similarity_max": 0.85,
+      "required_fields": [
+        "unique_atom"
+      ]
+    },
+    "reddit": {
+      "minimum_word_count": 800,
+      "required_artifacts": true,
+      "worked_example": true,
+      "cta_profile": "full",
+      "source_floor": 1
+    },
+    "daily_insight": {
+      "minimum_word_count": 900,
+      "required_artifacts": true,
+      "worked_example": true,
+      "cta_profile": "full",
+      "source_floor": 0
+    },
+    "synthesis": {
+      "minimum_word_count": 1100,
+      "required_artifacts": true,
+      "worked_example": true,
+      "cta_profile": "full",
+      "source_floor": 2
+    },
+    "authority": {
+      "minimum_word_count": 1400,
+      "required_artifacts": true,
+      "worked_example": true,
+      "cta_profile": "full",
+      "source_floor": 3
+    },
+    "whitepaper": {
+      "minimum_word_count": 1800,
+      "required_artifacts": true,
+      "worked_example": true,
+      "cta_profile": "full",
+      "source_floor": 4
+    },
+    "fanout": {
+      "minimum_word_count": 800,
+      "required_artifacts": true,
+      "worked_example": true,
+      "cta_profile": "full",
+      "source_floor": 0
+    },
+    "legacy": {
+      "minimum_word_count": 0,
+      "required_artifacts": false,
+      "worked_example": false,
+      "cta_profile": "universal",
+      "source_floor": 0
+    }
+  },
+  "programmatic_axes": {
+    "entity_use_case": {
+      "required_unique_atom": true,
+      "forbid_entity_only_substitution": true,
+      "entity_substitution_similarity_max": 0.65,
+      "unique_atom_min_words_after_entity_use_case_removal": 8
+    },
+    "comparison_graph": {
+      "required_current_entities": true,
+      "required_official_sources": true,
+      "required_conflict_disclosure": true,
+      "required_verified_at": true,
+      "official_source_floor": 2,
+      "official_source_distinct_host_floor": 2,
+      "visible_conflict_disclosure_required": true
+    },
+    "question_cluster": {
+      "literal_question_required": true,
+      "direct_answer_max_words": 70,
+      "merge_same_answer_variants": true,
+      "same_answer_similarity_max": 0.85,
+      "query_alias_collision_check": true
+    }
+  }
+}

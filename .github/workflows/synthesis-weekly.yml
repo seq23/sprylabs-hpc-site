@@ -22,12 +22,7 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
-      - run: npm run clusters:update
-      - run: npm run synthesis:build
-      - name: Build admin page
-        run: npm run admin:build
-      - run: npm run release:prepush:container
-      - run: npm run validate:warnings
+      - run: npm run programmatic:run-lane -- --lane synthesis -- npm run workflow:synthesis-weekly
       - name: Commit synthesis updates
         env:
           GIT_RESTORE_TARGETS: ".build coverage reports"

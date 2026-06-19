@@ -25,9 +25,7 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
-      - run: npm run reddit:evening
-      - run: npm run release:prepush:container
-      - run: npm run validate:warnings
+      - run: npm run programmatic:run-lane -- --lane reddit -- npm run workflow:reddit-evening
       - name: Commit and push if changed
         env:
           GIT_RESTORE_TARGETS: "data/answer_surface data/answer_surface_monitoring data/backlog reports .build coverage"

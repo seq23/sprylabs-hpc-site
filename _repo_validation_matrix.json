@@ -507,6 +507,116 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-051",
+      "validation_id": "VAL-051",
+      "lane": "content",
+      "command": "npm run redirects:apply",
+      "order": 51,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-052",
+      "validation_id": "VAL-052",
+      "lane": "content",
+      "command": "npm run programmatic:run-lane",
+      "order": 52,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-053",
+      "validation_id": "VAL-053",
+      "lane": "content",
+      "command": "npm run programmatic:generate",
+      "order": 53,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-054",
+      "validation_id": "VAL-054",
+      "lane": "content",
+      "command": "npm run validate:programmatic-registry",
+      "order": 54,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-055",
+      "validation_id": "VAL-055",
+      "lane": "content",
+      "command": "npm run validate:programmatic-admission",
+      "order": 55,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-056",
+      "validation_id": "VAL-056",
+      "lane": "routing",
+      "command": "npm run validate:retired-route-references",
+      "order": 56,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-057",
+      "validation_id": "VAL-057",
+      "lane": "build",
+      "command": "npm run validate:clean-rebuild-parity",
+      "order": 57,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-058",
+      "validation_id": "VAL-058",
+      "lane": "ci",
+      "command": "npm run release:ci-validate",
+      "order": 58,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-059",
+      "validation_id": "VAL-059",
+      "lane": "ci",
+      "command": "npm run release:create-attestation",
+      "order": 59,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-060",
+      "validation_id": "VAL-060",
+      "lane": "deployment",
+      "command": "npm run release:verify-attestation",
+      "order": 60,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-061",
+      "validation_id": "VAL-061",
+      "lane": "build",
+      "command": "npm run build:postprocess",
+      "order": 61,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ]
 }

@@ -49,6 +49,7 @@ BATCH_FILE="${ARTIFACT_DIR}/indexnow-batch.txt"
 if [[ -z "$KEY" && -f distribution.config.json ]]; then
   KEY="$(node -e "const fs=require('fs'); const c=JSON.parse(fs.readFileSync('distribution.config.json','utf8')); process.stdout.write((c.indexnow&&c.indexnow.key)||'')" 2>/dev/null || true)"
 fi
+if [[ -z "$KEY" && "${INDEXNOW_DRY_RUN:-0}" == "1" ]]; then KEY="dry-run-key"; fi
 [[ -n "$KEY" ]] || { echo "ERROR: INDEXNOW_KEY/--key is required or distribution.config.json must define indexnow.key" >&2; exit 1; }
 
 submit_args=(--key "$KEY" --allow-mixed --report "$REPORT_PATH")

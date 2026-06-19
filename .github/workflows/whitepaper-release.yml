@@ -22,8 +22,6 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
-      - run: npm run whitepaper:semiannual
-      - run: npm run release:prepush:container
-      - run: npm run validate:warnings
+      - run: npm run programmatic:run-lane -- --lane whitepaper -- npm run workflow:whitepaper
       - name: Commit and push if changed
         run: './.github/scripts/commit_and_push_if_changed.sh "chore: release scheduled white paper"'

@@ -22,9 +22,7 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
-      - run: npm run execution:strict
-      - run: npm run release:prepush:container
-      - run: npm run validate:warnings
+      - run: npm run programmatic:run-lane -- --lane authority -- npm run workflow:execution-strict
       - name: Commit execution outputs if changed
         env:
           GIT_RESTORE_TARGETS: ".build coverage reports"

@@ -49,6 +49,7 @@ if [[ -z "$KEY" ]]; then
   fi
 fi
 
+if [[ -z "$KEY" && "${INDEXNOW_DRY_RUN:-0}" == "1" ]]; then KEY="dry-run-key"; fi
 [[ -n "$KEY" ]] || { echo "ERROR: INDEXNOW_KEY/--key is required or distribution.config.json must define indexnow.key" >&2; exit 1; }
 
 mkdir -p "$(dirname "$REPORT_PATH")"

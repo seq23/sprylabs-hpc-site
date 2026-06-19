@@ -246,22 +246,7 @@ for (const redirect of redirectPayload.redirects) {
   const out = path.join(ROOT, redirect.source_path);
   fs.rmSync(out, {force:true});
 }
-function rewriteRetiredLinks(dir) {
-  for (const entry of fs.readdirSync(dir, {withFileTypes:true})) {
-    if (['.git','node_modules','artifacts','coverage','releases','.build'].includes(entry.name)) continue;
-    const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) rewriteRetiredLinks(full);
-    else if (entry.isFile() && entry.name.endsWith('.html')) {
-      let html = fs.readFileSync(full, 'utf8');
-      html = html.replace(
-        /href=["'][^"']*discipline-vs-motivation-(?:high-performance|the-calm-version-that-works)\.html["']/g,
-        'href="/discipline-vs-motivation/"',
-      );
-      fs.writeFileSync(full, html, 'utf8');
-    }
-  }
-}
-rewriteRetiredLinks(ROOT);
+
 for (const rel of ['feed.xml','feed.json','sitemap-spry.xml','sitemaps/sitemap-legacy.xml']) {
   const file = path.join(ROOT, rel);
   if (!fs.existsSync(file)) continue;

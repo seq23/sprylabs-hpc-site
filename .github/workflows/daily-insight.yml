@@ -22,8 +22,6 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
-      - run: node scripts/release_one_draft.js
-      - run: npm run release:prepush:container
-      - run: npm run validate:warnings
+      - run: npm run programmatic:run-lane -- --lane daily_insight -- npm run workflow:daily-insight
       - name: Commit and push if changed
         run: './.github/scripts/commit_and_push_if_changed.sh "chore: release daily insight"'

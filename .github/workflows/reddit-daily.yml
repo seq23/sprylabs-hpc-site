@@ -25,9 +25,6 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
-      - run: npm run reddit:daily
-      - run: npm run authority:fanout
-      - run: npm run release:prepush:container
-      - run: npm run validate:warnings
+      - run: npm run programmatic:run-lane -- --lane reddit -- npm run workflow:reddit-daily
       - name: Commit and push if changed
         run: './.github/scripts/commit_and_push_if_changed.sh "chore: reddit daily refresh"'
