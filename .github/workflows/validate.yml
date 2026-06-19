@@ -3,9 +3,13 @@ on:
   push:
     branches: [main]
   pull_request:
+permissions:
+  contents: read
 concurrency:
   group: main-automation
   cancel-in-progress: false
+env:
+  NODE_OPTIONS: --max-old-space-size=3072
 jobs:
   validate:
     runs-on: ubuntu-latest

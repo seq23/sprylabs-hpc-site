@@ -34,7 +34,8 @@ try {
   run("node scripts/admin/build_admin_page.js");
 
   run("node scripts/authority/enforce_conversion_floor.js");
-  run("npm run validate:all");
+
+  console.log("\nGeneration complete. Canonical build and validation run in release:prepush:container.\n");
 
   console.log("\n=== EXECUTION COMPLETE ===\n");
 } catch (e) {

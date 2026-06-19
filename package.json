@@ -60,12 +60,12 @@
     "citation:build": "node scripts/citation/build_citation_opportunities.js",
     "citation:warn": "node scripts/validators/validate_citation_readiness_warning.js",
     "citation:all": "npm run citation:build && npm run citation:warn",
-    "build:generated-content": "npm run intake && npm run scoring && npm run backlog && npm run fanout:auto && npm run answer:all && npm run backlog:build && node scripts/build_insights.js && node scripts/repair/auto_expand_short_pages.js && node scripts/repair/auto_repair_generated_page_ranges.js && node scripts/answer_surface/update_score_history.js && node scripts/answer_surface/build_weakness_backlog.js",
+    "build:generated-content": "npm run intake && npm run scoring && npm run backlog && npm run fanout:auto && npm run answer:all && npm run backlog:build && node scripts/build_insights.js && node scripts/repair/auto_expand_short_pages.js && node scripts/repair/auto_repair_generated_page_ranges.js && node scripts/answer_surface/update_score_history.js && node scripts/answer_surface/build_weakness_backlog.js && npm run build:manual-expansion",
     "build:all": "npm run build:generated-content && node scripts/prepare_distribution_artifacts.js && node scripts/build_coverage_map.js && node scripts/authority/compute_authority_scores.js && node scripts/internal/build_link_graph.js && python3 scripts/citation/apply_citation_program.py --postbuild && npm run citation:build",
     "validate:repo": "node scripts/validation/validate_repo.mjs && npm run validate:release-portability",
     "validate:validation-registry": "node scripts/validation/validate_validation_registry.mjs",
     "validate:citation-contract": "python3 scripts/validation/validate_citation_contract.py",
-    "validate:content": "bash scripts/validation/validate_legacy_contracts.sh && npm run validate:priority-citation-pages && npm run validate:agent-recommendations",
+    "validate:content": "bash scripts/validation/validate_legacy_contracts.sh && npm run validate:priority-citation-pages && npm run validate:agent-recommendations && npm run validate:page-admission",
     "validate:graph": "node scripts/validation/validate_graph.mjs",
     "validate:distribution": "node scripts/validation/validate_distribution.mjs",
     "validate:ui-test-parity": "node scripts/validation/validate_ui_test_parity.mjs",
@@ -73,7 +73,7 @@
     "validate:artifact-source-parity": "node scripts/validation/validate_artifact_source_parity.mjs",
     "validate:reopened-baseline": "node scripts/validation/validate_reopened_baseline.mjs",
     "validate:warnings": "node scripts/validators/validate_velocity_warnings.js && node scripts/validate_fanout_warning.js",
-    "validate:all": "npm run validate:repo && npm run validate:validation-registry && npm run validate:citation-contract && npm run validate:content && npm run validate:graph && npm run validate:distribution && npm run validate:ui-test-parity && npm run validate:browser-suite-contract",
+    "validate:all": "npm run validate:repo && npm run validate:validation-registry && npm run validate:workflow-contract && npm run validate:citation-contract && npm run validate:rendered-schema-parity && npm run validate:content && npm run validate:graph && npm run validate:distribution && npm run validate:ui-test-parity && npm run validate:browser-suite-contract",
     "guardrails:all": "npm run release:prepush:container",
     "full:loop": "npm run build:all && npm run validate:all",
     "release:prepush:container": "npm run build:all && npm run validate:all",
@@ -93,7 +93,11 @@
     "release:package-baseline": "node scripts/release/package_baseline.mjs",
     "validate:priority-citation-pages": "python3 scripts/validation/validate_priority_citation_pages.py",
     "validate:release-portability": "node scripts/validation/validate_release_portability.mjs",
-    "validate:agent-recommendations": "python3 scripts/validation/validate_agent_recommendations.py"
+    "validate:agent-recommendations": "python3 scripts/validation/validate_agent_recommendations.py",
+    "build:manual-expansion": "node scripts/content/build_manual_expansion_pages.mjs",
+    "validate:page-admission": "python3 scripts/validation/validate_manual_expansion.py",
+    "validate:rendered-schema-parity": "python3 scripts/validation/validate_rendered_schema_parity.py",
+    "validate:workflow-contract": "node scripts/validation/validate_workflow_contract.mjs"
   },
   "engines": {
     "node": ">=24.0.0"

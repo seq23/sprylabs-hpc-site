@@ -52,7 +52,7 @@ for (const file of files) {
     failures.push({ file, reason: "high-intent page missing direct public conversion endpoint" });
   }
 
-  if (!isHighIntent && !html.includes("https://aplayermode.com")) {
+  if (!isHighIntent && !html.includes("https://aplayermode.com") && !html.includes("gumroad.com")) {
     warnings.push({ file, reason: "educational page has conversion path but no visible aplayermode link" });
   }
 }

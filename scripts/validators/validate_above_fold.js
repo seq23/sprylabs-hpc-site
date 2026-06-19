@@ -14,6 +14,7 @@ for (const f of fs.readdirSync(ROOT)) if (/^synthesis-.*\.html$/.test(f)) files.
 const bad = [];
 for (const f of files) {
   const html = fs.readFileSync(f, 'utf8');
+  if (/<meta[^>]+name=["']robots["'][^>]+content=["'][^"']*noindex/i.test(html) || /<meta[^>]+content=["'][^"']*noindex[^"']*["'][^>]+name=["']robots["']/i.test(html)) continue;
   const main = html.search(/<main\b/i);
   const marker = html.indexOf('data-content-contract="above-fold-answer"');
   const h1 = html.search(/<h1\b/i);

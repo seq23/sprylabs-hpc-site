@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "status": "ACTIVE",
+  "policy": "Every new or materially rebuilt indexable page must independently earn its URL.",
+  "minimum_word_count": 900,
+  "maximum_main_content_similarity": 0.72,
+  "maximum_batch_size_after_manual_release": 10,
+  "required_fields": [
+    "primary_query",
+    "distinct_intent",
+    "named_framework",
+    "bold_definition",
+    "extraction_block",
+    "unique_artifact",
+    "failure_modes",
+    "worked_example",
+    "limitations",
+    "product_anchor",
+    "canonical_domain",
+    "schema_parity",
+    "source_review",
+    "cluster_links"
+  ],
+  "hard_fail_conditions": [
+    "duplicate_primary_query_owner",
+    "keyword_swapped_duplicate",
+    "missing_unique_artifact",
+    "product_bridge_only",
+    "unsupported_health_claim",
+    "hidden_machine_only_claim",
+    "structured_data_visible_content_mismatch",
+    "orphan_page",
+    "unapproved_auto_publication",
+    "cross_domain_query_collision"
+  ],
+  "manual_expansion_reference_set": "data/content/manual_expansion_pages.json"
+}

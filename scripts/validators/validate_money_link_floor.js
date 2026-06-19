@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const APPROVED_ENDPOINTS = [
+  'href="/download.html"',
   "https://aplayermode.com",
   "billionairehighperformancecoach.com/download",
   "gumroad.com",

@@ -1458,6 +1458,107 @@
         "MX-047"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-048",
+      "status": "ADMITTED",
+      "name": "validate:page-admission",
+      "check_type": "validator",
+      "owning_lane": "content",
+      "risk_prevented": "Prevents thin, duplicate, query-colliding, unsupported, or schema-inconsistent manual and future programmatic pages from becoming indexable.",
+      "existing_coverage_gap": "The universal citation validator proves common markup but does not prove distinct intent, unique artifacts, page-specific reasoning, health-adjacent safeguards, or bounded similarity across the manual reference set.",
+      "scope": [
+        "55 manual expansion pages",
+        "future programmatic page admission reference set"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:page-admission",
+      "implementation_path": "scripts/validation/validate_manual_expansion.py",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/citation/pass.txt",
+      "negative_fixture": "fixtures/validation/citation/fail.txt",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-page-admission/summary.json",
+      "runtime_budget_seconds": 60,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Extends validate:citation-contract with page-level uniqueness, source, safety, and programmatic-admission requirements."
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted as the page-quality gate for the manual reference set and future programmatic batches.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-048"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-049",
+      "status": "ADMITTED",
+      "name": "validate:rendered-schema-parity",
+      "check_type": "validator",
+      "owning_lane": "citation-contract",
+      "risk_prevented": "Prevents final rendered HTML from diverging from FAQ, HowTo, Breadcrumb, Article, author, date, image, canonical, and visible-content schema contracts after post-build processing.",
+      "existing_coverage_gap": "Registry and source validators did not prove that the final packaged HTML preserved exact visible-content/schema parity after the citation post-build compiler ran.",
+      "scope": [
+        "all active governed public pages",
+        "final rendered JSON-LD",
+        "premium GEO authorship and freshness surfaces"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:rendered-schema-parity",
+      "implementation_path": "scripts/validation/validate_rendered_schema_parity.py",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/citation/pass.txt",
+      "negative_fixture": "fixtures/validation/citation/fail.txt",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-rendered-schema-parity/summary.json",
+      "runtime_budget_seconds": 90,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements citation-contract and page-admission validation by inspecting the final rendered artifact rather than declarations."
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted after final-output audit found blanket FAQ schema, missing HowTo output, and cross-domain schema drift invisible to prior source-level gates.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-049"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-050",
+      "status": "ADMITTED",
+      "name": "validate:workflow-contract",
+      "check_type": "validator",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents GitHub Actions from bypassing canonical validation, invoking missing commands, using the wrong Node/runtime profile, losing provider credentials, or shipping workflow files that are absent from artifact parity.",
+      "existing_coverage_gap": "Workflow admission previously proved only that YAML files existed. It did not validate command references, canonical gate ordering, mutation/push safety, memory constraints, credential placement, or packaging parity.",
+      "scope": [
+        "all .github/workflows/*.yml",
+        ".github/scripts/commit_and_push_if_changed.sh",
+        "CI command and packaging parity"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:workflow-contract",
+      "implementation_path": "scripts/validation/validate_workflow_contract.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-workflow-contract/summary.json",
+      "runtime_budget_seconds": 30,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements validation-registry admission and release-portability by inspecting workflow behavior and references."
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted after hostile release review found deploy and automation workflows could diverge from the newly expanded validation stack.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [
+        "MX-050"
+      ],
+      "not_applicable_reason": null
     }
   ]
 }

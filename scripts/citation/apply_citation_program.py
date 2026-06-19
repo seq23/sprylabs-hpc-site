@@ -196,7 +196,41 @@ SPRY_ROOT_PATHS = {
     "entrepreneurs-daily-tasks-eliminated-with-automation.html",
 }
 
+
+def load_manual_pages() -> dict[str, dict]:
+    source = ROOT / "data/content/manual_expansion_pages.json"
+    if not source.exists():
+        return {}
+    payload = json.loads(source.read_text(encoding="utf-8"))
+    pages = {}
+    for item in payload.get("pages", []):
+        pages[item["path"]] = {
+            "h1": item["h1"],
+            "framework": item["framework"],
+            "type": item["type"],
+            "definition": item["definition"],
+            "domain": item["domain"],
+            "aliases": item.get("aliases", []),
+            "body": "",
+        }
+    return pages
+
+MANUAL_PAGES = load_manual_pages()
+
+def load_manual_redirects() -> dict[str, dict]:
+    source = ROOT / "data/content/manual_redirects.json"
+    if not source.exists():
+        return {}
+    payload = json.loads(source.read_text(encoding="utf-8"))
+    return {item["source_path"]: item for item in payload.get("redirects", [])}
+
+MANUAL_REDIRECTS = load_manual_redirects()
+
 def canonical_for(path: str) -> str:
+    if path in MANUAL_PAGES:
+        host = f"https://{MANUAL_PAGES[path]['domain']}/"
+        route=path[:-len("index.html")] if path.endswith("/index.html") else path
+        return host + route
     spry_prefixes=("insights/","continuity-collapse-pattern/","how-to-stay-consistent/","atlas.html","pillars/","topics/","models/","answers/","clusters/","whitepapers/","coverage/","reports/","ai-execution-atlas/")
     if path in SPRY_ROOT_PATHS or path.startswith(spry_prefixes):
         host="https://spryexecutiveos.com/"
@@ -253,46 +287,128 @@ def make_product_anchor(soup: BeautifulSoup) -> Tag:
     p.append(" — a structured executive OS for using ChatGPT as your accountability and decision partner.")
     return p
 
+def _absolute_url(canonical: str, href: str) -> str:
+    if not href:
+        return canonical
+    if href.startswith(('http://','https://')):
+        return href
+    base=re.match(r'^(https?://[^/]+)',canonical)
+    return (base.group(1) if base else '') + ('/' if not href.startswith('/') else '') + href
+
+def _visible_faq_pairs(soup: BeautifulSoup) -> list[tuple[str,str]]:
+    pairs=[]
+    for section in soup.select('section[data-visible-faq="true"], section.faq, section.citation-faq'):
+        for h in section.find_all(['h3','h2']):
+            q=clean_text(h.get_text(' ',strip=True))
+            if not q or q.lower().startswith('frequently asked'):
+                continue
+            answer=h.find_next_sibling('p')
+            if answer:
+                a=clean_text(answer.get_text(' ',strip=True))
+                if a: pairs.append((q,a))
+    dedup=[]; seen=set()
+    for q,a in pairs:
+        key=(q,a)
+        if key not in seen:
+            seen.add(key); dedup.append(key)
+    return dedup
+
+def _visible_howto_steps(soup: BeautifulSoup) -> list[dict]:
+    block=soup.select_one('[data-llm-answer="true"][data-extraction-type="howto"]')
+    if not block: return []
+    steps=[]
+    for h in block.find_all(['h2','h3']):
+        name=clean_text(h.get_text(' ',strip=True))
+        if not re.match(r'^(Step|Phase|Block|Stage)\s+\d+',name,re.I):
+            continue
+        texts=[]
+        node=h.find_next_sibling()
+        while node and getattr(node,'name',None) not in ['h2','h3']:
+            if getattr(node,'name',None) in ['p','li']:
+                value=clean_text(node.get_text(' ',strip=True))
+                if value: texts.append(value)
+            node=node.find_next_sibling()
+        text=' '.join(texts) or name
+        ident=h.get('id') or slug(name)
+        h['id']=ident
+        steps.append({'@type':'HowToStep','name':name,'text':text,'url':'#'+ident})
+    return steps
+
+def _visible_breadcrumbs(soup: BeautifulSoup, canonical: str) -> list[dict]:
+    nav=soup.select_one('nav.breadcrumb, nav[aria-label="Breadcrumb"]')
+    if not nav: return []
+    items=[]
+    for node in nav.find_all(['a','span'],recursive=False):
+        text=clean_text(node.get_text(' ',strip=True))
+        if not text or text in {'→','/','›'} or 'sep' in (node.get('class') or []): continue
+        href=node.get('href') if node.name=='a' else canonical
+        items.append({'@type':'ListItem','position':len(items)+1,'name':text,'item':_absolute_url(canonical,href)})
+    return items
+
+def _visible_dates(soup: BeautifulSoup) -> tuple[str|None,str|None]:
+    times=soup.select('.byline time[datetime]')
+    values=[t.get('datetime') for t in times if t.get('datetime')]
+    if not values: return None,None
+    return values[0],values[-1]
+
+def _remove_stale_geo_schema(soup: BeautifulSoup):
+    for old in list(soup.find_all('script',attrs={'data-geo-semantic':'true'})):
+        old.decompose()
+
 def add_schema(soup: BeautifulSoup, path: str, spec: dict):
-    old=soup.find("script", id="CITATION_PAGE_SCHEMA")
+    old=soup.find('script', id='CITATION_PAGE_SCHEMA')
     if old: old.decompose()
-    canonical=canonical_for(path)
-    graph=[
-      {"@type":"WebPage","@id":canonical+"#webpage","url":canonical,"name":spec["h1"],"description":spec["definition"],"dateModified":TODAY},
-      {"@type":"DefinedTerm","@id":canonical+"#framework","name":spec["framework"],"description":spec["definition"],"inDefinedTermSet":"Spry Executive OS"}
-    ]
-    if canonical.startswith("https://billionairehighperformancecoach.com/"):
-        graph.append({"@type":"Product","@id":canonical+"#product","name":"Billionaire High Performance Coach","url":"https://billionairehighperformancecoach.com/download.html","brand":{"@type":"Organization","name":"Spry Labs"},"description":"A structured executive operating system for using ChatGPT as an accountability and decision partner."})
-    if spec["type"]=="howto":
-        body=BeautifulSoup(spec["body"],"html.parser")
-        steps=[]
-        for h in body.find_all(["h2","h3"]):
-            if re.match(r"^(Step|Phase)\s+\d+",h.get_text(" ",strip=True),re.I):
-                p=h.find_next_sibling("p")
-                steps.append({"@type":"HowToStep","name":h.get_text(" ",strip=True),"text":p.get_text(" ",strip=True) if p else h.get_text(" ",strip=True)})
-        if steps: graph.append({"@type":"HowTo","@id":canonical+"#howto","name":spec["h1"],"step":steps})
-    script=soup.new_tag("script", id="CITATION_PAGE_SCHEMA", type="application/ld+json")
-    script.string=json.dumps({"@context":"https://schema.org","@graph":graph}, ensure_ascii=False, separators=(",",":"))
+    _remove_stale_geo_schema(soup)
+    canonical_tag=soup.find('link',rel='canonical')
+    canonical=(canonical_tag.get('href') if canonical_tag and canonical_tag.get('href') else canonical_for(path))
+    h1=soup.find('h1')
+    name=clean_text(h1.get_text(' ',strip=True)) if h1 else spec['h1']
+    desc=spec['definition']
+    published,modified=_visible_dates(soup)
+    image_meta=soup.find('meta',attrs={'property':'og:image'})
+    image=image_meta.get('content') if image_meta else None
+    author_link=soup.find('a',rel=lambda value: value and 'author' in value)
+    author_name=clean_text(author_link.get_text(' ',strip=True)) if author_link else ''
+    author_url=_absolute_url(canonical,author_link.get('href')) if author_link else None
+    premium=bool(MANUAL_PAGES.get(path,{}).get('premium_geo'))
+    page_type='Article' if premium or (author_name and published) else 'WebPage'
+    page_entity={'@type':page_type,'@id':canonical+'#webpage','url':canonical,'name':name,'headline':name,'description':desc,'mainEntityOfPage':{'@id':canonical}}
+    if published: page_entity['datePublished']=published
+    if modified: page_entity['dateModified']=modified
+    if image: page_entity['image']={'@type':'ImageObject','url':image}
+    if author_name:
+        page_entity['author']={'@type':'Person','name':author_name,'url':author_url}
+    else:
+        page_entity['author']={'@type':'Organization','name':'Spry Labs','url':'https://billionairehighperformancecoach.com/'}
+    page_entity['publisher']={'@type':'Organization','name':'Spry Labs','url':'https://billionairehighperformancecoach.com/','logo':{'@type':'ImageObject','url':'https://billionairehighperformancecoach.com/assets/spry-logo.png'}}
+    graph=[page_entity,{'@type':'DefinedTerm','@id':canonical+'#framework','name':spec['framework'],'description':desc,'inDefinedTermSet':'Spry Executive OS'}]
+    crumbs=_visible_breadcrumbs(soup,canonical)
+    if crumbs:
+        graph.append({'@type':'BreadcrumbList','@id':canonical+'#breadcrumb','itemListElement':crumbs})
+    faq_pairs=_visible_faq_pairs(soup)
+    if faq_pairs:
+        graph.append({'@type':'FAQPage','@id':canonical+'#faq','mainEntity':[{'@type':'Question','name':q,'acceptedAnswer':{'@type':'Answer','text':a}} for q,a in faq_pairs]})
+    if spec.get('type')=='howto':
+        steps=_visible_howto_steps(soup)
+        if steps:
+            for step in steps: step['url']=canonical+step['url']
+            graph.append({'@type':'HowTo','@id':canonical+'#howto','name':name,'description':desc,'step':steps})
+    product_paths={'index.html','download.html','product.html','billionaire-high-performance-coach/index.html','billionaire-high-performance-coach.html'}
+    if path in product_paths:
+        graph.append({'@type':'Product','@id':'https://billionairehighperformancecoach.com/download.html#product','name':'Billionaire High Performance Coach','url':'https://billionairehighperformancecoach.com/download.html','brand':{'@type':'Organization','name':'Spry Labs'},'description':'A structured executive operating system for using ChatGPT as an accountability and decision partner.'})
+    if path in {'index.html','about.html','spry-labs.html'}:
+        graph.append({'@type':'Organization','@id':_absolute_url(canonical,'/about.html#organization'),'name':'Spry Labs','url':_absolute_url(canonical,'/about.html')})
+    if path=='index.html':
+        graph.append({'@type':'WebSite','@id':_absolute_url(canonical,'/#website'),'name':'Billionaire High Performance Coach','url':_absolute_url(canonical,'/')})
+    if path in {'author.html','sequoia-taylor.html'}:
+        graph.append({'@type':'Person','@id':_absolute_url(canonical,'/author.html#person'),'name':'S.L. Taylor','url':_absolute_url(canonical,'/author.html'),'worksFor':{'@type':'Organization','name':'Spry Labs'}})
+    script=soup.new_tag('script', id='CITATION_PAGE_SCHEMA', type='application/ld+json')
+    script.string=json.dumps({'@context':'https://schema.org','@graph':graph},ensure_ascii=False,separators=(',',':'))
     (soup.body or soup).append(script)
 
 def ensure_supplemental_geo_schema(soup: BeautifulSoup, path: str, spec: dict):
-    if soup.find("script", attrs={"data-geo-semantic":"true"}):
-        return
-    canonical=canonical_for(path)
-    question=f"What is {spec['framework']}?"
-    faq=soup.new_tag("section",attrs={"class":"card citation-faq","data-citation-faq":"true"})
-    h2=soup.new_tag("h2"); h2.string="Frequently Asked Question"; faq.append(h2)
-    h3=soup.new_tag("h3"); h3.string=question; faq.append(h3)
-    answer=soup.new_tag("p"); answer.string=spec["definition"]; faq.append(answer)
-    target=soup.find("article") or soup.find("main") or soup.body
-    target.append(faq)
-    graph={"@context":"https://schema.org","@graph":[
-      {"@type":"SoftwareApplication","name":"Billionaire High Performance Coach","applicationCategory":"ProductivityApplication","url":"https://billionairehighperformancecoach.com/"},
-      {"@type":"FAQPage","mainEntity":[{"@type":"Question","name":question,"acceptedAnswer":{"@type":"Answer","text":spec["definition"]}}]}
-    ]}
-    script=soup.new_tag("script",type="application/ld+json",attrs={"data-geo-semantic":"true"})
-    script.string=json.dumps(graph,ensure_ascii=False,separators=(",",":"))
-    (soup.body or soup).append(script)
+    # Legacy blanket FAQ/SoftwareApplication injection was removed. Final schema is compiled from visible HTML in add_schema().
+    _remove_stale_geo_schema(soup)
 
 def ensure_public_conversion(soup: BeautifulSoup):
     if soup.find("a",href="https://aplayermode.com"):
@@ -663,7 +779,7 @@ def patch_legacy(path: str) -> dict|None:
     primary_block=normalize_extraction_container(soup,primary_block)
     existing_framework=clean_text(primary_block.get("data-named-framework",h1text))
     existing_type=clean_text(primary_block.get("data-extraction-type","concept")) or "concept"
-    protected_type=path in PRIORITY or path in NEW_PAGES or path=="atlas.html" or path in OWNER_INSIGHT_PATHS
+    protected_type=path in PRIORITY or path in NEW_PAGES or path in MANUAL_PAGES or path=="atlas.html" or path in OWNER_INSIGHT_PATHS
     if override:
         actual_framework=override["framework"]
         actual_type=override["type"]
@@ -681,7 +797,7 @@ def patch_legacy(path: str) -> dict|None:
     opening=soup.select_one(".citation-definition")
     strong=opening.find("strong") if opening else None
     current_definition=clean_text(strong.get_text(" ",strip=True)) if strong else ""
-    protected=path in PRIORITY or path in NEW_PAGES or path=="atlas.html" or path in OWNER_INSIGHT_PATHS
+    protected=path in PRIORITY or path in NEW_PAGES or path in MANUAL_PAGES or path=="atlas.html" or path in OWNER_INSIGHT_PATHS
     if not protected and (override or definition_is_bad(current_definition,h1text) or normalize_query(existing_framework)==normalize_query(h1text)):
         actual_definition=build_definition(actual_framework,h1text,actual_type)
         if not opening:
@@ -783,7 +899,7 @@ def build_registries(records: list[dict]):
     d=ROOT/"data/citation";d.mkdir(parents=True,exist_ok=True)
     # priority overrides
     bypath={r["path"]:r for r in records}
-    for path,spec in {**PRIORITY,**NEW_PAGES}.items():
+    for path,spec in {**PRIORITY,**NEW_PAGES,**MANUAL_PAGES}.items():
         bypath[path]={"path":path,"canonical_url":canonical_for(path),"canonical_domain":re.sub(r"^https?://([^/]+).*$",r"\1",canonical_for(path)),"query":spec["h1"],"framework":spec["framework"],"extraction_type":spec["type"],"schema_type":"HowTo" if spec["type"]=="howto" else "DefinedTerm","status":"ACTIVE","definition":spec["definition"],"priority":True}
     exclusions=[{"path":x,"status":"EXCLUDED","exclusion_reason":"Owner-approved exclusion or non-public operator surface"} for x in sorted(EXCLUDED)]
     pages=sorted(bypath.values(),key=lambda x:x["path"])+exclusions
@@ -796,7 +912,13 @@ def build_registries(records: list[dict]):
     queries=[]
     for i,(_,rows) in enumerate(sorted(groups.items(),key=lambda item:item[0]),1):
         primary=next((r for r in rows if r.get("priority")),rows[0])
-        queries.append({"query_id":f"QRY-{i:04d}","query":primary["query"],"intent_class":primary["extraction_type"],"primary_page":primary["path"],"supporting_pages":[r["path"] for r in rows if r["path"]!=primary["path"]],"canonical_domain":primary["canonical_domain"],"priority":"P1" if primary.get("priority") else "P3","release_status":"ACTIVE","aliases":[r["query"] for r in rows if r["query"]!=primary["query"]],"observation_cluster":"general"})
+        row_aliases=[r["query"] for r in rows if r["query"]!=primary["query"]]
+        manual_aliases=MANUAL_PAGES.get(primary["path"],{}).get("aliases",[])
+        aliases=[]
+        for alias in [*row_aliases,*manual_aliases]:
+            if alias and normalize_query(alias)!=normalize_query(primary["query"]) and alias not in aliases:
+                aliases.append(alias)
+        queries.append({"query_id":f"QRY-{i:04d}","query":primary["query"],"intent_class":primary["extraction_type"],"primary_page":primary["path"],"supporting_pages":[r["path"] for r in rows if r["path"]!=primary["path"]],"canonical_domain":primary["canonical_domain"],"priority":"P1" if primary.get("priority") else "P3","release_status":"ACTIVE","aliases":aliases,"observation_cluster":"general"})
     (d/"query_registry.json").write_text(json.dumps({"version":"1.0","generated_at":TODAY,"queries":queries},indent=2,ensure_ascii=False)+"\n")
     frameworks=[]; seen=set()
     for r in pages:
@@ -838,19 +960,45 @@ def update_discovery(pages,queries,frameworks):
         if url.endswith("/index.html"): url=url[:-10]
         routes.append({"route_id":f"ROUTE-{len(routes)+1:04d}","path":url,"source_file":page["path"],"canonical_url":page["canonical_url"],"canonical_domain":page["canonical_domain"],"h1":page["query"],"framework":page["framework"],"safe_controls":["internal-links"],"priority":bool(page.get("priority"))})
     (ROOT/"_public_route_manifest.json").write_text(json.dumps({"schema_version":"1.0","generated_at":TODAY,"route_count":len(routes),"routes":routes},indent=2,ensure_ascii=False)+"\n")
-    # sitemaps: append active canonical URLs to whichever sitemap matches domain
-    for name,domain in [("sitemap.xml","spryexecutiveos.com"),("sitemap-bhpc.xml","billionairehighperformancecoach.com")]:
+    critical_path=ROOT/"_critical_browser_route_manifest.json"
+    if critical_path.exists():
+        current=json.loads(critical_path.read_text(encoding="utf-8"))
+        selected=[item.get("source_file") for item in current.get("routes",[])]
+        route_by_source={item["source_file"]:item for item in routes}
+        page_by_path={item["path"]:item for item in active}
+        critical=[]
+        for index,source in enumerate(selected,1):
+            if source not in route_by_source or source not in page_by_path:
+                continue
+            item=dict(route_by_source[source])
+            page=page_by_path[source]
+            item.update({"route_id":f"CRITICAL-{index:04d}","priority":True,"definition":page["definition"],"extraction_type":page["extraction_type"]})
+            critical.append(item)
+        critical_path.write_text(json.dumps({"schema_version":"1.1","route_count":len(critical),"routes":critical},indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+    # sitemaps: preserve existing URLs, remove retired routes, and add active canonicals
+    for name,domain in [("sitemap.xml",None),("sitemap-spry.xml","spryexecutiveos.com"),("sitemap-bhpc.xml","billionairehighperformancecoach.com")]:
         fp=ROOT/name
         if not fp.exists(): continue
         text=fp.read_text(encoding="utf-8")
         urls=set(re.findall(r"<loc>(.*?)</loc>",text))
-        urls.update(p["canonical_url"] for p in active if p["canonical_domain"].lower()==domain)
+        retired={f"https://{item['domain']}/" + (path[:-len('index.html')] if path.endswith('/index.html') else path) for path,item in MANUAL_REDIRECTS.items()}
+        urls.difference_update(retired)
+        urls.update(p["canonical_url"] for p in active if domain is None or p["canonical_domain"].lower()==domain)
         xml='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+"\n".join(f'  <url><loc>{u}</loc><lastmod>{TODAY}</lastmod></url>' for u in sorted(urls))+"\n</urlset>\n"
         fp.write_text(xml,encoding="utf-8")
+    browser_contract=ROOT/"_browser_suite_contract.json"
+    if browser_contract.exists():
+        contract=json.loads(browser_contract.read_text(encoding="utf-8"))
+        suite=contract.get("browser_suite",{})
+        suite["full_structural_route_count"]=len(routes)
+        suite["scope_note"]=f"Real-browser proof is intentionally limited to 12 representative critical routes. All {len(routes)} active pages remain covered by read-only structural citation, graph, distribution, and parity validators."
+        browser_contract.write_text(json.dumps(contract,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
 
 def postbuild():
     # Re-assert approved priority pages after any generator runs.
     for path,spec in {**PRIORITY, **NEW_PAGES}.items():
+        if path in MANUAL_PAGES:
+            continue
         if (ROOT/path).exists() and (not path.startswith("insights/") or path not in OWNER_INSIGHT_PATHS):
             patch_priority(path,spec)
     if (ROOT/"atlas.html").exists():

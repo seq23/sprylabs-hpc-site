@@ -3,7 +3,9 @@ import fs from 'node:fs';
 
 const manifest = JSON.parse(fs.readFileSync('_critical_browser_route_manifest.json', 'utf8'));
 const acceptance = JSON.parse(fs.readFileSync('data/citation/priority_page_acceptance.json', 'utf8'));
-const acceptanceByPath = new Map(acceptance.pages.map(page => [page.path, page]));
+const manualAcceptance = JSON.parse(fs.readFileSync('data/citation/manual_expansion_acceptance.json', 'utf8'));
+const acceptanceByPath = new Map(acceptance.pages.map(page => [page.path, {kind: 'priority', ...page}]));
+for (const page of manualAcceptance.pages) acceptanceByPath.set(page.path, {kind: 'manual', ...page});
 const deployed = process.env.PLAYWRIGHT_DEPLOYED === '1';
 const PRODUCT = 'This is one of the frameworks inside the Billionaire High Performance Coach system — a structured executive OS for using ChatGPT as your accountability and decision partner.';
 
@@ -84,16 +86,44 @@ for (const route of manifest.routes) {
     expect(() => JSON.parse(schemaText)).not.toThrow();
 
     const acceptanceRule = acceptanceByPath.get(route.source_file);
-    expect(acceptanceRule, `Missing priority acceptance rule for ${route.source_file}`).toBeTruthy();
+    expect(acceptanceRule, `Missing exact acceptance rule for ${route.source_file}`).toBeTruthy();
     const bodyText = normalize(await page.locator('body').innerText());
-    if (acceptanceRule.opening_contains) expect(bodyText.toLowerCase()).toContain(acceptanceRule.opening_contains.toLowerCase());
-    for (const required of acceptanceRule.required_text || []) expect(bodyText.toLowerCase()).toContain(required.toLowerCase());
-    const visibleHeadings = await page.locator('h2,h3').allTextContents();
-    const normalizedHeadings = visibleHeadings.map(normalize);
-    for (const required of acceptanceRule.required_headings || []) expect(normalizedHeadings).toContain(required);
-    const allCells = (await page.locator('th,td').allTextContents()).map(normalize);
-    for (const required of acceptanceRule.table_headers || []) expect(allCells).toContain(required);
-    for (const required of acceptanceRule.table_rows || []) expect(allCells).toContain(required);
+    if (acceptanceRule.kind === 'manual') {
+      expect(bodyText).toContain(acceptanceRule.required_opening);
+      expect(bodyText).toContain(acceptanceRule.required_artifact);
+      expect(route.h1).toBe(acceptanceRule.h1);
+      expect(route.framework).toBe(acceptanceRule.framework);
+      expect(route.extraction_type).toBe(acceptanceRule.extraction_type);
+      const sourceCount = await page.locator('section.sources li a').count();
+      expect(sourceCount).toBeGreaterThanOrEqual(acceptanceRule.required_source_count || 0);
+      if (acceptanceRule.health_adjacent) {
+        expect(bodyText.toLowerCase()).toContain('does not diagnose');
+        expect(bodyText.toLowerCase()).toContain('qualified professionals');
+      }
+      if (acceptanceRule.premium_geo) {
+        await expect(page.locator('aside.tldr')).toHaveCount(1);
+        await expect(page.locator('p.byline a[href="/author.html"][rel="author"]')).toHaveCount(1);
+        await expect(page.locator('p.byline time[datetime]')).toHaveCount(2);
+        expect(await page.locator('nav.toc a[href^="#"]').count()).toBeGreaterThanOrEqual(3);
+        const hero = page.locator('figure.page-hero-image img');
+        await expect(hero).toHaveCount(1);
+        await expect(hero).toBeVisible();
+        expect(await page.locator('section.sources a[href^="http"]').count()).toBeGreaterThanOrEqual(acceptanceRule.required_source_count || 0);
+        await expect(page.locator('section.author-bio a[href="/author.html"]')).toHaveCount(1);
+        const graph = JSON.parse(schemaText)['@graph'];
+        const types = graph.map(node => node['@type']);
+        for (const requiredType of acceptanceRule.required_schema_types || []) expect(types).toContain(requiredType);
+      }
+    } else {
+      if (acceptanceRule.opening_contains) expect(bodyText.toLowerCase()).toContain(acceptanceRule.opening_contains.toLowerCase());
+      for (const required of acceptanceRule.required_text || []) expect(bodyText.toLowerCase()).toContain(required.toLowerCase());
+      const visibleHeadings = await page.locator('h2,h3').allTextContents();
+      const normalizedHeadings = visibleHeadings.map(normalize);
+      for (const required of acceptanceRule.required_headings || []) expect(normalizedHeadings).toContain(required);
+      const allCells = (await page.locator('th,td').allTextContents()).map(normalize);
+      for (const required of acceptanceRule.table_headers || []) expect(allCells).toContain(required);
+      for (const required of acceptanceRule.table_rows || []) expect(allCells).toContain(required);
+    }
 
     const layout = await page.evaluate(() => {
       const sentencePattern = /[.!?](?:[”"']?)(?=\s|$)/g;

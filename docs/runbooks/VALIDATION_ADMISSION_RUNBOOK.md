@@ -29,3 +29,17 @@ A retired check remains in the registry with status `RETIRED`, retirement date, 
 - Do not downgrade severity to force a pass.
 - Do not use a warning where a release-blocking defect is proven.
 - Do not add a check without fixtures and an evidence contract.
+
+## Manual expansion and programmatic page admission
+
+`VAL-048` / `MX-048` governs the 46-page manual reference set through `npm run validate:page-admission`.
+
+The gate hard-fails when a governed page lacks distinct query ownership, a page-specific artifact, sufficient substantive depth, required sources, visible/schema parity, health-adjacent boundaries, or acceptable main-content similarity. The canonical inputs are:
+
+- `data/content/manual_expansion_pages.json`
+- `data/citation/manual_expansion_acceptance.json`
+- `data/citation/programmatic_page_admission_contract.json`
+- `data/citation/health_adjacent_content_contract.json`
+- `data/content/manual_redirects.json`
+
+A future programmatic page must be added to an admitted batch and satisfy this contract before it can enter the active query registry, sitemap, or `llms.txt`. The default maximum admitted programmatic batch is ten pages.

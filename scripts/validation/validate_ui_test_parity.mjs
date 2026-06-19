@@ -5,6 +5,7 @@ const allRoutes = readJson('_public_route_manifest.json').routes;
 const criticalRoutes = readJson('_critical_browser_route_manifest.json').routes;
 const pages = readJson('data/citation/citable_pages.json').pages.filter(page => page.status === 'ACTIVE');
 const priority = readJson('data/citation/priority_page_acceptance.json').pages;
+const manual = readJson('data/citation/manual_expansion_acceptance.json').pages;
 const errors = [];
 
 if (allRoutes.length !== pages.length) errors.push(`public route count ${allRoutes.length} != active pages ${pages.length}`);
@@ -35,13 +36,14 @@ for (const route of criticalRoutes) {
   }
 }
 
-const priorityPaths = new Set(priority.map(page => page.path));
-for (const source of criticalSources) if (!priorityPaths.has(source)) errors.push(`critical route is not governed by priority acceptance contract: ${source}`);
+const exactPaths = new Set([...priority, ...manual].map(page => page.path));
+for (const source of criticalSources) if (!exactPaths.has(source)) errors.push(`critical route is not governed by an exact acceptance contract: ${source}`);
 
 const test = fs.readFileSync('tests/public-routes.spec.mjs', 'utf8');
 for (const token of [
   '_critical_browser_route_manifest.json',
   'priority_page_acceptance.json',
+  'manual_expansion_acceptance.json',
   'citation-definition',
   'data-llm-answer',
   'data-extraction-type',
@@ -60,8 +62,9 @@ writeSummary('validate-ui-test-parity', {
   status: errors.length ? 'FAIL' : 'PASS',
   structural_routes: allRoutes.length,
   priority_pages: priority.length,
+  manual_expansion_pages: manual.length,
   critical_browser_routes: criticalRoutes.length,
   errors,
 });
 if (errors.length) fail(`[validate:ui-test-parity] FAIL: ${errors.length} issue(s)`, errors);
-pass(`[validate:ui-test-parity] OK: ${allRoutes.length} structural routes, ${priority.length} exact priority contracts, ${criticalRoutes.length} critical browser routes`);
+pass(`[validate:ui-test-parity] OK: ${allRoutes.length} structural routes, ${priority.length} priority contracts, ${manual.length} manual expansion contracts, ${criticalRoutes.length} critical browser routes`);

@@ -2,60 +2,44 @@ const fs = require('fs');
 const path = require('path');
 const ROOT = process.cwd();
 const errors = [];
+const registryPath = path.join(ROOT, 'data/citation/citable_pages.json');
+const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
 
-function walk(dir, acc = []) {
-  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    if (['node_modules', '.git', '_ops', 'scripts', 'templates', 'docs', 'audit', '.build', 'releases'].includes(entry.name)) continue;
-    const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) walk(full, acc);
-    else if (entry.isFile() && entry.name.endsWith('.html')) acc.push(full);
+function parseGraph(html, rel) {
+  const match = html.match(/<script[^>]+id=["']CITATION_PAGE_SCHEMA["'][^>]*>([\s\S]*?)<\/script>/i);
+  if (!match) { errors.push(`${rel}: CITATION_PAGE_SCHEMA missing`); return []; }
+  try {
+    const parsed = JSON.parse(match[1]);
+    if (!Array.isArray(parsed['@graph'])) { errors.push(`${rel}: schema @graph missing`); return []; }
+    return parsed['@graph'];
+  } catch (error) {
+    errors.push(`${rel}: invalid CITATION_PAGE_SCHEMA JSON (${error.message})`);
+    return [];
   }
-  return acc;
 }
 
-function getSchemaInfo(html) {
-  const scriptRe = /<script([^>]*)type=["']application\/ld\+json["']([^>]*)>([\s\S]*?)<\/script>/gi;
-  let m;
-  const allTypes = new Set();
-  let supplementalTagged = false;
-  while ((m = scriptRe.exec(html)) !== null) {
-    const attrs = `${m[1]} ${m[2]}`;
-    if (/data-geo-semantic\s*=\s*["']true["']/i.test(attrs)) supplementalTagged = true;
-    const raw = m[3] || '';
-    const typeRe = /"@type"\s*:\s*("([^"]+)"|\[([^\]]+)\])/g;
-    let t;
-    while ((t = typeRe.exec(raw)) !== null) {
-      if (t[2]) allTypes.add(t[2]);
-      if (t[3]) {
-        const innerRe = /"([^"]+)"/g;
-        let inner;
-        while ((inner = innerRe.exec(t[3])) !== null) allTypes.add(inner[1]);
-      }
-    }
-  }
-  return { supplementalTagged, allTypes };
-}
-
-for (const file of walk(ROOT)) {
-  const rel = path.relative(ROOT, file).replace(/\\/g, '/');
+for (const record of registry.pages || []) {
+  if ((record.status || 'ACTIVE') !== 'ACTIVE') continue;
+  const rel = record.path;
+  const file = path.join(ROOT, rel);
+  if (!fs.existsSync(file)) { errors.push(`${rel}: active page missing`); continue; }
   const html = fs.readFileSync(file, 'utf8');
-  if (html.includes('class="fanout-payload"')) errors.push(`${rel}: hidden fanout payload still present`);
-  if (html.includes('data-fanout-query-cluster="true"')) {
-    if (!html.includes('Related search intents')) errors.push(`${rel}: fanout heading not upgraded`);
-    if (!html.includes('Close variants')) errors.push(`${rel}: fanout variants heading missing`);
-    if (!html.includes('Adjacent decision paths')) errors.push(`${rel}: fanout intent heading missing`);
-  }
-  const { supplementalTagged, allTypes } = getSchemaInfo(html);
-  if (!supplementalTagged) errors.push(`${rel}: supplemental geo schema missing`);
-  if (!allTypes.has('SoftwareApplication')) errors.push(`${rel}: SoftwareApplication schema missing`);
-  if (!allTypes.has('FAQPage')) errors.push(`${rel}: FAQPage schema missing`);
+  if (/class=["']fanout-payload["']/i.test(html)) errors.push(`${rel}: hidden fanout payload still present`);
+  if (/data-geo-semantic=["']true["']/i.test(html)) errors.push(`${rel}: obsolete blanket supplemental schema present`);
+  const schemaCount = (html.match(/id=["']CITATION_PAGE_SCHEMA["']/gi) || []).length;
+  if (schemaCount !== 1) errors.push(`${rel}: expected one final citation schema graph, found ${schemaCount}`);
+  const graph = parseGraph(html, rel);
+  const types = new Set(graph.flatMap(node => Array.isArray(node['@type']) ? node['@type'] : [node['@type']]).filter(Boolean));
+  if (![...types].some(type => ['WebPage','Article','BlogPosting'].includes(type))) errors.push(`${rel}: primary page schema missing`);
+  if (!types.has('DefinedTerm')) errors.push(`${rel}: DefinedTerm schema missing`);
+  const hasVisibleFaq = /<section[^>]+(?:class=["'][^"']*(?:faq|citation-faq)[^"']*["']|data-visible-faq=["']true["'])/i.test(html);
+  if (hasVisibleFaq !== types.has('FAQPage')) errors.push(`${rel}: FAQPage presence does not match visible FAQ presence`);
+  if (types.has('SoftwareApplication')) errors.push(`${rel}: blanket SoftwareApplication schema is not permitted on editorial pages`);
 }
 
 if (errors.length) {
   console.error('validate_geo_semantics failed:');
-  for (const e of errors.slice(0, 150)) console.error(' - ' + e);
+  for (const e of errors.slice(0, 200)) console.error(' - ' + e);
   process.exit(1);
 }
-console.log('validate_geo_semantics: OK');
-
-process.exit(0);
+console.log(`validate_geo_semantics: OK (${(registry.pages || []).filter(p => (p.status || 'ACTIVE') === 'ACTIVE').length} active pages checked)`);

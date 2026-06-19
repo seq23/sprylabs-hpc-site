@@ -61,7 +61,7 @@ try {
 } catch (error) {
   errors.push(`vendored Python import failed with site-packages disabled: ${String(error.stderr || error.message).trim()}`);
 }
-for (const script of ['scripts/citation/apply_citation_program.py', 'scripts/validation/validate_citation_contract.py', 'scripts/validation/validate_priority_citation_pages.py', 'scripts/validation/validate_agent_recommendations.py']) {
+for (const script of ['scripts/citation/apply_citation_program.py', 'scripts/validation/validate_citation_contract.py', 'scripts/validation/validate_priority_citation_pages.py', 'scripts/validation/validate_agent_recommendations.py', 'scripts/validation/validate_manual_expansion.py']) {
   const firstTwo = fs.readFileSync(script, 'utf8').split(/\r?\n/).slice(0, 2).join('\n');
   if (!/coding:\s*utf-8/i.test(firstTwo)) errors.push(`${script}: explicit UTF-8 declaration missing`);
 }
@@ -121,6 +121,15 @@ for (const required of [
   'data/citation/agent_recommendation_acceptance.json',
   'scripts/validation/validate_agent_recommendations.py',
   'favicon.ico',
+  'data/content/manual_expansion_pages.json',
+  'data/content/manual_redirects.json',
+  'data/search/semrush_manual_expansion.json',
+  'data/citation/manual_expansion_acceptance.json',
+  'data/citation/programmatic_page_admission_contract.json',
+  'data/citation/health_adjacent_content_contract.json',
+  'scripts/content/build_manual_expansion_pages.mjs',
+  'scripts/validation/validate_manual_expansion.py',
+  '_redirects',
 ]) if (!fs.existsSync(required)) errors.push(`release-critical file missing: ${required}`);
 
 writeSummary('validate-release-portability', {

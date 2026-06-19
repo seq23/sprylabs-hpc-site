@@ -8,9 +8,14 @@ permissions:
 concurrency:
   group: main-automation
   cancel-in-progress: false
+env:
+  NODE_OPTIONS: --max-old-space-size=3072
 jobs:
   rotate:
     runs-on: ubuntu-latest
+    env:
+      REDDIT_ACCESS_TOKEN: ${{ secrets.REDDIT_ACCESS_TOKEN }}
+      REDDIT_USER_AGENT: ${{ secrets.REDDIT_USER_AGENT }}
     steps:
       - uses: actions/checkout@v6
         with:
@@ -25,7 +30,5 @@ jobs:
       - run: npm run validate:warnings
       - name: Commit and push if changed
         env:
-          REDDIT_ACCESS_TOKEN: ${{ secrets.REDDIT_ACCESS_TOKEN }}
-          REDDIT_USER_AGENT: ${{ secrets.REDDIT_USER_AGENT }}
           GIT_RESTORE_TARGETS: "data/answer_surface data/answer_surface_monitoring data/backlog reports .build coverage"
         run: './.github/scripts/commit_and_push_if_changed.sh "chore: reddit evening refresh"'

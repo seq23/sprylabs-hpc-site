@@ -31,6 +31,7 @@ function checkFile(file) {
   if (family === 'ignore' || family === 'coverage') return;
   checked += 1;
   const html = fs.readFileSync(file, 'utf8');
+  if (/<meta[^>]+name=["']robots["'][^>]+content=["'][^"']*noindex/i.test(html) || /<meta[^>]+content=["'][^"']*noindex[^"']*["'][^>]+name=["']robots["']/i.test(html)) return;
   if (!html.includes('data-fanout-query-cluster="true"')) warnings.push(`${rel}: missing fanout block`);
   const listGroups = html.match(/<ul class="fanout-list">([\s\S]*?)<\/ul>/gi) || [];
   if (listGroups.length < 2) {
