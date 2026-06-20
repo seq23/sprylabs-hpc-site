@@ -49,6 +49,12 @@ for item in contract['fixes']:
         if req not in headings: errors.append(f'{path}: missing heading {req!r}')
     for req in item.get('required_text',[]):
         if req.casefold() not in body.casefold(): errors.append(f'{path}: missing text {req!r}')
+    for selector in item.get('required_selectors',[]):
+        if not soup.select_one(selector): errors.append(f'{path}: required selector missing {selector!r}')
+    minimum_source_links=item.get('minimum_source_links',0)
+    if minimum_source_links:
+        source_links=soup.select('section.sources a[href]')
+        if len(source_links)<minimum_source_links: errors.append(f'{path}: source links {len(source_links)} < {minimum_source_links}')
     for prefix,minn in item.get('minimum_heading_prefix_count',{}).items():
         c=sum(h.startswith(prefix) for h in headings)
         if c<minn: errors.append(f'{path}: heading prefix {prefix!r} count {c} < {minn}')

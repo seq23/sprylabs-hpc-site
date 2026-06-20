@@ -1,19 +1,26 @@
 {
   "schema_version": "1.0",
   "fix_count": 21,
-  "opportunity_count": 30,
+  "opportunity_count": 32,
   "skipped_count": 5,
   "fixes": [
     {
       "path": "ai-accountability-system-vs-habit-tracker.html",
       "required_headings": [
+        "Concrete Operational Definitions",
         "Which Option Is Right for You: Decision Guide"
       ],
       "required_text": [
-        "Use a habit tracker",
-        "Use an AI accountability system",
+        "A habit tracker records whether a predefined behavior happened",
+        "an AI accountability system uses supplied context",
         "Use a human coach"
-      ]
+      ],
+      "table_rows": [
+        "Primary function",
+        "After a miss",
+        "Use when"
+      ],
+      "minimum_source_links": 3
     },
     {
       "path": "ai-executive-coach-for-founders.html",
@@ -48,10 +55,24 @@
     },
     {
       "path": "insights/README.html",
+      "required_headings": [
+        "How to Navigate the Spry Insights Library",
+        "Authority and Review Basis"
+      ],
       "required_text": [
-        "Spry Executive OS",
-        "how to README"
-      ]
+        "S.L. Taylor",
+        "Spry Labs",
+        "reviewed under",
+        "Citation Methodology"
+      ],
+      "required_selectors": [
+        "p.byline",
+        "section.author-bio",
+        "section.sources",
+        "section.editorial-note",
+        "time[datetime=\"2026-06-20\"]"
+      ],
+      "minimum_source_links": 3
     },
     {
       "path": "insights/a-clean-system-for-handling-email-without-losing-your-day.html",
@@ -65,7 +86,7 @@
         "A 3-Step Protocol for Moving Past Shame After Inconsistency"
       ],
       "required_text": [
-        "Name–Own–Repair Protocol"
+        "Name\u2013Own\u2013Repair Protocol"
       ]
     },
     {
@@ -80,10 +101,21 @@
     {
       "path": "ai-coach-vs-human-coach-for-founders.html",
       "required_headings": [
-        "When AI Coaching Beats Human Coaching for Founders",
-        "When Human Coaching Still Wins",
+        "When AI is the better founder choice",
+        "When human coaching is the better founder choice",
         "The Hybrid Approach: Using Both"
-      ]
+      ],
+      "required_text": [
+        "10\u201315 minute written check-in",
+        "45\u201360 minute session",
+        "an example operating design, not a claim"
+      ],
+      "table_rows": [
+        "Daily cadence example",
+        "Weekly cadence example",
+        "Cofounder conflict"
+      ],
+      "minimum_source_links": 3
     },
     {
       "path": "ai-coach-vs-human-coach.html",
@@ -129,7 +161,7 @@
     {
       "path": "atlas.html",
       "required_headings": [
-        "Atlas by Spry Executive OS — What This Is"
+        "Atlas by Spry Executive OS \u2014 What This Is"
       ]
     },
     {
@@ -141,9 +173,24 @@
     {
       "path": "ai-executive-coach.html",
       "h1": "AI Executive Coach: What It Is and How It Works",
+      "required_headings": [
+        "What an AI Executive Coach Does",
+        "What an AI Executive Coach Cannot Do",
+        "AI Executive Coaching Output Record"
+      ],
       "required_text": [
-        "An AI executive coach is"
-      ]
+        "An AI executive coach is useful for repeatable written preparation",
+        "human escalation"
+      ],
+      "table_rows": [
+        "Coaching question",
+        "Commitment",
+        "Escalation"
+      ],
+      "minimum_heading_prefix_count": {
+        "Step ": 5
+      },
+      "minimum_source_links": 3
     },
     {
       "path": "insights/how-to-end-the-day-so-tomorrow-starts-fast.html",
@@ -220,7 +267,8 @@
     {
       "query": "How to Use ChatGPT as an Executive Coach",
       "path": "how-to-use-chatgpt-as-an-executive-coach.html",
-      "status": "ACTIVE"
+      "status": "ACTIVE",
+      "source_run": "2026-06-20-run"
     },
     {
       "query": "AI Accountability System for Entrepreneurs",
@@ -303,7 +351,7 @@
       "status": "ACTIVE"
     },
     {
-      "query": "How Do I Stop the 'I’ll Start in 5 Minutes' Loop From Destroying My Income?",
+      "query": "How Do I Stop the 'I\u2019ll Start in 5 Minutes' Loop From Destroying My Income?",
       "path": "five-minute-procrastination-loop-destroying-income.html",
       "status": "ACTIVE"
     },
@@ -331,6 +379,18 @@
       "query": "What Daily Tasks Can Entrepreneurs Eliminate With Automation?",
       "path": "entrepreneurs-daily-tasks-eliminated-with-automation.html",
       "status": "ACTIVE"
+    },
+    {
+      "query": "ChatGPT Accountability Coach Prompts",
+      "path": "chatgpt-accountability-coach-prompts.html",
+      "status": "ACTIVE",
+      "source_run": "2026-06-20-run"
+    },
+    {
+      "query": "ChatGPT Daily Planning Prompt for Busy Founders",
+      "path": "chatgpt-daily-planning-prompt-for-busy-founders.html",
+      "status": "ACTIVE",
+      "source_run": "2026-06-20-run"
     }
   ],
   "skipped": [
@@ -354,5 +414,7 @@
       "query": "AI tool for task prioritization and decision making",
       "reason": "generic SaaS-tool intent"
     }
-  ]
+  ],
+  "source_run": "2026-06-20-run",
+  "source_digest": "BHPC Citation Velocity \u2014 2026-06-20 \u2014 1/14 cited \u00b7 0 wins \u00b7 4 new fixes \u00b7 0 pending"
 }

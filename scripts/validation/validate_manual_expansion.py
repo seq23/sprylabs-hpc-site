@@ -71,8 +71,8 @@ for page in SPEC['pages']:
         if block.get('data-extraction-type')!=page['type']: fail(rel,'extraction type mismatch')
     artifact=None
     for section in soup.select('section.page-artifact, section[data-llm-answer="true"]'):
-        heading=section.find(['h2','h3'])
-        if heading and heading.get_text(' ',strip=True)==page['artifact']['title']:
+        headings=[h.get_text(' ',strip=True) for h in section.find_all(['h2','h3'])]
+        if page['artifact']['title'] in headings:
             artifact=section; break
     if not artifact: fail(rel,'required unique artifact missing')
     elif page['artifact']['kind'] in ('matrix','template') and not artifact.find('table'): fail(rel,'artifact table missing')

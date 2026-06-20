@@ -1,0 +1,75 @@
+{
+  "schema_version": "1.0",
+  "goal": "Increase qualified LLM citations and purchase-path visibility toward 100000 citations per month for the BHPC/Spry property cluster.",
+  "source_strategy": "June 2026 Citation Dominance Plan",
+  "implementation_model": "repo-adapted four-layer citation system",
+  "reviewed_at": "2026-06-20",
+  "layers": {
+    "substrate": {
+      "required": [
+        "data/citation/citable_pages.json",
+        "data/citation/query_registry.json",
+        "data/citation/framework_registry.json",
+        "data/entities/author_profile.json",
+        "data/research/ai_coaching_source_registry.json",
+        "data/citation/agent_runs/2026-06-20.json"
+      ]
+    },
+    "reference_pages": {
+      "priority_pages": [
+        "insights/README.html",
+        "ai-accountability-system-vs-habit-tracker.html",
+        "ai-coach-vs-human-coach-for-founders.html",
+        "ai-executive-coach.html",
+        "how-to-use-chatgpt-as-an-executive-coach.html",
+        "chatgpt-accountability-coach-prompts.html",
+        "chatgpt-daily-planning-prompt-for-busy-founders.html",
+        "citation-methodology.html"
+      ],
+      "requirements": [
+        "one_h1",
+        "canonical",
+        "bold_definition",
+        "one_extraction_block",
+        "visible_author",
+        "visible_review_date",
+        "citation_schema",
+        "source_basis",
+        "product_bridge",
+        "stable_url"
+      ]
+    },
+    "authority": {
+      "required": [
+        "author.html",
+        "citation-methodology.html",
+        "data/entities/author_profile.json"
+      ],
+      "policy": "Use real creator and publisher identities, official or primary sources, explicit limitations, and human escalation. Do not fabricate credentials, outcomes, clients, or third-party authority."
+    },
+    "distribution": {
+      "required": [
+        "robots.txt",
+        "sitemap.xml",
+        "sitemap-bhpc.xml",
+        "sitemap-spry.xml",
+        "llms.txt",
+        "llms-full.txt",
+        "distribution.config.json",
+        "distribution_scripts/indexnow_submit.sh",
+        "data/search/search_engine_submission_manifest.json"
+      ]
+    }
+  },
+  "measurement": {
+    "minimum_post_deploy_observation_hours": 72,
+    "preferred_comparison_window_days": 7,
+    "primary_outcomes": [
+      "new citations",
+      "progress-level movement",
+      "indexed priority pages",
+      "purchase-path citations"
+    ],
+    "early_run_rule": "A run less than 72 hours after deployment is diagnostic for content presence, not conclusive evidence of strategy performance."
+  }
+}

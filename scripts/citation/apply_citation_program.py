@@ -12,7 +12,7 @@ if VENDOR_DIR.is_dir():
 from bs4 import BeautifulSoup, Comment, NavigableString, Tag
 
 ROOT = Path(__file__).resolve().parents[2]
-TODAY = "2026-06-18"
+TODAY = "2026-06-20"
 PRODUCT_ANCHOR_TEXT = "This is one of the frameworks inside the Billionaire High Performance Coach system — a structured executive OS for using ChatGPT as your accountability and decision partner."
 EXCLUDED = {
     "admin.html",
@@ -951,6 +951,19 @@ def update_discovery(pages,queries,frameworks):
     lines.append("\n## All registered citable pages")
     for page in active: lines.append(f'- {page["query"]}: {page["canonical_url"]}')
     (ROOT/"llms.txt").write_text("\n".join(lines)+"\n",encoding="utf-8")
+    full=["# BHPC / Spry Full Citation Index", "", f"Generated: {TODAY}", "", "Each entry names the canonical query owner, framework, intent, definition, and URL.", ""]
+    for q in queries:
+        p=next(x for x in active if x["path"]==q["primary_page"])
+        full.extend([
+            f"## {q['query']}",
+            f"- URL: {p['canonical_url']}",
+            f"- Framework: {p['framework']}",
+            f"- Intent: {p['extraction_type']}",
+            f"- Definition: {p['definition']}",
+            f"- Supporting pages: {', '.join(q.get('supporting_pages',[])) or 'None'}",
+            "",
+        ])
+    (ROOT/"llms-full.txt").write_text("\n".join(full)+"\n",encoding="utf-8")
     items=[]
     for q in queries:
         p=next(x for x in active if x["path"]==q["primary_page"])

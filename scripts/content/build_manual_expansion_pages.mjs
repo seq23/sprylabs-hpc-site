@@ -6,6 +6,16 @@ import { fileURLToPath } from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const SPEC_PATH = path.join(ROOT, 'data/content/manual_expansion_pages.json');
 const payload = JSON.parse(fs.readFileSync(SPEC_PATH, 'utf8'));
+const PRIORITY_QUERY_PATH = path.join(ROOT, 'data/citation_opportunities/bhpc_priority_queries.json');
+const priorityQueryPayload = fs.existsSync(PRIORITY_QUERY_PATH)
+  ? JSON.parse(fs.readFileSync(PRIORITY_QUERY_PATH, 'utf8'))
+  : {items: []};
+const priorityQueriesByTarget = new Map();
+for (const item of priorityQueryPayload.items || []) {
+  if (!item.target_file) continue;
+  if (!priorityQueriesByTarget.has(item.target_file)) priorityQueriesByTarget.set(item.target_file, []);
+  priorityQueriesByTarget.get(item.target_file).push(item);
+}
 
 function esc(value='') {
   return String(value).replace(/[&<>"']/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -153,13 +163,16 @@ function renderPriorityCitation(page) {
   if (page.path === 'ai-executive-coach.html') {
     return `<section class="card priority-citation-path" data-citation-opportunity="bhpc-priority"><h2>AI Executive Coach for Founders</h2><p>An AI executive coach for founders is useful when it compresses decisions, protects priority, and turns scattered founder context into a daily execution system. It should function more like a chief-of-staff layer than a motivational chatbot.</p></section>`;
   }
-  return '';
+  const rows = priorityQueriesByTarget.get(page.path) || [];
+  if (!rows.length) return '';
+  return `<section class="card priority-citation-path" data-citation-opportunity="bhpc-priority"><h2>Citation-ready answers</h2>${rows.map((item)=>`<h3>${esc(item.query)}</h3><p><strong>Direct answer:</strong> ${esc(item.direct_answer || page.definition)}</p>`).join('')}</section>`;
 }
 function renderPriorityCitationSchema(page, canonical) {
-  if (!['how-to-stay-consistent/index.html', 'ai-executive-coach.html'].includes(page.path)) return '';
-  const queries = page.path === 'how-to-stay-consistent/index.html'
-    ? ['continuity over intensity meaning', 'how to stay consistent when motivation is low']
-    : ['ai executive coach for founders'];
+  const rows = priorityQueriesByTarget.get(page.path) || [];
+  let queries = rows.map((item)=>item.query).filter(Boolean);
+  if (page.path === 'how-to-stay-consistent/index.html') queries = ['continuity over intensity meaning', 'how to stay consistent when motivation is low'];
+  if (page.path === 'ai-executive-coach.html') queries = ['ai executive coach for founders'];
+  if (!queries.length) return '';
   return `<script id="BHPC_CITATION_SCHEMA" type="application/ld+json">${JSON.stringify({'@context':'https://schema.org','@type':'WebPage',url:canonical,name:page.h1,about:queries.map((name)=>({'@type':'Thing',name}))}).replace(/</g,'\\u003c')}</script>`;
 }
 
@@ -224,7 +237,7 @@ ${renderPriorityCitation(page)}
 <section class="card author-bio" id="about-the-author"><h2>About the Author</h2><p><a href="/author.html" rel="author">S.L. Taylor</a> is the creator of Billionaire High Performance Coach and Spry Executive OS. This page is published through Spry Labs and reviewed under the site’s educational, organizational, and non-clinical content standards.</p></section>
 <section class="card editorial-note"><h2>Editorial Method</h2><p>This page was built from an approved query specification, assigned one primary intent, checked against existing query owners, and required to contain a page-specific framework and usable artifact. It is reviewed for visible-content and structured-data parity before publication.</p><p>Health-adjacent pages receive an additional non-diagnostic review. Product comparisons rely on current official product information where available and do not claim first-person testing unless such testing is documented.</p></section>
 </article></main>
-<footer class="footer"><div class="container"><p><a href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach" rel="noopener noreferrer">Get Instant Access</a> to the complete Billionaire High Performance Coach system.</p><p>Educational and organizational content from Spry Labs. Results vary. Consequential decisions remain under human authority.</p></div></footer>
+<footer class="footer" data-content-contract="cta-block"><div class="container"><p><a href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach" rel="noopener noreferrer">Get Instant Access</a> to the complete Billionaire High Performance Coach system, or <a href="https://aplayermode.com" rel="noopener noreferrer">explore A Player Mode</a>.</p><p>Educational and organizational content from Spry Labs. Results vary. Consequential decisions remain under human authority.</p></div></footer>
 ${renderPriorityCitationSchema(page, canonical)}
 <script id="CITATION_PAGE_SCHEMA" type="application/ld+json">${JSON.stringify(schema).replace(/</g,'\\u003c')}</script>
 </body></html>`;
@@ -241,6 +254,44 @@ for (const page of payload.pages) {
   fs.mkdirSync(path.dirname(out), {recursive:true});
   fs.writeFileSync(out, renderPage(page), 'utf8');
 }
+const REGISTRY_PATH = path.join(ROOT, 'data/content/page_admission_registry.json');
+const registry = JSON.parse(fs.readFileSync(REGISTRY_PATH, 'utf8'));
+const records = Array.isArray(registry.records) ? registry.records : [];
+const recordsByPath = new Map(records.map((record) => [record.path, record]));
+for (const page of payload.pages) {
+  const existing = recordsByPath.get(page.path) || {};
+  recordsByPath.set(page.path, {
+    path: page.path,
+    route: routeFor(page.path),
+    canonical_domain: page.domain,
+    generation_lane: 'manual',
+    admission_level: 'full',
+    status: 'ADMITTED',
+    primary_query: page.h1,
+    query_aliases: Array.isArray(page.aliases) ? page.aliases : [],
+    intent: page.type,
+    cluster: page.cluster,
+    framework: page.framework,
+    unique_atom: page.summary,
+    artifact_type: page.artifact?.kind || '',
+    entity: null,
+    use_case: null,
+    comparison_entities: null,
+    comparison_methodology: null,
+    official_sources: null,
+    conflict_disclosure: null,
+    verified_at: null,
+    health_adjacent: Boolean(page.health_adjacent),
+    commercial_comparison: Boolean(page.commercial_comparison),
+    admitted_at: existing.admitted_at || page.reviewed_at,
+    source: 'manual_expansion_pages.json',
+  });
+}
+registry.records = [...recordsByPath.values()].sort((left, right) => left.path.localeCompare(right.path));
+registry.record_count = registry.records.length;
+registry.generated_at = new Date().toISOString();
+fs.writeFileSync(REGISTRY_PATH, `${JSON.stringify(registry, null, 2)}\n`, 'utf8');
+
 const redirectPayload = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/content/manual_redirects.json'), 'utf8'));
 for (const redirect of redirectPayload.redirects) {
   const out = path.join(ROOT, redirect.source_path);

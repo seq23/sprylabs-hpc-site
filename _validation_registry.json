@@ -2092,6 +2092,75 @@
         "MX-066"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-067",
+      "status": "ADMITTED",
+      "name": "search:prepare-submission",
+      "check_type": "build",
+      "owning_lane": "seo-governance",
+      "risk_prevented": "Prevents changed priority pages from being omitted from IndexNow, Google Search Console, and Bing Webmaster submission handoff.",
+      "existing_coverage_gap": "The repository generated sitemaps and IndexNow files but did not persist one owner-readable manifest linking new citation pages to each search engine action.",
+      "scope": [
+        "repository",
+        "citation-strategy",
+        "search-distribution"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run search:prepare-submission",
+      "implementation_path": "scripts/search/build_submission_manifest.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "data/search/search_engine_submission_manifest.json",
+      "runtime_budget_seconds": 30,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "npm run distribution:prepare"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted to generate a deterministic search-engine submission handoff for every priority citation release.",
+      "decision_date": "2026-06-20",
+      "matrix_ids": [
+        "MX-067"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-068",
+      "status": "ADMITTED",
+      "name": "validate:citation-strategy",
+      "check_type": "validator",
+      "owning_lane": "seo-governance",
+      "risk_prevented": "Prevents the four-layer citation strategy from being only partially implemented or drifting away from the priority pages identified by the citation monitor.",
+      "existing_coverage_gap": "Existing validators prove page syntax and registry parity but did not prove substrate, authority, retrieval files, search submission readiness, and exact priority-page coverage as one system.",
+      "scope": [
+        "repository",
+        "citation-strategy",
+        "search-distribution"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:citation-strategy",
+      "implementation_path": "scripts/validation/validate_citation_strategy.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-citation-strategy/summary.json",
+      "runtime_budget_seconds": 30,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "npm run validate:citation-contract",
+        "npm run validate:distribution"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted as the end-to-end proof for the repo-adapted citation dominance operating model.",
+      "decision_date": "2026-06-20",
+      "matrix_ids": [
+        "MX-068"
+      ],
+      "not_applicable_reason": null
     }
   ]
 }
