@@ -85,3 +85,29 @@ The monitor checks the latest completed GitHub run for each governed workflow. A
 - Hostile-review failure: inspect forbidden changed files and required outputs; source/governance mutation by a scheduled generator is not allowed.
 - Monitor failure: manually run the named workflow after the source fix and confirm a successful completed run.
 - Browser failure: repair the represented route or the test only when evidence proves the expectation is stale. Never reduce the suite to manufacture green.
+
+
+## Generated-state push collision policy
+
+All eight repository-mutating workflows are governed by `data/workflows/workflow_contracts.json`:
+
+- Content Authority Pipeline
+- Daily Insight
+- Execution Strict
+- Reddit Daily
+- Reddit Evening
+- Social Signal Processing
+- Weekly Synthesis Builder
+- Whitepaper Release
+
+Every workflow supports manual dispatch and its declared schedule, runs through the governed trace wrapper, performs hostile review and lineage validation, and uploads its final trace after the push step.
+
+Generated ledgers and rendered outputs are not line-merged. When `main` advances before a workflow can push, the shared helper:
+
+1. discards the stale generated commit;
+2. resets to the current remote head;
+3. reruns the workflow from its machine-readable contract;
+4. repeats canonical validation, hostile review, and trace generation;
+5. recommits the regenerated result and retries the push.
+
+This prevents rebase conflicts in shared generated files while preserving the newest admitted repository state.

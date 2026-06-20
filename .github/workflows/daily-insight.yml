@@ -1,8 +1,8 @@
 name: Daily Insight
 on:
+  workflow_dispatch:
   schedule:
     - cron: '20 14 * * *'
-  workflow_dispatch:
 permissions:
   contents: write
 concurrency:
@@ -24,6 +24,10 @@ jobs:
       - run: npm ci --ignore-scripts
       - name: Run governed daily insight release
         run: npm run workflow:run -- --workflow daily-insight -- npm run programmatic:run-lane -- --lane daily_insight -- npm run workflow:daily-insight
+      - name: Commit and push if changed
+        env:
+          GIT_RESTORE_TARGETS: '.build coverage reports'
+        run: './.github/scripts/commit_and_push_if_changed.sh "chore: release daily insight" daily-insight'
       - uses: actions/upload-artifact@v7
         if: always()
         with:
@@ -31,7 +35,3 @@ jobs:
           path: reports/workflows/daily-insight/
           if-no-files-found: error
           retention-days: 30
-      - name: Commit and push if changed
-        env:
-          GIT_RESTORE_TARGETS: '.build coverage reports'
-        run: './.github/scripts/commit_and_push_if_changed.sh "chore: release daily insight"'

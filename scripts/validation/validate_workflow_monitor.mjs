@@ -18,13 +18,19 @@ for (const contract of contracts) {
     continue;
   }
   const text = fs.readFileSync(contract.workflow_file, 'utf8');
-  const expectedRunner = `npm run workflow:run -- --workflow ${contract.id} -- npm run programmatic:run-lane -- --lane ${contract.lane} -- ${contract.workflow_command}`;
+  const expectedRunner = `npm run workflow:run -- --workflow ${contract.id} -- npm run programmatic:run-lane -- --lane ${contract.lane} -- ${contract.workflow_argv.join(' ')}`;
   if (!text.includes('workflow_dispatch:')) errors.push(`${contract.id}: workflow_dispatch trigger missing`);
   if (!text.includes('schedule:')) errors.push(`${contract.id}: schedule trigger missing`);
   if (!text.includes(`cron: '${contract.schedule_cron}'`) && !text.includes(`cron: "${contract.schedule_cron}"`)) errors.push(`${contract.id}: schedule drift from contract`);
   if (!text.includes(expectedRunner)) errors.push(`${contract.id}: governed runner command drift`);
   if (!text.includes(`reports/workflows/${contract.id}/`)) errors.push(`${contract.id}: trace artifact path missing`);
   if (!text.includes('actions/upload-artifact@v7')) errors.push(`${contract.id}: workflow trace artifact upload missing`);
+  const helperIndex = text.indexOf('.github/scripts/commit_and_push_if_changed.sh');
+  const uploadIndex = text.indexOf('actions/upload-artifact@v7');
+  if (helperIndex < 0) errors.push(`${contract.id}: race-safe commit helper missing`);
+  if (helperIndex >= 0 && uploadIndex >= 0 && uploadIndex < helperIndex) errors.push(`${contract.id}: trace upload must follow the retry-capable commit step`);
+  if (!text.includes(`"${contract.commit_message}" ${contract.id}`)) errors.push(`${contract.id}: commit helper identity drift`);
+  if (contract.remote_advance_strategy !== 'reset-regenerate-validate-recommit') errors.push(`${contract.id}: remote advance strategy drift`);
   if (!Number.isFinite(contract.monitor_max_age_hours) || contract.monitor_max_age_hours < 1) errors.push(`${contract.id}: invalid monitor age budget`);
   results.push({workflow_id:contract.id, workflow_file:contract.workflow_file, schedule_cron:contract.schedule_cron, manual_dispatch:true, monitor_max_age_hours:contract.monitor_max_age_hours});
 }

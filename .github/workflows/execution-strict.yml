@@ -1,8 +1,8 @@
 name: Execution Strict
 on:
+  workflow_dispatch:
   schedule:
     - cron: '0 14 * * *'
-  workflow_dispatch:
 permissions:
   contents: write
 concurrency:
@@ -24,6 +24,10 @@ jobs:
       - run: npm ci --ignore-scripts
       - name: Run governed strict execution
         run: npm run workflow:run -- --workflow execution-strict -- npm run programmatic:run-lane -- --lane authority -- npm run workflow:execution-strict
+      - name: Commit execution outputs if changed
+        env:
+          GIT_RESTORE_TARGETS: '.build coverage reports'
+        run: './.github/scripts/commit_and_push_if_changed.sh "auto: strict execution refresh" execution-strict'
       - uses: actions/upload-artifact@v7
         if: always()
         with:
@@ -31,7 +35,3 @@ jobs:
           path: reports/workflows/execution-strict/
           if-no-files-found: error
           retention-days: 30
-      - name: Commit execution outputs if changed
-        env:
-          GIT_RESTORE_TARGETS: '.build coverage reports'
-        run: './.github/scripts/commit_and_push_if_changed.sh "auto: strict execution refresh"'

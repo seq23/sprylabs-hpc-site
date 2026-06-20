@@ -1,8 +1,8 @@
 name: Social Signal Processing
 on:
+  workflow_dispatch:
   schedule:
     - cron: '45 13 * * 1-5'
-  workflow_dispatch:
 permissions:
   contents: write
 concurrency:
@@ -22,6 +22,16 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
-      - run: npm run programmatic:run-lane -- --lane daily_insight -- npm run workflow:social-signal
+      - name: Run governed social signal processing
+        run: npm run workflow:run -- --workflow social-signal -- npm run programmatic:run-lane -- --lane daily_insight -- npm run workflow:social-signal
       - name: Commit and push if changed
-        run: './.github/scripts/commit_and_push_if_changed.sh "chore: social signal refresh"'
+        env:
+          GIT_RESTORE_TARGETS: '.build coverage reports'
+        run: './.github/scripts/commit_and_push_if_changed.sh "chore: social signal refresh" social-signal'
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: workflow-trace-social-signal-${{ github.run_number }}
+          path: reports/workflows/social-signal/
+          if-no-files-found: error
+          retention-days: 30

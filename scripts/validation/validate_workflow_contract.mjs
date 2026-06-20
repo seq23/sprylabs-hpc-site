@@ -108,18 +108,21 @@ for (const name of actualWorkflows) {
     const commit = indexOrError(text, '.github/scripts/commit_and_push_if_changed.sh', 'safe commit helper', name);
     if (laneRunner >= 0 && commit >= 0 && commit < laneRunner) errors.push(`${name}: commit helper runs before programmatic admission and canonical validation`);
     const contract = governedByFile.get(name);
-    if (contract) {
+    if (!contract) {
+      errors.push(`${name}: mutating workflow has no governed workflow contract`);
+    } else {
       const governedRunner = indexOrError(text, 'npm run workflow:run', 'governed workflow runner', name);
       const traceUpload = indexOrError(text, 'actions/upload-artifact@v7', 'workflow trace upload', name);
       if (governedRunner >= 0 && laneRunner >= 0 && laneRunner < governedRunner) errors.push(`${name}: programmatic runner is not nested under governed workflow runner`);
-      if (traceUpload >= 0 && commit >= 0 && commit < traceUpload) errors.push(`${name}: commit helper runs before trace artifact upload`);
+      if (traceUpload >= 0 && commit >= 0 && traceUpload < commit) errors.push(`${name}: trace artifact upload must run after the race-safe commit helper`);
       if (!/--workflow\s+[a-z0-9-]+\s+--\s+npm\s+run\s+programmatic:run-lane\s+--\s+--lane\s+[a-z_]+\s+--\s+npm\s+run\s+workflow:[\w-]+/.test(text)) errors.push(`${name}: mutation command must be wrapped in governed trace and a named admitted programmatic lane`);
-      const expected = `npm run workflow:run -- --workflow ${contract.id} -- npm run programmatic:run-lane -- --lane ${contract.lane} -- ${contract.workflow_command}`;
+      const expected = `npm run workflow:run -- --workflow ${contract.id} -- npm run programmatic:run-lane -- --lane ${contract.lane} -- ${contract.workflow_argv.join(' ')}`;
       if (!text.includes(expected)) errors.push(`${name}: governed workflow command drift from data/workflows/workflow_contracts.json`);
+      const expectedHelper = `./.github/scripts/commit_and_push_if_changed.sh "${contract.commit_message}" ${contract.id}`;
+      if (!text.includes(expectedHelper)) errors.push(`${name}: commit helper workflow identity or message drift`);
+      if (contract.remote_advance_strategy !== 'reset-regenerate-validate-recommit') errors.push(`${name}: invalid remote advance strategy`);
       if (!text.includes(`reports/workflows/${contract.id}/`)) errors.push(`${name}: trace artifact path drift from workflow contract`);
       if (!text.includes('workflow_dispatch:') || !text.includes('schedule:')) errors.push(`${name}: governed workflow must support manual and scheduled execution`);
-    } else if (!/--lane\s+[a-z_]+\s+--\s+npm\s+run\s+workflow:[\w-]+/.test(text)) {
-      errors.push(`${name}: mutation command must be wrapped in a named admitted programmatic lane`);
     }
   }
 
@@ -176,9 +179,10 @@ if (fs.existsSync(ciRunner)) {
 if (!fs.existsSync(helper)) errors.push(`missing ${helper}`);
 else {
   const helperText = fs.readFileSync(helper, 'utf8');
-  for (const required of ['git status --porcelain', 'npm run release:prepush:container', 'npm run validate:warnings', 'git commit --amend --no-edit']) {
-    if (!helperText.includes(required)) errors.push(`${helper}: missing safe post-rebase behavior: ${required}`);
+  for (const required of ['workflow_id=', 'git reset --hard', 'git clean -fd', 'Regenerating governed workflow', 'workflow_argv', 'git merge-base --is-ancestor']) {
+    if (!helperText.includes(required)) errors.push(`${helper}: missing reset-regenerate retry behavior: ${required}`);
   }
+  if (helperText.includes('git rebase')) errors.push(`${helper}: generated-state workflows must not rebase stale generated commits`);
 }
 
 writeSummary('validate-workflow-contract', {

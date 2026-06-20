@@ -1,5 +1,6 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
+  "remote_advance_policy": "reset-regenerate-validate-recommit",
   "governed_workflows": [
     {
       "id": "content-authority",
@@ -7,15 +8,22 @@
       "workflow_file": ".github/workflows/content-authority-pipeline.yml",
       "lane": "authority",
       "workflow_command": "npm run workflow:content-authority",
+      "workflow_argv": [
+        "npm",
+        "run",
+        "workflow:content-authority"
+      ],
+      "commit_message": "Run content authority pipeline",
       "schedule_cron": "17 14 * * *",
       "manual_dispatch": true,
       "monitor_max_age_hours": 36,
+      "remote_advance_strategy": "reset-regenerate-validate-recommit",
       "lineage_inputs": [
         "config/social_ingestion_policy.json",
         "config/social_sources.json",
         "data/content/page_admission_registry.json",
         "data/content/programmatic_lane_contracts.json",
-        "data/citation/query_registry.json",
+        "data/citation/**",
         "scripts/authority/**",
         "scripts/community/**",
         "scripts/synthesis/**",
@@ -24,10 +32,11 @@
       "lineage_outputs": [
         "admin.html",
         "comparisons/**",
-        "data/content/page_admission_registry.json",
-        "data/programmatic/latest_run_summary.json",
+        "data/**",
         "insights/**",
-        "sitemap-*.xml",
+        "releases/**",
+        "sitemap*.xml",
+        "sitemaps/**",
         "synthesis-*.html"
       ],
       "required_outputs": [
@@ -37,6 +46,7 @@
       ],
       "allowed_change_patterns": [
         "*.html",
+        "_ops/daily-insights/**",
         "answers/**",
         "clusters/**",
         "comparisons/**",
@@ -47,6 +57,8 @@
         "feed.xml",
         "insights/**",
         "llms*.txt",
+        "models/**",
+        "pillars/**",
         "releases/**",
         "sitemap*.xml",
         "sitemaps/**",
@@ -72,9 +84,16 @@
       "workflow_file": ".github/workflows/daily-insight.yml",
       "lane": "daily_insight",
       "workflow_command": "npm run workflow:daily-insight",
+      "workflow_argv": [
+        "npm",
+        "run",
+        "workflow:daily-insight"
+      ],
+      "commit_message": "chore: release daily insight",
       "schedule_cron": "20 14 * * *",
       "manual_dispatch": true,
       "monitor_max_age_hours": 36,
+      "remote_advance_strategy": "reset-regenerate-validate-recommit",
       "lineage_inputs": [
         "content/insights/_drafts/**",
         "data/content/page_admission_registry.json",
@@ -84,13 +103,12 @@
       ],
       "lineage_outputs": [
         "_ops/daily-insights/**",
-        "data/content/page_admission_registry.json",
-        "data/programmatic/latest_run_summary.json",
-        "data/publish_state.json",
+        "data/**",
         "feed.json",
         "feed.xml",
         "insights/**",
-        "sitemap-*.xml"
+        "sitemap*.xml",
+        "sitemaps/**"
       ],
       "required_outputs": [
         "data/content/page_admission_registry.json",
@@ -98,16 +116,24 @@
         "data/publish_state.json"
       ],
       "allowed_change_patterns": [
+        "*.html",
         "_ops/daily-insights/**",
+        "answers/**",
+        "clusters/**",
+        "comparisons/**",
+        "content/**",
         "coverage.json",
         "data/**",
         "feed.json",
         "feed.xml",
         "insights/**",
         "llms*.txt",
+        "models/**",
+        "pillars/**",
         "releases/**",
         "sitemap*.xml",
-        "sitemaps/**"
+        "sitemaps/**",
+        "synthesis-*.html"
       ],
       "forbidden_change_patterns": [
         ".github/**",
@@ -129,9 +155,16 @@
       "workflow_file": ".github/workflows/execution-strict.yml",
       "lane": "authority",
       "workflow_command": "npm run workflow:execution-strict",
+      "workflow_argv": [
+        "npm",
+        "run",
+        "workflow:execution-strict"
+      ],
+      "commit_message": "auto: strict execution refresh",
       "schedule_cron": "0 14 * * *",
       "manual_dispatch": true,
       "monitor_max_age_hours": 36,
+      "remote_advance_strategy": "reset-regenerate-validate-recommit",
       "lineage_inputs": [
         "config/query_taxonomy.json",
         "data/content/manual_expansion_pages.json",
@@ -147,10 +180,11 @@
         "answers/**",
         "comparisons/**",
         "coverage.json",
-        "data/content/page_admission_registry.json",
-        "data/programmatic/latest_run_summary.json",
+        "data/**",
         "insights/**",
-        "sitemap-*.xml"
+        "releases/**",
+        "sitemap*.xml",
+        "sitemaps/**"
       ],
       "required_outputs": [
         "admin.html",
@@ -171,6 +205,360 @@
         "feed.xml",
         "insights/**",
         "llms*.txt",
+        "models/**",
+        "pillars/**",
+        "releases/**",
+        "sitemap*.xml",
+        "sitemaps/**",
+        "synthesis-*.html"
+      ],
+      "forbidden_change_patterns": [
+        ".github/**",
+        "config/**",
+        "docs/**",
+        "package.json",
+        "package-lock.json",
+        "playwright.config.mjs",
+        "scripts/**",
+        "tests/**",
+        "_repo_*.json",
+        "_validation_registry.json",
+        "_browser_suite_contract.json"
+      ]
+    },
+    {
+      "id": "reddit-daily",
+      "name": "Reddit Daily",
+      "workflow_file": ".github/workflows/reddit-daily.yml",
+      "lane": "reddit",
+      "workflow_command": "npm run workflow:reddit-daily",
+      "workflow_argv": [
+        "npm",
+        "run",
+        "workflow:reddit-daily"
+      ],
+      "commit_message": "chore: reddit daily refresh",
+      "schedule_cron": "50 13 * * *",
+      "manual_dispatch": true,
+      "monitor_max_age_hours": 36,
+      "remote_advance_strategy": "reset-regenerate-validate-recommit",
+      "lineage_inputs": [
+        "data/reddit/queries.json",
+        "data/reddit/subreddits.json",
+        "data/reddit/cluster_rules.json",
+        "data/content/page_admission_registry.json",
+        "scripts/reddit/**"
+      ],
+      "lineage_outputs": [
+        "data/reddit/**",
+        "data/content/page_admission_registry.json",
+        "data/programmatic/latest_run_summary.json",
+        "feed.xml",
+        "insights/**",
+        "releases/**",
+        "sitemap*.xml",
+        "sitemaps/**"
+      ],
+      "required_outputs": [
+        "data/reddit/published_manifest.json",
+        "data/content/page_admission_registry.json",
+        "data/programmatic/latest_run_summary.json"
+      ],
+      "allowed_change_patterns": [
+        "*.html",
+        "_ops/daily-insights/**",
+        "answers/**",
+        "clusters/**",
+        "comparisons/**",
+        "content/**",
+        "coverage.json",
+        "data/**",
+        "feed.json",
+        "feed.xml",
+        "insights/**",
+        "llms*.txt",
+        "models/**",
+        "pillars/**",
+        "releases/**",
+        "sitemap*.xml",
+        "sitemaps/**",
+        "synthesis-*.html"
+      ],
+      "forbidden_change_patterns": [
+        ".github/**",
+        "config/**",
+        "docs/**",
+        "package.json",
+        "package-lock.json",
+        "playwright.config.mjs",
+        "scripts/**",
+        "tests/**",
+        "_repo_*.json",
+        "_validation_registry.json",
+        "_browser_suite_contract.json"
+      ]
+    },
+    {
+      "id": "reddit-evening",
+      "name": "Reddit Evening",
+      "workflow_file": ".github/workflows/reddit-evening.yml",
+      "lane": "reddit",
+      "workflow_command": "npm run workflow:reddit-evening",
+      "workflow_argv": [
+        "npm",
+        "run",
+        "workflow:reddit-evening"
+      ],
+      "commit_message": "chore: reddit evening refresh",
+      "schedule_cron": "20 0 * * *",
+      "manual_dispatch": true,
+      "monitor_max_age_hours": 36,
+      "remote_advance_strategy": "reset-regenerate-validate-recommit",
+      "lineage_inputs": [
+        "data/reddit/queries.json",
+        "data/reddit/subreddits.json",
+        "data/reddit/cluster_rules.json",
+        "data/content/page_admission_registry.json",
+        "scripts/reddit/**"
+      ],
+      "lineage_outputs": [
+        "data/reddit/**",
+        "data/content/page_admission_registry.json",
+        "data/programmatic/latest_run_summary.json",
+        "data/ingestion/**",
+        "data/clusters/**",
+        "releases/**"
+      ],
+      "required_outputs": [
+        "data/reddit/cluster_registry.json",
+        "data/content/page_admission_registry.json",
+        "data/programmatic/latest_run_summary.json"
+      ],
+      "allowed_change_patterns": [
+        "*.html",
+        "_ops/daily-insights/**",
+        "answers/**",
+        "clusters/**",
+        "comparisons/**",
+        "content/**",
+        "coverage.json",
+        "data/**",
+        "feed.json",
+        "feed.xml",
+        "insights/**",
+        "llms*.txt",
+        "models/**",
+        "pillars/**",
+        "releases/**",
+        "sitemap*.xml",
+        "sitemaps/**",
+        "synthesis-*.html"
+      ],
+      "forbidden_change_patterns": [
+        ".github/**",
+        "config/**",
+        "docs/**",
+        "package.json",
+        "package-lock.json",
+        "playwright.config.mjs",
+        "scripts/**",
+        "tests/**",
+        "_repo_*.json",
+        "_validation_registry.json",
+        "_browser_suite_contract.json"
+      ]
+    },
+    {
+      "id": "social-signal",
+      "name": "Social Signal Processing",
+      "workflow_file": ".github/workflows/social-signal-processing.yml",
+      "lane": "daily_insight",
+      "workflow_command": "npm run workflow:social-signal",
+      "workflow_argv": [
+        "npm",
+        "run",
+        "workflow:social-signal"
+      ],
+      "commit_message": "chore: social signal refresh",
+      "schedule_cron": "45 13 * * 1-5",
+      "manual_dispatch": true,
+      "monitor_max_age_hours": 96,
+      "remote_advance_strategy": "reset-regenerate-validate-recommit",
+      "lineage_inputs": [
+        "config/social_ingestion_policy.json",
+        "config/social_sources.json",
+        "data/social/source_registry.json",
+        "data/content/page_admission_registry.json",
+        "scripts/social/**"
+      ],
+      "lineage_outputs": [
+        "data/social/**",
+        "data/ingestion/**",
+        "data/clusters/**",
+        "data/content/page_admission_registry.json",
+        "data/programmatic/latest_run_summary.json",
+        "releases/**"
+      ],
+      "required_outputs": [
+        "data/social/source_registry.json",
+        "data/content/page_admission_registry.json",
+        "data/programmatic/latest_run_summary.json"
+      ],
+      "allowed_change_patterns": [
+        "*.html",
+        "_ops/daily-insights/**",
+        "answers/**",
+        "clusters/**",
+        "comparisons/**",
+        "content/**",
+        "coverage.json",
+        "data/**",
+        "feed.json",
+        "feed.xml",
+        "insights/**",
+        "llms*.txt",
+        "models/**",
+        "pillars/**",
+        "releases/**",
+        "sitemap*.xml",
+        "sitemaps/**",
+        "synthesis-*.html"
+      ],
+      "forbidden_change_patterns": [
+        ".github/**",
+        "config/**",
+        "docs/**",
+        "package.json",
+        "package-lock.json",
+        "playwright.config.mjs",
+        "scripts/**",
+        "tests/**",
+        "_repo_*.json",
+        "_validation_registry.json",
+        "_browser_suite_contract.json"
+      ]
+    },
+    {
+      "id": "synthesis-weekly",
+      "name": "Weekly Synthesis Builder",
+      "workflow_file": ".github/workflows/synthesis-weekly.yml",
+      "lane": "synthesis",
+      "workflow_command": "npm run workflow:synthesis-weekly",
+      "workflow_argv": [
+        "npm",
+        "run",
+        "workflow:synthesis-weekly"
+      ],
+      "commit_message": "Build weekly synthesis layer",
+      "schedule_cron": "45 14 * * 1",
+      "manual_dispatch": true,
+      "monitor_max_age_hours": 216,
+      "remote_advance_strategy": "reset-regenerate-validate-recommit",
+      "lineage_inputs": [
+        "data/synthesis/queue.json",
+        "data/clusters/**",
+        "data/content/page_admission_registry.json",
+        "scripts/synthesis/**",
+        "templates/**"
+      ],
+      "lineage_outputs": [
+        "data/synthesis/**",
+        "data/content/page_admission_registry.json",
+        "data/programmatic/latest_run_summary.json",
+        "synthesis-*.html",
+        "admin.html",
+        "releases/**"
+      ],
+      "required_outputs": [
+        "data/synthesis/manifest.json",
+        "data/content/page_admission_registry.json",
+        "data/programmatic/latest_run_summary.json"
+      ],
+      "allowed_change_patterns": [
+        "*.html",
+        "_ops/daily-insights/**",
+        "answers/**",
+        "clusters/**",
+        "comparisons/**",
+        "content/**",
+        "coverage.json",
+        "data/**",
+        "feed.json",
+        "feed.xml",
+        "insights/**",
+        "llms*.txt",
+        "models/**",
+        "pillars/**",
+        "releases/**",
+        "sitemap*.xml",
+        "sitemaps/**",
+        "synthesis-*.html"
+      ],
+      "forbidden_change_patterns": [
+        ".github/**",
+        "config/**",
+        "docs/**",
+        "package.json",
+        "package-lock.json",
+        "playwright.config.mjs",
+        "scripts/**",
+        "tests/**",
+        "_repo_*.json",
+        "_validation_registry.json",
+        "_browser_suite_contract.json"
+      ]
+    },
+    {
+      "id": "whitepaper-release",
+      "name": "Whitepaper Release",
+      "workflow_file": ".github/workflows/whitepaper-release.yml",
+      "lane": "whitepaper",
+      "workflow_command": "npm run workflow:whitepaper",
+      "workflow_argv": [
+        "npm",
+        "run",
+        "workflow:whitepaper"
+      ],
+      "commit_message": "chore: release scheduled white paper",
+      "schedule_cron": "15 15 1 6,12 *",
+      "manual_dispatch": true,
+      "monitor_max_age_hours": 5200,
+      "remote_advance_strategy": "reset-regenerate-validate-recommit",
+      "lineage_inputs": [
+        "data/whitepapers/queue.json",
+        "data/content/page_admission_registry.json",
+        "data/content/programmatic_lane_contracts.json",
+        "scripts/whitepapers/**",
+        "templates/**"
+      ],
+      "lineage_outputs": [
+        "data/whitepapers/**",
+        "data/content/page_admission_registry.json",
+        "data/programmatic/latest_run_summary.json",
+        "releases/**",
+        "*.html",
+        "sitemap*.xml"
+      ],
+      "required_outputs": [
+        "data/whitepapers/queue.json",
+        "data/content/page_admission_registry.json",
+        "data/programmatic/latest_run_summary.json"
+      ],
+      "allowed_change_patterns": [
+        "*.html",
+        "_ops/daily-insights/**",
+        "answers/**",
+        "clusters/**",
+        "comparisons/**",
+        "content/**",
+        "coverage.json",
+        "data/**",
+        "feed.json",
+        "feed.xml",
+        "insights/**",
+        "llms*.txt",
+        "models/**",
+        "pillars/**",
         "releases/**",
         "sitemap*.xml",
         "sitemaps/**",

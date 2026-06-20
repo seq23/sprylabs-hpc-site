@@ -11,10 +11,12 @@ const report = [];
 for (const contract of contracts) {
   if (seen.has(contract.id)) errors.push(`duplicate workflow contract id: ${contract.id}`);
   seen.add(contract.id);
-  for (const field of ['id','name','workflow_file','lane','workflow_command','schedule_cron']) {
+  for (const field of ['id','name','workflow_file','lane','workflow_command','commit_message','schedule_cron','remote_advance_strategy']) {
     if (!String(contract[field] || '').trim()) errors.push(`${contract.id || 'unknown'}: missing ${field}`);
   }
   if (!contract.manual_dispatch) errors.push(`${contract.id}: manual dispatch must be enabled`);
+  if (!Array.isArray(contract.workflow_argv) || contract.workflow_argv.join(' ') !== contract.workflow_command) errors.push(`${contract.id}: workflow_argv must exactly encode workflow_command`);
+  if (contract.remote_advance_strategy !== 'reset-regenerate-validate-recommit') errors.push(`${contract.id}: generated-state retry strategy is not admitted`);
   if (!Array.isArray(contract.lineage_inputs) || contract.lineage_inputs.length < 3) errors.push(`${contract.id}: at least three lineage inputs required`);
   if (!Array.isArray(contract.lineage_outputs) || contract.lineage_outputs.length < 3) errors.push(`${contract.id}: at least three lineage outputs required`);
   if (!Array.isArray(contract.required_outputs) || contract.required_outputs.length === 0) errors.push(`${contract.id}: required outputs missing`);

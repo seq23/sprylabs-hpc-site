@@ -1,8 +1,8 @@
 name: Reddit Evening
 on:
+  workflow_dispatch:
   schedule:
     - cron: '20 0 * * *'
-  workflow_dispatch:
 permissions:
   contents: write
 concurrency:
@@ -25,8 +25,16 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
-      - run: npm run programmatic:run-lane -- --lane reddit -- npm run workflow:reddit-evening
+      - name: Run governed Reddit evening refresh
+        run: npm run workflow:run -- --workflow reddit-evening -- npm run programmatic:run-lane -- --lane reddit -- npm run workflow:reddit-evening
       - name: Commit and push if changed
         env:
-          GIT_RESTORE_TARGETS: "data/answer_surface data/answer_surface_monitoring data/backlog reports .build coverage"
-        run: './.github/scripts/commit_and_push_if_changed.sh "chore: reddit evening refresh"'
+          GIT_RESTORE_TARGETS: 'data/answer_surface data/answer_surface_monitoring data/backlog reports .build coverage'
+        run: './.github/scripts/commit_and_push_if_changed.sh "chore: reddit evening refresh" reddit-evening'
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: workflow-trace-reddit-evening-${{ github.run_number }}
+          path: reports/workflows/reddit-evening/
+          if-no-files-found: error
+          retention-days: 30

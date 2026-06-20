@@ -2,7 +2,7 @@ name: Weekly Synthesis Builder
 on:
   workflow_dispatch:
   schedule:
-    - cron: "45 14 * * 1"
+    - cron: '45 14 * * 1'
 permissions:
   contents: write
 concurrency:
@@ -22,8 +22,16 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
-      - run: npm run programmatic:run-lane -- --lane synthesis -- npm run workflow:synthesis-weekly
+      - name: Run governed weekly synthesis
+        run: npm run workflow:run -- --workflow synthesis-weekly -- npm run programmatic:run-lane -- --lane synthesis -- npm run workflow:synthesis-weekly
       - name: Commit synthesis updates
         env:
-          GIT_RESTORE_TARGETS: ".build coverage reports"
-        run: './.github/scripts/commit_and_push_if_changed.sh "Build weekly synthesis layer"'
+          GIT_RESTORE_TARGETS: '.build coverage reports'
+        run: './.github/scripts/commit_and_push_if_changed.sh "Build weekly synthesis layer" synthesis-weekly'
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: workflow-trace-synthesis-weekly-${{ github.run_number }}
+          path: reports/workflows/synthesis-weekly/
+          if-no-files-found: error
+          retention-days: 30

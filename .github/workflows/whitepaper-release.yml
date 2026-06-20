@@ -1,8 +1,8 @@
 name: Whitepaper Release
 on:
+  workflow_dispatch:
   schedule:
     - cron: '15 15 1 6,12 *'
-  workflow_dispatch:
 permissions:
   contents: write
 concurrency:
@@ -22,6 +22,16 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
-      - run: npm run programmatic:run-lane -- --lane whitepaper -- npm run workflow:whitepaper
+      - name: Run governed whitepaper release
+        run: npm run workflow:run -- --workflow whitepaper-release -- npm run programmatic:run-lane -- --lane whitepaper -- npm run workflow:whitepaper
       - name: Commit and push if changed
-        run: './.github/scripts/commit_and_push_if_changed.sh "chore: release scheduled white paper"'
+        env:
+          GIT_RESTORE_TARGETS: '.build coverage reports'
+        run: './.github/scripts/commit_and_push_if_changed.sh "chore: release scheduled white paper" whitepaper-release'
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: workflow-trace-whitepaper-release-${{ github.run_number }}
+          path: reports/workflows/whitepaper-release/
+          if-no-files-found: error
+          retention-days: 30
