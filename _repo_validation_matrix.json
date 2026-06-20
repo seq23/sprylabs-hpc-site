@@ -617,6 +617,56 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-062",
+      "validation_id": "VAL-062",
+      "lane": "ci",
+      "command": "npm run validate:workflow-lineage",
+      "order": 62,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-063",
+      "validation_id": "VAL-063",
+      "lane": "ci",
+      "command": "npm run validate:workflow-monitor",
+      "order": 63,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-064",
+      "validation_id": "VAL-064",
+      "lane": "ci",
+      "command": ".github/workflows/workflow-monitor.yml",
+      "order": 64,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-065",
+      "validation_id": "VAL-065",
+      "lane": "seo-governance",
+      "command": "npm run validate:disavow-asset",
+      "order": 65,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-066",
+      "validation_id": "VAL-066",
+      "lane": "content",
+      "command": "npm run validate:programmatic-provenance",
+      "order": 66,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ]
 }

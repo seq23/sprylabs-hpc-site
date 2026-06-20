@@ -73,7 +73,7 @@
     "validate:artifact-source-parity": "node scripts/validation/validate_artifact_source_parity.mjs",
     "validate:reopened-baseline": "node scripts/validation/validate_reopened_baseline.mjs",
     "validate:warnings": "node scripts/validators/validate_velocity_warnings.js && node scripts/validate_fanout_warning.js",
-    "validate:all": "npm run validate:repo && npm run validate:validation-registry && npm run validate:workflow-contract && npm run validate:programmatic-registry && npm run validate:citation-contract && npm run validate:rendered-schema-parity && npm run validate:retired-route-references && npm run validate:content && npm run validate:graph && npm run validate:distribution && npm run validate:ui-test-parity && npm run validate:browser-suite-contract",
+    "validate:all": "npm run validate:repo && npm run validate:validation-registry && npm run validate:workflow-contract && npm run validate:workflow-lineage && npm run validate:workflow-monitor && npm run validate:disavow-asset && npm run validate:programmatic-provenance && npm run validate:programmatic-registry && npm run validate:citation-contract && npm run validate:rendered-schema-parity && npm run validate:retired-route-references && npm run validate:content && npm run validate:graph && npm run validate:distribution && npm run validate:ui-test-parity && npm run validate:browser-suite-contract",
     "guardrails:all": "npm run release:prepush:container",
     "full:loop": "npm run build:all && npm run validate:all",
     "release:prepush:container": "node scripts/release/container_prepush.mjs",
@@ -116,7 +116,14 @@
     "release:ci-validate": "node scripts/release/ci_validate.mjs",
     "release:create-attestation": "node scripts/release/create_validation_attestation.mjs",
     "release:verify-attestation": "node scripts/release/verify_validation_attestation.mjs",
-    "build:postprocess": "npm run redirects:apply && node scripts/build_coverage_map.js && node scripts/authority/compute_authority_scores.js && node scripts/internal/build_link_graph.js && python3 scripts/citation/apply_citation_program.py --postbuild && npm run redirects:apply && node scripts/prepare_distribution_artifacts.js && npm run citation:build"
+    "build:postprocess": "npm run redirects:apply && node scripts/build_coverage_map.js && node scripts/authority/compute_authority_scores.js && node scripts/internal/build_link_graph.js && python3 scripts/citation/apply_citation_program.py --postbuild && npm run redirects:apply && node scripts/prepare_distribution_artifacts.js && npm run citation:build",
+    "workflow:run": "node scripts/workflow/run_governed_workflow.mjs",
+    "workflow:hostile-review": "node scripts/workflow/hostile_review.mjs",
+    "workflow:monitor": "node scripts/workflow/monitor_workflows.mjs",
+    "validate:workflow-lineage": "node scripts/validation/validate_workflow_lineage.mjs",
+    "validate:workflow-monitor": "node scripts/validation/validate_workflow_monitor.mjs",
+    "validate:disavow-asset": "node scripts/validation/validate_disavow_asset.mjs",
+    "validate:programmatic-provenance": "node scripts/programmatic/run_lane.mjs --lane authority --self-test-provenance"
   },
   "engines": {
     "node": ">=24.0.0"

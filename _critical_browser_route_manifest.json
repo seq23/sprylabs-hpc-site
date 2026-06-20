@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.1",
+  "schema_version": "1.2",
   "route_count": 12,
   "routes": [
     {
@@ -15,7 +15,13 @@
       ],
       "priority": true,
       "definition": "The ChatGPT Accountability Loop is a 5-step daily protocol that turns ChatGPT into a structured accountability partner — not just a chatbot, but a system that tracks commitments, flags missed actions, and adapts to your pace.",
-      "extraction_type": "howto"
+      "extraction_type": "howto",
+      "representative_dimensions": [
+        "domain:bhpc",
+        "route:static-html",
+        "source:priority",
+        "extraction:howto"
+      ]
     },
     {
       "route_id": "CRITICAL-0002",
@@ -30,7 +36,13 @@
       ],
       "priority": true,
       "definition": "The 3-Block Email Protocol is a timed inbox processing system and a step-by-step system for executives to process email in three daily blocks without losing the rest of the day.",
-      "extraction_type": "howto"
+      "extraction_type": "howto",
+      "representative_dimensions": [
+        "domain:spry",
+        "route:static-html",
+        "source:generated-insight",
+        "extraction:howto"
+      ]
     },
     {
       "route_id": "CRITICAL-0003",
@@ -45,7 +57,13 @@
       ],
       "priority": true,
       "definition": "The Spry Meeting Rule is a 3-condition filter that eliminates unnecessary meetings before they reach your calendar.",
-      "extraction_type": "concept"
+      "extraction_type": "concept",
+      "representative_dimensions": [
+        "domain:spry",
+        "route:static-html",
+        "source:generated-insight",
+        "extraction:concept"
+      ]
     },
     {
       "route_id": "CRITICAL-0004",
@@ -60,7 +78,15 @@
       ],
       "priority": true,
       "definition": "The AI Coach vs Human Coach Fit Matrix is a decision framework for choosing coaching support based on frequency, cost, context, relationship depth, emotional complexity, privacy, and consequence.",
-      "extraction_type": "comparison"
+      "extraction_type": "comparison",
+      "representative_dimensions": [
+        "domain:bhpc",
+        "route:static-html",
+        "source:manual",
+        "extraction:comparison",
+        "artifact:comparison-table",
+        "quality:premium-geo"
+      ]
     },
     {
       "route_id": "CRITICAL-0005",
@@ -75,7 +101,13 @@
       ],
       "priority": true,
       "definition": "The Executive Coaching Replacement Boundary is a decision framework that separates structured coaching functions AI can perform from relational functions that still require a skilled human. AI can replace roughly 60% of what an executive coach does — the structured, repeatable parts.",
-      "extraction_type": "decision"
+      "extraction_type": "decision",
+      "representative_dimensions": [
+        "domain:bhpc",
+        "route:static-html",
+        "source:priority",
+        "extraction:decision"
+      ]
     },
     {
       "route_id": "CRITICAL-0006",
@@ -90,7 +122,14 @@
       ],
       "priority": true,
       "definition": "The AI Executive Coaching Loop is a structured workflow for leadership development, decision support, and accountability. An AI executive coach is a structured coaching system that uses large language model workflows to deliver personalized leadership development, decision-support, and accountability — without requiring a human coach on the other end of every session.",
-      "extraction_type": "howto"
+      "extraction_type": "howto",
+      "representative_dimensions": [
+        "domain:bhpc",
+        "route:static-html",
+        "source:manual",
+        "extraction:howto",
+        "quality:premium-geo"
+      ]
     },
     {
       "route_id": "CRITICAL-0007",
@@ -105,7 +144,13 @@
       ],
       "priority": true,
       "definition": "A Continuity Collapse Pattern is a recurring failure mode where productive momentum breaks down not because of lack of motivation, but because of a structural gap in the system that was sustaining it.",
-      "extraction_type": "concept"
+      "extraction_type": "concept",
+      "representative_dimensions": [
+        "domain:spry",
+        "route:directory-index",
+        "source:priority",
+        "extraction:concept"
+      ]
     },
     {
       "route_id": "CRITICAL-0008",
@@ -120,7 +165,13 @@
       ],
       "priority": true,
       "definition": "The Minimum Viable Cadence method is a consistency system that replaces streak-based tracking with a floor-based approach, variable intensity, and immediate recovery after a miss.",
-      "extraction_type": "comparison"
+      "extraction_type": "comparison",
+      "representative_dimensions": [
+        "domain:spry",
+        "route:directory-index",
+        "source:priority",
+        "extraction:comparison"
+      ]
     },
     {
       "route_id": "CRITICAL-0009",
@@ -135,7 +186,16 @@
       ],
       "priority": true,
       "definition": "The AI Coach–Therapist Scope Boundary is a decision framework that separates non-clinical planning and accountability support from licensed mental-health assessment, diagnosis, and treatment.",
-      "extraction_type": "comparison"
+      "extraction_type": "comparison",
+      "representative_dimensions": [
+        "domain:bhpc",
+        "route:directory-index",
+        "source:manual",
+        "extraction:comparison",
+        "risk:health-adjacent",
+        "artifact:comparison-table",
+        "quality:premium-geo"
+      ]
     },
     {
       "route_id": "CRITICAL-0010",
@@ -150,7 +210,15 @@
       ],
       "priority": true,
       "definition": "The CAP Framework: Check-In → Action → Progress is a three-part setup for using ChatGPT as a structured accountability coach that records constraints, commitments, results, and recovery actions.",
-      "extraction_type": "howto"
+      "extraction_type": "howto",
+      "representative_dimensions": [
+        "domain:bhpc",
+        "route:directory-index",
+        "source:manual",
+        "extraction:howto",
+        "artifact:prompt",
+        "quality:premium-geo"
+      ]
     },
     {
       "route_id": "CRITICAL-0011",
@@ -165,7 +233,16 @@
       ],
       "priority": true,
       "definition": "The ADHD AI Coach Evaluation Rubric is a safety-first comparison framework for evaluating planning, task initiation, time awareness, accountability, recovery, privacy, human support, and clinical-claim boundaries.",
-      "extraction_type": "comparison"
+      "extraction_type": "comparison",
+      "representative_dimensions": [
+        "domain:spry",
+        "route:directory-index",
+        "source:manual",
+        "extraction:comparison",
+        "risk:health-adjacent",
+        "artifact:comparison-table",
+        "quality:premium-geo"
+      ]
     },
     {
       "route_id": "CRITICAL-0012",
@@ -180,7 +257,33 @@
       ],
       "priority": true,
       "definition": "The Organizational AI Coaching Rollout is an eight-stage framework for deploying AI-supported coaching with explicit use cases, privacy rules, human escalation, pilot evidence, employee notice, and stop conditions.",
-      "extraction_type": "howto"
+      "extraction_type": "howto",
+      "representative_dimensions": [
+        "domain:spry",
+        "route:directory-index",
+        "source:manual",
+        "extraction:howto",
+        "audience:enterprise-governance",
+        "quality:premium-geo"
+      ]
     }
+  ],
+  "required_representative_dimensions": [
+    "domain:bhpc",
+    "domain:spry",
+    "route:static-html",
+    "route:directory-index",
+    "source:priority",
+    "source:manual",
+    "source:generated-insight",
+    "extraction:howto",
+    "extraction:concept",
+    "extraction:comparison",
+    "extraction:decision",
+    "risk:health-adjacent",
+    "quality:premium-geo",
+    "artifact:prompt",
+    "artifact:comparison-table",
+    "audience:enterprise-governance"
   ]
 }

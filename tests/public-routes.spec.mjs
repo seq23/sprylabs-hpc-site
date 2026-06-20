@@ -14,7 +14,8 @@ function normalize(value) {
 }
 
 for (const route of manifest.routes) {
-  test(`${route.route_id} ${route.path}`, async ({ page }) => {
+  test(`${route.route_id} ${route.path} [${(route.representative_dimensions || []).join(',')}]`, async ({ page }, testInfo) => {
+    for (const dimension of route.representative_dimensions || []) testInfo.annotations.push({type: 'representative-dimension', description: dimension});
     const consoleErrors = [];
     const pageErrors = [];
     const failedRequests = [];

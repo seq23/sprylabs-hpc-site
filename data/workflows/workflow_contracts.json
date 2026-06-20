@@ -1,0 +1,194 @@
+{
+  "schema_version": "1.0",
+  "governed_workflows": [
+    {
+      "id": "content-authority",
+      "name": "Content Authority Pipeline",
+      "workflow_file": ".github/workflows/content-authority-pipeline.yml",
+      "lane": "authority",
+      "workflow_command": "npm run workflow:content-authority",
+      "schedule_cron": "17 14 * * *",
+      "manual_dispatch": true,
+      "monitor_max_age_hours": 36,
+      "lineage_inputs": [
+        "config/social_ingestion_policy.json",
+        "config/social_sources.json",
+        "data/content/page_admission_registry.json",
+        "data/content/programmatic_lane_contracts.json",
+        "data/citation/query_registry.json",
+        "scripts/authority/**",
+        "scripts/community/**",
+        "scripts/synthesis/**",
+        "templates/**"
+      ],
+      "lineage_outputs": [
+        "admin.html",
+        "comparisons/**",
+        "data/content/page_admission_registry.json",
+        "data/programmatic/latest_run_summary.json",
+        "insights/**",
+        "sitemap-*.xml",
+        "synthesis-*.html"
+      ],
+      "required_outputs": [
+        "admin.html",
+        "data/content/page_admission_registry.json",
+        "data/programmatic/latest_run_summary.json"
+      ],
+      "allowed_change_patterns": [
+        "*.html",
+        "answers/**",
+        "clusters/**",
+        "comparisons/**",
+        "content/**",
+        "coverage.json",
+        "data/**",
+        "feed.json",
+        "feed.xml",
+        "insights/**",
+        "llms*.txt",
+        "releases/**",
+        "sitemap*.xml",
+        "sitemaps/**",
+        "synthesis-*.html"
+      ],
+      "forbidden_change_patterns": [
+        ".github/**",
+        "config/**",
+        "docs/**",
+        "package.json",
+        "package-lock.json",
+        "playwright.config.mjs",
+        "scripts/**",
+        "tests/**",
+        "_repo_*.json",
+        "_validation_registry.json",
+        "_browser_suite_contract.json"
+      ]
+    },
+    {
+      "id": "daily-insight",
+      "name": "Daily Insight",
+      "workflow_file": ".github/workflows/daily-insight.yml",
+      "lane": "daily_insight",
+      "workflow_command": "npm run workflow:daily-insight",
+      "schedule_cron": "20 14 * * *",
+      "manual_dispatch": true,
+      "monitor_max_age_hours": 36,
+      "lineage_inputs": [
+        "content/insights/_drafts/**",
+        "data/content/page_admission_registry.json",
+        "data/publish_state.json",
+        "scripts/release_one_draft.js",
+        "templates/**"
+      ],
+      "lineage_outputs": [
+        "_ops/daily-insights/**",
+        "data/content/page_admission_registry.json",
+        "data/programmatic/latest_run_summary.json",
+        "data/publish_state.json",
+        "feed.json",
+        "feed.xml",
+        "insights/**",
+        "sitemap-*.xml"
+      ],
+      "required_outputs": [
+        "data/content/page_admission_registry.json",
+        "data/programmatic/latest_run_summary.json",
+        "data/publish_state.json"
+      ],
+      "allowed_change_patterns": [
+        "_ops/daily-insights/**",
+        "coverage.json",
+        "data/**",
+        "feed.json",
+        "feed.xml",
+        "insights/**",
+        "llms*.txt",
+        "releases/**",
+        "sitemap*.xml",
+        "sitemaps/**"
+      ],
+      "forbidden_change_patterns": [
+        ".github/**",
+        "config/**",
+        "docs/**",
+        "package.json",
+        "package-lock.json",
+        "playwright.config.mjs",
+        "scripts/**",
+        "tests/**",
+        "_repo_*.json",
+        "_validation_registry.json",
+        "_browser_suite_contract.json"
+      ]
+    },
+    {
+      "id": "execution-strict",
+      "name": "Execution Strict",
+      "workflow_file": ".github/workflows/execution-strict.yml",
+      "lane": "authority",
+      "workflow_command": "npm run workflow:execution-strict",
+      "schedule_cron": "0 14 * * *",
+      "manual_dispatch": true,
+      "monitor_max_age_hours": 36,
+      "lineage_inputs": [
+        "config/query_taxonomy.json",
+        "data/content/manual_expansion_pages.json",
+        "data/content/page_admission_registry.json",
+        "data/content/programmatic_lane_contracts.json",
+        "data/intake/**",
+        "scripts/execution/**",
+        "scripts/intake/**",
+        "templates/**"
+      ],
+      "lineage_outputs": [
+        "admin.html",
+        "answers/**",
+        "comparisons/**",
+        "coverage.json",
+        "data/content/page_admission_registry.json",
+        "data/programmatic/latest_run_summary.json",
+        "insights/**",
+        "sitemap-*.xml"
+      ],
+      "required_outputs": [
+        "admin.html",
+        "coverage.json",
+        "data/content/page_admission_registry.json",
+        "data/programmatic/latest_run_summary.json"
+      ],
+      "allowed_change_patterns": [
+        "*.html",
+        "_ops/daily-insights/**",
+        "answers/**",
+        "clusters/**",
+        "comparisons/**",
+        "content/**",
+        "coverage.json",
+        "data/**",
+        "feed.json",
+        "feed.xml",
+        "insights/**",
+        "llms*.txt",
+        "releases/**",
+        "sitemap*.xml",
+        "sitemaps/**",
+        "synthesis-*.html"
+      ],
+      "forbidden_change_patterns": [
+        ".github/**",
+        "config/**",
+        "docs/**",
+        "package.json",
+        "package-lock.json",
+        "playwright.config.mjs",
+        "scripts/**",
+        "tests/**",
+        "_repo_*.json",
+        "_validation_registry.json",
+        "_browser_suite_contract.json"
+      ]
+    }
+  ]
+}

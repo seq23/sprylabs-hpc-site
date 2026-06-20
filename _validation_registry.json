@@ -1929,6 +1929,169 @@
         "MX-061"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-062",
+      "status": "ADMITTED",
+      "name": "validate:workflow-lineage",
+      "check_type": "validator",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents scheduled generators from becoming opaque or mutating undeclared data surfaces.",
+      "existing_coverage_gap": "The existing workflow contract validator checks syntax and ordering but did not prove executable input/output lineage.",
+      "scope": [
+        "repository",
+        "workflow-data-lineage"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:workflow-lineage",
+      "implementation_path": "scripts/validation/validate_workflow_lineage.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-workflow-lineage/summary.json",
+      "runtime_budget_seconds": 30,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:workflow-contract"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted to make workflow input/output lineage machine-readable and executable.",
+      "decision_date": "2026-06-19",
+      "matrix_ids": [
+        "MX-062"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-063",
+      "status": "ADMITTED",
+      "name": "validate:workflow-monitor",
+      "check_type": "validator",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents silent schedule drift, lost manual dispatch support, missing traces, and stale workflow health monitoring.",
+      "existing_coverage_gap": "The existing workflow validator did not validate runtime trace completeness or monitor age budgets.",
+      "scope": [
+        "repository",
+        "workflow-monitoring"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:workflow-monitor",
+      "implementation_path": "scripts/validation/validate_workflow_monitor.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-workflow-monitor/summary.json",
+      "runtime_budget_seconds": 30,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:workflow-contract"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted to validate manual/scheduled triggers, trace artifacts, and future workflow monitoring contracts.",
+      "decision_date": "2026-06-19",
+      "matrix_ids": [
+        "MX-063"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-064",
+      "status": "ADMITTED",
+      "name": "workflow-monitor.yml",
+      "check_type": "ci-workflow",
+      "owning_lane": "ci",
+      "risk_prevented": "Creates a scheduled alert when one of the governed generators is failed or stale.",
+      "existing_coverage_gap": "Static validation cannot detect whether the latest GitHub Actions run is currently failed or stale.",
+      "scope": [
+        "github-actions",
+        "workflow-monitoring"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/workflow-monitor.yml",
+      "implementation_path": ".github/workflows/workflow-monitor.yml",
+      "environment": "github-actions",
+      "proof_tier": 4,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "reports/workflow-monitor.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "npm run validate:workflow-monitor"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted as the live scheduled monitor for the three governed workflows.",
+      "decision_date": "2026-06-19",
+      "matrix_ids": [
+        "MX-064"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-065",
+      "status": "ADMITTED",
+      "name": "validate:disavow-asset",
+      "check_type": "validator",
+      "owning_lane": "seo-governance",
+      "risk_prevented": "Prevents malformed, duplicate, or self-domain disavow directives from being handed to Search Console.",
+      "existing_coverage_gap": "General repository validation does not understand Google disavow text-file semantics.",
+      "scope": [
+        "repository",
+        "seo-disavow"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:disavow-asset",
+      "implementation_path": "scripts/validation/validate_disavow_asset.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-disavow-asset/summary.json",
+      "runtime_budget_seconds": 10,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted to validate the versioned Search Console disavow asset before release.",
+      "decision_date": "2026-06-19",
+      "matrix_ids": [
+        "MX-065"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-066",
+      "status": "ADMITTED",
+      "name": "validate:programmatic-provenance",
+      "check_type": "validator",
+      "owning_lane": "content",
+      "risk_prevented": "Prevents a scheduled rebuild from reclassifying an existing admitted manual page into the active workflow lane.",
+      "existing_coverage_gap": "Registry validation detects drift only after mutation; this regression check proves the candidate metadata rule before workflow execution.",
+      "scope": [
+        "repository",
+        "programmatic-admission"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:programmatic-provenance",
+      "implementation_path": "scripts/programmatic/run_lane.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-programmatic-provenance/summary.json",
+      "runtime_budget_seconds": 10,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "npm run validate:programmatic-registry"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted as the focused regression proof for the three failed scheduled workflows.",
+      "decision_date": "2026-06-19",
+      "matrix_ids": [
+        "MX-066"
+      ],
+      "not_applicable_reason": null
     }
   ]
 }

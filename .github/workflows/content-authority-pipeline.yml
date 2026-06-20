@@ -2,7 +2,7 @@ name: Content Authority Pipeline
 on:
   workflow_dispatch:
   schedule:
-    - cron: "17 14 * * *"
+    - cron: '17 14 * * *'
 permissions:
   contents: write
 concurrency:
@@ -22,8 +22,16 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
-      - run: npm run programmatic:run-lane -- --lane authority -- npm run workflow:content-authority
+      - name: Run governed content authority pipeline
+        run: npm run workflow:run -- --workflow content-authority -- npm run programmatic:run-lane -- --lane authority -- npm run workflow:content-authority
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: workflow-trace-content-authority-${{ github.run_number }}
+          path: reports/workflows/content-authority/
+          if-no-files-found: error
+          retention-days: 30
       - name: Commit generated authority updates
         env:
-          GIT_RESTORE_TARGETS: ".build coverage reports"
+          GIT_RESTORE_TARGETS: '.build coverage reports'
         run: './.github/scripts/commit_and_push_if_changed.sh "Run content authority pipeline"'

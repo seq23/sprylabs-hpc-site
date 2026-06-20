@@ -964,6 +964,7 @@ def update_discovery(pages,queries,frameworks):
     if critical_path.exists():
         current=json.loads(critical_path.read_text(encoding="utf-8"))
         selected=[item.get("source_file") for item in current.get("routes",[])]
+        current_by_source={item.get("source_file"):item for item in current.get("routes",[])}
         route_by_source={item["source_file"]:item for item in routes}
         page_by_path={item["path"]:item for item in active}
         critical=[]
@@ -972,9 +973,15 @@ def update_discovery(pages,queries,frameworks):
                 continue
             item=dict(route_by_source[source])
             page=page_by_path[source]
+            prior=current_by_source.get(source,{})
             item.update({"route_id":f"CRITICAL-{index:04d}","priority":True,"definition":page["definition"],"extraction_type":page["extraction_type"]})
+            if prior.get("representative_dimensions"):
+                item["representative_dimensions"]=prior["representative_dimensions"]
             critical.append(item)
-        critical_path.write_text(json.dumps({"schema_version":"1.1","route_count":len(critical),"routes":critical},indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+        payload={"schema_version":"1.2","route_count":len(critical),"routes":critical}
+        if current.get("required_representative_dimensions"):
+            payload["required_representative_dimensions"]=current["required_representative_dimensions"]
+        critical_path.write_text(json.dumps(payload,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
     # sitemaps: preserve existing URLs, remove retired routes, and add active canonicals
     for name,domain in [("sitemap.xml",None),("sitemap-spry.xml","spryexecutiveos.com"),("sitemap-bhpc.xml","billionairehighperformancecoach.com")]:
         fp=ROOT/name

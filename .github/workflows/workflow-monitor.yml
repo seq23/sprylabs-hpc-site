@@ -1,0 +1,36 @@
+name: Workflow Health Monitor
+on:
+  schedule:
+    - cron: '35 15 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+concurrency:
+  group: workflow-health-monitor
+  cancel-in-progress: false
+env:
+  NODE_OPTIONS: --max-old-space-size=3072
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Validate workflow contracts and latest runs
+        run: npm run workflow:monitor
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: workflow-health-monitor-${{ github.run_number }}
+          path: reports/workflow-monitor.json
+          if-no-files-found: error
+          retention-days: 30

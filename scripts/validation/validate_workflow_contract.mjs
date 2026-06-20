@@ -15,6 +15,7 @@ const expectedWorkflows = [
   'synthesis-weekly.yml',
   'validate.yml',
   'whitepaper-release.yml',
+  'workflow-monitor.yml',
 ];
 const mutationWorkflows = new Set([
   'content-authority-pipeline.yml',
@@ -37,6 +38,8 @@ const packageScripts = pkg.scripts || {};
 const registry = readJson('_validation_registry.json').records || [];
 const matrix = readJson('_repo_validation_matrix.json').entries || [];
 const packaging = readJson('_baseline_packaging_contract.json');
+const governedWorkflowContracts = readJson('data/workflows/workflow_contracts.json').governed_workflows || [];
+const governedByFile = new Map(governedWorkflowContracts.map(item => [path.basename(item.workflow_file), item]));
 const requiredFiles = new Set(packaging.required_files || []);
 const actualWorkflows = fs.readdirSync(workflowDir).filter(name => /\.ya?ml$/.test(name)).sort();
 
@@ -104,7 +107,20 @@ for (const name of actualWorkflows) {
     const laneRunner = indexOrError(text, 'npm run programmatic:run-lane', 'programmatic lane runner', name);
     const commit = indexOrError(text, '.github/scripts/commit_and_push_if_changed.sh', 'safe commit helper', name);
     if (laneRunner >= 0 && commit >= 0 && commit < laneRunner) errors.push(`${name}: commit helper runs before programmatic admission and canonical validation`);
-    if (!/--lane\s+[a-z_]+\s+--\s+npm\s+run\s+workflow:[\w-]+/.test(text)) errors.push(`${name}: mutation command must be wrapped in a named admitted programmatic lane`);
+    const contract = governedByFile.get(name);
+    if (contract) {
+      const governedRunner = indexOrError(text, 'npm run workflow:run', 'governed workflow runner', name);
+      const traceUpload = indexOrError(text, 'actions/upload-artifact@v7', 'workflow trace upload', name);
+      if (governedRunner >= 0 && laneRunner >= 0 && laneRunner < governedRunner) errors.push(`${name}: programmatic runner is not nested under governed workflow runner`);
+      if (traceUpload >= 0 && commit >= 0 && commit < traceUpload) errors.push(`${name}: commit helper runs before trace artifact upload`);
+      if (!/--workflow\s+[a-z0-9-]+\s+--\s+npm\s+run\s+programmatic:run-lane\s+--\s+--lane\s+[a-z_]+\s+--\s+npm\s+run\s+workflow:[\w-]+/.test(text)) errors.push(`${name}: mutation command must be wrapped in governed trace and a named admitted programmatic lane`);
+      const expected = `npm run workflow:run -- --workflow ${contract.id} -- npm run programmatic:run-lane -- --lane ${contract.lane} -- ${contract.workflow_command}`;
+      if (!text.includes(expected)) errors.push(`${name}: governed workflow command drift from data/workflows/workflow_contracts.json`);
+      if (!text.includes(`reports/workflows/${contract.id}/`)) errors.push(`${name}: trace artifact path drift from workflow contract`);
+      if (!text.includes('workflow_dispatch:') || !text.includes('schedule:')) errors.push(`${name}: governed workflow must support manual and scheduled execution`);
+    } else if (!/--lane\s+[a-z_]+\s+--\s+npm\s+run\s+workflow:[\w-]+/.test(text)) {
+      errors.push(`${name}: mutation command must be wrapped in a named admitted programmatic lane`);
+    }
   }
 
   if (name === 'deploy-distribution.yml') {
@@ -116,6 +132,14 @@ for (const name of actualWorkflows) {
     if (download >= 0 && verify >= 0 && verify < download) errors.push(`${name}: attestation verification runs before artifact download`);
     if (verify >= 0 && deploy >= 0 && deploy < verify) errors.push(`${name}: distribution can run before attestation verification`);
     if (!text.includes('npm run release:ci-validate')) errors.push(`${name}: manual dispatch must validate and attest before deployment`);
+  }
+
+
+  if (name === 'workflow-monitor.yml') {
+    if (!/permissions:\s*\n\s{2}contents:\s*read\s*\n\s{2}actions:\s*read/m.test(text)) errors.push(`${name}: monitor workflow must declare contents: read and actions: read`);
+    if (!text.includes('workflow_dispatch:') || !text.includes('schedule:')) errors.push(`${name}: monitor must support manual and scheduled execution`);
+    if (!text.includes('npm run workflow:monitor')) errors.push(`${name}: monitor command missing`);
+    if (!text.includes('reports/workflow-monitor.json')) errors.push(`${name}: monitor report artifact missing`);
   }
 
   if (name === 'validate.yml') {
@@ -137,7 +161,7 @@ for (const name of actualWorkflows) {
 const helper = '.github/scripts/commit_and_push_if_changed.sh';
 if (!requiredFiles.has(helper)) errors.push(`${helper}: missing from baseline critical-file parity`);
 if (!requiredFiles.has('scripts/validation/validate_workflow_contract.mjs')) errors.push('workflow validator missing from baseline critical-file parity');
-for (const critical of ['scripts/programmatic/run_lane.mjs','scripts/release/ci_validate.mjs','scripts/release/create_validation_attestation.mjs','scripts/release/verify_validation_attestation.mjs']) if (!requiredFiles.has(critical)) errors.push(`${critical}: missing from baseline critical-file parity`);
+for (const critical of ['scripts/programmatic/run_lane.mjs','scripts/workflow/run_governed_workflow.mjs','scripts/workflow/hostile_review.mjs','scripts/workflow/monitor_workflows.mjs','scripts/validation/validate_workflow_lineage.mjs','scripts/validation/validate_workflow_monitor.mjs','data/workflows/workflow_contracts.json','docs/runbooks/GOVERNED_WORKFLOW_OPERATIONS.md','scripts/release/ci_validate.mjs','scripts/release/create_validation_attestation.mjs','scripts/release/verify_validation_attestation.mjs']) if (!requiredFiles.has(critical)) errors.push(`${critical}: missing from baseline critical-file parity`);
 
 const laneRunner='scripts/programmatic/run_lane.mjs';
 if (fs.existsSync(laneRunner)) {

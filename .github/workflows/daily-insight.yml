@@ -22,6 +22,16 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
-      - run: npm run programmatic:run-lane -- --lane daily_insight -- npm run workflow:daily-insight
+      - name: Run governed daily insight release
+        run: npm run workflow:run -- --workflow daily-insight -- npm run programmatic:run-lane -- --lane daily_insight -- npm run workflow:daily-insight
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: workflow-trace-daily-insight-${{ github.run_number }}
+          path: reports/workflows/daily-insight/
+          if-no-files-found: error
+          retention-days: 30
       - name: Commit and push if changed
+        env:
+          GIT_RESTORE_TARGETS: '.build coverage reports'
         run: './.github/scripts/commit_and_push_if_changed.sh "chore: release daily insight"'
