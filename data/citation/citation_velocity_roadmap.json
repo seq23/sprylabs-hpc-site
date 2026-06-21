@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-06-21",
+  "goal": "100000 qualified LLM citations or surfacings per month for BHPC / APlayerMode property cluster",
+  "definition": "A surfacing is an LLM response that names the brand, explains the method, or links the property URL. No outcome is guaranteed.",
+  "phases": [
+    {
+      "phase": 1,
+      "name": "Foundation",
+      "target_window": "Months 0-2",
+      "target_range": "0-500/month",
+      "implemented_in_repo": true
+    },
+    {
+      "phase": 2,
+      "name": "Coverage",
+      "target_window": "Months 2-5",
+      "target_range": "500-5000/month",
+      "implemented_in_repo": true
+    },
+    {
+      "phase": 3,
+      "name": "Authority Compounding",
+      "target_window": "Months 5-9",
+      "target_range": "5000-25000/month",
+      "implemented_in_repo": true,
+      "note": "External authority items tracked as planned unless verified."
+    },
+    {
+      "phase": 4,
+      "name": "Dominance",
+      "target_window": "Months 9-18",
+      "target_range": "25000-100000/month",
+      "implemented_in_repo": true,
+      "note": "Repo is prepared for scaled batches; actual 2000+ pages require future source-governed generation."
+    }
+  ],
+  "weekly_kpis": [
+    "manual 50-query sample across major LLMs",
+    "indexed page count",
+    "brand query movement",
+    "purchase-path citations",
+    "missing-citation backlog count"
+  ]
+}

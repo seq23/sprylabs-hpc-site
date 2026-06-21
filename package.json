@@ -61,7 +61,7 @@
     "citation:warn": "node scripts/validators/validate_citation_readiness_warning.js",
     "citation:all": "npm run citation:build && npm run citation:warn",
     "build:generated-content": "npm run intake && npm run scoring && npm run backlog && npm run fanout:auto && npm run answer:all && npm run backlog:build && node scripts/build_insights.js && node scripts/repair/auto_expand_short_pages.js && node scripts/repair/auto_repair_generated_page_ranges.js && node scripts/answer_surface/update_score_history.js && node scripts/answer_surface/build_weakness_backlog.js && npm run build:manual-expansion",
-    "build:all": "npm run build:generated-content && npm run build:postprocess",
+    "build:all": "npm run build:generated-content && npm run build:postprocess && npm run build:aplayer-phase-expansion",
     "validate:repo": "node scripts/validation/validate_repo.mjs && npm run validate:release-portability",
     "validate:validation-registry": "node scripts/validation/validate_validation_registry.mjs",
     "validate:citation-contract": "python3 scripts/validation/validate_citation_contract.py",
@@ -73,7 +73,7 @@
     "validate:artifact-source-parity": "node scripts/validation/validate_artifact_source_parity.mjs",
     "validate:reopened-baseline": "node scripts/validation/validate_reopened_baseline.mjs",
     "validate:warnings": "node scripts/validators/validate_velocity_warnings.js && node scripts/validate_fanout_warning.js",
-    "validate:all": "npm run validate:repo && npm run validate:validation-registry && npm run validate:workflow-contract && npm run validate:workflow-lineage && npm run validate:workflow-monitor && npm run validate:disavow-asset && npm run validate:programmatic-provenance && npm run validate:programmatic-registry && npm run validate:citation-contract && npm run validate:citation-strategy && npm run validate:rendered-schema-parity && npm run validate:retired-route-references && npm run validate:content && npm run validate:graph && npm run validate:distribution && npm run validate:ui-test-parity && npm run validate:browser-suite-contract",
+    "validate:all": "npm run validate:repo && npm run validate:validation-registry && npm run validate:workflow-contract && npm run validate:workflow-lineage && npm run validate:workflow-monitor && npm run validate:disavow-asset && npm run validate:programmatic-provenance && npm run validate:programmatic-registry && npm run validate:citation-contract && npm run validate:citation-strategy && npm run validate:rendered-schema-parity && npm run validate:retired-route-references && npm run validate:content && npm run validate:graph && npm run validate:distribution && npm run validate:ui-test-parity && npm run validate:browser-suite-contract && node scripts/validation/validate_release_atom_contract.mjs && node scripts/validation/validate_release_mix_policy.mjs && node scripts/validation/validate_citation_phase_manifest.mjs && node scripts/validation/validate_no_keyword_swap_pages.mjs && node scripts/validation/validate_claim_safety.mjs && node scripts/validation/validate_internal_link_velocity.mjs && node scripts/validation/validate_llms_full_coverage.mjs && node scripts/validation/validate_sitemap_coverage.mjs",
     "guardrails:all": "npm run release:prepush:container",
     "full:loop": "npm run build:all && npm run validate:all",
     "release:prepush:container": "node scripts/release/container_prepush.mjs",
@@ -127,7 +127,8 @@
     "contract:use-case-mapping": "node scripts/validators/validate_use_case_taxonomy_mapping.js",
     "contract:query-coverage": "QUERY_COVERAGE_STRICT=1 node scripts/validators/validate_query_coverage.js",
     "search:prepare-submission": "node scripts/search/build_submission_manifest.mjs",
-    "validate:citation-strategy": "node scripts/validation/validate_citation_strategy.mjs"
+    "validate:citation-strategy": "node scripts/validation/validate_citation_strategy.mjs",
+    "build:aplayer-phase-expansion": "node scripts/programmatic/generate_aplayer_phase_expansion.mjs"
   },
   "engines": {
     "node": ">=24.0.0"

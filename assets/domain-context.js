@@ -1,11 +1,10 @@
 (function(){
   var host=window.location.hostname||'';
   var isProduct=/(^|\.)billionairehighperformancecoach\.com$/i.test(host);
+  var isSpry=/(^|\.)spryexecutiveos\.com$/i.test(host);
   var html=document.documentElement;
-  if(html){html.classList.add(isProduct?'product-domain':'system-domain');}
-  document.addEventListener('DOMContentLoaded',function(){
-    document.querySelectorAll('[data-brand-primary]').forEach(function(el){
-      el.textContent=isProduct?'Billionaire High Performance Coach':'Spry Executive OS';
-    });
-  });
+  if(html){html.classList.add(isProduct?'product-domain':(isSpry?'system-domain':'preview-domain'));}
+  // Brand text is intentionally source-authored in HTML.
+  // Do not rewrite the brand on localhost or spryexecutiveos.com; it caused
+  // "Spry Executive OS by Spry Executive OS" in preview and weakened product clarity.
 })();

@@ -2,17 +2,21 @@
   "schema_version": "1.0",
   "goal": "Increase qualified LLM citations and purchase-path visibility toward 100000 citations per month for the BHPC/Spry property cluster.",
   "source_strategy": "June 2026 Citation Dominance Plan",
-  "implementation_model": "repo-adapted four-layer citation system",
-  "reviewed_at": "2026-06-20",
+  "implementation_model": "repo-adapted four-layer citation system folded into the existing content automation release spine",
+  "reviewed_at": "2026-06-21",
   "layers": {
     "substrate": {
       "required": [
+        "data/citation/agent_runs/2026-06-20.json",
         "data/citation/citable_pages.json",
-        "data/citation/query_registry.json",
+        "data/citation/citation_phase_manifest.json",
         "data/citation/framework_registry.json",
+        "data/citation/methodology_taxonomy.json",
+        "data/citation/outcome_pattern_registry.json",
+        "data/citation/query_registry.json",
+        "data/citation/reference_page_inventory.json",
         "data/entities/author_profile.json",
-        "data/research/ai_coaching_source_registry.json",
-        "data/citation/agent_runs/2026-06-20.json"
+        "data/research/ai_coaching_source_registry.json"
       ]
     },
     "reference_pages": {
@@ -43,21 +47,25 @@
       "required": [
         "author.html",
         "citation-methodology.html",
-        "data/entities/author_profile.json"
+        "data/entities/author_profile.json",
+        "data/entities/authority_signal_manifest.json",
+        "docs/strategy/BHPC_APLAYER_CITATION_DOMINANCE_STRATEGY.md"
       ],
       "policy": "Use real creator and publisher identities, official or primary sources, explicit limitations, and human escalation. Do not fabricate credentials, outcomes, clients, or third-party authority."
     },
     "distribution": {
       "required": [
-        "robots.txt",
-        "sitemap.xml",
-        "sitemap-bhpc.xml",
-        "sitemap-spry.xml",
-        "llms.txt",
-        "llms-full.txt",
+        "data/citation/citation_velocity_roadmap.json",
+        "data/citation/syndication_plan.json",
+        "data/search/search_engine_submission_manifest.json",
         "distribution.config.json",
         "distribution_scripts/indexnow_submit.sh",
-        "data/search/search_engine_submission_manifest.json"
+        "llms-full.txt",
+        "llms.txt",
+        "robots.txt",
+        "sitemap-bhpc.xml",
+        "sitemap-spry.xml",
+        "sitemap.xml"
       ]
     }
   },
@@ -71,5 +79,68 @@
       "purchase-path citations"
     ],
     "early_run_rule": "A run less than 72 hours after deployment is diagnostic for content presence, not conclusive evidence of strategy performance."
+  },
+  "scope": "aplayermode.com + billionairehighperformancecoach.com only",
+  "excluded_strategy_sections": [
+    "theindustryguides.com",
+    "Industry Guides provider databases",
+    "state/provider vertical directory pages"
+  ],
+  "phases": {
+    "phase_1_foundation": {
+      "status": "IMPLEMENTED",
+      "artifacts": [
+        "data/citation/citation_strategy_contract.json",
+        "docs/strategy/BHPC_APLAYER_CITATION_DOMINANCE_STRATEGY.md",
+        "robots.txt",
+        "sitemap-bhpc.xml",
+        "llms.txt"
+      ]
+    },
+    "phase_2_coverage": {
+      "status": "IMPLEMENTED_AT_2000_PLUS_SCALE",
+      "minimums": {
+        "active_reference_surfaces": 2000
+      },
+      "generated_counts": {
+        "answer": 600,
+        "use_case": 250,
+        "comparison": 200,
+        "glossary": 150,
+        "method": 100,
+        "brand_defense": 50,
+        "platform": 50
+      }
+    },
+    "phase_3_authority_compounding": {
+      "status": "IMPLEMENTED_WITH_TRUTH_BOUNDARIES",
+      "artifacts": [
+        "data/entities/authority_signal_manifest.json",
+        "author.html",
+        "citation-methodology.html"
+      ],
+      "note": "External appearances and credentials are tracked but not claimed unless verified."
+    },
+    "phase_4_dominance": {
+      "status": "RUNWAY_ACTIVE_NOT_COMPLETE",
+      "release_mix_policy": "data/content/release_mix_policy.json",
+      "external_distribution": "pending_real_world_execution"
+    }
+  },
+  "target_reference_surface_count": 2000,
+  "current_active_reference_surfaces": 2019,
+  "no_second_release_system": true,
+  "generated_baseline_expansion": {
+    "source": "aplayer_phase_expansion_2000_baseline",
+    "new_pages": 1400,
+    "counts": {
+      "answer": 600,
+      "use_case": 250,
+      "comparison": 200,
+      "glossary": 150,
+      "method": 100,
+      "brand_defense": 50,
+      "platform": 50
+    }
   }
 }

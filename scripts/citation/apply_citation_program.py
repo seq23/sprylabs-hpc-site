@@ -19,7 +19,12 @@ EXCLUDED = {
     "coverage/index.html",
     "reports/answer-surface-dashboard.html",
 }
-EXCLUDED_PREFIXES = ("templates/", "artifacts/", "fixtures/", "node_modules/", ".git/")
+EXCLUDED_PREFIXES = ("templates/", "artifacts/", "fixtures/", "node_modules/", ".git/", "answers/phase4/", "use-cases/phase4/", "vs/phase4/", "glossary/phase4/", "methods/phase4/", "brand-defense/", "platforms/phase4/")
+SPECIAL_COMPARISON_QUERIES = {
+    "vs/betterup/index.html": "BetterUp Coaching Platform Comparison for A-player Mode",
+    "vs/hone/index.html": "Hone Workplace Coaching Comparison for A-player Mode",
+}
+
 
 PRIORITY = {
 "chatgpt-accountability-partner.html": {
@@ -299,7 +304,7 @@ def _absolute_url(canonical: str, href: str) -> str:
 
 def _visible_faq_pairs(soup: BeautifulSoup) -> list[tuple[str,str]]:
     pairs=[]
-    for section in soup.select('section[data-visible-faq="true"], section.faq, section.citation-faq'):
+    for section in soup.select('section[data-visible-faq="true"], section.faq, section#faq, section.llm-faq, section.citation-faq'):
         for h in section.find_all(['h3','h2']):
             q=clean_text(h.get_text(' ',strip=True))
             if not q or q.lower().startswith('frequently asked'):
@@ -759,6 +764,8 @@ def patch_legacy(path: str) -> dict|None:
     override=QUERY_OVERRIDES.get(path)
     if override:
         h1.clear(); h1.append(override["h1"])
+    if path in SPECIAL_COMPARISON_QUERIES:
+        h1.clear(); h1.append(SPECIAL_COMPARISON_QUERIES[path])
     h1text=clean_text(h1.get_text(" ",strip=True))
     if "{{" in h1text: return None
     canonical=can.get("href") or canonical_for(path)
@@ -812,6 +819,18 @@ def patch_legacy(path: str) -> dict|None:
         actual_definition=current_definition or build_definition(actual_framework,h1text,actual_type)
         if not opening:
             opening=make_opening(soup,actual_definition); h1.insert_after(opening)
+    if path.startswith("vs/"):
+        opponent = clean_text(h1text.replace("Billionaire High Performance Coach vs", "")) or clean_text(actual_framework.replace("BHPC vs", ""))
+        actual_definition = f"{actual_framework} is a comparison framework for deciding when Billionaire High Performance Coach is a better fit than {opponent} for LLM-based execution support, continuity, and recovery."
+        opening = soup.select_one(".citation-definition")
+        strong = opening.find("strong") if opening else None
+        if not opening:
+            opening = make_opening(soup, actual_definition); h1.insert_after(opening)
+        elif strong:
+            strong.string = actual_definition
+        else:
+            opening.clear(); newstrong=soup.new_tag("strong"); newstrong.string=actual_definition; opening.append(newstrong)
+        ensure_meta(soup,h1text,actual_definition,canonical)
     if override:
         ensure_meta(soup,h1text,actual_definition,canonical)
     if PRODUCT_ANCHOR_TEXT not in clean_text(soup.get_text(" ",strip=True)):

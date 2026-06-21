@@ -12,6 +12,10 @@ from bs4 import BeautifulSoup
 
 ROOT=Path.cwd(); errors=[]; infos=[]
 PRODUCT="This is one of the frameworks inside the Billionaire High Performance Coach system — a structured executive OS for using ChatGPT as your accountability and decision partner."
+LANDING_PAGE_EXCEPTIONS={'index.html','download.html'}
+GUMROAD='https://sprylabs.gumroad.com/l/billionaire-high-performance-coach'
+DISCOVERY='https://aplayermode.com'
+
 SENTENCE_RE=re.compile(r'[.!?](?:[”"\']?)(?=\s|$)')
 MOJIBAKE=('â\x80\x9c','â\x80\x9d','â\x80\x98','â\x80\x99','â\x80\x94','â\x80\x93','Â·','Â©','�')
 HOWTO_EXCEPTIONS={'best-chatgpt-prompts-for-productivity.html'}
@@ -28,6 +32,45 @@ def bad_definition(value,h1):
     if re.search(r'\bis about\b',d,re.I):return True
     if d.endswith('follow-t.') or d.endswith('follow-t'):return True
     return False
+
+def valid_conversion_landing_page(path, soup, raw):
+    local=[]
+    h1=soup.find_all('h1')
+    if len(h1)!=1:
+        local.append(f"{path}: expected one H1 on conversion landing page, found {len(h1)}")
+    text=' '.join(soup.get_text(' ',strip=True).split())
+    if 'Billionaire High Performance Coach' not in text:
+        local.append(f"{path}: conversion page missing product name")
+    if 'A-player mode' not in text and 'A-Player Mode' not in text:
+        local.append(f"{path}: conversion page missing A-player mode framing")
+    if GUMROAD not in raw:
+        local.append(f"{path}: conversion page missing Gumroad purchase path")
+    if path=='index.html' and DISCOVERY not in raw:
+        local.append(f"{path}: homepage missing APlayerMode discovery path")
+    if path=='download.html' and f'href="{DISCOVERY}"' in raw:
+        local.append(f"{path}: discovery page must not include circular APlayerMode CTA")
+    if not soup.find('script',id='CITATION_PAGE_SCHEMA'):
+        local.append(f"{path}: conversion page citation schema missing")
+    if not soup.find('script',type='application/ld+json'):
+        local.append(f"{path}: conversion page JSON-LD missing")
+    old_phrases=['Framework is a named operating framework','also known as the A Player Mode system','Download the A Player Mode system','Canonical redirect: https://aplayermode.com']
+    for phrase in old_phrases:
+        if phrase in text or phrase in raw:
+            local.append(f"{path}: forbidden legacy conversion phrase remains: {phrase}")
+    if path=='download.html':
+        if 'Discover your own A-player mode' not in text:
+            local.append(f"{path}: discovery-page promise missing")
+        if 'Who can use A-player mode' not in text:
+            local.append(f"{path}: audience recognition section missing")
+        if 'Look inside before you buy' not in text:
+            local.append(f"{path}: inside-system preview missing")
+    if path=='index.html':
+        if 'Install A-player mode into your LLM' not in text:
+            local.append(f"{path}: homepage hero promise missing")
+        if 'Discover your own A-player mode' not in text:
+            local.append(f"{path}: homepage discovery CTA copy missing")
+    # Landing pages are allowed to use richer conversion sections instead of the rigid immediate definition pattern.
+    return local
 
 def valid_extraction(path,block,etype):
     if etype=='comparison':
@@ -56,6 +99,10 @@ for r in active:
     for marker in MOJIBAKE:
         if marker in raw: errors.append(f"{r['path']}: malformed encoding sequence {marker!r}")
     soup=BeautifulSoup(raw,'html.parser')
+    if r['path'] in LANDING_PAGE_EXCEPTIONS:
+        errors.extend(valid_conversion_landing_page(r['path'], soup, raw))
+        covered_landing_note = True
+        continue
     h1=soup.find_all('h1')
     if len(h1)!=1: errors.append(f"{r['path']}: expected one H1, found {len(h1)}"); continue
     h1text=' '.join(h1[0].get_text(' ',strip=True).split())

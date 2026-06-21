@@ -1,0 +1,85 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-06-21",
+  "authority": "Existing content automation system is the only release spine; profiles route into the current admission and build lifecycle.",
+  "profiles": [
+    {
+      "name": "daily_insight",
+      "release_spine": "workflow:daily-insight -> content:pipeline -> build:generated-content -> build:postprocess -> validate:all -> release:prepush",
+      "admission_registry": "data/content/page_admission_registry.json",
+      "atom_contract_required": true
+    },
+    {
+      "name": "manual_expansion",
+      "release_spine": "workflow:daily-insight -> content:pipeline -> build:generated-content -> build:postprocess -> validate:all -> release:prepush",
+      "admission_registry": "data/content/page_admission_registry.json",
+      "atom_contract_required": true
+    },
+    {
+      "name": "comparison_graph",
+      "release_spine": "workflow:daily-insight -> content:pipeline -> build:generated-content -> build:postprocess -> validate:all -> release:prepush",
+      "admission_registry": "data/content/page_admission_registry.json",
+      "atom_contract_required": true
+    },
+    {
+      "name": "question_cluster",
+      "release_spine": "workflow:daily-insight -> content:pipeline -> build:generated-content -> build:postprocess -> validate:all -> release:prepush",
+      "admission_registry": "data/content/page_admission_registry.json",
+      "atom_contract_required": true
+    },
+    {
+      "name": "authority",
+      "release_spine": "workflow:daily-insight -> content:pipeline -> build:generated-content -> build:postprocess -> validate:all -> release:prepush",
+      "admission_registry": "data/content/page_admission_registry.json",
+      "atom_contract_required": true
+    },
+    {
+      "name": "whitepaper",
+      "release_spine": "workflow:daily-insight -> content:pipeline -> build:generated-content -> build:postprocess -> validate:all -> release:prepush",
+      "admission_registry": "data/content/page_admission_registry.json",
+      "atom_contract_required": true
+    },
+    {
+      "name": "citation_phase_expansion",
+      "release_spine": "workflow:daily-insight -> content:pipeline -> build:generated-content -> build:postprocess -> validate:all -> release:prepush",
+      "admission_registry": "data/content/page_admission_registry.json",
+      "atom_contract_required": true
+    },
+    {
+      "name": "brand_defense",
+      "release_spine": "workflow:daily-insight -> content:pipeline -> build:generated-content -> build:postprocess -> validate:all -> release:prepush",
+      "admission_registry": "data/content/page_admission_registry.json",
+      "atom_contract_required": true
+    },
+    {
+      "name": "refresh",
+      "release_spine": "workflow:daily-insight -> content:pipeline -> build:generated-content -> build:postprocess -> validate:all -> release:prepush",
+      "admission_registry": "data/content/page_admission_registry.json",
+      "atom_contract_required": true
+    },
+    {
+      "name": "platform_implementation",
+      "release_spine": "workflow:daily-insight -> content:pipeline -> build:generated-content -> build:postprocess -> validate:all -> release:prepush",
+      "admission_registry": "data/content/page_admission_registry.json",
+      "atom_contract_required": true
+    },
+    {
+      "name": "method_protocol",
+      "release_spine": "workflow:daily-insight -> content:pipeline -> build:generated-content -> build:postprocess -> validate:all -> release:prepush",
+      "admission_registry": "data/content/page_admission_registry.json",
+      "atom_contract_required": true
+    },
+    {
+      "name": "case_study",
+      "release_spine": "workflow:daily-insight -> content:pipeline -> build:generated-content -> build:postprocess -> validate:all -> release:prepush",
+      "admission_registry": "data/content/page_admission_registry.json",
+      "atom_contract_required": true
+    },
+    {
+      "name": "glossary",
+      "release_spine": "workflow:daily-insight -> content:pipeline -> build:generated-content -> build:postprocess -> validate:all -> release:prepush",
+      "admission_registry": "data/content/page_admission_registry.json",
+      "atom_contract_required": true
+    }
+  ]
+}

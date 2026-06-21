@@ -9,6 +9,47 @@ const queries=readJson('data/citation/query_registry.json').queries.filter(x=>x.
 const author=readJson('data/entities/author_profile.json');
 const search=readJson('data/search/search_engine_submission_manifest.json');
 const requiredFiles=[...contract.layers.substrate.required,...contract.layers.authority.required,...contract.layers.distribution.required];
+
+// Phase 1-4 strategy enforcement for BHPC / APlayerMode only.
+if(!String(contract.scope||'').includes('aplayermode.com + billionairehighperformancecoach.com')) errors.push('citation strategy contract scope must be BHPC / APlayerMode only');
+for(const banned of ['theindustryguides.com','Industry Guides provider databases']){
+  const strategyDoc = fs.existsSync('docs/strategy/BHPC_APLAYER_CITATION_DOMINANCE_STRATEGY.md') ? fs.readFileSync('docs/strategy/BHPC_APLAYER_CITATION_DOMINANCE_STRATEGY.md','utf8') : '';
+  if(banned==='theindustryguides.com'){
+    if(!strategyDoc.includes('Explicit exclusion')) errors.push('BHPC strategy doc must explicitly exclude non-BHPC strategy sections');
+  }
+}
+const phaseManifest=readJson('data/citation/citation_phase_manifest.json');
+if(!String(phaseManifest.scope||'').includes('aplayermode.com + billionairehighperformancecoach.com')) errors.push('phase manifest scope must be BHPC / APlayerMode only');
+const inventory=readJson('data/citation/reference_page_inventory.json');
+const minimums=contract.phases?.phase_2_coverage?.minimums || phaseManifest.phase_requirements?.phase_2_coverage?.minimums || {};
+const invCounts=inventory.counts || {};
+for(const [key,min] of Object.entries(minimums)){
+  const actual=Number(invCounts[key]||0);
+  if(actual < Number(min)) errors.push(`phase 2 coverage too low: ${key}=${actual}, expected >=${min}`);
+}
+for(const rel of inventory.files || []){
+  if(!fs.existsSync(rel)) errors.push(`phase inventory file missing: ${rel}`);
+}
+for(const rel of [
+  'data/citation/citation_phase_manifest.json',
+  'data/citation/reference_page_inventory.json',
+  'data/citation/methodology_taxonomy.json',
+  'data/citation/outcome_pattern_registry.json',
+  'data/entities/authority_signal_manifest.json',
+  'data/citation/syndication_plan.json',
+  'data/citation/citation_velocity_roadmap.json',
+  'docs/strategy/BHPC_APLAYER_CITATION_DOMINANCE_STRATEGY.md'
+]){
+  if(!fs.existsSync(rel)) errors.push(`missing phase strategy artifact: ${rel}`);
+}
+const sitemapBhpc=fs.readFileSync('sitemap-bhpc.xml','utf8');
+const llmsTxt=fs.readFileSync('llms.txt','utf8');
+for(const rel of (inventory.files || []).slice(0, 110)){
+  const url='https://billionairehighperformancecoach.com/' + rel.replace(/index\.html$/,'');
+  if(!sitemapBhpc.includes(url)) errors.push(`sitemap-bhpc missing phase page: ${url}`);
+  if(!llmsTxt.includes(url)) errors.push(`llms.txt missing phase page: ${url}`);
+}
+
 for(const rel of requiredFiles) if(!fs.existsSync(rel)) errors.push(`missing strategy artifact: ${rel}`);
 for(const phrase of ['GPTBot','ClaudeBot','PerplexityBot','Google-Extended','Bingbot']){
   const robots=fs.readFileSync('robots.txt','utf8'); if(!robots.includes(`User-agent: ${phrase}`)) errors.push(`robots.txt missing ${phrase}`);
