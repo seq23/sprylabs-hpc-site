@@ -60,12 +60,12 @@ def valid_conversion_landing_page(path, soup, raw):
     if path=='download.html':
         if 'Discover your own A-player mode' not in text:
             local.append(f"{path}: discovery-page promise missing")
-        if 'Who can use A-player mode' not in text:
+        if 'Who can use Billionaire High Performance Coach OS' not in text and 'Who can use A-player mode' not in text:
             local.append(f"{path}: audience recognition section missing")
         if 'Look inside before you buy' not in text:
             local.append(f"{path}: inside-system preview missing")
     if path=='index.html':
-        if 'Install A-player mode into your LLM' not in text:
+        if 'Your personal executive operating system for the AI you already use' not in text and 'Install A-player mode into your LLM' not in text:
             local.append(f"{path}: homepage hero promise missing")
         if 'Discover your own A-player mode' not in text:
             local.append(f"{path}: homepage discovery CTA copy missing")

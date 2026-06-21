@@ -33,6 +33,41 @@
       "not_applicable_reason": null
     },
     {
+      "validation_id": "VAL-RETIRED-001",
+      "status": "RETIRED",
+      "name": "legacy-flat-validate-all",
+      "check_type": "validator",
+      "owning_lane": "content",
+      "risk_prevented": "Historical flat validation runner.",
+      "existing_coverage_gap": "Superseded by admitted lane orchestration.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "bash scripts/validate_all.sh",
+      "implementation_path": "scripts/validate_all.sh",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "none",
+      "runtime_budget_seconds": 0,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:content",
+        "validate:all"
+      ],
+      "retirement_offset": null,
+      "decision": "Retired because it mixed generation and validation and enabled fail-fast too late.",
+      "decision_date": "2026-06-18",
+      "matrix_ids": [],
+      "superseded_by": [
+        "VAL-001"
+      ],
+      "retirement_date": "2026-06-18",
+      "not_applicable_reason": null
+    },
+    {
       "validation_id": "VAL-002",
       "status": "ADMITTED",
       "name": "build:generated-content",
@@ -1327,41 +1362,6 @@
       "not_applicable_reason": null
     },
     {
-      "validation_id": "VAL-RETIRED-001",
-      "status": "RETIRED",
-      "name": "legacy-flat-validate-all",
-      "check_type": "validator",
-      "owning_lane": "content",
-      "risk_prevented": "Historical flat validation runner.",
-      "existing_coverage_gap": "Superseded by admitted lane orchestration.",
-      "scope": [
-        "repository"
-      ],
-      "proposed_severity": "HARD_FAIL",
-      "command": "bash scripts/validate_all.sh",
-      "implementation_path": "scripts/validate_all.sh",
-      "environment": "container",
-      "proof_tier": 1,
-      "positive_fixture": "fixtures/validation/repo/pass.json",
-      "negative_fixture": "fixtures/validation/repo/fail.json",
-      "evidence_output": "none",
-      "runtime_budget_seconds": 0,
-      "maintenance_owner": "repo",
-      "overlap_analysis": [
-        "validate:content",
-        "validate:all"
-      ],
-      "retirement_offset": null,
-      "decision": "Retired because it mixed generation and validation and enabled fail-fast too late.",
-      "decision_date": "2026-06-18",
-      "matrix_ids": [],
-      "superseded_by": [
-        "VAL-001"
-      ],
-      "retirement_date": "2026-06-18",
-      "not_applicable_reason": null
-    },
-    {
       "validation_id": "VAL-045",
       "status": "ADMITTED",
       "name": "validate:priority-citation-pages",
@@ -2159,6 +2159,146 @@
       "decision_date": "2026-06-20",
       "matrix_ids": [
         "MX-068"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-069",
+      "status": "ADMITTED",
+      "name": "citation:5k:daily",
+      "check_type": "programmatic-generator",
+      "owning_lane": "citation-velocity",
+      "risk_prevented": "Prevents the 5K AEO/GEO expansion from relying on manual page creation, ungoverned atom fanout, or unvalidated workflow mutation.",
+      "existing_coverage_gap": "Existing workflows generate several content lanes but did not provide a dedicated 75/day atom-driven path to the 5K admitted-page target.",
+      "scope": [
+        "repository",
+        "programmatic-content",
+        "github-actions"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run citation:5k:daily",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "reports/workflows/citation-velocity-5k/latest.json",
+      "runtime_budget_seconds": 7200,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "npm run validate:workflow-contract",
+        "npm run validate:programmatic-registry"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted for Citation Velocity 5K programmatic automation.",
+      "decision_date": "2026-06-21",
+      "matrix_ids": [
+        "MX-069"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-070",
+      "status": "ADMITTED",
+      "name": "citation:5k:plan",
+      "check_type": "programmatic-planner",
+      "owning_lane": "citation-velocity",
+      "risk_prevented": "Prevents the 5K AEO/GEO expansion from relying on manual page creation, ungoverned atom fanout, or unvalidated workflow mutation.",
+      "existing_coverage_gap": "Existing workflows generate several content lanes but did not provide a dedicated 75/day atom-driven path to the 5K admitted-page target.",
+      "scope": [
+        "repository",
+        "programmatic-content",
+        "github-actions"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run citation:5k:plan",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "data/citation_velocity/latest_batch.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "npm run validate:workflow-contract",
+        "npm run validate:programmatic-registry"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted for Citation Velocity 5K programmatic automation.",
+      "decision_date": "2026-06-21",
+      "matrix_ids": [
+        "MX-070"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-071",
+      "status": "ADMITTED",
+      "name": "validate:citation-velocity-automation",
+      "check_type": "validator",
+      "owning_lane": "citation-velocity",
+      "risk_prevented": "Prevents the 5K AEO/GEO expansion from relying on manual page creation, ungoverned atom fanout, or unvalidated workflow mutation.",
+      "existing_coverage_gap": "Existing workflows generate several content lanes but did not provide a dedicated 75/day atom-driven path to the 5K admitted-page target.",
+      "scope": [
+        "repository",
+        "programmatic-content",
+        "github-actions"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:citation-velocity-automation",
+      "implementation_path": "scripts/validation/validate_citation_velocity_automation.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "reports/validation-summaries/validate-citation-velocity-automation.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "npm run validate:workflow-contract",
+        "npm run validate:programmatic-registry"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted for Citation Velocity 5K programmatic automation.",
+      "decision_date": "2026-06-21",
+      "matrix_ids": [
+        "MX-071"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-072",
+      "status": "ADMITTED",
+      "name": "citation-velocity-5k.yml",
+      "check_type": "workflow",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents the 5K AEO/GEO expansion from relying on manual page creation, ungoverned atom fanout, or unvalidated workflow mutation.",
+      "existing_coverage_gap": "Existing workflows generate several content lanes but did not provide a dedicated 75/day atom-driven path to the 5K admitted-page target.",
+      "scope": [
+        "repository",
+        "programmatic-content",
+        "github-actions"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/citation-velocity-5k.yml",
+      "implementation_path": ".github/workflows/citation-velocity-5k.yml",
+      "environment": "ci",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
+      "runtime_budget_seconds": 7200,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "npm run validate:workflow-contract",
+        "npm run validate:programmatic-registry"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted scheduled Citation Velocity 5K workflow using governed trace, programmatic admission, safe commit helper, and reset-regenerate retry.",
+      "decision_date": "2026-06-21",
+      "matrix_ids": [
+        "MX-072"
       ],
       "not_applicable_reason": null
     }

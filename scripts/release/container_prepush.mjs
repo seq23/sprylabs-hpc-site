@@ -20,6 +20,7 @@ for (const [label,args] of [
   ['validate:workflow-contract',['run','validate:workflow-contract']],
   ['validate:workflow-lineage',['run','validate:workflow-lineage']],
   ['validate:workflow-monitor',['run','validate:workflow-monitor']],
+  ['validate:citation-velocity-automation',['run','validate:citation-velocity-automation']],
   ['validate:disavow-asset',['run','validate:disavow-asset']],
   ['validate:programmatic-provenance',['run','validate:programmatic-provenance']],
   ['validate:programmatic-registry',['run','validate:programmatic-registry']],

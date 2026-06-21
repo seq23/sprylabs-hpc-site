@@ -5,6 +5,7 @@ import { readJson, fail, pass, writeSummary } from './common.mjs';
 const errors = [];
 const workflowDir = '.github/workflows';
 const expectedWorkflows = [
+  'citation-velocity-5k.yml',
   'content-authority-pipeline.yml',
   'daily-insight.yml',
   'deploy-distribution.yml',
@@ -18,6 +19,7 @@ const expectedWorkflows = [
   'workflow-monitor.yml',
 ];
 const mutationWorkflows = new Set([
+  'citation-velocity-5k.yml',
   'content-authority-pipeline.yml',
   'daily-insight.yml',
   'execution-strict.yml',

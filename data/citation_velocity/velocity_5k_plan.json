@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "status": "ACTIVE",
+  "source_baseline": "sprylabs-hpc-site-main_BASELINE_06-21-26_9b6df023.zip",
+  "goal": "Grow admitted AEO/GEO reference surfaces from ~2K to 5K with no manual production work.",
+  "current_admitted_floor": 2000,
+  "target_admitted_pages": 5000,
+  "target_new_pages": 3000,
+  "default_daily_batch_size": 75,
+  "default_daily_mix": {
+    "question_cluster": 35,
+    "entity_use_case": 15,
+    "comparison_graph": 10,
+    "method": 5,
+    "glossary": 4,
+    "platform": 3,
+    "brand_defense": 3
+  },
+  "automation_model": {
+    "workflow_id": "citation-velocity-5k",
+    "workflow_file": ".github/workflows/citation-velocity-5k.yml",
+    "schedule_cron": "12 13 * * *",
+    "manual_dispatch": true,
+    "commit_strategy": "reset-regenerate-validate-recommit",
+    "operator_required": "none after merge unless GitHub Actions fails or external platform limits block execution"
+  },
+  "quality_gates": [
+    "atom uniqueness before render",
+    "literal query ownership",
+    "programmatic page admission",
+    "claim safety",
+    "no keyword-swap pages",
+    "internal link velocity",
+    "sitemap coverage",
+    "llms-full coverage",
+    "workflow lineage and monitor validation"
+  ],
+  "stop_conditions": [
+    "page_admission_registry record_count >= target_admitted_pages",
+    "no unused atoms remain",
+    "programmatic admission fails",
+    "validate:all fails",
+    "workflow hostile review fails"
+  ]
+}

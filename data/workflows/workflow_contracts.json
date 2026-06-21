@@ -577,6 +577,91 @@
         "_validation_registry.json",
         "_browser_suite_contract.json"
       ]
+    },
+    {
+      "id": "citation-velocity-5k",
+      "name": "Citation Velocity 5K",
+      "workflow_file": ".github/workflows/citation-velocity-5k.yml",
+      "lane": "citation_velocity_batch",
+      "workflow_command": "npm run workflow:citation-velocity-5k",
+      "workflow_argv": [
+        "npm",
+        "run",
+        "workflow:citation-velocity-5k"
+      ],
+      "commit_message": "auto: citation velocity 5k batch",
+      "schedule_cron": "12 13 * * *",
+      "manual_dispatch": true,
+      "monitor_max_age_hours": 36,
+      "remote_advance_strategy": "reset-regenerate-validate-recommit",
+      "lineage_inputs": [
+        "data/citation_velocity/**",
+        "data/content/page_admission_registry.json",
+        "data/content/programmatic_lane_contracts.json",
+        "data/citation/query_registry.json",
+        "data/citation/citable_pages.json",
+        "data/programmatic/programmatic_page_candidates.json",
+        "scripts/programmatic/generate_citation_velocity_batch.mjs",
+        "scripts/programmatic/run_lane.mjs",
+        "templates/**"
+      ],
+      "lineage_outputs": [
+        "answers/citation-velocity/**",
+        "use-cases/citation-velocity/**",
+        "vs/citation-velocity/**",
+        "methods/citation-velocity/**",
+        "glossary/citation-velocity/**",
+        "platforms/citation-velocity/**",
+        "brand-defense/citation-velocity/**",
+        "data/citation_velocity/**",
+        "data/content/page_admission_registry.json",
+        "data/programmatic/latest_run_summary.json",
+        "data/programmatic/programmatic_page_candidates.json",
+        "data/citation/**",
+        "answers.json",
+        "llms*.txt",
+        "sitemap*.xml",
+        "sitemaps/**",
+        "feed.xml",
+        "feed.json"
+      ],
+      "required_outputs": [
+        "data/citation_velocity/latest_batch.json",
+        "data/citation_velocity/generated_ledger.json",
+        "data/content/page_admission_registry.json",
+        "data/programmatic/latest_run_summary.json"
+      ],
+      "allowed_change_patterns": [
+        "answers/citation-velocity/**",
+        "use-cases/citation-velocity/**",
+        "vs/citation-velocity/**",
+        "methods/citation-velocity/**",
+        "glossary/citation-velocity/**",
+        "platforms/citation-velocity/**",
+        "brand-defense/citation-velocity/**",
+        "answers.json",
+        "coverage.json",
+        "data/**",
+        "feed.json",
+        "feed.xml",
+        "llms*.txt",
+        "releases/**",
+        "sitemap*.xml",
+        "sitemaps/**"
+      ],
+      "forbidden_change_patterns": [
+        ".github/**",
+        "config/**",
+        "docs/**",
+        "package.json",
+        "package-lock.json",
+        "playwright.config.mjs",
+        "scripts/**",
+        "tests/**",
+        "_repo_*.json",
+        "_validation_registry.json",
+        "_browser_suite_contract.json"
+      ]
     }
   ]
 }

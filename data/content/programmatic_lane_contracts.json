@@ -149,6 +149,19 @@
       "required_fields": [
         "unique_atom"
       ]
+    },
+    "citation_velocity_batch": {
+      "minimum_word_count": 800,
+      "required_artifacts": true,
+      "worked_example": true,
+      "cta_profile": "full",
+      "source_floor": 0,
+      "required_fields": [
+        "unique_atom"
+      ],
+      "batch_default_size": 75,
+      "batch_target": "5k_admitted_pages",
+      "atom_source": "data/citation_velocity/atom_axes.json"
     }
   },
   "programmatic_axes": {

@@ -22,6 +22,7 @@ run node scripts/validators/validate_vertical_keys.js
 run node scripts/validators/validate_content_routing.js
 run node scripts/validators/validate_extractability.js
 run node scripts/validators/validate_priority_llm_surfaces.js
+run node scripts/prepare_distribution_artifacts.js
 run node _ops/validators/validate_distribution_contract.js
 run node _ops/validators/validate_dual_domain_contract.js
 run node _ops/validators/validate_internal_links.js

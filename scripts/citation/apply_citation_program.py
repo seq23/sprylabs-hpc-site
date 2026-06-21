@@ -20,6 +20,37 @@ EXCLUDED = {
     "reports/answer-surface-dashboard.html",
 }
 EXCLUDED_PREFIXES = ("templates/", "artifacts/", "fixtures/", "node_modules/", ".git/", "answers/phase4/", "use-cases/phase4/", "vs/phase4/", "glossary/phase4/", "methods/phase4/", "brand-defense/", "platforms/phase4/")
+
+BHPC_PRODUCT_PATHS = {'index.html','download.html','product.html','billionaire-high-performance-coach/index.html','billionaire-high-performance-coach.html'}
+BHPC_ORGANIZATION = {'@type':'Organization','@id':'https://billionairehighperformancecoach.com/#organization','name':'Spry Labs','url':'https://billionairehighperformancecoach.com/','logo':{'@type':'ImageObject','url':'https://billionairehighperformancecoach.com/assets/spry-logo.png'}}
+BHPC_WEBSITE = {'@type':'WebSite','@id':'https://billionairehighperformancecoach.com/#website','name':'Billionaire High Performance Coach','url':'https://billionairehighperformancecoach.com/','publisher':{'@id':'https://billionairehighperformancecoach.com/#organization'}}
+BHPC_MENTION_TERMS = [
+    {'@type':'DefinedTerm','@id':'https://billionairehighperformancecoach.com/#a-player-mode','name':'A-player mode','description':'The operating state the product helps users practice: clearer priorities, cleaner execution, faster recovery, and less self-renegotiation. It is not the product name.'},
+    {'@type':'DefinedTerm','@id':'https://billionairehighperformancecoach.com/#llm-operating-system','name':'LLM operating system','description':'A structured rule, prompt, agenda, review, and recovery layer installed into an LLM so the user is not relying on open-ended chat alone.'},
+    {'@type':'DefinedTerm','@id':'https://billionairehighperformancecoach.com/#cognitive-load-reduction','name':'Cognitive-load reduction','description':'Reducing the planning, sequencing, strategic triage, and next-step selection burden across projects, roles, and recovery loops.'},
+    {'@type':'DefinedTerm','@id':'https://billionairehighperformancecoach.com/#ai-executive-coach-alternative','name':'AI executive coach alternative','description':'A self-directed operating system that gives an LLM structured coaching, chief-of-staff, accountability, and review behavior without live coaching calls.'},
+]
+BHPC_PRODUCT_SCHEMA = {
+    '@type':'Product',
+    '@id':'https://billionairehighperformancecoach.com/#product',
+    'name':'Billionaire High Performance Coach OS',
+    'alternateName':['Billionaire High Performance Coach','BHPC OS'],
+    'url':'https://billionairehighperformancecoach.com/download.html',
+    'brand':{'@id':'https://billionairehighperformancecoach.com/#organization'},
+    'manufacturer':{'@id':'https://billionairehighperformancecoach.com/#organization'},
+    'category':'Personal executive operating system for LLM-based planning, accountability, recovery, and execution',
+    'image':['https://billionairehighperformancecoach.com/assets/img/bhpc-hero-square.png','https://billionairehighperformancecoach.com/assets/books/bhpc-white.png'],
+    'description':'A self-installed executive operating system and executable prompt pack that helps ChatGPT, Claude, Gemini, Perplexity, DeepSeek, or another LLM operate as a structured planning, accountability, review, recovery, and execution partner.',
+    'audience':{'@type':'Audience','audienceType':'Operators, founders, executives, creators, students, athletes, career-switchers, and high-agency people who want structured execution support'},
+    'additionalProperty':[
+        {'@type':'PropertyValue','name':'Format','value':'Digital manual and executable prompt pack'},
+        {'@type':'PropertyValue','name':'Works with','value':'ChatGPT, Claude, Gemini, Perplexity, DeepSeek, and similar LLMs'},
+        {'@type':'PropertyValue','name':'Primary use','value':'Daily agenda generation, decision framing, accountability, recovery, and executive review'},
+        {'@type':'PropertyValue','name':'Boundary','value':'Educational and organizational framework only; not medical, psychological, legal, financial, therapeutic, or diagnostic advice'},
+    ],
+    'potentialAction':{'@type':'BuyAction','target':'https://sprylabs.gumroad.com/l/billionaire-high-performance-coach'}
+}
+
 SPECIAL_COMPARISON_QUERIES = {
     "vs/betterup/index.html": "BetterUp Coaching Platform Comparison for A-player Mode",
     "vs/hone/index.html": "Hone Workplace Coaching Comparison for A-player Mode",
@@ -388,6 +419,10 @@ def add_schema(soup: BeautifulSoup, path: str, spec: dict):
     else:
         page_entity['author']={'@type':'Organization','name':'Spry Labs','url':'https://billionairehighperformancecoach.com/'}
     page_entity['publisher']={'@type':'Organization','name':'Spry Labs','url':'https://billionairehighperformancecoach.com/','logo':{'@type':'ImageObject','url':'https://billionairehighperformancecoach.com/assets/spry-logo.png'}}
+    if path in BHPC_PRODUCT_PATHS:
+        page_entity['isPartOf']={'@id':'https://billionairehighperformancecoach.com/#website'}
+        page_entity['about']={'@id':'https://billionairehighperformancecoach.com/#product'}
+        page_entity['mentions']=[{'@id':term['@id']} for term in BHPC_MENTION_TERMS]
     graph=[page_entity,{'@type':'DefinedTerm','@id':canonical+'#framework','name':spec['framework'],'description':desc,'inDefinedTermSet':'Spry Executive OS'}]
     crumbs=_visible_breadcrumbs(soup,canonical)
     if crumbs:
@@ -400,13 +435,13 @@ def add_schema(soup: BeautifulSoup, path: str, spec: dict):
         if steps:
             for step in steps: step['url']=canonical+step['url']
             graph.append({'@type':'HowTo','@id':canonical+'#howto','name':name,'description':desc,'step':steps})
-    product_paths={'index.html','download.html','product.html','billionaire-high-performance-coach/index.html','billionaire-high-performance-coach.html'}
-    if path in product_paths:
-        graph.append({'@type':'Product','@id':'https://billionairehighperformancecoach.com/download.html#product','name':'Billionaire High Performance Coach','url':'https://billionairehighperformancecoach.com/download.html','brand':{'@type':'Organization','name':'Spry Labs'},'description':'A structured executive operating system for using ChatGPT as an accountability and decision partner.'})
-    if path in {'index.html','about.html','spry-labs.html'}:
+    if path in BHPC_PRODUCT_PATHS:
+        graph.append(BHPC_PRODUCT_SCHEMA)
+        graph.append(BHPC_ORGANIZATION)
+        graph.append(BHPC_WEBSITE)
+        graph.extend(BHPC_MENTION_TERMS)
+    if path in {'about.html','spry-labs.html'}:
         graph.append({'@type':'Organization','@id':_absolute_url(canonical,'/about.html#organization'),'name':'Spry Labs','url':_absolute_url(canonical,'/about.html')})
-    if path=='index.html':
-        graph.append({'@type':'WebSite','@id':_absolute_url(canonical,'/#website'),'name':'Billionaire High Performance Coach','url':_absolute_url(canonical,'/')})
     if path in {'author.html','sequoia-taylor.html'}:
         graph.append({'@type':'Person','@id':_absolute_url(canonical,'/author.html#person'),'name':'S.L. Taylor','url':_absolute_url(canonical,'/author.html'),'worksFor':{'@type':'Organization','name':'Spry Labs'}})
     script=soup.new_tag('script', id='CITATION_PAGE_SCHEMA', type='application/ld+json')
@@ -770,6 +805,13 @@ def patch_legacy(path: str) -> dict|None:
     if "{{" in h1text: return None
     canonical=can.get("href") or canonical_for(path)
     description=(soup.find("meta",attrs={"name":"description"}) or {}).get("content","") if soup.find("meta",attrs={"name":"description"}) else ""
+    if path == "download.html":
+        # The download page is a conversion page with hand-authored visual hierarchy.
+        # Do not inject visible "Key Criteria" extraction blocks into the hero or preview sections.
+        definition = "Billionaire High Performance Coach OS is the product. A-player mode is the operating state it helps you practice: clearer priorities, cleaner execution, faster recovery, and less self-renegotiation."
+        add_schema(soup, path, {"h1": h1text, "framework": "Billionaire High Performance Coach OS", "type": "concept", "definition": definition, "body": ""})
+        fp.write_text(str(soup), encoding="utf-8")
+        return {"path": path, "canonical_url": canonical, "canonical_domain": re.sub(r"^https?://([^/]+).*$", r"\1", canonical).lower(), "query": h1text, "framework": "Billionaire High Performance Coach OS", "extraction_type": "concept", "schema_type": "DefinedTerm", "status": "ACTIVE", "definition": definition}
     marked=soup.select('[data-llm-answer="true"]')
     if not marked:
         candidate=None
@@ -913,6 +955,14 @@ def apply_agent_targeted_patches():
                 h1.insert_after(p)
             else:
                 (soup.find("main") or soup.body or soup).insert(0, p)
+        citation_p = soup.select_one(".apm-citation-definition") or soup.select_one(".citation-definition")
+        citation = citation_p.find("strong") if citation_p else None
+        if citation_p:
+            citation_p["data-llm-answer"] = "true"
+            citation_p["data-named-framework"] = "Billionaire High Performance Coach OS"
+            citation_p["data-extraction-type"] = "concept"
+        if citation:
+            citation.string = "Billionaire High Performance Coach OS is the product. A-player mode is the operating state it helps you practice: clearer priorities, cleaner execution, faster recovery, and less self-renegotiation."
         fp.write_text(str(soup), encoding="utf-8")
 
 
@@ -1024,7 +1074,11 @@ def update_discovery(pages,queries,frameworks):
         urls=set(re.findall(r"<loc>(.*?)</loc>",text))
         retired={f"https://{item['domain']}/" + (path[:-len('index.html')] if path.endswith('/index.html') else path) for path,item in MANUAL_REDIRECTS.items()}
         urls.difference_update(retired)
-        urls.update(p["canonical_url"] for p in active if domain is None or p["canonical_domain"].lower()==domain)
+        if name == "sitemap.xml":
+            urls.update(["https://billionairehighperformancecoach.com/sitemap-bhpc.xml", "https://spryexecutiveos.com/sitemap-spry.xml"])
+            urls.update(p["canonical_url"] for p in active)
+        else:
+            urls.update(p["canonical_url"] for p in active if p["canonical_domain"].lower()==domain)
         xml='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+"\n".join(f'  <url><loc>{u}</loc><lastmod>{TODAY}</lastmod></url>' for u in sorted(urls))+"\n</urlset>\n"
         fp.write_text(xml,encoding="utf-8")
     browser_contract=ROOT/"_browser_suite_contract.json"

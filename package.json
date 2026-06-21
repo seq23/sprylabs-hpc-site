@@ -65,7 +65,7 @@
     "validate:repo": "node scripts/validation/validate_repo.mjs && npm run validate:release-portability",
     "validate:validation-registry": "node scripts/validation/validate_validation_registry.mjs",
     "validate:citation-contract": "python3 scripts/validation/validate_citation_contract.py",
-    "validate:content": "bash scripts/validation/validate_legacy_contracts.sh && npm run validate:priority-citation-pages && npm run validate:agent-recommendations && npm run validate:page-admission",
+    "validate:content": "bash scripts/validation/validate_legacy_contracts.sh && npm run validate:priority-citation-pages && npm run validate:agent-recommendations && npm run validate:page-admission && node scripts/validation/validate_bhpc_page_contracts.mjs",
     "validate:graph": "node scripts/validation/validate_graph.mjs",
     "validate:distribution": "node scripts/validation/validate_distribution.mjs",
     "validate:ui-test-parity": "node scripts/validation/validate_ui_test_parity.mjs",
@@ -73,7 +73,7 @@
     "validate:artifact-source-parity": "node scripts/validation/validate_artifact_source_parity.mjs",
     "validate:reopened-baseline": "node scripts/validation/validate_reopened_baseline.mjs",
     "validate:warnings": "node scripts/validators/validate_velocity_warnings.js && node scripts/validate_fanout_warning.js",
-    "validate:all": "npm run validate:repo && npm run validate:validation-registry && npm run validate:workflow-contract && npm run validate:workflow-lineage && npm run validate:workflow-monitor && npm run validate:disavow-asset && npm run validate:programmatic-provenance && npm run validate:programmatic-registry && npm run validate:citation-contract && npm run validate:citation-strategy && npm run validate:rendered-schema-parity && npm run validate:retired-route-references && npm run validate:content && npm run validate:graph && npm run validate:distribution && npm run validate:ui-test-parity && npm run validate:browser-suite-contract && node scripts/validation/validate_release_atom_contract.mjs && node scripts/validation/validate_release_mix_policy.mjs && node scripts/validation/validate_citation_phase_manifest.mjs && node scripts/validation/validate_no_keyword_swap_pages.mjs && node scripts/validation/validate_claim_safety.mjs && node scripts/validation/validate_internal_link_velocity.mjs && node scripts/validation/validate_llms_full_coverage.mjs && node scripts/validation/validate_sitemap_coverage.mjs",
+    "validate:all": "npm run validate:repo && npm run validate:validation-registry && npm run validate:workflow-contract && npm run validate:workflow-lineage && npm run validate:workflow-monitor && npm run validate:citation-velocity-automation && npm run validate:disavow-asset && npm run validate:programmatic-provenance && npm run validate:programmatic-registry && npm run validate:citation-contract && npm run validate:citation-strategy && npm run validate:rendered-schema-parity && npm run validate:retired-route-references && npm run validate:content && npm run validate:graph && npm run validate:distribution && npm run validate:ui-test-parity && npm run validate:browser-suite-contract && node scripts/validation/validate_release_atom_contract.mjs && node scripts/validation/validate_release_mix_policy.mjs && node scripts/validation/validate_citation_phase_manifest.mjs && node scripts/validation/validate_no_keyword_swap_pages.mjs && node scripts/validation/validate_claim_safety.mjs && node scripts/validation/validate_internal_link_velocity.mjs && node scripts/validation/validate_llms_full_coverage.mjs && node scripts/validation/validate_sitemap_coverage.mjs",
     "guardrails:all": "npm run release:prepush:container",
     "full:loop": "npm run build:all && npm run validate:all",
     "release:prepush:container": "node scripts/release/container_prepush.mjs",
@@ -128,7 +128,11 @@
     "contract:query-coverage": "QUERY_COVERAGE_STRICT=1 node scripts/validators/validate_query_coverage.js",
     "search:prepare-submission": "node scripts/search/build_submission_manifest.mjs",
     "validate:citation-strategy": "node scripts/validation/validate_citation_strategy.mjs",
-    "build:aplayer-phase-expansion": "node scripts/programmatic/generate_aplayer_phase_expansion.mjs"
+    "build:aplayer-phase-expansion": "node scripts/programmatic/generate_aplayer_phase_expansion.mjs",
+    "citation:5k:daily": "node scripts/programmatic/generate_citation_velocity_batch.mjs",
+    "citation:5k:plan": "node scripts/programmatic/generate_citation_velocity_batch.mjs --dry-run --batch-size 75",
+    "validate:citation-velocity-automation": "node scripts/validation/validate_citation_velocity_automation.mjs",
+    "workflow:citation-velocity-5k": "npm run citation:5k:daily"
   },
   "engines": {
     "node": ">=24.0.0"
