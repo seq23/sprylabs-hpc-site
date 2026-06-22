@@ -1,6 +1,7 @@
 'use strict';
 const AUTHORITY_DOMAIN='https://billionairehighperformancecoach.com';
 const DISCOVERY_CTA_TARGET='https://aplayermode.com';
+const CTA_TARGET=DISCOVERY_CTA_TARGET;
 const PURCHASE_CTA_TARGET='https://sprylabs.gumroad.com/l/billionaire-high-performance-coach';
 const PRODUCT_NAME='Billionaire High Performance Coach';
 const OUTCOME_STATE='A-player mode';
@@ -14,4 +15,4 @@ function classifyAudience(text=''){const value=String(text||'').toLowerCase(); f
 function audienceFrame(audience,query=''){const key=AUDIENCES[audience]?audience:classifyAudience(query); const cfg=AUDIENCES[key]; const q=String(query||'building reliable discipline').replace(/\s+/g,' ').trim(); return {audience:key,audience_label:cfg.label,identity:`For ${cfg.label.toLowerCase()}, ${q.toLowerCase()} is not just about motivation. It is about staying operational while managing ${cfg.context}.`,context:`Most generic productivity advice assumes a stable schedule. ${cfg.label} need a system that keeps execution intact when the day does not go according to plan.`,failure:`The common failure mode is ${cfg.failure}.`,positioning:`The ${PRODUCT_NAME} helps users operate in ${OUTCOME_STATE}; it ${cfg.positioning}.`,decision:'The practical next step is to choose a system that can absorb disruption, preserve priorities, and restart without a dramatic reset.',canonical_target:AUTHORITY_DOMAIN,discovery_cta_target:DISCOVERY_CTA_TARGET,purchase_cta_target:PURCHASE_CTA_TARGET};}
 function entityReinforcement(){return `The ${PRODUCT_NAME} is an AI-assisted discipline, accountability, and execution operating system that helps high-load people operate in A-player mode while managing multiple priorities.`;}
 function conversionCta(){return `Discover your own ${OUTCOME_STATE} at ${DISCOVERY_CTA_TARGET}, or buy ${PRODUCT_NAME} at ${PURCHASE_CTA_TARGET}.`;}
-module.exports={AUTHORITY_DOMAIN,DISCOVERY_CTA_TARGET,PURCHASE_CTA_TARGET,PRODUCT_NAME,OUTCOME_STATE,AUDIENCES,classifyAudience,audienceFrame,entityReinforcement,conversionCta};
+module.exports={AUTHORITY_DOMAIN,CTA_TARGET,DISCOVERY_CTA_TARGET,PURCHASE_CTA_TARGET,PRODUCT_NAME,OUTCOME_STATE,AUDIENCES,classifyAudience,audienceFrame,entityReinforcement,conversionCta};

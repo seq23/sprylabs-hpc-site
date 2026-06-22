@@ -16,6 +16,7 @@ const PATCHES=[
 function injectAfterBody(txt,html){ if(txt.includes(html)) return txt; const m=txt.match(/<body[^>]*>/i); if(m){const i=m.index+m[0].length; return txt.slice(0,i)+html+txt.slice(i);} return html+txt; }
 function ensureCta(txt,file){
   if(file==='download.html'){
+    txt=txt.replace(/<p class="conversion-path"><a href="https:\/\/aplayermode\.com">Get Instant Access<\/a><\/p>/g,'');
     if(txt.includes(PURCHASE_CTA)) return txt;
     const block=`<section class="conversion-path"><h2>Next step</h2><p>${ENTITY}</p><p><a href="${PURCHASE_CTA}">I need this now</a></p></section>`;
     return txt.replace(/<\/body>/i,`${block}</body>`);

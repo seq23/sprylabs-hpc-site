@@ -789,8 +789,23 @@ def ensure_extraction_structure(soup: BeautifulSoup, block: Tag, framework: str,
             p=soup.new_tag("p"); p.string="Use the instructions and evidence already documented on this page to complete this step."; wrap.append(p)
         block.insert(0,wrap)
 
+
+
+def admitted_public_paths() -> set[str]:
+    source = ROOT / "data/content/page_admission_registry.json"
+    if not source.exists():
+        return set()
+    try:
+        payload = json.loads(source.read_text(encoding="utf-8"))
+    except Exception:
+        return set()
+    return {row.get("path") for row in payload.get("records", []) if row.get("status") == "ADMITTED" and row.get("path")}
+
+def is_unadmitted_synthesis_page(path: str) -> bool:
+    return path.startswith("synthesis-") and path.endswith(".html") and path not in admitted_public_paths()
+
 def patch_legacy(path: str) -> dict|None:
-    if path in EXCLUDED or path.startswith(EXCLUDED_PREFIXES): return None
+    if path in EXCLUDED or path.startswith(EXCLUDED_PREFIXES) or is_unadmitted_synthesis_page(path): return None
     fp=ROOT/path
     raw=repair_mojibake(fp.read_text(encoding="utf-8",errors="ignore"))
     soup=BeautifulSoup(raw,"html.parser")

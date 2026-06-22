@@ -116,7 +116,7 @@
     "release:ci-validate": "node scripts/release/ci_validate.mjs",
     "release:create-attestation": "node scripts/release/create_validation_attestation.mjs",
     "release:verify-attestation": "node scripts/release/verify_validation_attestation.mjs",
-    "build:postprocess": "npm run redirects:apply && node scripts/build_coverage_map.js && node scripts/authority/compute_authority_scores.js && node scripts/internal/build_link_graph.js && python3 scripts/citation/apply_citation_program.py --postbuild && npm run redirects:apply && node scripts/prepare_distribution_artifacts.js && npm run citation:build && npm run search:prepare-submission",
+    "build:postprocess": "npm run redirects:apply && node scripts/build_coverage_map.js && node scripts/authority/compute_authority_scores.js && node scripts/internal/build_link_graph.js && python3 scripts/citation/apply_citation_program.py --postbuild && node scripts/citation/sync_citation_phase_metadata.mjs && npm run redirects:apply && node scripts/prepare_distribution_artifacts.js && npm run citation:build && npm run search:prepare-submission",
     "workflow:run": "node scripts/workflow/run_governed_workflow.mjs",
     "workflow:hostile-review": "node scripts/workflow/hostile_review.mjs",
     "workflow:monitor": "node scripts/workflow/monitor_workflows.mjs",

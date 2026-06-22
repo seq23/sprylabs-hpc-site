@@ -20,6 +20,9 @@ function render(item) { return renderSynthesis(item); }
 function main() {
   const memory = read(MEMORY, { clusters: [] });
   const manifest = read(MANIFEST, { items: [] });
+  const admission = read(path.join(ROOT, 'data/content/page_admission_registry.json'), { records: [] });
+  const admittedPaths = new Set((admission.records || []).filter(x => x.status === 'ADMITTED').map(x => x.path));
+  const allowCandidateRender = Boolean(process.env.PROGRAMMATIC_LANE || process.env.WORKFLOW_TRACE_RUN_ID || process.env.PROGRAMMATIC_RUN_ID);
   const existing = new Set((manifest.items || []).map(x => x.cluster_id));
   const candidates = (memory.clusters || []).filter(c => (c.signal_count || 0) >= 4 && !existing.has(c.cluster_id)).slice(0, 5);
   const queue = read(OUT, { items: [] });
@@ -28,13 +31,22 @@ function main() {
     if (!queue.items.some(x => x.cluster_id === c.cluster_id)) queue.items.push(item);
     if (!manifest.items.some(x => x.cluster_id === c.cluster_id)) manifest.items.push({ ...item, path: `${item.slug}.html`, created_at: new Date().toISOString() });
   }
+  let rendered = 0;
+  let held = 0;
   for (const item of queue.items || []) {
     if (!item.slug) continue;
-    const file = path.join(ROOT, `${item.slug}.html`);
+    const rel = `${item.slug}.html`;
+    const file = path.join(ROOT, rel);
+    if (!admittedPaths.has(rel) && !allowCandidateRender) {
+      if (fs.existsSync(file)) fs.rmSync(file, { force: true });
+      held += 1;
+      continue;
+    }
     fs.writeFileSync(file, render(item));
+    rendered += 1;
   }
   write(OUT, queue);
   write(MANIFEST, manifest);
-  console.log(`synthesis: queued/rendered ${candidates.length} synthesis articles; ensured ${queue.items.length} queued files`);
+  console.log(`synthesis: queued=${candidates.length}; rendered=${rendered}; held_unadmitted=${held}; queue=${queue.items.length}`);
 }
 if (require.main === module) { main(); process.exit(0); }
