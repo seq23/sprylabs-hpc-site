@@ -276,6 +276,9 @@ def main():
         print('[validate:programmatic-admission] FAIL')
         for e in errors[:300]: print(' -',e)
         raise SystemExit(1)
-    print(f'[validate:programmatic-admission] {payload["status"]}: {payload["accepted"]}/{payload["pages"]} pages admitted; {payload["rejected"]} rejected')
+    if errors and args.no_fail_quality:
+        print(f'[validate:programmatic-admission] QUARANTINE: {payload["accepted"]}/{payload["pages"]} pages admitted; {payload["rejected"]} rejected; quality rejections were quarantined without failing the governed workflow')
+    else:
+        print(f'[validate:programmatic-admission] PASS: {payload["accepted"]}/{payload["pages"]} pages admitted; {payload["rejected"]} rejected')
 
 if __name__=='__main__': main()

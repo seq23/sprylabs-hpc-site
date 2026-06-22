@@ -966,10 +966,44 @@ def apply_agent_targeted_patches():
         fp.write_text(str(soup), encoding="utf-8")
 
 
+def preserve_excluded_prefix_registry_rows(bypath: dict[str, dict]) -> None:
+    """Preserve registry owners for pages intentionally excluded from citation postbuild rewriting.
+
+    Phase 4 generated pages are rendered and admitted by the A-player phase
+    expansion generator. The citation postbuild script deliberately avoids
+    rewriting those HTML files via EXCLUDED_PREFIXES, but the old registry
+    rebuild path also dropped their citable/query ownership data. Any governed
+    workflow that quarantined a generated candidate and reran build:postprocess
+    could therefore leave admitted pages with no active query owner.
+
+    The safe behavior is: if an excluded-prefix page already has an ACTIVE
+    citable registry row and the file still exists, preserve that row while
+    rebuilding non-excluded citation records. The generated source marker is
+    also preserved so the phase expansion generator can cleanly replace these
+    records on the next build instead of accumulating stale query owners.
+    """
+    source = ROOT / "data/citation/citable_pages.json"
+    if not source.exists():
+        return
+    try:
+        payload = json.loads(source.read_text(encoding="utf-8"))
+    except Exception:
+        return
+    for row in payload.get("pages", []):
+        path = row.get("path")
+        if not path or row.get("status") != "ACTIVE":
+            continue
+        if not path.startswith(EXCLUDED_PREFIXES):
+            continue
+        if not (ROOT / path).exists():
+            continue
+        bypath.setdefault(path, row)
+
 def build_registries(records: list[dict]):
     d=ROOT/"data/citation";d.mkdir(parents=True,exist_ok=True)
     # priority overrides
     bypath={r["path"]:r for r in records}
+    preserve_excluded_prefix_registry_rows(bypath)
     for path,spec in {**PRIORITY,**NEW_PAGES,**MANUAL_PAGES}.items():
         bypath[path]={"path":path,"canonical_url":canonical_for(path),"canonical_domain":re.sub(r"^https?://([^/]+).*$",r"\1",canonical_for(path)),"query":spec["h1"],"framework":spec["framework"],"extraction_type":spec["type"],"schema_type":"HowTo" if spec["type"]=="howto" else "DefinedTerm","status":"ACTIVE","definition":spec["definition"],"priority":True}
     exclusions=[{"path":x,"status":"EXCLUDED","exclusion_reason":"Owner-approved exclusion or non-public operator surface"} for x in sorted(EXCLUDED)]
@@ -989,7 +1023,10 @@ def build_registries(records: list[dict]):
         for alias in [*row_aliases,*manual_aliases]:
             if alias and normalize_query(alias)!=normalize_query(primary["query"]) and alias not in aliases:
                 aliases.append(alias)
-        queries.append({"query_id":f"QRY-{i:04d}","query":primary["query"],"intent_class":primary["extraction_type"],"primary_page":primary["path"],"supporting_pages":[r["path"] for r in rows if r["path"]!=primary["path"]],"canonical_domain":primary["canonical_domain"],"priority":"P1" if primary.get("priority") else "P3","release_status":"ACTIVE","aliases":aliases,"observation_cluster":"general"})
+        query_row={"query_id":f"QRY-{i:04d}","query":primary["query"],"intent_class":primary["extraction_type"],"primary_page":primary["path"],"supporting_pages":[r["path"] for r in rows if r["path"]!=primary["path"]],"canonical_domain":primary["canonical_domain"],"priority":"P1" if primary.get("priority") else "P3","release_status":"ACTIVE","aliases":aliases,"observation_cluster":"general"}
+        if primary.get("source"):
+            query_row["source"]=primary["source"]
+        queries.append(query_row)
     (d/"query_registry.json").write_text(json.dumps({"version":"1.0","generated_at":TODAY,"queries":queries},indent=2,ensure_ascii=False)+"\n")
     frameworks=[]; seen=set()
     for r in pages:
@@ -998,7 +1035,10 @@ def build_registries(records: list[dict]):
         if key in seen:continue
         seen.add(key)
         supporting=[x["canonical_url"] for x in pages if x.get("status")=="ACTIVE" and x.get("framework","").lower()==key and x["path"]!=r["path"]]
-        frameworks.append({"framework_id":f"FW-{len(frameworks)+1:04d}","name":r["framework"],"definition":r["definition"],"primary_url":r["canonical_url"],"supporting_urls":supporting,"aliases":[],"prohibited_conflicting_definitions":True})
+        framework_row={"framework_id":f"FW-{len(frameworks)+1:04d}","name":r["framework"],"definition":r["definition"],"primary_url":r["canonical_url"],"supporting_urls":supporting,"aliases":[],"prohibited_conflicting_definitions":True}
+        if r.get("source"):
+            framework_row["source"]=r["source"]
+        frameworks.append(framework_row)
     (d/"framework_registry.json").write_text(json.dumps({"version":"1.0","generated_at":TODAY,"frameworks":frameworks},indent=2,ensure_ascii=False)+"\n")
     return pages,queries,frameworks
 
