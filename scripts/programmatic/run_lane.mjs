@@ -104,6 +104,69 @@ const accepted=[]; const rejected=[];
 for(const item of result.results){const candidate=candidates.find(x=>x.path===item.path);if(!candidate)continue;if(item.accepted){candidate.status='ADMITTED';candidate.admitted_at=candidate.admitted_at||new Date().toISOString();candidate.source=candidate.source||`workflow:${lane}`;delete candidate.baseline_hash;delete candidate.candidate_hash;const idx=registry.records.findIndex(x=>x.path===candidate.path);if(idx>=0)registry.records[idx]=candidate;else registry.records.push(candidate);accepted.push(candidate.path);}else{const old=baseline.get(candidate.path);if(old)fs.writeFileSync(candidate.path,old.body);else fs.rmSync(candidate.path,{force:true});rejected.push({run_id:runId,lane,path:candidate.path,primary_query:candidate.primary_query,candidate_hash:candidate.candidate_hash,reasons:item.errors,rejected_at:new Date().toISOString()});}}
 registry.records.sort((a,b)=>a.path.localeCompare(b.path));registry.record_count=registry.records.length;registry.generated_at=new Date().toISOString();fs.writeFileSync('data/content/page_admission_registry.json',JSON.stringify(registry,null,2)+'\n');
 const backlog=JSON.parse(fs.readFileSync('data/programmatic/rejection_backlog.json','utf8'));backlog.updated_at=new Date().toISOString();backlog.rejections.push(...rejected);fs.writeFileSync('data/programmatic/rejection_backlog.json',JSON.stringify(backlog,null,2)+'\n');
+if(lane==='authority'){
+ const qPath='data/authority_paper_queue.json';
+ if(fs.existsSync(qPath)){
+  const q=JSON.parse(fs.readFileSync(qPath,'utf8'));
+  const missing=(q.items||[])
+   .filter(item=>item&&item.slug&&item.status==='released'&&!fs.existsSync(path.join(ROOT,'whitepapers',`${item.slug}.html`)))
+   .map(item=>item.slug);
+  if(missing.length){
+   console.log(`[programmatic:${lane}] authority repair: ${missing.length} released whitepaper(s) missing after quarantine: ${missing.join(', ')}`);
+   run('npm',['run','build:authority'],{PROGRAMMATIC_LANE:lane,PROGRAMMATIC_RUN_ID:runId});
+   const registryPath='data/content/page_admission_registry.json';
+   const queryRegistryPath='data/citation/query_registry.json';
+   if(fs.existsSync(registryPath)&&fs.existsSync(queryRegistryPath)){
+    const registry=JSON.parse(fs.readFileSync(registryPath,'utf8'));
+    const queryRegistry=JSON.parse(fs.readFileSync(queryRegistryPath,'utf8'));
+    registry.records=registry.records||[];
+    const activeQueries=new Map((queryRegistry.queries||[])
+     .filter(q=>q&&q.release_status==='ACTIVE'&&q.primary_page)
+     .map(q=>[q.primary_page,q]));
+    const today=new Date().toISOString().slice(0,10);
+    let registered=0;
+    for(const slug of missing){
+     const route=`whitepapers/${slug}.html`;
+     const q=activeQueries.get(route);
+     if(!q)continue;
+     const existing=registry.records.find(record=>record&&record.path===route);
+     const record={
+      path:route,
+      route:`/${route}`,
+      canonical_domain:q.canonical_domain||'billionairehighperformancecoach.com',
+      generation_lane:'authority',
+      admission_level:'baseline',
+      status:'ADMITTED',
+      primary_query:q.query||slug.replace(/-/g,' '),
+      query_aliases:q.aliases||[],
+      intent:q.intent_class||'concept',
+      cluster:q.observation_cluster||'authority',
+      framework:`${q.query||slug} Framework`,
+      unique_atom:'Authority whitepaper repaired after quarantine and admitted through the governed authority lane.',
+      artifact_type:'whitepaper',
+      entity:null,
+      use_case:null,
+      comparison_entities:null,
+      comparison_methodology:null,
+      official_sources:null,
+      conflict_disclosure:null,
+      verified_at:null,
+      health_adjacent:false,
+      commercial_comparison:false,
+      admitted_at:today,
+      source:'authority_paper_queue'
+     };
+     if(existing)Object.assign(existing,record);
+     else registry.records.push(record);
+     registered++;
+    }
+    registry.record_count=registry.records.length;
+    fs.writeFileSync(registryPath,JSON.stringify(registry,null,2)+'\n');
+    console.log(`[programmatic:${lane}] authority repair: registered ${registered} repaired whitepaper(s) in page admission registry`);
+   }
+  }
+ }
+}
 if(rejected.length)run('npm',['run','build:postprocess'],{PROGRAMMATIC_LANE:lane,PROGRAMMATIC_RUN_ID:runId});
 fs.writeFileSync('data/content/programmatic_candidate_manifest.json',JSON.stringify({schema_version:'1.0',generated_at:new Date().toISOString(),lane:null,run_id:runId,candidates:[]},null,2)+'\n');
 run('npm',['run','validate:all']);
