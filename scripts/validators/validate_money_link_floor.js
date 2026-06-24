@@ -13,6 +13,8 @@ function walkHtml(dir, out = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     if (entry.name === ".git" || entry.name === "node_modules" || entry.name === "_ops" || entry.name === "templates" || entry.name === "coverage") continue;
     const full = path.join(dir, entry.name);
+    const rel = path.relative(process.cwd(), full).replace(/\\/g, '/');
+    if (rel.startsWith('data/report_fixes/agent_runs/')) continue;
     if (entry.isDirectory()) walkHtml(full, out);
     else if (entry.isFile() && entry.name.endsWith(".html")) out.push(full);
   }

@@ -19,7 +19,7 @@ function walk(dir) {
   return out;
 }
 
-const htmlFiles = walk(ROOT).filter(f => f.endsWith('.html'));
+const htmlFiles = walk(ROOT).filter(f => f.endsWith('.html') && !path.relative(ROOT, f).replace(/\\/g, '/').startsWith('data/report_fixes/agent_runs/'));
 const failures=[];
 for (const f of htmlFiles) {
   const rel = path.relative(ROOT,f);

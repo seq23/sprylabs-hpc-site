@@ -1,6 +1,10 @@
 name: Content Authority Pipeline
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'data/report_fixes/agent_runs/**'
   schedule:
     - cron: '17 14 * * *'
 permissions:

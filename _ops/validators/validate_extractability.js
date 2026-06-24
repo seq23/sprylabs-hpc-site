@@ -17,7 +17,7 @@ function walk(dir) {
   return out;
 }
 
-const htmlFiles = walk(ROOT).filter(f => f.endsWith('.html') && !f.includes(`${path.sep}templates${path.sep}`));
+const htmlFiles = walk(ROOT).filter(f => f.endsWith('.html') && !f.includes(`${path.sep}templates${path.sep}`) && !path.relative(ROOT, f).replace(/\\/g, '/').startsWith('data/report_fixes/agent_runs/'));
 
 const failures = [];
 for (const f of htmlFiles) {

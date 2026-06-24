@@ -17,6 +17,8 @@ function walk(dir, out = []) {
   for (const entry of entries) {
     if (EXCLUDE_DIRS.has(entry.name)) continue;
     const full = path.join(dir, entry.name);
+    const relPath = path.relative(ROOT, full).replace(/\\/g, '/');
+    if (relPath.startsWith('data/report_fixes/agent_runs/')) continue;
     if (entry.isDirectory()) walk(full, out);
     else if (entry.isFile() && CHECK_EXTS.has(path.extname(entry.name).toLowerCase())) out.push(full);
   }

@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-06-24T04:12:24.383Z",
+  "status": "PASS",
+  "artifact_run_count": 1,
+  "traces": [
+    {
+      "run_date": "2026-06-24",
+      "status": "ABSORBED",
+      "csv_path": "data/report_fixes/agent_runs/2026-06-24/bhpc/bhpc.csv",
+      "html_path": "data/report_fixes/agent_runs/2026-06-24/bhpc/bhpc.html",
+      "csv_sha256": "8919dbbdc16b9d0dd5c432cf0d0655c03d78d9335bd954556315be0bb04a18d1",
+      "html_sha256": "b128d0847f210d20711316d56d64047d41c17390fce3ff2161f0a06f4043b234",
+      "parsed_record_count": 3,
+      "normalized_path": "data/report_fixes/normalized_agent_runs/2026-06-24_bhpc.json",
+      "normalized_exists": true,
+      "social_run_path": "data/social/runs/2026-06-24-bhpc-agent.json",
+      "social_run_exists": true,
+      "sample_queries": [
+        "Continuity Collapse Pattern with AI",
+        "How to use ChatGPT as an accountability coach",
+        "AI operating system for consistency"
+      ]
+    }
+  ],
+  "workflow_bridge": {
+    "content_authority_inputs": [
+      "config/social_ingestion_policy.json",
+      "config/social_sources.json",
+      "data/content/page_admission_registry.json",
+      "data/content/programmatic_lane_contracts.json",
+      "data/citation/**",
+      "scripts/authority/**",
+      "scripts/community/**",
+      "scripts/synthesis/**",
+      "templates/**",
+      "data/report_fixes/agent_runs/**",
+      "data/report_fixes/normalized_agent_runs/**",
+      "data/social/runs/**"
+    ],
+    "content_authority_workflow_file": ".github/workflows/content-authority-pipeline.yml"
+  },
+  "errors": []
+}

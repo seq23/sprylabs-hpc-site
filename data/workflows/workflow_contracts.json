@@ -27,7 +27,10 @@
         "scripts/authority/**",
         "scripts/community/**",
         "scripts/synthesis/**",
-        "templates/**"
+        "templates/**",
+        "data/report_fixes/agent_runs/**",
+        "data/report_fixes/normalized_agent_runs/**",
+        "data/social/runs/**"
       ],
       "lineage_outputs": [
         "admin.html",
@@ -37,7 +40,9 @@
         "releases/**",
         "sitemap*.xml",
         "sitemaps/**",
-        "synthesis-*.html"
+        "synthesis-*.html",
+        "data/report_fixes/normalized_agent_runs/**",
+        "data/social/runs/**"
       ],
       "required_outputs": [
         "admin.html",
@@ -76,7 +81,12 @@
         "_repo_*.json",
         "_validation_registry.json",
         "_browser_suite_contract.json"
-      ]
+      ],
+      "artifact_receipt_paths": [
+        "data/report_fixes/agent_runs/**"
+      ],
+      "artifact_contract": "BHPC CSV + HTML + manifest under data/report_fixes/agent_runs/YYYY-MM-DD/bhpc/",
+      "fallback_behavior": "If no ready artifact exists, or if artifact volume is insufficient, workflow:content-authority continues the existing content pipeline unchanged."
     },
     {
       "id": "daily-insight",
