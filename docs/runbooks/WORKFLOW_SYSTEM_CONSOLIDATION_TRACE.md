@@ -7,14 +7,14 @@ The repo now uses one governed workflow system. BHPC agent artifacts feed the ex
 ## Content Authority Pipeline inputs
 
 - Existing social/reddit/community/citation sources
-- `data/report_fixes/agent_runs/**` BHPC agent artifacts
+- `data/report_fixes/agent_runs/**/agent_run_manifest.json` BHPC agent artifact completion signal
 - `data/social/runs/**` existing social run backlog
 - `data/citation/**` citation strategy and agent evidence
 
 ## Trigger model
 
 - Scheduled Content Authority Pipeline keeps existing content cadence.
-- Push to `data/report_fixes/agent_runs/**` triggers the same Content Authority Pipeline.
+- Push to `data/report_fixes/agent_runs/**/agent_run_manifest.json` triggers the same Content Authority Pipeline.
 - Other governed workflows retain their existing cadence.
 
 ## Gap-fill rule

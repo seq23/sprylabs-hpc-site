@@ -44,7 +44,8 @@ else {
 }
 const ymlPath = '.github/workflows/content-authority-pipeline.yml';
 const yml = fs.existsSync(path.join(ROOT, ymlPath)) ? fs.readFileSync(path.join(ROOT, ymlPath), 'utf8') : '';
-if (!yml.includes('data/report_fixes/agent_runs/**')) errors.push(`${ymlPath}: artifact receipt path trigger missing`);
+if (!yml.includes('data/report_fixes/agent_runs/**/agent_run_manifest.json')) errors.push(`${ymlPath}: manifest-only artifact receipt trigger missing`);
+if (yml.includes("- 'data/report_fixes/agent_runs/**'") || yml.includes('- "data/report_fixes/agent_runs/**"')) errors.push(`${ymlPath}: broad agent-run trigger is forbidden; trigger only on agent_run_manifest.json`);
 if (!yml.includes('npm run workflow:run -- --workflow content-authority')) errors.push(`${ymlPath}: governed runner command missing`);
 const report = {schema_version:'1.0', generated_at:new Date().toISOString(), status:errors.length?'FAIL':'PASS', artifact_run_count:traces.length, traces, workflow_bridge:{content_authority_inputs: contentAuthority?.lineage_inputs || [], content_authority_workflow_file:ymlPath}, errors};
 writeJson('artifacts/validation/bhpc-agent-data-trace.json', report);

@@ -43,6 +43,63 @@ function shouldRender(item){
   return false;
 }
 
+
+function readJson(file, fallback){
+  try { return JSON.parse(fs.readFileSync(path.join(ROOT, file), 'utf8')); }
+  catch { return fallback; }
+}
+function writeJson(file, payload){
+  fs.mkdirSync(path.dirname(path.join(ROOT, file)), {recursive:true});
+  fs.writeFileSync(path.join(ROOT, file), JSON.stringify(payload, null, 2) + '\n');
+}
+function upsertReleasedAuthorityAdmission(queue){
+  const registry = readJson('data/content/page_admission_registry.json', {schema_version:'1.0', records:[]});
+  const queries = readJson('data/citation/query_registry.json', {queries:[]}).queries || [];
+  const queryByPage = new Map(queries.filter(q => q && q.release_status === 'ACTIVE' && q.primary_page).map(q => [q.primary_page, q]));
+  const byPath = new Map((registry.records || []).map(record => [record.path, record]));
+  let upserted = 0;
+  for (const item of queue.items || []) {
+    if (!item || item.status !== 'released' || !item.slug) continue;
+    const rel = `whitepapers/${item.slug}.html`;
+    if (!fs.existsSync(path.join(ROOT, rel))) continue;
+    const q = queryByPage.get(rel);
+    const record = {
+      path: rel,
+      route: `/${rel}`,
+      canonical_domain: q?.canonical_domain || 'billionairehighperformancecoach.com',
+      generation_lane: 'authority',
+      admission_level: 'baseline',
+      status: 'ADMITTED',
+      primary_query: q?.query || item.title || item.slug.replace(/-/g, ' '),
+      query_aliases: q?.aliases || [],
+      intent: q?.intent_class || 'concept',
+      cluster: q?.observation_cluster || item.cluster_id || 'authority',
+      framework: `${q?.query || item.title || item.slug.replace(/-/g, ' ')} Framework`,
+      unique_atom: 'Authority whitepaper released by the governed Content Authority Pipeline from observed citation and social demand signals.',
+      artifact_type: 'whitepaper',
+      entity: null,
+      use_case: null,
+      comparison_entities: null,
+      comparison_methodology: null,
+      official_sources: null,
+      conflict_disclosure: null,
+      verified_at: null,
+      health_adjacent: false,
+      commercial_comparison: false,
+      admitted_at: item.released_at || new Date().toISOString().slice(0,10),
+      source: 'authority_paper_queue'
+    };
+    if (byPath.has(rel)) Object.assign(byPath.get(rel), record);
+    else { registry.records.push(record); byPath.set(rel, record); }
+    upserted += 1;
+  }
+  registry.records.sort((a,b) => a.path.localeCompare(b.path));
+  registry.record_count = registry.records.length;
+  registry.generated_at = new Date().toISOString();
+  writeJson('data/content/page_admission_registry.json', registry);
+  return upserted;
+}
+
 function main(){
   const { queue, created } = promote();
   let rendered = 0;
@@ -73,8 +130,9 @@ function main(){
     calendar_release_is_fallback_only: true
   };
 
+  const admitted = upsertReleasedAuthorityAdmission(queue);
   fs.writeFileSync('data/authority_paper_queue.json', JSON.stringify(queue, null, 2) + '\n');
-  console.log(`authority: promoted ${created.length}; rendered ${rendered}; repaired ${repaired}; skipped ${skipped}`);
+  console.log(`authority: promoted ${created.length}; rendered ${rendered}; repaired ${repaired}; skipped ${skipped}; admitted ${admitted}`);
 }
 
 if (require.main === module) main();

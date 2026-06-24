@@ -41,7 +41,7 @@ Accepted statuses:
 The consolidated workflow is:
 
 ```text
-Twin artifact commit under data/report_fixes/agent_runs/**
+Atomic Twin artifact commit under data/report_fixes/agent_runs/YYYY-MM-DD/bhpc/ with agent_run_manifest.json as the workflow trigger
 → Content Authority Pipeline push trigger
 → BHPC artifact validator
 → BHPC artifact absorber
@@ -60,11 +60,13 @@ If no artifact arrives, the scheduled Content Authority Pipeline still runs the 
 
 ## Twin Agent write boundary
 
-Twin may write only:
+Twin may write only inside the agent-run artifact folder:
 
 ```text
-data/report_fixes/agent_runs/**
+data/report_fixes/agent_runs/YYYY-MM-DD/bhpc/
 ```
+
+The workflow trigger is intentionally narrower than the write boundary: only `agent_run_manifest.json` starts the Content Authority Pipeline. CSV and HTML alone must not trigger the workflow.
 
 Twin must not edit workflows, package files, scripts, docs, generated public pages, registries, or validation artifacts.
 

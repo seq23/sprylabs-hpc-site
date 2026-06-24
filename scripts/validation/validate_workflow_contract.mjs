@@ -128,6 +128,13 @@ for (const name of actualWorkflows) {
     }
   }
 
+  if (name === 'content-authority-pipeline.yml') {
+    if (!text.includes("data/report_fixes/agent_runs/**/agent_run_manifest.json")) errors.push(`${name}: BHPC artifact trigger must be manifest-only`);
+    if (text.includes("- 'data/report_fixes/agent_runs/**'") || text.includes('- "data/report_fixes/agent_runs/**"')) {
+      errors.push(`${name}: broad BHPC artifact trigger is forbidden because split CSV/HTML/manifest commits race the pipeline`);
+    }
+  }
+
   if (name === 'deploy-distribution.yml') {
     if (!/permissions:\s*\n\s{2}contents:\s*read\s*\n\s{2}actions:\s*read/m.test(text)) errors.push(`${name}: deployment workflow must declare contents: read and actions: read`);
     if (!text.includes('workflow_run:') || !text.includes('workflows: ["Validate"]')) errors.push(`${name}: deployment must be triggered by successful Validate workflow completion`);

@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - 'data/report_fixes/agent_runs/**'
+      - 'data/report_fixes/agent_runs/**/agent_run_manifest.json'
   schedule:
     - cron: '17 14 * * *'
 permissions:

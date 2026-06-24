@@ -83,8 +83,9 @@
         "_browser_suite_contract.json"
       ],
       "artifact_receipt_paths": [
-        "data/report_fixes/agent_runs/**"
+        "data/report_fixes/agent_runs/**/agent_run_manifest.json"
       ],
+      "artifact_trigger_policy": "Manifest-only trigger. CSV and HTML may land before manifest, but the workflow only starts when the manifest declares the bundle ready.",
       "artifact_contract": "BHPC CSV + HTML + manifest under data/report_fixes/agent_runs/YYYY-MM-DD/bhpc/",
       "fallback_behavior": "If no ready artifact exists, or if artifact volume is insufficient, workflow:content-authority continues the existing content pipeline unchanged."
     },
