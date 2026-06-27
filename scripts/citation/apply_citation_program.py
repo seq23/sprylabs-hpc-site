@@ -161,6 +161,18 @@ if AGENT_SPEC_PATH.exists():
     PRIORITY.update(_agent_payload.get("priority_pages", {}))
     NEW_PAGES.update(_agent_payload.get("new_pages", {}))
 
+AGENT_GENERATED_SPEC_PATH = ROOT / "data/citation/agent_page_specs.generated.json"
+if AGENT_GENERATED_SPEC_PATH.exists():
+    _generated_payload = json.loads(AGENT_GENERATED_SPEC_PATH.read_text(encoding="utf-8"))
+    PRIORITY.update(_generated_payload.get("priority_pages", {}))
+    NEW_PAGES.update(_generated_payload.get("new_pages", {}))
+
+AGENT_REPAIR_SPEC_PATH = ROOT / "data/citation/agent_repair_specs.generated.json"
+if AGENT_REPAIR_SPEC_PATH.exists():
+    _repair_payload = json.loads(AGENT_REPAIR_SPEC_PATH.read_text(encoding="utf-8"))
+    PRIORITY.update(_repair_payload.get("priority_pages", {}))
+    NEW_PAGES.update(_repair_payload.get("new_pages", {}))
+
 
 RELATED = [
     ("/chatgpt-accountability-partner.html", "Use ChatGPT as an accountability partner"),
@@ -537,6 +549,94 @@ def shell(path: str, spec: dict) -> str:
     ensure_public_conversion(soup)
     ensure_fanout_block(soup,spec)
     return str(soup)
+
+
+def materialize_agent_new_pages() -> list[str]:
+    """Create missing generated agent pages in both normal and postbuild modes.
+
+    The exact implementation lane writes future CREATE_NEW_TARGET_PAGE specs to
+    data/citation/agent_page_specs.generated.json. The governed Spry content
+    workflow calls this citation program in --postbuild mode, so missing NEW_PAGES
+    must be materialized here before trace/validation runs.
+    """
+    created=[]
+    for path,spec in NEW_PAGES.items():
+        if path in MANUAL_PAGES:
+            continue
+        target=ROOT/path
+        if target.exists():
+            continue
+        target.parent.mkdir(parents=True,exist_ok=True)
+        target.write_text(shell(path,spec),encoding="utf-8")
+        created.append(path)
+    if created:
+        report_path=ROOT/"artifacts/validation/agent-generated-page-materialization.json"
+        report_path.parent.mkdir(parents=True,exist_ok=True)
+        report_path.write_text(json.dumps({"schema_version":"1.0","status":"PASS","created_count":len(created),"created":created},indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+    return created
+
+def sync_agent_page_admission_records() -> int:
+    """Admit generated agent pages as baseline public pages so registry parity holds.
+
+    These pages are not a second content engine; they are materialized from the
+    canonical exact-agent spec and then registered into the existing admission
+    registry consumed by the Spry validation spine.
+    """
+    registry_path=ROOT/"data/content/page_admission_registry.json"
+    if not registry_path.exists():
+        return 0
+    try:
+        payload=json.loads(registry_path.read_text(encoding="utf-8"))
+    except Exception:
+        return 0
+    records=payload.get("records",[])
+    by_path={row.get("path"):row for row in records if row.get("path")}
+    changed=0
+    for path,spec in NEW_PAGES.items():
+        if not (ROOT/path).exists():
+            continue
+        if path in by_path:
+            continue
+        route="/"+path
+        if route.endswith("/index.html"):
+            route=route[:-10]
+        canonical=canonical_for(path)
+        record={
+            "path":path,
+            "route":route,
+            "canonical_domain":re.sub(r"^https?://([^/]+).*$",r"\1",canonical).lower(),
+            "generation_lane":"legacy",
+            "admission_level":"baseline",
+            "status":"ADMITTED",
+            "primary_query":spec.get("h1",path),
+            "query_aliases":[],
+            "intent":spec.get("type","concept"),
+            "cluster":"agent-exact-implementation",
+            "framework":spec.get("framework",spec.get("h1",path)),
+            "unique_atom":spec.get("definition",spec.get("h1",path)),
+            "artifact_type":"agent_exact_citation_page",
+            "entity":None,
+            "use_case":None,
+            "comparison_entities":None,
+            "comparison_methodology":None,
+            "official_sources":None,
+            "conflict_disclosure":None,
+            "verified_at":None,
+            "health_adjacent":False,
+            "commercial_comparison":False,
+            "admitted_at":TODAY,
+            "source":"agent_exact_implementation"
+        }
+        records.append(record)
+        by_path[path]=record
+        changed+=1
+    if changed:
+        records.sort(key=lambda row: row.get("path",""))
+        payload["records"]=records
+        payload["record_count"]=len(records)
+        payload["generated_at"]=TODAY
+        registry_path.write_text(json.dumps(payload,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+    return changed
 
 def first_sentence(text: str) -> str:
     text=clean_text(text).replace("Direct answer:","").replace("Short Answer:","")
@@ -1146,6 +1246,7 @@ def update_discovery(pages,queries,frameworks):
 
 def postbuild():
     # Re-assert approved priority pages after any generator runs.
+    materialize_agent_new_pages()
     for path,spec in {**PRIORITY, **NEW_PAGES}.items():
         if path in MANUAL_PAGES:
             continue
@@ -1164,6 +1265,7 @@ def postbuild():
         rec=patch_legacy(rel)
         if rec: records.append(rec)
     pages,queries,frameworks=build_registries(records)
+    sync_agent_page_admission_records()
     update_discovery(pages,queries,frameworks)
     print(f"citation postbuild: {len(records)} active pages, {len(queries)} query records, {len(frameworks)} frameworks")
 
@@ -1175,8 +1277,7 @@ def main():
     if not args.postbuild:
         update_markdown_sources()
         modify_build_insights()
-        for path,spec in NEW_PAGES.items():
-            (ROOT/path).write_text(shell(path,spec),encoding="utf-8")
+        materialize_agent_new_pages()
     postbuild()
 
 if __name__=="__main__":

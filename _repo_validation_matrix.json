@@ -727,6 +727,36 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-073",
+      "validation_id": "VAL-073",
+      "lane": "agent-intake",
+      "command": "node scripts/agent_intake/build_bhpc_agent_exact_implementation_plan.mjs",
+      "order": 73,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-074",
+      "validation_id": "VAL-074",
+      "lane": "agent-intake",
+      "command": "node scripts/agent_intake/trace_bhpc_agent_exact_implementation.mjs",
+      "order": 74,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-075",
+      "validation_id": "VAL-075",
+      "lane": "agent-intake",
+      "command": "node scripts/agent_intake/validate_bhpc_agent_exact_implementation.mjs",
+      "order": 75,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ]
 }

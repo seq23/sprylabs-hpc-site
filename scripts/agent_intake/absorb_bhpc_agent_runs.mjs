@@ -1,12 +1,10 @@
 #!/usr/bin/env node
-import fs from 'node:fs';
-import path from 'node:path';
-import {ROOT, AGENT_ROOT, NORMALIZED_ROOT, SOCIAL_RUNS_ROOT, findAgentManifests, writeJson, digestManifest, readJson, slug} from './bhpc_agent_common.mjs';
+import {ROOT, NORMALIZED_ROOT, SOCIAL_RUNS_ROOT, findAgentManifests, writeJson, digestManifest, readJson, manifestAllowedByExactPolicy, loadExactPolicy, hashFile} from './bhpc_agent_common.mjs';
 
 function socialRecord(row, runDate, digestText) {
   const query = row.query || 'BHPC agent signal';
   const title = query;
-  const excerpt = [row.gap, digestText].filter(Boolean).join(' ').slice(0, 700);
+  const excerpt = [row.gap, row.fix_recommendation, digestText].filter(Boolean).join(' ').slice(0, 700);
   return {
     platform: 'agent_html_digest',
     source: 'twin_agent',
@@ -21,20 +19,30 @@ function socialRecord(row, runDate, digestText) {
     agent_scope: 'bhpc',
     gap: row.gap,
     cited_source: row.cited_source,
+    operation: row.operation,
+    intended_winner_page: row.intended_winner_page,
+    intended_winner_path: row.intended_winner_path,
+    implementation_path: row.implementation_path,
+    patch_needed: row.patch_needed,
+    blocked_reason: row.blocked_reason,
   };
 }
 
-const validation = await import('./validate_bhpc_agent_runs.mjs').catch(() => null);
-const ready = findAgentManifests().filter(entry => entry.manifest?.status === 'READY_FOR_ABSORPTION');
+await import('./validate_bhpc_agent_runs.mjs').catch(() => null);
+const policy = loadExactPolicy();
+const allReady = findAgentManifests().filter(entry => entry.manifest?.status === 'READY_FOR_ABSORPTION');
+const ready = allReady.filter(entry => manifestAllowedByExactPolicy(entry, policy));
+const skipped = allReady.filter(entry => !manifestAllowedByExactPolicy(entry, policy)).map(entry => ({manifest:entry.manifestRel, run_date:entry.runDate, reason:'before_exact_implementation_cutover'}));
 const absorbed = [];
 for (const entry of ready) {
   const digest = digestManifest(entry);
   const normalized = {
-    schema_version: '1.0',
+    schema_version: '1.1',
     source: entry.manifest.source || 'twin_agent',
     run_date: entry.runDate,
     scope: 'bhpc',
     generated_at: new Date().toISOString(),
+    exact_implementation_policy: 'data/report_fixes/agent_exact_implementation_policy.json',
     csv_path: digest.csvRel,
     html_path: digest.htmlRel,
     csv_sha256: digest.csv_sha256,
@@ -53,9 +61,9 @@ for (const entry of ready) {
     generated_at: new Date().toISOString(),
     policy: {
       source: 'bhpc_agent_artifact',
-      role: 'agent_digest_to_social_signal_bridge',
+      role: 'agent_digest_to_social_signal_bridge_with_exact_implementation_metadata',
       artifact_contract: 'CSV + HTML + manifest',
-      fallback_behavior: 'content_authority_pipeline_continues_existing_content_generation_when_agent_rows_are_insufficient',
+      fallback_behavior: 'content_authority_pipeline_may_continue_existing_content_generation_but_may_not_count_social_fallback_as_exact_page_repair',
     },
     records: Array.from(byId.values()).sort((a,b) => String(a.id).localeCompare(String(b.id))),
     health: [{source_key:'bhpc-agent-run', platform:'agent_html_digest', status:digest.rows.length?'ok':'warning_only_empty', count:digest.rows.length}],
@@ -63,13 +71,21 @@ for (const entry of ready) {
   writeJson(socialRel, socialPayload);
 
   const citationRunRel = `data/citation/agent_runs/${entry.runDate}-bhpc.json`;
-  const findings = digest.rows.map(row => ({path:'data/social/runs', domain:'billionairehighperformancecoach.com', issue: row.gap || row.query}));
-  const opportunities = digest.rows.map(row => ({query: row.query, path: 'data/social/runs'}));
+  const findings = digest.rows.map(row => ({
+    path: row.intended_winner_path || row.implementation_path || 'data/social/runs',
+    domain: row.intended_winner_page ? (() => { try { return new URL(row.intended_winner_page).hostname; } catch { return 'billionairehighperformancecoach.com'; } })() : 'billionairehighperformancecoach.com',
+    issue: row.gap || row.query,
+    operation: row.operation,
+    implementation_required: row.patch_needed,
+    blocked_reason: row.blocked_reason || ''
+  }));
+  const opportunities = digest.rows.map(row => ({query: row.query, path: row.intended_winner_path || row.implementation_path || 'data/social/runs', operation: row.operation}));
   writeJson(citationRunRel, {
-    schema_version: '1.0',
+    schema_version: '1.1',
     run_id: `${entry.runDate}-bhpc-agent`,
     generated_at: new Date().toISOString(),
     artifact_contract: 'CSV + HTML + manifest',
+    exact_implementation_policy: 'data/report_fixes/agent_exact_implementation_policy.json',
     queries_tested: digest.rows.length,
     cited_domains: Array.from(new Set(digest.rows.map(row => row.cited_source).filter(Boolean))).length,
     wins: digest.rows.filter(row => /cited|win|yes/i.test(`${row.cited_source} ${row.gap}`)).length,
@@ -78,15 +94,15 @@ for (const entry of ready) {
     findings,
     opportunities,
     interpretation: {
-      measurement_status: 'AGENT_DIGEST_ABSORBED',
-      reason: 'The digest is normalized into social signals and citation-run evidence; the governed content pipeline then fills any remaining output gap from the existing content mechanism.',
+      measurement_status: 'AGENT_DIGEST_ABSORBED_WITH_EXACT_IMPLEMENTATION_METADATA',
+      reason: 'The digest preserves intended destination, operation, and implementation path. Exact application is planned and traced by the agent exact implementation lane.',
     },
   });
 
-  const manifest = {...entry.manifest, status:'ABSORBED', absorbed_at:new Date().toISOString(), absorbed_record_count:digest.rows.length, normalized_path: normalizedRel, social_run_path: socialRel};
+  const manifest = {...entry.manifest, status:'ABSORBED', absorbed_at:new Date().toISOString(), absorbed_record_count:digest.rows.length, normalized_path: normalizedRel, social_run_path: socialRel, exact_implementation_policy:'data/report_fixes/agent_exact_implementation_policy.json'};
   writeJson(entry.manifestRel, manifest);
   absorbed.push({run_date: entry.runDate, normalized_path: normalizedRel, social_run_path: socialRel, records: digest.rows.length});
 }
-const report = {schema_version:'1.0', generated_at:new Date().toISOString(), status:'PASS', ready_count: ready.length, absorbed_count: absorbed.length, absorbed};
+const report = {schema_version:'1.1', generated_at:new Date().toISOString(), status:'PASS', ready_count: ready.length, skipped_by_policy: skipped, absorbed_count: absorbed.length, absorbed};
 writeJson('reports/bhpc-agent-absorption.json', report);
-console.log(`[bhpc-agent-absorb] PASS: absorbed=${absorbed.length}; ready=${ready.length}`);
+console.log(`[bhpc-agent-absorb] PASS: absorbed=${absorbed.length}; ready=${ready.length}; skipped_by_policy=${skipped.length}`);

@@ -2301,6 +2301,111 @@
         "MX-072"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-073",
+      "status": "ADMITTED",
+      "name": "agent:bhpc:plan-exact",
+      "check_type": "programmatic-planner",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Prevents BHPC agent page-fix recommendations from being satisfied only by social fallback or unrelated generated pages.",
+      "existing_coverage_gap": "Existing BHPC intake traced artifact absorption but not exact intended-winner implementation.",
+      "scope": [
+        "repository",
+        "agent-runs",
+        "citation-velocity"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "node scripts/agent_intake/build_bhpc_agent_exact_implementation_plan.mjs",
+      "implementation_path": "scripts/agent_intake/build_bhpc_agent_exact_implementation_plan.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/agent-exact-implementation-plan.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "agent:bhpc:validate",
+        "agent:bhpc:trace"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted for forward-only exact intended-winner implementation enforcement.",
+      "decision_date": "2026-06-26",
+      "matrix_ids": [
+        "MX-073"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-074",
+      "status": "ADMITTED",
+      "name": "agent:bhpc:trace-exact",
+      "check_type": "validator",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Prevents BHPC agent page-fix recommendations from being satisfied only by social fallback or unrelated generated pages.",
+      "existing_coverage_gap": "Existing BHPC intake traced artifact absorption but not exact intended-winner implementation.",
+      "scope": [
+        "repository",
+        "agent-runs",
+        "citation-velocity"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "node scripts/agent_intake/trace_bhpc_agent_exact_implementation.mjs",
+      "implementation_path": "scripts/agent_intake/trace_bhpc_agent_exact_implementation.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/agent-exact-implementation-trace.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "agent:bhpc:validate",
+        "agent:bhpc:trace"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted for forward-only exact intended-winner implementation enforcement.",
+      "decision_date": "2026-06-26",
+      "matrix_ids": [
+        "MX-074"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-075",
+      "status": "ADMITTED",
+      "name": "agent:bhpc:validate-exact",
+      "check_type": "validator",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Prevents BHPC agent page-fix recommendations from being satisfied only by social fallback or unrelated generated pages.",
+      "existing_coverage_gap": "Existing BHPC intake traced artifact absorption but not exact intended-winner implementation.",
+      "scope": [
+        "repository",
+        "agent-runs",
+        "citation-velocity"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "node scripts/agent_intake/validate_bhpc_agent_exact_implementation.mjs",
+      "implementation_path": "scripts/agent_intake/validate_bhpc_agent_exact_implementation.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/agent-exact-implementation.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "agent:bhpc:validate",
+        "agent:bhpc:trace"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted for forward-only exact intended-winner implementation enforcement.",
+      "decision_date": "2026-06-26",
+      "matrix_ids": [
+        "MX-075"
+      ],
+      "not_applicable_reason": null
     }
   ]
 }

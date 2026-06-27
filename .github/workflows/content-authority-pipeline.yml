@@ -36,6 +36,12 @@ jobs:
         if: always()
         with:
           name: workflow-trace-content-authority-${{ github.run_number }}
-          path: reports/workflows/content-authority/
+          path: |
+            reports/workflows/content-authority/
+            artifacts/validation/agent-exact-implementation*.json
+            data/citation/agent_page_specs.generated.json
+            data/citation/agent_repair_specs.generated.json
+            data/report_fixes/agent_exact_implementation_policy.json
+            reports/bhpc-agent-*.json
           if-no-files-found: error
           retention-days: 30

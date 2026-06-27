@@ -6,6 +6,7 @@ export const ROOT = process.cwd();
 export const AGENT_ROOT = 'data/report_fixes/agent_runs';
 export const NORMALIZED_ROOT = 'data/report_fixes/normalized_agent_runs';
 export const SOCIAL_RUNS_ROOT = 'data/social/runs';
+export const EXACT_POLICY_PATH = 'data/report_fixes/agent_exact_implementation_policy.json';
 export const VALID_STATUSES = new Set(['READY_FOR_ABSORPTION', 'ABSORBED', 'QUARANTINED']);
 
 export function posixJoin(...parts) {
@@ -30,7 +31,7 @@ export function writeText(rel, body) {
 }
 
 export function hashFile(rel) {
-  return crypto.createHash('sha256').update(fs.readFileSync(path.join(ROOT, rel))).digest('hex');
+  return fs.existsSync(path.join(ROOT, rel)) ? crypto.createHash('sha256').update(fs.readFileSync(path.join(ROOT, rel))).digest('hex') : null;
 }
 
 export function htmlToText(html = '') {
@@ -103,18 +104,90 @@ export function findAgentManifests() {
   return manifests;
 }
 
+export function loadExactPolicy() {
+  return readJson(EXACT_POLICY_PATH, {
+    schema_version: '1.0',
+    effective_from: '9999-12-31',
+    retroactive_processing: false,
+    process_manifest_statuses: ['READY_FOR_ABSORPTION'],
+    allowed_intended_winner_hosts: ['billionairehighperformancecoach.com', 'spryexecutiveos.com'],
+    block_unresolved_patch_rows: true
+  });
+}
+
+export function manifestAllowedByExactPolicy(entry, policy = loadExactPolicy()) {
+  const statuses = new Set(policy.process_manifest_statuses || ['READY_FOR_ABSORPTION']);
+  if (!statuses.has(String(entry.manifest?.status || ''))) return false;
+  if (policy.retroactive_processing === false && entry.runDate && policy.effective_from && entry.runDate < policy.effective_from) return false;
+  return true;
+}
+
+export function repoPathFromIntendedWinnerPage(url, policy = loadExactPolicy()) {
+  const raw = String(url || '').trim();
+  if (!raw) return null;
+  try {
+    const parsed = raw.startsWith('http') ? new URL(raw) : new URL(raw, 'https://billionairehighperformancecoach.com');
+    const allowed = new Set(policy.allowed_intended_winner_hosts || ['billionairehighperformancecoach.com', 'spryexecutiveos.com']);
+    if (!allowed.has(parsed.hostname)) return null;
+    let p = parsed.pathname.replace(/^\//, '');
+    if (!p) p = 'index.html';
+    if (p.endsWith('/')) p += 'index.html';
+    if (!/\.html$/.test(p) && !p.endsWith('/index.html')) p = p.replace(/\/$/, '') + '/index.html';
+    return p;
+  } catch {
+    return raw.replace(/^\//, '');
+  }
+}
+
+export function allowedHostFromUrl(url, policy = loadExactPolicy()) {
+  const raw = String(url || '').trim();
+  if (!raw) return true;
+  try {
+    const parsed = raw.startsWith('http') ? new URL(raw) : new URL(raw, 'https://billionairehighperformancecoach.com');
+    return new Set(policy.allowed_intended_winner_hosts || ['billionairehighperformancecoach.com', 'spryexecutiveos.com']).has(parsed.hostname);
+  } catch { return true; }
+}
+
+function boolish(value) { return /^(y|yes|true|1|needed)$/i.test(String(value || '').trim()); }
+
 export function classifyRow(row, htmlDigestText = '') {
   const combined = Object.values(row || {}).join(' ') + ' ' + htmlDigestText;
   const query = row.query || row.prompt || row.question || row.search_query || row.keyword || row.topic || row.title || row.issue || row.finding || 'BHPC agent signal';
   const cited = row.cited_domain || row.cited_source || row.cited_sources || row.citation || row.source || '';
   const gap = row.gap || row.issue || row.finding || row.recommendation || row.action || row.notes || '';
-  const scoreRaw = row.score || row.priority || row.severity || row.purchase_path_potential || '';
+  const intendedWinnerPage = row.intended_winner_page || row.target_url || row.url || row.page || row.target_page || row.intended_page || '';
+  const patchNeeded = boolish(row.patch_needed_y_n || row.patch_needed || row.gap_found || row.fix_needed) || /patch|fix|not cited|gap|weak|missing|absent/i.test(combined);
+  const fixRecommendation = row.fix_recommendation || row.recommendation || row.action || row.notes || gap || '';
+  const actionTier = row.action_tier || row.tier || '';
+  const primaryFixType = row.primary_fix_type || row.gap_type || row.fix_type || '';
+  const policy = loadExactPolicy();
+  const intendedPath = repoPathFromIntendedWinnerPage(intendedWinnerPage, policy);
+  let operation = 'CREATE_NEW_TARGET_PAGE';
+  let blockedReason = '';
+  if (patchNeeded && intendedWinnerPage && !allowedHostFromUrl(intendedWinnerPage, policy)) {
+    operation = 'BLOCKED_EXTERNAL_DOMAIN';
+    blockedReason = 'intended_winner_page_not_on_allowed_host';
+  } else if (patchNeeded && intendedPath && fs.existsSync(path.join(ROOT, intendedPath))) {
+    operation = 'REPAIR_INTENDED_WINNER_PAGE';
+  } else if (patchNeeded && intendedPath && !fs.existsSync(path.join(ROOT, intendedPath))) {
+    operation = 'CREATE_NEW_TARGET_PAGE';
+  }
+  const scoreRaw = row.score || row.priority || row.severity || row.purchase_path_potential || row.priority_score || '';
   const numeric = Number(String(scoreRaw).replace(/[^0-9.]/g, ''));
   const score = Number.isFinite(numeric) && numeric > 0 ? Math.min(100, numeric <= 10 ? numeric * 10 : numeric) : (/gap|not cited|miss|fail|absent|weak/i.test(combined) ? 85 : 65);
   return {
     query: String(query).trim().slice(0, 240),
     cited_source: String(cited).trim().slice(0, 180),
     gap: String(gap).trim().slice(0, 420),
+    intended_winner_page: String(intendedWinnerPage || '').trim(),
+    intended_winner_path: intendedPath || '',
+    patch_needed: patchNeeded,
+    fix_recommendation: String(fixRecommendation || '').trim().slice(0, 700),
+    action_tier: String(actionTier || '').trim(),
+    primary_fix_type: String(primaryFixType || '').trim(),
+    operation,
+    blocked_reason: blockedReason,
+    implementation_path: intendedPath || `agent/${slug(query)}.html`,
     score,
   };
 }
@@ -138,6 +211,15 @@ export function digestManifest(entry) {
       query: 'BHPC citation digest follow-up',
       cited_source: '',
       gap: htmlDigestText.slice(0, 420),
+      intended_winner_page: '',
+      intended_winner_path: '',
+      patch_needed: false,
+      fix_recommendation: htmlDigestText.slice(0, 420),
+      action_tier: 'digest',
+      primary_fix_type: 'digest',
+      operation: 'CREATE_NEW_TARGET_PAGE',
+      implementation_path: 'agent/bhpc-citation-digest-follow-up.html',
+      blocked_reason: '',
       score: 70,
       raw: {source: 'html_digest_only'},
     });
