@@ -151,10 +151,15 @@ for (const name of actualWorkflows) {
     if (!/permissions:\s*\n\s{2}contents:\s*read\s*\n\s{2}actions:\s*read/m.test(text)) errors.push(`${name}: deployment workflow must declare contents: read and actions: read`);
     if (!text.includes('workflow_run:') || !text.includes('workflows: ["Validate"]')) errors.push(`${name}: deployment must be triggered by successful Validate workflow completion`);
     const download = indexOrError(text, 'actions/download-artifact@v4', 'validated artifact download', name);
+    const normalize = indexOrError(text, 'Normalize downloaded validation artifact', 'downloaded validation artifact normalization', name);
     const verify = indexOrError(text, 'npm run release:verify-attestation', 'attestation verification', name);
     const deploy = indexOrError(text, 'npm run distribution:deploy', 'distribution deployment command', name);
+    if (download >= 0 && normalize >= 0 && normalize < download) errors.push(`${name}: downloaded artifact normalization runs before artifact download`);
+    if (normalize >= 0 && verify >= 0 && verify < normalize) errors.push(`${name}: attestation verification runs before downloaded artifact normalization`);
     if (download >= 0 && verify >= 0 && verify < download) errors.push(`${name}: attestation verification runs before artifact download`);
     if (verify >= 0 && deploy >= 0 && deploy < verify) errors.push(`${name}: distribution can run before attestation verification`);
+    if (!text.includes('run-id: ${{ github.event.workflow_run.id }}')) errors.push(`${name}: workflow_run deploy must download artifact from the triggering Validate run`);
+    if (!text.includes('test -f .build/indexnow-priority.txt') || !text.includes('test -f .build/indexnow-batch.txt')) errors.push(`${name}: workflow_run deploy must fail fast if downloaded distribution files are missing`);
     if (!text.includes('npm run release:ci-validate')) errors.push(`${name}: manual dispatch must validate and attest before deployment`);
   }
 
@@ -170,6 +175,8 @@ for (const name of actualWorkflows) {
     if (!text.includes('npm run release:ci-validate')) errors.push(`${name}: push/PR validation must run release:ci-validate`);
     if (!text.includes('actions/upload-artifact@v4')) errors.push(`${name}: validated distribution artifact must be uploaded`);
     if (!text.includes('reports/validation-attestation.json')) errors.push(`${name}: validation attestation must be uploaded`);
+    if (!text.includes('.build/**')) errors.push(`${name}: .build distribution artifacts must be uploaded`);
+    if (!text.includes('include-hidden-files: true')) errors.push(`${name}: upload-artifact must include hidden .build files for Deploy Distribution handoff`);
     if (!/permissions:\s*\n\s{2}contents:\s*read/m.test(text)) errors.push(`${name}: validation workflow must declare contents: read`);
   }
 

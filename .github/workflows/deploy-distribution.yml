@@ -37,6 +37,16 @@ jobs:
           path: .
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ github.token }}
+      - name: Normalize downloaded validation artifact
+        if: github.event_name == 'workflow_run'
+        run: |
+          mkdir -p .build
+          if [ ! -f .build/validation-attestation.json ] && [ -f reports/validation-attestation.json ]; then
+            cp reports/validation-attestation.json .build/validation-attestation.json
+          fi
+          test -f .build/validation-attestation.json
+          test -f .build/indexnow-priority.txt
+          test -f .build/indexnow-batch.txt
       - run: |
           npm run release:verify-attestation
       - run: |

@@ -27,6 +27,7 @@ jobs:
         if: always()
         with:
           name: validated-distribution
+          include-hidden-files: true
           path: |
             .build/**
             reports/validation-attestation.json
