@@ -24,17 +24,17 @@ jobs:
   run:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
       - run: npm run workflow:run -- --workflow whitepaper-release -- npm run programmatic:run-lane -- --lane whitepaper -- npm run workflow:whitepaper
       - run: ./.github/scripts/commit_and_push_if_changed.sh "chore: release scheduled white paper" whitepaper-release
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: whitepaper-release-trace

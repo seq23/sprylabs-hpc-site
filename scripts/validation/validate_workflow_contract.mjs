@@ -30,10 +30,10 @@ const mutationWorkflows = new Set([
   'whitepaper-release.yml',
 ]);
 const allowedActions = new Set([
-  'actions/checkout@v6',
-  'actions/setup-node@v6',
-  'actions/upload-artifact@v7',
-  'actions/download-artifact@v8',
+  'actions/checkout@v4',
+  'actions/setup-node@v4',
+  'actions/upload-artifact@v4',
+  'actions/download-artifact@v4',
 ]);
 const pkg = readJson('package.json');
 const packageScripts = pkg.scripts || {};
@@ -69,8 +69,8 @@ for (const name of actualWorkflows) {
   if (!/^env:\s*\n\s{2}NODE_OPTIONS:\s*--max-old-space-size=3072\s*$/m.test(text)) {
     errors.push(`${name}: root NODE_OPTIONS must be --max-old-space-size=3072`);
   }
-  if (!text.includes('actions/checkout@v6')) errors.push(`${name}: actions/checkout@v6 is required`);
-  if (!text.includes('actions/setup-node@v6')) errors.push(`${name}: actions/setup-node@v6 is required`);
+  if (!text.includes('actions/checkout@v4')) errors.push(`${name}: actions/checkout@v4 is required`);
+  if (!text.includes('actions/setup-node@v4')) errors.push(`${name}: actions/setup-node@v4 is required`);
   if (!/node-version:\s*24\b/.test(text)) errors.push(`${name}: Node 24 setup is required`);
   if (!/cache:\s*npm\b/.test(text)) errors.push(`${name}: npm dependency caching is required`);
   if (!text.includes('npm ci --ignore-scripts')) errors.push(`${name}: npm ci --ignore-scripts is required`);
@@ -114,7 +114,7 @@ for (const name of actualWorkflows) {
       errors.push(`${name}: mutating workflow has no governed workflow contract`);
     } else {
       const governedRunner = indexOrError(text, 'npm run workflow:run', 'governed workflow runner', name);
-      const traceUpload = indexOrError(text, 'actions/upload-artifact@v7', 'workflow trace upload', name);
+      const traceUpload = indexOrError(text, 'actions/upload-artifact@v4', 'workflow trace upload', name);
       if (governedRunner >= 0 && laneRunner >= 0 && laneRunner < governedRunner) errors.push(`${name}: programmatic runner is not nested under governed workflow runner`);
       if (traceUpload >= 0 && commit >= 0 && traceUpload < commit) errors.push(`${name}: trace artifact upload must run after the race-safe commit helper`);
       if (!/--workflow\s+[a-z0-9-]+\s+--\s+npm\s+run\s+programmatic:run-lane\s+--\s+--lane\s+[a-z_]+\s+--\s+npm\s+run\s+workflow:[\w-]+/.test(text)) errors.push(`${name}: mutation command must be wrapped in governed trace and a named admitted programmatic lane`);
@@ -138,7 +138,7 @@ for (const name of actualWorkflows) {
   if (name === 'deploy-distribution.yml') {
     if (!/permissions:\s*\n\s{2}contents:\s*read\s*\n\s{2}actions:\s*read/m.test(text)) errors.push(`${name}: deployment workflow must declare contents: read and actions: read`);
     if (!text.includes('workflow_run:') || !text.includes('workflows: ["Validate"]')) errors.push(`${name}: deployment must be triggered by successful Validate workflow completion`);
-    const download = indexOrError(text, 'actions/download-artifact@v8', 'validated artifact download', name);
+    const download = indexOrError(text, 'actions/download-artifact@v4', 'validated artifact download', name);
     const verify = indexOrError(text, 'npm run release:verify-attestation', 'attestation verification', name);
     const deploy = indexOrError(text, 'npm run distribution:deploy', 'distribution deployment command', name);
     if (download >= 0 && verify >= 0 && verify < download) errors.push(`${name}: attestation verification runs before artifact download`);
@@ -156,7 +156,7 @@ for (const name of actualWorkflows) {
 
   if (name === 'validate.yml') {
     if (!text.includes('npm run release:ci-validate')) errors.push(`${name}: push/PR validation must run release:ci-validate`);
-    if (!text.includes('actions/upload-artifact@v7')) errors.push(`${name}: validated distribution artifact must be uploaded`);
+    if (!text.includes('actions/upload-artifact@v4')) errors.push(`${name}: validated distribution artifact must be uploaded`);
     if (!text.includes('reports/validation-attestation.json')) errors.push(`${name}: validation attestation must be uploaded`);
     if (!/permissions:\s*\n\s{2}contents:\s*read/m.test(text)) errors.push(`${name}: validation workflow must declare contents: read`);
   }

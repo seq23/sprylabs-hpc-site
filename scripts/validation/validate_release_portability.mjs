@@ -98,6 +98,23 @@ for (const route of criticalRoutes) {
 }
 if (missingLocalResources.length) errors.push(`critical browser routes reference missing local resources: ${missingLocalResources.slice(0, 20).join(', ')}`);
 
+
+const cloudflareMaxAssetBytes = 25 * 1024 * 1024;
+const deployLargeFiles = [];
+function walkDeployAssets(dir) {
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    if (['.git', 'node_modules', 'artifacts', 'test-results', 'playwright-report', 'reports', '.build'].includes(entry.name)) continue;
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) walkDeployAssets(full);
+    else if (entry.isFile()) {
+      const size = fs.statSync(full).size;
+      if (size > cloudflareMaxAssetBytes) deployLargeFiles.push(`${full.replace(/^\.\//,'')}: ${Math.round(size/1024/1024*10)/10} MiB`);
+    }
+  }
+}
+walkDeployAssets('.');
+if (deployLargeFiles.length) errors.push(`Cloudflare Pages asset limit exceeded by root-deployed file(s): ${deployLargeFiles.slice(0,10).join(', ')}`);
+
 const forbiddenSource = [];
 function walk(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {

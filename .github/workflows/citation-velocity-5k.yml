@@ -24,17 +24,17 @@ jobs:
   run:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
       - run: npm run workflow:run -- --workflow citation-velocity-5k -- npm run programmatic:run-lane -- --lane citation_velocity_batch -- npm run workflow:citation-velocity-5k
       - run: ./.github/scripts/commit_and_push_if_changed.sh "auto: citation velocity 5k batch" citation-velocity-5k
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: citation-velocity-5k-trace

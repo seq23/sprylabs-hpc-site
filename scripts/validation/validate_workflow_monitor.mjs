@@ -24,9 +24,9 @@ for (const contract of contracts) {
   if (!text.includes(`cron: '${contract.schedule_cron}'`) && !text.includes(`cron: "${contract.schedule_cron}"`)) errors.push(`${contract.id}: schedule drift from contract`);
   if (!text.includes(expectedRunner)) errors.push(`${contract.id}: governed runner command drift`);
   if (!text.includes(`reports/workflows/${contract.id}/`)) errors.push(`${contract.id}: trace artifact path missing`);
-  if (!text.includes('actions/upload-artifact@v7')) errors.push(`${contract.id}: workflow trace artifact upload missing`);
+  if (!text.includes('actions/upload-artifact@v4')) errors.push(`${contract.id}: workflow trace artifact upload missing`);
   const helperIndex = text.indexOf('.github/scripts/commit_and_push_if_changed.sh');
-  const uploadIndex = text.indexOf('actions/upload-artifact@v7');
+  const uploadIndex = text.indexOf('actions/upload-artifact@v4');
   if (helperIndex < 0) errors.push(`${contract.id}: race-safe commit helper missing`);
   if (helperIndex >= 0 && uploadIndex >= 0 && uploadIndex < helperIndex) errors.push(`${contract.id}: trace upload must follow the retry-capable commit step`);
   if (!text.includes(`"${contract.commit_message}" ${contract.id}`)) errors.push(`${contract.id}: commit helper identity drift`);

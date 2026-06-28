@@ -24,17 +24,17 @@ jobs:
   run:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
       - run: npm run workflow:run -- --workflow reddit-evening -- npm run programmatic:run-lane -- --lane reddit -- npm run workflow:reddit-evening
       - run: ./.github/scripts/commit_and_push_if_changed.sh "chore: reddit evening refresh" reddit-evening
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: reddit-evening-trace

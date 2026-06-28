@@ -101,7 +101,11 @@ run('python3',['scripts/validation/validate_programmatic_admission.py','--candid
 const result=JSON.parse(fs.readFileSync(resultPath,'utf8'));
 const registry=JSON.parse(fs.readFileSync('data/content/page_admission_registry.json','utf8'));
 const accepted=[]; const rejected=[];
-for(const item of result.results){const candidate=candidates.find(x=>x.path===item.path);if(!candidate)continue;if(item.accepted){candidate.status='ADMITTED';candidate.admitted_at=candidate.admitted_at||new Date().toISOString();candidate.source=candidate.source||`workflow:${lane}`;delete candidate.baseline_hash;delete candidate.candidate_hash;const idx=registry.records.findIndex(x=>x.path===candidate.path);if(idx>=0)registry.records[idx]=candidate;else registry.records.push(candidate);accepted.push(candidate.path);}else{const old=baseline.get(candidate.path);if(old)fs.writeFileSync(candidate.path,old.body);else fs.rmSync(candidate.path,{force:true});rejected.push({run_id:runId,lane,path:candidate.path,primary_query:candidate.primary_query,candidate_hash:candidate.candidate_hash,reasons:item.errors,rejected_at:new Date().toISOString()});}}
+for(const item of result.results){const candidate=candidates.find(x=>x.path===item.path);if(!candidate)continue;if(item.accepted){candidate.status='ADMITTED';candidate.admitted_at=candidate.admitted_at||new Date().toISOString();candidate.source=candidate.source||`workflow:${lane}`;delete candidate.baseline_hash;delete candidate.candidate_hash;const idx=registry.records.findIndex(x=>x.path===candidate.path);if(idx>=0)registry.records[idx]=candidate;else registry.records.push(candidate);accepted.push(candidate.path);}else{const old=baseline.get(candidate.path);if(old)fs.writeFileSync(candidate.path,old.body);else fs.rmSync(candidate.path,{force:true});{
+ const reasons = Array.isArray(item.errors) ? item.errors : [String(item.errors||'unknown rejection')];
+ const reasonHash = crypto.createHash('sha256').update(JSON.stringify(reasons)).digest('hex');
+ rejected.push({run_id:runId,lane,path:candidate.path,primary_query:candidate.primary_query,candidate_hash:candidate.candidate_hash,reason_count:reasons.length,reason_sample:reasons.slice(0,5).map(reason=>String(reason).slice(0,300)),reason_hash:reasonHash,rejected_at:new Date().toISOString()});
+}}}
 registry.records.sort((a,b)=>a.path.localeCompare(b.path));registry.record_count=registry.records.length;registry.generated_at=new Date().toISOString();fs.writeFileSync('data/content/page_admission_registry.json',JSON.stringify(registry,null,2)+'\n');
 const backlog=JSON.parse(fs.readFileSync('data/programmatic/rejection_backlog.json','utf8'));backlog.updated_at=new Date().toISOString();backlog.rejections.push(...rejected);fs.writeFileSync('data/programmatic/rejection_backlog.json',JSON.stringify(backlog,null,2)+'\n');
 if(lane==='authority'){
@@ -171,6 +175,6 @@ if(rejected.length)run('npm',['run','build:postprocess'],{PROGRAMMATIC_LANE:lane
 fs.writeFileSync('data/content/programmatic_candidate_manifest.json',JSON.stringify({schema_version:'1.0',generated_at:new Date().toISOString(),lane:null,run_id:runId,candidates:[]},null,2)+'\n');
 run('npm',['run','validate:all']);
 run('npm',['run','validate:warnings']);
-const summary={status:'PASS',run_id:runId,lane,changed_candidates:candidates.length,accepted,rejected:rejected.map(x=>({path:x.path,reasons:x.reasons}))};
+const summary={status:'PASS',run_id:runId,lane,changed_candidates:candidates.length,accepted,rejected:rejected.map(x=>({path:x.path,reason_count:x.reason_count,reason_sample:x.reason_sample,reason_hash:x.reason_hash}))};
 fs.writeFileSync('data/programmatic/latest_run_summary.json',JSON.stringify(summary,null,2)+'\n');
 console.log(`[programmatic:${lane}] PASS: ${accepted.length} admitted, ${rejected.length} quarantined`);
