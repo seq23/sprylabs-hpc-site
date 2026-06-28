@@ -2,6 +2,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {ROOT, NORMALIZED_ROOT, readJson, writeJson, loadExactPolicy, hashFile, slug} from './bhpc_agent_common.mjs';
+const queryRegistry = readJson('data/citation/query_registry.json', {queries:[]});
+const activeQueryOwners = new Map((queryRegistry.queries||[])
+  .filter(q => q.release_status === 'ACTIVE' && q.query && q.primary_page)
+  .map(q => [String(q.query).toLowerCase().replace(/[^a-z0-9]+/g,' ').trim(), q]));
+function activeOwnerFor(query){ return activeQueryOwners.get(String(query||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()) || null; }
 const policy = loadExactPolicy();
 function normalizeText(value){return String(value||'').replace(/\s+/g,' ').trim();}
 function definitionFor(rows){
@@ -41,8 +46,13 @@ const groups=new Map();
 const blocked=[];
 for(const row of rows){
   if(String(row.operation||'').startsWith('BLOCKED_')){blocked.push({...row,status:'BLOCKED',blocked_reason:row.blocked_reason||row.operation});continue;}
-  const pathValue=row.intended_winner_path || row.implementation_path || `agent/${slug(row.query)}.html`;
-  const key=`${row.operation||'CREATE_NEW_TARGET_PAGE'}:${pathValue}`;
+  const owner=activeOwnerFor(row.query);
+  let pathValue = owner?.primary_page || row.intended_winner_path || row.implementation_path || `agent/${slug(row.query)}.html`;
+  if (String(pathValue||'').toLowerCase().startsWith('n/a')) {
+    blocked.push({...row,status:'BLOCKED',blocked_reason:'no_active_query_owner_for_n_a_intended_winner'});
+    continue;
+  }
+  const key=`${owner ? 'REPAIR_INTENDED_WINNER_PAGE' : (row.operation||'CREATE_NEW_TARGET_PAGE')}:${pathValue}`;
   if(!groups.has(key)) groups.set(key, []);
   groups.get(key).push(row);
 }
@@ -51,8 +61,9 @@ const new_pages={};
 const specs=[];
 for(const [key, group] of groups){
   const row=group[0];
-  const pathValue=row.intended_winner_path || row.implementation_path || `agent/${slug(row.query)}.html`;
-  const operation=row.operation === 'REPAIR_INTENDED_WINNER_PAGE' ? 'REPAIR_INTENDED_WINNER_PAGE' : 'CREATE_NEW_TARGET_PAGE';
+  const owner=activeOwnerFor(row.query);
+  let pathValue = owner?.primary_page || row.intended_winner_path || row.implementation_path || `agent/${slug(row.query)}.html`;
+  const operation = owner ? 'REPAIR_INTENDED_WINNER_PAGE' : (row.operation === 'REPAIR_INTENDED_WINNER_PAGE' ? 'REPAIR_INTENDED_WINNER_PAGE' : 'CREATE_NEW_TARGET_PAGE');
   const pageSpec=specFor(pathValue, group);
   if(operation === 'REPAIR_INTENDED_WINNER_PAGE') priority_pages[pathValue]=pageSpec;
   else new_pages[pathValue]=pageSpec;

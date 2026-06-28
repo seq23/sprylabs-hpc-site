@@ -20,6 +20,29 @@ async function fetchText(url){ await throttle(); const c=new AbortController(); 
 function strip(html){ return String(html||'').replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\s+/g,' ').trim(); }
 async function collectYoutube(source){ const out=[]; for(const term of (source.search_terms||[]).slice(0, TERM_LIMIT)){ try{ const html=await fetchText(`https://www.youtube.com/results?search_query=${encodeURIComponent(term)}`); const text=strip(html).slice(0,4000); if(HIGH_INTENT.test(`${term} ${text}`)) out.push({platform:'youtube',source_key:source.source_key,term,title:term,excerpt:text.slice(0,300),score:score(`${term} ${text}`),captured_at:new Date().toISOString()}); }catch(e){ out.push({platform:'youtube',source_key:source.source_key,term,status:'warning_only_fetch_failed',error:String(e.message||e),captured_at:new Date().toISOString()}); } } return out.filter(x=>!x.error && x.score>=60).slice(0,10); }
 function collectManual(source){ const p=path.join(ROOT,'data/social/manual_import.json'); if(!fs.existsSync(p)) return []; const j=JSON.parse(fs.readFileSync(p,'utf8')); return (j.items||[]).map((x,i)=>({platform:'manual',source_key:source.source_key,id:`manual_${i}`,score:score(`${x.title||''} ${x.excerpt||''}`),captured_at:new Date().toISOString(),...x})).filter(x=>x.score>=60); }
-async function main(){ ensureDir(OUT_DIR); const registry=JSON.parse(fs.readFileSync(REGISTRY,'utf8')); const results=[]; const health=[]; for(const source of registry.sources||[]){ if(source.status==='inactive') continue; try{ let rows=[]; if(source.platform==='youtube') rows=await collectYoutube(source); else if(source.platform==='manual') rows=collectManual(source); else rows=[]; results.push(...rows); health.push({source_key:source.source_key,platform:source.platform,status:rows.length?'ok':'warning_only_empty',count:rows.length}); }catch(e){ health.push({source_key:source.source_key,platform:source.platform,status:'warning_only_failed',error:String(e.message||e),count:0}); } }
- const payload={generated_at:new Date().toISOString(),policy:registry.policy,pipeline_role:registry.pipeline_role||'query_discovery_only',records:results,health}; fs.writeFileSync(path.join(OUT_DIR,`${today}.json`),JSON.stringify(payload,null,2)); console.log(`social:collect wrote ${results.length} high-intent social records`); if(health.some(h=>h.status!=='ok')) console.warn('social:collect warning-only source gaps present'); }
+async function main(){
+ ensureDir(OUT_DIR);
+ const registry=JSON.parse(fs.readFileSync(REGISTRY,'utf8'));
+ const rawSources=Array.isArray(registry.sources)?registry.sources:[];
+ const activeSources=rawSources
+   .filter(source => source && typeof source === 'object')
+   .filter(source => source.status !== 'inactive' && ['youtube','manual'].includes(source.platform));
+ const results=[];
+ const health=[];
+ for(const source of activeSources){
+   try{
+     let rows=[];
+     if(source.platform==='youtube') rows=await collectYoutube(source);
+     else if(source.platform==='manual') rows=collectManual(source);
+     results.push(...rows);
+     health.push({source_key:source.source_key,platform:source.platform,status:rows.length?'ok':'empty_no_action',count:rows.length});
+   }catch(e){
+     health.push({source_key:source.source_key,platform:source.platform,status:'warning_only_failed',error:String(e.message||e),count:0});
+   }
+ }
+ const payload={generated_at:new Date().toISOString(),policy:registry.policy,pipeline_role:registry.pipeline_role||'query_discovery_only',records:results,health,source_mode:activeSources.length?'active_sources':'offline_safe_no_active_sources'};
+ fs.writeFileSync(path.join(OUT_DIR,`${today}.json`),JSON.stringify(payload,null,2));
+ console.log(`social:collect wrote ${results.length} high-intent social records`);
+ if(health.some(h=>h.status==='warning_only_failed')) console.warn('social:collect warning-only fetch failures present');
+}
 main().catch(e=>{ console.error(e); process.exit(1); });

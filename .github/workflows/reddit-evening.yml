@@ -1,21 +1,28 @@
 name: Reddit Evening
+
 on:
   workflow_dispatch:
   schedule:
     - cron: '20 0 * * *'
+  push:
+    paths:
+      - 'data/report_fixes/agent_runs/**/agent_run_manifest.json'
+
+env:
+  NODE_OPTIONS: --max-old-space-size=3072
+  REDDIT_ACCESS_TOKEN: ${{ secrets.REDDIT_ACCESS_TOKEN }}
+  REDDIT_USER_AGENT: ${{ secrets.REDDIT_USER_AGENT }}
+
 permissions:
   contents: write
+
 concurrency:
   group: main-automation
   cancel-in-progress: false
-env:
-  NODE_OPTIONS: --max-old-space-size=3072
+
 jobs:
-  rotate:
+  run:
     runs-on: ubuntu-latest
-    env:
-      REDDIT_ACCESS_TOKEN: ${{ secrets.REDDIT_ACCESS_TOKEN }}
-      REDDIT_USER_AGENT: ${{ secrets.REDDIT_USER_AGENT }}
     steps:
       - uses: actions/checkout@v6
         with:
@@ -25,16 +32,10 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
-      - name: Run governed Reddit evening refresh
-        run: npm run workflow:run -- --workflow reddit-evening -- npm run programmatic:run-lane -- --lane reddit -- npm run workflow:reddit-evening
-      - name: Commit and push if changed
-        env:
-          GIT_RESTORE_TARGETS: 'data/answer_surface data/answer_surface_monitoring data/backlog reports .build coverage'
-        run: './.github/scripts/commit_and_push_if_changed.sh "chore: reddit evening refresh" reddit-evening'
+      - run: npm run workflow:run -- --workflow reddit-evening -- npm run programmatic:run-lane -- --lane reddit -- npm run workflow:reddit-evening
+      - run: ./.github/scripts/commit_and_push_if_changed.sh "chore: reddit evening refresh" reddit-evening
       - uses: actions/upload-artifact@v7
         if: always()
         with:
-          name: workflow-trace-reddit-evening-${{ github.run_number }}
+          name: reddit-evening-trace
           path: reports/workflows/reddit-evening/
-          if-no-files-found: error
-          retention-days: 30

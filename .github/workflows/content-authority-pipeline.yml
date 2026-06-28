@@ -1,21 +1,27 @@
 name: Content Authority Pipeline
+
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - 'data/report_fixes/agent_runs/**/agent_run_manifest.json'
   schedule:
     - cron: '17 14 * * *'
+  push:
+    paths:
+      - 'data/report_fixes/agent_runs/**/agent_run_manifest.json'
+
+env:
+  NODE_OPTIONS: --max-old-space-size=3072
+  REDDIT_ACCESS_TOKEN: ${{ secrets.REDDIT_ACCESS_TOKEN }}
+  REDDIT_USER_AGENT: ${{ secrets.REDDIT_USER_AGENT }}
+
 permissions:
   contents: write
+
 concurrency:
   group: main-automation
   cancel-in-progress: false
-env:
-  NODE_OPTIONS: --max-old-space-size=3072
+
 jobs:
-  build-authority-system:
+  run:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -26,22 +32,10 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
-      - name: Run governed content authority pipeline
-        run: npm run workflow:run -- --workflow content-authority -- npm run programmatic:run-lane -- --lane authority -- npm run workflow:content-authority
-      - name: Commit generated authority updates
-        env:
-          GIT_RESTORE_TARGETS: '.build coverage reports'
-        run: './.github/scripts/commit_and_push_if_changed.sh "Run content authority pipeline" content-authority'
+      - run: npm run workflow:run -- --workflow content-authority -- npm run programmatic:run-lane -- --lane authority -- npm run workflow:content-authority
+      - run: ./.github/scripts/commit_and_push_if_changed.sh "Run content authority pipeline" content-authority
       - uses: actions/upload-artifact@v7
         if: always()
         with:
-          name: workflow-trace-content-authority-${{ github.run_number }}
-          path: |
-            reports/workflows/content-authority/
-            artifacts/validation/agent-exact-implementation*.json
-            data/citation/agent_page_specs.generated.json
-            data/citation/agent_repair_specs.generated.json
-            data/report_fixes/agent_exact_implementation_policy.json
-            reports/bhpc-agent-*.json
-          if-no-files-found: error
-          retention-days: 30
+          name: content-authority-trace
+          path: reports/workflows/content-authority/

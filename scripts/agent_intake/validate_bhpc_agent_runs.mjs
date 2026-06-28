@@ -7,7 +7,7 @@ const errors = [];
 const warnings = [];
 const runs = [];
 const dateRe = /^\d{4}-\d{2}-\d{2}$/;
-const allowedFields = new Set(['source','run_date','scope','bucket','csv_path','html_path','status','created_at','absorbed_at','absorbed_record_count','normalized_path','social_run_path','notes']);
+const allowedFields = new Set(['source','run_date','scope','bucket','csv_path','html_path','status','created_at','absorbed_at','absorbed_record_count','normalized_path','social_run_path','notes','exact_implementation_policy']);
 
 for (const entry of findAgentManifests()) {
   const manifest = entry.manifest || {};

@@ -1,22 +1,21 @@
 name: Validate
+
 on:
+  workflow_dispatch:
   push:
-    branches: [main]
   pull_request:
-permissions:
-  contents: read
-concurrency:
-  group: main-automation
-  cancel-in-progress: false
+
 env:
   NODE_OPTIONS: --max-old-space-size=3072
+
+permissions:
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
       - uses: actions/setup-node@v6
         with:
           node-version: 24
@@ -24,11 +23,9 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm run release:ci-validate
       - uses: actions/upload-artifact@v7
+        if: always()
         with:
-          name: sprylabs-hpc-validated-${{ github.sha }}
+          name: validated-distribution
           path: |
-            .build
+            .build/**
             reports/validation-attestation.json
-          include-hidden-files: true
-          if-no-files-found: error
-          retention-days: 14

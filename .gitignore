@@ -1,31 +1,3 @@
-__pycache__/
-*.pyc
-reports/
-.build/
-coverage/
-reports/
-data/authority/
-data/answer_surface/
-data/answer_surface_monitoring/
-
-# Generated runtime/build artifacts - do not track
-.build/
-coverage/
-reports/
-data/backlog/
-data/intake/query_clusters.json
-data/intake/query_corpus.json
-data/intake/query_scores.json
-data/intake/query_universe.json
-data/intake/source_ingestion/
-data/answer_surface/
-data/answer_surface_monitoring/
-data/intake/build_backlog.json
-
-# Local patch backups
-_ops/patch-backups/
-
-# Local dependencies, browser evidence, diagnostics, and secrets
 node_modules/
 artifacts/diagnostics/
 test-results/
@@ -36,8 +8,11 @@ logs/
 .tmp/
 .runtime-data/
 .DS_Store
-npm-debug.log*
 .env
 .env.*
 !.env.example
-!.env.*.example
+.wrangler/
+tmp/
+coverage/
+__pycache__/
+*.pyc

@@ -1,17 +1,27 @@
 name: Weekly Synthesis Builder
+
 on:
   workflow_dispatch:
   schedule:
     - cron: '45 14 * * 1'
+  push:
+    paths:
+      - 'data/report_fixes/agent_runs/**/agent_run_manifest.json'
+
+env:
+  NODE_OPTIONS: --max-old-space-size=3072
+  REDDIT_ACCESS_TOKEN: ${{ secrets.REDDIT_ACCESS_TOKEN }}
+  REDDIT_USER_AGENT: ${{ secrets.REDDIT_USER_AGENT }}
+
 permissions:
   contents: write
+
 concurrency:
   group: main-automation
   cancel-in-progress: false
-env:
-  NODE_OPTIONS: --max-old-space-size=3072
+
 jobs:
-  synthesis:
+  run:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -22,16 +32,10 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
-      - name: Run governed weekly synthesis
-        run: npm run workflow:run -- --workflow synthesis-weekly -- npm run programmatic:run-lane -- --lane synthesis -- npm run workflow:synthesis-weekly
-      - name: Commit synthesis updates
-        env:
-          GIT_RESTORE_TARGETS: '.build coverage reports'
-        run: './.github/scripts/commit_and_push_if_changed.sh "Build weekly synthesis layer" synthesis-weekly'
+      - run: npm run workflow:run -- --workflow synthesis-weekly -- npm run programmatic:run-lane -- --lane synthesis -- npm run workflow:synthesis-weekly
+      - run: ./.github/scripts/commit_and_push_if_changed.sh "Build weekly synthesis layer" synthesis-weekly
       - uses: actions/upload-artifact@v7
         if: always()
         with:
-          name: workflow-trace-synthesis-weekly-${{ github.run_number }}
+          name: synthesis-weekly-trace
           path: reports/workflows/synthesis-weekly/
-          if-no-files-found: error
-          retention-days: 30

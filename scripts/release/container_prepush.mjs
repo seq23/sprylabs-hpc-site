@@ -13,6 +13,7 @@ function node(label, script){
   if(r.status!==0)process.exit(r.status??1);
 }
 run('build:all',['run','build:all']);
+node('repair:programmatic-registry-owners','scripts/content/repair_programmatic_registry_owners.mjs');
 // Decomposed validate:all, same gates, less brittle for large 2K-surface baseline validation in constrained containers.
 for (const [label,args] of [
   ['validate:repo',['run','validate:repo']],
@@ -26,6 +27,7 @@ for (const [label,args] of [
   ['validate:disavow-asset',['run','validate:disavow-asset']],
   ['validate:programmatic-provenance',['run','validate:programmatic-provenance']],
   ['validate:programmatic-registry',['run','validate:programmatic-registry']],
+  ['repair:citation-contract-surfaces',['run','repair:citation-contract-surfaces']],
   ['validate:citation-contract',['run','validate:citation-contract']],
   ['validate:citation-strategy',['run','validate:citation-strategy']],
   ['validate:rendered-schema-parity',['run','validate:rendered-schema-parity']],

@@ -65,17 +65,29 @@ while (priority.length < 32) {
   if (!priority.includes(candidate)) priority.push(candidate);
 }
 const priorityUrls = priority.slice(0, 32);
-const batchUrls = allUrls.slice().sort();
+const INDEXNOW_ACTIVE_BATCH_LIMIT = Number(process.env.INDEXNOW_ACTIVE_BATCH_LIMIT || 100);
+const sortedBatchUrls = allUrls.slice().sort();
+const batchUrls = [];
+for (const url of priorityUrls) {
+  if (!batchUrls.includes(url) && batchUrls.length < INDEXNOW_ACTIVE_BATCH_LIMIT) batchUrls.push(url);
+}
+for (const url of sortedBatchUrls) {
+  if (!batchUrls.includes(url) && batchUrls.length < INDEXNOW_ACTIVE_BATCH_LIMIT) batchUrls.push(url);
+}
+const batchSet = new Set(batchUrls);
+const deferredBatchUrls = sortedBatchUrls.filter((url) => !batchSet.has(url));
 fs.writeFileSync(path.join(buildDir, 'indexnow-priority.txt'), priorityUrls.join('\n') + '\n');
 fs.writeFileSync(path.join(buildDir, 'distribution-priority-urls.txt'), priorityUrls.join('\n') + '\n');
 fs.writeFileSync(path.join(buildDir, 'indexnow-batch.txt'), batchUrls.join('\n') + '\n');
+fs.writeFileSync(path.join(buildDir, 'indexnow-deferred-batch.txt'), deferredBatchUrls.join('\n') + (deferredBatchUrls.length ? '\n' : ''));
 const manifest = {
   generated_at: new Date().toISOString(),
-  counts: { spry: spryUrls.length, bhpc: bhpcUrls.length, priority: priorityUrls.length, batch: batchUrls.length },
+  counts: { spry: spryUrls.length, bhpc: bhpcUrls.length, priority: priorityUrls.length, batch: batchUrls.length, deferred_batch: deferredBatchUrls.length, active_batch_limit: INDEXNOW_ACTIVE_BATCH_LIMIT },
   files: {
     priority: '.build/indexnow-priority.txt',
     distribution_priority: '.build/distribution-priority-urls.txt',
-    batch: '.build/indexnow-batch.txt'
+    batch: '.build/indexnow-batch.txt',
+    deferred_batch: '.build/indexnow-deferred-batch.txt'
   }
 };
 fs.writeFileSync(path.join(buildDir, 'distribution-manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
@@ -84,14 +96,17 @@ const readme = [
   '',
   `Priority URLs: ${priorityUrls.length}`,
   `Batch URLs: ${batchUrls.length}`,
+  `Deferred batch URLs: ${deferredBatchUrls.length}`,
+  `Active batch limit: ${INDEXNOW_ACTIVE_BATCH_LIMIT}`,
   '',
   'Files:',
   '- .build/indexnow-priority.txt',
   '- .build/indexnow-batch.txt',
+  '- .build/indexnow-deferred-batch.txt',
   '- .build/distribution-priority-urls.txt',
   '- .build/distribution-manifest.json'
 ].join('\n');
 fs.writeFileSync(path.join(buildDir, 'distribution-readme.txt'), readme + '\n');
-console.log(`distribution artifacts prepared: priority=${priorityUrls.length} batch=${batchUrls.length}`);
+console.log(`distribution artifacts prepared: priority=${priorityUrls.length} batch=${batchUrls.length} deferred=${deferredBatchUrls.length} active_limit=${INDEXNOW_ACTIVE_BATCH_LIMIT}`);
 
 process.exit(0);

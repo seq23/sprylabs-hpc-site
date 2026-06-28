@@ -1,17 +1,27 @@
 name: Citation Velocity 5K
+
 on:
   workflow_dispatch:
   schedule:
     - cron: '12 13 * * *'
+  push:
+    paths:
+      - 'data/report_fixes/agent_runs/**/agent_run_manifest.json'
+
+env:
+  NODE_OPTIONS: --max-old-space-size=3072
+  REDDIT_ACCESS_TOKEN: ${{ secrets.REDDIT_ACCESS_TOKEN }}
+  REDDIT_USER_AGENT: ${{ secrets.REDDIT_USER_AGENT }}
+
 permissions:
   contents: write
+
 concurrency:
   group: main-automation
   cancel-in-progress: false
-env:
-  NODE_OPTIONS: --max-old-space-size=3072
+
 jobs:
-  build-citation-velocity-batch:
+  run:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -22,16 +32,10 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
-      - name: Run governed Citation Velocity 5K batch
-        run: npm run workflow:run -- --workflow citation-velocity-5k -- npm run programmatic:run-lane -- --lane citation_velocity_batch -- npm run workflow:citation-velocity-5k
-      - name: Commit generated citation velocity updates
-        env:
-          GIT_RESTORE_TARGETS: '.build coverage reports'
-        run: './.github/scripts/commit_and_push_if_changed.sh "auto: citation velocity 5k batch" citation-velocity-5k'
+      - run: npm run workflow:run -- --workflow citation-velocity-5k -- npm run programmatic:run-lane -- --lane citation_velocity_batch -- npm run workflow:citation-velocity-5k
+      - run: ./.github/scripts/commit_and_push_if_changed.sh "auto: citation velocity 5k batch" citation-velocity-5k
       - uses: actions/upload-artifact@v7
         if: always()
         with:
-          name: workflow-trace-citation-velocity-5k-${{ github.run_number }}
+          name: citation-velocity-5k-trace
           path: reports/workflows/citation-velocity-5k/
-          if-no-files-found: error
-          retention-days: 30

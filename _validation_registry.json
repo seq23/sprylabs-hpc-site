@@ -2406,6 +2406,96 @@
         "MX-075"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-076",
+      "status": "ADMITTED",
+      "name": "validate:indexnow-batch-budget",
+      "check_type": "validator",
+      "owning_lane": "indexnow",
+      "risk_prevented": "Prevents unvalidated validate:indexnow-batch-budget behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "Added during pantry/root-fix reconciliation so new governed package scripts are admitted.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:indexnow-batch-budget",
+      "implementation_path": "scripts/validation/validate_indexnow_batch_budget.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-indexnow-batch-budget/summary.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted for 2026-06-27 pantry and IndexNow root-fix baseline reconciliation.",
+      "decision_date": "2026-06-27",
+      "matrix_ids": [
+        "MX-076"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-077",
+      "status": "ADMITTED",
+      "name": "validate:hpc-pantry",
+      "check_type": "validator",
+      "owning_lane": "content-pantry",
+      "risk_prevented": "Prevents unvalidated validate:hpc-pantry behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "Added during pantry/root-fix reconciliation so new governed package scripts are admitted.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:hpc-pantry",
+      "implementation_path": "scripts/content/validate_hpc_pantry.js",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-hpc-pantry/summary.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted for 2026-06-27 pantry and IndexNow root-fix baseline reconciliation.",
+      "decision_date": "2026-06-27",
+      "matrix_ids": [
+        "MX-077"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-078",
+      "status": "ADMITTED",
+      "name": "trace:hpc-pantry",
+      "check_type": "validator",
+      "owning_lane": "content-pantry",
+      "risk_prevented": "Prevents unvalidated trace:hpc-pantry behavior from entering the release lifecycle.",
+      "existing_coverage_gap": "Added during pantry/root-fix reconciliation so new governed package scripts are admitted.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run trace:hpc-pantry",
+      "implementation_path": "scripts/content/trace_hpc_pantry_usage.js",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/trace-hpc-pantry/summary.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted for 2026-06-27 pantry and IndexNow root-fix baseline reconciliation.",
+      "decision_date": "2026-06-27",
+      "matrix_ids": [
+        "MX-078"
+      ],
+      "not_applicable_reason": null
     }
   ]
 }

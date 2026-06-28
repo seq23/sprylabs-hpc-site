@@ -1,17 +1,27 @@
 name: Daily Insight
+
 on:
   workflow_dispatch:
   schedule:
     - cron: '20 14 * * *'
+  push:
+    paths:
+      - 'data/report_fixes/agent_runs/**/agent_run_manifest.json'
+
+env:
+  NODE_OPTIONS: --max-old-space-size=3072
+  REDDIT_ACCESS_TOKEN: ${{ secrets.REDDIT_ACCESS_TOKEN }}
+  REDDIT_USER_AGENT: ${{ secrets.REDDIT_USER_AGENT }}
+
 permissions:
   contents: write
+
 concurrency:
   group: main-automation
   cancel-in-progress: false
-env:
-  NODE_OPTIONS: --max-old-space-size=3072
+
 jobs:
-  release:
+  run:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -22,16 +32,10 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
-      - name: Run governed daily insight release
-        run: npm run workflow:run -- --workflow daily-insight -- npm run programmatic:run-lane -- --lane daily_insight -- npm run workflow:daily-insight
-      - name: Commit and push if changed
-        env:
-          GIT_RESTORE_TARGETS: '.build coverage reports'
-        run: './.github/scripts/commit_and_push_if_changed.sh "chore: release daily insight" daily-insight'
+      - run: npm run workflow:run -- --workflow daily-insight -- npm run programmatic:run-lane -- --lane daily_insight -- npm run workflow:daily-insight
+      - run: ./.github/scripts/commit_and_push_if_changed.sh "chore: release daily insight" daily-insight
       - uses: actions/upload-artifact@v7
         if: always()
         with:
-          name: workflow-trace-daily-insight-${{ github.run_number }}
+          name: daily-insight-trace
           path: reports/workflows/daily-insight/
-          if-no-files-found: error
-          retention-days: 30
