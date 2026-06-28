@@ -101,6 +101,18 @@ for (const name of actualWorkflows) {
   if (!requiredFiles.has(rel)) errors.push(`${name}: workflow missing from baseline critical-file parity`);
 
   if (mutationWorkflows.has(name)) {
+    const hasPushTrigger = /^\s{2}push:\s*$/m.test(text);
+    if (name === 'content-authority-pipeline.yml') {
+      if (!hasPushTrigger) errors.push(`${name}: BHPC artifact intake must retain manifest-only push trigger`);
+    } else if (hasPushTrigger) {
+      errors.push(`${name}: scheduled governed workflow must not run on push; only Content Authority may push-trigger from agent_run_manifest.json`);
+    }
+    for (const [lineNo, line] of lines.entries()) {
+      const inline = line.match(/^\s*-\s+run:\s+(.+)$/);
+      if (inline && inline[1].trim() !== '|' && /:\s/.test(inline[1])) {
+        errors.push(`${name}: line ${lineNo + 1} has colon-bearing inline run command; use block scalar run: | to avoid invalid workflow YAML`);
+      }
+    }
     if (!/permissions:\s*\n\s{2}contents:\s*write/m.test(text)) errors.push(`${name}: mutating workflow requires contents: write`);
     if (!/concurrency:\s*\n\s{2}group:\s*main-automation\s*\n\s{2}cancel-in-progress:\s*false/m.test(text)) {
       errors.push(`${name}: mutating workflow must serialize through main-automation`);

@@ -173,6 +173,12 @@ if AGENT_REPAIR_SPEC_PATH.exists():
     PRIORITY.update(_repair_payload.get("priority_pages", {}))
     NEW_PAGES.update(_repair_payload.get("new_pages", {}))
 
+AGENT_HTML_REPORT_SPEC_PATH = ROOT / "data/citation/agent_html_report_page_specs.generated.json"
+if AGENT_HTML_REPORT_SPEC_PATH.exists():
+    _html_report_payload = json.loads(AGENT_HTML_REPORT_SPEC_PATH.read_text(encoding="utf-8"))
+    PRIORITY.update(_html_report_payload.get("priority_pages", {}))
+    NEW_PAGES.update(_html_report_payload.get("new_pages", {}))
+
 
 RELATED = [
     ("/chatgpt-accountability-partner.html", "Use ChatGPT as an accountability partner"),
@@ -282,7 +288,9 @@ def canonical_for(path: str) -> str:
         route=path[:-len("index.html")] if path.endswith("/index.html") else path
         return host + route
     spry_prefixes=("insights/","continuity-collapse-pattern/","how-to-stay-consistent/","atlas.html","pillars/","topics/","models/","answers/","clusters/","whitepapers/","coverage/","reports/","ai-execution-atlas/")
-    if path in SPRY_ROOT_PATHS or path.startswith(spry_prefixes):
+    if path.startswith("comparisons/bhpc-vs-"):
+        host="https://billionairehighperformancecoach.com/"
+    elif path.startswith("comparisons/") or path in SPRY_ROOT_PATHS or path.startswith(spry_prefixes):
         host="https://spryexecutiveos.com/"
     else:
         host="https://billionairehighperformancecoach.com/"

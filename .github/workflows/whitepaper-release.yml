@@ -4,9 +4,6 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '15 15 1 6,12 *'
-  push:
-    paths:
-      - 'data/report_fixes/agent_runs/**/agent_run_manifest.json'
 
 env:
   NODE_OPTIONS: --max-old-space-size=3072
@@ -32,8 +29,10 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
-      - run: npm run workflow:run -- --workflow whitepaper-release -- npm run programmatic:run-lane -- --lane whitepaper -- npm run workflow:whitepaper
-      - run: ./.github/scripts/commit_and_push_if_changed.sh "chore: release scheduled white paper" whitepaper-release
+      - run: |
+          npm run workflow:run -- --workflow whitepaper-release -- npm run programmatic:run-lane -- --lane whitepaper -- npm run workflow:whitepaper
+      - run: |
+          ./.github/scripts/commit_and_push_if_changed.sh "chore: release scheduled white paper" whitepaper-release
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -29,6 +29,9 @@ jobs:
         with:
           name: validated-distribution
           path: .
-      - run: npm run release:verify-attestation
-      - run: npm run distribution:deploy
-      - run: npm run release:ci-validate
+      - run: |
+          npm run release:verify-attestation
+      - run: |
+          npm run distribution:deploy
+      - run: |
+          npm run release:ci-validate

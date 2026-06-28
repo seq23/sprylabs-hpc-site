@@ -13,6 +13,9 @@ function node(label, script){
   if(r.status!==0)process.exit(r.status??1);
 }
 run('build:all',['run','build:all']);
+run('agent:bhpc:apply-report-contract',['run','agent:bhpc:apply-report-contract']);
+run('build:postprocess',['run','build:postprocess']);
+run('agent:bhpc:apply-report-contract',['run','agent:bhpc:apply-report-contract']);
 node('repair:programmatic-registry-owners','scripts/content/repair_programmatic_registry_owners.mjs');
 // Decomposed validate:all, same gates, less brittle for large 2K-surface baseline validation in constrained containers.
 for (const [label,args] of [

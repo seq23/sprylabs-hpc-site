@@ -4,9 +4,6 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '45 13 * * 1-5'
-  push:
-    paths:
-      - 'data/report_fixes/agent_runs/**/agent_run_manifest.json'
 
 env:
   NODE_OPTIONS: --max-old-space-size=3072
@@ -32,8 +29,10 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
-      - run: npm run workflow:run -- --workflow social-signal -- npm run programmatic:run-lane -- --lane daily_insight -- npm run workflow:social-signal
-      - run: ./.github/scripts/commit_and_push_if_changed.sh "chore: social signal refresh" social-signal
+      - run: |
+          npm run workflow:run -- --workflow social-signal -- npm run programmatic:run-lane -- --lane daily_insight -- npm run workflow:social-signal
+      - run: |
+          ./.github/scripts/commit_and_push_if_changed.sh "chore: social signal refresh" social-signal
       - uses: actions/upload-artifact@v4
         if: always()
         with:

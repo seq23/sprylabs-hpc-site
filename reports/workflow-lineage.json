@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-06-28T00:21:35.464Z",
+  "generated_at": "2026-06-28T01:37:14.123Z",
   "status": "PASS",
   "workflows": [
     {
@@ -9,11 +9,12 @@
       "workflow_command": "npm run workflow:content-authority",
       "input_pattern_count": 12,
       "output_pattern_count": 13,
-      "matched_input_count": 115,
-      "matched_output_count": 862,
+      "matched_input_count": 116,
+      "matched_output_count": 938,
       "sample_inputs": [
         "config/social_ingestion_policy.json",
         "config/social_sources.json",
+        "data/citation/agent_html_report_page_specs.generated.json",
         "data/citation/agent_page_specs.generated.json",
         "data/citation/agent_page_specs.json",
         "data/citation/agent_recommendation_acceptance.json",
@@ -22,8 +23,7 @@
         "data/citation/agent_runs/2026-06-23-bhpc.json",
         "data/citation/agent_runs/2026-06-24-bhpc.json",
         "data/citation/agent_runs/2026-06-27-bhpc.json",
-        "data/citation/citable_pages.json",
-        "data/citation/citation_phase_manifest.json"
+        "data/citation/citable_pages.json"
       ],
       "sample_outputs": [
         "admin.html",
@@ -32,12 +32,12 @@
         "comparisons/bhpc-vs-culture-amp.html",
         "comparisons/bhpc-vs-hone.html",
         "comparisons/bhpc-vs-torch.html",
+        "comparisons/has-anyone-else-realised-that-surviving-isnt-the-same-thing-as-living.html",
         "comparisons/index.html",
+        "comparisons/uanonnamrs-on-has-anyone-else-realised-that-surviving-isnt-the-same-thing-as-living.html",
+        "comparisons/umarblerun201-on-has-anyone-else-realised-that-surviving-isnt-the-same-thing-as-living.html",
         "data/answer_surface/score_history.json",
-        "data/answer_surface/weakness_backlog.json",
-        "data/answer_surface_monitoring/observation_candidates.json",
-        "data/answer_surface_monitoring/queries.seed.json",
-        "data/authority/academic_citations.json"
+        "data/answer_surface/weakness_backlog.json"
       ]
     },
     {
@@ -47,7 +47,7 @@
       "input_pattern_count": 5,
       "output_pattern_count": 7,
       "matched_input_count": 241,
-      "matched_output_count": 841,
+      "matched_output_count": 914,
       "sample_inputs": [
         "content/insights/_drafts/2026-04-10_how-to-create-leverage-without-burning-out.md",
         "content/insights/_drafts/2026-04-11_the-20-minute-planning-loop-that-prevents-chaos.md",
@@ -84,7 +84,7 @@
       "input_pattern_count": 8,
       "output_pattern_count": 9,
       "matched_input_count": 36,
-      "matched_output_count": 1459,
+      "matched_output_count": 1535,
       "sample_inputs": [
         "config/query_taxonomy.json",
         "data/content/manual_expansion_pages.json",
@@ -121,7 +121,7 @@
       "input_pattern_count": 5,
       "output_pattern_count": 8,
       "matched_input_count": 15,
-      "matched_output_count": 650,
+      "matched_output_count": 722,
       "sample_inputs": [
         "data/content/page_admission_registry.json",
         "data/reddit/cluster_rules.json",
@@ -304,7 +304,7 @@
       "input_pattern_count": 9,
       "output_pattern_count": 18,
       "matched_input_count": 24,
-      "matched_output_count": 49,
+      "matched_output_count": 50,
       "sample_inputs": [
         "data/citation/citable_pages.json",
         "data/citation/query_registry.json",
@@ -321,6 +321,7 @@
       ],
       "sample_outputs": [
         "answers.json",
+        "data/citation/agent_html_report_page_specs.generated.json",
         "data/citation/agent_page_specs.generated.json",
         "data/citation/agent_page_specs.json",
         "data/citation/agent_recommendation_acceptance.json",
@@ -330,8 +331,7 @@
         "data/citation/agent_runs/2026-06-24-bhpc.json",
         "data/citation/agent_runs/2026-06-27-bhpc.json",
         "data/citation/citable_pages.json",
-        "data/citation/citation_phase_manifest.json",
-        "data/citation/citation_strategy_contract.json"
+        "data/citation/citation_phase_manifest.json"
       ]
     }
   ],
