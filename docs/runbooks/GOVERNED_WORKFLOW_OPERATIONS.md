@@ -49,6 +49,17 @@ npm run validate:workflow-lineage
 
 The report is written to `reports/workflow-lineage.json`.
 
+
+## Generated route-proof manifests
+
+Public-route and browser-suite proof manifests are generated route inventory, not hand-edited source. When a governed workflow admits or quarantines pages, it may regenerate:
+
+- `_public_route_manifest.json`
+- `_critical_browser_route_manifest.json`
+- `_browser_suite_contract.json`
+
+The hostile review still forbids workflow, package, script, docs, test, and config mutation. Route-proof manifest changes are allowed only because they describe the current public route set required by `validate:ui-test-parity` and `validate:browser-suite-contract`.
+
 ## Manual actions
 
 In GitHub:

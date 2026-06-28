@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-06-28T01:37:14.123Z",
+  "generated_at": "2026-06-28T02:09:07.852Z",
   "status": "PASS",
   "workflows": [
     {
@@ -8,9 +8,9 @@
       "workflow_file": ".github/workflows/content-authority-pipeline.yml",
       "workflow_command": "npm run workflow:content-authority",
       "input_pattern_count": 12,
-      "output_pattern_count": 13,
+      "output_pattern_count": 16,
       "matched_input_count": 116,
-      "matched_output_count": 938,
+      "matched_output_count": 941,
       "sample_inputs": [
         "config/social_ingestion_policy.json",
         "config/social_sources.json",
@@ -26,6 +26,9 @@
         "data/citation/citable_pages.json"
       ],
       "sample_outputs": [
+        "_browser_suite_contract.json",
+        "_critical_browser_route_manifest.json",
+        "_public_route_manifest.json",
         "admin.html",
         "comparisons/bhpc-vs-betterup.html",
         "comparisons/bhpc-vs-coachhub.html",
@@ -34,10 +37,7 @@
         "comparisons/bhpc-vs-torch.html",
         "comparisons/has-anyone-else-realised-that-surviving-isnt-the-same-thing-as-living.html",
         "comparisons/index.html",
-        "comparisons/uanonnamrs-on-has-anyone-else-realised-that-surviving-isnt-the-same-thing-as-living.html",
-        "comparisons/umarblerun201-on-has-anyone-else-realised-that-surviving-isnt-the-same-thing-as-living.html",
-        "data/answer_surface/score_history.json",
-        "data/answer_surface/weakness_backlog.json"
+        "comparisons/uanonnamrs-on-has-anyone-else-realised-that-surviving-isnt-the-same-thing-as-living.html"
       ]
     },
     {
@@ -45,9 +45,9 @@
       "workflow_file": ".github/workflows/daily-insight.yml",
       "workflow_command": "npm run workflow:daily-insight",
       "input_pattern_count": 5,
-      "output_pattern_count": 7,
+      "output_pattern_count": 10,
       "matched_input_count": 241,
-      "matched_output_count": 914,
+      "matched_output_count": 917,
       "sample_inputs": [
         "content/insights/_drafts/2026-04-10_how-to-create-leverage-without-burning-out.md",
         "content/insights/_drafts/2026-04-11_the-20-minute-planning-loop-that-prevents-chaos.md",
@@ -63,18 +63,18 @@
         "content/insights/_drafts/2026-05-30_how-to-create-leverage-without-burning-out.md"
       ],
       "sample_outputs": [
+        "_browser_suite_contract.json",
+        "_critical_browser_route_manifest.json",
         "_ops/daily-insights/CONTENT_FAMILY_MAP.md",
         "_ops/daily-insights/README.md",
         "_ops/daily-insights/manifest.json",
         "_ops/daily-insights/preview-index.md",
         "_ops/daily-insights/touched-files-2026-04-12.txt",
+        "_public_route_manifest.json",
         "data/answer_surface/score_history.json",
         "data/answer_surface/weakness_backlog.json",
         "data/answer_surface_monitoring/observation_candidates.json",
-        "data/answer_surface_monitoring/queries.seed.json",
-        "data/authority/academic_citations.json",
-        "data/authority/founder_profile.json",
-        "data/authority/internal_authority_scores.json"
+        "data/answer_surface_monitoring/queries.seed.json"
       ]
     },
     {
@@ -82,9 +82,9 @@
       "workflow_file": ".github/workflows/execution-strict.yml",
       "workflow_command": "npm run workflow:execution-strict",
       "input_pattern_count": 8,
-      "output_pattern_count": 9,
+      "output_pattern_count": 12,
       "matched_input_count": 36,
-      "matched_output_count": 1535,
+      "matched_output_count": 1538,
       "sample_inputs": [
         "config/query_taxonomy.json",
         "data/content/manual_expansion_pages.json",
@@ -100,6 +100,9 @@
         "data/intake/source_ingestion/reddit.json"
       ],
       "sample_outputs": [
+        "_browser_suite_contract.json",
+        "_critical_browser_route_manifest.json",
+        "_public_route_manifest.json",
         "admin.html",
         "answers/accountability-and-consistency.html",
         "answers/agentic-ai-and-existential-questions.html",
@@ -108,10 +111,7 @@
         "answers/ai-high-performance-coach.html",
         "answers/ambition-and-long-horizon-thinking.html",
         "answers/burnout-and-recovery.html",
-        "answers/chatgpt-vs-executive-coach.html",
-        "answers/chief-of-staff-and-life-operations.html",
-        "answers/do-you-need-a-life-coach-or-a-system.html",
-        "answers/executive-coach.html"
+        "answers/chatgpt-vs-executive-coach.html"
       ]
     },
     {
@@ -119,9 +119,9 @@
       "workflow_file": ".github/workflows/reddit-daily.yml",
       "workflow_command": "npm run workflow:reddit-daily",
       "input_pattern_count": 5,
-      "output_pattern_count": 8,
+      "output_pattern_count": 11,
       "matched_input_count": 15,
-      "matched_output_count": 722,
+      "matched_output_count": 725,
       "sample_inputs": [
         "data/content/page_admission_registry.json",
         "data/reddit/cluster_rules.json",
@@ -137,6 +137,9 @@
         "scripts/reddit/renderers/question_template.js"
       ],
       "sample_outputs": [
+        "_browser_suite_contract.json",
+        "_critical_browser_route_manifest.json",
+        "_public_route_manifest.json",
         "data/content/page_admission_registry.json",
         "data/programmatic/latest_run_summary.json",
         "data/reddit/archive/2026-03-19-generated.json",
@@ -145,10 +148,7 @@
         "data/reddit/archive/2026-03-20-publish.json",
         "data/reddit/archive/2026-03-21-generated.json",
         "data/reddit/archive/2026-03-21-publish.json",
-        "data/reddit/archive/2026-03-22-generated.json",
-        "data/reddit/archive/2026-03-22-publish.json",
-        "data/reddit/archive/2026-03-23-generated.json",
-        "data/reddit/archive/2026-03-23-publish.json"
+        "data/reddit/archive/2026-03-22-generated.json"
       ]
     },
     {
@@ -156,9 +156,9 @@
       "workflow_file": ".github/workflows/reddit-evening.yml",
       "workflow_command": "npm run workflow:reddit-evening",
       "input_pattern_count": 5,
-      "output_pattern_count": 6,
+      "output_pattern_count": 9,
       "matched_input_count": 15,
-      "matched_output_count": 502,
+      "matched_output_count": 505,
       "sample_inputs": [
         "data/content/page_admission_registry.json",
         "data/reddit/cluster_rules.json",
@@ -174,6 +174,9 @@
         "scripts/reddit/renderers/question_template.js"
       ],
       "sample_outputs": [
+        "_browser_suite_contract.json",
+        "_critical_browser_route_manifest.json",
+        "_public_route_manifest.json",
         "data/clusters/approved_clusters.json",
         "data/clusters/clusters.json",
         "data/clusters/rejected_clusters.json",
@@ -182,10 +185,7 @@
         "data/ingestion/raw/last_ingestion_manifest.json",
         "data/programmatic/latest_run_summary.json",
         "data/reddit/archive/2026-03-19-generated.json",
-        "data/reddit/archive/2026-03-19-publish.json",
-        "data/reddit/archive/2026-03-20-generated.json",
-        "data/reddit/archive/2026-03-20-publish.json",
-        "data/reddit/archive/2026-03-21-generated.json"
+        "data/reddit/archive/2026-03-19-publish.json"
       ]
     },
     {
@@ -193,9 +193,9 @@
       "workflow_file": ".github/workflows/social-signal-processing.yml",
       "workflow_command": "npm run workflow:social-signal",
       "input_pattern_count": 5,
-      "output_pattern_count": 6,
+      "output_pattern_count": 9,
       "matched_input_count": 10,
-      "matched_output_count": 62,
+      "matched_output_count": 65,
       "sample_inputs": [
         "config/social_ingestion_policy.json",
         "config/social_sources.json",
@@ -209,6 +209,9 @@
         "scripts/social/throttle.js"
       ],
       "sample_outputs": [
+        "_browser_suite_contract.json",
+        "_critical_browser_route_manifest.json",
+        "_public_route_manifest.json",
         "data/clusters/approved_clusters.json",
         "data/clusters/clusters.json",
         "data/clusters/rejected_clusters.json",
@@ -217,10 +220,7 @@
         "data/ingestion/raw/last_ingestion_manifest.json",
         "data/programmatic/latest_run_summary.json",
         "data/social/publish_queue.json",
-        "data/social/published_manifest.json",
-        "data/social/runs/2026-04-26.json",
-        "data/social/runs/2026-04-27.json",
-        "data/social/runs/2026-04-28.json"
+        "data/social/published_manifest.json"
       ]
     },
     {
@@ -228,9 +228,9 @@
       "workflow_file": ".github/workflows/synthesis-weekly.yml",
       "workflow_command": "npm run workflow:synthesis-weekly",
       "input_pattern_count": 5,
-      "output_pattern_count": 6,
+      "output_pattern_count": 9,
       "matched_input_count": 18,
-      "matched_output_count": 26,
+      "matched_output_count": 29,
       "sample_inputs": [
         "data/clusters/approved_clusters.json",
         "data/clusters/clusters.json",
@@ -246,6 +246,9 @@
         "templates/layout.html"
       ],
       "sample_outputs": [
+        "_browser_suite_contract.json",
+        "_critical_browser_route_manifest.json",
+        "_public_route_manifest.json",
         "admin.html",
         "data/content/page_admission_registry.json",
         "data/programmatic/latest_run_summary.json",
@@ -254,10 +257,7 @@
         "releases/fanout_query_clusters.bhpc.json",
         "synthesis-accountability-and-consistency.html",
         "synthesis-ai-coaching-athlete.html",
-        "synthesis-ai-coaching-founder.html",
-        "synthesis-ai-exec-coach.html",
-        "synthesis-ai-executive-coaching.html",
-        "synthesis-comparison-athlete.html"
+        "synthesis-ai-coaching-founder.html"
       ]
     },
     {
@@ -265,9 +265,9 @@
       "workflow_file": ".github/workflows/whitepaper-release.yml",
       "workflow_command": "npm run workflow:whitepaper",
       "input_pattern_count": 5,
-      "output_pattern_count": 6,
+      "output_pattern_count": 9,
       "matched_input_count": 16,
-      "matched_output_count": 147,
+      "matched_output_count": 150,
       "sample_inputs": [
         "data/content/page_admission_registry.json",
         "data/content/programmatic_lane_contracts.json",
@@ -283,6 +283,9 @@
         "templates/pillar_page.html"
       ],
       "sample_outputs": [
+        "_browser_suite_contract.json",
+        "_critical_browser_route_manifest.json",
+        "_public_route_manifest.json",
         "about.html",
         "admin.html",
         "ai-accountability-coach-for-founders.html",
@@ -291,10 +294,7 @@
         "ai-accountability-system-vs-habit-tracker.html",
         "ai-coach-vs-human-coach-for-founders.html",
         "ai-coach-vs-human-coach.html",
-        "ai-daily-planning-prompt-for-busy-founders.html",
-        "ai-executive-coach-alternative-for-high-performers.html",
-        "ai-executive-coach-for-founders.html",
-        "ai-executive-coach.html"
+        "ai-daily-planning-prompt-for-busy-founders.html"
       ]
     },
     {
@@ -302,9 +302,9 @@
       "workflow_file": ".github/workflows/citation-velocity-5k.yml",
       "workflow_command": "npm run workflow:citation-velocity-5k",
       "input_pattern_count": 9,
-      "output_pattern_count": 18,
+      "output_pattern_count": 21,
       "matched_input_count": 24,
-      "matched_output_count": 50,
+      "matched_output_count": 53,
       "sample_inputs": [
         "data/citation/citable_pages.json",
         "data/citation/query_registry.json",
@@ -320,6 +320,9 @@
         "scripts/programmatic/run_lane.mjs"
       ],
       "sample_outputs": [
+        "_browser_suite_contract.json",
+        "_critical_browser_route_manifest.json",
+        "_public_route_manifest.json",
         "answers.json",
         "data/citation/agent_html_report_page_specs.generated.json",
         "data/citation/agent_page_specs.generated.json",
@@ -328,10 +331,7 @@
         "data/citation/agent_repair_specs.generated.json",
         "data/citation/agent_runs/2026-06-20.json",
         "data/citation/agent_runs/2026-06-23-bhpc.json",
-        "data/citation/agent_runs/2026-06-24-bhpc.json",
-        "data/citation/agent_runs/2026-06-27-bhpc.json",
-        "data/citation/citable_pages.json",
-        "data/citation/citation_phase_manifest.json"
+        "data/citation/agent_runs/2026-06-24-bhpc.json"
       ]
     }
   ],

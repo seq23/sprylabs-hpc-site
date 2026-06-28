@@ -25,13 +25,19 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
-      - uses: actions/download-artifact@v4
+      - name: Validate and attest manual deployment
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          npm run release:ci-validate
+      - name: Download validated distribution from Validate run
+        if: github.event_name == 'workflow_run'
+        uses: actions/download-artifact@v4
         with:
           name: validated-distribution
           path: .
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
       - run: |
           npm run release:verify-attestation
       - run: |
           npm run distribution:deploy
-      - run: |
-          npm run release:ci-validate
