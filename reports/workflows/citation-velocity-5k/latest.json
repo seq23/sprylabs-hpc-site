@@ -1,0 +1,1422 @@
+{
+  "schema_version": "1.0",
+  "workflow_id": "citation-velocity-5k",
+  "workflow_name": "Citation Velocity 5K",
+  "run_id": "20260628134940-2366",
+  "trigger": "schedule",
+  "repository": "seq23/sprylabs-hpc-site",
+  "ref": "refs/heads/main",
+  "sha": "6d8101099ab315f169131ca43ac22af8e41a99c2",
+  "actor": "seq23",
+  "started_at": "2026-06-28T13:49:40.368Z",
+  "command": "npm run programmatic:run-lane -- --lane citation_velocity_batch -- npm run workflow:citation-velocity-5k",
+  "contract_file": "data/workflows/workflow_contracts.json",
+  "workflow_file": ".github/workflows/citation-velocity-5k.yml",
+  "lane": "citation_velocity_batch",
+  "lineage": {
+    "input_patterns": [
+      "data/citation_velocity/**",
+      "data/content/page_admission_registry.json",
+      "data/content/programmatic_lane_contracts.json",
+      "data/citation/query_registry.json",
+      "data/citation/citable_pages.json",
+      "data/programmatic/programmatic_page_candidates.json",
+      "scripts/programmatic/generate_citation_velocity_batch.mjs",
+      "scripts/programmatic/run_lane.mjs",
+      "templates/**"
+    ],
+    "output_patterns": [
+      "answers/citation-velocity/**",
+      "use-cases/citation-velocity/**",
+      "vs/citation-velocity/**",
+      "methods/citation-velocity/**",
+      "glossary/citation-velocity/**",
+      "platforms/citation-velocity/**",
+      "brand-defense/citation-velocity/**",
+      "data/citation_velocity/**",
+      "data/content/page_admission_registry.json",
+      "data/programmatic/latest_run_summary.json",
+      "data/programmatic/programmatic_page_candidates.json",
+      "data/citation/**",
+      "answers.json",
+      "llms*.txt",
+      "sitemap*.xml",
+      "sitemaps/**",
+      "feed.xml",
+      "feed.json",
+      "_public_route_manifest.json",
+      "_critical_browser_route_manifest.json",
+      "_browser_suite_contract.json"
+    ],
+    "inputs_before": [
+      {
+        "file": "data/citation_velocity/atom_axes.json",
+        "sha256": "f2a0d440c370b9de42562c7096daf5c5e45c01963f4322811144a81c3fd6f776",
+        "bytes": 7954
+      },
+      {
+        "file": "data/citation_velocity/daily_runs.json",
+        "sha256": "884781cfb893bf5929578e16e17ef6ff4aa6cd638d5d3b383be965af27a4149b",
+        "bytes": 50266
+      },
+      {
+        "file": "data/citation_velocity/generated_ledger.json",
+        "sha256": "8dacf7a9355da254ed613243da848cd003fc99fe6ea204600339a7c175c96541",
+        "bytes": 169249
+      },
+      {
+        "file": "data/citation_velocity/latest_batch.json",
+        "sha256": "d78ce0f1e598090d5d6c0938798cdf861ed8070ca31fa4ad9b1aeaf1184214ad",
+        "bytes": 20739
+      },
+      {
+        "file": "data/citation_velocity/velocity_5k_plan.json",
+        "sha256": "a4b282b8ee95b7b83ecf4850ce1cefda1d287ae886d40e05e68200faf098ac60",
+        "bytes": 1461
+      },
+      {
+        "file": "data/citation/citable_pages.json",
+        "sha256": "b99d44634952858077946273889fd9acabf99a87f4dd82a67e2f564a22efadc7",
+        "bytes": 1941721
+      },
+      {
+        "file": "data/citation/query_registry.json",
+        "sha256": "4ed13f89e7bd98fd079b2800808450ee973a8f37548e39ebd4b92f8011051613",
+        "bytes": 1068628
+      },
+      {
+        "file": "data/content/page_admission_registry.json",
+        "sha256": "5ede5ebe4abae8d1de3cd63698e6b351c8d8df97b05e37728cbf5373d845bbda",
+        "bytes": 4449319
+      },
+      {
+        "file": "data/content/programmatic_lane_contracts.json",
+        "sha256": "f4d6471e09696f610145a6110a386863daa7eb2d7809667ea59011e86fb361b1",
+        "bytes": 4998
+      },
+      {
+        "file": "data/programmatic/programmatic_page_candidates.json",
+        "sha256": "cb51ba6ad5e1133172f6d6ba02b6908c26de0518dfaf5ab8482592e6c7af41ca",
+        "bytes": 149
+      },
+      {
+        "file": "scripts/programmatic/generate_citation_velocity_batch.mjs",
+        "sha256": "7b77493bcee1fd9066a0c4bf7f1bad1cf7c50f1ff6a9e61be352a6183090063d",
+        "bytes": 22397
+      },
+      {
+        "file": "scripts/programmatic/run_lane.mjs",
+        "sha256": "f97d8c052ed6ebeca847952c9b1f5f219e6c939f57d024b14f9f23de9424a6aa",
+        "bytes": 13322
+      },
+      {
+        "file": "templates/answer_page.html",
+        "sha256": "9c5f80da9be295b81a48db6c3651df14228d5f8d33817ee0e2c92f48fe8619ca",
+        "bytes": 625
+      },
+      {
+        "file": "templates/cluster_page.html",
+        "sha256": "9c5f80da9be295b81a48db6c3651df14228d5f8d33817ee0e2c92f48fe8619ca",
+        "bytes": 625
+      },
+      {
+        "file": "templates/comparison_page.html",
+        "sha256": "604b0dcffb3dfbb6c47326f1eb13c375ee49f25d8fe0c986aaa1c91472f3e3eb",
+        "bytes": 710
+      },
+      {
+        "file": "templates/faq_page.html",
+        "sha256": "9c5f80da9be295b81a48db6c3651df14228d5f8d33817ee0e2c92f48fe8619ca",
+        "bytes": 625
+      },
+      {
+        "file": "templates/insight_page.html",
+        "sha256": "9c5f80da9be295b81a48db6c3651df14228d5f8d33817ee0e2c92f48fe8619ca",
+        "bytes": 625
+      },
+      {
+        "file": "templates/layout.html",
+        "sha256": "4d3a935269b1e66ea95f4b3327672123a015d4b9fc8b72bded55e96292a0e26a",
+        "bytes": 4749
+      },
+      {
+        "file": "templates/location_page.html",
+        "sha256": "9c5f80da9be295b81a48db6c3651df14228d5f8d33817ee0e2c92f48fe8619ca",
+        "bytes": 625
+      },
+      {
+        "file": "templates/pillar_page.html",
+        "sha256": "9c5f80da9be295b81a48db6c3651df14228d5f8d33817ee0e2c92f48fe8619ca",
+        "bytes": 625
+      },
+      {
+        "file": "templates/product_page.html",
+        "sha256": "9c5f80da9be295b81a48db6c3651df14228d5f8d33817ee0e2c92f48fe8619ca",
+        "bytes": 625
+      },
+      {
+        "file": "templates/question_page.html",
+        "sha256": "ab27cd714b7771b62d9a91608e594d00075099bb13b6ae30860e29a67c8c08b7",
+        "bytes": 679
+      },
+      {
+        "file": "templates/readme.md",
+        "sha256": "e07eff877a99cb15a99c035d76c29e3680332a4198aa8471da14b84f6ec71814",
+        "bytes": 276
+      },
+      {
+        "file": "templates/reddit_insight_page.html",
+        "sha256": "2f70c26f766d0e25311c63b34f860508b2dd07d02189ee37ec942420bfa6b840",
+        "bytes": 711
+      }
+    ],
+    "outputs_before": [
+      {
+        "file": "_browser_suite_contract.json",
+        "sha256": "97a10016077c69cf1e9939eaa3158af2d51a13f7bed19361aa23d7d2c168ce68",
+        "bytes": 1348
+      },
+      {
+        "file": "_critical_browser_route_manifest.json",
+        "sha256": "0e5b726bf30997fb77db2fdb5734dfce0fd6395315573257df12f4482447d10e",
+        "bytes": 11625
+      },
+      {
+        "file": "_public_route_manifest.json",
+        "sha256": "7eae8571c8912e6f0b4076df38040b6825346fefd949680828fbbd56d09ae670",
+        "bytes": 1406893
+      },
+      {
+        "file": "answers.json",
+        "sha256": "e643e27fe2d045776785219cefc2ea04d9dd4360aa793fffe765ca3a40854b7c",
+        "bytes": 1925497
+      },
+      {
+        "file": "data/citation_velocity/atom_axes.json",
+        "sha256": "f2a0d440c370b9de42562c7096daf5c5e45c01963f4322811144a81c3fd6f776",
+        "bytes": 7954
+      },
+      {
+        "file": "data/citation_velocity/daily_runs.json",
+        "sha256": "884781cfb893bf5929578e16e17ef6ff4aa6cd638d5d3b383be965af27a4149b",
+        "bytes": 50266
+      },
+      {
+        "file": "data/citation_velocity/generated_ledger.json",
+        "sha256": "8dacf7a9355da254ed613243da848cd003fc99fe6ea204600339a7c175c96541",
+        "bytes": 169249
+      },
+      {
+        "file": "data/citation_velocity/latest_batch.json",
+        "sha256": "d78ce0f1e598090d5d6c0938798cdf861ed8070ca31fa4ad9b1aeaf1184214ad",
+        "bytes": 20739
+      },
+      {
+        "file": "data/citation_velocity/velocity_5k_plan.json",
+        "sha256": "a4b282b8ee95b7b83ecf4850ce1cefda1d287ae886d40e05e68200faf098ac60",
+        "bytes": 1461
+      },
+      {
+        "file": "data/citation/agent_html_report_page_specs.generated.json",
+        "sha256": "f863841f5f44a4596cb2436a8dce34b890d1c328a73772b309386ef2bbdfc414",
+        "bytes": 132866
+      },
+      {
+        "file": "data/citation/agent_page_specs.generated.json",
+        "sha256": "235d3c38a01122fcc52a136ccf30bdc478a52f5a6162d6f211d1678158747ca6",
+        "bytes": 95
+      },
+      {
+        "file": "data/citation/agent_page_specs.json",
+        "sha256": "252ea6eabfd09ccc63ea047b1fa209f109904488fa6ddab275433df4b25c54c3",
+        "bytes": 28839
+      },
+      {
+        "file": "data/citation/agent_recommendation_acceptance.json",
+        "sha256": "8254b46f1c8ddc242dbbd494ad080805aa79a6e8955296fba6dd6ba8f5e94ec5",
+        "bytes": 12810
+      },
+      {
+        "file": "data/citation/agent_repair_specs.generated.json",
+        "sha256": "7d9a8c6ffc4fb116d2707c02efd811ad9a3e01efcd6e2cfe84c812173c083971",
+        "bytes": 69606
+      },
+      {
+        "file": "data/citation/agent_runs/2026-06-20.json",
+        "sha256": "f0d49f1411091b72ea896f4ed91c7f17159f790aee377f08baba0c82a848cab5",
+        "bytes": 1703
+      },
+      {
+        "file": "data/citation/agent_runs/2026-06-23-bhpc.json",
+        "sha256": "398d3259d4de283f509da78134f7b5797dcbf51f80767ff6b55854c01702e89c",
+        "bytes": 4906
+      },
+      {
+        "file": "data/citation/agent_runs/2026-06-24-bhpc.json",
+        "sha256": "8c0c2f38976c5c9617ca7c7e15677af7704875fe73dece3c298b1225126c2e67",
+        "bytes": 1520
+      },
+      {
+        "file": "data/citation/agent_runs/2026-06-27-bhpc.json",
+        "sha256": "21bd08e860e75f7b4d4df5eb351f3fb2e9a65d826e64f7be4f3b481edcaa977c",
+        "bytes": 92252
+      },
+      {
+        "file": "data/citation/citable_pages.json",
+        "sha256": "b99d44634952858077946273889fd9acabf99a87f4dd82a67e2f564a22efadc7",
+        "bytes": 1941721
+      },
+      {
+        "file": "data/citation/citation_phase_manifest.json",
+        "sha256": "c1219cf4bdd6da9c510dabb17e63f7744f52d80b1c46cdf8f0c38767308db78a",
+        "bytes": 1983
+      },
+      {
+        "file": "data/citation/citation_strategy_contract.json",
+        "sha256": "e44b7a4edd98baa53151a7c035bc577832c8dc218ee501964fd29ae22004bba2",
+        "bytes": 5049
+      },
+      {
+        "file": "data/citation/citation_velocity_roadmap.json",
+        "sha256": "3082aa22878ebffe575b7b656ecaecb6494aa3325843029d411c849c4765d746",
+        "bytes": 1414
+      },
+      {
+        "file": "data/citation/framework_registry.json",
+        "sha256": "f0e120836161dacd938ee9a0da553e19ef042ebbb7036a2d0198a13645e44919",
+        "bytes": 1468057
+      },
+      {
+        "file": "data/citation/framework_taxonomy.json",
+        "sha256": "ffe93185e821000f47cf2effb1610bbab34c5ab020a5d7d6e3165851d719628a",
+        "bytes": 6874
+      },
+      {
+        "file": "data/citation/health_adjacent_content_contract.json",
+        "sha256": "f2b982e929318c8e1c36fd57b33503260118c36ce9fb1590470844673a9d468d",
+        "bytes": 902
+      },
+      {
+        "file": "data/citation/llm_platform_support.json",
+        "sha256": "0dcd7a891e565aa318bdd87407c030eb8b7e7fdab2b4ecb780aa6003b225a407",
+        "bytes": 895
+      },
+      {
+        "file": "data/citation/manual_expansion_acceptance.json",
+        "sha256": "5e2b7591cb56c2cdbfc05705b888403407471fc97f589c516cd7eed78dd270b6",
+        "bytes": 60660
+      },
+      {
+        "file": "data/citation/methodology_taxonomy.json",
+        "sha256": "cf253e19e47d996dccb9033fc33e39d57efce74bb10017bef4d5e5e25c1295b8",
+        "bytes": 3371
+      },
+      {
+        "file": "data/citation/outcome_pattern_registry.json",
+        "sha256": "420b8c228d11ee96de70e3606f57d754a0c18392aa8b8806e98305fddcc4140c",
+        "bytes": 6521
+      },
+      {
+        "file": "data/citation/priority_page_acceptance.json",
+        "sha256": "57691584672e10851d556f1d102a36e8a2be424bf4011f54281369d6d8055a41",
+        "bytes": 14890
+      },
+      {
+        "file": "data/citation/product_claims_registry.json",
+        "sha256": "3db0b2819336a4b99d8a12b3544ba253617518b003d0ce4d76289b53091aee7d",
+        "bytes": 1032
+      },
+      {
+        "file": "data/citation/programmatic_page_admission_contract.json",
+        "sha256": "084b87f544ba82c991cd22793869b044d49f2e4cc34fb2e127db074fcbca4223",
+        "bytes": 1046
+      },
+      {
+        "file": "data/citation/query_registry.json",
+        "sha256": "4ed13f89e7bd98fd079b2800808450ee973a8f37548e39ebd4b92f8011051613",
+        "bytes": 1068628
+      },
+      {
+        "file": "data/citation/reference_page_inventory.json",
+        "sha256": "d637d46b1455d72c18e1212dfa9c86903cabe1168cc705b7761e65613dc99b15",
+        "bytes": 136910
+      },
+      {
+        "file": "data/citation/syndication_plan.json",
+        "sha256": "b5ceda1068adb54857a235702d19caaed289830e9a43d3ab027787321252a628",
+        "bytes": 790
+      },
+      {
+        "file": "data/content/page_admission_registry.json",
+        "sha256": "5ede5ebe4abae8d1de3cd63698e6b351c8d8df97b05e37728cbf5373d845bbda",
+        "bytes": 4449319
+      },
+      {
+        "file": "data/programmatic/latest_run_summary.json",
+        "sha256": "f0a4d304a0e0cc1378345563c8294376c8c2a6bd292ccefa453a94ca22293284",
+        "bytes": 14699
+      },
+      {
+        "file": "data/programmatic/programmatic_page_candidates.json",
+        "sha256": "cb51ba6ad5e1133172f6d6ba02b6908c26de0518dfaf5ab8482592e6c7af41ca",
+        "bytes": 149
+      },
+      {
+        "file": "feed.json",
+        "sha256": "a87585fed33efe824c0709a8f1b325ef785539bcc758d131e7363bc5e05e98f9",
+        "bytes": 52262
+      },
+      {
+        "file": "feed.xml",
+        "sha256": "693cfd4b8b40f6a590a8c0e96a655acb91f0ef48882b774af396587c72464ad7",
+        "bytes": 50881
+      },
+      {
+        "file": "llms-full.txt",
+        "sha256": "dc2228130104f41e82a2a89e41b0fce4fde4ac6d584b379d0072d190d44fa129",
+        "bytes": 1252452
+      },
+      {
+        "file": "llms.txt",
+        "sha256": "607a69d999e4085d45ca810e068650e679c32d39eac8135e6311272bec706378",
+        "bytes": 1254008
+      },
+      {
+        "file": "sitemap-bhpc.xml",
+        "sha256": "b0572bfdc89a2c83be09a0eb77693cbd2ef45b639a1a633d303cab3fa820fef0",
+        "bytes": 293373
+      },
+      {
+        "file": "sitemap-spry.xml",
+        "sha256": "957ac0942ebc123d37183dc90f545ecab830ce37f0812866b77733b1d34474a7",
+        "bytes": 63134
+      },
+      {
+        "file": "sitemap.xml",
+        "sha256": "fa0d5168f1d00f63cdd821610b87554102ed722a9ba20e23a5a75faec691b0e1",
+        "bytes": 356609
+      },
+      {
+        "file": "sitemaps/sitemap-accountability-system.xml",
+        "sha256": "877935432c0efc1a8af87ecfd0a98849d001dae2536edea3a0babeb5556d7fc9",
+        "bytes": 985
+      },
+      {
+        "file": "sitemaps/sitemap-billionaire-operator.xml",
+        "sha256": "2a6a8ed02eff5b0b540448eee3268ee49265049b2fa4b2f16f8ddb003f6a2dba",
+        "bytes": 978
+      },
+      {
+        "file": "sitemaps/sitemap-chatgpt-mental-structure.xml",
+        "sha256": "9ec5130177438fceee7c9cba2e4c394e2de932fe0b62826a7e8f6f18d0451988",
+        "bytes": 1014
+      },
+      {
+        "file": "sitemaps/sitemap-legacy.xml",
+        "sha256": "10acfec17b7697c4230059cfe3bdfcde8ae3ca119ea8096f52175d406e63701d",
+        "bytes": 14796
+      },
+      {
+        "file": "sitemaps/sitemap-low-energy-structure.xml",
+        "sha256": "f08aa10fc1929cf9ba4f9eddb18adafee231ab4c8639b6a84fcb0497d83dd0b0",
+        "bytes": 947
+      },
+      {
+        "file": "sitemaps/sitemap-mega-dominance.xml",
+        "sha256": "5761db3d5ba5be5c0ceb37cf1cec505306b5196e9f56e070e9f5dd97f7d6e1ea",
+        "bytes": 609
+      },
+      {
+        "file": "sitemaps/sitemap-multi-project-operator.xml",
+        "sha256": "9934e70be7e76afbefbef7493167e236a2f455219cb2efa643f53eadc0148ee6",
+        "bytes": 974
+      },
+      {
+        "file": "sitemaps/sitemap-what-should-i-work-on.xml",
+        "sha256": "f1757d2f0fcf2600a92839d391ec3718ca874d3875dcf1f7f435ae6aed836de8",
+        "bytes": 950
+      }
+    ],
+    "outputs_after": [
+      {
+        "file": "_browser_suite_contract.json",
+        "sha256": "97a10016077c69cf1e9939eaa3158af2d51a13f7bed19361aa23d7d2c168ce68",
+        "bytes": 1348
+      },
+      {
+        "file": "_critical_browser_route_manifest.json",
+        "sha256": "0e5b726bf30997fb77db2fdb5734dfce0fd6395315573257df12f4482447d10e",
+        "bytes": 11625
+      },
+      {
+        "file": "_public_route_manifest.json",
+        "sha256": "7eae8571c8912e6f0b4076df38040b6825346fefd949680828fbbd56d09ae670",
+        "bytes": 1406893
+      },
+      {
+        "file": "answers.json",
+        "sha256": "e643e27fe2d045776785219cefc2ea04d9dd4360aa793fffe765ca3a40854b7c",
+        "bytes": 1925497
+      },
+      {
+        "file": "data/citation_velocity/atom_axes.json",
+        "sha256": "f2a0d440c370b9de42562c7096daf5c5e45c01963f4322811144a81c3fd6f776",
+        "bytes": 7954
+      },
+      {
+        "file": "data/citation_velocity/daily_runs.json",
+        "sha256": "4ee2dd6a46ff481f8dc0954f87b92d884abb8db013de1a82d4670d4dd85b25e1",
+        "bytes": 58979
+      },
+      {
+        "file": "data/citation_velocity/generated_ledger.json",
+        "sha256": "156747b70399a7d6ed601fec6fc1466d16cfca4c0692f511583144c98c67dd81",
+        "bytes": 198240
+      },
+      {
+        "file": "data/citation_velocity/latest_batch.json",
+        "sha256": "c04a7e9b3fc4be2544c828c2d015d6560ad5465b553e33a9a8506b6b034d5b49",
+        "bytes": 22855
+      },
+      {
+        "file": "data/citation_velocity/velocity_5k_plan.json",
+        "sha256": "a4b282b8ee95b7b83ecf4850ce1cefda1d287ae886d40e05e68200faf098ac60",
+        "bytes": 1461
+      },
+      {
+        "file": "data/citation/agent_html_report_page_specs.generated.json",
+        "sha256": "f863841f5f44a4596cb2436a8dce34b890d1c328a73772b309386ef2bbdfc414",
+        "bytes": 132866
+      },
+      {
+        "file": "data/citation/agent_page_specs.generated.json",
+        "sha256": "ff48338c5a447ad30c4b9fc8ce0a4eadfd1ef2cdb449991db3a2f44f121652f9",
+        "bytes": 95
+      },
+      {
+        "file": "data/citation/agent_page_specs.json",
+        "sha256": "252ea6eabfd09ccc63ea047b1fa209f109904488fa6ddab275433df4b25c54c3",
+        "bytes": 28839
+      },
+      {
+        "file": "data/citation/agent_recommendation_acceptance.json",
+        "sha256": "8254b46f1c8ddc242dbbd494ad080805aa79a6e8955296fba6dd6ba8f5e94ec5",
+        "bytes": 12810
+      },
+      {
+        "file": "data/citation/agent_repair_specs.generated.json",
+        "sha256": "897348bf43e2dc3761e4be228bd49cda7793b35bc41bbb8291f83af3d580eaa0",
+        "bytes": 69606
+      },
+      {
+        "file": "data/citation/agent_runs/2026-06-20.json",
+        "sha256": "f0d49f1411091b72ea896f4ed91c7f17159f790aee377f08baba0c82a848cab5",
+        "bytes": 1703
+      },
+      {
+        "file": "data/citation/agent_runs/2026-06-23-bhpc.json",
+        "sha256": "398d3259d4de283f509da78134f7b5797dcbf51f80767ff6b55854c01702e89c",
+        "bytes": 4906
+      },
+      {
+        "file": "data/citation/agent_runs/2026-06-24-bhpc.json",
+        "sha256": "8c0c2f38976c5c9617ca7c7e15677af7704875fe73dece3c298b1225126c2e67",
+        "bytes": 1520
+      },
+      {
+        "file": "data/citation/agent_runs/2026-06-27-bhpc.json",
+        "sha256": "21bd08e860e75f7b4d4df5eb351f3fb2e9a65d826e64f7be4f3b481edcaa977c",
+        "bytes": 92252
+      },
+      {
+        "file": "data/citation/citable_pages.json",
+        "sha256": "b99d44634952858077946273889fd9acabf99a87f4dd82a67e2f564a22efadc7",
+        "bytes": 1941721
+      },
+      {
+        "file": "data/citation/citation_phase_manifest.json",
+        "sha256": "c1219cf4bdd6da9c510dabb17e63f7744f52d80b1c46cdf8f0c38767308db78a",
+        "bytes": 1983
+      },
+      {
+        "file": "data/citation/citation_strategy_contract.json",
+        "sha256": "e44b7a4edd98baa53151a7c035bc577832c8dc218ee501964fd29ae22004bba2",
+        "bytes": 5049
+      },
+      {
+        "file": "data/citation/citation_velocity_roadmap.json",
+        "sha256": "3082aa22878ebffe575b7b656ecaecb6494aa3325843029d411c849c4765d746",
+        "bytes": 1414
+      },
+      {
+        "file": "data/citation/framework_registry.json",
+        "sha256": "f0e120836161dacd938ee9a0da553e19ef042ebbb7036a2d0198a13645e44919",
+        "bytes": 1468057
+      },
+      {
+        "file": "data/citation/framework_taxonomy.json",
+        "sha256": "ffe93185e821000f47cf2effb1610bbab34c5ab020a5d7d6e3165851d719628a",
+        "bytes": 6874
+      },
+      {
+        "file": "data/citation/health_adjacent_content_contract.json",
+        "sha256": "f2b982e929318c8e1c36fd57b33503260118c36ce9fb1590470844673a9d468d",
+        "bytes": 902
+      },
+      {
+        "file": "data/citation/llm_platform_support.json",
+        "sha256": "0dcd7a891e565aa318bdd87407c030eb8b7e7fdab2b4ecb780aa6003b225a407",
+        "bytes": 895
+      },
+      {
+        "file": "data/citation/manual_expansion_acceptance.json",
+        "sha256": "5e2b7591cb56c2cdbfc05705b888403407471fc97f589c516cd7eed78dd270b6",
+        "bytes": 60660
+      },
+      {
+        "file": "data/citation/methodology_taxonomy.json",
+        "sha256": "cf253e19e47d996dccb9033fc33e39d57efce74bb10017bef4d5e5e25c1295b8",
+        "bytes": 3371
+      },
+      {
+        "file": "data/citation/outcome_pattern_registry.json",
+        "sha256": "420b8c228d11ee96de70e3606f57d754a0c18392aa8b8806e98305fddcc4140c",
+        "bytes": 6521
+      },
+      {
+        "file": "data/citation/priority_page_acceptance.json",
+        "sha256": "57691584672e10851d556f1d102a36e8a2be424bf4011f54281369d6d8055a41",
+        "bytes": 14890
+      },
+      {
+        "file": "data/citation/product_claims_registry.json",
+        "sha256": "3db0b2819336a4b99d8a12b3544ba253617518b003d0ce4d76289b53091aee7d",
+        "bytes": 1032
+      },
+      {
+        "file": "data/citation/programmatic_page_admission_contract.json",
+        "sha256": "084b87f544ba82c991cd22793869b044d49f2e4cc34fb2e127db074fcbca4223",
+        "bytes": 1046
+      },
+      {
+        "file": "data/citation/query_registry.json",
+        "sha256": "4ed13f89e7bd98fd079b2800808450ee973a8f37548e39ebd4b92f8011051613",
+        "bytes": 1068628
+      },
+      {
+        "file": "data/citation/reference_page_inventory.json",
+        "sha256": "d637d46b1455d72c18e1212dfa9c86903cabe1168cc705b7761e65613dc99b15",
+        "bytes": 136910
+      },
+      {
+        "file": "data/citation/syndication_plan.json",
+        "sha256": "b5ceda1068adb54857a235702d19caaed289830e9a43d3ab027787321252a628",
+        "bytes": 790
+      },
+      {
+        "file": "data/content/page_admission_registry.json",
+        "sha256": "ae25f92bf7469beac0a79907c8bd1f558875a9689da1945c3df20235861d720f",
+        "bytes": 4446183
+      },
+      {
+        "file": "data/programmatic/latest_run_summary.json",
+        "sha256": "5a733b68af86b7b86ad7e554f7170e23684db2ed3bf177c3090e8c42e0f7e229",
+        "bytes": 2534116
+      },
+      {
+        "file": "data/programmatic/programmatic_page_candidates.json",
+        "sha256": "410e19485cbe84d4852945d89b2b5c4127203264a8a01919e2a1b098012975fa",
+        "bytes": 513733
+      },
+      {
+        "file": "feed.json",
+        "sha256": "a87585fed33efe824c0709a8f1b325ef785539bcc758d131e7363bc5e05e98f9",
+        "bytes": 52262
+      },
+      {
+        "file": "feed.xml",
+        "sha256": "8939d7693de6f4cb092f4bf4ff96e7d60cc43c8cc7790fdc4ce767bc10bc3bcb",
+        "bytes": 50881
+      },
+      {
+        "file": "llms-full.txt",
+        "sha256": "dc2228130104f41e82a2a89e41b0fce4fde4ac6d584b379d0072d190d44fa129",
+        "bytes": 1252452
+      },
+      {
+        "file": "llms.txt",
+        "sha256": "607a69d999e4085d45ca810e068650e679c32d39eac8135e6311272bec706378",
+        "bytes": 1254008
+      },
+      {
+        "file": "sitemap-bhpc.xml",
+        "sha256": "b87e766ff5ea5d4750b5537fdc3a8ffa2152a49f1d23b126888e729436fe91ab",
+        "bytes": 308052
+      },
+      {
+        "file": "sitemap-spry.xml",
+        "sha256": "957ac0942ebc123d37183dc90f545ecab830ce37f0812866b77733b1d34474a7",
+        "bytes": 63134
+      },
+      {
+        "file": "sitemap.xml",
+        "sha256": "fa0d5168f1d00f63cdd821610b87554102ed722a9ba20e23a5a75faec691b0e1",
+        "bytes": 356609
+      },
+      {
+        "file": "sitemaps/sitemap-accountability-system.xml",
+        "sha256": "877935432c0efc1a8af87ecfd0a98849d001dae2536edea3a0babeb5556d7fc9",
+        "bytes": 985
+      },
+      {
+        "file": "sitemaps/sitemap-billionaire-operator.xml",
+        "sha256": "2a6a8ed02eff5b0b540448eee3268ee49265049b2fa4b2f16f8ddb003f6a2dba",
+        "bytes": 978
+      },
+      {
+        "file": "sitemaps/sitemap-chatgpt-mental-structure.xml",
+        "sha256": "9ec5130177438fceee7c9cba2e4c394e2de932fe0b62826a7e8f6f18d0451988",
+        "bytes": 1014
+      },
+      {
+        "file": "sitemaps/sitemap-legacy.xml",
+        "sha256": "10acfec17b7697c4230059cfe3bdfcde8ae3ca119ea8096f52175d406e63701d",
+        "bytes": 14796
+      },
+      {
+        "file": "sitemaps/sitemap-low-energy-structure.xml",
+        "sha256": "f08aa10fc1929cf9ba4f9eddb18adafee231ab4c8639b6a84fcb0497d83dd0b0",
+        "bytes": 947
+      },
+      {
+        "file": "sitemaps/sitemap-mega-dominance.xml",
+        "sha256": "5761db3d5ba5be5c0ceb37cf1cec505306b5196e9f56e070e9f5dd97f7d6e1ea",
+        "bytes": 609
+      },
+      {
+        "file": "sitemaps/sitemap-multi-project-operator.xml",
+        "sha256": "9934e70be7e76afbefbef7493167e236a2f455219cb2efa643f53eadc0148ee6",
+        "bytes": 974
+      },
+      {
+        "file": "sitemaps/sitemap-what-should-i-work-on.xml",
+        "sha256": "f1757d2f0fcf2600a92839d391ec3718ca874d3875dcf1f7f435ae6aed836de8",
+        "bytes": 950
+      }
+    ],
+    "changed_files": [
+      {
+        "file": "ai-accountability-coach-for-founders.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "d1627d926723451c4d0968cc897edd6edc46b1335a280504f672367ca3d81f3a",
+          "bytes": 9380
+        },
+        "after": {
+          "sha256": "0de2258c543ef649f6a88259a1501437a5420b6c067be43c1455e9992d249894",
+          "bytes": 10028
+        }
+      },
+      {
+        "file": "ai-accountability-system-vs-habit-tracker.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "9ffd5fdc484d48cf28979255961e0e45bab1ee5c59ace603e8066b5f8fc54771",
+          "bytes": 24219
+        },
+        "after": {
+          "sha256": "b79a58afccc20c6b8a1ba78d9b4074c06c8cc802a626f690c92a1293cbc26323",
+          "bytes": 25092
+        }
+      },
+      {
+        "file": "ai-coach-vs-human-coach-for-founders.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "169339570ea144d878c384c7b6681f9add5f04366f343dc921db35a71ed90a73",
+          "bytes": 25163
+        },
+        "after": {
+          "sha256": "1ab2ed23b08263fcf8d0d3a52dae9dc474664590f47034b1df6f65929a5d7894",
+          "bytes": 26000
+        }
+      },
+      {
+        "file": "ai-coach-vs-human-coach.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "b17be83e0b80c33b0b78f22f0388734055e0400c5d3c25d16b56bdf555237f7f",
+          "bytes": 24506
+        },
+        "after": {
+          "sha256": "86110ae2d0668b03fc32bc040484e79f2ef1795766bfdc85e9a9609b53607017",
+          "bytes": 25189
+        }
+      },
+      {
+        "file": "ai-daily-planning-prompt-for-busy-founders.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "87d2c506776d0484fa25afc2b434f9140e67b7d03e308ac09ba4dd4567bc5635",
+          "bytes": 10129
+        },
+        "after": {
+          "sha256": "ec46c2863d5dc5f47e2825c3a7ccad1cbd90479db5ba4a1337e80cd6dae63e43",
+          "bytes": 10774
+        }
+      },
+      {
+        "file": "ai-executive-coach.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "fbb238c02ba32a2a74d7d3f0d430e4453bcaf1cb5a60148bdb8aebbcad3d2ed1",
+          "bytes": 30281
+        },
+        "after": {
+          "sha256": "fc0d1d9b12d36de5abb9918ca1c4f9fa311a86a6d7d7846a00dc3e12a2c9084c",
+          "bytes": 30972
+        }
+      },
+      {
+        "file": "atlas.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "3557dc4bc87ab58fec55af05bbda9f61e2aeb58565e9e1237f0aa12d3b09d2d3",
+          "bytes": 27662
+        },
+        "after": {
+          "sha256": "8511b68623902f5efcc7206db09dfb3c478782941f5601ff5f373b99f80cf0b3",
+          "bytes": 28450
+        }
+      },
+      {
+        "file": "best-chatgpt-prompts-for-founders-to-stay-accountable.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "fab1390a7985b042d7ee4bb1364002298d954aa44a58bbb5ec66e7af93973de4",
+          "bytes": 10169
+        },
+        "after": {
+          "sha256": "d898bba6a6bd341ed83062b30ede28e3e1644ad82e0367436e592eaf2562079e",
+          "bytes": 10847
+        }
+      },
+      {
+        "file": "best-chatgpt-prompts-for-productivity.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "782499d289005d106cca0bba0a9b824cfe07172508de3d33ebc662fdb69e7e21",
+          "bytes": 13304
+        },
+        "after": {
+          "sha256": "250fa09f524d250a5aa89c31ec748f0807b80a53694addc2cef11beac198bf16",
+          "bytes": 13997
+        }
+      },
+      {
+        "file": "can-ai-replace-an-executive-coach-for-startups.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "d872466b4d9dab1325a99b9cc9c5606b9e32b2c87b23ea17171d1f1c5509c533",
+          "bytes": 8506
+        },
+        "after": {
+          "sha256": "e7cae21239bbec5ea18a30da5d20ce967fda8317bda005a594e2f25edb4104f3",
+          "bytes": 9163
+        }
+      },
+      {
+        "file": "chatgpt-accountability-system-for-founders.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "f8fcef19e57520b8f365731375299d411b15457fb25d662e5362701a9c1c69f0",
+          "bytes": 11288
+        },
+        "after": {
+          "sha256": "a8e6ba8cf8035f4c2b73e9bc3c89d9bef98c0f87925bd407bd3a4eb53cfbf4e8",
+          "bytes": 11933
+        }
+      },
+      {
+        "file": "chatgpt-as-accountability-partner-for-solopreneurs.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "5f7c76d19dbfe2acc36ad10509631dede333835c069db8c3d3e28e30fa2687d9",
+          "bytes": 10540
+        },
+        "after": {
+          "sha256": "05e06169141877bb9254556bd1af92a65016f718a55e10dfa37c4b61b122fc15",
+          "bytes": 11209
+        }
+      },
+      {
+        "file": "chatgpt-daily-planning-prompt-for-busy-founders.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "61ed32cdf3bd1a4989f586a8044edbea57ade8c62f89f0b85318e87eb3716b5e",
+          "bytes": 26661
+        },
+        "after": {
+          "sha256": "dc124ed96a9c53abf0598448300243f4838e5def52316eeb08e0910f88265934",
+          "bytes": 27321
+        }
+      },
+      {
+        "file": "chatgpt-for-high-performance-habits.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "6583f90295031de2ebeb0b9c503a6ffe2a9fd71fb46657a8bc3e86a00d2b0cf2",
+          "bytes": 10230
+        },
+        "after": {
+          "sha256": "1c08cba7370010df8997081c05875683348c0777ddf2e1f116a972494ca77570",
+          "bytes": 10875
+        }
+      },
+      {
+        "file": "data/answer_surface_monitoring/observation_candidates.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "9db4ae14bb7467ddf8f0fc6247b74f0767374d6d03652d661bb9e79f67041b9c",
+          "bytes": 13849
+        },
+        "after": {
+          "sha256": "a418dff91de575893a767cf219b7855977f9d306bc75fc20020841f2369c4dc7",
+          "bytes": 13849
+        }
+      },
+      {
+        "file": "data/answer_surface/score_history.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "541977ebd3cc6123263d67df40f0c376321b3227181c570efeada318eb3e4324",
+          "bytes": 1755
+        },
+        "after": {
+          "sha256": "72935f339c7fdc2eb1a0e97094ba96f9c16767879a1f19593df5615f6aca11fc",
+          "bytes": 3406
+        }
+      },
+      {
+        "file": "data/answer_surface/weakness_backlog.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "345b774bcbe92cc4da53a3e52f724b5eaf05e39ed243aee472d23e87ec8b9eae",
+          "bytes": 6994
+        },
+        "after": {
+          "sha256": "76ab922110f0246ef60328abd63b431fabf8a80215a8324a9c59b8dbaaed4042",
+          "bytes": 6961
+        }
+      },
+      {
+        "file": "data/authority/internal_authority_scores.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "1afe75060b01ed42279858a91eb2878b0689aefbd8a1bd5d9bf847cd459cc46b",
+          "bytes": 2405101
+        },
+        "after": {
+          "sha256": "50c0d2c62b70edef2946b12fb3f35cae387bde6a4333d6784c8eb07a9b449903",
+          "bytes": 2406027
+        }
+      },
+      {
+        "file": "data/backlog/build_backlog.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "ba8c06f9171a2dc7407b9d54cad6c8c87762268f3eda42b25084e6479c8d3e86",
+          "bytes": 45157
+        },
+        "after": {
+          "sha256": "3ecf8715285e7b8896debdafa89ddd81c070c484bef0b5c4f6fd410af63a9f66",
+          "bytes": 45157
+        }
+      },
+      {
+        "file": "data/backlog/expansion_backlog.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "ca4712eda1a12aaec25d830a7c076e146429b78214bbe1b3730a0e12bd244e52",
+          "bytes": 12840
+        },
+        "after": {
+          "sha256": "25940e2c29dccab42593e8498fbcea77ebd8a08d59efb73217af070386e7c191",
+          "bytes": 12840
+        }
+      },
+      {
+        "file": "data/backlog/word_count_holds.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "36aa06af23bb655d45f6d8b8311ee42e863bf6ec1087291bcb90d299ad688fd8",
+          "bytes": 17272
+        },
+        "after": {
+          "sha256": "5c73119d88a15e2425e2d21b4e390b726addd9cbfe38c2c18803646f1da2449b",
+          "bytes": 17272
+        }
+      },
+      {
+        "file": "data/citation_opportunities/citation_opportunity_report.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "9e0aacc9b8b209ad8f5b56568fce46ab14b971b5a1c7557ac6332464b18390b4",
+          "bytes": 9460
+        },
+        "after": {
+          "sha256": "8fdeb8720c6592da200eb4fd156afc8c51e12123a06b68d1fde2dcefde5050ab",
+          "bytes": 9460
+        }
+      },
+      {
+        "file": "data/citation_opportunities/target_page_patch_map.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "9e0aacc9b8b209ad8f5b56568fce46ab14b971b5a1c7557ac6332464b18390b4",
+          "bytes": 9460
+        },
+        "after": {
+          "sha256": "8fdeb8720c6592da200eb4fd156afc8c51e12123a06b68d1fde2dcefde5050ab",
+          "bytes": 9460
+        }
+      },
+      {
+        "file": "data/citation_velocity/daily_runs.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "884781cfb893bf5929578e16e17ef6ff4aa6cd638d5d3b383be965af27a4149b",
+          "bytes": 50266
+        },
+        "after": {
+          "sha256": "4ee2dd6a46ff481f8dc0954f87b92d884abb8db013de1a82d4670d4dd85b25e1",
+          "bytes": 58979
+        }
+      },
+      {
+        "file": "data/citation_velocity/generated_ledger.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "8dacf7a9355da254ed613243da848cd003fc99fe6ea204600339a7c175c96541",
+          "bytes": 169249
+        },
+        "after": {
+          "sha256": "156747b70399a7d6ed601fec6fc1466d16cfca4c0692f511583144c98c67dd81",
+          "bytes": 198240
+        }
+      },
+      {
+        "file": "data/citation_velocity/latest_batch.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "d78ce0f1e598090d5d6c0938798cdf861ed8070ca31fa4ad9b1aeaf1184214ad",
+          "bytes": 20739
+        },
+        "after": {
+          "sha256": "c04a7e9b3fc4be2544c828c2d015d6560ad5465b553e33a9a8506b6b034d5b49",
+          "bytes": 22855
+        }
+      },
+      {
+        "file": "data/citation/agent_page_specs.generated.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "235d3c38a01122fcc52a136ccf30bdc478a52f5a6162d6f211d1678158747ca6",
+          "bytes": 95
+        },
+        "after": {
+          "sha256": "ff48338c5a447ad30c4b9fc8ce0a4eadfd1ef2cdb449991db3a2f44f121652f9",
+          "bytes": 95
+        }
+      },
+      {
+        "file": "data/citation/agent_repair_specs.generated.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "7d9a8c6ffc4fb116d2707c02efd811ad9a3e01efcd6e2cfe84c812173c083971",
+          "bytes": 69606
+        },
+        "after": {
+          "sha256": "897348bf43e2dc3761e4be228bd49cda7793b35bc41bbb8291f83af3d580eaa0",
+          "bytes": 69606
+        }
+      },
+      {
+        "file": "data/content/page_admission_registry.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "5ede5ebe4abae8d1de3cd63698e6b351c8d8df97b05e37728cbf5373d845bbda",
+          "bytes": 4449319
+        },
+        "after": {
+          "sha256": "ae25f92bf7469beac0a79907c8bd1f558875a9689da1945c3df20235861d720f",
+          "bytes": 4446183
+        }
+      },
+      {
+        "file": "data/content/programmatic_candidate_manifest.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "708f0995ff25331793b59ee48a462eb92020ead170593c5fdb642d846f4f2af8",
+          "bytes": 3610756
+        },
+        "after": {
+          "sha256": "6226c740816597b568cc8090540747a2283fe7636200f7bcb83647a4e21c7459",
+          "bytes": 147
+        }
+      },
+      {
+        "file": "data/intake/build_backlog.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "68f5928f13e8d6e4808da06a84f7b61106cd947a2068aab69cfc27e5b8253f8f",
+          "bytes": 45157
+        },
+        "after": {
+          "sha256": "96146dfd52a54d15d8fe84c08c96a2f89ee14b53df08741775ff4435296bcdc4",
+          "bytes": 45157
+        }
+      },
+      {
+        "file": "data/intake/query_clusters.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "4e0629ac5d76af49870483588f71545f185b46991afaeb51f1876d72d4a5194e",
+          "bytes": 5799220
+        },
+        "after": {
+          "sha256": "f06de6baad3fbc5a849ad157715122dcabdc11d6177066fe99ef5cb0c9049d53",
+          "bytes": 5799220
+        }
+      },
+      {
+        "file": "data/intake/query_corpus.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "10cc8f98b24a2729dd2be047e9368dceb1bf4f02d4317521ac790206488b2fec",
+          "bytes": 5082721
+        },
+        "after": {
+          "sha256": "79265a0dcbe1774f9768539798f5ba8d0cbf0d689cf74f40a3a3f68147134bc7",
+          "bytes": 5082721
+        }
+      },
+      {
+        "file": "data/intake/query_scores.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "ca83187f7be47e8ef3eaf5a48138216289171d553cd5c0743f9bc8ca3a33cc17",
+          "bytes": 64422
+        },
+        "after": {
+          "sha256": "292e4158c92f4bb18e4a562a5f0e063f1c563749d96b3dd4b45848ff9f430c3a",
+          "bytes": 64422
+        }
+      },
+      {
+        "file": "data/intake/query_universe.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "a2ada4ae6acc6ed2487fc11e946fd10968cad31f381a0e32235d8a02756d985c",
+          "bytes": 5424636
+        },
+        "after": {
+          "sha256": "5b5e5465f782996c7f54b851392141ef0dfdcb820fd91eaa024041777b0d13de",
+          "bytes": 5424636
+        }
+      },
+      {
+        "file": "data/intake/source_ingestion/reddit.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "baee43bfac84d230a7f7cd343baa7441d065855f93173032e48c5d7986fb33fa",
+          "bytes": 2305
+        },
+        "after": {
+          "sha256": "34642239530e6eb328295726aaf0957cdbddb9e0eec8b2b7451d1cec486cf4ca",
+          "bytes": 2305
+        }
+      },
+      {
+        "file": "data/intake/source_ingestion/serp.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "d0da641e0b038fed2caa4ee01b0c23620f969628652662a9e3b51378c960be0c",
+          "bytes": 2196
+        },
+        "after": {
+          "sha256": "2bb021cec1c53e421380c2be28a1452ac14b26282b4b0b1499a8ac1b4d030304",
+          "bytes": 2196
+        }
+      },
+      {
+        "file": "data/programmatic/latest_run_summary.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "f0a4d304a0e0cc1378345563c8294376c8c2a6bd292ccefa453a94ca22293284",
+          "bytes": 14699
+        },
+        "after": {
+          "sha256": "5a733b68af86b7b86ad7e554f7170e23684db2ed3bf177c3090e8c42e0f7e229",
+          "bytes": 2534116
+        }
+      },
+      {
+        "file": "data/programmatic/programmatic_page_candidates.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "cb51ba6ad5e1133172f6d6ba02b6908c26de0518dfaf5ab8482592e6c7af41ca",
+          "bytes": 149
+        },
+        "after": {
+          "sha256": "410e19485cbe84d4852945d89b2b5c4127203264a8a01919e2a1b098012975fa",
+          "bytes": 513733
+        }
+      },
+      {
+        "file": "data/programmatic/rejection_backlog.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "3876d0732a3d41e1dffe81a217c5790fce8ec35d806a64797ad6f834d7691e16",
+          "bytes": 3491599
+        },
+        "after": {
+          "sha256": "e986fca8da4061fcba49c45b11abb0d486a77934cdcfcb133e3f4767e8c4c390",
+          "bytes": 6622584
+        }
+      },
+      {
+        "file": "data/search/search_engine_submission_manifest.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "d38b50858e49b90374b166d6822f8ae6cb36dafe7c62cabf5e68f6ddc0e8160b",
+          "bytes": 4047
+        },
+        "after": {
+          "sha256": "006537f102b87a86628b39bd75d31c53c540cbda693dff5293f5e7f0532ed909",
+          "bytes": 4047
+        }
+      },
+      {
+        "file": "feed.xml",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "693cfd4b8b40f6a590a8c0e96a655acb91f0ef48882b774af396587c72464ad7",
+          "bytes": 50881
+        },
+        "after": {
+          "sha256": "8939d7693de6f4cb092f4bf4ff96e7d60cc43c8cc7790fdc4ce767bc10bc3bcb",
+          "bytes": 50881
+        }
+      },
+      {
+        "file": "how-to-build-a-performance-system-with-ai.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "d842374e1a05b46620756890c837921061a621542157e16760f962130d841e89",
+          "bytes": 10511
+        },
+        "after": {
+          "sha256": "86d5d3aa5a8b11ff705dd838e405300278898cfc89c20ed8bb5d822695a65a12",
+          "bytes": 11153
+        }
+      },
+      {
+        "file": "how-to-stay-consistent/index.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "b01349f66169fdca8b03e8134f83a309972f22d2a9f0d5e0764b8cf733503b55",
+          "bytes": 17189
+        },
+        "after": {
+          "sha256": "c2a834b870d35ad183aabe13bbc181560da848c66322f75ff4fa7f003da15c30",
+          "bytes": 18051
+        }
+      },
+      {
+        "file": "how-to-use-chatgpt-as-a-productivity-coach.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "357ebabec4a9510a38f8b6f26d42333bc1c74608ddc0885ddc453cfdc36d1796",
+          "bytes": 10375
+        },
+        "after": {
+          "sha256": "f27e830452d8dcf6136229cf1d539c0cc8a7ba955eb566060608028e0aa96924",
+          "bytes": 11041
+        }
+      },
+      {
+        "file": "how-to-use-chatgpt-as-an-executive-coach.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "2d575a27da460c2412293cc81580d74d73ead2827176e3bcb3b01012e5c5c721",
+          "bytes": 28453
+        },
+        "after": {
+          "sha256": "13db4a8aafef725c70daf85ed7e0ea024e00877b897d57cfaed408741a64487d",
+          "bytes": 29176
+        }
+      },
+      {
+        "file": "insights/a-clean-system-for-handling-email-without-losing-your-day.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "04740952b2b78f00e087c0b7d5ff27a9188e344129f21dd52c9bc861c0fa25d1",
+          "bytes": 20119
+        },
+        "after": {
+          "sha256": "d23a409f32c0a933c6e37e5f9a14d12884c7e7341a5ac66e1446bc541e37afa0",
+          "bytes": 21391
+        }
+      },
+      {
+        "file": "insights/a-clean-way-to-handle-shame-after-inconsistency.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "39d195b1f50b3985a9406ef6b72d3757d0a9c3332810c201849a0d087c774d14",
+          "bytes": 20421
+        },
+        "after": {
+          "sha256": "c6bae33854d4c033008dcfce7548e5cfb928581b8227e28fee0b230900b71fb3",
+          "bytes": 21153
+        }
+      },
+      {
+        "file": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "d36137f0669b22e4e74fd741095eb2c038657212dbd9c6d6ed017f61079bcae3",
+          "bytes": 20883
+        },
+        "after": {
+          "sha256": "e65f56a33b88c343174105446b996713feda557c41f73a63a34ac2397713961b",
+          "bytes": 21696
+        }
+      },
+      {
+        "file": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "50ffa548ccef0d7b9039ff6736ca4cb5acb895fe714c1c2ba366f9c239caf6bc",
+          "bytes": 21339
+        },
+        "after": {
+          "sha256": "af116fc7eb6a378cf71877fdc76989d800a767fab8761f56cdf994a17111e6e5",
+          "bytes": 22098
+        }
+      },
+      {
+        "file": "insights/a-simple-knowledge-system-capture-distill-use.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "0b45f94ac85553c5213935d764c9d5dad07a5e418088ca9dfeb9d684be13d874",
+          "bytes": 19301
+        },
+        "after": {
+          "sha256": "42aada71c23bbf0745c1cc041f4de637ef8b59766ada5013b758fee0798b35df",
+          "bytes": 20045
+        }
+      },
+      {
+        "file": "insights/a-simple-meeting-rule-that-prevents-calendar-chaos.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "19d9400eecf1dc8c58d8a0df4b570b03cb42bbbfbaa7d5866afdd13e0ba53b4f",
+          "bytes": 19141
+        },
+        "after": {
+          "sha256": "a29ae5d553f4b0e3f53ed1303de672a0cc3c7ed92b4481242daf7f873f6103bf",
+          "bytes": 19840
+        }
+      },
+      {
+        "file": "insights/how-to-act-confident-before-you-feel-confident.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "c5855be9628d3f2f5b37911c9c63737d92ee8502ac93c2735d672349c665a267",
+          "bytes": 19300
+        },
+        "after": {
+          "sha256": "5573075f16676a496e90499e6623c316f184320b60c5ab4f7c7adfec1dcb5820",
+          "bytes": 19704
+        }
+      },
+      {
+        "file": "insights/personal-playbook-recurring-problems.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "3de21780332e7ff6ca23c92a29f9237476930d0bff432086b6b2829c7f2c5c3e",
+          "bytes": 22657
+        },
+        "after": {
+          "sha256": "11582b6effef097ea27eb530b3f2857590488d79ec194ef2af7e7f431d13385b",
+          "bytes": 23093
+        }
+      },
+      {
+        "file": "insights/README.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "7ee003ae4cd4e132d75d684f8b4ed9b60f2656c3dc5bdbf90bbe2ae1f5b297b4",
+          "bytes": 24450
+        },
+        "after": {
+          "sha256": "c4f76ab58503556378db05073e4b293b6450a40d8b44f2906814795a7c54e35f",
+          "bytes": 25292
+        }
+      },
+      {
+        "file": "insights/system-for-confidence.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "78e70cf1bbd1700634e592ffd9461e4fb1e0c2110bb878b1996ee0f91e0e585c",
+          "bytes": 21696
+        },
+        "after": {
+          "sha256": "04e1b797f0d3b431abce223e3f674675cf75deb2965517af54229714fdd465d4",
+          "bytes": 22111
+        }
+      },
+      {
+        "file": "insights/the-difference-between-confidence-and-certainty-and-why-it-matters.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "a3b5cd46e3c0ec0a8a4a26866603746d160b432da68abd7e4106deceb6e792f1",
+          "bytes": 18599
+        },
+        "after": {
+          "sha256": "5da752140ad175dfb411c2840ecc83a8b8113d85bfc1995f8abac54fc76e8fda",
+          "bytes": 18964
+        }
+      },
+      {
+        "file": "sitemap-bhpc.xml",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "b0572bfdc89a2c83be09a0eb77693cbd2ef45b639a1a633d303cab3fa820fef0",
+          "bytes": 293373
+        },
+        "after": {
+          "sha256": "b87e766ff5ea5d4750b5537fdc3a8ffa2152a49f1d23b126888e729436fe91ab",
+          "bytes": 308052
+        }
+      }
+    ]
+  },
+  "validation": {
+    "canonical_validation": "npm run validate:all (enforced by programmatic:run-lane)",
+    "status": "PASSED"
+  },
+  "hostile_review": {
+    "status": "PASSED",
+    "report": "reports/workflows/citation-velocity-5k/20260628134940-2366/hostile-review.json"
+  },
+  "monitor_validation": {
+    "status": "PASSED"
+  },
+  "status": "PASS",
+  "completed_at": "2026-06-28T14:02:54.869Z",
+  "command_exit_code": 0,
+  "signal": null,
+  "finalized_at": "2026-06-28T14:02:55.324Z"
+}
