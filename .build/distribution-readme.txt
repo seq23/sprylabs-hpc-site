@@ -2,7 +2,7 @@ Option B Lite distribution artifacts
 
 Priority URLs: 32
 Batch URLs: 100
-Deferred batch URLs: 2088
+Deferred batch URLs: 2013
 Active batch limit: 100
 
 Files:
