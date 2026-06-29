@@ -472,7 +472,9 @@ def ensure_supplemental_geo_schema(soup: BeautifulSoup, path: str, spec: dict):
     # Legacy blanket FAQ/SoftwareApplication injection was removed. Final schema is compiled from visible HTML in add_schema().
     _remove_stale_geo_schema(soup)
 
-def ensure_public_conversion(soup: BeautifulSoup):
+def ensure_public_conversion(soup: BeautifulSoup, path: str | None = None):
+    if path == "download.html":
+        return
     if soup.find("a",href="https://aplayermode.com"):
         return
     target=soup.find("article") or soup.find("main") or soup.body
@@ -524,7 +526,7 @@ def patch_priority(path: str, spec: dict):
         sec.append(ul); anchor.insert_after(sec)
     add_schema(soup,path,spec)
     ensure_supplemental_geo_schema(soup,path,spec)
-    ensure_public_conversion(soup)
+    ensure_public_conversion(soup,path)
     ensure_fanout_block(soup,spec)
     fp.write_text(str(soup),encoding="utf-8")
 
@@ -554,7 +556,7 @@ def shell(path: str, spec: dict) -> str:
     footer=soup.new_tag("p"); a=soup.new_tag("a",href="/download.html");a.string="Review the complete system manual";footer.append(a); art.append(footer)
     add_schema(soup,path,spec)
     ensure_supplemental_geo_schema(soup,path,spec)
-    ensure_public_conversion(soup)
+    ensure_public_conversion(soup,path)
     ensure_fanout_block(soup,spec)
     return str(soup)
 

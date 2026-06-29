@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import {spawnSync} from 'node:child_process';
 const major=Number(process.versions.node.split('.')[0]);
+process.env.PYTHONDONTWRITEBYTECODE = '1';
 console.log(`[release-profile] environment=container profile=release:prepush:container node=${major}`);
 function run(label, args){
   console.log(`[release:prepush:container] ${label}`);
@@ -24,6 +25,7 @@ for (const [label,args] of [
   ['validate:workflow-contract',['run','validate:workflow-contract']],
   ['validate:workflow-lineage',['run','validate:workflow-lineage']],
   ['validate:workflow-monitor',['run','validate:workflow-monitor']],
+  ['agent:artifact-shape:self-test',['run','agent:artifact-shape:self-test']],
   ['agent:bhpc:validate',['run','agent:bhpc:validate']],
   ['agent:bhpc:trace',['run','agent:bhpc:trace']],
   ['validate:citation-velocity-automation',['run','validate:citation-velocity-automation']],

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
-import {ROOT, NORMALIZED_ROOT, readJson, writeJson, loadExactPolicy, hashFile, slug} from './bhpc_agent_common.mjs';
+import {ROOT, NORMALIZED_ROOT, readJson, writeJson, loadExactPolicy, hashFile, slug, safeScope} from './bhpc_agent_common.mjs';
 const queryRegistry = readJson('data/citation/query_registry.json', {queries:[]});
 const activeQueryOwners = new Map((queryRegistry.queries||[])
   .filter(q => q.release_status === 'ACTIVE' && q.query && q.primary_page)
@@ -12,7 +12,9 @@ function normalizeText(value){return String(value||'').replace(/\s+/g,' ').trim(
 function definitionFor(rows){
   const primary=rows[0];
   const rec=normalizeText(primary.fix_recommendation || primary.gap || primary.query);
-  return `${primary.query} is an agent-identified BHPC/Spry citation opportunity. This page is updated through the exact intended-winner pipeline so the named page, not a fallback social page, owns the answer. ${rec}`.slice(0,520);
+  const scope=safeScope(primary.scope || 'bhpc');
+  const system=scope === 'bhpc' ? 'BHPC/Spry' : `Spry ${scope}`;
+  return `${primary.query} is an agent-identified ${system} citation opportunity. This page is updated through the exact intended-winner pipeline so the named page, not a fallback social page, owns the answer. ${rec}`.slice(0,520);
 }
 function bodyFor(rows){
   const primary=rows[0];
@@ -34,9 +36,28 @@ function collectRows(){
     if(!file.endsWith('.json')) continue;
     const rel=`${NORMALIZED_ROOT}/${file}`;
     const payload=readJson(rel,{records:[]});
+    if(policy.retroactive_processing===false && payload.run_date && policy.effective_from && payload.run_date < policy.effective_from) continue;
     for(const row of payload.records||[]) {
-      if(policy.retroactive_processing===false && payload.run_date && policy.effective_from && payload.run_date < policy.effective_from) continue;
-      out.push({...row, normalized_path:rel, run_date:payload.run_date});
+      out.push({...row, scope: safeScope(row.scope || payload.scope || 'bhpc'), normalized_path:rel, run_date:payload.run_date});
+    }
+    for(const spec of payload.page_specs||[]) {
+      out.push({
+        id: spec.id || `${payload.run_date || 'unknown'}-${safeScope(payload.scope || 'agent')}-page`,
+        scope: safeScope(spec.scope || payload.scope || 'bhpc'),
+        query: spec.query,
+        gap: spec.why_worth_building || spec.recommendation || '',
+        fix_recommendation: spec.why_worth_building || spec.recommendation || '',
+        intended_winner_page: '',
+        intended_winner_path: '',
+        implementation_path: spec.implementation_path || `agent/${safeScope(spec.scope || payload.scope || 'bhpc')}/${slug(spec.query)}.html`,
+        operation: 'CREATE_NEW_TARGET_PAGE',
+        patch_needed: true,
+        primary_fix_type: 'pages_to_build',
+        blocked_reason: '',
+        normalized_path: rel,
+        run_date: payload.run_date,
+        raw: spec.raw || spec
+      });
     }
   }
   return out;
