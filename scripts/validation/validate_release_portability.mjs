@@ -103,7 +103,10 @@ const cloudflareMaxAssetBytes = 25 * 1024 * 1024;
 const deployLargeFiles = [];
 function walkDeployAssets(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    if (['.git', 'node_modules', 'artifacts', 'test-results', 'playwright-report', 'reports', '.build'].includes(entry.name)) continue;
+    // Cloudflare Pages validates the configured output directory exactly as cloned.
+    // This project deploys from repository root with no build command, so reports,
+    // fixtures, artifacts, and other repo-owned files are deployable assets too.
+    if (['.git', 'node_modules'].includes(entry.name)) continue;
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) walkDeployAssets(full);
     else if (entry.isFile()) {
