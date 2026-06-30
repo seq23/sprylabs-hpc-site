@@ -1,0 +1,25 @@
+{
+  "source": "manual_master_fix",
+  "reason": "governed agents need one deterministic post-generation citation surface repair order",
+  "observed": {
+    "direct_build_then_validate": "failed because full citation repair chain was skipped",
+    "execution_strict": "failed after full repair chain because download.html still had circular APlayerMode CTA",
+    "daily_insight": "user reported scheduled run passed after latest main advance"
+  },
+  "patch": {
+    "download_repair": "scripts/repair/repair_download_contract.mjs",
+    "repair_chain_tail": "repair:citation-contract-surfaces now ends with repair:download-contract",
+    "postprocess_tail": "build:postprocess now ends with repair:citation-contract-surfaces",
+    "workflow_hardening": [
+      ".github/workflows/citation-velocity-5k.yml",
+      ".github/workflows/content-authority-pipeline.yml",
+      ".github/workflows/daily-insight.yml",
+      ".github/workflows/execution-strict.yml",
+      ".github/workflows/reddit-daily.yml",
+      ".github/workflows/reddit-evening.yml",
+      ".github/workflows/social-signal-processing.yml",
+      ".github/workflows/synthesis-weekly.yml",
+      ".github/workflows/whitepaper-release.yml"
+    ]
+  }
+}

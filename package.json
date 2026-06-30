@@ -116,7 +116,7 @@
     "release:ci-validate": "node scripts/release/ci_validate.mjs",
     "release:create-attestation": "node scripts/release/create_validation_attestation.mjs",
     "release:verify-attestation": "node scripts/release/verify_validation_attestation.mjs",
-    "build:postprocess": "npm run redirects:apply && node scripts/build_coverage_map.js && node scripts/authority/compute_authority_scores.js && node scripts/internal/build_link_graph.js && python3 scripts/citation/apply_citation_program.py --postbuild && node scripts/citation/sync_citation_phase_metadata.mjs && npm run redirects:apply && node scripts/prepare_distribution_artifacts.js && npm run validate:indexnow-batch-budget && npm run citation:build && npm run search:prepare-submission",
+    "build:postprocess": "npm run redirects:apply && node scripts/build_coverage_map.js && node scripts/authority/compute_authority_scores.js && node scripts/internal/build_link_graph.js && python3 scripts/citation/apply_citation_program.py --postbuild && node scripts/citation/sync_citation_phase_metadata.mjs && npm run redirects:apply && node scripts/prepare_distribution_artifacts.js && npm run validate:indexnow-batch-budget && npm run citation:build && npm run search:prepare-submission && npm run repair:citation-contract-surfaces",
     "workflow:run": "node scripts/workflow/run_governed_workflow.mjs",
     "workflow:hostile-review": "node scripts/workflow/hostile_review.mjs",
     "workflow:monitor": "node scripts/workflow/monitor_workflows.mjs",
@@ -145,9 +145,10 @@
     "trace:hpc-pantry": "node scripts/content/trace_hpc_pantry_usage.js",
     "apply:hpc-pantry": "node scripts/content/apply_hpc_pantry_to_generation.js",
     "repair:programmatic-registry-owners": "node scripts/content/repair_programmatic_registry_owners.mjs",
-    "repair:citation-contract-surfaces": "python3 scripts/citation/repair_citation_registry_parity.py && python3 scripts/citation/repair_active_citation_contract.py && python3 scripts/citation/repair_agent_recommendations.py && python3 scripts/citation/repair_priority_citation_pages.py && python3 scripts/citation/repair_manual_expansion_parity.py && python3 scripts/citation/repair_citation_registry_parity.py && python3 scripts/citation/repair_active_citation_contract.py && python3 scripts/citation/repair_agent_recommendations.py && python3 scripts/citation/repair_priority_citation_pages.py && python3 scripts/citation/repair_manual_expansion_parity.py && python3 scripts/citation/repair_dual_domain_contract.py && python3 scripts/citation/repair_schema_parity.py && python3 scripts/citation/repair_ui_test_parity.py",
+    "repair:citation-contract-surfaces": "python3 scripts/citation/repair_citation_registry_parity.py && python3 scripts/citation/repair_active_citation_contract.py && python3 scripts/citation/repair_agent_recommendations.py && python3 scripts/citation/repair_priority_citation_pages.py && python3 scripts/citation/repair_manual_expansion_parity.py && python3 scripts/citation/repair_citation_registry_parity.py && python3 scripts/citation/repair_active_citation_contract.py && python3 scripts/citation/repair_agent_recommendations.py && python3 scripts/citation/repair_priority_citation_pages.py && python3 scripts/citation/repair_manual_expansion_parity.py && python3 scripts/citation/repair_dual_domain_contract.py && python3 scripts/citation/repair_schema_parity.py && python3 scripts/citation/repair_ui_test_parity.py && npm run repair:download-contract",
     "agent:bhpc:apply-report-contract": "node scripts/agent_intake/apply_bhpc_html_report_contract.mjs",
-    "agent:artifact-shape:self-test": "node scripts/agent_intake/self_test_cross_vertical_artifact_shape.mjs"
+    "agent:artifact-shape:self-test": "node scripts/agent_intake/self_test_cross_vertical_artifact_shape.mjs",
+    "repair:download-contract": "node scripts/repair/repair_download_contract.mjs"
   },
   "engines": {
     "node": ">=24.0.0"
