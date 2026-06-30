@@ -5,6 +5,8 @@ on:
   schedule:
     - cron: '17 14 * * *'
   push:
+    branches:
+      - main
     paths:
       - 'data/report_fixes/agent_runs/**/agent_run_manifest.json'
 

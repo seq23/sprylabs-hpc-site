@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import os from 'node:os';
 import { spawnSync } from 'node:child_process';
 
 const ROOT=process.cwd();
@@ -95,10 +96,12 @@ const candidates=[];
 for(const [rel,current] of after){const old=baseline.get(rel);if(!old||old.hash!==current.hash)candidates.push(infer(rel,current.body.toString('utf8'),old?.hash,current.hash));}
 const manifest={schema_version:'1.0',generated_at:new Date().toISOString(),lane,run_id:runId,candidates};
 fs.writeFileSync('data/content/programmatic_candidate_manifest.json',JSON.stringify(manifest,null,2)+'\n');
-fs.mkdirSync('reports',{recursive:true});
-const resultPath='reports/programmatic-candidate-results.json';
+const runtimeDir=path.join(os.tmpdir(), 'sprylabs-programmatic-admission');
+fs.mkdirSync(runtimeDir,{recursive:true});
+const resultPath=path.join(runtimeDir, `programmatic-candidate-results-${runId}.json`);
 run('python3',['scripts/validation/validate_programmatic_admission.py','--candidate-only','--json-output',resultPath,'--no-fail-quality']);
 const result=JSON.parse(fs.readFileSync(resultPath,'utf8'));
+fs.rmSync(resultPath,{force:true});
 const registry=JSON.parse(fs.readFileSync('data/content/page_admission_registry.json','utf8'));
 const accepted=[]; const rejected=[];
 for(const item of result.results){const candidate=candidates.find(x=>x.path===item.path);if(!candidate)continue;if(item.accepted){candidate.status='ADMITTED';candidate.admitted_at=candidate.admitted_at||new Date().toISOString();candidate.source=candidate.source||`workflow:${lane}`;delete candidate.baseline_hash;delete candidate.candidate_hash;const idx=registry.records.findIndex(x=>x.path===candidate.path);if(idx>=0)registry.records[idx]=candidate;else registry.records.push(candidate);accepted.push(candidate.path);}else{const old=baseline.get(candidate.path);if(old)fs.writeFileSync(candidate.path,old.body);else fs.rmSync(candidate.path,{force:true});{
