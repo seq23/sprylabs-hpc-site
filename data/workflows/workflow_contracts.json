@@ -644,9 +644,9 @@
         "workflow:citation-velocity-5k"
       ],
       "commit_message": "auto: citation velocity 5k batch",
-      "schedule_cron": "12 13 * * *",
+      "schedule_cron": "10 16 * * 2",
       "manual_dispatch": true,
-      "monitor_max_age_hours": 36,
+      "monitor_max_age_hours": 192,
       "remote_advance_strategy": "reset-regenerate-validate-recommit",
       "lineage_inputs": [
         "data/citation_velocity/**",
@@ -720,7 +720,8 @@
         "tests/**",
         "_repo_*.json",
         "_validation_registry.json"
-      ]
+      ],
+      "cadence_note": "Weekly Tuesday bulk citation expansion. Not daily; run manually only after large artifact/model changes or when ready to intentionally expand citation surfaces."
     }
   ]
 }

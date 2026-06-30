@@ -61,13 +61,13 @@ else {
   if (workflow.workflow_file !== '.github/workflows/citation-velocity-5k.yml') errors.push('workflow file path drift');
   if (workflow.lane !== 'citation_velocity_batch') errors.push('workflow lane must be citation_velocity_batch');
   if (workflow.workflow_command !== 'npm run workflow:citation-velocity-5k') errors.push('workflow command drift');
-  if (workflow.schedule_cron !== '12 13 * * *') errors.push('workflow schedule must be daily 13:12 UTC');
+  if (workflow.schedule_cron !== '10 16 * * 2') errors.push('workflow schedule must be weekly Tuesday 16:10 UTC');
   if (workflow.remote_advance_strategy !== 'reset-regenerate-validate-recommit') errors.push('workflow must use reset-regenerate-validate-recommit');
   for (const file of workflow.required_outputs || []) if (!fs.existsSync(file)) errors.push(`workflow required output missing: ${file}`);
 }
 
 const workflowText = fs.existsSync('.github/workflows/citation-velocity-5k.yml') ? fs.readFileSync('.github/workflows/citation-velocity-5k.yml','utf8') : '';
-for (const token of ['workflow_dispatch:', 'schedule:', '12 13 * * *', 'contents: write', 'npm run workflow:run -- --workflow citation-velocity-5k -- npm run programmatic:run-lane -- --lane citation_velocity_batch -- npm run workflow:citation-velocity-5k', './.github/scripts/commit_and_push_if_changed.sh "auto: citation velocity 5k batch" citation-velocity-5k']) {
+for (const token of ['workflow_dispatch:', 'schedule:', '10 16 * * 2', 'contents: write', 'npm run workflow:run -- --workflow citation-velocity-5k -- npm run programmatic:run-lane -- --lane citation_velocity_batch -- npm run workflow:citation-velocity-5k', './.github/scripts/commit_and_push_if_changed.sh "auto: citation velocity 5k batch" citation-velocity-5k']) {
   if (!workflowText.includes(token)) errors.push(`citation velocity workflow missing token: ${token}`);
 }
 
@@ -83,16 +83,16 @@ for (const required of ['.github/workflows/citation-velocity-5k.yml','scripts/pr
 
 const currentCount = admissions.length;
 const needed = Math.max(0, Number(plan.target_admitted_pages || 5000) - currentCount);
-const daysAt75 = Math.ceil(needed / 75);
+const runsAt75 = Math.ceil(needed / 75);
 writeSummary('validate-citation-velocity-automation', {
   status: errors.length ? 'FAIL' : 'PASS',
   current_admitted_count: currentCount,
   target: Number(plan.target_admitted_pages || 5000),
   needed,
-  days_at_75: daysAt75,
+  runs_at_75: runsAt75,
   theoretical_atom_count: totalTheoretical,
   theoretical_by_lane: theoretical,
   errors,
 });
 if (errors.length) fail(`[validate:citation-velocity-automation] FAIL: ${errors.length} issue(s)`, errors);
-pass(`[validate:citation-velocity-automation] OK: ${currentCount} admitted, ${needed} to 5K, ${daysAt75} scheduled daily batches at 75/day, ${totalTheoretical} atoms available`);
+pass(`[validate:citation-velocity-automation] OK: ${currentCount} admitted, ${needed} to 5K, ${runsAt75} governed batches at 75/run, weekly schedule, ${totalTheoretical} atoms available`);

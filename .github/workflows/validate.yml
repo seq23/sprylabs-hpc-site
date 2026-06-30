@@ -3,7 +3,11 @@ name: Validate
 on:
   workflow_dispatch:
   push:
+    branches:
+      - main
   pull_request:
+    branches:
+      - main
 
 env:
   NODE_OPTIONS: --max-old-space-size=3072
