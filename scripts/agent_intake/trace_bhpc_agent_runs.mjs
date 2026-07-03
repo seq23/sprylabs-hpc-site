@@ -9,6 +9,19 @@ for (const entry of findAgentManifests()) {
   const manifest = entry.manifest;
   const scope = safeScope(entry.scope || manifest.scope || manifest.bucket || manifest.vertical || 'bhpc');
   const digest = digestManifest({...entry, scope});
+  const rawManifestExists = fs.existsSync(path.join(ROOT, entry.manifestRel));
+  const rawDirExists = fs.existsSync(path.join(ROOT, entry.dirRel));
+  const rawCsvExists = Boolean(digest.csvRel && fs.existsSync(path.join(ROOT, digest.csvRel)));
+  const rawJsonExists = Boolean(digest.jsonRel && fs.existsSync(path.join(ROOT, digest.jsonRel)));
+  const rawHtmlExists = Boolean(digest.htmlRel && fs.existsSync(path.join(ROOT, digest.htmlRel)));
+
+  if (!rawDirExists) errors.push(`${entry.manifestRel}: raw artifact directory missing ${entry.dirRel}`);
+  if (!rawManifestExists) errors.push(`${entry.manifestRel}: raw agent_run_manifest.json missing`);
+  if (!rawHtmlExists) errors.push(`${entry.manifestRel}: raw HTML digest/report missing`);
+  if (!rawCsvExists && !rawJsonExists) errors.push(`${entry.manifestRel}: raw source payload missing; expected CSV or JSON`);
+  if (!['READY_FOR_ABSORPTION', 'ABSORBED', 'QUARANTINED'].includes(String(manifest.status || ''))) {
+    errors.push(`${entry.manifestRel}: invalid manifest status ${manifest.status || 'missing'}`);
+  }
   const normalizedRel = manifest.normalized_path || `data/report_fixes/normalized_agent_runs/${runKey(entry.runDate, scope)}.json`;
   const socialRel = manifest.social_run_path || `data/social/runs/${sourceKey(entry.runDate, scope)}.json`;
   const normalized = readJson(normalizedRel, null);
@@ -27,6 +40,12 @@ for (const entry of findAgentManifests()) {
     run_date: entry.runDate,
     scope,
     status: manifest.status,
+    raw_artifact_dir: entry.dirRel,
+    raw_artifact_dir_exists: rawDirExists,
+    raw_manifest_exists: rawManifestExists,
+    raw_csv_exists: rawCsvExists,
+    raw_json_exists: rawJsonExists,
+    raw_html_exists: rawHtmlExists,
     csv_path: digest.csvRel || null,
     json_path: digest.jsonRel || null,
     html_path: digest.htmlRel || null,

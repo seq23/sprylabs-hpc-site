@@ -1,19 +1,93 @@
 #!/usr/bin/env node
-import fs from 'node:fs';
-import path from 'node:path';
-const ROOT = process.cwd();
-function readJson(rel, fallback = null) { try { return JSON.parse(fs.readFileSync(path.join(ROOT, rel), 'utf8')); } catch { return fallback; } }
-function writeJson(rel, payload) { const file = path.join(ROOT, rel); fs.mkdirSync(path.dirname(file), {recursive:true}); fs.writeFileSync(file, `${JSON.stringify(payload,null,2)}\n`); }
-const manifest = readJson('data/report_fixes/agent_acceptance_manifest.generated.json', {entries: []});
-const allowed = new Set(['intended_winner_repair','comparison_page','answer_page','authority_insight','cluster_page','fallback_gap_fill','bhpc_insight']);
-const errors=[]; const approvals=[];
-for (const entry of manifest.entries || []) {
-  if (!allowed.has(entry.page_family)) errors.push(`${entry.record_id}:unknown_page_family:${entry.page_family}`);
-  if (entry.acceptance_status === 'REQUIRED' && !entry.implementation_path) errors.push(`${entry.record_id}:required_without_path`);
-  if (entry.page_family === 'intended_winner_repair' && entry.operation !== 'REPAIR_INTENDED_WINNER_PAGE' && entry.route_status !== 'EXACT_EXISTING_REPAIR') errors.push(`${entry.record_id}:repair_family_without_repair_status`);
-  approvals.push({record_id: entry.record_id, page_family: entry.page_family, route_status: entry.route_status, path: entry.implementation_path, status: entry.acceptance_status});
+import {writeJson} from '../agent_intake/bhpc_agent_common.mjs';
+import {collectBhpcRouteAuthority, validateBhpcRouteAuthorityRecord} from '../lib/bhpc_route_authority.mjs';
+
+const {records, admitted, blocked} = collectBhpcRouteAuthority();
+const errors = [];
+const warnings = [];
+
+if (!records.length) errors.push('no_bhpc_route_authority_records');
+
+const exactPlanPaths = new Set(admitted
+  .filter(record => record.source === 'agent_exact_implementation_plan' && record.implementation_path)
+  .map(record => record.implementation_path));
+const seenPaths = new Map();
+for (const record of records) {
+  for (const error of validateBhpcRouteAuthorityRecord(record)) errors.push(error);
+
+  if (record.admitted) {
+    const key = record.implementation_path;
+    if (key) {
+      const previous = seenPaths.get(key);
+      if (previous && previous.record_id !== record.record_id && !exactPlanPaths.has(key)) {
+        errors.push(`duplicate_admitted_route:${key}:${previous.record_id}:${record.record_id}`);
+      } else if (!previous) {
+        seenPaths.set(key, record);
+      }
+    }
+
+    if (!record.rendered_exists) {
+      warnings.push(`admitted_route_not_rendered_yet:${record.record_id}:${record.implementation_path}`);
+    }
+  }
+
+  if (record.blocked && record.rendered_exists) {
+    errors.push(`blocked_route_rendered:${record.record_id}:${record.implementation_path}:${record.blocked_reason || record.route_status || record.operation}`);
+  }
 }
-const report={schema_version:'1.0', generated_at:new Date().toISOString(), status:errors.length?'FAIL':'PASS', approval_count:approvals.length, required_count:approvals.filter(a=>a.status==='REQUIRED').length, page_family_counts: approvals.reduce((acc,a)=>{acc[a.page_family]=(acc[a.page_family]||0)+1;return acc;},{}), approvals, errors};
+
+const pageFamilyCounts = admitted.reduce((acc, record) => {
+  const key = record.page_family || 'unknown';
+  acc[key] = (acc[key] || 0) + 1;
+  return acc;
+}, {});
+
+const routeShapeCounts = admitted.reduce((acc, record) => {
+  const key = record.route_shape || 'unknown';
+  acc[key] = (acc[key] || 0) + 1;
+  return acc;
+}, {});
+
+const sourceCounts = records.reduce((acc, record) => {
+  const key = record.source || 'unknown';
+  acc[key] = (acc[key] || 0) + 1;
+  return acc;
+}, {});
+
+const report = {
+  schema_version: '2.0',
+  validator: 'bhpc-page-family-contract',
+  authority_model: 'artifact_admitted_route_authority',
+  status: errors.length ? 'FAIL' : 'PASS',
+  generated_at: new Date().toISOString(),
+  record_count: records.length,
+  admitted_count: admitted.length,
+  blocked_count: blocked.length,
+  page_family_counts: pageFamilyCounts,
+  route_shape_counts: routeShapeCounts,
+  source_counts: sourceCounts,
+  sample_admitted_routes: admitted.slice(0, 25).map(record => ({
+    record_id: record.record_id,
+    source: record.source,
+    scope: record.scope,
+    operation: record.operation,
+    page_family: record.page_family,
+    route_status: record.route_status,
+    implementation_path: record.implementation_path,
+    route_shape: record.route_shape,
+    admission_basis: record.admission_basis
+  })),
+  errors,
+  warnings
+};
+
 writeJson('artifacts/validation/bhpc-page-family-contract.json', report);
-if(errors.length){console.error(`[validate:bhpc-page-family-contract] FAIL: ${errors.length} issue(s)`); for(const e of errors.slice(0,80)) console.error(` - ${e}`); process.exit(1);}
-console.log(`[validate:bhpc-page-family-contract] PASS: approvals=${report.approval_count}`);
+writeJson('reports/bhpc-page-family-contract.json', report);
+
+if (errors.length) {
+  console.error(`[validate:bhpc-page-family-contract] FAIL: ${errors.length} issue(s)`);
+  for (const error of errors.slice(0, 120)) console.error(` - ${error}`);
+  process.exit(1);
+}
+
+console.log(`[validate:bhpc-page-family-contract] PASS: admitted=${admitted.length}; blocked=${blocked.length}; shapes=${JSON.stringify(routeShapeCounts)}`);

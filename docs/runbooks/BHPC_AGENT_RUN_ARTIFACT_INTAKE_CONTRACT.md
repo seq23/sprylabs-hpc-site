@@ -147,3 +147,22 @@ npm run validate:workflow-contract
 npm run validate:workflow-lineage
 npm run validate:workflow-monitor
 ```
+
+## Raw artifact preservation law
+
+After a run is absorbed, the raw source folder must remain present:
+
+```text
+data/report_fixes/agent_runs/YYYY-MM-DD/<scope>/
+```
+
+For every absorbed normalized run, the repo must retain:
+
+- `agent_run_manifest.json`
+- one HTML digest/report artifact
+- at least one source payload: CSV or JSON
+
+Generated normalized files, social bridge files, reports, public pages, and validation artifacts do not replace the raw run folder.
+
+A raw run folder may be removed only through an explicit retirement artifact or manual governance decision. Silent deletion is invalid.
+

@@ -49,16 +49,23 @@ for (const file of files) {
   };
 }
 
+const targetByUrl = new Map();
+for (const target of Object.values(pages)) {
+  const keys = new Set([
+    target.url,
+    target.url.replace(/\.html$/, ""),
+    target.url.replace(/\/index\.html$/, "/"),
+    target.url.replace(/\/$/, "")
+  ].filter(Boolean));
+  for (const key of keys) targetByUrl.set(key, target);
+}
+
 for (const page of Object.values(pages)) {
   for (const link of page.outbound_links) {
     if (!link.startsWith("/")) continue;
-    const normalized = link.replace(/\/index\.html$/, "/").replace(/\.html$/, "");
-    for (const target of Object.values(pages)) {
-      const targetNorm = target.url.replace(/\.html$/, "");
-      if (normalized === targetNorm || normalized === target.url) {
-        target.inbound_links++;
-      }
-    }
+    const normalized = link.replace(/\/index\.html$/, "/").replace(/\.html$/, "").replace(/\/$/, "");
+    const target = targetByUrl.get(normalized) || targetByUrl.get(`${normalized}/`) || targetByUrl.get(link);
+    if (target) target.inbound_links++;
   }
 }
 

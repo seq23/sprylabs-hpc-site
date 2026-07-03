@@ -2752,6 +2752,40 @@
         "MX-086"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-087",
+      "status": "ADMITTED",
+      "name": "release:agent-intake",
+      "check_type": "release-stage",
+      "owning_lane": "content-agent",
+      "risk_prevented": "Runs the BHPC/Spry agent artifact intake lane through validation, absorption, route authority, exact semantic implementation, and trace without expanding validate:all.",
+      "existing_coverage_gap": "The BHPC artifact lane previously existed as scattered component commands; this admits one deterministic lane alias.",
+      "scope": [
+        "repository",
+        "content",
+        "agent-artifacts"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run release:agent-intake",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 2,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/release-agent-intake.json",
+      "runtime_budget_seconds": 600,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:agent-run"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted during Spry route-authority simplification after deep validation found the new package command unregistered.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-087"
+      ],
+      "not_applicable_reason": null
     }
   ]
 }

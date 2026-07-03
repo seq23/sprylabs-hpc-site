@@ -2,13 +2,13 @@
   "schema_version": "1.0",
   "workflow_id": "reddit-evening",
   "workflow_name": "Reddit Evening",
-  "run_id": "20260703041111-2384",
+  "run_id": "20260702012003-2398",
   "trigger": "schedule",
   "repository": "seq23/sprylabs-hpc-site",
   "ref": "refs/heads/main",
-  "sha": "2e435553d8198ee5f8ed4364f4f9921456d73fcf",
+  "sha": "20486f6b0798d47db978c007c2ea0bbf25e13fdf",
   "actor": "seq23",
-  "started_at": "2026-07-03T04:11:11.961Z",
+  "started_at": "2026-07-02T01:20:03.662Z",
   "command": "npm run programmatic:run-lane -- --lane reddit -- npm run workflow:reddit-evening",
   "contract_file": "data/workflows/workflow_contracts.json",
   "workflow_file": ".github/workflows/reddit-evening.yml",
@@ -35,8 +35,8 @@
     "inputs_before": [
       {
         "file": "data/content/page_admission_registry.json",
-        "sha256": "5ca16e624613a5e7b0e32182664d6f24e5c3e108e2f9e44cbe3cc2b976fbd7b3",
-        "bytes": 4461957
+        "sha256": "085c64f025d8fc6905f862d5667120eed9af47f9335841bf96f986dafc0882c5",
+        "bytes": 4448541
       },
       {
         "file": "data/reddit/cluster_rules.json",
@@ -112,7 +112,7 @@
     "outputs_before": [
       {
         "file": "_browser_suite_contract.json",
-        "sha256": "3389e0a53242df37794a232575556bfe2f49da49c2e8ce59c548ca79ff5ceb79",
+        "sha256": "50ff5e3c2c621a2caef516509d494d727eb8ba1f784dc674064149afd6b4a756",
         "bytes": 1348
       },
       {
@@ -122,42 +122,42 @@
       },
       {
         "file": "_public_route_manifest.json",
-        "sha256": "85514bde180bb2a426f8dee0e0f904d34ec7cac30fb9432cd9d1b0fe9de03117",
-        "bytes": 1413513
+        "sha256": "a524e4a56f51c27a9b78ebbfb6064b572ce1e1553bf1b1df352de27a6d59d387",
+        "bytes": 1408219
       },
       {
         "file": "data/clusters/approved_clusters.json",
-        "sha256": "45d9b37fd486d06809fcbe7cb87aba7d81226e0130271741bf48ee776b9f747b",
+        "sha256": "a3aafef7d4ea5fbae9683356800c736239d6796183d8a3bc4f84ff791b8ca65f",
         "bytes": 227932
       },
       {
         "file": "data/clusters/clusters.json",
-        "sha256": "0e1bc3ba87136ac1f0bda284edfa7e12c946c9f5293826e51a0029c84859ecf3",
+        "sha256": "a28ae3faa8d8affe7c2af831b767cf734b4e94e594976cd12bd5d83b386f4d88",
         "bytes": 230428
       },
       {
         "file": "data/clusters/rejected_clusters.json",
-        "sha256": "1034286c85a5a7397e5b01c739bd3986543f5155231cf05d759b63e5a25ce20f",
+        "sha256": "f0b3f67154a9d2fd16a3ecb71f7a127279ce36592a5f9b70497c56fb3c1a8f95",
         "bytes": 4007
       },
       {
         "file": "data/content/page_admission_registry.json",
-        "sha256": "5ca16e624613a5e7b0e32182664d6f24e5c3e108e2f9e44cbe3cc2b976fbd7b3",
-        "bytes": 4461957
+        "sha256": "085c64f025d8fc6905f862d5667120eed9af47f9335841bf96f986dafc0882c5",
+        "bytes": 4448541
       },
       {
         "file": "data/ingestion/normalized/unified_stream.json",
-        "sha256": "be5dbfae0ac2efbf3e0fb2cf8ccec66375e6dded65367f20a6d87a70733dd3b4",
+        "sha256": "51cbbd30e6964dbf3f455eeeb4b37589525ac0211665788377f5f399768db5af",
         "bytes": 205476
       },
       {
         "file": "data/ingestion/raw/last_ingestion_manifest.json",
-        "sha256": "760779f98b8dd25fb33889138c8cde7515eb5ca9c3880f3a3f03367b941fa9e5",
+        "sha256": "678d1633666640f0dce0a81dee17bc8892de48fa162d68027203eee837fe27f0",
         "bytes": 99
       },
       {
         "file": "data/programmatic/latest_run_summary.json",
-        "sha256": "709e09cdf6733cf36607b80366b0969a6736e64a19b29c20f5bfb1bbfc402ee4",
+        "sha256": "fb76d692fa44ed8647dd40404bb4ef1f4b5f027a55d3ade36941ecebd5c80376",
         "bytes": 2120222
       },
       {
@@ -1121,18 +1121,8 @@
         "bytes": 63
       },
       {
-        "file": "data/reddit/archive/2026-07-02-generated.json",
-        "sha256": "ca8ac0d4d11cebb51af80cfd8ae0a5b406a5c258baa8551f02b13c9b866d0e77",
-        "bytes": 63
-      },
-      {
-        "file": "data/reddit/archive/2026-07-02-publish.json",
-        "sha256": "0e22aa47d80de6d1451ea191edd0d17a32d6eafa335621c59f3c8260abaab100",
-        "bytes": 63
-      },
-      {
         "file": "data/reddit/cluster_registry.json",
-        "sha256": "c3d482598e23543612b4792634950afba857bd912ee7e0bd3435950fe7d2ce19",
+        "sha256": "a579c86953e9ed3cd61940aea62741ed54ffd280fe5f25ab165845cd120972ff",
         "bytes": 300
       },
       {
@@ -1646,11 +1636,6 @@
         "bytes": 8344
       },
       {
-        "file": "data/reddit/clusters/2026-07-02.json",
-        "sha256": "e9051705fe2421a6558fb0d454fc73682dfaf386eb909ae2e77121e27abb556f",
-        "bytes": 8344
-      },
-      {
         "file": "data/reddit/generated_pages.json",
         "sha256": "f4a7d29d27a839e49b20b25c6017988f41ec1cc3bf06c505d51536744b5c9429",
         "bytes": 22639
@@ -2161,18 +2146,13 @@
         "bytes": 5356
       },
       {
-        "file": "data/reddit/normalized/2026-07-02.json",
-        "sha256": "3f83c6768b4c71bd8608e6ab3092f4c0b46cddce4d7e66f588a6ce71d66ce05e",
-        "bytes": 5356
-      },
-      {
         "file": "data/reddit/publish_queue.json",
-        "sha256": "5b5e9906bb7f3f940ec99e6c8fa94781d566d2460a671c951f55be76ec04acdb",
+        "sha256": "eb6ff0d064a3bf6498e59f06b65e4792b30c4ae2c0c9bbd1bfe2c16dff33a7e2",
         "bytes": 137
       },
       {
         "file": "data/reddit/published_manifest.json",
-        "sha256": "34956146b5f3fcc6b6feea176e705c026584763cf47f51f8954de55e9406b27d",
+        "sha256": "092fee4225b204216f12f0a747a44dc94038bdcfc5c11cdd0dc80a990246cf56",
         "bytes": 1284
       },
       {
@@ -2686,18 +2666,13 @@
         "bytes": 1721
       },
       {
-        "file": "data/reddit/raw/2026-07-02.json",
-        "sha256": "08577c66830fb6a76067e3b684c431597f6f0daed8f848d3f5b0ea16e9bc1f96",
-        "bytes": 1721
-      },
-      {
         "file": "data/reddit/scores.json",
         "sha256": "5cf83b0ae332d8af1b28ee460ac3c09a314d43f3242f20f1df54c88b94a90786",
         "bytes": 667
       },
       {
         "file": "data/reddit/slug_registry.json",
-        "sha256": "97ed6ca638f09bb1f71a3e6ad498ddcba5fef7517a81ee134b6a1ab7c29d6e90",
+        "sha256": "1b600eb318a3316be127e86c319fff29e6be14a27174ec1a8f8425897e5c83cb",
         "bytes": 368
       },
       {
@@ -2707,14 +2682,14 @@
       },
       {
         "file": "releases/fanout_query_clusters.bhpc.json",
-        "sha256": "001fb429e95e33cea2640c83562a0565898db0715fcc002f14949191a15f5273",
+        "sha256": "ba1a256d5b374e8a0e4f28cac654ae2790df7f2f4188535052f44e54d89e2aea",
         "bytes": 3363305
       }
     ],
     "outputs_after": [
       {
         "file": "_browser_suite_contract.json",
-        "sha256": "3389e0a53242df37794a232575556bfe2f49da49c2e8ce59c548ca79ff5ceb79",
+        "sha256": "50ff5e3c2c621a2caef516509d494d727eb8ba1f784dc674064149afd6b4a756",
         "bytes": 1348
       },
       {
@@ -2724,43 +2699,43 @@
       },
       {
         "file": "_public_route_manifest.json",
-        "sha256": "85514bde180bb2a426f8dee0e0f904d34ec7cac30fb9432cd9d1b0fe9de03117",
-        "bytes": 1413513
+        "sha256": "a524e4a56f51c27a9b78ebbfb6064b572ce1e1553bf1b1df352de27a6d59d387",
+        "bytes": 1408219
       },
       {
         "file": "data/clusters/approved_clusters.json",
-        "sha256": "7090566fb1632426a4f4cb857fe80ba00a3d4d5f857c23b52f5b5828bfd87740",
+        "sha256": "aac48dfcc2e0dcc05420a66309acfcd8c093bffc39614301b09826680ebf2f5e",
         "bytes": 227932
       },
       {
         "file": "data/clusters/clusters.json",
-        "sha256": "337bfd0ab7d73a6d97e36729a783f10329396ad1d848b585b5bfa4ffa060bfc4",
+        "sha256": "103407d3b46f3c91a4acf4bda695fa7a6967c748d6d2cb9f45dcf24ac83e7614",
         "bytes": 230428
       },
       {
         "file": "data/clusters/rejected_clusters.json",
-        "sha256": "ce0d8905c796fe4cc69fbea7b4de10ac8788f5ce775f4eb5197ef06075cefff3",
+        "sha256": "0db90565122d2cef0eebd5fefd077378b19839ec3452c07b9feffd93c2b766e5",
         "bytes": 4007
       },
       {
         "file": "data/content/page_admission_registry.json",
-        "sha256": "2d82f5f046a3432507bd8f3e75296d1a67592770565284ffe2901a92b2d1f543",
-        "bytes": 4458821
+        "sha256": "b01e7d1d4bc86dd7f90299591d2c2b00c8dccea235b3e6c254cf538c3cac9a83",
+        "bytes": 4448541
       },
       {
         "file": "data/ingestion/normalized/unified_stream.json",
-        "sha256": "864b751ad9b3f5c176ed82c3ad30474fa5900cae1ce50d7425089269b3f23408",
+        "sha256": "b2afc6bf02147e1f4979792140c02dce34c120bef202248794fdecedfb4b1506",
         "bytes": 205476
       },
       {
         "file": "data/ingestion/raw/last_ingestion_manifest.json",
-        "sha256": "9b981d26c719018b238b3ca37c69b4bd8580bd90e527d36296cd0d26cdbabd1f",
+        "sha256": "ae69bd8c52d48c5913b7258f72b83164da43ed6b7e27a7c341050b86d3663621",
         "bytes": 99
       },
       {
         "file": "data/programmatic/latest_run_summary.json",
-        "sha256": "84ab514c28718c4f717956675d5eca134b42ea32e230987885aecf989468c053",
-        "bytes": 2015880
+        "sha256": "214952a095e3b4e5a67eef93c7788c1ad61cf98e5990d4047408cc95bc622ee5",
+        "bytes": 2120215
       },
       {
         "file": "data/reddit/archive/2026-03-19-generated.json",
@@ -3723,18 +3698,8 @@
         "bytes": 63
       },
       {
-        "file": "data/reddit/archive/2026-07-02-generated.json",
-        "sha256": "ca8ac0d4d11cebb51af80cfd8ae0a5b406a5c258baa8551f02b13c9b866d0e77",
-        "bytes": 63
-      },
-      {
-        "file": "data/reddit/archive/2026-07-02-publish.json",
-        "sha256": "0e22aa47d80de6d1451ea191edd0d17a32d6eafa335621c59f3c8260abaab100",
-        "bytes": 63
-      },
-      {
         "file": "data/reddit/cluster_registry.json",
-        "sha256": "c3d482598e23543612b4792634950afba857bd912ee7e0bd3435950fe7d2ce19",
+        "sha256": "a579c86953e9ed3cd61940aea62741ed54ffd280fe5f25ab165845cd120972ff",
         "bytes": 300
       },
       {
@@ -4249,12 +4214,7 @@
       },
       {
         "file": "data/reddit/clusters/2026-07-02.json",
-        "sha256": "e9051705fe2421a6558fb0d454fc73682dfaf386eb909ae2e77121e27abb556f",
-        "bytes": 8344
-      },
-      {
-        "file": "data/reddit/clusters/2026-07-03.json",
-        "sha256": "611061d0981312098dbebe9e78bfb341264611d3ab3d11916c37c5abb3d6cbb8",
+        "sha256": "85e702e5d2fc2794d0da62622306c539b39f94f258b1c2f53c09f57ad4ac454d",
         "bytes": 8344
       },
       {
@@ -4769,22 +4729,17 @@
       },
       {
         "file": "data/reddit/normalized/2026-07-02.json",
-        "sha256": "3f83c6768b4c71bd8608e6ab3092f4c0b46cddce4d7e66f588a6ce71d66ce05e",
-        "bytes": 5356
-      },
-      {
-        "file": "data/reddit/normalized/2026-07-03.json",
-        "sha256": "f4c1274499c702dc6a4140da7fc4e370188d0f806ef7a10b6662c0104de1ac16",
+        "sha256": "b39f77f98f94b725de3297bcdc7e3e9944cf336bcdc107da5cf1584d41c5c724",
         "bytes": 5356
       },
       {
         "file": "data/reddit/publish_queue.json",
-        "sha256": "67b1dbd2b32ecbe68481fa54df82d3d96fb6c71040c3cc1b2cfbb42f82015100",
+        "sha256": "96eda25a325f2e31052c8e7591f9a5caee9778d34890199a10cf00e10af3116e",
         "bytes": 137
       },
       {
         "file": "data/reddit/published_manifest.json",
-        "sha256": "34956146b5f3fcc6b6feea176e705c026584763cf47f51f8954de55e9406b27d",
+        "sha256": "092fee4225b204216f12f0a747a44dc94038bdcfc5c11cdd0dc80a990246cf56",
         "bytes": 1284
       },
       {
@@ -5299,12 +5254,7 @@
       },
       {
         "file": "data/reddit/raw/2026-07-02.json",
-        "sha256": "08577c66830fb6a76067e3b684c431597f6f0daed8f848d3f5b0ea16e9bc1f96",
-        "bytes": 1721
-      },
-      {
-        "file": "data/reddit/raw/2026-07-03.json",
-        "sha256": "4b0f810887fdfe87edfe07a15de93dd09e9355ae7d5f11357add648514c1a7f2",
+        "sha256": "ff116d5000ede16315065e4094229e19bd40ea927a868b0cbe7fce57a1789f9e",
         "bytes": 1721
       },
       {
@@ -5314,7 +5264,7 @@
       },
       {
         "file": "data/reddit/slug_registry.json",
-        "sha256": "97ed6ca638f09bb1f71a3e6ad498ddcba5fef7517a81ee134b6a1ab7c29d6e90",
+        "sha256": "1b600eb318a3316be127e86c319fff29e6be14a27174ec1a8f8425897e5c83cb",
         "bytes": 368
       },
       {
@@ -5324,7 +5274,7 @@
       },
       {
         "file": "releases/fanout_query_clusters.bhpc.json",
-        "sha256": "001fb429e95e33cea2640c83562a0565898db0715fcc002f14949191a15f5273",
+        "sha256": "ba1a256d5b374e8a0e4f28cac654ae2790df7f2f4188535052f44e54d89e2aea",
         "bytes": 3363305
       }
     ],
@@ -5333,11 +5283,11 @@
         "file": "data/answer_surface_monitoring/observation_candidates.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "587ca9fda9ff90167cf5a9dee40ccfa42abf98f265a8749b47567ac3239851ac",
+          "sha256": "ab500a13b3d43c494eb1907e6b9df668e38f77961f2fcc7f1075fdd3a493e666",
           "bytes": 13849
         },
         "after": {
-          "sha256": "42dff52779e1aecfa42dd7e87d8bcb6cd36f3b68da571bde3278284bc7ab33c2",
+          "sha256": "1fc218ae57706346e27b61405bce2b3876d3b807b2045bf1294b51be6172a70b",
           "bytes": 13849
         }
       },
@@ -5345,23 +5295,23 @@
         "file": "data/answer_surface/score_history.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "82cbfaee34850003cb558ea9f5b923ed684bbd778e4b7afef9e99572f238b4fa",
-          "bytes": 44681
+          "sha256": "3f6f21adcc04bc0b10ae67a1769f6e1572732e0a9597e9b7cb00d02519fc5777",
+          "bytes": 31473
         },
         "after": {
-          "sha256": "67bcb5d95fd23ff9a75e4c5433f76c5e44bbe90a24fdca32beae38dae95719a7",
-          "bytes": 46332
+          "sha256": "def1d3ff193fee440b31f806c848fb584508be8801b087352d610a73238568cf",
+          "bytes": 33124
         }
       },
       {
         "file": "data/answer_surface/weakness_backlog.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "999eefefcde47f39bcdd95e33c6eacf597d75e9f166b90a734b8f04ab4dafc08",
+          "sha256": "2553837de1323b9f4bcfc570ec93bb494ae9774547e5e81547710bbfee72c97b",
           "bytes": 6961
         },
         "after": {
-          "sha256": "e99995a45942ad7a64a4f8772bd5963e36a6ac1dd10b3f07d2213d6339e19021",
+          "sha256": "b00a3d394d1fe9ffa48f1586a9186dbafc23acbe1f102e6b40297ff255ea1a41",
           "bytes": 6961
         }
       },
@@ -5369,23 +5319,23 @@
         "file": "data/authority/internal_authority_scores.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "7e08ca94886468f32b19797766d7e0eeca261f9235144b054bc786adefb72b33",
-          "bytes": 2413430
+          "sha256": "062ddf2b169891c9ec60747cd96ecf77fc713fd9b7a86d9ebc6a534a7d72f552",
+          "bytes": 2408094
         },
         "after": {
-          "sha256": "55e8224ea05e88b6d7581c1fec941a5a01bad8f6387dd191d5549a02492c7d59",
-          "bytes": 2414400
+          "sha256": "29893c2d4de95cf6d0eda0d5371473b5430cd8217b8aba3a4d8a9c2bf4f74561",
+          "bytes": 2408094
         }
       },
       {
         "file": "data/backlog/build_backlog.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "d26cd03418a8f24450a1b9c628e9fb34e190b3e95d6cdf8e33d6715b701167a5",
+          "sha256": "b92c3c94860c6a38bd1a0144055b3f878a2194494cb7e7a9837815155ba07d89",
           "bytes": 45157
         },
         "after": {
-          "sha256": "73b3a9bf1fa9274049dfd3a685b806206deede037934ce056337bf4246b3ffe7",
+          "sha256": "7c85582ade4a400f58a937c05017b540de1b917f78a440697a9cbc652c99a127",
           "bytes": 45157
         }
       },
@@ -5393,11 +5343,11 @@
         "file": "data/backlog/expansion_backlog.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "e73b13e001a3fe1a2f6b1784b4d2efe91caa2027718502f16b7dbe20f49ff432",
+          "sha256": "dd702701a7e15537cd60a435751390ec1850132b43fbcba19886b10fb2c301b0",
           "bytes": 18322
         },
         "after": {
-          "sha256": "780d72568a2e03f83756f1238222fe5009f313533522d0e8c64ac826d436bbfc",
+          "sha256": "b09f2f12a80506d631dd3122c280773b3416f9928146326d7e6da708d9fbf784",
           "bytes": 18322
         }
       },
@@ -5405,23 +5355,23 @@
         "file": "data/backlog/word_count_holds.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "c6c4c498efc68ebf7e578908e22e5d249c7ee9c7737db62a79cd9953201ba1cf",
-          "bytes": 1226
+          "sha256": "c34e5daf75615c139e0fa3fd0db10c2edc4c94ef0e881647bcb6c0393eb1851f",
+          "bytes": 16653
         },
         "after": {
-          "sha256": "a78cf3a7e483463a83667187c557df5a5f18872b3526635575f1ecee2dff0083",
-          "bytes": 1226
+          "sha256": "672e2e5191b3d2907b50f8b2532f3371442bd242914dd8a2789b1bc9856b8e28",
+          "bytes": 16653
         }
       },
       {
         "file": "data/citation_opportunities/citation_opportunity_report.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "a9f45294d5a0a04ddaacee69ea1a7a57ebd8683422b5aefa429ddec91003739e",
+          "sha256": "4fcec58bcfad47c0b4e1fcc8ffbe0c1e08fb15c4f9a40262c2b010d29e6d8a9c",
           "bytes": 9460
         },
         "after": {
-          "sha256": "4911e7e8f7ca661cb20c528b9c4924335bd9bc46392aa53aa2e2ac6e09e48fa5",
+          "sha256": "dd56b7933d1b2eb7f26d32d8022061388a0df4395d38ddae9fd332975deefaed",
           "bytes": 9460
         }
       },
@@ -5429,11 +5379,11 @@
         "file": "data/citation_opportunities/target_page_patch_map.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "a9f45294d5a0a04ddaacee69ea1a7a57ebd8683422b5aefa429ddec91003739e",
+          "sha256": "4fcec58bcfad47c0b4e1fcc8ffbe0c1e08fb15c4f9a40262c2b010d29e6d8a9c",
           "bytes": 9460
         },
         "after": {
-          "sha256": "4911e7e8f7ca661cb20c528b9c4924335bd9bc46392aa53aa2e2ac6e09e48fa5",
+          "sha256": "dd56b7933d1b2eb7f26d32d8022061388a0df4395d38ddae9fd332975deefaed",
           "bytes": 9460
         }
       },
@@ -5441,35 +5391,71 @@
         "file": "data/citation/agent_page_specs.generated.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "69965aec1790b81e0b387283d7d7c71ec1bf368b2056d909553349a4ffdd2d5c",
-          "bytes": 141
+          "sha256": "38cea740f781e06abc1be5fab5e9254c17c26d4005dd83b8d17ea8647db559a2",
+          "bytes": 95
         },
         "after": {
-          "sha256": "ca33e9ff12628ddef0300e6a31bdcef7d74db5eac8bfa7c71ff29e70fef4415a",
-          "bytes": 141
+          "sha256": "53ce252d08e8b6b68e35a7dac8f5e6ca573484fd7025dfcba3139c407c4c1434",
+          "bytes": 95
         }
       },
       {
         "file": "data/citation/agent_repair_specs.generated.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "299973f2e5d23fa2ef653b5898604490abbf9c1f6201dd28df948df4258e2f5a",
-          "bytes": 106463
+          "sha256": "25d7e820e4053c484489b0a37cb941baa5a8ea511cbe1027f6f886097cc8c6d0",
+          "bytes": 69606
         },
         "after": {
-          "sha256": "d74231be6f5010587613d35594a0713466821e97a7d0ef517ca6fa211554de3c",
-          "bytes": 106463
+          "sha256": "f7e13ae4b2435ddbbd4822a2903d69ed984d2ada92bff60afee1de68e543fe36",
+          "bytes": 69606
+        }
+      },
+      {
+        "file": "data/citation/citation_phase_manifest.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "d5df9cf4fbb75cbd05ba0e6046b0fe49c005eb4351c9b42b4015344edd588b05",
+          "bytes": 1983
+        },
+        "after": {
+          "sha256": "1d078a86456558942bcf6ccdde5db63ef04355f12fe27baaee29c83ddf776898",
+          "bytes": 1983
+        }
+      },
+      {
+        "file": "data/citation/citation_strategy_contract.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "6ca61ad833d096998a00c2589278bb71060298a8f5c51f3fdbfd4f645cf9d667",
+          "bytes": 5049
+        },
+        "after": {
+          "sha256": "c1fcb9b0fa205f887e1627f09dfea1e9f02eb52f3367bb169412f04049d25cfc",
+          "bytes": 5049
+        }
+      },
+      {
+        "file": "data/citation/reference_page_inventory.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "8225dc1207d7727861ab11c8092759b5d02caccda7278c6fec1db6527df43aa4",
+          "bytes": 136910
+        },
+        "after": {
+          "sha256": "4f226533d2a600a93260a3b766588ff77e01f2aeba717c57fceda65f4f4cee44",
+          "bytes": 136910
         }
       },
       {
         "file": "data/clusters/approved_clusters.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "45d9b37fd486d06809fcbe7cb87aba7d81226e0130271741bf48ee776b9f747b",
+          "sha256": "a3aafef7d4ea5fbae9683356800c736239d6796183d8a3bc4f84ff791b8ca65f",
           "bytes": 227932
         },
         "after": {
-          "sha256": "7090566fb1632426a4f4cb857fe80ba00a3d4d5f857c23b52f5b5828bfd87740",
+          "sha256": "aac48dfcc2e0dcc05420a66309acfcd8c093bffc39614301b09826680ebf2f5e",
           "bytes": 227932
         }
       },
@@ -5477,11 +5463,11 @@
         "file": "data/clusters/clusters.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "0e1bc3ba87136ac1f0bda284edfa7e12c946c9f5293826e51a0029c84859ecf3",
+          "sha256": "a28ae3faa8d8affe7c2af831b767cf734b4e94e594976cd12bd5d83b386f4d88",
           "bytes": 230428
         },
         "after": {
-          "sha256": "337bfd0ab7d73a6d97e36729a783f10329396ad1d848b585b5bfa4ffa060bfc4",
+          "sha256": "103407d3b46f3c91a4acf4bda695fa7a6967c748d6d2cb9f45dcf24ac83e7614",
           "bytes": 230428
         }
       },
@@ -5489,11 +5475,11 @@
         "file": "data/clusters/rejected_clusters.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "1034286c85a5a7397e5b01c739bd3986543f5155231cf05d759b63e5a25ce20f",
+          "sha256": "f0b3f67154a9d2fd16a3ecb71f7a127279ce36592a5f9b70497c56fb3c1a8f95",
           "bytes": 4007
         },
         "after": {
-          "sha256": "ce0d8905c796fe4cc69fbea7b4de10ac8788f5ce775f4eb5197ef06075cefff3",
+          "sha256": "0db90565122d2cef0eebd5fefd077378b19839ec3452c07b9feffd93c2b766e5",
           "bytes": 4007
         }
       },
@@ -5501,23 +5487,23 @@
         "file": "data/content/page_admission_registry.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "5ca16e624613a5e7b0e32182664d6f24e5c3e108e2f9e44cbe3cc2b976fbd7b3",
-          "bytes": 4461957
+          "sha256": "085c64f025d8fc6905f862d5667120eed9af47f9335841bf96f986dafc0882c5",
+          "bytes": 4448541
         },
         "after": {
-          "sha256": "2d82f5f046a3432507bd8f3e75296d1a67592770565284ffe2901a92b2d1f543",
-          "bytes": 4458821
+          "sha256": "b01e7d1d4bc86dd7f90299591d2c2b00c8dccea235b3e6c254cf538c3cac9a83",
+          "bytes": 4448541
         }
       },
       {
         "file": "data/content/programmatic_candidate_manifest.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "708f0995ff25331793b59ee48a462eb92020ead170593c5fdb642d846f4f2af8",
-          "bytes": 3610756
+          "sha256": "4d60900ef09daa65ca8282a50a38715d9c48e7e1351965a7b74cbe1d70a58275",
+          "bytes": 147
         },
         "after": {
-          "sha256": "d20f6b587af1980b8a2a12eb88f617c000df9a62f76962f94198bb76bc3cd1a8",
+          "sha256": "880205e086a7d223afbb1cb09c3c219df72cc2a332948650338688afa776106d",
           "bytes": 147
         }
       },
@@ -5525,11 +5511,11 @@
         "file": "data/ingestion/normalized/unified_stream.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "be5dbfae0ac2efbf3e0fb2cf8ccec66375e6dded65367f20a6d87a70733dd3b4",
+          "sha256": "51cbbd30e6964dbf3f455eeeb4b37589525ac0211665788377f5f399768db5af",
           "bytes": 205476
         },
         "after": {
-          "sha256": "864b751ad9b3f5c176ed82c3ad30474fa5900cae1ce50d7425089269b3f23408",
+          "sha256": "b2afc6bf02147e1f4979792140c02dce34c120bef202248794fdecedfb4b1506",
           "bytes": 205476
         }
       },
@@ -5537,11 +5523,11 @@
         "file": "data/ingestion/raw/last_ingestion_manifest.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "760779f98b8dd25fb33889138c8cde7515eb5ca9c3880f3a3f03367b941fa9e5",
+          "sha256": "678d1633666640f0dce0a81dee17bc8892de48fa162d68027203eee837fe27f0",
           "bytes": 99
         },
         "after": {
-          "sha256": "9b981d26c719018b238b3ca37c69b4bd8580bd90e527d36296cd0d26cdbabd1f",
+          "sha256": "ae69bd8c52d48c5913b7258f72b83164da43ed6b7e27a7c341050b86d3663621",
           "bytes": 99
         }
       },
@@ -5549,11 +5535,11 @@
         "file": "data/intake/build_backlog.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "3856e5af5cb521b2816ef05b78866ab424993c659976bf332e6ef6dcdb9c22d0",
+          "sha256": "66caed1b7762725a1f3d46945a7bb8173cac4124de3a7734ad62828ca853221a",
           "bytes": 45157
         },
         "after": {
-          "sha256": "57f8772bcd18a48d6d56c396b23dbcabd5292adff1e1059035f5f14b685db8b1",
+          "sha256": "1a0ddafb86a6aaff60f0740b6665c22e5bc1fb7dca525955724ce61a75006e02",
           "bytes": 45157
         }
       },
@@ -5561,11 +5547,11 @@
         "file": "data/intake/query_clusters.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "f19c67cc450979204adc57c4efdbc817eb9c2e6f124b9776f8ade5486acdf396",
+          "sha256": "7eac73b40ba7c1f61b72606d3beed14b4788ac42b8315c9815cec8286ebb035f",
           "bytes": 5799220
         },
         "after": {
-          "sha256": "cb8f0dd975ee306c7db6db1dc1b89c98b42dfa700a959ac3c19ad2866900ae03",
+          "sha256": "626932c671b1ce9211a72ca1da78d09e125bb08e7e5df4beb40884749dec9904",
           "bytes": 5799220
         }
       },
@@ -5573,11 +5559,11 @@
         "file": "data/intake/query_corpus.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "90206b1b5c68571a833918d164efe9f36fac85640cf786c8e900580e0d292274",
+          "sha256": "351c546cb4a9defbe42120e543161f38902330eb3b8c40dc268a2e534ff50030",
           "bytes": 5082721
         },
         "after": {
-          "sha256": "ec3b7c1fafa491746f01879385b5db74d71a94f469af20008805944d7d2bb188",
+          "sha256": "45d5ce11cded4faf4673f21b4210e1543824caf423f6890270c65f2971fb85ef",
           "bytes": 5082721
         }
       },
@@ -5585,11 +5571,11 @@
         "file": "data/intake/query_scores.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "364a4b691a08d88b3f70d723868bf1ea09cf804460231cff733d4cdd7b023f80",
+          "sha256": "6252a0d894992aefef4ec503c9fa1cf84f43d4772ea03bcbdcf62e9b54c73b88",
           "bytes": 64422
         },
         "after": {
-          "sha256": "7804b5be7e826c2f5c0fd61424d5b4cf855d5075e9025e2d7620e63fb881eeb0",
+          "sha256": "2866f60e9bd5478e56addf513a5cdddb6c7ae046b8333ebf31b3e0a018cd733d",
           "bytes": 64422
         }
       },
@@ -5597,11 +5583,11 @@
         "file": "data/intake/query_universe.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "527e1c8f796163e01c162945e73bb655d22f0ed0d0179d750e2f58c287dd34f9",
+          "sha256": "8d64379cd318942cbdbde5b16a9e132e4fa2a754104bea3d52ce9dc200036e67",
           "bytes": 5424636
         },
         "after": {
-          "sha256": "2c0348f77aaf3cb4614d55ca8e9d182f9627e120e119d3f33fe764b11c91d93e",
+          "sha256": "8d163267719d89b0768e14ebc6c8912531721a6d5d770eecfec55bb88bfd7ea1",
           "bytes": 5424636
         }
       },
@@ -5609,11 +5595,11 @@
         "file": "data/intake/source_ingestion/reddit.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "d0ba72cf4bc43ed0ce760770aad8732cf5d5912d7308006fcf6c0beaaf066d17",
+          "sha256": "01c6d0a9f273ced772a1b5a8a74d01f3bf80e557324160228c0db9a7a32aa857",
           "bytes": 2305
         },
         "after": {
-          "sha256": "856499edd6bf898450c509ba2c7f6484525e4e84a2c064a8481b4edbc8ce1636",
+          "sha256": "0c61b070967b5b5a3e14ad0cd2765bfce1beb884d9b015320b8f83c676d99b95",
           "bytes": 2305
         }
       },
@@ -5621,11 +5607,11 @@
         "file": "data/intake/source_ingestion/serp.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "0798e44b9594030e80c8eea6d1c9a6fe476ac8db5c5d38d7399ae3da6bb0069a",
+          "sha256": "82a6fc8675c1ab84d0b94b440aec6926abbe7d4ebddf72af890de17ea2323dac",
           "bytes": 2196
         },
         "after": {
-          "sha256": "51115a706801c9f61c06220b402236b0b07a68c65b1b3c5a52fd5953956a164c",
+          "sha256": "1389da1f404be6c22eef2078d5be05acc60828474c472ea3ccf431890da75e31",
           "bytes": 2196
         }
       },
@@ -5633,39 +5619,39 @@
         "file": "data/programmatic/latest_run_summary.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "709e09cdf6733cf36607b80366b0969a6736e64a19b29c20f5bfb1bbfc402ee4",
+          "sha256": "fb76d692fa44ed8647dd40404bb4ef1f4b5f027a55d3ade36941ecebd5c80376",
           "bytes": 2120222
         },
         "after": {
-          "sha256": "84ab514c28718c4f717956675d5eca134b42ea32e230987885aecf989468c053",
-          "bytes": 2015880
+          "sha256": "214952a095e3b4e5a67eef93c7788c1ad61cf98e5990d4047408cc95bc622ee5",
+          "bytes": 2120215
         }
       },
       {
         "file": "data/programmatic/rejection_backlog.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "b3fbd95f6fa07720ba763009391865a04f0df1ded70d761fcdadf646f2d14687",
-          "bytes": 4308386
+          "sha256": "31bb72d4abbd04d8033ce3b6a757b3a40f12d52c3e3b0a8938c3e6f21f256194",
+          "bytes": 4302070
         },
         "after": {
-          "sha256": "36524371584ba800cb8b8f1e81fef448be37cd8c454459500b8dff25e6231e92",
-          "bytes": 4306068
+          "sha256": "8ca5908e9762046736c9e05e13836eceb3d85e75694c4bf19f2aec56d20d7074",
+          "bytes": 4308818
         }
       },
       {
-        "file": "data/reddit/clusters/2026-07-03.json",
+        "file": "data/reddit/clusters/2026-07-02.json",
         "change": "ADDED",
         "after": {
-          "sha256": "611061d0981312098dbebe9e78bfb341264611d3ab3d11916c37c5abb3d6cbb8",
+          "sha256": "85e702e5d2fc2794d0da62622306c539b39f94f258b1c2f53c09f57ad4ac454d",
           "bytes": 8344
         }
       },
       {
-        "file": "data/reddit/normalized/2026-07-03.json",
+        "file": "data/reddit/normalized/2026-07-02.json",
         "change": "ADDED",
         "after": {
-          "sha256": "f4c1274499c702dc6a4140da7fc4e370188d0f806ef7a10b6662c0104de1ac16",
+          "sha256": "b39f77f98f94b725de3297bcdc7e3e9944cf336bcdc107da5cf1584d41c5c724",
           "bytes": 5356
         }
       },
@@ -5673,55 +5659,31 @@
         "file": "data/reddit/publish_queue.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "5b5e9906bb7f3f940ec99e6c8fa94781d566d2460a671c951f55be76ec04acdb",
+          "sha256": "eb6ff0d064a3bf6498e59f06b65e4792b30c4ae2c0c9bbd1bfe2c16dff33a7e2",
           "bytes": 137
         },
         "after": {
-          "sha256": "67b1dbd2b32ecbe68481fa54df82d3d96fb6c71040c3cc1b2cfbb42f82015100",
+          "sha256": "96eda25a325f2e31052c8e7591f9a5caee9778d34890199a10cf00e10af3116e",
           "bytes": 137
         }
       },
       {
-        "file": "data/reddit/raw/2026-07-03.json",
+        "file": "data/reddit/raw/2026-07-02.json",
         "change": "ADDED",
         "after": {
-          "sha256": "4b0f810887fdfe87edfe07a15de93dd09e9355ae7d5f11357add648514c1a7f2",
+          "sha256": "ff116d5000ede16315065e4094229e19bd40ea927a868b0cbe7fce57a1789f9e",
           "bytes": 1721
-        }
-      },
-      {
-        "file": "data/report_fixes/agent_acceptance_manifest.generated.json",
-        "change": "MODIFIED",
-        "before": {
-          "sha256": "837ae3ca204b0a4857cec27b451b9114404faaa3558d60627093344f82758f02",
-          "bytes": 517229
-        },
-        "after": {
-          "sha256": "d8727d2fa86c211b7f8352aa7e749785ac0ec0f3dff3dd185291c84c374a200e",
-          "bytes": 517229
-        }
-      },
-      {
-        "file": "data/report_fixes/agent_acceptance_manifests/2026-06-27_bhpc.json",
-        "change": "MODIFIED",
-        "before": {
-          "sha256": "7d029a735417258ab37c0a143c9c57b73d1848078540db62031828876857a817",
-          "bytes": 516911
-        },
-        "after": {
-          "sha256": "db3999b108cbaceeeafe8143afb4ea3a77478c2b8aa87e5138076c35b0240e6d",
-          "bytes": 516911
         }
       },
       {
         "file": "data/search/search_engine_submission_manifest.json",
         "change": "MODIFIED",
         "before": {
-          "sha256": "9920e3cffc81063139ed6c35bf9fbfd52a479bb49ed3873e35d8a70a68fa92dc",
+          "sha256": "7ffbc54613aff5f7ad5f28eb8a30b0a32aad5606b6529e84afe286875497f95d",
           "bytes": 4047
         },
         "after": {
-          "sha256": "368abbb4bd8111e47286c93d041ada53fabcb2d05aa9be285db9b6110346b0cc",
+          "sha256": "06d26c149fb0c14767d2229d50537796f3ee68b5cdb16dc3b90d101ea75155ca",
           "bytes": 4047
         }
       },
@@ -5729,72 +5691,12 @@
         "file": "feed.xml",
         "change": "MODIFIED",
         "before": {
-          "sha256": "9591c4e5f8fddd80169425f2183331cca163cf7d044a9c174f94c0e953035728",
+          "sha256": "08a62b4cad2d75efc9446448d9d2aa471df17dc4d7893f61095abe2f33278eb7",
           "bytes": 50881
         },
         "after": {
-          "sha256": "a98c7fdc3e40730b63489abc9ec15391780b149457b6682f1c05fd7436e1179e",
+          "sha256": "d8390ab2a820f866ffa4babe6ed96347db8dad77eac3db9b95435144ebbcb4e1",
           "bytes": 50881
-        }
-      },
-      {
-        "file": "insights/a-clean-system-for-handling-email-without-losing-your-day.html",
-        "change": "MODIFIED",
-        "before": {
-          "sha256": "5fb8657952bdfe5f193668c0b088791238678e16c8b6e0de675307f3d921a1df",
-          "bytes": 37675
-        },
-        "after": {
-          "sha256": "3985c7a36bbe5c4ccdd379c3cd8aab48c0a12f69cd41bf2276260533675a2256",
-          "bytes": 38059
-        }
-      },
-      {
-        "file": "insights/how-to-act-confident-before-you-feel-confident.html",
-        "change": "MODIFIED",
-        "before": {
-          "sha256": "c5855be9628d3f2f5b37911c9c63737d92ee8502ac93c2735d672349c665a267",
-          "bytes": 19300
-        },
-        "after": {
-          "sha256": "5573075f16676a496e90499e6623c316f184320b60c5ab4f7c7adfec1dcb5820",
-          "bytes": 19704
-        }
-      },
-      {
-        "file": "insights/personal-playbook-recurring-problems.html",
-        "change": "MODIFIED",
-        "before": {
-          "sha256": "3de21780332e7ff6ca23c92a29f9237476930d0bff432086b6b2829c7f2c5c3e",
-          "bytes": 22657
-        },
-        "after": {
-          "sha256": "11582b6effef097ea27eb530b3f2857590488d79ec194ef2af7e7f431d13385b",
-          "bytes": 23093
-        }
-      },
-      {
-        "file": "insights/system-for-confidence.html",
-        "change": "MODIFIED",
-        "before": {
-          "sha256": "78e70cf1bbd1700634e592ffd9461e4fb1e0c2110bb878b1996ee0f91e0e585c",
-          "bytes": 21696
-        },
-        "after": {
-          "sha256": "04e1b797f0d3b431abce223e3f674675cf75deb2965517af54229714fdd465d4",
-          "bytes": 22111
-        }
-      },
-      {
-        "file": "insights/the-difference-between-confidence-and-certainty-and-why-it-matters.html",
-        "change": "MODIFIED",
-        "before": {
-          "sha256": "a3b5cd46e3c0ec0a8a4a26866603746d160b432da68abd7e4106deceb6e792f1",
-          "bytes": 18599
-        },
-        "after": {
-          "sha256": "5da752140ad175dfb411c2840ecc83a8b8113d85bfc1995f8abac54fc76e8fda",
-          "bytes": 18964
         }
       }
     ]
@@ -5805,14 +5707,14 @@
   },
   "hostile_review": {
     "status": "PASSED",
-    "report": "reports/workflows/reddit-evening/20260703041111-2384/hostile-review.json"
+    "report": "reports/workflows/reddit-evening/20260702012003-2398/hostile-review.json"
   },
   "monitor_validation": {
     "status": "PASSED"
   },
   "status": "PASS",
-  "completed_at": "2026-07-03T04:22:43.754Z",
+  "completed_at": "2026-07-02T01:31:50.813Z",
   "command_exit_code": 0,
   "signal": null,
-  "finalized_at": "2026-07-03T04:22:44.002Z"
+  "finalized_at": "2026-07-02T01:31:51.068Z"
 }
