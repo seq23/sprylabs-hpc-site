@@ -95,7 +95,11 @@
       ],
       "artifact_trigger_policy": "Manifest-only trigger. CSV and HTML may land before manifest, but the workflow only starts when the manifest declares the bundle ready.",
       "artifact_contract": "BHPC CSV + HTML + manifest under data/report_fixes/agent_runs/YYYY-MM-DD/bhpc/",
-      "fallback_behavior": "If no ready artifact exists, or if artifact volume is insufficient, workflow:content-authority continues the existing content pipeline unchanged."
+      "fallback_behavior": "If no ready artifact exists, or if artifact volume is insufficient, workflow:content-authority continues the existing content pipeline unchanged.",
+      "canonical_lane": "content-authority",
+      "canonical_mode": "authority",
+      "topology_status": "canonical",
+      "topology_command": "npm run workflow:content-authority"
     },
     {
       "id": "daily-insight",
@@ -171,7 +175,11 @@
         "tests/**",
         "_repo_*.json",
         "_validation_registry.json"
-      ]
+      ],
+      "canonical_lane": "content-expansion",
+      "canonical_mode": "daily-insight",
+      "topology_status": "alias",
+      "topology_command": "npm run workflow:content-expansion -- --mode=daily-insight"
     },
     {
       "id": "execution-strict",
@@ -253,7 +261,11 @@
         "tests/**",
         "_repo_*.json",
         "_validation_registry.json"
-      ]
+      ],
+      "canonical_lane": "content-expansion",
+      "canonical_mode": "strict",
+      "topology_status": "alias",
+      "topology_command": "npm run workflow:content-expansion -- --mode=strict"
     },
     {
       "id": "reddit-daily",
@@ -330,7 +342,11 @@
         "tests/**",
         "_repo_*.json",
         "_validation_registry.json"
-      ]
+      ],
+      "canonical_lane": "signal-intake",
+      "canonical_mode": "daily",
+      "topology_status": "alias",
+      "topology_command": "npm run workflow:signal-intake -- --mode=daily"
     },
     {
       "id": "reddit-evening",
@@ -405,7 +421,11 @@
         "tests/**",
         "_repo_*.json",
         "_validation_registry.json"
-      ]
+      ],
+      "canonical_lane": "signal-intake",
+      "canonical_mode": "evening",
+      "topology_status": "alias",
+      "topology_command": "npm run workflow:signal-intake -- --mode=evening"
     },
     {
       "id": "social-signal",
@@ -480,7 +500,11 @@
         "tests/**",
         "_repo_*.json",
         "_validation_registry.json"
-      ]
+      ],
+      "canonical_lane": "signal-intake",
+      "canonical_mode": "social",
+      "topology_status": "alias",
+      "topology_command": "npm run workflow:signal-intake -- --mode=social"
     },
     {
       "id": "synthesis-weekly",
@@ -555,7 +579,11 @@
         "tests/**",
         "_repo_*.json",
         "_validation_registry.json"
-      ]
+      ],
+      "canonical_lane": "content-expansion",
+      "canonical_mode": "synthesis",
+      "topology_status": "alias",
+      "topology_command": "npm run workflow:content-expansion -- --mode=synthesis"
     },
     {
       "id": "whitepaper-release",
@@ -630,7 +658,11 @@
         "tests/**",
         "_repo_*.json",
         "_validation_registry.json"
-      ]
+      ],
+      "canonical_lane": "content-expansion",
+      "canonical_mode": "whitepaper",
+      "topology_status": "alias",
+      "topology_command": "npm run workflow:content-expansion -- --mode=whitepaper"
     },
     {
       "id": "citation-velocity-5k",
@@ -721,7 +753,11 @@
         "_repo_*.json",
         "_validation_registry.json"
       ],
-      "cadence_note": "Weekly Tuesday bulk citation expansion. Not daily; run manually only after large artifact/model changes or when ready to intentionally expand citation surfaces."
+      "cadence_note": "Weekly Tuesday bulk citation expansion. Not daily; run manually only after large artifact/model changes or when ready to intentionally expand citation surfaces.",
+      "canonical_lane": "citation-expansion",
+      "canonical_mode": "daily",
+      "topology_status": "alias",
+      "topology_command": "npm run workflow:citation-expansion -- --mode=daily"
     }
   ]
 }

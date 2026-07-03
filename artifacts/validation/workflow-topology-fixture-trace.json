@@ -1,0 +1,82 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-07-03T17:07:41.231Z",
+  "status": "PASS",
+  "workflow_count": 9,
+  "traced_workflow_count": 9,
+  "traces": [
+    {
+      "workflow_id": "content-authority",
+      "topology_status": "canonical",
+      "lane": "content-authority",
+      "mode": "authority",
+      "stage_count": 13,
+      "trace_path": "artifacts/validation/workflow-topology-fixtures/content-authority/fixture-content-authority/trace.json"
+    },
+    {
+      "workflow_id": "daily-insight",
+      "topology_status": "alias",
+      "lane": "content-expansion",
+      "mode": "daily-insight",
+      "stage_count": 1,
+      "trace_path": "artifacts/validation/workflow-topology-fixtures/content-expansion/fixture-daily-insight/trace.json"
+    },
+    {
+      "workflow_id": "execution-strict",
+      "topology_status": "alias",
+      "lane": "content-expansion",
+      "mode": "strict",
+      "stage_count": 1,
+      "trace_path": "artifacts/validation/workflow-topology-fixtures/content-expansion/fixture-execution-strict/trace.json"
+    },
+    {
+      "workflow_id": "reddit-daily",
+      "topology_status": "alias",
+      "lane": "signal-intake",
+      "mode": "daily",
+      "stage_count": 9,
+      "trace_path": "artifacts/validation/workflow-topology-fixtures/signal-intake/fixture-reddit-daily/trace.json"
+    },
+    {
+      "workflow_id": "reddit-evening",
+      "topology_status": "alias",
+      "lane": "signal-intake",
+      "mode": "evening",
+      "stage_count": 5,
+      "trace_path": "artifacts/validation/workflow-topology-fixtures/signal-intake/fixture-reddit-evening/trace.json"
+    },
+    {
+      "workflow_id": "social-signal",
+      "topology_status": "alias",
+      "lane": "signal-intake",
+      "mode": "social",
+      "stage_count": 4,
+      "trace_path": "artifacts/validation/workflow-topology-fixtures/signal-intake/fixture-social-signal/trace.json"
+    },
+    {
+      "workflow_id": "synthesis-weekly",
+      "topology_status": "alias",
+      "lane": "content-expansion",
+      "mode": "synthesis",
+      "stage_count": 3,
+      "trace_path": "artifacts/validation/workflow-topology-fixtures/content-expansion/fixture-synthesis-weekly/trace.json"
+    },
+    {
+      "workflow_id": "whitepaper-release",
+      "topology_status": "alias",
+      "lane": "content-expansion",
+      "mode": "whitepaper",
+      "stage_count": 1,
+      "trace_path": "artifacts/validation/workflow-topology-fixtures/content-expansion/fixture-whitepaper-release/trace.json"
+    },
+    {
+      "workflow_id": "citation-velocity-5k",
+      "topology_status": "alias",
+      "lane": "citation-expansion",
+      "mode": "daily",
+      "stage_count": 1,
+      "trace_path": "artifacts/validation/workflow-topology-fixtures/citation-expansion/fixture-citation-velocity-5k/trace.json"
+    }
+  ],
+  "errors": []
+}

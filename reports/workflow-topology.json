@@ -1,0 +1,168 @@
+{
+  "schema_version": "1.1",
+  "generated_at": "2026-07-03T17:07:40.796Z",
+  "status": "PASS",
+  "canonical_lane_count": 5,
+  "governed_workflow_count": 9,
+  "alias_workflow_count": 8,
+  "stage_count": 47,
+  "canonical_lanes": {
+    "content-authority": {
+      "command": "npm run workflow:content-authority",
+      "modes": [
+        "authority"
+      ],
+      "replaces": [
+        "release:agent-intake",
+        "agent:bhpc:*",
+        "agent:artifact-shape:self-test"
+      ],
+      "stage_modes": {
+        "authority": 13
+      }
+    },
+    "signal-intake": {
+      "command": "npm run workflow:signal-intake",
+      "modes": [
+        "daily",
+        "evening",
+        "social"
+      ],
+      "replaces": [
+        "reddit:daily",
+        "reddit:evening",
+        "social:daily",
+        "velocity:sync",
+        "answer:all"
+      ],
+      "stage_modes": {
+        "daily": 9,
+        "evening": 5,
+        "social": 4
+      }
+    },
+    "content-expansion": {
+      "command": "npm run workflow:content-expansion",
+      "modes": [
+        "generated",
+        "manual",
+        "synthesis",
+        "whitepaper",
+        "daily-insight",
+        "strict"
+      ],
+      "replaces": [
+        "build:generated-content",
+        "build:manual-expansion",
+        "workflow:synthesis-weekly",
+        "workflow:whitepaper",
+        "workflow:daily-insight",
+        "workflow:execution-strict"
+      ],
+      "stage_modes": {
+        "generated": 3,
+        "manual": 1,
+        "synthesis": 3,
+        "whitepaper": 1,
+        "daily-insight": 1,
+        "strict": 1
+      }
+    },
+    "citation-expansion": {
+      "command": "npm run workflow:citation-expansion",
+      "modes": [
+        "daily",
+        "plan"
+      ],
+      "replaces": [
+        "workflow:citation-velocity-5k",
+        "citation:5k:daily",
+        "citation:5k:plan"
+      ],
+      "stage_modes": {
+        "daily": 1,
+        "plan": 1
+      }
+    },
+    "release-verify": {
+      "command": "npm run workflow:release-verify",
+      "modes": [
+        "audit",
+        "container",
+        "local",
+        "postpush"
+      ],
+      "replaces": [
+        "validate:all",
+        "full:loop",
+        "guardrails:all"
+      ],
+      "stage_modes": {
+        "audit": 1,
+        "container": 1,
+        "local": 1,
+        "postpush": 1
+      }
+    }
+  },
+  "aliases": [
+    {
+      "id": "daily-insight",
+      "canonical_lane": "content-expansion",
+      "canonical_mode": "daily-insight",
+      "workflow_command": "npm run workflow:daily-insight"
+    },
+    {
+      "id": "execution-strict",
+      "canonical_lane": "content-expansion",
+      "canonical_mode": "strict",
+      "workflow_command": "npm run workflow:execution-strict"
+    },
+    {
+      "id": "reddit-daily",
+      "canonical_lane": "signal-intake",
+      "canonical_mode": "daily",
+      "workflow_command": "npm run workflow:reddit-daily"
+    },
+    {
+      "id": "reddit-evening",
+      "canonical_lane": "signal-intake",
+      "canonical_mode": "evening",
+      "workflow_command": "npm run workflow:reddit-evening"
+    },
+    {
+      "id": "social-signal",
+      "canonical_lane": "signal-intake",
+      "canonical_mode": "social",
+      "workflow_command": "npm run workflow:social-signal"
+    },
+    {
+      "id": "synthesis-weekly",
+      "canonical_lane": "content-expansion",
+      "canonical_mode": "synthesis",
+      "workflow_command": "npm run workflow:synthesis-weekly"
+    },
+    {
+      "id": "whitepaper-release",
+      "canonical_lane": "content-expansion",
+      "canonical_mode": "whitepaper",
+      "workflow_command": "npm run workflow:whitepaper"
+    },
+    {
+      "id": "citation-velocity-5k",
+      "canonical_lane": "citation-expansion",
+      "canonical_mode": "daily",
+      "workflow_command": "npm run workflow:citation-velocity-5k"
+    }
+  ],
+  "warnings": [
+    "reddit:daily:legacy: still present as a direct component command; target=workflow:signal-intake --mode=daily",
+    "reddit:evening:legacy: still present as a direct component command; target=workflow:signal-intake --mode=evening",
+    "social:daily: still present as a direct component command; target=workflow:signal-intake --mode=daily",
+    "authority:daily: still present as a direct component command; target=workflow:content-authority",
+    "content:pipeline: still present as a direct component command; target=workflow:content-authority",
+    "full:loop: still present as a direct component command; target=workflow:release-verify --mode=audit",
+    "guardrails:all: still present as a direct component command; target=release:prepush:container"
+  ],
+  "errors": []
+}

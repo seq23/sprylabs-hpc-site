@@ -2786,6 +2786,79 @@
         "MX-087"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-088",
+      "status": "ADMITTED",
+      "name": "validate:workflow-topology",
+      "check_type": "validator",
+      "owning_lane": "workflow-governance",
+      "risk_prevented": "Prevents scheduled workflows and public package commands from bypassing the canonical workflow topology lanes.",
+      "existing_coverage_gap": "Workflow contract, lineage, and monitor validation prove individual workflow structure, but did not previously prove that public workflow entrypoints collapse into a small canonical topology.",
+      "scope": [
+        "repository",
+        "workflows",
+        "package-scripts",
+        "governed-workflows"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:workflow-topology",
+      "implementation_path": "scripts/validation/validate_workflow_topology.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/workflow-topology.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:workflow-contract",
+        "validate:workflow-lineage",
+        "validate:workflow-monitor"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted during Spry workflow-topology simplification to prove canonical lane consolidation without reducing release proof.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-088"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-089",
+      "status": "ADMITTED",
+      "name": "validate:workflow-topology:fixtures",
+      "check_type": "validator",
+      "owning_lane": "workflow-governance",
+      "risk_prevented": "Proves every governed workflow can be data-traced through its canonical topology lane and mode without executing components or mutating operational workflow reports.",
+      "existing_coverage_gap": "The topology validator proved static mapping, but did not prove that each governed workflow could produce a deterministic trace through the lane runner.",
+      "scope": [
+        "repository",
+        "workflows",
+        "package-scripts",
+        "governed-workflows"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:workflow-topology:fixtures",
+      "implementation_path": "scripts/validation/validate_workflow_topology_fixtures.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/workflow-topology-fixture-trace.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:workflow-topology",
+        "validate:workflow-lineage"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted during hostile review of Spry workflow-topology simplification to prevent untraced alias topology from becoming hidden debt.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-089"
+      ],
+      "not_applicable_reason": null
     }
   ]
 }

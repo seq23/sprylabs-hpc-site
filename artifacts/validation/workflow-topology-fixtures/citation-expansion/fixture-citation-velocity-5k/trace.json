@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.1",
+  "topology_schema_version": "1.0",
+  "lane": "citation-expansion",
+  "mode": "daily",
+  "contract_id": "citation-velocity-5k",
+  "run_id": "fixture-citation-velocity-5k",
+  "trace_only": true,
+  "fixture_input": {
+    "type": "workflow-topology-fixture",
+    "contract_id": "citation-velocity-5k",
+    "lane": "citation-expansion",
+    "mode": "daily",
+    "component_count": 1
+  },
+  "started_at": "2026-07-03T17:07:41.228Z",
+  "status": "TRACE_ONLY_PASS",
+  "stages": [
+    {
+      "label": "citation:5k:daily",
+      "command": "npm run citation:5k:daily",
+      "started_at": "2026-07-03T17:07:41.229Z",
+      "completed_at": "2026-07-03T17:07:41.229Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "citation-expansion:daily:citation:5k:daily",
+        "expected_command": "npm run citation:5k:daily"
+      }
+    }
+  ],
+  "completed_at": "2026-07-03T17:07:41.229Z"
+}

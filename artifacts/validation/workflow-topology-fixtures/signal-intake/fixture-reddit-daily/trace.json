@@ -1,0 +1,138 @@
+{
+  "schema_version": "1.1",
+  "topology_schema_version": "1.0",
+  "lane": "signal-intake",
+  "mode": "daily",
+  "contract_id": "reddit-daily",
+  "run_id": "fixture-reddit-daily",
+  "trace_only": true,
+  "fixture_input": {
+    "type": "workflow-topology-fixture",
+    "contract_id": "reddit-daily",
+    "lane": "signal-intake",
+    "mode": "daily",
+    "component_count": 9
+  },
+  "started_at": "2026-07-03T17:07:41.055Z",
+  "status": "TRACE_ONLY_PASS",
+  "stages": [
+    {
+      "label": "reddit:fetch",
+      "command": "npm run reddit:fetch",
+      "started_at": "2026-07-03T17:07:41.057Z",
+      "completed_at": "2026-07-03T17:07:41.057Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "signal-intake:daily:reddit:fetch",
+        "expected_command": "npm run reddit:fetch"
+      }
+    },
+    {
+      "label": "reddit:normalize",
+      "command": "npm run reddit:normalize",
+      "started_at": "2026-07-03T17:07:41.057Z",
+      "completed_at": "2026-07-03T17:07:41.057Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "signal-intake:daily:reddit:normalize",
+        "expected_command": "npm run reddit:normalize"
+      }
+    },
+    {
+      "label": "reddit:cluster",
+      "command": "npm run reddit:cluster",
+      "started_at": "2026-07-03T17:07:41.057Z",
+      "completed_at": "2026-07-03T17:07:41.057Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "signal-intake:daily:reddit:cluster",
+        "expected_command": "npm run reddit:cluster"
+      }
+    },
+    {
+      "label": "reddit:score",
+      "command": "npm run reddit:score",
+      "started_at": "2026-07-03T17:07:41.057Z",
+      "completed_at": "2026-07-03T17:07:41.057Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "signal-intake:daily:reddit:score",
+        "expected_command": "npm run reddit:score"
+      }
+    },
+    {
+      "label": "velocity:sync",
+      "command": "npm run velocity:sync",
+      "started_at": "2026-07-03T17:07:41.057Z",
+      "completed_at": "2026-07-03T17:07:41.057Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "signal-intake:daily:velocity:sync",
+        "expected_command": "npm run velocity:sync"
+      }
+    },
+    {
+      "label": "reddit:generate",
+      "command": "npm run reddit:generate",
+      "started_at": "2026-07-03T17:07:41.058Z",
+      "completed_at": "2026-07-03T17:07:41.058Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "signal-intake:daily:reddit:generate",
+        "expected_command": "npm run reddit:generate"
+      }
+    },
+    {
+      "label": "reddit:publish",
+      "command": "npm run reddit:publish",
+      "started_at": "2026-07-03T17:07:41.058Z",
+      "completed_at": "2026-07-03T17:07:41.058Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "signal-intake:daily:reddit:publish",
+        "expected_command": "npm run reddit:publish"
+      }
+    },
+    {
+      "label": "reddit:indexes",
+      "command": "npm run reddit:indexes",
+      "started_at": "2026-07-03T17:07:41.058Z",
+      "completed_at": "2026-07-03T17:07:41.058Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "signal-intake:daily:reddit:indexes",
+        "expected_command": "npm run reddit:indexes"
+      }
+    },
+    {
+      "label": "authority:fanout",
+      "command": "npm run authority:fanout",
+      "started_at": "2026-07-03T17:07:41.058Z",
+      "completed_at": "2026-07-03T17:07:41.058Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "signal-intake:daily:authority:fanout",
+        "expected_command": "npm run authority:fanout"
+      }
+    }
+  ],
+  "completed_at": "2026-07-03T17:07:41.058Z"
+}

@@ -1,0 +1,73 @@
+{
+  "schema_version": "1.1",
+  "topology_schema_version": "1.0",
+  "lane": "signal-intake",
+  "mode": "social",
+  "contract_id": "social-signal",
+  "run_id": "fixture-social-signal",
+  "trace_only": true,
+  "fixture_input": {
+    "type": "workflow-topology-fixture",
+    "contract_id": "social-signal",
+    "lane": "signal-intake",
+    "mode": "social",
+    "component_count": 4
+  },
+  "started_at": "2026-07-03T17:07:41.126Z",
+  "status": "TRACE_ONLY_PASS",
+  "stages": [
+    {
+      "label": "social:collect",
+      "command": "npm run social:collect",
+      "started_at": "2026-07-03T17:07:41.128Z",
+      "completed_at": "2026-07-03T17:07:41.128Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "signal-intake:social:social:collect",
+        "expected_command": "npm run social:collect"
+      }
+    },
+    {
+      "label": "ingest:normalize",
+      "command": "npm run ingest:normalize",
+      "started_at": "2026-07-03T17:07:41.128Z",
+      "completed_at": "2026-07-03T17:07:41.128Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "signal-intake:social:ingest:normalize",
+        "expected_command": "npm run ingest:normalize"
+      }
+    },
+    {
+      "label": "ingest:cluster",
+      "command": "npm run ingest:cluster",
+      "started_at": "2026-07-03T17:07:41.128Z",
+      "completed_at": "2026-07-03T17:07:41.128Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "signal-intake:social:ingest:cluster",
+        "expected_command": "npm run ingest:cluster"
+      }
+    },
+    {
+      "label": "answer:all",
+      "command": "npm run answer:all",
+      "started_at": "2026-07-03T17:07:41.128Z",
+      "completed_at": "2026-07-03T17:07:41.128Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "signal-intake:social:answer:all",
+        "expected_command": "npm run answer:all"
+      }
+    }
+  ],
+  "completed_at": "2026-07-03T17:07:41.128Z"
+}

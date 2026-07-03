@@ -1,0 +1,521 @@
+{
+  "schema_version": "1.0",
+  "authority_law": "workflow topology defines public lanes; package component scripts remain private unless explicitly admitted as lane aliases.",
+  "canonical_lanes": {
+    "content-authority": {
+      "command": "npm run workflow:content-authority",
+      "default_mode": "authority",
+      "modes": [
+        "authority"
+      ],
+      "replaces": [
+        "release:agent-intake",
+        "agent:bhpc:*",
+        "agent:artifact-shape:self-test"
+      ],
+      "lane_owner": "content-agent",
+      "stages_by_mode": {
+        "authority": [
+          {
+            "label": "agent:bhpc:validate",
+            "command": [
+              "npm",
+              "run",
+              "agent:bhpc:validate"
+            ]
+          },
+          {
+            "label": "agent:bhpc:absorb",
+            "command": [
+              "npm",
+              "run",
+              "agent:bhpc:absorb"
+            ]
+          },
+          {
+            "label": "agent:bhpc:trace",
+            "command": [
+              "npm",
+              "run",
+              "agent:bhpc:trace"
+            ]
+          },
+          {
+            "label": "agent:bhpc:compile-acceptance",
+            "command": [
+              "npm",
+              "run",
+              "agent:bhpc:compile-acceptance"
+            ]
+          },
+          {
+            "label": "agent:bhpc:plan-exact",
+            "command": [
+              "npm",
+              "run",
+              "agent:bhpc:plan-exact"
+            ]
+          },
+          {
+            "label": "agent:bhpc:apply-report-contract",
+            "command": [
+              "npm",
+              "run",
+              "agent:bhpc:apply-report-contract"
+            ]
+          },
+          {
+            "label": "agent:bhpc:apply-exact",
+            "command": [
+              "npm",
+              "run",
+              "agent:bhpc:apply-exact"
+            ]
+          },
+          {
+            "label": "content:pipeline",
+            "command": [
+              "npm",
+              "run",
+              "content:pipeline"
+            ]
+          },
+          {
+            "label": "build:postprocess",
+            "command": [
+              "npm",
+              "run",
+              "build:postprocess"
+            ]
+          },
+          {
+            "label": "agent:bhpc:apply-report-contract:post",
+            "command": [
+              "npm",
+              "run",
+              "agent:bhpc:apply-report-contract"
+            ]
+          },
+          {
+            "label": "agent:bhpc:apply-exact:post",
+            "command": [
+              "npm",
+              "run",
+              "agent:bhpc:apply-exact"
+            ]
+          },
+          {
+            "label": "agent:bhpc:trace-exact",
+            "command": [
+              "npm",
+              "run",
+              "agent:bhpc:trace-exact"
+            ]
+          },
+          {
+            "label": "agent:bhpc:validate-exact",
+            "command": [
+              "npm",
+              "run",
+              "agent:bhpc:validate-exact"
+            ]
+          }
+        ]
+      }
+    },
+    "signal-intake": {
+      "command": "npm run workflow:signal-intake",
+      "default_mode": "evening",
+      "modes": [
+        "daily",
+        "evening",
+        "social"
+      ],
+      "replaces": [
+        "reddit:daily",
+        "reddit:evening",
+        "social:daily",
+        "velocity:sync",
+        "answer:all"
+      ],
+      "lane_owner": "signal",
+      "stages_by_mode": {
+        "daily": [
+          {
+            "label": "reddit:fetch",
+            "command": [
+              "npm",
+              "run",
+              "reddit:fetch"
+            ]
+          },
+          {
+            "label": "reddit:normalize",
+            "command": [
+              "npm",
+              "run",
+              "reddit:normalize"
+            ]
+          },
+          {
+            "label": "reddit:cluster",
+            "command": [
+              "npm",
+              "run",
+              "reddit:cluster"
+            ]
+          },
+          {
+            "label": "reddit:score",
+            "command": [
+              "npm",
+              "run",
+              "reddit:score"
+            ]
+          },
+          {
+            "label": "velocity:sync",
+            "command": [
+              "npm",
+              "run",
+              "velocity:sync"
+            ]
+          },
+          {
+            "label": "reddit:generate",
+            "command": [
+              "npm",
+              "run",
+              "reddit:generate"
+            ]
+          },
+          {
+            "label": "reddit:publish",
+            "command": [
+              "npm",
+              "run",
+              "reddit:publish"
+            ]
+          },
+          {
+            "label": "reddit:indexes",
+            "command": [
+              "npm",
+              "run",
+              "reddit:indexes"
+            ]
+          },
+          {
+            "label": "authority:fanout",
+            "command": [
+              "npm",
+              "run",
+              "authority:fanout"
+            ]
+          }
+        ],
+        "evening": [
+          {
+            "label": "reddit:fetch",
+            "command": [
+              "npm",
+              "run",
+              "reddit:fetch"
+            ]
+          },
+          {
+            "label": "reddit:normalize",
+            "command": [
+              "npm",
+              "run",
+              "reddit:normalize"
+            ]
+          },
+          {
+            "label": "reddit:cluster",
+            "command": [
+              "npm",
+              "run",
+              "reddit:cluster"
+            ]
+          },
+          {
+            "label": "reddit:score",
+            "command": [
+              "npm",
+              "run",
+              "reddit:score"
+            ]
+          },
+          {
+            "label": "velocity:sync",
+            "command": [
+              "npm",
+              "run",
+              "velocity:sync"
+            ]
+          }
+        ],
+        "social": [
+          {
+            "label": "social:collect",
+            "command": [
+              "npm",
+              "run",
+              "social:collect"
+            ]
+          },
+          {
+            "label": "ingest:normalize",
+            "command": [
+              "npm",
+              "run",
+              "ingest:normalize"
+            ]
+          },
+          {
+            "label": "ingest:cluster",
+            "command": [
+              "npm",
+              "run",
+              "ingest:cluster"
+            ]
+          },
+          {
+            "label": "answer:all",
+            "command": [
+              "npm",
+              "run",
+              "answer:all"
+            ]
+          }
+        ]
+      }
+    },
+    "content-expansion": {
+      "command": "npm run workflow:content-expansion",
+      "default_mode": "generated",
+      "modes": [
+        "generated",
+        "manual",
+        "synthesis",
+        "whitepaper",
+        "daily-insight",
+        "strict"
+      ],
+      "replaces": [
+        "build:generated-content",
+        "build:manual-expansion",
+        "workflow:synthesis-weekly",
+        "workflow:whitepaper",
+        "workflow:daily-insight",
+        "workflow:execution-strict"
+      ],
+      "lane_owner": "content",
+      "stages_by_mode": {
+        "generated": [
+          {
+            "label": "build:generated-content",
+            "command": [
+              "npm",
+              "run",
+              "build:generated-content"
+            ]
+          },
+          {
+            "label": "build:postprocess",
+            "command": [
+              "npm",
+              "run",
+              "build:postprocess"
+            ]
+          },
+          {
+            "label": "build:aplayer-phase-expansion",
+            "command": [
+              "npm",
+              "run",
+              "build:aplayer-phase-expansion"
+            ]
+          }
+        ],
+        "manual": [
+          {
+            "label": "build:manual-expansion",
+            "command": [
+              "npm",
+              "run",
+              "build:manual-expansion"
+            ]
+          }
+        ],
+        "synthesis": [
+          {
+            "label": "clusters:update",
+            "command": [
+              "npm",
+              "run",
+              "clusters:update"
+            ]
+          },
+          {
+            "label": "synthesis:build",
+            "command": [
+              "npm",
+              "run",
+              "synthesis:build"
+            ]
+          },
+          {
+            "label": "admin:build",
+            "command": [
+              "npm",
+              "run",
+              "admin:build"
+            ]
+          }
+        ],
+        "whitepaper": [
+          {
+            "label": "whitepaper:semiannual",
+            "command": [
+              "npm",
+              "run",
+              "whitepaper:semiannual"
+            ]
+          }
+        ],
+        "daily-insight": [
+          {
+            "label": "daily-insight",
+            "command": [
+              "node",
+              "scripts/release_one_draft.js"
+            ]
+          }
+        ],
+        "strict": [
+          {
+            "label": "execution:strict",
+            "command": [
+              "npm",
+              "run",
+              "execution:strict"
+            ]
+          }
+        ]
+      }
+    },
+    "citation-expansion": {
+      "command": "npm run workflow:citation-expansion",
+      "default_mode": "daily",
+      "modes": [
+        "daily",
+        "plan"
+      ],
+      "replaces": [
+        "workflow:citation-velocity-5k",
+        "citation:5k:daily",
+        "citation:5k:plan"
+      ],
+      "lane_owner": "citation",
+      "stages_by_mode": {
+        "daily": [
+          {
+            "label": "citation:5k:daily",
+            "command": [
+              "npm",
+              "run",
+              "citation:5k:daily"
+            ]
+          }
+        ],
+        "plan": [
+          {
+            "label": "citation:5k:plan",
+            "command": [
+              "npm",
+              "run",
+              "citation:5k:plan"
+            ]
+          }
+        ]
+      }
+    },
+    "release-verify": {
+      "command": "npm run workflow:release-verify",
+      "default_mode": "audit",
+      "modes": [
+        "audit",
+        "container",
+        "local",
+        "postpush"
+      ],
+      "replaces": [
+        "validate:all",
+        "full:loop",
+        "guardrails:all"
+      ],
+      "lane_owner": "release",
+      "stages_by_mode": {
+        "audit": [
+          {
+            "label": "validate:full-audit",
+            "command": [
+              "npm",
+              "run",
+              "validate:full-audit"
+            ]
+          }
+        ],
+        "container": [
+          {
+            "label": "release:prepush:container",
+            "command": [
+              "npm",
+              "run",
+              "release:prepush:container"
+            ]
+          }
+        ],
+        "local": [
+          {
+            "label": "release:prepush:local",
+            "command": [
+              "npm",
+              "run",
+              "release:prepush:local"
+            ]
+          }
+        ],
+        "postpush": [
+          {
+            "label": "release:postpush",
+            "command": [
+              "npm",
+              "run",
+              "release:postpush"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "deprecated_public_entrypoints": {
+    "reddit:daily:legacy": "workflow:signal-intake --mode=daily",
+    "reddit:evening:legacy": "workflow:signal-intake --mode=evening",
+    "social:daily": "workflow:signal-intake --mode=daily",
+    "authority:daily": "workflow:content-authority",
+    "content:pipeline": "workflow:content-authority",
+    "full:loop": "workflow:release-verify --mode=audit",
+    "guardrails:all": "release:prepush:container"
+  },
+  "component_command_policy": {
+    "status": "private_components_allowed",
+    "rule": "component scripts may remain in package.json but scheduled workflows and human operator docs should target canonical workflow lanes."
+  },
+  "trace_only_policy": {
+    "status": "enabled",
+    "rule": "Trace-only mode writes deterministic fixture traces for every governed workflow without executing component commands or mutating operational reports."
+  }
+}

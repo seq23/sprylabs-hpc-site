@@ -25,6 +25,8 @@ for (const [label,args] of [
   ['validate:workflow-contract',['run','validate:workflow-contract']],
   ['validate:workflow-lineage',['run','validate:workflow-lineage']],
   ['validate:workflow-monitor',['run','validate:workflow-monitor']],
+  ['validate:workflow-topology',['run','validate:workflow-topology']],
+  ['validate:workflow-topology:fixtures',['run','validate:workflow-topology:fixtures']],
   ['agent:artifact-shape:self-test',['run','agent:artifact-shape:self-test']],
   ['agent:bhpc:validate',['run','agent:bhpc:validate']],
   ['agent:bhpc:trace',['run','agent:bhpc:trace']],
