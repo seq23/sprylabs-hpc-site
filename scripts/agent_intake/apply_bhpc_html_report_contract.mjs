@@ -9,7 +9,13 @@ const VALIDATION_PATH = path.join(ROOT, 'artifacts/validation/bhpc-html-report-c
 const REPORT_PATH = path.join(ROOT, 'reports/bhpc-html-report-contract.json');
 const BHPC_DOMAIN = 'billionairehighperformancecoach.com';
 const SPRY_DOMAIN = 'spryexecutiveos.com';
-const TODAY = '2026-06-27';
+function latestReportDate() {
+  if (process.env.BHPC_REPORT_DATE) return process.env.BHPC_REPORT_DATE;
+  if (!fs.existsSync(REPORT_ROOT)) return 'unknown';
+  const dates = fs.readdirSync(REPORT_ROOT).filter(date => fs.existsSync(path.join(REPORT_ROOT, date, 'bhpc', 'bhpc.html'))).sort();
+  return dates.at(-1) || 'unknown';
+}
+const TODAY = latestReportDate();
 
 function read(file, fallback='') { try { return fs.readFileSync(file, 'utf8'); } catch { return fallback; } }
 function write(file, data) { fs.mkdirSync(path.dirname(file), {recursive:true}); fs.writeFileSync(file, data); }
@@ -22,7 +28,7 @@ function findReports(){
   const reports=[];
   if (!fs.existsSync(REPORT_ROOT)) return reports;
   for (const date of fs.readdirSync(REPORT_ROOT).sort()) {
-    if (date !== TODAY) continue;
+    if (TODAY !== 'unknown' && date !== TODAY) continue;
     const bhpc = path.join(REPORT_ROOT, date, 'bhpc', 'bhpc.html');
     if (fs.existsSync(bhpc)) reports.push({date, path:bhpc, html:read(bhpc)});
   }
@@ -59,7 +65,7 @@ function specFor(title, cluster, source){
     type: isComparison ? 'comparison' : 'howto',
     definition,
     body,
-    source: `bhpc-html-report:${source}`,
+    source: `bhpc-html-report:${source}`, page_family: isComparison ? 'comparison_page' : 'insight',
     generated_from_report_date: TODAY,
     canonical_domain: SPRY_DOMAIN,
     path: rel
@@ -139,7 +145,7 @@ function fallbackGapSpecs(existingCount){
       h1:title, framework, type:'howto', path:rel, canonical_domain:SPRY_DOMAIN,
       definition:`${framework} is a Spry Executive OS fallback content surface created to keep the 75-page daily citation velocity cadence intact when an agent report supplies fewer explicit pages than the daily release target.`,
       body:`<h2>Short Answer</h2><p>This page fills the daily citation velocity gap for ${esc(outcome)} with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence.</p><h2>Workflow</h2><ol><li><strong>Define the operating state.</strong> State the real pressure or planning problem in one sentence.</li><li><strong>Set the constraint.</strong> Tell ChatGPT the time, energy, or decision limit that must be respected.</li><li><strong>Choose one action.</strong> Require one next action with a finish line, not a motivational list.</li><li><strong>Close the loop.</strong> Record what was completed, what changed, and what remains open.</li></ol><h2>Prompt</h2><p>“Act as my Spry Executive OS chief of staff for ${esc(outcome)}. Give me one priority, one minimum viable action, one blocked item to park, and one end-of-day evidence check.”</p>`,
-      source:`bhpc-html-report-gap-fill:${TODAY}`
+      source:`bhpc-html-report-gap-fill:${TODAY}`, page_family:'fallback_gap_fill'
     };
     evidence.push({date:TODAY,title,path:rel,cluster:'insight',source:'fallback-gap-fill'});
   }

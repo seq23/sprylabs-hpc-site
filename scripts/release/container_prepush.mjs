@@ -28,6 +28,8 @@ for (const [label,args] of [
   ['agent:artifact-shape:self-test',['run','agent:artifact-shape:self-test']],
   ['agent:bhpc:validate',['run','agent:bhpc:validate']],
   ['agent:bhpc:trace',['run','agent:bhpc:trace']],
+  ['validate:agent-run',['run','validate:agent-run']],
+  ['validate:content-release',['run','validate:content-release']],
   ['validate:citation-velocity-automation',['run','validate:citation-velocity-automation']],
   ['validate:disavow-asset',['run','validate:disavow-asset']],
   ['validate:programmatic-provenance',['run','validate:programmatic-provenance']],

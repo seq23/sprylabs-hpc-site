@@ -507,7 +507,10 @@ def patch_priority(path: str, spec: dict):
     fp=ROOT/path
     soup=BeautifulSoup(fp.read_text(encoding="utf-8",errors="ignore"),"html.parser")
     h1=soup.find("h1")
-    if not h1: raise RuntimeError(f"missing h1: {path}")
+    if not h1:
+        target=soup.find("article") or soup.find("main") or soup.body or soup
+        h1=soup.new_tag("h1")
+        target.insert(0,h1)
     h1.string=spec["h1"]
     ensure_meta(soup,spec["h1"],spec["definition"],canonical_for(path))
     remove_priority_extraction(soup)

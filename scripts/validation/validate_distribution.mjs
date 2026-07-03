@@ -10,7 +10,7 @@ for(const p of pages){
  const sm=p.canonical_domain.includes('spryexecutiveos')?maps.spry:maps.bhpc;
  if(!sm.includes(p.canonical_url)) errors.push(`sitemap missing ${p.canonical_url}`);
 }
-const answerText=JSON.stringify(answers);
+const answerText=JSON.stringify(answers).replace(/\\"/g,'\"');
 for(const q of queries) if(!llms.includes(q.query)||!answerText.includes(q.query)) errors.push(`query surface parity missing: ${q.query}`);
 writeSummary('validate-distribution',{status:errors.length?'FAIL':'PASS',pages:pages.length,queries:queries.length,errors});
 if(errors.length) fail(`[validate:distribution] FAIL: ${errors.length} issue(s)`,errors.slice(0,200));

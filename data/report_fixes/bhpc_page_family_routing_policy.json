@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "policy": "BHPC agent page-family routing",
+  "law": "Every agent row must receive a page-family decision before implementation. Fallback pages cannot satisfy exact agent recommendations.",
+  "families": {
+    "intended_winner_repair": "Repair an existing intended winner page.",
+    "comparison_page": "Create comparison page for vs/alternatives/matrix queries.",
+    "answer_page": "Create answer page for direct question queries.",
+    "authority_insight": "Create authority/citation/entity/schema insight.",
+    "cluster_page": "Create cluster/synthesis page.",
+    "fallback_gap_fill": "Keep daily cadence but do not count as exact agent implementation.",
+    "bhpc_insight": "Default Spry/BHPC insight route."
+  }
+}

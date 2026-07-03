@@ -104,3 +104,11 @@ Validate builds once, runs the complete CI profile, verifies build idempotence, 
 * **Risks Accepted:** File-pattern lineage cannot prove semantic correctness by itself; canonical validators and representative Playwright coverage remain required. GitHub live-run monitoring depends on Actions API availability.
 * **Validation Impact:** Focused provenance regression, workflow contract validation, workflow lineage validation, hostile review, runtime trace validation, 24 representative Playwright checks, local updater validation, and GitHub Actions reruns.
 * **Future Reversal Conditions:** Reconsider only if the repository adopts a different immutable page-identity model or replaces generated HTML snapshots with a transactional content registry that records provenance outside the page admission record.
+
+## ADR — 2026-07-03 — BHPC Agent Artifact Semantic Acceptance
+
+Decision: BHPC agent artifact rows are now governed by an automatic semantic acceptance compiler. The compiler converts each normalized row into route/page-family decisions, required visible strings, required block types, and rendered proof expectations.
+
+Reason: The prior exact implementation pipeline could pass with marker/query presence. That created false confidence because a page could contain `Agent Exact Citation Repair` without implementing the actual recommendation.
+
+Consequence: Marker-only proof is invalid. Fallback gap-fill pages remain allowed for cadence but cannot count as exact agent implementation.

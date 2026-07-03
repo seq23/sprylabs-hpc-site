@@ -2496,6 +2496,262 @@
         "MX-078"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-079",
+      "status": "ADMITTED",
+      "name": "validate:bhpc-agent-acceptance",
+      "check_type": "validator",
+      "owning_lane": "content-agent",
+      "risk_prevented": "Validates that every BHPC agent row has generated semantic acceptance criteria or a blocked reason.",
+      "existing_coverage_gap": "Admitted as part of the 2026-07-03 BHPC semantic agent artifact acceptance patch.",
+      "scope": [
+        "repository",
+        "content",
+        "agent-artifacts"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:bhpc-agent-acceptance",
+      "implementation_path": "scripts/validators/validate_bhpc_agent_acceptance_manifest.mjs",
+      "environment": "container",
+      "proof_tier": 2,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/validate-bhpc-agent-acceptance.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted by BHPC agent artifact semantic acceptance implementation plan.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-079"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-080",
+      "status": "ADMITTED",
+      "name": "validate:bhpc-no-marker-only-agent-pass",
+      "check_type": "validator",
+      "owning_lane": "content-agent",
+      "risk_prevented": "Prevents marker-only agent proof from counting as implementation.",
+      "existing_coverage_gap": "Admitted as part of the 2026-07-03 BHPC semantic agent artifact acceptance patch.",
+      "scope": [
+        "repository",
+        "content",
+        "agent-artifacts"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:bhpc-no-marker-only-agent-pass",
+      "implementation_path": "scripts/validators/validate_bhpc_no_marker_only_agent_pass.mjs",
+      "environment": "container",
+      "proof_tier": 2,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/validate-bhpc-no-marker-only-agent-pass.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted by BHPC agent artifact semantic acceptance implementation plan.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-080"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-081",
+      "status": "ADMITTED",
+      "name": "validate:bhpc-page-family-contract",
+      "check_type": "validator",
+      "owning_lane": "routing",
+      "risk_prevented": "Ensures every BHPC agent row has a route and page-family decision before implementation.",
+      "existing_coverage_gap": "Admitted as part of the 2026-07-03 BHPC semantic agent artifact acceptance patch.",
+      "scope": [
+        "repository",
+        "content",
+        "agent-artifacts"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:bhpc-page-family-contract",
+      "implementation_path": "scripts/validators/validate_bhpc_page_family_contract.mjs",
+      "environment": "container",
+      "proof_tier": 2,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/validate-bhpc-page-family-contract.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted by BHPC agent artifact semantic acceptance implementation plan.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-081"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-082",
+      "status": "ADMITTED",
+      "name": "validate:bhpc-fallback-gap-separation",
+      "check_type": "validator",
+      "owning_lane": "content-agent",
+      "risk_prevented": "Ensures fallback gap-fill pages cannot satisfy exact agent recommendations.",
+      "existing_coverage_gap": "Admitted as part of the 2026-07-03 BHPC semantic agent artifact acceptance patch.",
+      "scope": [
+        "repository",
+        "content",
+        "agent-artifacts"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:bhpc-fallback-gap-separation",
+      "implementation_path": "scripts/validators/validate_bhpc_fallback_gap_separation.mjs",
+      "environment": "container",
+      "proof_tier": 2,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/validate-bhpc-fallback-gap-separation.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted by BHPC agent artifact semantic acceptance implementation plan.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-082"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-083",
+      "status": "ADMITTED",
+      "name": "validate:browser-structural",
+      "check_type": "validator",
+      "owning_lane": "browser",
+      "risk_prevented": "Provides sandbox-safe structural render proof without claiming real browser proof.",
+      "existing_coverage_gap": "Admitted as part of the 2026-07-03 BHPC semantic agent artifact acceptance patch.",
+      "scope": [
+        "repository",
+        "content",
+        "agent-artifacts"
+      ],
+      "proposed_severity": "STRONG_WARNING",
+      "command": "npm run validate:browser-structural",
+      "implementation_path": "scripts/validators/validate_bhpc_browser_structural.mjs",
+      "environment": "container",
+      "proof_tier": 2,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/validate-browser-structural.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted by BHPC agent artifact semantic acceptance implementation plan.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-083"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-084",
+      "status": "ADMITTED",
+      "name": "validate:agent-run",
+      "check_type": "validator",
+      "owning_lane": "content-agent",
+      "risk_prevented": "Runs the BHPC agent artifact semantic acceptance lane end to end.",
+      "existing_coverage_gap": "Admitted as part of the 2026-07-03 BHPC semantic agent artifact acceptance patch.",
+      "scope": [
+        "repository",
+        "content",
+        "agent-artifacts"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:agent-run",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 2,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/validate-agent-run.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted by BHPC agent artifact semantic acceptance implementation plan.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-084"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-085",
+      "status": "ADMITTED",
+      "name": "validate:content-release",
+      "check_type": "validator",
+      "owning_lane": "content",
+      "risk_prevented": "Runs lean content release checks without local-only browser proof.",
+      "existing_coverage_gap": "Admitted as part of the 2026-07-03 BHPC semantic agent artifact acceptance patch.",
+      "scope": [
+        "repository",
+        "content",
+        "agent-artifacts"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:content-release",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 2,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/validate-content-release.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted by BHPC agent artifact semantic acceptance implementation plan.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-085"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-086",
+      "status": "ADMITTED",
+      "name": "validate:full-audit",
+      "check_type": "validator",
+      "owning_lane": "audit",
+      "risk_prevented": "Runs deep hostile validation across agent, content, workflow, citation, claim, LLM, and sitemap lanes.",
+      "existing_coverage_gap": "Admitted as part of the 2026-07-03 BHPC semantic agent artifact acceptance patch.",
+      "scope": [
+        "repository",
+        "content",
+        "agent-artifacts"
+      ],
+      "proposed_severity": "STRONG_WARNING",
+      "command": "npm run validate:full-audit",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 2,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/validate-full-audit.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted by BHPC agent artifact semantic acceptance implementation plan.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-086"
+      ],
+      "not_applicable_reason": null
     }
   ]
 }

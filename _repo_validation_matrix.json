@@ -787,6 +787,86 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-079",
+      "validation_id": "VAL-079",
+      "lane": "content-agent",
+      "command": "npm run validate:bhpc-agent-acceptance",
+      "order": 79,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-080",
+      "validation_id": "VAL-080",
+      "lane": "content-agent",
+      "command": "npm run validate:bhpc-no-marker-only-agent-pass",
+      "order": 80,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-081",
+      "validation_id": "VAL-081",
+      "lane": "routing",
+      "command": "npm run validate:bhpc-page-family-contract",
+      "order": 81,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-082",
+      "validation_id": "VAL-082",
+      "lane": "content-agent",
+      "command": "npm run validate:bhpc-fallback-gap-separation",
+      "order": 82,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-083",
+      "validation_id": "VAL-083",
+      "lane": "browser",
+      "command": "npm run validate:browser-structural",
+      "order": 83,
+      "severity": "STRONG_WARNING",
+      "release_effect": false,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-084",
+      "validation_id": "VAL-084",
+      "lane": "content-agent",
+      "command": "npm run validate:agent-run",
+      "order": 84,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-085",
+      "validation_id": "VAL-085",
+      "lane": "content",
+      "command": "npm run validate:content-release",
+      "order": 85,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-086",
+      "validation_id": "VAL-086",
+      "lane": "audit",
+      "command": "npm run validate:full-audit",
+      "order": 86,
+      "severity": "STRONG_WARNING",
+      "release_effect": false,
+      "status": "ADMITTED"
     }
   ]
 }

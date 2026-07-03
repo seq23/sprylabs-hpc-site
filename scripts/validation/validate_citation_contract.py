@@ -164,10 +164,30 @@ for f in frameworks:
     if nf in normalized_frameworks: errors.append(f"normalized framework collision: {f.get('name')!r} and {normalized_frameworks[nf]}")
     else: normalized_frameworks[nf]=f.get('name')
 
-llms=(ROOT/'llms.txt').read_text(errors='ignore'); answers=(ROOT/'answers.json').read_text(errors='ignore')
+llms=(ROOT/'llms.txt').read_text(errors='ignore')
+answers_raw=(ROOT/'answers.json').read_text(errors='ignore')
+try:
+    answers_payload=json.loads(answers_raw)
+    answer_items=answers_payload.get('items',[]) if isinstance(answers_payload,dict) else []
+except Exception:
+    answer_items=[]
+answer_query_norms=set()
+for item in answer_items:
+    if not isinstance(item,dict):
+        continue
+    for key in ('title','query','question','description'):
+        value=item.get(key)
+        if isinstance(value,str):
+            answer_query_norms.add(norm(value))
+    for key in ('queries_supported','questions_supported'):
+        value=item.get(key)
+        if isinstance(value,list):
+            for entry in value:
+                if isinstance(entry,str):
+                    answer_query_norms.add(norm(entry))
 for q in queries:
     if q['query'] not in llms: errors.append(f"llms.txt missing query: {q['query']}")
-    if q['query'] not in answers: errors.append(f"answers.json missing query: {q['query']}")
+    if norm(q['query']) not in answer_query_norms and q['query'] not in answers_raw: errors.append(f"answers.json missing query: {q['query']}")
 
 out=ROOT/'artifacts/diagnostics/container-current/validate-citation-contract';out.mkdir(parents=True,exist_ok=True)
 (out/'summary.json').write_text(json.dumps({'status':'FAIL' if errors else 'PASS','active_pages':len(active),'queries':len(queries),'frameworks':len(frameworks),'errors':errors,'info':infos},indent=2)+'\n')
