@@ -1167,6 +1167,26 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-BHPC-AGENT-COVERAGE-01",
+      "validation_id": "VAL-BHPC-AGENT-COVERAGE-01",
+      "lane": "agent-intake",
+      "command": "npm run validate:bhpc-agent-source-coverage",
+      "order": 131,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-BHPC-AGENT-RECDRIVEN-01",
+      "validation_id": "VAL-BHPC-AGENT-RECDRIVEN-01",
+      "lane": "agent-intake",
+      "command": "npm run validate:bhpc-agent-recommendation-driven-output",
+      "order": 132,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
   "entry_count": 116,

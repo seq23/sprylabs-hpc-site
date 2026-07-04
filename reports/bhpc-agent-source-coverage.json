@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0",
+  "validator": "bhpc-agent-source-coverage",
+  "generated_at": "2026-07-04T16:30:47.489Z",
+  "status": "PASS",
+  "policy": {
+    "checked_statuses": [
+      "READY_FOR_ABSORPTION",
+      "ABSORBED"
+    ],
+    "coverage_from": "2026-07-04",
+    "rule": "Every actionable source item from agent artifacts must be normalized, represented by its own source id, applied to page-level proof or explicitly skipped/blocked with a reason; every canonical new-page target must be built."
+  },
+  "run_count": 1,
+  "runs": [
+    {
+      "run_date": "2026-07-04",
+      "scope": "bhpc",
+      "manifest": "data/report_fixes/agent_runs/2026-07-04/bhpc/agent_run_manifest.json",
+      "normalized_path": "data/report_fixes/normalized_agent_runs/2026-07-04_bhpc.json",
+      "source_record_count": 225,
+      "new_page_source_record_count": 10,
+      "canonical_new_page_count": 5,
+      "normalized_record_count": 235,
+      "missing_from_normalized_count": 0,
+      "unaddressed_count": 0,
+      "content_proof_missing_count": 0,
+      "built_new_page_count": 5,
+      "queued_new_page_count": 5,
+      "missing_built_new_page_count": 0,
+      "built_new_pages": [
+        "answers/how-can-i-transform-this-task-into-something-enjoyable-rather-than-tedious.html",
+        "answers/what-systems-can-i-implement-to-remove-the-need-for-willpower.html",
+        "answers/what-productivity-strategies-have-i-implemented-that-felt-rewarding-in-the-long-run-compared-to-.html",
+        "answers/give-me-five-real-world-examples-where-adding-novelty-into-otherwise-mundane-work-tasks-lead-to-.html",
+        "insights/create-a-to-do-list-prioritize-tasks-use-a-calendar-planner-minimize-distractions-take-breaks-de.html"
+      ],
+      "queued_new_pages": [
+        "answers/how-can-i-transform-this-task-into-something-enjoyable-rather-than-tedious.html",
+        "answers/what-systems-can-i-implement-to-remove-the-need-for-willpower.html",
+        "answers/what-productivity-strategies-have-i-implemented-that-felt-rewarding-in-the-long-run-compared-to-.html",
+        "answers/give-me-five-real-world-examples-where-adding-novelty-into-otherwise-mundane-work-tasks-lead-to-.html",
+        "insights/create-a-to-do-list-prioritize-tasks-use-a-calendar-planner-minimize-distractions-take-breaks-de.html"
+      ],
+      "duplicate_canonical_new_page_groups": [
+        {
+          "implementation_path": "answers/how-can-i-transform-this-task-into-something-enjoyable-rather-than-tedious.html",
+          "source_record_count": 2
+        },
+        {
+          "implementation_path": "answers/what-systems-can-i-implement-to-remove-the-need-for-willpower.html",
+          "source_record_count": 2
+        },
+        {
+          "implementation_path": "answers/what-productivity-strategies-have-i-implemented-that-felt-rewarding-in-the-long-run-compared-to-.html",
+          "source_record_count": 2
+        },
+        {
+          "implementation_path": "answers/give-me-five-real-world-examples-where-adding-novelty-into-otherwise-mundane-work-tasks-lead-to-.html",
+          "source_record_count": 2
+        },
+        {
+          "implementation_path": "insights/create-a-to-do-list-prioritize-tasks-use-a-calendar-planner-minimize-distractions-take-breaks-de.html",
+          "source_record_count": 2
+        }
+      ]
+    }
+  ],
+  "warnings": [],
+  "errors": []
+}

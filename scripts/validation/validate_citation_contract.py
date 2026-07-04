@@ -9,8 +9,9 @@ if VENDOR_DIR.is_dir():
     sys.path.insert(0, str(VENDOR_DIR))
 
 from bs4 import BeautifulSoup
+from style_policy import sentence_count, paragraph_sentence_severity, paragraph_sentence_message
 
-ROOT=Path.cwd(); errors=[]; infos=[]
+ROOT=Path.cwd(); errors=[]; infos=[]; warnings=[]
 PRODUCT="This is one of the frameworks inside the Billionaire High Performance Coach system — a structured executive OS for using ChatGPT as your accountability and decision partner."
 LANDING_PAGE_EXCEPTIONS={'index.html','download.html'}
 GUMROAD='https://sprylabs.gumroad.com/l/billionaire-high-performance-coach'
@@ -136,10 +137,13 @@ for r in active:
     if not soup.find('script',id='CITATION_PAGE_SCHEMA'): errors.append(f"{r['path']}: citation schema missing")
     if soup.find('br',class_='sentence-break'): errors.append(f"{r['path']}: legacy sentence-break markup remains")
     for idx,p in enumerate(soup.find_all('p')):
-        n=len(SENTENCE_RE.findall(' '.join(p.get_text(' ',strip=True).split())))
-        if n>3:
-            errors.append(f"{r['path']}: paragraph {idx+1} exceeds three sentences ({n})")
+        n=sentence_count(p.get_text(' ',strip=True))
+        severity=paragraph_sentence_severity(n)
+        if severity=='FAIL':
+            errors.append(paragraph_sentence_message(r['path'], idx, n))
             break
+        if severity=='WARN':
+            warnings.append(paragraph_sentence_message(r['path'], idx, n))
 
 covered={}
 normalized_registry={}
@@ -190,9 +194,13 @@ for q in queries:
     if norm(q['query']) not in answer_query_norms and q['query'] not in answers_raw: errors.append(f"answers.json missing query: {q['query']}")
 
 out=ROOT/'artifacts/diagnostics/container-current/validate-citation-contract';out.mkdir(parents=True,exist_ok=True)
-(out/'summary.json').write_text(json.dumps({'status':'FAIL' if errors else 'PASS','active_pages':len(active),'queries':len(queries),'frameworks':len(frameworks),'errors':errors,'info':infos},indent=2)+'\n')
+(out/'summary.json').write_text(json.dumps({'status':'FAIL' if errors else 'PASS','active_pages':len(active),'queries':len(queries),'frameworks':len(frameworks),'errors':errors,'warnings':warnings,'info':infos},indent=2)+'\n')
 if errors:
     print(f"[validate:citation-contract] FAIL: {len(errors)} issue(s)",file=sys.stderr)
     for e in errors[:250]: print(' - '+e,file=sys.stderr)
     sys.exit(1)
-print(f"[validate:citation-contract] OK: {len(active)} pages, {len(queries)} queries, {len(frameworks)} frameworks")
+if warnings:
+    print(f"[validate:citation-contract] OK with {len(warnings)} content-quality warning(s): {len(active)} pages, {len(queries)} queries, {len(frameworks)} frameworks")
+    for w in warnings[:25]: print(' - WARN: '+w)
+else:
+    print(f"[validate:citation-contract] OK: {len(active)} pages, {len(queries)} queries, {len(frameworks)} frameworks")

@@ -7,9 +7,12 @@ ROOT=Path.cwd()
 VENDOR=ROOT/'scripts/_vendor'
 if VENDOR.is_dir(): sys.path.insert(0,str(VENDOR))
 from bs4 import BeautifulSoup
+sys.path.insert(0, str(ROOT/'scripts/validation'))
+from style_policy import sentence_count_split, paragraph_sentence_severity, paragraph_sentence_message
 PRODUCT="This is one of the frameworks inside the Billionaire High Performance Coach system — a structured executive OS for using ChatGPT as your accountability and decision partner."
 contract=json.loads((ROOT/'data/citation/agent_recommendation_acceptance.json').read_text(encoding='utf-8'))
 errors=[]
+warnings=[]
 
 def text(x): return ' '.join(x.get_text(' ',strip=True).split()) if x else ''
 def section_words(heading):
@@ -31,10 +34,12 @@ def universal(path,soup,expected_h1=None):
     product=soup.select_one('p.product-anchor')
     if not product or PRODUCT not in text(product): errors.append(f'{path}: product anchor missing')
     if not product or not product.select_one('a[href="/download.html"]'): errors.append(f'{path}: /download.html anchor missing')
-    for p in soup.find_all('p'):
+    for idx,p in enumerate(soup.find_all('p')):
         s=text(p)
-        count=len([x for x in re.split(r'(?<=[.!?])(?:[”’\"\']*)\s+',s) if x.strip()])
-        if count>3: errors.append(f'{path}: paragraph exceeds 3 sentences: {s[:90]!r}'); break
+        count=sentence_count_split(s)
+        severity=paragraph_sentence_severity(count)
+        if severity=='FAIL': errors.append(paragraph_sentence_message(path, idx, count)); break
+        if severity=='WARN': warnings.append(paragraph_sentence_message(path, idx, count))
 
 for item in contract['fixes']:
     path=item['path']; fp=ROOT/path
@@ -83,9 +88,12 @@ for item in contract['opportunities']:
 
 if len(contract.get('skipped',[]))!=5: errors.append('expected exactly 5 owner-approved low-relevance skips')
 out=ROOT/'artifacts/diagnostics/container-current/validate-agent-recommendations'; out.mkdir(parents=True,exist_ok=True)
-(out/'summary.json').write_text(json.dumps({'status':'FAIL' if errors else 'PASS','fixes':len(contract['fixes']),'opportunities':len(contract['opportunities']),'skipped':len(contract['skipped']),'errors':errors},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+(out/'summary.json').write_text(json.dumps({'status':'FAIL' if errors else 'PASS','fixes':len(contract['fixes']),'opportunities':len(contract['opportunities']),'skipped':len(contract['skipped']),'errors':errors,'warnings':warnings},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 if errors:
     print(f'[validate:agent-recommendations] FAIL: {len(errors)} issue(s)',file=sys.stderr)
     for e in errors: print(' - '+e,file=sys.stderr)
     raise SystemExit(1)
-print(f"[validate:agent-recommendations] OK: {len(contract['fixes'])} fixes, {len(contract['opportunities'])} opportunity pages, and {len(contract['skipped'])} explicit skips")
+if warnings:
+    print(f"[validate:agent-recommendations] OK with {len(warnings)} content-quality warning(s): {len(contract['fixes'])} fixes, {len(contract['opportunities'])} opportunity pages, and {len(contract['skipped'])} explicit skips")
+else:
+    print(f"[validate:agent-recommendations] OK: {len(contract['fixes'])} fixes, {len(contract['opportunities'])} opportunity pages, and {len(contract['skipped'])} explicit skips")

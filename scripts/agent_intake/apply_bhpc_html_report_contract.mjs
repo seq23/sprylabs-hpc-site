@@ -138,9 +138,9 @@ function fallbackGapSpecs(existingCount){
   const pages={}; const evidence=[];
   for(let i=0;i<needed;i++){
     const outcome=outcomes[i%outcomes.length];
-    const title=`BHPC daily citation gap fill ${String(i+1).padStart(2,'0')}: ChatGPT workflow for ${outcome}`;
+    const title=`BHPC daily citation gap fill ${TODAY} ${String(i+1).padStart(2,'0')}: ChatGPT workflow for ${outcome}`;
     const rel=`insights/bhpc-daily-citation-gap-fill-${TODAY}-${String(i+1).padStart(2,'0')}-chatgpt-workflow-for-${slugify(outcome)}.html`;
-    const framework=`Daily Citation Gap Fill ${String(i+1).padStart(2,'0')} ${outcome} Framework`;
+    const framework=`Daily Citation Gap Fill ${TODAY} ${String(i+1).padStart(2,'0')} ${outcome} Framework`;
     pages[rel]={
       h1:title, framework, type:'howto', path:rel, canonical_domain:SPRY_DOMAIN,
       definition:`${framework} is a Spry Executive OS fallback content surface created to keep the 75-page daily citation velocity cadence intact when an agent report supplies fewer explicit pages than the daily release target.`,

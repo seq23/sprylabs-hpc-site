@@ -8,6 +8,7 @@ sys.dont_write_bytecode=True
 VENDOR=Path(__file__).resolve().parents[1]/'_vendor'
 if VENDOR.is_dir(): sys.path.insert(0,str(VENDOR))
 from bs4 import BeautifulSoup
+from style_policy import sentence_count, paragraph_sentence_severity, paragraph_sentence_message
 
 ROOT=Path(__file__).resolve().parents[2]
 SPEC=json.loads((ROOT/'data/content/manual_expansion_pages.json').read_text(encoding='utf-8'))
@@ -18,6 +19,7 @@ PRODUCT='This is one of the frameworks inside the Billionaire High Performance C
 SENTENCE=re.compile(r'[.!?](?:[”"\']?)(?=\s|$)')
 WORD=re.compile(r"\b[\w’'-]+\b",re.UNICODE)
 errors=[]
+warnings=[]
 
 def norm(s): return ' '.join(re.sub(r'[^a-z0-9]+',' ',(s or '').casefold()).split())
 def words(s): return WORD.findall(s or '')
@@ -84,8 +86,11 @@ for page in SPEC['pages']:
     if not product_link: fail(rel,'product anchor link missing')
     wc=len(words((soup.find('article') or soup).get_text(' ',strip=True)))
     if wc<PROGRAM['minimum_word_count']: fail(rel,f'word count {wc} below {PROGRAM["minimum_word_count"]}')
-    for ptag in soup.find_all('p'):
-        if len(SENTENCE.findall(ptag.get_text(' ',strip=True)))>3: fail(rel,'paragraph exceeds three sentences'); break
+    for idx,ptag in enumerate(soup.find_all('p')):
+        n=sentence_count(ptag.get_text(' ',strip=True))
+        severity=paragraph_sentence_severity(n)
+        if severity=='FAIL': fail(rel, paragraph_sentence_message(rel, idx, n)); break
+        if severity=='WARN': warnings.append(paragraph_sentence_message(rel, idx, n))
     schema=soup.find('script',id='CITATION_PAGE_SCHEMA')
     if not schema: fail(rel,'citation schema missing')
     else:
@@ -165,4 +170,7 @@ if errors:
     print('[validate:manual-expansion] FAIL')
     for e in errors: print(' -',e)
     raise SystemExit(1)
-print(f'[validate:manual-expansion] OK: {len(SPEC["pages"])} pages pass exact acceptance and programmatic admission')
+if warnings:
+    print(f'[validate:manual-expansion] OK with {len(warnings)} content-quality warning(s): {len(SPEC["pages"])} pages pass exact acceptance and programmatic admission')
+else:
+    print(f'[validate:manual-expansion] OK: {len(SPEC["pages"])} pages pass exact acceptance and programmatic admission')

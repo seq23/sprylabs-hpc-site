@@ -15,9 +15,32 @@ const removed = before.filter(r => r && r.path && !active.has(r.path));
 registry.records = before.filter(r => r && r.path && active.has(r.path));
 const byPath = new Map(registry.records.map(r => [r.path, r]));
 let added = 0;
+let updated = 0;
 for (const q of activeQueries) {
-  if (byPath.has(q.primary_page) || !fs.existsSync(q.primary_page)) continue;
+  if (!fs.existsSync(q.primary_page)) continue;
   const c = citableByPath.get(q.primary_page) || {};
+  if (byPath.has(q.primary_page)) {
+    const rec = byPath.get(q.primary_page);
+    const nextPrimary = q.query || rec.primary_query;
+    const nextFramework = c.framework || rec.framework || `${nextPrimary} Framework`;
+    const nextAtom = c.definition || rec.unique_atom || `${nextPrimary} is an admitted citation surface.`;
+    const nextIntent = q.intent_class || c.extraction_type || rec.intent || 'concept';
+    const nextArtifact = c.schema_type || rec.artifact_type || 'reference_page';
+    const nextDomain = q.canonical_domain || c.canonical_domain || rec.canonical_domain || 'spryexecutiveos.com';
+    if (rec.primary_query !== nextPrimary || rec.framework !== nextFramework || rec.unique_atom !== nextAtom || rec.intent !== nextIntent || rec.artifact_type !== nextArtifact || rec.canonical_domain !== nextDomain) {
+      rec.primary_query = nextPrimary;
+      rec.framework = nextFramework;
+      rec.unique_atom = nextAtom;
+      rec.intent = nextIntent;
+      rec.artifact_type = nextArtifact;
+      rec.canonical_domain = nextDomain;
+      rec.query_aliases = q.aliases || rec.query_aliases || [];
+      rec.cluster = q.observation_cluster || rec.cluster || 'general';
+      rec.source = rec.source || 'programmatic_registry_owner_repair';
+      updated++;
+    }
+    continue;
+  }
   const rec = {
     path: q.primary_page,
     route: '/' + q.primary_page.replace(/index\.html$/, ''),
@@ -51,6 +74,7 @@ fs.writeFileSync('reports/programmatic-registry-owner-repair.json', `${JSON.stri
   after_count: registry.records.length,
   removed_count: removed.length,
   added_count: added,
+  updated_count: updated,
   removed: removed.map(r => ({path: r.path, primary_query: r.primary_query, source: r.source}))
 }, null, 2)}\n`, 'utf8');
-console.log(`[programmatic-registry-owner-repair] PASS: removed=${removed.length}; added=${added}; active=${active.size}; remaining=${registry.records.length}`);
+console.log(`[programmatic-registry-owner-repair] PASS: removed=${removed.length}; added=${added}; updated=${updated}; active=${active.size}; remaining=${registry.records.length}`);

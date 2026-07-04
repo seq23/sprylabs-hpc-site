@@ -1,0 +1,61 @@
+{
+  "schema_version": "1.0",
+  "validator": "bhpc-route-resolution-self-test",
+  "generated_at": "2026-07-04T16:30:45.528Z",
+  "status": "PASS",
+  "cases": {
+    "existingTitleTypo": {
+      "status": "TYPO_RESOLVED_REGISTRY_REPAIR",
+      "page_family": "intended_winner_repair",
+      "implementation_path": "ai-executive-coach/index.html",
+      "blocked_reason": "",
+      "route_resolution": {
+        "ambiguous": false,
+        "best": {
+          "path": "ai-executive-coach/index.html",
+          "score": 0.9444444444444444,
+          "matched_on": "query_registry_similarity",
+          "label": "AI Executive Coach",
+          "query_id": "QRY-0298"
+        },
+        "alternatives": [
+          {
+            "path": "ai-executive-coach/index.html",
+            "score": 0.9444444444444444,
+            "matched_on": "query_registry_similarity",
+            "label": "AI Executive Coach",
+            "query_id": "QRY-0298"
+          }
+        ]
+      }
+    },
+    "existingPathTypo": {
+      "status": "TYPO_RESOLVED_EXISTING_REPAIR",
+      "page_family": "intended_winner_repair",
+      "implementation_path": "arbitration-engine.html",
+      "blocked_reason": "",
+      "route_resolution": {
+        "ambiguous": false,
+        "best": {
+          "path": "arbitration-engine.html",
+          "score": 0.9444444444444444,
+          "matched_on": "path_slug_similarity"
+        },
+        "alternatives": [
+          {
+            "path": "arbitration-engine.html",
+            "score": 0.9444444444444444,
+            "matched_on": "path_slug_similarity"
+          }
+        ]
+      }
+    },
+    "newPageSpec": {
+      "status": "DECLARED_CREATE",
+      "page_family": "answer_page",
+      "implementation_path": "answers/route-resolution-self-test-new-page-do-not-fuzzy-match.html",
+      "blocked_reason": ""
+    }
+  },
+  "errors": []
+}

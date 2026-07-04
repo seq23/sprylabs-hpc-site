@@ -1,14 +1,14 @@
 {
   "schema_version": "1.0",
   "status": "PASS",
-  "generated_at": "2026-07-04T15:32:50.790Z",
+  "generated_at": "2026-07-04T16:30:45.952Z",
   "acceptance_manifest_path": "data/report_fixes/agent_acceptance_manifest.generated.json",
   "policy_path": "data/report_fixes/agent_exact_implementation_policy.json",
-  "repair_count": 49,
+  "repair_count": 56,
   "new_page_count": 0,
   "blocked_count": 0,
-  "acceptance_entry_count": 388,
-  "required_acceptance_entry_count": 388,
+  "acceptance_entry_count": 429,
+  "required_acceptance_entry_count": 429,
   "specs": [
     {
       "record_id": "2026-06-27-bhpc-001",
@@ -22,15 +22,15 @@
         "2026-06-27-bhpc-026",
         "2026-06-27-bhpc-027",
         "2026-06-27-bhpc-036",
-        "2026-07-04-bhpc-001",
-        "2026-07-04-bhpc-009",
-        "2026-07-04-bhpc-020",
-        "2026-07-04-bhpc-021",
-        "2026-07-04-bhpc-022",
-        "2026-07-04-bhpc-023",
-        "2026-07-04-bhpc-026",
-        "2026-07-04-bhpc-027",
-        "2026-07-04-bhpc-036"
+        "2026-07-04-bhpc-032",
+        "2026-07-04-bhpc-040",
+        "2026-07-04-bhpc-051",
+        "2026-07-04-bhpc-052",
+        "2026-07-04-bhpc-053",
+        "2026-07-04-bhpc-054",
+        "2026-07-04-bhpc-057",
+        "2026-07-04-bhpc-058",
+        "2026-07-04-bhpc-067"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-001",
@@ -42,30 +42,31 @@
         "2026-06-27-bhpc-026",
         "2026-06-27-bhpc-027",
         "2026-06-27-bhpc-036",
-        "2026-07-04-bhpc-001",
-        "2026-07-04-bhpc-009",
-        "2026-07-04-bhpc-020",
-        "2026-07-04-bhpc-021",
-        "2026-07-04-bhpc-022",
-        "2026-07-04-bhpc-023",
-        "2026-07-04-bhpc-026",
-        "2026-07-04-bhpc-027",
-        "2026-07-04-bhpc-036"
+        "2026-07-04-bhpc-032",
+        "2026-07-04-bhpc-040",
+        "2026-07-04-bhpc-051",
+        "2026-07-04-bhpc-052",
+        "2026-07-04-bhpc-053",
+        "2026-07-04-bhpc-054",
+        "2026-07-04-bhpc-057",
+        "2026-07-04-bhpc-058",
+        "2026-07-04-bhpc-067"
       ],
       "query": "The Arbitration Engine: How to Decide What Actually Matters",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "https://spryexecutiveos.com/arbitration-engine.html",
       "intended_winner_path": "arbitration-engine.html",
       "implementation_path": "arbitration-engine.html",
-      "before_hash": "135fe3249e54c12ddd225f6ce539358f3b52a36803cc8f09421c8a99e133231c",
+      "before_hash": "8bbd8296ff891f16920a19b7aa00965991e8d6cc5376492783d7161200cbc929",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "definition_callout",
         "checklist",
         "protocol",
@@ -73,7 +74,7 @@
         "cta_callout",
         "source_block"
       ],
-      "required_strings_count": 116
+      "required_strings_count": 169
     },
     {
       "record_id": "2026-06-27-bhpc-002",
@@ -89,17 +90,17 @@
         "2026-06-27-bhpc-018",
         "2026-06-27-bhpc-019",
         "2026-06-27-bhpc-024",
-        "2026-07-04-bhpc-002",
-        "2026-07-04-bhpc-003",
-        "2026-07-04-bhpc-010",
-        "2026-07-04-bhpc-012",
-        "2026-07-04-bhpc-014",
-        "2026-07-04-bhpc-015",
-        "2026-07-04-bhpc-016",
-        "2026-07-04-bhpc-017",
-        "2026-07-04-bhpc-018",
-        "2026-07-04-bhpc-019",
-        "2026-07-04-bhpc-024"
+        "2026-07-04-bhpc-033",
+        "2026-07-04-bhpc-034",
+        "2026-07-04-bhpc-041",
+        "2026-07-04-bhpc-043",
+        "2026-07-04-bhpc-045",
+        "2026-07-04-bhpc-046",
+        "2026-07-04-bhpc-047",
+        "2026-07-04-bhpc-048",
+        "2026-07-04-bhpc-049",
+        "2026-07-04-bhpc-050",
+        "2026-07-04-bhpc-055"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-002",
@@ -113,32 +114,33 @@
         "2026-06-27-bhpc-018",
         "2026-06-27-bhpc-019",
         "2026-06-27-bhpc-024",
-        "2026-07-04-bhpc-002",
-        "2026-07-04-bhpc-003",
-        "2026-07-04-bhpc-010",
-        "2026-07-04-bhpc-012",
-        "2026-07-04-bhpc-014",
-        "2026-07-04-bhpc-015",
-        "2026-07-04-bhpc-016",
-        "2026-07-04-bhpc-017",
-        "2026-07-04-bhpc-018",
-        "2026-07-04-bhpc-019",
-        "2026-07-04-bhpc-024"
+        "2026-07-04-bhpc-033",
+        "2026-07-04-bhpc-034",
+        "2026-07-04-bhpc-041",
+        "2026-07-04-bhpc-043",
+        "2026-07-04-bhpc-045",
+        "2026-07-04-bhpc-046",
+        "2026-07-04-bhpc-047",
+        "2026-07-04-bhpc-048",
+        "2026-07-04-bhpc-049",
+        "2026-07-04-bhpc-050",
+        "2026-07-04-bhpc-055"
       ],
       "query": "AI execution systems",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "https://spryexecutiveos.com/ai-execution-atlas/",
       "intended_winner_path": "ai-execution-atlas/index.html",
       "implementation_path": "ai-execution-atlas/index.html",
-      "before_hash": "038fc85457704f837dba6a2f60fec201c31f4bf18b2b2c902b2b68d96c7e0edd",
+      "before_hash": "e9a43bcd2fa04afdf9a395e0470ac1a73ac6b313cd3ffaa22934e5f4cf7a71dc",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "definition_callout",
         "checklist",
         "protocol",
@@ -146,7 +148,7 @@
         "comparison_table",
         "source_block"
       ],
-      "required_strings_count": 126
+      "required_strings_count": 185
     },
     {
       "record_id": "2026-06-27-bhpc-004",
@@ -161,16 +163,16 @@
         "2026-06-27-bhpc-065",
         "2026-06-27-bhpc-071",
         "2026-06-27-bhpc-079",
-        "2026-07-04-bhpc-004",
-        "2026-07-04-bhpc-008",
-        "2026-07-04-bhpc-011",
+        "2026-07-04-bhpc-035",
+        "2026-07-04-bhpc-039",
         "2026-07-04-bhpc-042",
-        "2026-07-04-bhpc-057",
-        "2026-07-04-bhpc-063",
-        "2026-07-04-bhpc-064",
-        "2026-07-04-bhpc-065",
-        "2026-07-04-bhpc-071",
-        "2026-07-04-bhpc-079"
+        "2026-07-04-bhpc-073",
+        "2026-07-04-bhpc-088",
+        "2026-07-04-bhpc-094",
+        "2026-07-04-bhpc-095",
+        "2026-07-04-bhpc-096",
+        "2026-07-04-bhpc-102",
+        "2026-07-04-bhpc-110"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-004",
@@ -183,38 +185,39 @@
         "2026-06-27-bhpc-065",
         "2026-06-27-bhpc-071",
         "2026-06-27-bhpc-079",
-        "2026-07-04-bhpc-004",
-        "2026-07-04-bhpc-008",
-        "2026-07-04-bhpc-011",
+        "2026-07-04-bhpc-035",
+        "2026-07-04-bhpc-039",
         "2026-07-04-bhpc-042",
-        "2026-07-04-bhpc-057",
-        "2026-07-04-bhpc-063",
-        "2026-07-04-bhpc-064",
-        "2026-07-04-bhpc-065",
-        "2026-07-04-bhpc-071",
-        "2026-07-04-bhpc-079"
+        "2026-07-04-bhpc-073",
+        "2026-07-04-bhpc-088",
+        "2026-07-04-bhpc-094",
+        "2026-07-04-bhpc-095",
+        "2026-07-04-bhpc-096",
+        "2026-07-04-bhpc-102",
+        "2026-07-04-bhpc-110"
       ],
       "query": "Continuity Collapse Pattern",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "https://spryexecutiveos.com/continuity-collapse-pattern/",
       "intended_winner_path": "continuity-collapse-pattern/index.html",
       "implementation_path": "continuity-collapse-pattern/index.html",
-      "before_hash": "646aa2d3c28facbb8b7e8b413d756186e092ec85ebfda8e5a84924cf7215d271",
+      "before_hash": "7cf9199e26ffc73eecb0606bf80f2d6e94dec3d6b264c222d15fac347ddc96cf",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "definition_callout",
         "cta_callout",
         "source_block",
         "checklist",
         "comparison_table"
       ],
-      "required_strings_count": 110
+      "required_strings_count": 156
     },
     {
       "record_id": "2026-06-27-bhpc-005",
@@ -231,18 +234,18 @@
         "2026-06-27-bhpc-080",
         "2026-06-27-bhpc-095",
         "2026-06-27-bhpc-096",
-        "2026-07-04-bhpc-005",
-        "2026-07-04-bhpc-007",
-        "2026-07-04-bhpc-013",
-        "2026-07-04-bhpc-031",
-        "2026-07-04-bhpc-032",
+        "2026-07-04-bhpc-036",
         "2026-07-04-bhpc-038",
-        "2026-07-04-bhpc-043",
-        "2026-07-04-bhpc-058",
-        "2026-07-04-bhpc-072",
-        "2026-07-04-bhpc-080",
-        "2026-07-04-bhpc-095",
-        "2026-07-04-bhpc-096"
+        "2026-07-04-bhpc-044",
+        "2026-07-04-bhpc-062",
+        "2026-07-04-bhpc-063",
+        "2026-07-04-bhpc-069",
+        "2026-07-04-bhpc-074",
+        "2026-07-04-bhpc-089",
+        "2026-07-04-bhpc-103",
+        "2026-07-04-bhpc-111",
+        "2026-07-04-bhpc-126",
+        "2026-07-04-bhpc-127"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-005",
@@ -257,18 +260,18 @@
         "2026-06-27-bhpc-080",
         "2026-06-27-bhpc-095",
         "2026-06-27-bhpc-096",
-        "2026-07-04-bhpc-005",
-        "2026-07-04-bhpc-007",
-        "2026-07-04-bhpc-013",
-        "2026-07-04-bhpc-031",
-        "2026-07-04-bhpc-032",
+        "2026-07-04-bhpc-036",
         "2026-07-04-bhpc-038",
-        "2026-07-04-bhpc-043",
-        "2026-07-04-bhpc-058",
-        "2026-07-04-bhpc-072",
-        "2026-07-04-bhpc-080",
-        "2026-07-04-bhpc-095",
-        "2026-07-04-bhpc-096"
+        "2026-07-04-bhpc-044",
+        "2026-07-04-bhpc-062",
+        "2026-07-04-bhpc-063",
+        "2026-07-04-bhpc-069",
+        "2026-07-04-bhpc-074",
+        "2026-07-04-bhpc-089",
+        "2026-07-04-bhpc-103",
+        "2026-07-04-bhpc-111",
+        "2026-07-04-bhpc-126",
+        "2026-07-04-bhpc-127"
       ],
       "query": "How to maintain follow-through across days",
       "run_date": "2026-06-27",
@@ -278,12 +281,13 @@
       "intended_winner_page": "https://spryexecutiveos.com/how-to-stay-consistent/",
       "intended_winner_path": "how-to-stay-consistent/index.html",
       "implementation_path": "how-to-stay-consistent/index.html",
-      "before_hash": "c74b48eb3153865dabc6426e6c956cd375aaa18cf04ad7a456f83927bcf2db55",
+      "before_hash": "8ff4c5abfe07b6f2ab5238690e58a020691b742b479667d3e0389c26d7c3c6ff",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "checklist",
         "comparison_table",
         "protocol",
@@ -291,7 +295,7 @@
         "source_block",
         "definition_callout"
       ],
-      "required_strings_count": 170
+      "required_strings_count": 224
     },
     {
       "record_id": "2026-06-27-bhpc-006",
@@ -308,18 +312,18 @@
         "2026-06-27-bhpc-159",
         "2026-06-27-bhpc-163",
         "2026-06-27-bhpc-172",
-        "2026-07-04-bhpc-006",
-        "2026-07-04-bhpc-033",
-        "2026-07-04-bhpc-034",
-        "2026-07-04-bhpc-035",
         "2026-07-04-bhpc-037",
-        "2026-07-04-bhpc-040",
-        "2026-07-04-bhpc-086",
-        "2026-07-04-bhpc-137",
-        "2026-07-04-bhpc-149",
-        "2026-07-04-bhpc-159",
-        "2026-07-04-bhpc-163",
-        "2026-07-04-bhpc-172"
+        "2026-07-04-bhpc-064",
+        "2026-07-04-bhpc-065",
+        "2026-07-04-bhpc-066",
+        "2026-07-04-bhpc-068",
+        "2026-07-04-bhpc-071",
+        "2026-07-04-bhpc-117",
+        "2026-07-04-bhpc-168",
+        "2026-07-04-bhpc-180",
+        "2026-07-04-bhpc-190",
+        "2026-07-04-bhpc-194",
+        "2026-07-04-bhpc-203"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-006",
@@ -334,18 +338,18 @@
         "2026-06-27-bhpc-159",
         "2026-06-27-bhpc-163",
         "2026-06-27-bhpc-172",
-        "2026-07-04-bhpc-006",
-        "2026-07-04-bhpc-033",
-        "2026-07-04-bhpc-034",
-        "2026-07-04-bhpc-035",
         "2026-07-04-bhpc-037",
-        "2026-07-04-bhpc-040",
-        "2026-07-04-bhpc-086",
-        "2026-07-04-bhpc-137",
-        "2026-07-04-bhpc-149",
-        "2026-07-04-bhpc-159",
-        "2026-07-04-bhpc-163",
-        "2026-07-04-bhpc-172"
+        "2026-07-04-bhpc-064",
+        "2026-07-04-bhpc-065",
+        "2026-07-04-bhpc-066",
+        "2026-07-04-bhpc-068",
+        "2026-07-04-bhpc-071",
+        "2026-07-04-bhpc-117",
+        "2026-07-04-bhpc-168",
+        "2026-07-04-bhpc-180",
+        "2026-07-04-bhpc-190",
+        "2026-07-04-bhpc-194",
+        "2026-07-04-bhpc-203"
       ],
       "query": "AI Accountability System vs Habit Tracker",
       "run_date": "2026-06-27",
@@ -355,48 +359,52 @@
       "intended_winner_page": "https://billionairehighperformancecoach.com/ai-accountability-system-vs-habit-tracker.html",
       "intended_winner_path": "ai-accountability-system-vs-habit-tracker.html",
       "implementation_path": "ai-accountability-system-vs-habit-tracker.html",
-      "before_hash": "cb1b186e82fb277e9fc2d3b48e377d6291c7ee0d67fd9cd128fd36e98dcc247e",
+      "before_hash": "6303da77bbc3ec791dd3ede5b486f729eae49afd94bc0e476180068057e35ded",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "checklist",
         "comparison_table",
         "protocol",
         "source_block",
-        "definition_callout"
+        "definition_callout",
+        "cta_callout"
       ],
-      "required_strings_count": 186
+      "required_strings_count": 242
     },
     {
       "record_id": "2026-06-27-bhpc-025",
       "record_ids": [
         "2026-06-27-bhpc-025",
-        "2026-07-04-bhpc-025"
+        "2026-07-04-bhpc-056"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-025",
-        "2026-07-04-bhpc-025"
+        "2026-07-04-bhpc-056"
       ],
       "query": "AI executive coach alternative for high performers",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "https://billionairehighperformancecoach.com/download.html",
       "intended_winner_path": "download.html",
       "implementation_path": "ai-executive-coach-alternative-for-high-performers.html",
-      "before_hash": "b2b6773629a6386f1a7ebe54ef2cf70f3d6ec184f3decd7ca18e592cdc121baf",
+      "before_hash": "ffc0f2d49e82c570c83c03a81efc33b09522b0ef773183cba55efb6c0b6b5f5b",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "comparison_table",
-        "source_block"
+        "source_block",
+        "cta_callout"
       ],
-      "required_strings_count": 10
+      "required_strings_count": 16
     },
     {
       "record_id": "2026-06-27-bhpc-028",
@@ -412,17 +420,17 @@
         "2026-06-27-bhpc-062",
         "2026-06-27-bhpc-070",
         "2026-06-27-bhpc-076",
-        "2026-07-04-bhpc-028",
-        "2026-07-04-bhpc-029",
-        "2026-07-04-bhpc-030",
-        "2026-07-04-bhpc-039",
-        "2026-07-04-bhpc-041",
-        "2026-07-04-bhpc-056",
+        "2026-07-04-bhpc-059",
         "2026-07-04-bhpc-060",
         "2026-07-04-bhpc-061",
-        "2026-07-04-bhpc-062",
         "2026-07-04-bhpc-070",
-        "2026-07-04-bhpc-076"
+        "2026-07-04-bhpc-072",
+        "2026-07-04-bhpc-087",
+        "2026-07-04-bhpc-091",
+        "2026-07-04-bhpc-092",
+        "2026-07-04-bhpc-093",
+        "2026-07-04-bhpc-101",
+        "2026-07-04-bhpc-107"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-028",
@@ -436,17 +444,17 @@
         "2026-06-27-bhpc-062",
         "2026-06-27-bhpc-070",
         "2026-06-27-bhpc-076",
-        "2026-07-04-bhpc-028",
-        "2026-07-04-bhpc-029",
-        "2026-07-04-bhpc-030",
-        "2026-07-04-bhpc-039",
-        "2026-07-04-bhpc-041",
-        "2026-07-04-bhpc-056",
+        "2026-07-04-bhpc-059",
         "2026-07-04-bhpc-060",
         "2026-07-04-bhpc-061",
-        "2026-07-04-bhpc-062",
         "2026-07-04-bhpc-070",
-        "2026-07-04-bhpc-076"
+        "2026-07-04-bhpc-072",
+        "2026-07-04-bhpc-087",
+        "2026-07-04-bhpc-091",
+        "2026-07-04-bhpc-092",
+        "2026-07-04-bhpc-093",
+        "2026-07-04-bhpc-101",
+        "2026-07-04-bhpc-107"
       ],
       "query": "Atlas — Spry Executive OS",
       "run_date": "2026-06-27",
@@ -456,50 +464,53 @@
       "intended_winner_page": "https://spryexecutiveos.com/atlas.html",
       "intended_winner_path": "atlas.html",
       "implementation_path": "atlas.html",
-      "before_hash": "29f63310ac691033ca03e09a2706d9bddc4f7bc90097e9766f80860b9930b0dc",
+      "before_hash": "ef42fa3b6aa3269593101aa6d84da1ff035a17fec9b97c8b9655744c38123f54",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "protocol",
         "source_block",
         "comparison_table",
-        "cta_callout"
+        "cta_callout",
+        "definition_callout"
       ],
-      "required_strings_count": 108
+      "required_strings_count": 166
     },
     {
       "record_id": "2026-06-27-bhpc-044",
       "record_ids": [
         "2026-06-27-bhpc-044",
-        "2026-07-04-bhpc-044"
+        "2026-07-04-bhpc-075"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-044",
-        "2026-07-04-bhpc-044"
+        "2026-07-04-bhpc-075"
       ],
       "query": "AI executive coach",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "https://spryexecutiveos.com/insights/how-to-end-the-day-so-tomorrow-starts-fast-2.html",
       "intended_winner_path": "insights/how-to-end-the-day-so-tomorrow-starts-fast-2.html",
       "implementation_path": "ai-executive-coach/index.html",
-      "before_hash": "1239d9712bab4d0b82777b86b2297d5c236e7e426491b66e22cdfa948af7761e",
+      "before_hash": "49c4bb527cad7e654642b69e0bc9e10f0fdda890d6b950720826ed2bf8f67a79",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "definition_callout",
         "checklist",
         "comparison_table",
         "source_block",
         "cta_callout"
       ],
-      "required_strings_count": 22
+      "required_strings_count": 27
     },
     {
       "record_id": "2026-06-27-bhpc-045",
@@ -515,17 +526,17 @@
         "2026-06-27-bhpc-160",
         "2026-06-27-bhpc-164",
         "2026-06-27-bhpc-176",
-        "2026-07-04-bhpc-045",
-        "2026-07-04-bhpc-085",
-        "2026-07-04-bhpc-103",
-        "2026-07-04-bhpc-104",
-        "2026-07-04-bhpc-127",
-        "2026-07-04-bhpc-128",
-        "2026-07-04-bhpc-138",
-        "2026-07-04-bhpc-150",
-        "2026-07-04-bhpc-160",
-        "2026-07-04-bhpc-164",
-        "2026-07-04-bhpc-176"
+        "2026-07-04-bhpc-076",
+        "2026-07-04-bhpc-116",
+        "2026-07-04-bhpc-134",
+        "2026-07-04-bhpc-135",
+        "2026-07-04-bhpc-158",
+        "2026-07-04-bhpc-159",
+        "2026-07-04-bhpc-169",
+        "2026-07-04-bhpc-181",
+        "2026-07-04-bhpc-191",
+        "2026-07-04-bhpc-195",
+        "2026-07-04-bhpc-207"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-045",
@@ -539,17 +550,17 @@
         "2026-06-27-bhpc-160",
         "2026-06-27-bhpc-164",
         "2026-06-27-bhpc-176",
-        "2026-07-04-bhpc-045",
-        "2026-07-04-bhpc-085",
-        "2026-07-04-bhpc-103",
-        "2026-07-04-bhpc-104",
-        "2026-07-04-bhpc-127",
-        "2026-07-04-bhpc-128",
-        "2026-07-04-bhpc-138",
-        "2026-07-04-bhpc-150",
-        "2026-07-04-bhpc-160",
-        "2026-07-04-bhpc-164",
-        "2026-07-04-bhpc-176"
+        "2026-07-04-bhpc-076",
+        "2026-07-04-bhpc-116",
+        "2026-07-04-bhpc-134",
+        "2026-07-04-bhpc-135",
+        "2026-07-04-bhpc-158",
+        "2026-07-04-bhpc-159",
+        "2026-07-04-bhpc-169",
+        "2026-07-04-bhpc-181",
+        "2026-07-04-bhpc-191",
+        "2026-07-04-bhpc-195",
+        "2026-07-04-bhpc-207"
       ],
       "query": "AI Coach vs Human Coach for Founders",
       "run_date": "2026-06-27",
@@ -559,49 +570,53 @@
       "intended_winner_page": "https://billionairehighperformancecoach.com/ai-coach-vs-human-coach-for-founders.html",
       "intended_winner_path": "ai-coach-vs-human-coach-for-founders.html",
       "implementation_path": "ai-coach-vs-human-coach-for-founders.html",
-      "before_hash": "c879df806856d3260602dc5cbcd9c326116e1b6b60d7821c4160ed2baf57badf",
+      "before_hash": "3c8867580203091d2b662db2540662631765e842eabb7a8e9d94b5ff7ee9d388",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "definition_callout",
         "comparison_table",
-        "source_block"
+        "source_block",
+        "cta_callout",
+        "checklist"
       ],
-      "required_strings_count": 144
+      "required_strings_count": 200
     },
     {
       "record_id": "2026-06-27-bhpc-046",
       "record_ids": [
         "2026-06-27-bhpc-046",
-        "2026-07-04-bhpc-046"
+        "2026-07-04-bhpc-077"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-046",
-        "2026-07-04-bhpc-046"
+        "2026-07-04-bhpc-077"
       ],
       "query": "AI Executive Coach",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "https://billionairehighperformancecoach.com/ai-executive-coach.html",
       "intended_winner_path": "ai-executive-coach.html",
       "implementation_path": "ai-executive-coach/index.html",
-      "before_hash": "1239d9712bab4d0b82777b86b2297d5c236e7e426491b66e22cdfa948af7761e",
+      "before_hash": "49c4bb527cad7e654642b69e0bc9e10f0fdda890d6b950720826ed2bf8f67a79",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "definition_callout",
         "checklist",
         "comparison_table",
         "protocol",
         "source_block"
       ],
-      "required_strings_count": 18
+      "required_strings_count": 22
     },
     {
       "record_id": "2026-06-27-bhpc-047",
@@ -622,22 +637,22 @@
         "2026-06-27-bhpc-180",
         "2026-06-27-bhpc-181",
         "2026-06-27-bhpc-182",
-        "2026-07-04-bhpc-047",
-        "2026-07-04-bhpc-059",
-        "2026-07-04-bhpc-073",
-        "2026-07-04-bhpc-082",
-        "2026-07-04-bhpc-083",
-        "2026-07-04-bhpc-111",
-        "2026-07-04-bhpc-112",
-        "2026-07-04-bhpc-157",
-        "2026-07-04-bhpc-161",
-        "2026-07-04-bhpc-171",
-        "2026-07-04-bhpc-177",
-        "2026-07-04-bhpc-178",
-        "2026-07-04-bhpc-179",
-        "2026-07-04-bhpc-180",
-        "2026-07-04-bhpc-181",
-        "2026-07-04-bhpc-182"
+        "2026-07-04-bhpc-078",
+        "2026-07-04-bhpc-090",
+        "2026-07-04-bhpc-104",
+        "2026-07-04-bhpc-113",
+        "2026-07-04-bhpc-114",
+        "2026-07-04-bhpc-142",
+        "2026-07-04-bhpc-143",
+        "2026-07-04-bhpc-188",
+        "2026-07-04-bhpc-192",
+        "2026-07-04-bhpc-202",
+        "2026-07-04-bhpc-208",
+        "2026-07-04-bhpc-209",
+        "2026-07-04-bhpc-210",
+        "2026-07-04-bhpc-211",
+        "2026-07-04-bhpc-212",
+        "2026-07-04-bhpc-213"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-047",
@@ -656,37 +671,38 @@
         "2026-06-27-bhpc-180",
         "2026-06-27-bhpc-181",
         "2026-06-27-bhpc-182",
-        "2026-07-04-bhpc-047",
-        "2026-07-04-bhpc-059",
-        "2026-07-04-bhpc-073",
-        "2026-07-04-bhpc-082",
-        "2026-07-04-bhpc-083",
-        "2026-07-04-bhpc-111",
-        "2026-07-04-bhpc-112",
-        "2026-07-04-bhpc-157",
-        "2026-07-04-bhpc-161",
-        "2026-07-04-bhpc-171",
-        "2026-07-04-bhpc-177",
-        "2026-07-04-bhpc-178",
-        "2026-07-04-bhpc-179",
-        "2026-07-04-bhpc-180",
-        "2026-07-04-bhpc-181",
-        "2026-07-04-bhpc-182"
+        "2026-07-04-bhpc-078",
+        "2026-07-04-bhpc-090",
+        "2026-07-04-bhpc-104",
+        "2026-07-04-bhpc-113",
+        "2026-07-04-bhpc-114",
+        "2026-07-04-bhpc-142",
+        "2026-07-04-bhpc-143",
+        "2026-07-04-bhpc-188",
+        "2026-07-04-bhpc-192",
+        "2026-07-04-bhpc-202",
+        "2026-07-04-bhpc-208",
+        "2026-07-04-bhpc-209",
+        "2026-07-04-bhpc-210",
+        "2026-07-04-bhpc-211",
+        "2026-07-04-bhpc-212",
+        "2026-07-04-bhpc-213"
       ],
       "query": "How Tracks Work: The Missing Layer in Most Productivity Systems",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "https://spryexecutiveos.com/how-tracks-work.html",
       "intended_winner_path": "how-tracks-work.html",
       "implementation_path": "how-tracks-work.html",
-      "before_hash": "cb3d450b81c5b90ea35a0942586c5f9e1dca17207a9b3b37ca370cb7284fe6df",
+      "before_hash": "287d8f391ed001cd3ba923713340db19e20bf8b528b7f19205d86e38d7632fd1",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "cta_callout",
         "comparison_table",
         "definition_callout",
@@ -694,7 +710,7 @@
         "checklist",
         "protocol"
       ],
-      "required_strings_count": 230
+      "required_strings_count": 296
     },
     {
       "record_id": "2026-06-27-bhpc-048",
@@ -712,19 +728,19 @@
         "2026-06-27-bhpc-188",
         "2026-06-27-bhpc-189",
         "2026-06-27-bhpc-190",
-        "2026-07-04-bhpc-048",
-        "2026-07-04-bhpc-113",
-        "2026-07-04-bhpc-114",
-        "2026-07-04-bhpc-158",
-        "2026-07-04-bhpc-162",
-        "2026-07-04-bhpc-183",
-        "2026-07-04-bhpc-184",
-        "2026-07-04-bhpc-185",
-        "2026-07-04-bhpc-186",
-        "2026-07-04-bhpc-187",
-        "2026-07-04-bhpc-188",
+        "2026-07-04-bhpc-079",
+        "2026-07-04-bhpc-144",
+        "2026-07-04-bhpc-145",
         "2026-07-04-bhpc-189",
-        "2026-07-04-bhpc-190"
+        "2026-07-04-bhpc-193",
+        "2026-07-04-bhpc-214",
+        "2026-07-04-bhpc-215",
+        "2026-07-04-bhpc-216",
+        "2026-07-04-bhpc-217",
+        "2026-07-04-bhpc-218",
+        "2026-07-04-bhpc-219",
+        "2026-07-04-bhpc-220",
+        "2026-07-04-bhpc-221"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-048",
@@ -740,19 +756,19 @@
         "2026-06-27-bhpc-188",
         "2026-06-27-bhpc-189",
         "2026-06-27-bhpc-190",
-        "2026-07-04-bhpc-048",
-        "2026-07-04-bhpc-113",
-        "2026-07-04-bhpc-114",
-        "2026-07-04-bhpc-158",
-        "2026-07-04-bhpc-162",
-        "2026-07-04-bhpc-183",
-        "2026-07-04-bhpc-184",
-        "2026-07-04-bhpc-185",
-        "2026-07-04-bhpc-186",
-        "2026-07-04-bhpc-187",
-        "2026-07-04-bhpc-188",
+        "2026-07-04-bhpc-079",
+        "2026-07-04-bhpc-144",
+        "2026-07-04-bhpc-145",
         "2026-07-04-bhpc-189",
-        "2026-07-04-bhpc-190"
+        "2026-07-04-bhpc-193",
+        "2026-07-04-bhpc-214",
+        "2026-07-04-bhpc-215",
+        "2026-07-04-bhpc-216",
+        "2026-07-04-bhpc-217",
+        "2026-07-04-bhpc-218",
+        "2026-07-04-bhpc-219",
+        "2026-07-04-bhpc-220",
+        "2026-07-04-bhpc-221"
       ],
       "query": "README — Spry Executive OS",
       "run_date": "2026-06-27",
@@ -762,214 +778,231 @@
       "intended_winner_page": "https://spryexecutiveos.com/insights/README.html",
       "intended_winner_path": "insights/README.html",
       "implementation_path": "insights/README.html",
-      "before_hash": "6f9ccf4268dbdcfdaecee31048e63c10c3706b21fc85c2de6a99b81802084372",
+      "before_hash": "54eb19f53ccabe1464c0b994078f7af588f5ec9c3aa3985af5c9c9b74b637b60",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "source_block",
         "cta_callout",
         "checklist",
         "protocol",
-        "comparison_table"
+        "comparison_table",
+        "definition_callout"
       ],
-      "required_strings_count": 148
+      "required_strings_count": 203
     },
     {
       "record_id": "2026-06-27-bhpc-049",
       "record_ids": [
         "2026-06-27-bhpc-049",
-        "2026-07-04-bhpc-049"
+        "2026-07-04-bhpc-080"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-049",
-        "2026-07-04-bhpc-049"
+        "2026-07-04-bhpc-080"
       ],
       "query": "can AI replace an executive coach for startups",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "n/a",
       "intended_winner_path": "n/a/index.html",
       "implementation_path": "can-ai-replace-an-executive-coach-for-startups.html",
-      "before_hash": "39f37bee5ad6fcb550b2d7b86cfc5f14e06f455456ed2501a800405109ff3171",
+      "before_hash": "0df90332f9670a44520db496f0ac92707b0c3cef2b1816e6f1c9e6253fc3d774",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
-        "recommendation_summary"
+        "recommendation_summary",
+        "agent_directive",
+        "checklist",
+        "source_block"
       ],
-      "required_strings_count": 6
+      "required_strings_count": 13
     },
     {
       "record_id": "2026-06-27-bhpc-050",
       "record_ids": [
         "2026-06-27-bhpc-050",
-        "2026-07-04-bhpc-050"
+        "2026-07-04-bhpc-081"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-050",
-        "2026-07-04-bhpc-050"
+        "2026-07-04-bhpc-081"
       ],
       "query": "ChatGPT as accountability partner for solopreneurs",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "n/a",
       "intended_winner_path": "n/a/index.html",
       "implementation_path": "chatgpt-as-accountability-partner-for-solopreneurs.html",
-      "before_hash": "a5f9f635aba0e09f309384c07c7e2af415aeb828439f9a9ceb5c143fda9702b3",
+      "before_hash": "4fee23cf43c11225159edd887db91cb2afafc90bb097b6bf5e3ada1e70372f92",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
-        "recommendation_summary"
+        "recommendation_summary",
+        "agent_directive"
       ],
-      "required_strings_count": 6
+      "required_strings_count": 11
     },
     {
       "record_id": "2026-06-27-bhpc-051",
       "record_ids": [
         "2026-06-27-bhpc-051",
-        "2026-07-04-bhpc-051"
+        "2026-07-04-bhpc-082"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-051",
-        "2026-07-04-bhpc-051"
+        "2026-07-04-bhpc-082"
       ],
       "query": "AI vs human executive coach pros cons for entrepreneurs",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "n/a",
       "intended_winner_path": "n/a/index.html",
       "implementation_path": "comparisons/ai-vs-human-executive-coach-pros-cons-for-entrepreneurs.html",
-      "before_hash": "f21bc5375066523fac8e4cd288e78eb735724849eaf54993f1191fc0f22af199",
+      "before_hash": "9a8048f18758f8ac9f016a6603fbbf9fb6862ddf3e6b6194e6ceb90b05391468",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
-        "comparison_table"
+        "agent_directive",
+        "comparison_table",
+        "source_block"
       ],
-      "required_strings_count": 8
+      "required_strings_count": 14
     },
     {
       "record_id": "2026-06-27-bhpc-052",
       "record_ids": [
         "2026-06-27-bhpc-052",
-        "2026-07-04-bhpc-052"
+        "2026-07-04-bhpc-083"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-052",
-        "2026-07-04-bhpc-052"
+        "2026-07-04-bhpc-083"
       ],
       "query": "best ChatGPT prompts for founders to stay accountable",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "n/a",
       "intended_winner_path": "n/a/index.html",
       "implementation_path": "best-chatgpt-prompts-for-founders-to-stay-accountable.html",
-      "before_hash": "52e9f86421fa5bf8142410ad5ba050f7c61cc8bed4a60eb9ea81237f846cc6cb",
+      "before_hash": "b77e179811d27bcb45cb170ffd93d20f49b66767d1763779cc8815fa21dc8a21",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
-        "comparison_table"
+        "agent_directive",
+        "comparison_table",
+        "cta_callout"
       ],
-      "required_strings_count": 8
+      "required_strings_count": 14
     },
     {
       "record_id": "2026-06-27-bhpc-053",
       "record_ids": [
         "2026-06-27-bhpc-053",
-        "2026-07-04-bhpc-053"
+        "2026-07-04-bhpc-084"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-053",
-        "2026-07-04-bhpc-053"
+        "2026-07-04-bhpc-084"
       ],
       "query": "the \"i'll start in 5 minutes\" loop is actually destroying my income",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "n/a",
       "intended_winner_path": "n/a/index.html",
       "implementation_path": "insights/the-i-ll-start-in-5-minutes-loop-is-actually-destroying-my-income.html",
-      "before_hash": "afd997cda954654bef5298f08a876a8c3ae0f21aabc619f8dde98892c12e4e00",
+      "before_hash": "70bda27bcf9ba6bde6f77963f099c67e9268a8a99fd71b33dd1544552d0d2978",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "checklist",
-        "protocol"
+        "protocol",
+        "definition_callout",
+        "cta_callout"
       ],
-      "required_strings_count": 12
+      "required_strings_count": 17
     },
     {
       "record_id": "2026-06-27-bhpc-054",
       "record_ids": [
         "2026-06-27-bhpc-054",
-        "2026-07-04-bhpc-054"
+        "2026-07-04-bhpc-085"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-054",
-        "2026-07-04-bhpc-054"
+        "2026-07-04-bhpc-085"
       ],
       "query": "How do you have a productive routine the minute you wake up daily?",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "n/a",
       "intended_winner_path": "n/a/index.html",
       "implementation_path": "answers/how-do-you-have-a-productive-routine-the-minute-you-wake-up-daily.html",
-      "before_hash": "40299e5ecc865ed44cd9478b03eaa81f6109ef0c441b405755b4802981c5c5ae",
+      "before_hash": "b21008f60f169afd74d300df4a8b5faf11db061efd67d456c660e5eddde4e259",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "protocol",
-        "cta_callout"
+        "cta_callout",
+        "definition_callout"
       ],
-      "required_strings_count": 12
+      "required_strings_count": 16
     },
     {
       "record_id": "2026-06-27-bhpc-055",
       "record_ids": [
         "2026-06-27-bhpc-055",
-        "2026-07-04-bhpc-055"
+        "2026-07-04-bhpc-086"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-055",
-        "2026-07-04-bhpc-055"
+        "2026-07-04-bhpc-086"
       ],
       "query": "I abandon each project once it is at 95% completion and move to the next one. How to stay put?",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "n/a",
       "intended_winner_path": "n/a/index.html",
       "implementation_path": "answers/i-abandon-each-project-once-it-is-at-95-completion-and-move-to-the-next-one-how-to-stay-put.html",
-      "before_hash": "9ce8f29e249da2eba92ea0177bf16c0890dee051e7581e3c4fd9bb9a626d9141",
+      "before_hash": "91d0d0e80d17e0f69b6aab7ed6c7263b898bfb649e9a7727c0b2e8b671e9a995",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
-        "recommendation_summary"
+        "recommendation_summary",
+        "agent_directive",
+        "source_block"
       ],
-      "required_strings_count": 8
+      "required_strings_count": 14
     },
     {
       "record_id": "2026-06-27-bhpc-066",
@@ -978,166 +1011,172 @@
         "2026-06-27-bhpc-074",
         "2026-06-27-bhpc-141",
         "2026-06-27-bhpc-153",
-        "2026-07-04-bhpc-066",
-        "2026-07-04-bhpc-074",
-        "2026-07-04-bhpc-141",
-        "2026-07-04-bhpc-153"
+        "2026-07-04-bhpc-097",
+        "2026-07-04-bhpc-105",
+        "2026-07-04-bhpc-172",
+        "2026-07-04-bhpc-184"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-066",
         "2026-06-27-bhpc-074",
         "2026-06-27-bhpc-141",
         "2026-06-27-bhpc-153",
-        "2026-07-04-bhpc-066",
-        "2026-07-04-bhpc-074",
-        "2026-07-04-bhpc-141",
-        "2026-07-04-bhpc-153"
+        "2026-07-04-bhpc-097",
+        "2026-07-04-bhpc-105",
+        "2026-07-04-bhpc-172",
+        "2026-07-04-bhpc-184"
       ],
       "query": "best ChatGPT prompts for productivity",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "n/a",
       "intended_winner_path": "n/a/index.html",
       "implementation_path": "best-chatgpt-prompts-for-productivity.html",
-      "before_hash": "1615b2a866b19119eeab7bc4a74e92f13a6e69c1651a93038f216cb0bd99f4be",
+      "before_hash": "20f1f108e90f5cda20c80912fa2eb8ee6da747b794ba892253200eeb7062311e",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "source_block",
         "cta_callout"
       ],
-      "required_strings_count": 34
+      "required_strings_count": 53
     },
     {
       "record_id": "2026-06-27-bhpc-067",
       "record_ids": [
         "2026-06-27-bhpc-067",
         "2026-06-27-bhpc-075",
-        "2026-07-04-bhpc-067",
-        "2026-07-04-bhpc-075"
+        "2026-07-04-bhpc-098",
+        "2026-07-04-bhpc-106"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-067",
         "2026-06-27-bhpc-075",
-        "2026-07-04-bhpc-067",
-        "2026-07-04-bhpc-075"
+        "2026-07-04-bhpc-098",
+        "2026-07-04-bhpc-106"
       ],
       "query": "how to use ChatGPT as a productivity coach",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "n/a",
       "intended_winner_path": "n/a/index.html",
       "implementation_path": "how-to-use-chatgpt-as-a-productivity-coach.html",
-      "before_hash": "7a26ca1120b976b33bd8c9fa787b3824600caae709832984de46ee4b87cc8df7",
+      "before_hash": "78c77401d30839a2a57a7620c6bae4610761035e8855a1f7cf79dade844b596d",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "cta_callout"
       ],
-      "required_strings_count": 16
+      "required_strings_count": 24
     },
     {
       "record_id": "2026-06-27-bhpc-068",
       "record_ids": [
         "2026-06-27-bhpc-068",
         "2026-06-27-bhpc-077",
-        "2026-07-04-bhpc-068",
-        "2026-07-04-bhpc-077"
+        "2026-07-04-bhpc-099",
+        "2026-07-04-bhpc-108"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-068",
         "2026-06-27-bhpc-077",
-        "2026-07-04-bhpc-068",
-        "2026-07-04-bhpc-077"
+        "2026-07-04-bhpc-099",
+        "2026-07-04-bhpc-108"
       ],
       "query": "best operating framework for productivity",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "n/a",
       "intended_winner_path": "n/a/index.html",
       "implementation_path": "insights/best-operating-framework-for-productivity.html",
-      "before_hash": "60bc9547d1770be24810109ec196a6a6a7a26d4bda81716b1854529910d9889a",
+      "before_hash": "51f67f469b109a4842cca20ff63a2b311cab8434edb43027224e545be014de57",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "checklist",
         "source_block",
         "cta_callout"
       ],
-      "required_strings_count": 22
+      "required_strings_count": 30
     },
     {
       "record_id": "2026-06-27-bhpc-069",
       "record_ids": [
         "2026-06-27-bhpc-069",
         "2026-06-27-bhpc-078",
-        "2026-07-04-bhpc-069",
-        "2026-07-04-bhpc-078"
+        "2026-07-04-bhpc-100",
+        "2026-07-04-bhpc-109"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-069",
         "2026-06-27-bhpc-078",
-        "2026-07-04-bhpc-069",
-        "2026-07-04-bhpc-078"
+        "2026-07-04-bhpc-100",
+        "2026-07-04-bhpc-109"
       ],
       "query": "Andrew Huberman daily planning system",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "n/a",
       "intended_winner_path": "n/a/index.html",
       "implementation_path": "insights/andrew-huberman-daily-planning-system.html",
-      "before_hash": "5109d8ef007045c687125f27fe40be9b5fc28ba62e8fd99ea526d8c70f5cf301",
+      "before_hash": "49c9e8ffa83231dd65fd8278925da25968cbc5c3a984eb7796066f414cc77ac3",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "protocol",
-        "source_block"
+        "source_block",
+        "checklist"
       ],
-      "required_strings_count": 22
+      "required_strings_count": 32
     },
     {
       "record_id": "2026-06-27-bhpc-081",
       "record_ids": [
         "2026-06-27-bhpc-081",
-        "2026-07-04-bhpc-081"
+        "2026-07-04-bhpc-112"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-081",
-        "2026-07-04-bhpc-081"
+        "2026-07-04-bhpc-112"
       ],
       "query": "how to stay consistent when motivation is low",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "https://spryexecutiveos.com/how-to-stay-consistent/",
       "intended_winner_path": "how-to-stay-consistent/index.html",
       "implementation_path": "how-to-stay-consistent-when-motivation-is-low.html",
-      "before_hash": "b7fc0b323c42b1898c3a5e6b42d2cac7944fbb8e77f1f01c1cc9ffe93db24769",
+      "before_hash": "3971fb312d619e8a8aa3ea01658425eb2af63795990717530001a975520f8a9f",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "source_block"
       ],
-      "required_strings_count": 6
+      "required_strings_count": 11
     },
     {
       "record_id": "2026-06-27-bhpc-084",
@@ -1145,35 +1184,37 @@
         "2026-06-27-bhpc-084",
         "2026-06-27-bhpc-140",
         "2026-06-27-bhpc-152",
-        "2026-07-04-bhpc-084",
-        "2026-07-04-bhpc-140",
-        "2026-07-04-bhpc-152"
+        "2026-07-04-bhpc-115",
+        "2026-07-04-bhpc-171",
+        "2026-07-04-bhpc-183"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-084",
         "2026-06-27-bhpc-140",
         "2026-06-27-bhpc-152",
-        "2026-07-04-bhpc-084",
-        "2026-07-04-bhpc-140",
-        "2026-07-04-bhpc-152"
+        "2026-07-04-bhpc-115",
+        "2026-07-04-bhpc-171",
+        "2026-07-04-bhpc-183"
       ],
       "query": "ai executive coach for founders",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "https://billionairehighperformancecoach.com/ai-executive-coach.html",
       "intended_winner_path": "ai-executive-coach.html",
       "implementation_path": "ai-executive-coach-for-founders.html",
-      "before_hash": "8140364a72e427e43e9c76b9cb12563081aa52cee4b523cc86cd7a56c5e58c00",
+      "before_hash": "9d4a40ca0564c36ae56593e4a3cf18a472ff8fdc9b0c2018e8448b50eced32fb",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
-        "source_block"
+        "agent_directive",
+        "source_block",
+        "cta_callout"
       ],
-      "required_strings_count": 22
+      "required_strings_count": 39
     },
     {
       "record_id": "2026-06-27-bhpc-087",
@@ -1183,11 +1224,11 @@
         "2026-06-27-bhpc-110",
         "2026-06-27-bhpc-169",
         "2026-06-27-bhpc-175",
-        "2026-07-04-bhpc-087",
-        "2026-07-04-bhpc-109",
-        "2026-07-04-bhpc-110",
-        "2026-07-04-bhpc-169",
-        "2026-07-04-bhpc-175"
+        "2026-07-04-bhpc-118",
+        "2026-07-04-bhpc-140",
+        "2026-07-04-bhpc-141",
+        "2026-07-04-bhpc-200",
+        "2026-07-04-bhpc-206"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-087",
@@ -1195,11 +1236,11 @@
         "2026-06-27-bhpc-110",
         "2026-06-27-bhpc-169",
         "2026-06-27-bhpc-175",
-        "2026-07-04-bhpc-087",
-        "2026-07-04-bhpc-109",
-        "2026-07-04-bhpc-110",
-        "2026-07-04-bhpc-169",
-        "2026-07-04-bhpc-175"
+        "2026-07-04-bhpc-118",
+        "2026-07-04-bhpc-140",
+        "2026-07-04-bhpc-141",
+        "2026-07-04-bhpc-200",
+        "2026-07-04-bhpc-206"
       ],
       "query": "chatgpt accountability partner",
       "run_date": "2026-06-27",
@@ -1209,54 +1250,57 @@
       "intended_winner_page": "https://billionairehighperformancecoach.com/chatgpt-accountability-partner.html",
       "intended_winner_path": "chatgpt-accountability-partner.html",
       "implementation_path": "chatgpt-accountability-partner.html",
-      "before_hash": "10abbefa6113754fafc66510551bbe8de791aa56a1cdfbb9e0498e2af2eeef79",
+      "before_hash": "5d2016c8195150ed04c72e21647749f6a2183eaaf716b41baecbbade30f3e2c8",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "checklist",
-        "source_block"
+        "source_block",
+        "protocol"
       ],
-      "required_strings_count": 52
+      "required_strings_count": 77
     },
     {
       "record_id": "2026-06-27-bhpc-088",
       "record_ids": [
         "2026-06-27-bhpc-088",
-        "2026-07-04-bhpc-088"
+        "2026-07-04-bhpc-119"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-088",
-        "2026-07-04-bhpc-088"
+        "2026-07-04-bhpc-119"
       ],
       "query": "why accountability systems fail",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "https://billionairehighperformancecoach.com/why-accountability-systems-fail.html",
       "intended_winner_path": "why-accountability-systems-fail.html",
       "implementation_path": "why-accountability-systems-fail.html",
-      "before_hash": "c6f4fe017110037592aed2ad2229671acb77a4ce043a454dee2959456999a621",
+      "before_hash": "94610822341c36825a5360f1d52078dd75c37435b34bf481af5e06ce585f6b8b",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "source_block"
       ],
-      "required_strings_count": 6
+      "required_strings_count": 11
     },
     {
       "record_id": "2026-06-27-bhpc-089",
       "record_ids": [
         "2026-06-27-bhpc-089",
-        "2026-07-04-bhpc-089"
+        "2026-07-04-bhpc-120"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-089",
-        "2026-07-04-bhpc-089"
+        "2026-07-04-bhpc-120"
       ],
       "query": "reddit accountability and ai",
       "run_date": "2026-06-27",
@@ -1266,26 +1310,27 @@
       "intended_winner_page": "https://billionairehighperformancecoach.com/what-reddit-keeps-asking-about-accountability-and-ai.html",
       "intended_winner_path": "what-reddit-keeps-asking-about-accountability-and-ai.html",
       "implementation_path": "what-reddit-keeps-asking-about-accountability-and-ai.html",
-      "before_hash": "f9556748e2716633f6e3ee0a6d16425b2a5acb09cac685d2bce1888f8e872d88",
+      "before_hash": "de9a88643ac5fe740acc23cd6210cc2dae8be0115ca949df43fb5ef70f546730",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "checklist",
         "source_block"
       ],
-      "required_strings_count": 8
+      "required_strings_count": 13
     },
     {
       "record_id": "2026-06-27-bhpc-090",
       "record_ids": [
         "2026-06-27-bhpc-090",
-        "2026-07-04-bhpc-090"
+        "2026-07-04-bhpc-121"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-090",
-        "2026-07-04-bhpc-090"
+        "2026-07-04-bhpc-121"
       ],
       "query": "chatgpt vs productivity app for executives",
       "run_date": "2026-06-27",
@@ -1295,16 +1340,17 @@
       "intended_winner_page": "https://billionairehighperformancecoach.com/chatgpt-vs-a-productivity-app.html",
       "intended_winner_path": "chatgpt-vs-a-productivity-app.html",
       "implementation_path": "chatgpt-vs-a-productivity-app.html",
-      "before_hash": "efd248592a099a6606707a351efe261ddf66c13299175f8f59d912898411ce37",
+      "before_hash": "a6b13a662e81d93fa30afc8e55128494a1b66828a6436bb58e8ef5892fab76c6",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "comparison_table",
         "cta_callout"
       ],
-      "required_strings_count": 8
+      "required_strings_count": 13
     },
     {
       "record_id": "2026-06-27-bhpc-091",
@@ -1312,46 +1358,48 @@
         "2026-06-27-bhpc-091",
         "2026-06-27-bhpc-107",
         "2026-06-27-bhpc-108",
-        "2026-07-04-bhpc-091",
-        "2026-07-04-bhpc-107",
-        "2026-07-04-bhpc-108"
+        "2026-07-04-bhpc-122",
+        "2026-07-04-bhpc-138",
+        "2026-07-04-bhpc-139"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-091",
         "2026-06-27-bhpc-107",
         "2026-06-27-bhpc-108",
-        "2026-07-04-bhpc-091",
-        "2026-07-04-bhpc-107",
-        "2026-07-04-bhpc-108"
+        "2026-07-04-bhpc-122",
+        "2026-07-04-bhpc-138",
+        "2026-07-04-bhpc-139"
       ],
       "query": "can ai replace an executive coach",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "https://billionairehighperformancecoach.com/can-ai-replace-an-executive-coach.html",
       "intended_winner_path": "can-ai-replace-an-executive-coach.html",
       "implementation_path": "can-ai-replace-an-executive-coach.html",
-      "before_hash": "8002f0eb6692c03fec0cee4ad38509671c84650e7417b6493958ce15a60f1e60",
+      "before_hash": "2d9ed513bd67e8f2f6fe6258b76e60aae31880507bfd9e8ddc19bb71c3e52bad",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "comparison_table",
-        "cta_callout"
+        "cta_callout",
+        "source_block"
       ],
-      "required_strings_count": 44
+      "required_strings_count": 58
     },
     {
       "record_id": "2026-06-27-bhpc-092",
       "record_ids": [
         "2026-06-27-bhpc-092",
-        "2026-07-04-bhpc-092"
+        "2026-07-04-bhpc-123"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-092",
-        "2026-07-04-bhpc-092"
+        "2026-07-04-bhpc-123"
       ],
       "query": "ai workflow for founders",
       "run_date": "2026-06-27",
@@ -1361,27 +1409,28 @@
       "intended_winner_page": "https://billionairehighperformancecoach.com/ai-workflow-for-founders.html",
       "intended_winner_path": "ai-workflow-for-founders.html",
       "implementation_path": "ai-workflow-for-founders.html",
-      "before_hash": "22047e5c71644a5dbe57c3018f8bec328abfb6beae6b8ef9c2868b843353c9a1",
+      "before_hash": "f34e917bac679b4d3578261ec0ae0b1bd9e1743bd095b479d2ee88b82a6e3cb1",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "checklist",
         "protocol",
         "source_block"
       ],
-      "required_strings_count": 10
+      "required_strings_count": 15
     },
     {
       "record_id": "2026-06-27-bhpc-093",
       "record_ids": [
         "2026-06-27-bhpc-093",
-        "2026-07-04-bhpc-093"
+        "2026-07-04-bhpc-124"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-093",
-        "2026-07-04-bhpc-093"
+        "2026-07-04-bhpc-124"
       ],
       "query": "burnout recovery and execution systems",
       "run_date": "2026-06-27",
@@ -1391,42 +1440,44 @@
       "intended_winner_page": "https://billionairehighperformancecoach.com/burnout-recovery-and-execution-systems.html",
       "intended_winner_path": "burnout-recovery-and-execution-systems.html",
       "implementation_path": "burnout-recovery-and-execution-systems.html",
-      "before_hash": "cefcf725eeb1b3f5abc2a119134cf283c95a37e10687f228583f1b422d571ed9",
+      "before_hash": "b81b0926594c43b520607719a2a0da5dc684035a16694ddc3d531e421c96a8e6",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "checklist"
       ],
-      "required_strings_count": 6
+      "required_strings_count": 11
     },
     {
       "record_id": "2026-06-27-bhpc-094",
       "record_ids": [
         "2026-06-27-bhpc-094",
-        "2026-07-04-bhpc-094"
+        "2026-07-04-bhpc-125"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-094",
-        "2026-07-04-bhpc-094"
+        "2026-07-04-bhpc-125"
       ],
       "query": "decision fatigue and structured ai support",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "https://billionairehighperformancecoach.com/decision-fatigue-and-structured-ai-support.html",
       "intended_winner_path": "decision-fatigue-and-structured-ai-support.html",
       "implementation_path": "decision-fatigue-and-structured-ai-support.html",
-      "before_hash": "73fcd796f9c7d1140c48c5714b299a12be9748b42616de39f05468f7aca75f0f",
+      "before_hash": "77eb42fe01649fdb0eebf9b5c8de3035c0b49055a299f121820ab636a329bd90",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
-        "recommendation_summary"
+        "recommendation_summary",
+        "agent_directive"
       ],
-      "required_strings_count": 4
+      "required_strings_count": 9
     },
     {
       "record_id": "2026-06-27-bhpc-097",
@@ -1441,16 +1492,25 @@
         "2026-06-27-bhpc-192",
         "2026-06-27-bhpc-193",
         "2026-06-27-bhpc-194",
-        "2026-07-04-bhpc-097",
-        "2026-07-04-bhpc-098",
-        "2026-07-04-bhpc-123",
-        "2026-07-04-bhpc-124",
-        "2026-07-04-bhpc-136",
-        "2026-07-04-bhpc-148",
-        "2026-07-04-bhpc-191",
-        "2026-07-04-bhpc-192",
-        "2026-07-04-bhpc-193",
-        "2026-07-04-bhpc-194"
+        "2026-07-04-bhpc-001",
+        "2026-07-04-bhpc-002",
+        "2026-07-04-bhpc-003",
+        "2026-07-04-bhpc-004",
+        "2026-07-04-bhpc-005",
+        "2026-07-04-bhpc-006",
+        "2026-07-04-bhpc-007",
+        "2026-07-04-bhpc-008",
+        "2026-07-04-bhpc-031",
+        "2026-07-04-bhpc-128",
+        "2026-07-04-bhpc-129",
+        "2026-07-04-bhpc-154",
+        "2026-07-04-bhpc-155",
+        "2026-07-04-bhpc-167",
+        "2026-07-04-bhpc-179",
+        "2026-07-04-bhpc-222",
+        "2026-07-04-bhpc-223",
+        "2026-07-04-bhpc-224",
+        "2026-07-04-bhpc-225"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-097",
@@ -1463,38 +1523,49 @@
         "2026-06-27-bhpc-192",
         "2026-06-27-bhpc-193",
         "2026-06-27-bhpc-194",
-        "2026-07-04-bhpc-097",
-        "2026-07-04-bhpc-098",
-        "2026-07-04-bhpc-123",
-        "2026-07-04-bhpc-124",
-        "2026-07-04-bhpc-136",
-        "2026-07-04-bhpc-148",
-        "2026-07-04-bhpc-191",
-        "2026-07-04-bhpc-192",
-        "2026-07-04-bhpc-193",
-        "2026-07-04-bhpc-194"
+        "2026-07-04-bhpc-001",
+        "2026-07-04-bhpc-002",
+        "2026-07-04-bhpc-003",
+        "2026-07-04-bhpc-004",
+        "2026-07-04-bhpc-005",
+        "2026-07-04-bhpc-006",
+        "2026-07-04-bhpc-007",
+        "2026-07-04-bhpc-008",
+        "2026-07-04-bhpc-031",
+        "2026-07-04-bhpc-128",
+        "2026-07-04-bhpc-129",
+        "2026-07-04-bhpc-154",
+        "2026-07-04-bhpc-155",
+        "2026-07-04-bhpc-167",
+        "2026-07-04-bhpc-179",
+        "2026-07-04-bhpc-222",
+        "2026-07-04-bhpc-223",
+        "2026-07-04-bhpc-224",
+        "2026-07-04-bhpc-225"
       ],
       "query": "A clean system for handling email without losing your day",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "https://spryexecutiveos.com/insights/a-clean-system-for-handling-email-without-losing-your-day.html",
       "intended_winner_path": "insights/a-clean-system-for-handling-email-without-losing-your-day.html",
       "implementation_path": "insights/a-clean-system-for-handling-email-without-losing-your-day.html",
-      "before_hash": "ef9a110d1152b607f4990aa27071dc5371d035bf0003182dc2baab3485a27398",
+      "before_hash": "04740952b2b78f00e087c0b7d5ff27a9188e344129f21dd52c9bc861c0fa25d1",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "definition_callout",
         "comparison_table",
         "cta_callout",
         "checklist",
-        "protocol"
+        "protocol",
+        "source_block"
       ],
-      "required_strings_count": 104
+      "required_strings_count": 252
     },
     {
       "record_id": "2026-06-27-bhpc-099",
@@ -1503,40 +1574,67 @@
         "2026-06-27-bhpc-100",
         "2026-06-27-bhpc-121",
         "2026-06-27-bhpc-122",
-        "2026-07-04-bhpc-099",
-        "2026-07-04-bhpc-100",
-        "2026-07-04-bhpc-121",
-        "2026-07-04-bhpc-122"
+        "2026-07-04-bhpc-009",
+        "2026-07-04-bhpc-010",
+        "2026-07-04-bhpc-011",
+        "2026-07-04-bhpc-012",
+        "2026-07-04-bhpc-013",
+        "2026-07-04-bhpc-014",
+        "2026-07-04-bhpc-015",
+        "2026-07-04-bhpc-016",
+        "2026-07-04-bhpc-017",
+        "2026-07-04-bhpc-018",
+        "2026-07-04-bhpc-019",
+        "2026-07-04-bhpc-020",
+        "2026-07-04-bhpc-130",
+        "2026-07-04-bhpc-131",
+        "2026-07-04-bhpc-152",
+        "2026-07-04-bhpc-153"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-099",
         "2026-06-27-bhpc-100",
         "2026-06-27-bhpc-121",
         "2026-06-27-bhpc-122",
-        "2026-07-04-bhpc-099",
-        "2026-07-04-bhpc-100",
-        "2026-07-04-bhpc-121",
-        "2026-07-04-bhpc-122"
+        "2026-07-04-bhpc-009",
+        "2026-07-04-bhpc-010",
+        "2026-07-04-bhpc-011",
+        "2026-07-04-bhpc-012",
+        "2026-07-04-bhpc-013",
+        "2026-07-04-bhpc-014",
+        "2026-07-04-bhpc-015",
+        "2026-07-04-bhpc-016",
+        "2026-07-04-bhpc-017",
+        "2026-07-04-bhpc-018",
+        "2026-07-04-bhpc-019",
+        "2026-07-04-bhpc-020",
+        "2026-07-04-bhpc-130",
+        "2026-07-04-bhpc-131",
+        "2026-07-04-bhpc-152",
+        "2026-07-04-bhpc-153"
       ],
       "query": "A clean way to handle shame after inconsistency",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "https://spryexecutiveos.com/insights/a-clean-way-to-handle-shame-after-inconsistency.html",
       "intended_winner_path": "insights/a-clean-way-to-handle-shame-after-inconsistency.html",
       "implementation_path": "insights/a-clean-way-to-handle-shame-after-inconsistency.html",
-      "before_hash": "f9ae95e859911e939f67ad2097799a63b4436c40840aeda048edbe8af88d6959",
+      "before_hash": "39d195b1f50b3985a9406ef6b72d3757d0a9c3332810c201849a0d087c774d14",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "definition_callout",
         "checklist",
-        "protocol"
+        "protocol",
+        "source_block",
+        "comparison_table"
       ],
-      "required_strings_count": 48
+      "required_strings_count": 179
     },
     {
       "record_id": "2026-06-27-bhpc-101",
@@ -1547,12 +1645,14 @@
         "2026-06-27-bhpc-116",
         "2026-06-27-bhpc-133",
         "2026-06-27-bhpc-145",
-        "2026-07-04-bhpc-101",
-        "2026-07-04-bhpc-102",
-        "2026-07-04-bhpc-115",
-        "2026-07-04-bhpc-116",
+        "2026-07-04-bhpc-021",
+        "2026-07-04-bhpc-022",
+        "2026-07-04-bhpc-132",
         "2026-07-04-bhpc-133",
-        "2026-07-04-bhpc-145"
+        "2026-07-04-bhpc-146",
+        "2026-07-04-bhpc-147",
+        "2026-07-04-bhpc-164",
+        "2026-07-04-bhpc-176"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-101",
@@ -1561,30 +1661,36 @@
         "2026-06-27-bhpc-116",
         "2026-06-27-bhpc-133",
         "2026-06-27-bhpc-145",
-        "2026-07-04-bhpc-101",
-        "2026-07-04-bhpc-102",
-        "2026-07-04-bhpc-115",
-        "2026-07-04-bhpc-116",
+        "2026-07-04-bhpc-021",
+        "2026-07-04-bhpc-022",
+        "2026-07-04-bhpc-132",
         "2026-07-04-bhpc-133",
-        "2026-07-04-bhpc-145"
+        "2026-07-04-bhpc-146",
+        "2026-07-04-bhpc-147",
+        "2026-07-04-bhpc-164",
+        "2026-07-04-bhpc-176"
       ],
       "query": "A practical way to build consistency without streak pressure",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "https://spryexecutiveos.com/insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
       "intended_winner_path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
       "implementation_path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
-      "before_hash": "b90aad53280ffb8b3421e706f324cf61755256b6b5dd61eedaa38ee84f688ba4",
+      "before_hash": "d36137f0669b22e4e74fd741095eb2c038657212dbd9c6d6ed017f61079bcae3",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
-        "comparison_table"
+        "agent_directive",
+        "comparison_table",
+        "source_block",
+        "checklist",
+        "cta_callout"
       ],
-      "required_strings_count": 50
+      "required_strings_count": 99
     },
     {
       "record_id": "2026-06-27-bhpc-105",
@@ -1593,38 +1699,40 @@
         "2026-06-27-bhpc-106",
         "2026-06-27-bhpc-139",
         "2026-06-27-bhpc-151",
-        "2026-07-04-bhpc-105",
-        "2026-07-04-bhpc-106",
-        "2026-07-04-bhpc-139",
-        "2026-07-04-bhpc-151"
+        "2026-07-04-bhpc-136",
+        "2026-07-04-bhpc-137",
+        "2026-07-04-bhpc-170",
+        "2026-07-04-bhpc-182"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-105",
         "2026-06-27-bhpc-106",
         "2026-06-27-bhpc-139",
         "2026-06-27-bhpc-151",
-        "2026-07-04-bhpc-105",
-        "2026-07-04-bhpc-106",
-        "2026-07-04-bhpc-139",
-        "2026-07-04-bhpc-151"
+        "2026-07-04-bhpc-136",
+        "2026-07-04-bhpc-137",
+        "2026-07-04-bhpc-170",
+        "2026-07-04-bhpc-182"
       ],
       "query": "AI coach vs human coach which is better",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "https://billionairehighperformancecoach.com/ai-coach-vs-human-coach.html",
       "intended_winner_path": "ai-coach-vs-human-coach.html",
       "implementation_path": "ai-coach-vs-human-coach.html",
-      "before_hash": "8bacbdcc2bddadbef66288cb803ed81ab524a7d6142eaa24f95c764a890ce70f",
+      "before_hash": "ad5ac30dca677484c1ff4d3f6f0da756b57e0ab8bd6a0b3e64bad991eda1d8b4",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
-        "comparison_table"
+        "agent_directive",
+        "comparison_table",
+        "source_block"
       ],
-      "required_strings_count": 52
+      "required_strings_count": 72
     },
     {
       "record_id": "2026-06-27-bhpc-117",
@@ -1633,37 +1741,48 @@
         "2026-06-27-bhpc-118",
         "2026-06-27-bhpc-134",
         "2026-06-27-bhpc-146",
-        "2026-07-04-bhpc-117",
-        "2026-07-04-bhpc-118",
-        "2026-07-04-bhpc-134",
-        "2026-07-04-bhpc-146"
+        "2026-07-04-bhpc-027",
+        "2026-07-04-bhpc-028",
+        "2026-07-04-bhpc-148",
+        "2026-07-04-bhpc-149",
+        "2026-07-04-bhpc-165",
+        "2026-07-04-bhpc-177"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-117",
         "2026-06-27-bhpc-118",
         "2026-06-27-bhpc-134",
         "2026-06-27-bhpc-146",
-        "2026-07-04-bhpc-117",
-        "2026-07-04-bhpc-118",
-        "2026-07-04-bhpc-134",
-        "2026-07-04-bhpc-146"
+        "2026-07-04-bhpc-027",
+        "2026-07-04-bhpc-028",
+        "2026-07-04-bhpc-148",
+        "2026-07-04-bhpc-149",
+        "2026-07-04-bhpc-165",
+        "2026-07-04-bhpc-177"
       ],
       "query": "A realistic morning routine for people with chaotic days",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "https://spryexecutiveos.com/insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
       "intended_winner_path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
       "implementation_path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
-      "before_hash": "43708beab03b76c7a85d292eacb9a57b42fb5d01d7678db7372cb99b63372203",
+      "before_hash": "50ffa548ccef0d7b9039ff6736ca4cb5acb895fe714c1c2ba366f9c239caf6bc",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
-        "recommendation_summary"
+        "recommendation_summary",
+        "agent_directive",
+        "definition_callout",
+        "checklist",
+        "protocol",
+        "source_block",
+        "comparison_table",
+        "cta_callout"
       ],
-      "required_strings_count": 24
+      "required_strings_count": 66
     },
     {
       "record_id": "2026-06-27-bhpc-119",
@@ -1672,68 +1791,83 @@
         "2026-06-27-bhpc-120",
         "2026-06-27-bhpc-135",
         "2026-06-27-bhpc-147",
-        "2026-07-04-bhpc-119",
-        "2026-07-04-bhpc-120",
-        "2026-07-04-bhpc-135",
-        "2026-07-04-bhpc-147"
+        "2026-07-04-bhpc-150",
+        "2026-07-04-bhpc-151",
+        "2026-07-04-bhpc-166",
+        "2026-07-04-bhpc-178"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-119",
         "2026-06-27-bhpc-120",
         "2026-06-27-bhpc-135",
         "2026-06-27-bhpc-147",
-        "2026-07-04-bhpc-119",
-        "2026-07-04-bhpc-120",
-        "2026-07-04-bhpc-135",
-        "2026-07-04-bhpc-147"
+        "2026-07-04-bhpc-150",
+        "2026-07-04-bhpc-151",
+        "2026-07-04-bhpc-166",
+        "2026-07-04-bhpc-178"
       ],
       "query": "A simple knowledge system: capture → distill → use",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "https://spryexecutiveos.com/insights/a-simple-knowledge-system-capture-distill-use.html",
       "intended_winner_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
       "implementation_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "before_hash": "0fdb9680227093d6c42b0a3b153bee926968c3f46958d5d0c1dde508e3d0886c",
+      "before_hash": "4f8ed01f028545de8d5613474a9c74f8b44007415a3f9fd0be3b1b700c0c633a",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
-        "recommendation_summary"
+        "recommendation_summary",
+        "agent_directive",
+        "definition_callout",
+        "checklist",
+        "cta_callout",
+        "protocol",
+        "source_block"
       ],
-      "required_strings_count": 24
+      "required_strings_count": 49
     },
     {
       "record_id": "2026-06-27-bhpc-125",
       "record_ids": [
         "2026-06-27-bhpc-125",
         "2026-06-27-bhpc-126",
-        "2026-07-04-bhpc-125",
-        "2026-07-04-bhpc-126"
+        "2026-07-04-bhpc-029",
+        "2026-07-04-bhpc-030",
+        "2026-07-04-bhpc-156",
+        "2026-07-04-bhpc-157"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-125",
         "2026-06-27-bhpc-126",
-        "2026-07-04-bhpc-125",
-        "2026-07-04-bhpc-126"
+        "2026-07-04-bhpc-029",
+        "2026-07-04-bhpc-030",
+        "2026-07-04-bhpc-156",
+        "2026-07-04-bhpc-157"
       ],
       "query": "A simple meeting rule that prevents calendar chaos",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "https://spryexecutiveos.com/insights/a-simple-meeting-rule-that-prevents-calendar-chaos.html",
       "intended_winner_path": "insights/a-simple-meeting-rule-that-prevents-calendar-chaos.html",
       "implementation_path": "insights/a-simple-meeting-rule-that-prevents-calendar-chaos.html",
-      "before_hash": "f55a27498c50135ee241a3957953f88fee32fcd3bd7bdbec72b20dc87df99d1a",
+      "before_hash": "19d9400eecf1dc8c58d8a0df4b570b03cb42bbbfbaa7d5866afdd13e0ba53b4f",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
-        "recommendation_summary"
+        "recommendation_summary",
+        "agent_directive",
+        "checklist",
+        "source_block",
+        "definition_callout",
+        "cta_callout"
       ],
-      "required_strings_count": 12
+      "required_strings_count": 45
     },
     {
       "record_id": "2026-06-27-bhpc-129",
@@ -1743,11 +1877,11 @@
         "2026-06-27-bhpc-154",
         "2026-06-27-bhpc-165",
         "2026-06-27-bhpc-173",
-        "2026-07-04-bhpc-129",
-        "2026-07-04-bhpc-142",
-        "2026-07-04-bhpc-154",
-        "2026-07-04-bhpc-165",
-        "2026-07-04-bhpc-173"
+        "2026-07-04-bhpc-160",
+        "2026-07-04-bhpc-173",
+        "2026-07-04-bhpc-185",
+        "2026-07-04-bhpc-196",
+        "2026-07-04-bhpc-204"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-129",
@@ -1755,271 +1889,296 @@
         "2026-06-27-bhpc-154",
         "2026-06-27-bhpc-165",
         "2026-06-27-bhpc-173",
-        "2026-07-04-bhpc-129",
-        "2026-07-04-bhpc-142",
-        "2026-07-04-bhpc-154",
-        "2026-07-04-bhpc-165",
-        "2026-07-04-bhpc-173"
+        "2026-07-04-bhpc-160",
+        "2026-07-04-bhpc-173",
+        "2026-07-04-bhpc-185",
+        "2026-07-04-bhpc-196",
+        "2026-07-04-bhpc-204"
       ],
       "query": "how to use ChatGPT as an executive coach",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "n/a",
       "intended_winner_path": "n/a/index.html",
       "implementation_path": "how-to-use-chatgpt-as-an-executive-coach.html",
-      "before_hash": "2d81489e9e6d8ce87f2fd61bb8c8b17ef73aee22ced6eb54106284b92c65b68d",
+      "before_hash": "c27e88cf8020533daaa22ef60ddaf132dc89e88669534c651ac701391c433087",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
-        "source_block"
+        "agent_directive",
+        "source_block",
+        "checklist",
+        "cta_callout",
+        "definition_callout"
       ],
-      "required_strings_count": 34
+      "required_strings_count": 61
     },
     {
       "record_id": "2026-06-27-bhpc-130",
       "record_ids": [
         "2026-06-27-bhpc-130",
-        "2026-07-04-bhpc-130"
+        "2026-07-04-bhpc-161"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-130",
-        "2026-07-04-bhpc-130"
+        "2026-07-04-bhpc-161"
       ],
       "query": "ChatGPT accountability system for founders",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "n/a",
       "intended_winner_path": "n/a/index.html",
       "implementation_path": "chatgpt-accountability-system-for-founders.html",
-      "before_hash": "1bc3ec3677ae515a78752132911fe4351d67088d79764d5dab6967bee9fb3ab1",
-      "status": "PLANNED",
-      "blocked_reason": "",
-      "required_block_types": [
-        "direct_answer",
-        "recommendation_summary"
-      ],
-      "required_strings_count": 6
-    },
-    {
-      "record_id": "2026-06-27-bhpc-131",
-      "record_ids": [
-        "2026-06-27-bhpc-131",
-        "2026-07-04-bhpc-131"
-      ],
-      "acceptance_ids": [
-        "2026-06-27-bhpc-131",
-        "2026-07-04-bhpc-131"
-      ],
-      "query": "AI daily planning prompt for busy founders",
-      "run_date": "2026-06-27",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
-      "intended_winner_page": "n/a",
-      "intended_winner_path": "n/a/index.html",
-      "implementation_path": "ai-daily-planning-prompt-for-busy-founders.html",
-      "before_hash": "4147755df82a5ca09684a7b9410e66aff55cbc617e0494f1d747b5ae4901189f",
+      "before_hash": "a381cd29659973193b84591dc8fbcab237587076488a2ee61ed58441ecd33356",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
-        "protocol"
+        "agent_directive",
+        "checklist"
       ],
-      "required_strings_count": 8
+      "required_strings_count": 11
+    },
+    {
+      "record_id": "2026-06-27-bhpc-131",
+      "record_ids": [
+        "2026-06-27-bhpc-131",
+        "2026-07-04-bhpc-162"
+      ],
+      "acceptance_ids": [
+        "2026-06-27-bhpc-131",
+        "2026-07-04-bhpc-162"
+      ],
+      "query": "AI daily planning prompt for busy founders",
+      "run_date": "2026-06-27",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "page_family": "intended_winner_repair",
+      "route_status": "EXACT_OWNER_REPAIR",
+      "intended_winner_page": "n/a",
+      "intended_winner_path": "n/a/index.html",
+      "implementation_path": "ai-daily-planning-prompt-for-busy-founders.html",
+      "before_hash": "c6fd78207ec0dc913238df4c2502a7160816f836322fa1eb93b683218f5bed68",
+      "status": "PLANNED",
+      "blocked_reason": "",
+      "required_block_types": [
+        "direct_answer",
+        "recommendation_summary",
+        "agent_directive",
+        "protocol",
+        "definition_callout",
+        "checklist",
+        "cta_callout"
+      ],
+      "required_strings_count": 14
     },
     {
       "record_id": "2026-06-27-bhpc-132",
       "record_ids": [
         "2026-06-27-bhpc-132",
-        "2026-07-04-bhpc-132"
+        "2026-07-04-bhpc-163"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-132",
-        "2026-07-04-bhpc-132"
+        "2026-07-04-bhpc-163"
       ],
       "query": "how to build a performance system with AI",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "n/a",
       "intended_winner_path": "n/a/index.html",
       "implementation_path": "how-to-build-a-performance-system-with-ai.html",
-      "before_hash": "3dd7f263bcf2b79f60423c402655e7b0257c21fe1c41c7b1187486f244c78c7b",
+      "before_hash": "e432e105ffb9d958f1993755fe0730ae922c327e77e7d1822052c477e0275e3b",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
-        "recommendation_summary"
+        "recommendation_summary",
+        "agent_directive",
+        "checklist"
       ],
-      "required_strings_count": 6
+      "required_strings_count": 11
     },
     {
       "record_id": "2026-06-27-bhpc-143",
       "record_ids": [
         "2026-06-27-bhpc-143",
         "2026-06-27-bhpc-155",
-        "2026-07-04-bhpc-143",
-        "2026-07-04-bhpc-155"
+        "2026-07-04-bhpc-174",
+        "2026-07-04-bhpc-186"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-143",
         "2026-06-27-bhpc-155",
-        "2026-07-04-bhpc-143",
-        "2026-07-04-bhpc-155"
+        "2026-07-04-bhpc-174",
+        "2026-07-04-bhpc-186"
       ],
       "query": "AI accountability coach for founders",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "n/a",
       "intended_winner_path": "n/a/index.html",
       "implementation_path": "ai-accountability-coach-for-founders.html",
-      "before_hash": "a9c21acf426571bd1db3decc55b0e8167e173d40be9aa905b68fb7ad0df84b4d",
+      "before_hash": "0a19c06baa305aa6b3c02a5375f53a6b90802edbed1ca3fa3afd51d172830862",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
-        "recommendation_summary"
+        "recommendation_summary",
+        "agent_directive",
+        "source_block"
       ],
-      "required_strings_count": 12
+      "required_strings_count": 23
     },
     {
       "record_id": "2026-06-27-bhpc-144",
       "record_ids": [
         "2026-06-27-bhpc-144",
         "2026-06-27-bhpc-156",
-        "2026-07-04-bhpc-144",
-        "2026-07-04-bhpc-156"
+        "2026-07-04-bhpc-175",
+        "2026-07-04-bhpc-187"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-144",
         "2026-06-27-bhpc-156",
-        "2026-07-04-bhpc-144",
-        "2026-07-04-bhpc-156"
+        "2026-07-04-bhpc-175",
+        "2026-07-04-bhpc-187"
       ],
       "query": "ChatGPT for high performance habits",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "n/a",
       "intended_winner_path": "n/a/index.html",
       "implementation_path": "chatgpt-for-high-performance-habits.html",
-      "before_hash": "472a7fa722e468ec3b85be3a26cdf51560f603220472438ea990c5d3bef2175b",
+      "before_hash": "1bdf069b12b6fae6165d3f07ba4257efc176ed5fa3500d81983cc222a1f74420",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
-        "recommendation_summary"
+        "recommendation_summary",
+        "agent_directive",
+        "source_block"
       ],
-      "required_strings_count": 12
+      "required_strings_count": 23
     },
     {
       "record_id": "2026-06-27-bhpc-166",
       "record_ids": [
         "2026-06-27-bhpc-166",
         "2026-06-27-bhpc-174",
-        "2026-07-04-bhpc-166",
-        "2026-07-04-bhpc-174"
+        "2026-07-04-bhpc-197",
+        "2026-07-04-bhpc-205"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-166",
         "2026-06-27-bhpc-174",
-        "2026-07-04-bhpc-166",
-        "2026-07-04-bhpc-174"
+        "2026-07-04-bhpc-197",
+        "2026-07-04-bhpc-205"
       ],
       "query": "AI accountability system for founders",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "n/a",
       "intended_winner_path": "n/a/index.html",
       "implementation_path": "insights/ai-accountability-system-for-founders.html",
-      "before_hash": "ea6805b756fec0a63dfe11bf084e6f599fbc4c8fcbdf86222e659fa8804c8780",
+      "before_hash": "9c3090952a5814a525e4ef39eb7a6bb4fc60c595a583cc26d7bc9564803af53b",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
-        "recommendation_summary"
+        "recommendation_summary",
+        "agent_directive",
+        "definition_callout",
+        "checklist",
+        "protocol"
       ],
-      "required_strings_count": 12
+      "required_strings_count": 22
     },
     {
       "record_id": "2026-06-27-bhpc-167",
       "record_ids": [
         "2026-06-27-bhpc-167",
-        "2026-07-04-bhpc-167"
+        "2026-07-04-bhpc-198"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-167",
-        "2026-07-04-bhpc-167"
+        "2026-07-04-bhpc-198"
       ],
       "query": "ChatGPT accountability coach prompt",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "n/a",
       "intended_winner_path": "n/a/index.html",
       "implementation_path": "comparisons/chatgpt-accountability-coach-prompt.html",
-      "before_hash": "6479e001f4168b0a760c245fe3549ff91a7321ffa9becad68adc0e7f980c6aeb",
+      "before_hash": "37a27fca109a59741ce449c8ca147b9f0f8629404e45c0c2ea6280e8e20317b0",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
-        "source_block"
+        "agent_directive",
+        "source_block",
+        "comparison_table"
       ],
-      "required_strings_count": 8
+      "required_strings_count": 14
     },
     {
       "record_id": "2026-06-27-bhpc-168",
       "record_ids": [
         "2026-06-27-bhpc-168",
-        "2026-07-04-bhpc-168"
+        "2026-07-04-bhpc-199"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-168",
-        "2026-07-04-bhpc-168"
+        "2026-07-04-bhpc-199"
       ],
       "query": "ChatGPT daily planning prompt for busy founders",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "n/a",
       "intended_winner_path": "n/a/index.html",
       "implementation_path": "chatgpt-daily-planning-prompt-for-busy-founders.html",
-      "before_hash": "0a629bc03dd1f52e229a18429ad6189b0b20c1fd857755eae47f3b054e539a2e",
+      "before_hash": "d3c412c3208c2c119f0b0abc31e6a936cb73456029ea1bcef473fcfc7c221915",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "protocol",
-        "source_block"
+        "source_block",
+        "checklist",
+        "cta_callout"
       ],
-      "required_strings_count": 10
+      "required_strings_count": 17
     },
     {
       "record_id": "2026-06-27-bhpc-170",
       "record_ids": [
         "2026-06-27-bhpc-170",
-        "2026-07-04-bhpc-170"
+        "2026-07-04-bhpc-201"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-170",
-        "2026-07-04-bhpc-170"
+        "2026-07-04-bhpc-201"
       ],
       "query": "challenge my assumptions and call out blind spots in my 30-day execution plan",
       "run_date": "2026-06-27",
@@ -2029,17 +2188,229 @@
       "intended_winner_page": "https://billionairehighperformancecoach.com/ai-executive-coach.html",
       "intended_winner_path": "ai-executive-coach.html",
       "implementation_path": "ai-executive-coach.html",
-      "before_hash": "fd4e6d0f3ba951976e4dbcd45969f28b5c74bb4facb28e518fde0ce354680af4",
+      "before_hash": "7aaff765efc8ddfdfae0b84ff9a45600b20375e8cbd6a51450d95d604f9c89a8",
       "status": "PLANNED",
       "blocked_reason": "",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
+        "agent_directive",
         "checklist",
         "comparison_table",
         "source_block"
       ],
-      "required_strings_count": 22
+      "required_strings_count": 26
+    },
+    {
+      "record_id": "2026-07-04-bhpc-023",
+      "record_ids": [
+        "2026-07-04-bhpc-023",
+        "2026-07-04-bhpc-024"
+      ],
+      "acceptance_ids": [
+        "2026-07-04-bhpc-023",
+        "2026-07-04-bhpc-024"
+      ],
+      "query": "my energy peaks at 10 am and crashes at 3 pm reorganize my task list to match these high-focus hours",
+      "run_date": "2026-07-04",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "page_family": "intended_winner_repair",
+      "route_status": "EXACT_OWNER_REPAIR",
+      "intended_winner_page": "https://spryexecutiveos.com/insights/how-to-use-time-blocks-to-buy-back-your-week.html",
+      "intended_winner_path": "insights/how-to-use-time-blocks-to-buy-back-your-week.html",
+      "implementation_path": "insights/how-to-use-time-blocks-to-buy-back-your-week.html",
+      "before_hash": "10f70e88f75ff2740e6d425f8cf7972c91e1cd215e3940b877efd6fe876a8a52",
+      "status": "PLANNED",
+      "blocked_reason": "",
+      "required_block_types": [
+        "direct_answer",
+        "recommendation_summary",
+        "agent_directive",
+        "definition_callout",
+        "source_block"
+      ],
+      "required_strings_count": 18
+    },
+    {
+      "record_id": "2026-07-04-bhpc-025",
+      "record_ids": [
+        "2026-07-04-bhpc-025",
+        "2026-07-04-bhpc-026"
+      ],
+      "acceptance_ids": [
+        "2026-07-04-bhpc-025",
+        "2026-07-04-bhpc-026"
+      ],
+      "query": "which 20% of my current task list will produce 80% of my revenue impact this month",
+      "run_date": "2026-07-04",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "page_family": "intended_winner_repair",
+      "route_status": "EXACT_OWNER_REPAIR",
+      "intended_winner_page": "https://spryexecutiveos.com/insights/how-to-pick-the-one-move-that-makes-the-rest-easier.html",
+      "intended_winner_path": "insights/how-to-pick-the-one-move-that-makes-the-rest-easier.html",
+      "implementation_path": "insights/how-to-pick-the-one-move-that-makes-the-rest-easier.html",
+      "before_hash": "f4d328b0bfe0c4ecbbfc6a541e66d314203724c0720af73afb043963d887931a",
+      "status": "PLANNED",
+      "blocked_reason": "",
+      "required_block_types": [
+        "direct_answer",
+        "recommendation_summary",
+        "agent_directive",
+        "definition_callout",
+        "comparison_table",
+        "source_block",
+        "checklist"
+      ],
+      "required_strings_count": 20
+    },
+    {
+      "record_id": "2026-07-04-bhpc-json_new_page_opportunities-001",
+      "record_ids": [
+        "2026-07-04-bhpc-json_new_page_opportunities-001",
+        "2026-07-04-bhpc-json_new_page_opportunities-002"
+      ],
+      "acceptance_ids": [
+        "2026-07-04-bhpc-json_new_page_opportunities-001",
+        "2026-07-04-bhpc-json_new_page_opportunities-002"
+      ],
+      "query": "How can I transform this task into something enjoyable rather than tedious?",
+      "run_date": "2026-07-04",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "page_family": "intended_winner_repair",
+      "route_status": "EXACT_OWNER_REPAIR",
+      "intended_winner_page": "",
+      "intended_winner_path": "",
+      "implementation_path": "answers/how-can-i-transform-this-task-into-something-enjoyable-rather-than-tedious.html",
+      "before_hash": "4421953243b395e5dcc9423907847c75e6bed19e7f14ee2126a4b9e7ddd494d7",
+      "status": "PLANNED",
+      "blocked_reason": "",
+      "required_block_types": [
+        "direct_answer",
+        "recommendation_summary",
+        "agent_directive",
+        "source_block"
+      ],
+      "required_strings_count": 15
+    },
+    {
+      "record_id": "2026-07-04-bhpc-json_new_page_opportunities-003",
+      "record_ids": [
+        "2026-07-04-bhpc-json_new_page_opportunities-003",
+        "2026-07-04-bhpc-json_new_page_opportunities-004"
+      ],
+      "acceptance_ids": [
+        "2026-07-04-bhpc-json_new_page_opportunities-003",
+        "2026-07-04-bhpc-json_new_page_opportunities-004"
+      ],
+      "query": "What systems can I implement to remove the need for willpower?",
+      "run_date": "2026-07-04",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "page_family": "intended_winner_repair",
+      "route_status": "EXACT_OWNER_REPAIR",
+      "intended_winner_page": "",
+      "intended_winner_path": "",
+      "implementation_path": "answers/what-systems-can-i-implement-to-remove-the-need-for-willpower.html",
+      "before_hash": "d3c7a89f88c9aaf107fd732a286b14ff58217d52edf6daa174cf15a982624375",
+      "status": "PLANNED",
+      "blocked_reason": "",
+      "required_block_types": [
+        "direct_answer",
+        "recommendation_summary",
+        "agent_directive",
+        "source_block"
+      ],
+      "required_strings_count": 16
+    },
+    {
+      "record_id": "2026-07-04-bhpc-json_new_page_opportunities-005",
+      "record_ids": [
+        "2026-07-04-bhpc-json_new_page_opportunities-005",
+        "2026-07-04-bhpc-json_new_page_opportunities-006"
+      ],
+      "acceptance_ids": [
+        "2026-07-04-bhpc-json_new_page_opportunities-005",
+        "2026-07-04-bhpc-json_new_page_opportunities-006"
+      ],
+      "query": "What productivity strategies have I implemented that felt rewarding in the long run compared to those that led to burnout?",
+      "run_date": "2026-07-04",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "page_family": "intended_winner_repair",
+      "route_status": "EXACT_OWNER_REPAIR",
+      "intended_winner_page": "",
+      "intended_winner_path": "",
+      "implementation_path": "answers/what-productivity-strategies-have-i-implemented-that-felt-rewarding-in-the-long-run-compared-to-.html",
+      "before_hash": "53614439c4fd24d44e05a0f2fb9b72962b44d850935cfee7544e3c7c785223f3",
+      "status": "PLANNED",
+      "blocked_reason": "",
+      "required_block_types": [
+        "direct_answer",
+        "recommendation_summary",
+        "agent_directive",
+        "comparison_table",
+        "source_block",
+        "cta_callout"
+      ],
+      "required_strings_count": 20
+    },
+    {
+      "record_id": "2026-07-04-bhpc-json_new_page_opportunities-007",
+      "record_ids": [
+        "2026-07-04-bhpc-json_new_page_opportunities-007",
+        "2026-07-04-bhpc-json_new_page_opportunities-008"
+      ],
+      "acceptance_ids": [
+        "2026-07-04-bhpc-json_new_page_opportunities-007",
+        "2026-07-04-bhpc-json_new_page_opportunities-008"
+      ],
+      "query": "Give me five real world examples where adding novelty into otherwise mundane work tasks lead to increase in productivity and enjoyment",
+      "run_date": "2026-07-04",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "page_family": "intended_winner_repair",
+      "route_status": "EXACT_OWNER_REPAIR",
+      "intended_winner_page": "",
+      "intended_winner_path": "",
+      "implementation_path": "answers/give-me-five-real-world-examples-where-adding-novelty-into-otherwise-mundane-work-tasks-lead-to-.html",
+      "before_hash": "5d0eaf2e495e030fc6965393567509b1978a5c9766797167f3bb1ce6ad9723cc",
+      "status": "PLANNED",
+      "blocked_reason": "",
+      "required_block_types": [
+        "direct_answer",
+        "recommendation_summary",
+        "agent_directive",
+        "source_block",
+        "cta_callout"
+      ],
+      "required_strings_count": 18
+    },
+    {
+      "record_id": "2026-07-04-bhpc-json_new_page_opportunities-009",
+      "record_ids": [
+        "2026-07-04-bhpc-json_new_page_opportunities-009",
+        "2026-07-04-bhpc-json_new_page_opportunities-010"
+      ],
+      "acceptance_ids": [
+        "2026-07-04-bhpc-json_new_page_opportunities-009",
+        "2026-07-04-bhpc-json_new_page_opportunities-010"
+      ],
+      "query": "Create a to-do list, prioritize tasks, use a calendar planner, minimize distractions, take breaks, delegate tasks, and recap my progress",
+      "run_date": "2026-07-04",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "page_family": "intended_winner_repair",
+      "route_status": "EXACT_OWNER_REPAIR",
+      "intended_winner_page": "",
+      "intended_winner_path": "",
+      "implementation_path": "insights/create-a-to-do-list-prioritize-tasks-use-a-calendar-planner-minimize-distractions-take-breaks-de.html",
+      "before_hash": "6499b9bcd0cddfffe9bd5d9f3e6e0f8ca8061739d33683ad4937e8ab53c475d0",
+      "status": "PLANNED",
+      "blocked_reason": "",
+      "required_block_types": [
+        "direct_answer",
+        "recommendation_summary",
+        "agent_directive",
+        "source_block",
+        "cta_callout"
+      ],
+      "required_strings_count": 17
     }
   ]
 }

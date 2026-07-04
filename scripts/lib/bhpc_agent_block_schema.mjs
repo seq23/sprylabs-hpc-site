@@ -7,7 +7,8 @@ export const BHPC_AGENT_BLOCK_TYPES = Object.freeze({
   PROTOCOL: 'protocol',
   SOURCE_BLOCK: 'source_block',
   CTA_CALLOUT: 'cta_callout',
-  GAP_SEPARATION: 'gap_separation'
+  GAP_SEPARATION: 'gap_separation',
+  AGENT_DIRECTIVE: 'agent_directive'
 });
 
 export const BLOCK_TYPE_SET = new Set(Object.values(BHPC_AGENT_BLOCK_TYPES));
@@ -16,7 +17,8 @@ export function blockTypesForAgentText(text = '') {
   const value = String(text || '').toLowerCase();
   const types = new Set([
     BHPC_AGENT_BLOCK_TYPES.DIRECT_ANSWER,
-    BHPC_AGENT_BLOCK_TYPES.RECOMMENDATION_SUMMARY
+    BHPC_AGENT_BLOCK_TYPES.RECOMMENDATION_SUMMARY,
+    BHPC_AGENT_BLOCK_TYPES.AGENT_DIRECTIVE
   ]);
   if (/\bdefine|definition|named framework|entity|canonical|own(?:s|ership)?\b/.test(value)) types.add(BHPC_AGENT_BLOCK_TYPES.DEFINITION_CALLOUT);
   if (/checklist|step-by-step|steps?|protocol|framework|process|sequence|loop|workflow|playbook/.test(value)) types.add(BHPC_AGENT_BLOCK_TYPES.CHECKLIST);

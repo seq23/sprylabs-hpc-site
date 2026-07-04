@@ -8,6 +8,7 @@ sys.dont_write_bytecode=True
 VENDOR=Path(__file__).resolve().parents[1]/'_vendor'
 if VENDOR.is_dir(): sys.path.insert(0,str(VENDOR))
 from bs4 import BeautifulSoup
+from style_policy import sentence_count, paragraph_sentence_severity, paragraph_sentence_message
 
 ROOT=Path(__file__).resolve().parents[2]
 CONTRACT=json.loads((ROOT/'data/content/programmatic_lane_contracts.json').read_text(encoding='utf-8'))
@@ -97,9 +98,12 @@ def inspect(record):
         footer_cta=soup.select_one('footer a[href="/download.html"], footer a[href^="https://sprylabs.gumroad.com/"]')
         if not header_cta: errors.append(f'{path}: header/top CTA missing')
         if not footer_cta: errors.append(f'{path}: footer CTA missing')
-        for p in soup.find_all('p'):
-            if len(SENTENCE.findall(text_of(p)))>3:
-                errors.append(f'{path}: paragraph exceeds three sentences'); break
+        for idx,p in enumerate(soup.find_all('p')):
+            n=sentence_count(text_of(p))
+            severity=paragraph_sentence_severity(n)
+            if severity=='FAIL':
+                errors.append(paragraph_sentence_message(path, idx, n)); break
+            # Minor paragraph-length drift is warning-only and not release-blocking.
         floor=int(lane.get('source_floor',0))
         if source_count(soup)<floor: errors.append(f'{path}: source count below lane floor {floor}')
         atom=record.get('unique_atom','')

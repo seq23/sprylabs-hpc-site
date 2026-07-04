@@ -173,26 +173,78 @@ export function allowedHostFromUrl(url, policy = loadExactPolicy()) {
 
 function boolish(value) { return /^(y|yes|true|1|needed)$/i.test(String(value || '').trim()); }
 
+function compact(value = '') {
+  return String(value || '').replace(/\s+/g, ' ').trim();
+}
+
+function isBlankish(value) {
+  const text = compact(value);
+  return !text || /^n\/?a$/i.test(text) || /^none$/i.test(text);
+}
+
+function stringifyField(value) {
+  if (value === null || value === undefined) return '';
+  if (Array.isArray(value)) return value.map(stringifyField).filter(Boolean).join(', ');
+  if (typeof value === 'object') {
+    const preferred = ['edit_instruction', 'gap', 'current_state', 'why_worth_building', 'recommendation', 'summary', 'notes'];
+    const parts = [];
+    for (const key of preferred) {
+      const text = stringifyField(value[key]);
+      if (text) parts.push(`${key.replace(/_/g, ' ')}: ${text}`);
+    }
+    if (parts.length) return parts.join(' | ');
+    return Object.entries(value).map(([key, inner]) => {
+      const text = stringifyField(inner);
+      return text ? `${key.replace(/_/g, ' ')}: ${text}` : '';
+    }).filter(Boolean).join(' | ');
+  }
+  return compact(value);
+}
+
 function pick(row, keys) {
   for (const key of keys) {
-    if (row && row[key] !== undefined && String(row[key]).trim()) return row[key];
+    if (row && row[key] !== undefined) {
+      const text = stringifyField(row[key]);
+      if (!isBlankish(text)) return row[key];
+    }
   }
   return '';
 }
 
+function pathFromRepoFilePath(value = '') {
+  const raw = compact(value).replace(/^\/+/, '');
+  if (!raw || /^n\/?a$/i.test(raw) || raw.includes('..') || path.isAbsolute(raw)) return '';
+  if (/^https?:\/\//i.test(raw)) return repoPathFromIntendedWinnerPage(raw) || '';
+  return raw;
+}
+
+function sourceSignature(row = {}, context = {}) {
+  const basis = [
+    context.source_section || row.source_section || row.category || '',
+    row.query || row.title || '',
+    row.repo_file_path || row.intended_winner_page || row.implementation_path || '',
+    stringifyField(row.fix_recommendation || row.why_worth_building || row.recommendation || row.gap || ''),
+  ].map(stringifyField).join('||').toLowerCase();
+  return crypto.createHash('sha256').update(basis).digest('hex').slice(0, 16);
+}
+
 export function classifyRow(row, htmlDigestText = '', context = {}) {
-  const combined = Object.values(row || {}).join(' ') + ' ' + htmlDigestText;
+  const combined = stringifyField(row || {}) + ' ' + htmlDigestText;
   const scope = safeScope(context.scope || row.scope || row.vertical || 'bhpc');
-  const query = pick(row, ['query','prompt','question','search_query','keyword','topic','title','issue','finding','intended_query']) || `${scope} agent signal`;
-  const cited = pick(row, ['cited_domain','cited_source','cited_sources','citation','source','source_domain']);
-  const gap = pick(row, ['gap','issue','finding','recommendation','action','notes','why_worth_building','reason']);
-  const intendedWinnerPage = pick(row, ['intended_winner_page','target_url','url','page','target_page','intended_page','recommended_url','winner_url']);
-  const patchNeeded = boolish(pick(row, ['patch_needed_y_n','patch_needed','gap_found','fix_needed'])) || /patch|fix|not cited|gap|weak|missing|absent|outperform|free win|page fix|authority/i.test(combined);
-  const fixRecommendation = pick(row, ['fix_recommendation','recommendation','action','notes','why_worth_building']) || gap || '';
-  const actionTier = pick(row, ['action_tier','tier','category']);
-  const primaryFixType = pick(row, ['primary_fix_type','gap_type','fix_type','recommended_cluster','cluster','category']);
+  const queryValue = pick(row, ['query','prompt','question','search_query','keyword','topic','title','issue','finding','intended_query']) || `${scope} agent signal`;
+  const query = stringifyField(queryValue);
+  const cited = stringifyField(pick(row, ['cited_domain','cited_source','cited_sources','citation','source','source_domain']));
+  const fixRecommendationRaw = pick(row, ['fix_recommendation','edit_instruction','recommendation','action','notes','why_worth_building']);
+  const fixRecommendation = stringifyField(fixRecommendationRaw);
+  const gapRaw = pick(row, ['gap','gap_found','issue','finding','recommendation','action','notes','why_worth_building','reason']) || (typeof row.fix_recommendation === 'object' ? row.fix_recommendation?.gap : '');
+  const gap = stringifyField(gapRaw);
+  const intendedWinnerPage = stringifyField(pick(row, ['intended_winner_page','page_url','target_url','url','page','target_page','intended_page','recommended_url','winner_url']));
+  const declaredRepoPath = pathFromRepoFilePath(pick(row, ['repo_file_path','intended_winner_path','implementation_path']));
+  const patchNeeded = boolish(pick(row, ['patch_needed_y_n','patch_needed','fix_needed'])) || /patch|fix|not cited|gap|weak|missing|absent|outperform|free win|page fix|authority|no incumbent/i.test(combined);
+  const actionTier = stringifyField(pick(row, ['action_tier','tier','category']));
+  const primaryFixType = stringifyField(pick(row, ['primary_fix_type','gap_type','fix_type','recommended_cluster','cluster','category']));
   const policy = loadExactPolicy();
-  const intendedPath = repoPathFromIntendedWinnerPage(intendedWinnerPage, policy);
+  const intendedPath = declaredRepoPath || repoPathFromIntendedWinnerPage(intendedWinnerPage, policy) || '';
   let operation = row.operation || 'CREATE_NEW_TARGET_PAGE';
   let blockedReason = '';
   if (patchNeeded && intendedWinnerPage && !allowedHostFromUrl(intendedWinnerPage, policy)) {
@@ -203,25 +255,32 @@ export function classifyRow(row, htmlDigestText = '', context = {}) {
   } else if (patchNeeded && intendedPath && !fs.existsSync(path.join(ROOT, intendedPath))) {
     operation = 'CREATE_NEW_TARGET_PAGE';
   }
-  const scoreRaw = pick(row, ['score','priority','severity','purchase_path_potential','priority_score','progress_level_1_4','level']);
+  const scoreRaw = pick(row, ['score','priority','severity','purchase_path_potential','purchase_path_potential_1_5','priority_score','progress_level_1_4','level']);
   const numeric = Number(String(scoreRaw).replace(/[^0-9.]/g, ''));
-  const score = Number.isFinite(numeric) && numeric > 0 ? Math.min(100, numeric <= 10 ? numeric * 10 : numeric) : (/gap|not cited|miss|fail|absent|weak|outperform|page fix/i.test(combined) ? 85 : 65);
+  const score = Number.isFinite(numeric) && numeric > 0 ? Math.min(100, numeric <= 10 ? numeric * 10 : numeric) : (/gap|not cited|miss|fail|absent|weak|outperform|page fix|free win/i.test(combined) ? 85 : 65);
   return {
     scope,
-    query: String(query).trim().slice(0, 240),
-    cited_source: String(cited).trim().slice(0, 180),
-    gap: String(gap).trim().slice(0, 420),
+    query: query.trim().slice(0, 240),
+    cited_source: cited.trim().slice(0, 180),
+    gap: gap.trim().slice(0, 700),
     intended_winner_page: String(intendedWinnerPage || '').trim(),
     intended_winner_path: intendedPath || '',
     patch_needed: patchNeeded,
-    fix_recommendation: String(fixRecommendation || '').trim().slice(0, 700),
-    action_tier: String(actionTier || '').trim(),
-    primary_fix_type: String(primaryFixType || '').trim(),
+    fix_recommendation: (fixRecommendation || gap || '').trim().slice(0, 1200),
+    action_tier: actionTier.trim(),
+    primary_fix_type: primaryFixType.trim(),
     operation,
     blocked_reason: blockedReason,
-    implementation_path: intendedPath || `agent/${scope}/${slug(query)}.html`,
+    implementation_path: intendedPath || pathForAgentCreate(row, scope, query),
+    source_section: context.source_section || row.source_section || row.category || '',
+    source_signature: sourceSignature(row, context),
     score,
   };
+}
+
+function pathForAgentCreate(row, scope, query) {
+  const declared = pathFromRepoFilePath(row.implementation_path || row.repo_file_path || '');
+  return declared || `agent/${scope}/${slug(query)}.html`;
 }
 
 function firstArtifactRel(dirRel, extensions = [], exclude = []) {
@@ -241,39 +300,63 @@ function resolveArtifactRel(entry, key, defaultFile, extensions) {
   return firstArtifactRel(entry.dirRel, extensions, ['agent_run_manifest.json']);
 }
 
+function canonicalPagePathForOpportunity(item, scope) {
+  const query = stringifyField(pick(item, ['query','title','topic','question'])) || `${scope} page opportunity`;
+  const family = /\?|how can|what systems|give me|why|when|should/i.test(query) ? 'answers' : 'insights';
+  return `${family}/${slug(query)}.html`;
+}
+
+function pageSpecFromJsonItem(item, index, scope, runDate, sourceSection = 'json_pages_to_build') {
+  const query = stringifyField(pick(item, ['query','title','topic','question'])) || `${scope} page spec ${index + 1}`;
+  const cluster = stringifyField(pick(item, ['recommended_cluster','cluster','category'])) || 'agent-pages-to-build';
+  const why = stringifyField(pick(item, ['why_worth_building','reason','recommendation','notes','gap']));
+  const explicitPath = pathFromRepoFilePath(pick(item, ['implementation_path','repo_file_path','intended_winner_path']));
+  return {
+    id: `${runDate}-${scope}-${sourceSection}-${String(index + 1).padStart(3, '0')}`,
+    scope,
+    query: String(query).trim(),
+    recommended_cluster: String(cluster).trim(),
+    why_worth_building: why.trim(),
+    implementation_path: explicitPath || canonicalPagePathForOpportunity(item, scope),
+    operation: 'CREATE_NEW_TARGET_PAGE',
+    source: sourceSection,
+    source_section: sourceSection,
+    source_signature: sourceSignature({...item, source_section: sourceSection}, {source_section: sourceSection}),
+    raw: item,
+  };
+}
+
 function parseVelocityJson(payload, scope, runDate) {
   if (!payload || typeof payload !== 'object' || Array.isArray(payload)) return {rows: [], page_specs: [], scoreboard: null, json_vertical: ''};
   const categories = [
+    ['results', 'result'],
     ['free_wins', 'free_win'],
     ['page_fixes', 'page_fix'],
     ['outperform', 'outperform'],
     ['authority_required', 'authority_required'],
     ['wins', 'win'],
-    ['pending', 'pending']
+    ['pending', 'pending'],
+    ['pending_fixes', 'pending_fix']
   ];
   const rows = [];
   for (const [key, category] of categories) {
     const items = Array.isArray(payload[key]) ? payload[key] : [];
     for (const item of items) {
-      if (item && typeof item === 'object') rows.push({...item, category, vertical: payload.vertical || scope});
+      if (item && typeof item === 'object') rows.push({...item, category, source_section: key, vertical: payload.vertical || payload.scope || scope});
     }
   }
-  const page_specs = (Array.isArray(payload.pages_to_build) ? payload.pages_to_build : []).map((item, index) => {
-    const query = pick(item, ['query','title','topic','question']) || `${scope} page spec ${index + 1}`;
-    const cluster = pick(item, ['recommended_cluster','cluster','category']) || 'agent-pages-to-build';
-    return {
-      id: `${runDate}-${scope}-page-${String(index + 1).padStart(3, '0')}`,
-      scope,
-      query: String(query).trim(),
-      recommended_cluster: String(cluster).trim(),
-      why_worth_building: String(pick(item, ['why_worth_building','reason','recommendation','notes']) || '').trim(),
-      implementation_path: `agent/${scope}/${slug(query)}.html`,
-      operation: 'CREATE_NEW_TARGET_PAGE',
-      source: 'json_pages_to_build',
-      raw: item,
-    };
-  });
-  return {rows, page_specs, scoreboard: payload.scoreboard || null, json_vertical: payload.vertical || ''};
+  const pageSpecSources = [
+    ['pages_to_build', 'json_pages_to_build'],
+    ['new_page_opportunities', 'json_new_page_opportunities']
+  ];
+  const page_specs = [];
+  for (const [key, sourceSection] of pageSpecSources) {
+    const items = Array.isArray(payload[key]) ? payload[key] : [];
+    for (const item of items) {
+      if (item && typeof item === 'object') page_specs.push(pageSpecFromJsonItem(item, page_specs.length, scope, runDate, sourceSection));
+    }
+  }
+  return {rows, page_specs, scoreboard: payload.scoreboard || null, json_vertical: payload.vertical || payload.scope || ''};
 }
 
 export function digestManifest(entry) {
@@ -286,13 +369,17 @@ export function digestManifest(entry) {
   const jsonPayload = jsonRel && fs.existsSync(path.join(ROOT, jsonRel)) ? readJson(jsonRel, null) : null;
   const jsonDigest = parseVelocityJson(jsonPayload, scope, entry.runDate);
   const htmlDigestText = htmlToText(htmlText).slice(0, 6000);
-  const csvRows = parseCsv(csvText);
-  const sourceRows = csvRows.length ? csvRows : jsonDigest.rows;
-  const normalizedRows = sourceRows.map((row, index) => ({
-    id: `${entry.runDate}-${scope}-${String(index + 1).padStart(3, '0')}`,
-    ...classifyRow(row, htmlDigestText, {scope}),
-    raw: row,
-  }));
+  const csvRows = parseCsv(csvText).map(row => ({...row, source_section: 'csv'}));
+  const jsonRows = (jsonDigest.rows || []).map(row => ({...row, source_section: row.source_section || 'json'}));
+  const sourceRows = [...jsonRows, ...csvRows];
+  const normalizedRows = sourceRows.map((row, index) => {
+    const classified = classifyRow(row, htmlDigestText, {scope, source_section: row.source_section || 'unknown'});
+    return {
+      id: `${entry.runDate}-${scope}-${String(index + 1).padStart(3, '0')}`,
+      ...classified,
+      raw: row,
+    };
+  });
   if (!normalizedRows.length && htmlDigestText) {
     normalizedRows.push({
       id: `${entry.runDate}-${scope}-001`,

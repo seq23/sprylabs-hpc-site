@@ -17,7 +17,9 @@ const digest = digestManifest(entry);
 if (digest.scope !== 'sample-vertical') errors.push(`scope_not_preserved:${digest.scope}`);
 if (digest.csv_row_count !== 3) errors.push(`csv_row_count:${digest.csv_row_count}`);
 if (digest.json_scoreboard_total !== 3) errors.push(`json_scoreboard_total:${digest.json_scoreboard_total}`);
-if (digest.rows.length !== 3) errors.push(`normalized_record_count:${digest.rows.length}`);
+if (digest.rows.length !== 6) errors.push(`normalized_record_count:${digest.rows.length}`);
+const canonicalTargets = new Set(digest.rows.map(row => `${row.query}||${row.implementation_path}`));
+if (canonicalTargets.size !== 3) errors.push(`canonical_target_count:${canonicalTargets.size}`);
 if (digest.json_fix_row_count !== 3) errors.push(`json_fix_row_count:${digest.json_fix_row_count}`);
 if (digest.page_specs.length !== 2) errors.push(`page_specs:${digest.page_specs.length}`);
 if (!digest.artifact_shape.json || !digest.artifact_shape.csv || !digest.artifact_shape.html) errors.push('artifact_shape_flags_incomplete');
@@ -31,6 +33,7 @@ const report = {
   json_scoreboard_total: digest.json_scoreboard_total,
   json_fix_row_count: digest.json_fix_row_count,
   normalized_record_count: digest.rows.length,
+  canonical_target_count: canonicalTargets.size,
   json_pages_to_build: digest.page_specs.length,
   sample_pages_to_build: digest.page_specs.map(spec => spec.query),
   errors,
@@ -42,4 +45,4 @@ if (errors.length) {
   for (const error of errors) console.error(` - ${error}`);
   process.exit(1);
 }
-console.log(`[agent-artifact-shape-self-test] PASS: csv=${report.csv_row_count}; json_total=${report.json_scoreboard_total}; pages_to_build=${report.json_pages_to_build}`);
+console.log(`[agent-artifact-shape-self-test] PASS: csv=${report.csv_row_count}; json_total=${report.json_scoreboard_total}; normalized=${report.normalized_record_count}; canonical_targets=${report.canonical_target_count}; pages_to_build=${report.json_pages_to_build}`);

@@ -3716,6 +3716,70 @@
         "MX-WF-SIM-06"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "status": "ADMITTED",
+      "check_type": "validator",
+      "owning_lane": "agent-intake",
+      "scope": [
+        "repository",
+        "agent-runs",
+        "content-release"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/batch-g/pass.json",
+      "negative_fixture": "fixtures/validation/batch-g/fail.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision_date": "2026-07-04",
+      "not_applicable_reason": "",
+      "validation_id": "VAL-BHPC-AGENT-COVERAGE-01",
+      "name": "validate:bhpc-agent-source-coverage",
+      "risk_prevented": "Agent-run source recommendations can be accepted structurally but silently dropped before normalization, page application, queueing, or explicit blocking.",
+      "existing_coverage_gap": "Prior validation proved page and artifact shape but did not require source-record-to-output coverage for every agent recommendation and new-page opportunity.",
+      "command": "npm run validate:bhpc-agent-source-coverage",
+      "implementation_path": "scripts/validators/validate_bhpc_agent_source_coverage.mjs",
+      "evidence_output": "reports/bhpc-agent-source-coverage.json",
+      "decision": "Admitted as a permanent source coverage gate after the 2026-07-04 BHPC agent run dropped nested recommendations and new-page opportunities from downstream outputs.",
+      "matrix_ids": [
+        "MX-BHPC-AGENT-COVERAGE-01"
+      ]
+    },
+    {
+      "status": "ADMITTED",
+      "check_type": "validator",
+      "owning_lane": "agent-intake",
+      "scope": [
+        "repository",
+        "agent-runs",
+        "content-release"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/batch-g/pass.json",
+      "negative_fixture": "fixtures/validation/batch-g/fail.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision_date": "2026-07-04",
+      "not_applicable_reason": "",
+      "validation_id": "VAL-BHPC-AGENT-RECDRIVEN-01",
+      "name": "validate:bhpc-agent-recommendation-driven-output",
+      "risk_prevented": "Agent-run recommendations can be transformed into generic/precontracted page blocks that pass marker coverage without implementing the actual recommendation text.",
+      "existing_coverage_gap": "Prior validation proved marker existence but not that the visible implementation was driven by the exact source recommendation, including nested fix instructions and free-form page requirements.",
+      "command": "npm run validate:bhpc-agent-recommendation-driven-output",
+      "implementation_path": "scripts/validators/validate_bhpc_agent_recommendation_driven_output.mjs",
+      "evidence_output": "reports/bhpc-agent-recommendation-driven-output.json",
+      "decision": "Admitted as a permanent recommendation-driven output gate so future agent runs drive required page fixes and new pages instead of only matching precontracted fix shapes.",
+      "matrix_ids": [
+        "MX-BHPC-AGENT-RECDRIVEN-01"
+      ]
     }
   ],
   "record_count": 117,
