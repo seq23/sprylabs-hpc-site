@@ -1,0 +1,48 @@
+name: Spry Full Rebuild
+
+on:
+  workflow_dispatch:
+
+env:
+  NODE_OPTIONS: --max-old-space-size=3072
+  PUSH_RETRY_ATTEMPTS: 5
+
+permissions:
+  contents: write
+
+concurrency:
+  group: spry-full-rebuild-main
+  cancel-in-progress: false
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest main before install
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Run governed full rebuild
+        run: |
+          npm run workflow:run -- --workflow spry-full-rebuild -- npm run workflow:spry-full-rebuild
+      - name: Commit validated Spry full rebuild
+        run: |
+          ./.github/scripts/commit_and_push_if_changed.sh "spry full rebuild" spry-full-rebuild
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: spry-full-rebuild-diagnostics-${{ github.run_id }}
+          if-no-files-found: warn
+          path: |
+            reports/workflows/spry-full-rebuild/**
+            artifacts/validation/**
+            reports/**

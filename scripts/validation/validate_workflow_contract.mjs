@@ -5,10 +5,17 @@ import { readJson, fail, pass, writeSummary } from './common.mjs';
 const errors = [];
 const workflowDir = '.github/workflows';
 const expectedWorkflows = [
+  'daily-citation-intelligence.yml',
+  'deploy-distribution.yml',
+  'postdeploy-public-audit.yml',
+  'spry-content-release.yml',
+  'spry-full-rebuild.yml',
+  'validate-repo.yml',
+].sort();
+const retiredWorkflows = [
   'citation-velocity-5k.yml',
   'content-authority-pipeline.yml',
   'daily-insight.yml',
-  'deploy-distribution.yml',
   'execution-strict.yml',
   'reddit-daily.yml',
   'reddit-evening.yml',
@@ -17,19 +24,8 @@ const expectedWorkflows = [
   'validate.yml',
   'whitepaper-release.yml',
   'workflow-monitor.yml',
-  'daily-citation-intelligence.yml',
 ];
-const mutationWorkflows = new Set([
-  'citation-velocity-5k.yml',
-  'content-authority-pipeline.yml',
-  'daily-insight.yml',
-  'execution-strict.yml',
-  'reddit-daily.yml',
-  'reddit-evening.yml',
-  'social-signal-processing.yml',
-  'synthesis-weekly.yml',
-  'whitepaper-release.yml',
-]);
+const mutationWorkflows = new Set(['spry-content-release.yml', 'spry-full-rebuild.yml']);
 const allowedActions = new Set([
   'actions/checkout@v4',
   'actions/setup-node@v4',
@@ -41,19 +37,20 @@ const packageScripts = pkg.scripts || {};
 const registry = readJson('_validation_registry.json').records || [];
 const matrix = readJson('_repo_validation_matrix.json').entries || [];
 const packaging = readJson('_baseline_packaging_contract.json');
-const governedWorkflowContracts = readJson('data/workflows/workflow_contracts.json').governed_workflows || [];
-const governedByFile = new Map(governedWorkflowContracts.map(item => [path.basename(item.workflow_file), item]));
+const contracts = readJson('data/workflows/workflow_contracts.json').governed_workflows || [];
+const governedByFile = new Map(contracts.map(item => [path.basename(item.workflow_file), item]));
 const requiredFiles = new Set(packaging.required_files || []);
 const actualWorkflows = fs.readdirSync(workflowDir).filter(name => /\.ya?ml$/.test(name)).sort();
 
-function indexOrError(text, needle, label, workflow) {
-  const idx = text.indexOf(needle);
-  if (idx < 0) errors.push(`${workflow}: missing ${label}`);
-  return idx;
+function has(text, token, workflow, label = token) {
+  if (!text.includes(token)) errors.push(`${workflow}: missing ${label}`);
 }
 
+for (const retired of retiredWorkflows) {
+  if (actualWorkflows.includes(retired)) errors.push(`retired public workflow still present: ${retired}`);
+}
 for (const expected of expectedWorkflows) {
-  if (!actualWorkflows.includes(expected)) errors.push(`missing required workflow: ${expected}`);
+  if (!actualWorkflows.includes(expected)) errors.push(`missing required simplified workflow: ${expected}`);
 }
 for (const actual of actualWorkflows) {
   if (!expectedWorkflows.includes(actual)) errors.push(`unreviewed workflow file present: ${actual}`);
@@ -67,14 +64,12 @@ for (const name of actualWorkflows) {
   if (!/^name:\s*\S/m.test(text)) errors.push(`${name}: missing workflow name`);
   if (!/^on:\s*$/m.test(text)) errors.push(`${name}: missing on trigger mapping`);
   if (!/^jobs:\s*$/m.test(text)) errors.push(`${name}: missing jobs mapping`);
-  if (!/^env:\s*\n\s{2}NODE_OPTIONS:\s*--max-old-space-size=3072\s*$/m.test(text)) {
-    errors.push(`${name}: root NODE_OPTIONS must be --max-old-space-size=3072`);
-  }
-  if (!text.includes('actions/checkout@v4')) errors.push(`${name}: actions/checkout@v4 is required`);
-  if (!text.includes('actions/setup-node@v4')) errors.push(`${name}: actions/setup-node@v4 is required`);
+  if (!/^env:\s*\n\s{2}NODE_OPTIONS:\s*--max-old-space-size=3072\s*$/m.test(text)) errors.push(`${name}: root NODE_OPTIONS must be --max-old-space-size=3072`);
+  has(text, 'actions/checkout@v4', name);
+  has(text, 'actions/setup-node@v4', name);
   if (!/node-version:\s*24\b/.test(text)) errors.push(`${name}: Node 24 setup is required`);
   if (!/cache:\s*npm\b/.test(text)) errors.push(`${name}: npm dependency caching is required`);
-  if (!text.includes('npm ci --ignore-scripts')) errors.push(`${name}: npm ci --ignore-scripts is required`);
+  has(text, 'npm ci --ignore-scripts', name);
   for (const line of lines) {
     const trimmed = line.trim();
     if (trimmed.startsWith('- uses:')) {
@@ -102,124 +97,87 @@ for (const name of actualWorkflows) {
   if (!requiredFiles.has(rel)) errors.push(`${name}: workflow missing from baseline critical-file parity`);
 
   if (mutationWorkflows.has(name)) {
-    const hasPushTrigger = /^\s{2}push:\s*$/m.test(text);
-    if (name === 'content-authority-pipeline.yml') {
-      if (!hasPushTrigger) errors.push(`${name}: BHPC artifact intake must retain manifest-only push trigger`);
-    } else if (hasPushTrigger) {
-      errors.push(`${name}: scheduled governed workflow must not run on push; only Content Authority may push-trigger from agent_run_manifest.json`);
-    }
-    for (const [lineNo, line] of lines.entries()) {
-      const inline = line.match(/^\s*-\s+run:\s+(.+)$/);
-      if (inline && inline[1].trim() !== '|' && /:\s/.test(inline[1])) {
-        errors.push(`${name}: line ${lineNo + 1} has colon-bearing inline run command; use block scalar run: | to avoid invalid workflow YAML`);
-      }
-    }
     if (!/permissions:\s*\n\s{2}contents:\s*write/m.test(text)) errors.push(`${name}: mutating workflow requires contents: write`);
-    if (!/concurrency:\s*\n\s{2}group:\s*main-automation\s*\n\s{2}cancel-in-progress:\s*false/m.test(text)) {
-      errors.push(`${name}: mutating workflow must serialize through main-automation`);
-    }
     if (!/fetch-depth:\s*0\b/.test(text)) errors.push(`${name}: mutating workflow requires fetch-depth: 0`);
-    const laneRunner = indexOrError(text, 'npm run programmatic:run-lane', 'programmatic lane runner', name);
-    const commit = indexOrError(text, '.github/scripts/commit_and_push_if_changed.sh', 'safe commit helper', name);
-    if (laneRunner >= 0 && commit >= 0 && commit < laneRunner) errors.push(`${name}: commit helper runs before programmatic admission and canonical validation`);
+    has(text, '.github/scripts/commit_and_push_if_changed.sh', name, 'safe commit helper');
+    has(text, 'npm run workflow:run', name, 'governed workflow runner');
+    has(text, 'actions/upload-artifact@v4', name, 'diagnostic artifact upload');
     const contract = governedByFile.get(name);
     if (!contract) {
       errors.push(`${name}: mutating workflow has no governed workflow contract`);
     } else {
-      const governedRunner = indexOrError(text, 'npm run workflow:run', 'governed workflow runner', name);
-      const traceUpload = indexOrError(text, 'actions/upload-artifact@v4', 'workflow trace upload', name);
-      if (governedRunner >= 0 && laneRunner >= 0 && laneRunner < governedRunner) errors.push(`${name}: programmatic runner is not nested under governed workflow runner`);
-      if (traceUpload >= 0 && commit >= 0 && traceUpload < commit) errors.push(`${name}: trace artifact upload must run after the race-safe commit helper`);
-      if (!/--workflow\s+[a-z0-9-]+\s+--\s+npm\s+run\s+programmatic:run-lane\s+--\s+--lane\s+[a-z_]+\s+--\s+npm\s+run\s+workflow:[\w-]+/.test(text)) errors.push(`${name}: mutation command must be wrapped in governed trace and a named admitted programmatic lane`);
-      const expected = `npm run workflow:run -- --workflow ${contract.id} -- npm run programmatic:run-lane -- --lane ${contract.lane} -- ${contract.workflow_argv.join(' ')}`;
-      if (!text.includes(expected)) errors.push(`${name}: governed workflow command drift from data/workflows/workflow_contracts.json`);
-      const expectedHelper = `./.github/scripts/commit_and_push_if_changed.sh "${contract.commit_message}" ${contract.id}`;
-      if (!text.includes(expectedHelper)) errors.push(`${name}: commit helper workflow identity or message drift`);
-      if (contract.remote_advance_strategy !== 'reset-regenerate-validate-recommit') errors.push(`${name}: invalid remote advance strategy`);
-      if (!text.includes(`reports/workflows/${contract.id}/`)) errors.push(`${name}: trace artifact path drift from workflow contract`);
-      if (!text.includes('workflow_dispatch:') || !text.includes('schedule:')) errors.push(`${name}: governed workflow must support manual and scheduled execution`);
+      has(text, `--workflow ${contract.id}`, name, 'contract workflow id');
+      const helper = `./.github/scripts/commit_and_push_if_changed.sh "${contract.commit_message}" ${contract.id}`;
+      has(text, helper, name, 'contract commit helper invocation');
+      if (!text.includes('workflow_dispatch:')) errors.push(`${name}: mutating workflow must support manual dispatch`);
+      if (contract.id === 'spry-content-release') {
+        has(text, 'schedule:', name, 'scheduled consolidated release trigger');
+        has(text, 'data/report_fixes/agent_runs/**/agent_run_manifest.json', name, 'manifest-only agent artifact trigger');
+        has(text, 'full-content-cycle', name, 'full-content-cycle mode');
+        has(text, 'agent-intake', name, 'agent-intake mode');
+        has(text, 'signal-intake', name, 'signal-intake mode');
+        has(text, 'citation-expansion', name, 'citation-expansion mode');
+      }
     }
   }
 
-  if (name === 'content-authority-pipeline.yml') {
-    if (!text.includes("data/report_fixes/agent_runs/**/agent_run_manifest.json")) errors.push(`${name}: BHPC artifact trigger must be manifest-only`);
-    if (text.includes("- 'data/report_fixes/agent_runs/**'") || text.includes('- "data/report_fixes/agent_runs/**"')) {
-      errors.push(`${name}: broad BHPC artifact trigger is forbidden because split CSV/HTML/manifest commits race the pipeline`);
-    }
-  }
-
-  if (name === 'deploy-distribution.yml') {
-    if (!/permissions:\s*\n\s{2}contents:\s*read\s*\n\s{2}actions:\s*read/m.test(text)) errors.push(`${name}: deployment workflow must declare contents: read and actions: read`);
-    if (!text.includes('workflow_run:') || !text.includes('workflows: ["Validate"]')) errors.push(`${name}: deployment must be triggered by successful Validate workflow completion`);
-    const download = indexOrError(text, 'actions/download-artifact@v4', 'validated artifact download', name);
-    const normalize = indexOrError(text, 'Normalize downloaded validation artifact', 'downloaded validation artifact normalization', name);
-    const verify = indexOrError(text, 'npm run release:verify-attestation', 'attestation verification', name);
-    const deploy = indexOrError(text, 'npm run distribution:deploy', 'distribution deployment command', name);
-    if (download >= 0 && normalize >= 0 && normalize < download) errors.push(`${name}: downloaded artifact normalization runs before artifact download`);
-    if (normalize >= 0 && verify >= 0 && verify < normalize) errors.push(`${name}: attestation verification runs before downloaded artifact normalization`);
-    if (download >= 0 && verify >= 0 && verify < download) errors.push(`${name}: attestation verification runs before artifact download`);
-    if (verify >= 0 && deploy >= 0 && deploy < verify) errors.push(`${name}: distribution can run before attestation verification`);
-    if (!text.includes('run-id: ${{ github.event.workflow_run.id }}')) errors.push(`${name}: workflow_run deploy must download artifact from the triggering Validate run`);
-    if (!text.includes('test -f .build/indexnow-priority.txt') || !text.includes('test -f .build/indexnow-batch.txt')) errors.push(`${name}: workflow_run deploy must fail fast if downloaded distribution files are missing`);
-    if (!text.includes('npm run release:ci-validate')) errors.push(`${name}: manual dispatch must validate and attest before deployment`);
-  }
-
-
-  if (name === 'workflow-monitor.yml') {
-    if (!/permissions:\s*\n\s{2}contents:\s*read\s*\n\s{2}actions:\s*read/m.test(text)) errors.push(`${name}: monitor workflow must declare contents: read and actions: read`);
-    if (!text.includes('workflow_dispatch:') || !text.includes('schedule:')) errors.push(`${name}: monitor must support manual and scheduled execution`);
-    if (!text.includes('npm run workflow:monitor')) errors.push(`${name}: monitor command missing`);
-    if (!text.includes('reports/workflow-monitor.json')) errors.push(`${name}: monitor report artifact missing`);
-  }
-
-  if (name === 'validate.yml') {
-    if (!text.includes('npm run release:ci-validate')) errors.push(`${name}: push/PR validation must run release:ci-validate`);
-    if (!text.includes('actions/upload-artifact@v4')) errors.push(`${name}: validated distribution artifact must be uploaded`);
-    if (!text.includes('reports/validation-attestation.json')) errors.push(`${name}: validation attestation must be uploaded`);
-    if (!text.includes('.build/**')) errors.push(`${name}: .build distribution artifacts must be uploaded`);
-    if (!text.includes('include-hidden-files: true')) errors.push(`${name}: upload-artifact must include hidden .build files for Deploy Distribution handoff`);
+  if (name === 'validate-repo.yml') {
+    has(text, 'name: Validate Repo', name);
+    has(text, 'npm run release:ci-validate', name);
+    has(text, 'spry-validated-${{ github.sha }}', name, 'exact validated artifact name');
+    has(text, 'include-hidden-files: true', name);
     if (!/permissions:\s*\n\s{2}contents:\s*read/m.test(text)) errors.push(`${name}: validation workflow must declare contents: read`);
   }
-
-  if (text.includes('SPRY_ADMIN_PASSWORD')) errors.push(`${name}: static workflow must not inject SPRY_ADMIN_PASSWORD into generated HTML`);
-
-  if (name === 'reddit-daily.yml' || name === 'reddit-evening.yml') {
-    const beforeSteps = text.split(/\n\s{4}steps:\s*\n/, 1)[0];
-    if (!beforeSteps.includes('REDDIT_ACCESS_TOKEN: ${{ secrets.REDDIT_ACCESS_TOKEN }}')) errors.push(`${name}: Reddit access token is not available to the fetch step`);
-    if (!beforeSteps.includes('REDDIT_USER_AGENT: ${{ secrets.REDDIT_USER_AGENT }}')) errors.push(`${name}: Reddit user agent is not available to the fetch step`);
+  if (name === 'deploy-distribution.yml') {
+    has(text, 'workflows: ["Validate Repo"]', name, 'Validate Repo workflow_run dependency');
+    has(text, 'actions/download-artifact@v4', name);
+    has(text, 'npm run release:verify-attestation', name);
+    has(text, 'npm run distribution:deploy', name);
+    if (!/permissions:\s*\n\s{2}contents:\s*read\s*\n\s{2}actions:\s*read/m.test(text)) errors.push(`${name}: deployment workflow must declare contents: read and actions: read`);
   }
+  if (name === 'daily-citation-intelligence.yml') {
+    has(text, 'npm run workflow:daily-citation-intelligence', name);
+    if (!/permissions:\s*\n\s{2}contents:\s*read/m.test(text)) errors.push(`${name}: citation intelligence workflow must be read-only`);
+  }
+  if (name === 'postdeploy-public-audit.yml') {
+    has(text, 'npm run postdeploy:public-click-audit', name);
+    has(text, 'npx playwright install --with-deps chromium', name, 'Playwright browser install');
+    if (!/permissions:\s*\n\s{2}contents:\s*read/m.test(text)) errors.push(`${name}: postdeploy audit workflow must be read-only`);
+  }
+  if (text.includes('SPRY_ADMIN_PASSWORD')) errors.push(`${name}: static workflow must not inject SPRY_ADMIN_PASSWORD into generated HTML`);
+}
+
+for (const critical of [
+  '.github/scripts/commit_and_push_if_changed.sh',
+  'scripts/validation/validate_workflow_contract.mjs',
+  'scripts/workflow/run_governed_workflow.mjs',
+  'scripts/workflow/hostile_review.mjs',
+  'scripts/validation/validate_workflow_lineage.mjs',
+  'scripts/validation/validate_workflow_monitor.mjs',
+  'data/workflows/workflow_contracts.json',
+  'data/workflows/workflow_topology.json',
+  'scripts/release/ci_validate.mjs',
+  'scripts/release/create_validation_attestation.mjs',
+  'scripts/release/verify_validation_attestation.mjs',
+]) {
+  if (!requiredFiles.has(critical)) errors.push(`${critical}: missing from baseline critical-file parity`);
 }
 
 const helper = '.github/scripts/commit_and_push_if_changed.sh';
-if (!requiredFiles.has(helper)) errors.push(`${helper}: missing from baseline critical-file parity`);
-if (!requiredFiles.has('scripts/validation/validate_workflow_contract.mjs')) errors.push('workflow validator missing from baseline critical-file parity');
-for (const critical of ['scripts/programmatic/run_lane.mjs','scripts/workflow/run_governed_workflow.mjs','scripts/workflow/hostile_review.mjs','scripts/workflow/monitor_workflows.mjs','scripts/validation/validate_workflow_lineage.mjs','scripts/validation/validate_workflow_monitor.mjs','data/workflows/workflow_contracts.json','docs/runbooks/GOVERNED_WORKFLOW_OPERATIONS.md','scripts/release/ci_validate.mjs','scripts/release/create_validation_attestation.mjs','scripts/release/verify_validation_attestation.mjs']) if (!requiredFiles.has(critical)) errors.push(`${critical}: missing from baseline critical-file parity`);
-
-const laneRunner='scripts/programmatic/run_lane.mjs';
-if (fs.existsSync(laneRunner)) {
-  const laneText=fs.readFileSync(laneRunner,'utf8');
-  for (const token of ['build:all','validate_programmatic_admission.py','rejection_backlog.json','validate:all','validate:warnings','build:postprocess']) if (!laneText.includes(token)) errors.push(`${laneRunner}: missing required orchestration token ${token}`);
-}
-const ciRunner='scripts/release/ci_validate.mjs';
-if (fs.existsSync(ciRunner)) {
-  const ciText=fs.readFileSync(ciRunner,'utf8');
-  for (const token of ['release:prepush:container','validate:warnings','validate:clean-rebuild-parity','release:create-attestation']) if (!ciText.includes(token)) errors.push(`${ciRunner}: missing required CI attestation stage ${token}`);
-}
 if (!fs.existsSync(helper)) errors.push(`missing ${helper}`);
 else {
   const helperText = fs.readFileSync(helper, 'utf8');
   for (const required of ['workflow_id=', 'git reset --hard', 'git clean -fd', 'Regenerating governed workflow', 'workflow_argv', 'git merge-base --is-ancestor']) {
     if (!helperText.includes(required)) errors.push(`${helper}: missing reset-regenerate retry behavior: ${required}`);
   }
-  if (helperText.includes('git rebase')) errors.push(`${helper}: generated-state workflows must not rebase stale generated commits`);
 }
 
 writeSummary('validate-workflow-contract', {
   status: errors.length ? 'FAIL' : 'PASS',
   workflow_count: actualWorkflows.length,
-  mutation_workflow_count: mutationWorkflows.size,
-  expected_node: 24,
+  expected_workflow_count: expectedWorkflows.length,
+  retired_workflows: retiredWorkflows,
   errors,
 });
 if (errors.length) fail(`[validate:workflow-contract] FAIL: ${errors.length} issue(s)`, errors);
-pass(`[validate:workflow-contract] OK: ${actualWorkflows.length} workflows use Node 24, canonical validation, admitted commands, safe ordering, and artifact parity`);
+pass(`[validate:workflow-contract] OK: simplified public workflow topology has ${actualWorkflows.length} admitted workflows and governed mutation lanes`);

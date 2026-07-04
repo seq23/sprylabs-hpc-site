@@ -1,11 +1,11 @@
 {
   "schema_version": "1.1",
-  "generated_at": "2026-07-04T12:28:10.547Z",
+  "generated_at": "2026-07-04T13:46:45.865Z",
   "status": "PASS",
-  "canonical_lane_count": 6,
-  "governed_workflow_count": 9,
-  "alias_workflow_count": 8,
-  "stage_count": 48,
+  "canonical_lane_count": 8,
+  "governed_workflow_count": 2,
+  "alias_workflow_count": 0,
+  "stage_count": 85,
   "canonical_lanes": {
     "content-authority": {
       "command": "npm run workflow:content-authority",
@@ -115,68 +115,68 @@
       "stage_modes": {
         "shadow": 1
       }
+    },
+    "spry-content-release": {
+      "command": "npm run workflow:spry-content-release",
+      "modes": [
+        "full-content-cycle",
+        "agent-intake",
+        "daily-insight",
+        "signal-intake",
+        "synthesis",
+        "whitepaper",
+        "citation-expansion",
+        "strict"
+      ],
+      "replaces": [
+        "content-authority-pipeline.yml",
+        "daily-insight.yml",
+        "execution-strict.yml",
+        "reddit-daily.yml",
+        "reddit-evening.yml",
+        "social-signal-processing.yml",
+        "synthesis-weekly.yml",
+        "whitepaper-release.yml",
+        "citation-velocity-5k.yml"
+      ],
+      "stage_modes": {
+        "agent-intake": 1,
+        "daily-insight": 4,
+        "signal-intake": 10,
+        "synthesis": 4,
+        "whitepaper": 2,
+        "citation-expansion": 2,
+        "strict": 2,
+        "full-content-cycle": 7
+      }
+    },
+    "spry-full-rebuild": {
+      "command": "npm run workflow:spry-full-rebuild",
+      "modes": [
+        "full"
+      ],
+      "replaces": [
+        "workflow-monitor.yml",
+        "manual full rebuild scripts"
+      ],
+      "stage_modes": {
+        "full": 5
+      }
     }
   },
-  "aliases": [
-    {
-      "id": "daily-insight",
-      "canonical_lane": "content-expansion",
-      "canonical_mode": "daily-insight",
-      "workflow_command": "npm run workflow:daily-insight"
-    },
-    {
-      "id": "execution-strict",
-      "canonical_lane": "content-expansion",
-      "canonical_mode": "strict",
-      "workflow_command": "npm run workflow:execution-strict"
-    },
-    {
-      "id": "reddit-daily",
-      "canonical_lane": "signal-intake",
-      "canonical_mode": "daily",
-      "workflow_command": "npm run workflow:reddit-daily"
-    },
-    {
-      "id": "reddit-evening",
-      "canonical_lane": "signal-intake",
-      "canonical_mode": "evening",
-      "workflow_command": "npm run workflow:reddit-evening"
-    },
-    {
-      "id": "social-signal",
-      "canonical_lane": "signal-intake",
-      "canonical_mode": "social",
-      "workflow_command": "npm run workflow:social-signal"
-    },
-    {
-      "id": "synthesis-weekly",
-      "canonical_lane": "content-expansion",
-      "canonical_mode": "synthesis",
-      "workflow_command": "npm run workflow:synthesis-weekly"
-    },
-    {
-      "id": "whitepaper-release",
-      "canonical_lane": "content-expansion",
-      "canonical_mode": "whitepaper",
-      "workflow_command": "npm run workflow:whitepaper"
-    },
-    {
-      "id": "citation-velocity-5k",
-      "canonical_lane": "citation-expansion",
-      "canonical_mode": "daily",
-      "workflow_command": "npm run workflow:citation-velocity-5k"
-    }
-  ],
+  "aliases": [],
   "warnings": [
+    "workflow:daily-insight: workflow script is neither canonical nor governed alias",
+    "workflow:execution-strict: workflow script is neither canonical nor governed alias",
+    "workflow:reddit-daily: workflow script is neither canonical nor governed alias",
+    "workflow:reddit-evening: workflow script is neither canonical nor governed alias",
+    "workflow:social-signal: workflow script is neither canonical nor governed alias",
+    "workflow:synthesis-weekly: workflow script is neither canonical nor governed alias",
+    "workflow:whitepaper: workflow script is neither canonical nor governed alias",
+    "workflow:citation-velocity-5k: workflow script is neither canonical nor governed alias",
     "workflow:content-authority:raw: workflow script is neither canonical nor governed alias",
     "workflow:content-expansion:raw: workflow script is neither canonical nor governed alias",
-    "reddit:daily:legacy: still present as a direct component command; target=workflow:signal-intake --mode=daily",
-    "reddit:evening:legacy: still present as a direct component command; target=workflow:signal-intake --mode=evening",
-    "social:daily: still present as a direct component command; target=workflow:signal-intake --mode=daily",
-    "authority:daily: still present as a direct component command; target=workflow:content-authority",
-    "content:pipeline: still present as a direct component command; target=workflow:content-authority",
-    "full:loop: still present as a direct component command; target=workflow:release-verify --mode=audit",
-    "guardrails:all: still present as a direct component command; target=release:prepush:container"
+    "workflow:monitor: still present as a direct component command; target=validate-repo/postdeploy-public-audit evidence only"
   ],
   "errors": []
 }

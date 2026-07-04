@@ -68,20 +68,21 @@ for (const entry of findAgentManifests()) {
   });
 }
 const workflowContracts = readJson('data/workflows/workflow_contracts.json', {governed_workflows:[]});
-const contentAuthority = (workflowContracts.governed_workflows || []).find(item => item.id === 'content-authority');
-if (!contentAuthority) errors.push('content-authority workflow contract missing');
+const contentAuthority = (workflowContracts.governed_workflows || []).find(item => item.id === 'spry-content-release');
+if (!contentAuthority) errors.push('spry-content-release workflow contract missing');
 else {
   const inputs = contentAuthority.lineage_inputs || [];
   for (const required of ['data/report_fixes/agent_runs/**','data/report_fixes/normalized_agent_runs/**','data/social/runs/**']) {
-    if (!inputs.includes(required)) errors.push(`content-authority lineage missing ${required}`);
+    if (!inputs.includes(required)) errors.push(`spry-content-release lineage missing ${required}`);
   }
 }
-const ymlPath = '.github/workflows/content-authority-pipeline.yml';
+const ymlPath = '.github/workflows/spry-content-release.yml';
 const yml = fs.existsSync(path.join(ROOT, ymlPath)) ? fs.readFileSync(path.join(ROOT, ymlPath), 'utf8') : '';
 if (!yml.includes('data/report_fixes/agent_runs/**/agent_run_manifest.json')) errors.push(`${ymlPath}: manifest-only artifact receipt trigger missing`);
 if (yml.includes("- 'data/report_fixes/agent_runs/**'") || yml.includes('- "data/report_fixes/agent_runs/**"')) errors.push(`${ymlPath}: broad agent-run trigger is forbidden; trigger only on agent_run_manifest.json`);
-if (!yml.includes('npm run workflow:run -- --workflow content-authority')) errors.push(`${ymlPath}: governed runner command missing`);
-const report = {schema_version:'1.2', generated_at:new Date().toISOString(), status:errors.length?'FAIL':'PASS', artifact_run_count:traces.length, traces, workflow_bridge:{content_authority_inputs: contentAuthority?.lineage_inputs || [], content_authority_workflow_file:ymlPath}, errors};
+if (!yml.includes('npm run workflow:run -- --workflow spry-content-release')) errors.push(`${ymlPath}: governed runner command missing`);
+if (!yml.includes('agent-intake')) errors.push(`${ymlPath}: agent-intake mode missing`);
+const report = {schema_version:'1.3', generated_at:new Date().toISOString(), status:errors.length?'FAIL':'PASS', artifact_run_count:traces.length, traces, workflow_bridge:{content_authority_inputs: contentAuthority?.lineage_inputs || [], content_authority_workflow_file:ymlPath}, errors};
 writeJson('artifacts/validation/bhpc-agent-data-trace.json', report);
 writeJson('reports/bhpc-agent-data-trace.json', report);
 if (errors.length) {
@@ -89,4 +90,4 @@ if (errors.length) {
   for (const error of errors) console.error(` - ${error}`);
   process.exit(1);
 }
-console.log(`[agent-data-trace] PASS: ${traces.length} run(s) traced through content-authority`);
+console.log(`[agent-data-trace] PASS: ${traces.length} run(s) traced through spry-content-release`);

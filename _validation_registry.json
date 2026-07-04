@@ -1062,306 +1062,6 @@
       "not_applicable_reason": null
     },
     {
-      "validation_id": "VAL-035",
-      "status": "ADMITTED",
-      "name": "content-authority-pipeline",
-      "check_type": "workflow",
-      "owning_lane": "ci",
-      "risk_prevented": "Prevents CI or scheduled publishing from bypassing the canonical build and validation lifecycle.",
-      "existing_coverage_gap": "Workflow wiring is an external execution surface and must be governed independently of package scripts.",
-      "scope": [
-        "github-actions"
-      ],
-      "proposed_severity": "HARD_FAIL",
-      "command": ".github/workflows/content-authority-pipeline.yml",
-      "implementation_path": ".github/workflows/content-authority-pipeline.yml",
-      "environment": "ci",
-      "proof_tier": 1,
-      "positive_fixture": "fixtures/validation/repo/pass.json",
-      "negative_fixture": "fixtures/validation/repo/fail.json",
-      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
-      "runtime_budget_seconds": 7200,
-      "maintenance_owner": "repo",
-      "overlap_analysis": [],
-      "retirement_offset": null,
-      "decision": "Admitted CI workflow using Node 24 and canonical gates.",
-      "decision_date": "2026-06-18",
-      "matrix_ids": [
-        "MX-035"
-      ],
-      "not_applicable_reason": null
-    },
-    {
-      "validation_id": "VAL-036",
-      "status": "ADMITTED",
-      "name": "daily-insight",
-      "check_type": "workflow",
-      "owning_lane": "ci",
-      "risk_prevented": "Prevents CI or scheduled publishing from bypassing the canonical build and validation lifecycle.",
-      "existing_coverage_gap": "Workflow wiring is an external execution surface and must be governed independently of package scripts.",
-      "scope": [
-        "github-actions"
-      ],
-      "proposed_severity": "HARD_FAIL",
-      "command": ".github/workflows/daily-insight.yml",
-      "implementation_path": ".github/workflows/daily-insight.yml",
-      "environment": "ci",
-      "proof_tier": 1,
-      "positive_fixture": "fixtures/validation/repo/pass.json",
-      "negative_fixture": "fixtures/validation/repo/fail.json",
-      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
-      "runtime_budget_seconds": 7200,
-      "maintenance_owner": "repo",
-      "overlap_analysis": [],
-      "retirement_offset": null,
-      "decision": "Admitted CI workflow using Node 24 and canonical gates.",
-      "decision_date": "2026-06-18",
-      "matrix_ids": [
-        "MX-036"
-      ],
-      "not_applicable_reason": null
-    },
-    {
-      "validation_id": "VAL-037",
-      "status": "ADMITTED",
-      "name": "deploy-distribution",
-      "check_type": "workflow",
-      "owning_lane": "ci",
-      "risk_prevented": "Prevents CI or scheduled publishing from bypassing the canonical build and validation lifecycle.",
-      "existing_coverage_gap": "Workflow wiring is an external execution surface and must be governed independently of package scripts.",
-      "scope": [
-        "github-actions"
-      ],
-      "proposed_severity": "HARD_FAIL",
-      "command": ".github/workflows/deploy-distribution.yml",
-      "implementation_path": ".github/workflows/deploy-distribution.yml",
-      "environment": "ci",
-      "proof_tier": 1,
-      "positive_fixture": "fixtures/validation/repo/pass.json",
-      "negative_fixture": "fixtures/validation/repo/fail.json",
-      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
-      "runtime_budget_seconds": 7200,
-      "maintenance_owner": "repo",
-      "overlap_analysis": [],
-      "retirement_offset": null,
-      "decision": "Admitted CI workflow using Node 24 and canonical gates.",
-      "decision_date": "2026-06-18",
-      "matrix_ids": [
-        "MX-037"
-      ],
-      "not_applicable_reason": null
-    },
-    {
-      "validation_id": "VAL-038",
-      "status": "ADMITTED",
-      "name": "execution-strict",
-      "check_type": "workflow",
-      "owning_lane": "ci",
-      "risk_prevented": "Prevents CI or scheduled publishing from bypassing the canonical build and validation lifecycle.",
-      "existing_coverage_gap": "Workflow wiring is an external execution surface and must be governed independently of package scripts.",
-      "scope": [
-        "github-actions"
-      ],
-      "proposed_severity": "HARD_FAIL",
-      "command": ".github/workflows/execution-strict.yml",
-      "implementation_path": ".github/workflows/execution-strict.yml",
-      "environment": "ci",
-      "proof_tier": 1,
-      "positive_fixture": "fixtures/validation/repo/pass.json",
-      "negative_fixture": "fixtures/validation/repo/fail.json",
-      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
-      "runtime_budget_seconds": 7200,
-      "maintenance_owner": "repo",
-      "overlap_analysis": [],
-      "retirement_offset": null,
-      "decision": "Admitted CI workflow using Node 24 and canonical gates.",
-      "decision_date": "2026-06-18",
-      "matrix_ids": [
-        "MX-038"
-      ],
-      "not_applicable_reason": null
-    },
-    {
-      "validation_id": "VAL-039",
-      "status": "ADMITTED",
-      "name": "reddit-daily",
-      "check_type": "workflow",
-      "owning_lane": "ci",
-      "risk_prevented": "Prevents CI or scheduled publishing from bypassing the canonical build and validation lifecycle.",
-      "existing_coverage_gap": "Workflow wiring is an external execution surface and must be governed independently of package scripts.",
-      "scope": [
-        "github-actions"
-      ],
-      "proposed_severity": "HARD_FAIL",
-      "command": ".github/workflows/reddit-daily.yml",
-      "implementation_path": ".github/workflows/reddit-daily.yml",
-      "environment": "ci",
-      "proof_tier": 1,
-      "positive_fixture": "fixtures/validation/repo/pass.json",
-      "negative_fixture": "fixtures/validation/repo/fail.json",
-      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
-      "runtime_budget_seconds": 7200,
-      "maintenance_owner": "repo",
-      "overlap_analysis": [],
-      "retirement_offset": null,
-      "decision": "Admitted CI workflow using Node 24 and canonical gates.",
-      "decision_date": "2026-06-18",
-      "matrix_ids": [
-        "MX-039"
-      ],
-      "not_applicable_reason": null
-    },
-    {
-      "validation_id": "VAL-040",
-      "status": "ADMITTED",
-      "name": "reddit-evening",
-      "check_type": "workflow",
-      "owning_lane": "ci",
-      "risk_prevented": "Prevents CI or scheduled publishing from bypassing the canonical build and validation lifecycle.",
-      "existing_coverage_gap": "Workflow wiring is an external execution surface and must be governed independently of package scripts.",
-      "scope": [
-        "github-actions"
-      ],
-      "proposed_severity": "HARD_FAIL",
-      "command": ".github/workflows/reddit-evening.yml",
-      "implementation_path": ".github/workflows/reddit-evening.yml",
-      "environment": "ci",
-      "proof_tier": 1,
-      "positive_fixture": "fixtures/validation/repo/pass.json",
-      "negative_fixture": "fixtures/validation/repo/fail.json",
-      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
-      "runtime_budget_seconds": 7200,
-      "maintenance_owner": "repo",
-      "overlap_analysis": [],
-      "retirement_offset": null,
-      "decision": "Admitted CI workflow using Node 24 and canonical gates.",
-      "decision_date": "2026-06-18",
-      "matrix_ids": [
-        "MX-040"
-      ],
-      "not_applicable_reason": null
-    },
-    {
-      "validation_id": "VAL-041",
-      "status": "ADMITTED",
-      "name": "social-signal-processing",
-      "check_type": "workflow",
-      "owning_lane": "ci",
-      "risk_prevented": "Prevents CI or scheduled publishing from bypassing the canonical build and validation lifecycle.",
-      "existing_coverage_gap": "Workflow wiring is an external execution surface and must be governed independently of package scripts.",
-      "scope": [
-        "github-actions"
-      ],
-      "proposed_severity": "HARD_FAIL",
-      "command": ".github/workflows/social-signal-processing.yml",
-      "implementation_path": ".github/workflows/social-signal-processing.yml",
-      "environment": "ci",
-      "proof_tier": 1,
-      "positive_fixture": "fixtures/validation/repo/pass.json",
-      "negative_fixture": "fixtures/validation/repo/fail.json",
-      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
-      "runtime_budget_seconds": 7200,
-      "maintenance_owner": "repo",
-      "overlap_analysis": [],
-      "retirement_offset": null,
-      "decision": "Admitted CI workflow using Node 24 and canonical gates.",
-      "decision_date": "2026-06-18",
-      "matrix_ids": [
-        "MX-041"
-      ],
-      "not_applicable_reason": null
-    },
-    {
-      "validation_id": "VAL-042",
-      "status": "ADMITTED",
-      "name": "synthesis-weekly",
-      "check_type": "workflow",
-      "owning_lane": "ci",
-      "risk_prevented": "Prevents CI or scheduled publishing from bypassing the canonical build and validation lifecycle.",
-      "existing_coverage_gap": "Workflow wiring is an external execution surface and must be governed independently of package scripts.",
-      "scope": [
-        "github-actions"
-      ],
-      "proposed_severity": "HARD_FAIL",
-      "command": ".github/workflows/synthesis-weekly.yml",
-      "implementation_path": ".github/workflows/synthesis-weekly.yml",
-      "environment": "ci",
-      "proof_tier": 1,
-      "positive_fixture": "fixtures/validation/repo/pass.json",
-      "negative_fixture": "fixtures/validation/repo/fail.json",
-      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
-      "runtime_budget_seconds": 7200,
-      "maintenance_owner": "repo",
-      "overlap_analysis": [],
-      "retirement_offset": null,
-      "decision": "Admitted CI workflow using Node 24 and canonical gates.",
-      "decision_date": "2026-06-18",
-      "matrix_ids": [
-        "MX-042"
-      ],
-      "not_applicable_reason": null
-    },
-    {
-      "validation_id": "VAL-043",
-      "status": "ADMITTED",
-      "name": "validate",
-      "check_type": "workflow",
-      "owning_lane": "ci",
-      "risk_prevented": "Prevents CI or scheduled publishing from bypassing the canonical build and validation lifecycle.",
-      "existing_coverage_gap": "Workflow wiring is an external execution surface and must be governed independently of package scripts.",
-      "scope": [
-        "github-actions"
-      ],
-      "proposed_severity": "HARD_FAIL",
-      "command": ".github/workflows/validate.yml",
-      "implementation_path": ".github/workflows/validate.yml",
-      "environment": "ci",
-      "proof_tier": 1,
-      "positive_fixture": "fixtures/validation/repo/pass.json",
-      "negative_fixture": "fixtures/validation/repo/fail.json",
-      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
-      "runtime_budget_seconds": 7200,
-      "maintenance_owner": "repo",
-      "overlap_analysis": [],
-      "retirement_offset": null,
-      "decision": "Admitted CI workflow using Node 24 and canonical gates.",
-      "decision_date": "2026-06-18",
-      "matrix_ids": [
-        "MX-043"
-      ],
-      "not_applicable_reason": null
-    },
-    {
-      "validation_id": "VAL-044",
-      "status": "ADMITTED",
-      "name": "whitepaper-release",
-      "check_type": "workflow",
-      "owning_lane": "ci",
-      "risk_prevented": "Prevents CI or scheduled publishing from bypassing the canonical build and validation lifecycle.",
-      "existing_coverage_gap": "Workflow wiring is an external execution surface and must be governed independently of package scripts.",
-      "scope": [
-        "github-actions"
-      ],
-      "proposed_severity": "HARD_FAIL",
-      "command": ".github/workflows/whitepaper-release.yml",
-      "implementation_path": ".github/workflows/whitepaper-release.yml",
-      "environment": "ci",
-      "proof_tier": 1,
-      "positive_fixture": "fixtures/validation/repo/pass.json",
-      "negative_fixture": "fixtures/validation/repo/fail.json",
-      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
-      "runtime_budget_seconds": 7200,
-      "maintenance_owner": "repo",
-      "overlap_analysis": [],
-      "retirement_offset": null,
-      "decision": "Admitted CI workflow using Node 24 and canonical gates.",
-      "decision_date": "2026-06-18",
-      "matrix_ids": [
-        "MX-044"
-      ],
-      "not_applicable_reason": null
-    },
-    {
       "validation_id": "VAL-045",
       "status": "ADMITTED",
       "name": "validate:priority-citation-pages",
@@ -1997,39 +1697,6 @@
       "not_applicable_reason": null
     },
     {
-      "validation_id": "VAL-064",
-      "status": "ADMITTED",
-      "name": "workflow-monitor.yml",
-      "check_type": "ci-workflow",
-      "owning_lane": "ci",
-      "risk_prevented": "Creates a scheduled alert when one of the governed generators is failed or stale.",
-      "existing_coverage_gap": "Static validation cannot detect whether the latest GitHub Actions run is currently failed or stale.",
-      "scope": [
-        "github-actions",
-        "workflow-monitoring"
-      ],
-      "proposed_severity": "HARD_FAIL",
-      "command": ".github/workflows/workflow-monitor.yml",
-      "implementation_path": ".github/workflows/workflow-monitor.yml",
-      "environment": "github-actions",
-      "proof_tier": 4,
-      "positive_fixture": "fixtures/validation/repo/pass.json",
-      "negative_fixture": "fixtures/validation/repo/fail.json",
-      "evidence_output": "reports/workflow-monitor.json",
-      "runtime_budget_seconds": 300,
-      "maintenance_owner": "repo",
-      "overlap_analysis": [
-        "npm run validate:workflow-monitor"
-      ],
-      "retirement_offset": null,
-      "decision": "Admitted as the live scheduled monitor for all governed mutating workflows.",
-      "decision_date": "2026-06-19",
-      "matrix_ids": [
-        "MX-064"
-      ],
-      "not_applicable_reason": null
-    },
-    {
       "validation_id": "VAL-065",
       "status": "ADMITTED",
       "name": "validate:disavow-asset",
@@ -2264,41 +1931,6 @@
       "decision_date": "2026-06-21",
       "matrix_ids": [
         "MX-071"
-      ],
-      "not_applicable_reason": null
-    },
-    {
-      "validation_id": "VAL-072",
-      "status": "ADMITTED",
-      "name": "citation-velocity-5k.yml",
-      "check_type": "workflow",
-      "owning_lane": "ci",
-      "risk_prevented": "Prevents the 5K AEO/GEO expansion from relying on manual page creation, ungoverned atom fanout, or unvalidated workflow mutation.",
-      "existing_coverage_gap": "Existing workflows generate several content lanes but did not provide a dedicated 75/day atom-driven path to the 5K admitted-page target.",
-      "scope": [
-        "repository",
-        "programmatic-content",
-        "github-actions"
-      ],
-      "proposed_severity": "HARD_FAIL",
-      "command": ".github/workflows/citation-velocity-5k.yml",
-      "implementation_path": ".github/workflows/citation-velocity-5k.yml",
-      "environment": "ci",
-      "proof_tier": 1,
-      "positive_fixture": "fixtures/validation/repo/pass.json",
-      "negative_fixture": "fixtures/validation/repo/fail.json",
-      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
-      "runtime_budget_seconds": 7200,
-      "maintenance_owner": "repo",
-      "overlap_analysis": [
-        "npm run validate:workflow-contract",
-        "npm run validate:programmatic-registry"
-      ],
-      "retirement_offset": null,
-      "decision": "Admitted scheduled Citation Velocity 5K workflow using governed trace, programmatic admission, safe commit helper, and reset-regenerate retry.",
-      "decision_date": "2026-06-21",
-      "matrix_ids": [
-        "MX-072"
       ],
       "not_applicable_reason": null
     },
@@ -3373,38 +3005,6 @@
       "not_applicable_reason": null
     },
     {
-      "validation_id": "VAL-106",
-      "status": "ADMITTED",
-      "name": "Daily Citation Intelligence Workflow",
-      "check_type": "validator",
-      "owning_lane": "workflow-yaml",
-      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
-      "existing_coverage_gap": "Existing Spry validators cover citation surfaces and programmatic pages, but not the v1.4 traffic-qualified end-to-end signal trace and proof-packet spine.",
-      "scope": [
-        "repository"
-      ],
-      "proposed_severity": "HARD_FAIL",
-      "command": ".github/workflows/daily-citation-intelligence.yml",
-      "implementation_path": ".github/workflows/daily-citation-intelligence.yml",
-      "environment": "container",
-      "proof_tier": 1,
-      "positive_fixture": "fixtures/validation/traffic_qualified/pass.json",
-      "negative_fixture": "fixtures/validation/traffic_qualified/fail.json",
-      "evidence_output": "artifacts/validation/<command>.json",
-      "runtime_budget_seconds": 120,
-      "maintenance_owner": "repo",
-      "overlap_analysis": [
-        "Complements existing citation strategy, claim safety, sitemap, llms, and workflow topology validators."
-      ],
-      "retirement_offset": "No old validator retired; this is an admitted gap-specific spine validator.",
-      "decision": "Admitted for Traffic-Qualified AEO/GEO/SEO Citation Intelligence v1.4 implementation.",
-      "decision_date": "2026-07-03",
-      "matrix_ids": [
-        "MX-106"
-      ],
-      "not_applicable_reason": null
-    },
-    {
       "validation_id": "VAL-107",
       "status": "ADMITTED",
       "name": "validate:browserless-mock-backup",
@@ -3930,6 +3530,194 @@
         "MX-122"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-WF-SIM-01",
+      "status": "ADMITTED",
+      "name": "daily-citation-intelligence",
+      "check_type": "workflow",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents the simplified public GitHub Actions surface from bypassing canonical validation, self-healing, and artifact handoff.",
+      "existing_coverage_gap": "Workflow topology is an external release surface and must be explicitly admitted after simplification.",
+      "scope": [
+        "github-actions",
+        "workflow-topology-simplification"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/daily-citation-intelligence.yml",
+      "implementation_path": ".github/workflows/daily-citation-intelligence.yml",
+      "environment": "ci",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
+      "runtime_budget_seconds": 7200,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted simplified workflow surface aligned with Velocity six-workflow topology.",
+      "decision_date": "2026-07-04",
+      "matrix_ids": [
+        "MX-WF-SIM-01"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-WF-SIM-02",
+      "status": "ADMITTED",
+      "name": "deploy-distribution",
+      "check_type": "workflow",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents the simplified public GitHub Actions surface from bypassing canonical validation, self-healing, and artifact handoff.",
+      "existing_coverage_gap": "Workflow topology is an external release surface and must be explicitly admitted after simplification.",
+      "scope": [
+        "github-actions",
+        "workflow-topology-simplification"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/deploy-distribution.yml",
+      "implementation_path": ".github/workflows/deploy-distribution.yml",
+      "environment": "ci",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
+      "runtime_budget_seconds": 7200,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted simplified workflow surface aligned with Velocity six-workflow topology.",
+      "decision_date": "2026-07-04",
+      "matrix_ids": [
+        "MX-WF-SIM-02"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-WF-SIM-03",
+      "status": "ADMITTED",
+      "name": "postdeploy-public-audit",
+      "check_type": "workflow",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents the simplified public GitHub Actions surface from bypassing canonical validation, self-healing, and artifact handoff.",
+      "existing_coverage_gap": "Workflow topology is an external release surface and must be explicitly admitted after simplification.",
+      "scope": [
+        "github-actions",
+        "workflow-topology-simplification"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/postdeploy-public-audit.yml",
+      "implementation_path": ".github/workflows/postdeploy-public-audit.yml",
+      "environment": "ci",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
+      "runtime_budget_seconds": 7200,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted simplified workflow surface aligned with Velocity six-workflow topology.",
+      "decision_date": "2026-07-04",
+      "matrix_ids": [
+        "MX-WF-SIM-03"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-WF-SIM-04",
+      "status": "ADMITTED",
+      "name": "spry-content-release",
+      "check_type": "workflow",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents the simplified public GitHub Actions surface from bypassing canonical validation, self-healing, and artifact handoff.",
+      "existing_coverage_gap": "Workflow topology is an external release surface and must be explicitly admitted after simplification.",
+      "scope": [
+        "github-actions",
+        "workflow-topology-simplification"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/spry-content-release.yml",
+      "implementation_path": ".github/workflows/spry-content-release.yml",
+      "environment": "ci",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
+      "runtime_budget_seconds": 7200,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted simplified workflow surface aligned with Velocity six-workflow topology.",
+      "decision_date": "2026-07-04",
+      "matrix_ids": [
+        "MX-WF-SIM-04"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-WF-SIM-05",
+      "status": "ADMITTED",
+      "name": "spry-full-rebuild",
+      "check_type": "workflow",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents the simplified public GitHub Actions surface from bypassing canonical validation, self-healing, and artifact handoff.",
+      "existing_coverage_gap": "Workflow topology is an external release surface and must be explicitly admitted after simplification.",
+      "scope": [
+        "github-actions",
+        "workflow-topology-simplification"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/spry-full-rebuild.yml",
+      "implementation_path": ".github/workflows/spry-full-rebuild.yml",
+      "environment": "ci",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
+      "runtime_budget_seconds": 7200,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted simplified workflow surface aligned with Velocity six-workflow topology.",
+      "decision_date": "2026-07-04",
+      "matrix_ids": [
+        "MX-WF-SIM-05"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-WF-SIM-06",
+      "status": "ADMITTED",
+      "name": "validate-repo",
+      "check_type": "workflow",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents the simplified public GitHub Actions surface from bypassing canonical validation, self-healing, and artifact handoff.",
+      "existing_coverage_gap": "Workflow topology is an external release surface and must be explicitly admitted after simplification.",
+      "scope": [
+        "github-actions",
+        "workflow-topology-simplification"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/validate-repo.yml",
+      "implementation_path": ".github/workflows/validate-repo.yml",
+      "environment": "ci",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "GitHub Actions run plus uploaded diagnostics",
+      "runtime_budget_seconds": 7200,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted simplified workflow surface aligned with Velocity six-workflow topology.",
+      "decision_date": "2026-07-04",
+      "matrix_ids": [
+        "MX-WF-SIM-06"
+      ],
+      "not_applicable_reason": null
     }
-  ]
+  ],
+  "record_count": 117,
+  "generated_at": "2026-07-04T13:00:00Z"
 }

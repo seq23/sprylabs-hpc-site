@@ -1,0 +1,50 @@
+name: Postdeploy Public Audit
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: "Public base URL to audit"
+        required: true
+        default: "https://sprylabs-hpc-site.pages.dev"
+        type: string
+
+env:
+  NODE_OPTIONS: --max-old-space-size=3072
+
+permissions:
+  contents: read
+
+concurrency:
+  group: postdeploy-public-audit-${{ inputs.base_url }}
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Install Playwright runtime
+        run: |
+          npm install --no-save playwright@1.61.1
+          npx playwright install --with-deps chromium
+      - name: Run deployed public route audit
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ inputs.base_url }}
+        run: |
+          npm run postdeploy:public-click-audit
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: spry-postdeploy-public-audit-${{ github.run_id }}
+          if-no-files-found: warn
+          path: |
+            artifacts/diagnostics/**
+            test-results/**
+            playwright-report/**

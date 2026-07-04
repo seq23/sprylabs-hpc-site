@@ -9,7 +9,7 @@ if (!contract) errors.push('bhpc_priority_contract_missing');
 for (const cmd of ['release:agent-intake','agent:bhpc:apply-exact','release:daily-citation-intelligence']) if (!pkg.scripts[cmd]) errors.push(`package_script_missing:${cmd}`);
 const workflowsDir = path.join(ROOT,'.github/workflows');
 const texts = fs.existsSync(workflowsDir) ? Object.fromEntries(fs.readdirSync(workflowsDir).filter(f=>/\.ya?ml$/.test(f)).map(f=>[f,fs.readFileSync(path.join(workflowsDir,f),'utf8')])) : {};
-const content = Object.entries(texts).find(([name,text]) => /content-authority|agent|authority/i.test(name+text) && /release:agent-intake|agent:bhpc/.test(text));
+const content = Object.entries(texts).find(([name,text]) => (name === 'spry-content-release.yml' && /agent-intake/.test(text) && /data\/report_fixes\/agent_runs\/\*\*\/agent_run_manifest\.json/.test(text)) || (/content-authority|agent|authority/i.test(name+text) && /release:agent-intake|agent:bhpc/.test(text)));
 if (!content) errors.push('bhpc_agent_content_authority_workflow_missing');
 const daily = Object.entries(texts).find(([name]) => name === 'daily-citation-intelligence.yml');
 if (daily) {

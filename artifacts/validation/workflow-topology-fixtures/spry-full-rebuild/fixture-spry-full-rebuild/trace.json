@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.1",
+  "topology_schema_version": "1.2",
+  "lane": "spry-full-rebuild",
+  "mode": "full",
+  "contract_id": "spry-full-rebuild",
+  "run_id": "fixture-spry-full-rebuild",
+  "trace_only": true,
+  "fixture_input": {
+    "type": "workflow-topology-fixture",
+    "contract_id": "spry-full-rebuild",
+    "lane": "spry-full-rebuild",
+    "mode": "full",
+    "component_count": 5
+  },
+  "started_at": "2026-07-04T13:46:46.051Z",
+  "status": "TRACE_ONLY_PASS",
+  "stages": [
+    {
+      "label": "strategy:gap-fill:backlog",
+      "command": "npm run strategy:gap-fill:backlog",
+      "started_at": "2026-07-04T13:46:46.052Z",
+      "completed_at": "2026-07-04T13:46:46.052Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "spry-full-rebuild:full:strategy:gap-fill:backlog",
+        "expected_command": "npm run strategy:gap-fill:backlog"
+      }
+    },
+    {
+      "label": "strategy:gap-fill:release-gap",
+      "command": "npm run strategy:gap-fill:release-gap",
+      "started_at": "2026-07-04T13:46:46.052Z",
+      "completed_at": "2026-07-04T13:46:46.052Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "spry-full-rebuild:full:strategy:gap-fill:release-gap",
+        "expected_command": "npm run strategy:gap-fill:release-gap"
+      }
+    },
+    {
+      "label": "build:all",
+      "command": "npm run build:all",
+      "started_at": "2026-07-04T13:46:46.052Z",
+      "completed_at": "2026-07-04T13:46:46.052Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "spry-full-rebuild:full:build:all",
+        "expected_command": "npm run build:all"
+      }
+    },
+    {
+      "label": "release:content-finalize",
+      "command": "npm run release:content-finalize",
+      "started_at": "2026-07-04T13:46:46.052Z",
+      "completed_at": "2026-07-04T13:46:46.052Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "spry-full-rebuild:full:release:content-finalize",
+        "expected_command": "npm run release:content-finalize"
+      }
+    },
+    {
+      "label": "validate:full-audit",
+      "command": "npm run validate:full-audit",
+      "started_at": "2026-07-04T13:46:46.053Z",
+      "completed_at": "2026-07-04T13:46:46.053Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "spry-full-rebuild:full:validate:full-audit",
+        "expected_command": "npm run validate:full-audit"
+      }
+    }
+  ],
+  "completed_at": "2026-07-04T13:46:46.053Z"
+}

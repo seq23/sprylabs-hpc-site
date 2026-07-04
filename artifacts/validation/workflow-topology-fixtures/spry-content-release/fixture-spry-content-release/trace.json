@@ -1,0 +1,112 @@
+{
+  "schema_version": "1.1",
+  "topology_schema_version": "1.2",
+  "lane": "spry-content-release",
+  "mode": "full-content-cycle",
+  "contract_id": "spry-content-release",
+  "run_id": "fixture-spry-content-release",
+  "trace_only": true,
+  "fixture_input": {
+    "type": "workflow-topology-fixture",
+    "contract_id": "spry-content-release",
+    "lane": "spry-content-release",
+    "mode": "full-content-cycle",
+    "component_count": 7
+  },
+  "started_at": "2026-07-04T13:46:46.017Z",
+  "status": "TRACE_ONLY_PASS",
+  "stages": [
+    {
+      "label": "strategy:gap-fill:backlog",
+      "command": "npm run strategy:gap-fill:backlog",
+      "started_at": "2026-07-04T13:46:46.018Z",
+      "completed_at": "2026-07-04T13:46:46.018Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "spry-content-release:full-content-cycle:strategy:gap-fill:backlog",
+        "expected_command": "npm run strategy:gap-fill:backlog"
+      }
+    },
+    {
+      "label": "strategy:gap-fill:release-gap",
+      "command": "npm run strategy:gap-fill:release-gap",
+      "started_at": "2026-07-04T13:46:46.018Z",
+      "completed_at": "2026-07-04T13:46:46.018Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "spry-content-release:full-content-cycle:strategy:gap-fill:release-gap",
+        "expected_command": "npm run strategy:gap-fill:release-gap"
+      }
+    },
+    {
+      "label": "release:agent-intake:raw",
+      "command": "npm run release:agent-intake:raw",
+      "started_at": "2026-07-04T13:46:46.018Z",
+      "completed_at": "2026-07-04T13:46:46.018Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "spry-content-release:full-content-cycle:release:agent-intake:raw",
+        "expected_command": "npm run release:agent-intake:raw"
+      }
+    },
+    {
+      "label": "content:pipeline",
+      "command": "npm run content:pipeline",
+      "started_at": "2026-07-04T13:46:46.018Z",
+      "completed_at": "2026-07-04T13:46:46.018Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "spry-content-release:full-content-cycle:content:pipeline",
+        "expected_command": "npm run content:pipeline"
+      }
+    },
+    {
+      "label": "citation:5k:plan",
+      "command": "npm run citation:5k:plan",
+      "started_at": "2026-07-04T13:46:46.019Z",
+      "completed_at": "2026-07-04T13:46:46.019Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "spry-content-release:full-content-cycle:citation:5k:plan",
+        "expected_command": "npm run citation:5k:plan"
+      }
+    },
+    {
+      "label": "release:content-finalize",
+      "command": "npm run release:content-finalize",
+      "started_at": "2026-07-04T13:46:46.019Z",
+      "completed_at": "2026-07-04T13:46:46.019Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "spry-content-release:full-content-cycle:release:content-finalize",
+        "expected_command": "npm run release:content-finalize"
+      }
+    },
+    {
+      "label": "validate:batch-g-continuity",
+      "command": "npm run validate:batch-g-continuity",
+      "started_at": "2026-07-04T13:46:46.019Z",
+      "completed_at": "2026-07-04T13:46:46.019Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "spry-content-release:full-content-cycle:validate:batch-g-continuity",
+        "expected_command": "npm run validate:batch-g-continuity"
+      }
+    }
+  ],
+  "completed_at": "2026-07-04T13:46:46.019Z"
+}

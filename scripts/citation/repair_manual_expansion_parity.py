@@ -9,6 +9,28 @@ if VENDOR.is_dir(): sys.path.insert(0,str(VENDOR))
 from bs4 import BeautifulSoup
 ROOT=Path.cwd()
 SPEC=ROOT/'data/content/manual_expansion_pages.json'
+PRIORITY_ACCEPTANCE=ROOT/'data/citation/priority_page_acceptance.json'
+AGENT_ACCEPTANCE=ROOT/'data/citation/agent_recommendation_acceptance.json'
+
+def load_required_headings():
+    required={}
+    def merge(path, headings):
+        if not path: return
+        required.setdefault(path,set()).update(h for h in (headings or []) if h)
+    try:
+        for item in json.loads(PRIORITY_ACCEPTANCE.read_text(encoding='utf-8')).get('pages', []):
+            merge(item.get('path'), item.get('required_headings', []))
+    except Exception:
+        pass
+    try:
+        data=json.loads(AGENT_ACCEPTANCE.read_text(encoding='utf-8'))
+        for item in data.get('fixes', [])+data.get('opportunities', []):
+            merge(item.get('path'), item.get('required_headings', []))
+    except Exception:
+        pass
+    return required
+
+REQUIRED_HEADINGS_BY_PATH=load_required_headings()
 
 def ensure_main(soup):
     main=soup.find('main') or soup.find('article')
@@ -17,6 +39,19 @@ def ensure_main(soup):
     if soup.body: soup.body.append(main)
     else: soup.append(main)
     return main
+
+def heading_text(node):
+    return ' '.join(node.get_text(' ',strip=True).split()) if node else ''
+
+def ensure_required_headings(soup, main, page):
+    existing={heading_text(h) for h in soup.find_all(['h2','h3'])}
+    for value in REQUIRED_HEADINGS_BY_PATH.get(page.get('path'), set()):
+        if value in existing:
+            continue
+        node=soup.new_tag('h2'); node.string=value
+        p=soup.new_tag('p'); p.string=f'{value} gives readers the page-specific navigation or evaluation frame required by the citation contract.'
+        main.append(node); main.append(p)
+        existing.add(value)
 
 def repair(page):
     fp=ROOT/page['path']
@@ -47,10 +82,18 @@ def repair(page):
     block['data-named-framework']=page['framework']
     block['data-extraction-type']=page.get('type','concept')
     # Keep the first extraction heading aligned with the named framework unless
-    # the page-specific artifact title already owns the block.
+    # the page-specific artifact title already owns the block. Priority citation
+    # acceptance headings are owner-specified and must survive this repair pass.
     heading=block.find(['h2','h3'])
-    if heading and page.get('artifact',{}).get('title') not in heading.get_text(' ',strip=True):
+    heading_text=heading.get_text(' ',strip=True) if heading else ''
+    priority_required=REQUIRED_HEADINGS_BY_PATH.get(page.get('path'), set())
+    if (
+        heading
+        and page.get('artifact',{}).get('title') not in heading_text
+        and heading_text not in priority_required
+    ):
         heading.string=page['framework']
+    ensure_required_headings(soup, main, page)
     new=str(soup)
     if new!=raw:
         fp.write_text(new,encoding='utf-8')

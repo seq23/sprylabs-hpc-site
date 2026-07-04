@@ -1,6 +1,6 @@
 {
-  "schema_version": "1.2",
-  "generated_at": "2026-07-04T12:28:11.343Z",
+  "schema_version": "1.3",
+  "generated_at": "2026-07-04T13:46:46.565Z",
   "status": "PASS",
   "artifact_run_count": 3,
   "traces": [
@@ -113,20 +113,20 @@
   ],
   "workflow_bridge": {
     "content_authority_inputs": [
-      "config/social_ingestion_policy.json",
-      "config/social_sources.json",
-      "data/content/page_admission_registry.json",
-      "data/content/programmatic_lane_contracts.json",
-      "data/citation/**",
-      "scripts/authority/**",
-      "scripts/community/**",
-      "scripts/synthesis/**",
-      "templates/**",
       "data/report_fixes/agent_runs/**",
       "data/report_fixes/normalized_agent_runs/**",
-      "data/social/runs/**"
+      "data/social/runs/**",
+      "data/reddit/**",
+      "data/citation_velocity/**",
+      "data/strategy/**",
+      "scripts/agent_intake/**",
+      "scripts/content/**",
+      "scripts/reddit/**",
+      "scripts/social/**",
+      "scripts/synthesis/**",
+      "scripts/whitepapers/**"
     ],
-    "content_authority_workflow_file": ".github/workflows/content-authority-pipeline.yml"
+    "content_authority_workflow_file": ".github/workflows/spry-content-release.yml"
   },
   "errors": []
 }

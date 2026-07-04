@@ -1,0 +1,56 @@
+name: Validate Repo
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  NODE_OPTIONS: --max-old-space-size=3072
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Build and validate exact distribution artifact
+        run: |
+          npm run release:ci-validate
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: spry-validated-${{ github.sha }}
+          include-hidden-files: true
+          if-no-files-found: error
+          path: |
+            .build/**
+            reports/validation-attestation.json
+            artifacts/validation/**
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: spry-validation-diagnostics-${{ github.run_id }}
+          if-no-files-found: warn
+          path: |
+            logs/**
+            reports/**
+            artifacts/validation/**

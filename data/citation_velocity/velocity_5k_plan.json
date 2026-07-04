@@ -18,11 +18,13 @@
   },
   "automation_model": {
     "workflow_id": "citation-velocity-5k",
-    "workflow_file": ".github/workflows/citation-velocity-5k.yml",
+    "workflow_file": ".github/workflows/spry-content-release.yml",
     "schedule_cron": "12 13 * * *",
     "manual_dispatch": true,
     "commit_strategy": "reset-regenerate-validate-recommit",
-    "operator_required": "none after merge unless GitHub Actions fails or external platform limits block execution"
+    "operator_required": "none after merge unless GitHub Actions fails or external platform limits block execution",
+    "public_workflow": "Spry Content Release",
+    "workflow_mode": "citation-expansion"
   },
   "quality_gates": [
     "atom uniqueness before render",
@@ -41,5 +43,7 @@
     "programmatic admission fails",
     "validate:all fails",
     "workflow hostile review fails"
-  ]
+  ],
+  "workflow_file": ".github/workflows/spry-content-release.yml",
+  "workflow_mode": "citation-expansion"
 }

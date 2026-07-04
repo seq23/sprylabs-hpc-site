@@ -2,8 +2,21 @@ name: Deploy Distribution
 
 on:
   workflow_dispatch:
+    inputs:
+      artifact_name:
+        description: "Validated artifact name from Validate Repo"
+        required: true
+        type: string
+      artifact_run_id:
+        description: "Validate Repo workflow run ID containing the artifact"
+        required: true
+        type: string
+      commit_sha:
+        description: "Validated commit SHA"
+        required: true
+        type: string
   workflow_run:
-    workflows: ["Validate"]
+    workflows: ["Validate Repo"]
     types:
       - completed
     branches:
@@ -16,10 +29,15 @@ permissions:
   contents: read
   actions: read
 
+concurrency:
+  group: deploy-distribution
+  cancel-in-progress: false
+
 jobs:
   deploy:
     if: github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -27,20 +45,25 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
-      - name: Validate and attest manual deployment
-        if: github.event_name == 'workflow_dispatch'
+      - name: Resolve validated artifact identity
+        id: artifact
         run: |
-          npm run release:ci-validate
-      - name: Download validated distribution from Validate run
-        if: github.event_name == 'workflow_run'
-        uses: actions/download-artifact@v4
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "name=${{ inputs.artifact_name }}" >> "$GITHUB_OUTPUT"
+            echo "run_id=${{ inputs.artifact_run_id }}" >> "$GITHUB_OUTPUT"
+            echo "commit_sha=${{ inputs.commit_sha }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "name=spry-validated-${{ github.event.workflow_run.head_sha }}" >> "$GITHUB_OUTPUT"
+            echo "run_id=${{ github.event.workflow_run.id }}" >> "$GITHUB_OUTPUT"
+            echo "commit_sha=${{ github.event.workflow_run.head_sha }}" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/download-artifact@v4
         with:
-          name: validated-distribution
+          name: ${{ steps.artifact.outputs.name }}
           path: .
-          run-id: ${{ github.event.workflow_run.id }}
+          run-id: ${{ steps.artifact.outputs.run_id }}
           github-token: ${{ github.token }}
       - name: Normalize downloaded validation artifact
-        if: github.event_name == 'workflow_run'
         run: |
           mkdir -p .build
           if [ ! -f .build/validation-attestation.json ] && [ -f reports/validation-attestation.json ]; then
@@ -49,7 +72,9 @@ jobs:
           test -f .build/validation-attestation.json
           test -f .build/indexnow-priority.txt
           test -f .build/indexnow-batch.txt
-      - run: |
+      - name: Verify attestation and deploy distribution
+        env:
+          EXPECTED_COMMIT_SHA: ${{ steps.artifact.outputs.commit_sha }}
+        run: |
           npm run release:verify-attestation
-      - run: |
           npm run distribution:deploy

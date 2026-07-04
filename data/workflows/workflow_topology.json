@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.2",
   "authority_law": "workflow topology defines public lanes; package component scripts remain private unless explicitly admitted as lane aliases.",
   "canonical_lanes": {
     "content-authority": {
@@ -522,16 +522,374 @@
           }
         ]
       }
+    },
+    "spry-content-release": {
+      "command": "npm run workflow:spry-content-release",
+      "default_mode": "full-content-cycle",
+      "modes": [
+        "full-content-cycle",
+        "agent-intake",
+        "daily-insight",
+        "signal-intake",
+        "synthesis",
+        "whitepaper",
+        "citation-expansion",
+        "strict"
+      ],
+      "replaces": [
+        "content-authority-pipeline.yml",
+        "daily-insight.yml",
+        "execution-strict.yml",
+        "reddit-daily.yml",
+        "reddit-evening.yml",
+        "social-signal-processing.yml",
+        "synthesis-weekly.yml",
+        "whitepaper-release.yml",
+        "citation-velocity-5k.yml"
+      ],
+      "lane_owner": "content-release",
+      "stages_by_mode": {
+        "agent-intake": [
+          {
+            "label": "release:agent-intake",
+            "command": [
+              "npm",
+              "run",
+              "release:agent-intake"
+            ]
+          }
+        ],
+        "daily-insight": [
+          {
+            "label": "strategy:gap-fill:backlog",
+            "command": [
+              "npm",
+              "run",
+              "strategy:gap-fill:backlog"
+            ]
+          },
+          {
+            "label": "strategy:gap-fill:release-gap",
+            "command": [
+              "npm",
+              "run",
+              "strategy:gap-fill:release-gap"
+            ]
+          },
+          {
+            "label": "release-one-draft",
+            "command": [
+              "node",
+              "scripts/release_one_draft.js"
+            ]
+          },
+          {
+            "label": "release:content-finalize",
+            "command": [
+              "npm",
+              "run",
+              "release:content-finalize"
+            ]
+          }
+        ],
+        "signal-intake": [
+          {
+            "label": "social:collect",
+            "command": [
+              "npm",
+              "run",
+              "social:collect"
+            ]
+          },
+          {
+            "label": "reddit:fetch",
+            "command": [
+              "npm",
+              "run",
+              "reddit:fetch"
+            ]
+          },
+          {
+            "label": "reddit:normalize",
+            "command": [
+              "npm",
+              "run",
+              "reddit:normalize"
+            ]
+          },
+          {
+            "label": "reddit:cluster",
+            "command": [
+              "npm",
+              "run",
+              "reddit:cluster"
+            ]
+          },
+          {
+            "label": "reddit:score",
+            "command": [
+              "npm",
+              "run",
+              "reddit:score"
+            ]
+          },
+          {
+            "label": "velocity:sync",
+            "command": [
+              "npm",
+              "run",
+              "velocity:sync"
+            ]
+          },
+          {
+            "label": "reddit:generate",
+            "command": [
+              "npm",
+              "run",
+              "reddit:generate"
+            ]
+          },
+          {
+            "label": "reddit:publish",
+            "command": [
+              "npm",
+              "run",
+              "reddit:publish"
+            ]
+          },
+          {
+            "label": "reddit:indexes",
+            "command": [
+              "npm",
+              "run",
+              "reddit:indexes"
+            ]
+          },
+          {
+            "label": "release:content-finalize",
+            "command": [
+              "npm",
+              "run",
+              "release:content-finalize"
+            ]
+          }
+        ],
+        "synthesis": [
+          {
+            "label": "clusters:update",
+            "command": [
+              "npm",
+              "run",
+              "clusters:update"
+            ]
+          },
+          {
+            "label": "synthesis:build",
+            "command": [
+              "npm",
+              "run",
+              "synthesis:build"
+            ]
+          },
+          {
+            "label": "admin:build",
+            "command": [
+              "npm",
+              "run",
+              "admin:build"
+            ]
+          },
+          {
+            "label": "release:content-finalize",
+            "command": [
+              "npm",
+              "run",
+              "release:content-finalize"
+            ]
+          }
+        ],
+        "whitepaper": [
+          {
+            "label": "whitepaper:semiannual",
+            "command": [
+              "npm",
+              "run",
+              "whitepaper:semiannual"
+            ]
+          },
+          {
+            "label": "release:content-finalize",
+            "command": [
+              "npm",
+              "run",
+              "release:content-finalize"
+            ]
+          }
+        ],
+        "citation-expansion": [
+          {
+            "label": "citation:5k:daily",
+            "command": [
+              "npm",
+              "run",
+              "citation:5k:daily"
+            ]
+          },
+          {
+            "label": "release:content-finalize",
+            "command": [
+              "npm",
+              "run",
+              "release:content-finalize"
+            ]
+          }
+        ],
+        "strict": [
+          {
+            "label": "execution:strict",
+            "command": [
+              "npm",
+              "run",
+              "execution:strict"
+            ]
+          },
+          {
+            "label": "release:content-finalize",
+            "command": [
+              "npm",
+              "run",
+              "release:content-finalize"
+            ]
+          }
+        ],
+        "full-content-cycle": [
+          {
+            "label": "strategy:gap-fill:backlog",
+            "command": [
+              "npm",
+              "run",
+              "strategy:gap-fill:backlog"
+            ]
+          },
+          {
+            "label": "strategy:gap-fill:release-gap",
+            "command": [
+              "npm",
+              "run",
+              "strategy:gap-fill:release-gap"
+            ]
+          },
+          {
+            "label": "release:agent-intake:raw",
+            "command": [
+              "npm",
+              "run",
+              "release:agent-intake:raw"
+            ]
+          },
+          {
+            "label": "content:pipeline",
+            "command": [
+              "npm",
+              "run",
+              "content:pipeline"
+            ]
+          },
+          {
+            "label": "citation:5k:plan",
+            "command": [
+              "npm",
+              "run",
+              "citation:5k:plan"
+            ]
+          },
+          {
+            "label": "release:content-finalize",
+            "command": [
+              "npm",
+              "run",
+              "release:content-finalize"
+            ]
+          },
+          {
+            "label": "validate:batch-g-continuity",
+            "command": [
+              "npm",
+              "run",
+              "validate:batch-g-continuity"
+            ]
+          }
+        ]
+      }
+    },
+    "spry-full-rebuild": {
+      "command": "npm run workflow:spry-full-rebuild",
+      "default_mode": "full",
+      "modes": [
+        "full"
+      ],
+      "replaces": [
+        "workflow-monitor.yml",
+        "manual full rebuild scripts"
+      ],
+      "lane_owner": "release",
+      "stages_by_mode": {
+        "full": [
+          {
+            "label": "strategy:gap-fill:backlog",
+            "command": [
+              "npm",
+              "run",
+              "strategy:gap-fill:backlog"
+            ]
+          },
+          {
+            "label": "strategy:gap-fill:release-gap",
+            "command": [
+              "npm",
+              "run",
+              "strategy:gap-fill:release-gap"
+            ]
+          },
+          {
+            "label": "build:all",
+            "command": [
+              "npm",
+              "run",
+              "build:all"
+            ]
+          },
+          {
+            "label": "release:content-finalize",
+            "command": [
+              "npm",
+              "run",
+              "release:content-finalize"
+            ]
+          },
+          {
+            "label": "validate:full-audit",
+            "command": [
+              "npm",
+              "run",
+              "validate:full-audit"
+            ]
+          }
+        ]
+      }
     }
   },
   "deprecated_public_entrypoints": {
-    "reddit:daily:legacy": "workflow:signal-intake --mode=daily",
-    "reddit:evening:legacy": "workflow:signal-intake --mode=evening",
-    "social:daily": "workflow:signal-intake --mode=daily",
-    "authority:daily": "workflow:content-authority",
-    "content:pipeline": "workflow:content-authority",
-    "full:loop": "workflow:release-verify --mode=audit",
-    "guardrails:all": "release:prepush:container"
+    "workflow:citation-velocity-5k": "workflow:spry-content-release -- --mode=citation-expansion",
+    "workflow:content-authority": "workflow:spry-content-release -- --mode=agent-intake",
+    "workflow:daily-insight": "workflow:spry-content-release -- --mode=daily-insight",
+    "workflow:execution-strict": "workflow:spry-content-release -- --mode=strict",
+    "workflow:reddit-daily": "workflow:spry-content-release -- --mode=signal-intake",
+    "workflow:reddit-evening": "workflow:spry-content-release -- --mode=signal-intake",
+    "workflow:social-signal": "workflow:spry-content-release -- --mode=signal-intake",
+    "workflow:synthesis-weekly": "workflow:spry-content-release -- --mode=synthesis",
+    "workflow:whitepaper": "workflow:spry-content-release -- --mode=whitepaper",
+    "workflow:monitor": "validate-repo/postdeploy-public-audit evidence only"
   },
   "component_command_policy": {
     "status": "private_components_allowed",

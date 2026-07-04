@@ -349,106 +349,6 @@
       "status": "ADMITTED"
     },
     {
-      "matrix_id": "MX-035",
-      "validation_id": "VAL-035",
-      "lane": "ci",
-      "command": ".github/workflows/content-authority-pipeline.yml",
-      "order": 35,
-      "severity": "HARD_FAIL",
-      "release_effect": true,
-      "status": "ADMITTED"
-    },
-    {
-      "matrix_id": "MX-036",
-      "validation_id": "VAL-036",
-      "lane": "ci",
-      "command": ".github/workflows/daily-insight.yml",
-      "order": 36,
-      "severity": "HARD_FAIL",
-      "release_effect": true,
-      "status": "ADMITTED"
-    },
-    {
-      "matrix_id": "MX-037",
-      "validation_id": "VAL-037",
-      "lane": "ci",
-      "command": ".github/workflows/deploy-distribution.yml",
-      "order": 37,
-      "severity": "HARD_FAIL",
-      "release_effect": true,
-      "status": "ADMITTED"
-    },
-    {
-      "matrix_id": "MX-038",
-      "validation_id": "VAL-038",
-      "lane": "ci",
-      "command": ".github/workflows/execution-strict.yml",
-      "order": 38,
-      "severity": "HARD_FAIL",
-      "release_effect": true,
-      "status": "ADMITTED"
-    },
-    {
-      "matrix_id": "MX-039",
-      "validation_id": "VAL-039",
-      "lane": "ci",
-      "command": ".github/workflows/reddit-daily.yml",
-      "order": 39,
-      "severity": "HARD_FAIL",
-      "release_effect": true,
-      "status": "ADMITTED"
-    },
-    {
-      "matrix_id": "MX-040",
-      "validation_id": "VAL-040",
-      "lane": "ci",
-      "command": ".github/workflows/reddit-evening.yml",
-      "order": 40,
-      "severity": "HARD_FAIL",
-      "release_effect": true,
-      "status": "ADMITTED"
-    },
-    {
-      "matrix_id": "MX-041",
-      "validation_id": "VAL-041",
-      "lane": "ci",
-      "command": ".github/workflows/social-signal-processing.yml",
-      "order": 41,
-      "severity": "HARD_FAIL",
-      "release_effect": true,
-      "status": "ADMITTED"
-    },
-    {
-      "matrix_id": "MX-042",
-      "validation_id": "VAL-042",
-      "lane": "ci",
-      "command": ".github/workflows/synthesis-weekly.yml",
-      "order": 42,
-      "severity": "HARD_FAIL",
-      "release_effect": true,
-      "status": "ADMITTED"
-    },
-    {
-      "matrix_id": "MX-043",
-      "validation_id": "VAL-043",
-      "lane": "ci",
-      "command": ".github/workflows/validate.yml",
-      "order": 43,
-      "severity": "HARD_FAIL",
-      "release_effect": true,
-      "status": "ADMITTED"
-    },
-    {
-      "matrix_id": "MX-044",
-      "validation_id": "VAL-044",
-      "lane": "ci",
-      "command": ".github/workflows/whitepaper-release.yml",
-      "order": 44,
-      "severity": "HARD_FAIL",
-      "release_effect": true,
-      "status": "ADMITTED"
-    },
-    {
       "matrix_id": "MX-045",
       "validation_id": "VAL-045",
       "lane": "citation-contract",
@@ -639,16 +539,6 @@
       "status": "ADMITTED"
     },
     {
-      "matrix_id": "MX-064",
-      "validation_id": "VAL-064",
-      "lane": "ci",
-      "command": ".github/workflows/workflow-monitor.yml",
-      "order": 64,
-      "severity": "HARD_FAIL",
-      "release_effect": true,
-      "status": "ADMITTED"
-    },
-    {
       "matrix_id": "MX-065",
       "validation_id": "VAL-065",
       "lane": "seo-governance",
@@ -714,16 +604,6 @@
       "lane": "citation-velocity",
       "command": "npm run validate:citation-velocity-automation",
       "order": 71,
-      "severity": "HARD_FAIL",
-      "release_effect": true,
-      "status": "ADMITTED"
-    },
-    {
-      "matrix_id": "MX-072",
-      "validation_id": "VAL-072",
-      "lane": "ci",
-      "command": ".github/workflows/citation-velocity-5k.yml",
-      "order": 72,
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
@@ -1059,16 +939,6 @@
       "status": "ADMITTED"
     },
     {
-      "matrix_id": "MX-106",
-      "validation_id": "VAL-106",
-      "lane": "workflow-yaml",
-      "command": ".github/workflows/daily-citation-intelligence.yml",
-      "order": 106,
-      "severity": "HARD_FAIL",
-      "release_effect": true,
-      "status": "ADMITTED"
-    },
-    {
       "matrix_id": "MX-107",
       "validation_id": "VAL-107",
       "lane": "traffic-qualified-citation-intelligence",
@@ -1237,6 +1107,68 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-WF-SIM-01",
+      "validation_id": "VAL-WF-SIM-01",
+      "lane": "ci",
+      "command": ".github/workflows/daily-citation-intelligence.yml",
+      "order": 125,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-WF-SIM-02",
+      "validation_id": "VAL-WF-SIM-02",
+      "lane": "ci",
+      "command": ".github/workflows/deploy-distribution.yml",
+      "order": 126,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-WF-SIM-03",
+      "validation_id": "VAL-WF-SIM-03",
+      "lane": "ci",
+      "command": ".github/workflows/postdeploy-public-audit.yml",
+      "order": 127,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-WF-SIM-04",
+      "validation_id": "VAL-WF-SIM-04",
+      "lane": "ci",
+      "command": ".github/workflows/spry-content-release.yml",
+      "order": 128,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-WF-SIM-05",
+      "validation_id": "VAL-WF-SIM-05",
+      "lane": "ci",
+      "command": ".github/workflows/spry-full-rebuild.yml",
+      "order": 129,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-WF-SIM-06",
+      "validation_id": "VAL-WF-SIM-06",
+      "lane": "ci",
+      "command": ".github/workflows/validate-repo.yml",
+      "order": 130,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
-  ]
+  ],
+  "entry_count": 116,
+  "generated_at": "2026-07-04T13:00:00Z"
 }

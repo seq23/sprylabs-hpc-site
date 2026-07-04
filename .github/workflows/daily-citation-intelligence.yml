@@ -11,6 +11,10 @@ env:
 permissions:
   contents: read
 
+concurrency:
+  group: daily-citation-intelligence-main
+  cancel-in-progress: false
+
 jobs:
   daily-citation-intelligence:
     runs-on: ubuntu-latest
@@ -22,15 +26,15 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
-      - run: |
+      - name: Run shadow citation intelligence proof lane
+        run: |
           npm run workflow:daily-citation-intelligence
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: daily-citation-intelligence-proof
+          name: spry-daily-citation-intelligence-${{ github.run_id }}
+          if-no-files-found: warn
           path: |
-            artifacts/validation/fixture-signal-trace.json
-            artifacts/validation/daily-citation-release-plan.json
-            artifacts/validation/daily-proof-packet.json
-            reports/fixture-signal-trace.md
-            reports/daily-proof-packet.md
+            data/signals/**
+            artifacts/validation/**
+            reports/**

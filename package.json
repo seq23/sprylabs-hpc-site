@@ -116,7 +116,7 @@
     "release:ci-validate": "node scripts/release/ci_validate.mjs",
     "release:create-attestation": "node scripts/release/create_validation_attestation.mjs",
     "release:verify-attestation": "node scripts/release/verify_validation_attestation.mjs",
-    "build:postprocess": "npm run redirects:apply && node scripts/build_coverage_map.js && node scripts/authority/compute_authority_scores.js && node scripts/internal/build_link_graph.js && python3 scripts/citation/apply_citation_program.py --postbuild && node scripts/citation/sync_citation_phase_metadata.mjs && npm run redirects:apply && node scripts/prepare_distribution_artifacts.js && npm run validate:indexnow-batch-budget && npm run citation:build && npm run search:prepare-submission && npm run repair:citation-contract-surfaces",
+    "build:postprocess": "npm run redirects:apply && node scripts/build_coverage_map.js && node scripts/authority/compute_authority_scores.js && node scripts/internal/build_link_graph.js && python3 scripts/citation/apply_citation_program.py --postbuild && node scripts/citation/sync_citation_phase_metadata.mjs && npm run redirects:apply && node scripts/prepare_distribution_artifacts.js && npm run validate:indexnow-batch-budget && npm run citation:build && npm run search:prepare-submission",
     "workflow:run": "node scripts/workflow/run_governed_workflow.mjs",
     "workflow:hostile-review": "node scripts/workflow/hostile_review.mjs",
     "workflow:monitor": "node scripts/workflow/monitor_workflows.mjs",
@@ -145,7 +145,7 @@
     "trace:hpc-pantry": "node scripts/content/trace_hpc_pantry_usage.js",
     "apply:hpc-pantry": "node scripts/content/apply_hpc_pantry_to_generation.js",
     "repair:programmatic-registry-owners": "node scripts/content/repair_programmatic_registry_owners.mjs",
-    "repair:citation-contract-surfaces": "python3 scripts/citation/repair_citation_registry_parity.py && python3 scripts/citation/repair_active_citation_contract.py && python3 scripts/citation/repair_agent_recommendations.py && python3 scripts/citation/repair_priority_citation_pages.py && python3 scripts/citation/repair_manual_expansion_parity.py && python3 scripts/citation/repair_citation_registry_parity.py && python3 scripts/citation/repair_active_citation_contract.py && python3 scripts/citation/repair_agent_recommendations.py && python3 scripts/citation/repair_priority_citation_pages.py && python3 scripts/citation/repair_manual_expansion_parity.py && python3 scripts/citation/repair_dual_domain_contract.py && python3 scripts/citation/repair_schema_parity.py && python3 scripts/citation/repair_ui_test_parity.py && npm run repair:download-contract",
+    "repair:citation-contract-surfaces": "python3 scripts/citation/repair_citation_registry_parity.py && python3 scripts/citation/repair_active_citation_contract.py && python3 scripts/citation/repair_agent_recommendations.py && python3 scripts/citation/repair_priority_citation_pages.py && python3 scripts/citation/repair_manual_expansion_parity.py && python3 scripts/citation/repair_dual_domain_contract.py && python3 scripts/citation/repair_schema_parity.py && python3 scripts/citation/repair_ui_test_parity.py && npm run repair:download-contract && python3 scripts/citation/repair_agent_recommendations.py && npm run validate:agent-recommendations",
     "agent:bhpc:apply-report-contract": "node scripts/agent_intake/apply_bhpc_html_report_contract.mjs",
     "agent:artifact-shape:self-test": "node scripts/agent_intake/self_test_cross_vertical_artifact_shape.mjs",
     "repair:download-contract": "node scripts/repair/repair_download_contract.mjs",
@@ -213,7 +213,9 @@
     "release:content-finalize": "npm run self-heal:generated-content && npm run build:manual-expansion && npm run build:aplayer-phase-expansion && npm run agent:bhpc:plan-exact && npm run agent:bhpc:apply-exact && npm run agent:bhpc:trace-exact && npm run self-heal:generated-content && npm run validate:programmatic-admission && npm run validate:bhpc-page-family-contract && npm run validate:bhpc-rich-new-page-contract && npm run validate:bhpc-no-marker-only-agent-pass && node scripts/validation/validate_claim_safety.mjs && node scripts/validation/validate_no_keyword_swap_pages.mjs",
     "validate:generated-content-finalization": "node scripts/validators/validate_generated_content_finalization_contract.mjs",
     "validate:strategy-gap-fill": "node scripts/validators/validate_strategy_gap_fill_contract.mjs",
-    "validate:batch-g-continuity": "npm run strategy:gap-fill:backlog && npm run strategy:gap-fill:release-gap && npm run self-heal:generated-content && npm run validate:strategy-gap-fill && npm run validate:generated-content-finalization && npm run validate:batch-f-continuity"
+    "validate:batch-g-continuity": "npm run strategy:gap-fill:backlog && npm run strategy:gap-fill:release-gap && npm run self-heal:generated-content && npm run validate:strategy-gap-fill && npm run validate:generated-content-finalization && npm run validate:batch-f-continuity",
+    "workflow:spry-content-release": "node scripts/workflow/run_topology_lane.mjs --lane spry-content-release",
+    "workflow:spry-full-rebuild": "npm run strategy:gap-fill:backlog && npm run strategy:gap-fill:release-gap && npm run build:all && npm run release:content-finalize && npm run validate:full-audit"
   },
   "engines": {
     "node": ">=24.0.0"

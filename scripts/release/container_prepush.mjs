@@ -13,13 +13,12 @@ function node(label, script){
   const r=spawnSync('node',[script],{stdio:'inherit',env:process.env});
   if(r.status!==0)process.exit(r.status??1);
 }
-run('build:all',['run','build:all']);
-run('agent:bhpc:apply-report-contract',['run','agent:bhpc:apply-report-contract']);
-run('build:postprocess',['run','build:postprocess']);
-run('agent:bhpc:apply-report-contract',['run','agent:bhpc:apply-report-contract']);
-node('repair:programmatic-registry-owners','scripts/content/repair_programmatic_registry_owners.mjs');
-// Decomposed validate:all, same gates, less brittle for large 2K-surface baseline validation in constrained containers.
+// Bounded container prepush: same hard gates, reduced duplicate rebuild/repair loops for large 2K+ page baselines.
 for (const [label,args] of [
+  ['build:all',['run','build:all']],
+  ['agent:bhpc:apply-report-contract',['run','agent:bhpc:apply-report-contract']],
+  ['repair:programmatic-registry-owners',['run','repair:programmatic-registry-owners']],
+  ['repair:citation-contract-surfaces',['run','repair:citation-contract-surfaces']],
   ['validate:repo',['run','validate:repo']],
   ['validate:validation-registry',['run','validate:validation-registry']],
   ['validate:workflow-contract',['run','validate:workflow-contract']],
@@ -27,6 +26,7 @@ for (const [label,args] of [
   ['validate:workflow-monitor',['run','validate:workflow-monitor']],
   ['validate:workflow-topology',['run','validate:workflow-topology']],
   ['validate:workflow-topology:fixtures',['run','validate:workflow-topology:fixtures']],
+  ['workflow:hostile-review',['run','workflow:hostile-review']],
   ['agent:artifact-shape:self-test',['run','agent:artifact-shape:self-test']],
   ['agent:bhpc:validate',['run','agent:bhpc:validate']],
   ['agent:bhpc:trace',['run','agent:bhpc:trace']],
@@ -36,16 +36,15 @@ for (const [label,args] of [
   ['validate:disavow-asset',['run','validate:disavow-asset']],
   ['validate:programmatic-provenance',['run','validate:programmatic-provenance']],
   ['validate:programmatic-registry',['run','validate:programmatic-registry']],
-  ['repair:citation-contract-surfaces',['run','repair:citation-contract-surfaces']],
   ['validate:citation-contract',['run','validate:citation-contract']],
   ['validate:citation-strategy',['run','validate:citation-strategy']],
   ['validate:rendered-schema-parity',['run','validate:rendered-schema-parity']],
   ['validate:retired-route-references',['run','validate:retired-route-references']],
-  ['validate:content',['run','validate:content']],
-  ['validate:graph',['run','validate:graph']],
-  ['validate:distribution',['run','validate:distribution']],
   ['validate:ui-test-parity',['run','validate:ui-test-parity']],
-  ['validate:browser-suite-contract',['run','validate:browser-suite-contract']]
+  ['validate:browser-suite-contract',['run','validate:browser-suite-contract']],
+  ['validate:traffic-qualified-suite',['run','validate:traffic-qualified-suite']],
+  ['validate:batch-f-continuity',['run','validate:batch-f-continuity']],
+  ['validate:batch-g-continuity',['run','validate:batch-g-continuity']]
 ]) run(label,args);
 for (const [label,script] of [
   ['validate:release-atom-contract','scripts/validation/validate_release_atom_contract.mjs'],

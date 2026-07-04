@@ -11,7 +11,7 @@ for (const file of [
   'data/citation_velocity/daily_runs.json',
   'data/citation_velocity/latest_batch.json',
   'scripts/programmatic/generate_citation_velocity_batch.mjs',
-  '.github/workflows/citation-velocity-5k.yml',
+  '.github/workflows/spry-content-release.yml',
   'docs/strategy/BHPC_5K_AEO_GEO_PROGRAMMATIC_AUTOMATION_PLAN.md',
 ]) exists(file);
 
@@ -49,35 +49,36 @@ if (totalTheoretical < 3000) errors.push(`atom axes must produce at least 3000 t
 if ((axes.concepts || []).some(item => !item.key || !item.framework || !item.value || !item.anchor)) errors.push('each concept atom must include key/framework/value/anchor');
 if ((axes.comparison_entities || []).some(item => !item.name || !/^https:\/\//.test(item.url || ''))) errors.push('comparison entities must include https official URLs');
 
-for (const script of ['citation:5k:daily','citation:5k:plan','validate:citation-velocity-automation','workflow:citation-velocity-5k']) {
+for (const script of ['citation:5k:daily','citation:5k:plan','validate:citation-velocity-automation','workflow:citation-velocity-5k','workflow:spry-content-release']) {
   if (!pkg.scripts?.[script]) errors.push(`package script missing: ${script}`);
 }
 if (!String(pkg.scripts?.['citation:5k:daily'] || '').includes('generate_citation_velocity_batch.mjs')) errors.push('citation:5k:daily must run the atom batch generator');
+if (!String(pkg.scripts?.['workflow:citation-velocity-5k'] || '').includes('workflow:citation-expansion')) errors.push('legacy citation workflow alias must route through canonical citation-expansion lane');
 if (!String(pkg.scripts?.['validate:all'] || '').includes('validate:citation-velocity-automation')) errors.push('validate:all must include citation velocity automation validator');
 
-const workflow = workflows.find(item => item.id === 'citation-velocity-5k');
-if (!workflow) errors.push('citation-velocity-5k governed workflow contract missing');
+const workflow = workflows.find(item => item.id === 'spry-content-release');
+if (!workflow) errors.push('spry-content-release governed workflow contract missing');
 else {
-  if (workflow.workflow_file !== '.github/workflows/citation-velocity-5k.yml') errors.push('workflow file path drift');
-  if (workflow.lane !== 'citation_velocity_batch') errors.push('workflow lane must be citation_velocity_batch');
-  if (workflow.workflow_command !== 'npm run workflow:citation-velocity-5k') errors.push('workflow command drift');
-  if (workflow.schedule_cron !== '10 16 * * 2') errors.push('workflow schedule must be weekly Tuesday 16:10 UTC');
+  if (workflow.workflow_file !== '.github/workflows/spry-content-release.yml') errors.push('workflow file path drift');
+  if (workflow.canonical_lane !== 'spry-content-release') errors.push('workflow canonical lane must be spry-content-release');
+  if (workflow.workflow_command !== 'npm run workflow:spry-content-release') errors.push('workflow command drift');
+  if (workflow.schedule_cron !== '17 14 * * *') errors.push('workflow schedule must be daily 14:17 UTC');
   if (workflow.remote_advance_strategy !== 'reset-regenerate-validate-recommit') errors.push('workflow must use reset-regenerate-validate-recommit');
   for (const file of workflow.required_outputs || []) if (!fs.existsSync(file)) errors.push(`workflow required output missing: ${file}`);
 }
 
-const workflowText = fs.existsSync('.github/workflows/citation-velocity-5k.yml') ? fs.readFileSync('.github/workflows/citation-velocity-5k.yml','utf8') : '';
-for (const token of ['workflow_dispatch:', 'schedule:', '10 16 * * 2', 'contents: write', 'npm run workflow:run -- --workflow citation-velocity-5k -- npm run programmatic:run-lane -- --lane citation_velocity_batch -- npm run workflow:citation-velocity-5k', './.github/scripts/commit_and_push_if_changed.sh "auto: citation velocity 5k batch" citation-velocity-5k']) {
-  if (!workflowText.includes(token)) errors.push(`citation velocity workflow missing token: ${token}`);
+const workflowText = fs.existsSync('.github/workflows/spry-content-release.yml') ? fs.readFileSync('.github/workflows/spry-content-release.yml','utf8') : '';
+for (const token of ['workflow_dispatch:', 'schedule:', '17 14 * * *', 'contents: write', 'citation-expansion', 'npm run workflow:run -- --workflow spry-content-release', './.github/scripts/commit_and_push_if_changed.sh "spry content release" spry-content-release']) {
+  if (!workflowText.includes(token)) errors.push(`consolidated citation release workflow missing token: ${token}`);
 }
 
-for (const command of ['npm run citation:5k:daily','npm run citation:5k:plan','npm run validate:citation-velocity-automation','.github/workflows/citation-velocity-5k.yml']) {
+for (const command of ['npm run citation:5k:daily','npm run citation:5k:plan','npm run validate:citation-velocity-automation','.github/workflows/spry-content-release.yml']) {
   const reg = registry.find(item => item.command === command && item.status === 'ADMITTED');
   if (!reg) errors.push(`registry admission missing for ${command}`);
   const mx = reg ? matrix.find(item => item.validation_id === reg.validation_id && item.command === command && item.status === 'ADMITTED') : null;
   if (!mx) errors.push(`matrix admission missing for ${command}`);
 }
-for (const required of ['.github/workflows/citation-velocity-5k.yml','scripts/programmatic/generate_citation_velocity_batch.mjs','scripts/validation/validate_citation_velocity_automation.mjs','data/citation_velocity/velocity_5k_plan.json','data/citation_velocity/atom_axes.json','data/citation_velocity/generated_ledger.json','data/citation_velocity/daily_runs.json','data/citation_velocity/latest_batch.json','docs/strategy/BHPC_5K_AEO_GEO_PROGRAMMATIC_AUTOMATION_PLAN.md']) {
+for (const required of ['.github/workflows/spry-content-release.yml','scripts/programmatic/generate_citation_velocity_batch.mjs','scripts/validation/validate_citation_velocity_automation.mjs','data/citation_velocity/velocity_5k_plan.json','data/citation_velocity/atom_axes.json','data/citation_velocity/generated_ledger.json','data/citation_velocity/daily_runs.json','data/citation_velocity/latest_batch.json','docs/strategy/BHPC_5K_AEO_GEO_PROGRAMMATIC_AUTOMATION_PLAN.md']) {
   if (!(packaging.required_files || []).includes(required)) errors.push(`${required}: missing from baseline critical-file parity`);
 }
 
@@ -86,6 +87,8 @@ const needed = Math.max(0, Number(plan.target_admitted_pages || 5000) - currentC
 const runsAt75 = Math.ceil(needed / 75);
 writeSummary('validate-citation-velocity-automation', {
   status: errors.length ? 'FAIL' : 'PASS',
+  public_workflow: '.github/workflows/spry-content-release.yml',
+  workflow_mode: 'citation-expansion',
   current_admitted_count: currentCount,
   target: Number(plan.target_admitted_pages || 5000),
   needed,
@@ -95,4 +98,4 @@ writeSummary('validate-citation-velocity-automation', {
   errors,
 });
 if (errors.length) fail(`[validate:citation-velocity-automation] FAIL: ${errors.length} issue(s)`, errors);
-pass(`[validate:citation-velocity-automation] OK: ${currentCount} admitted, ${needed} to 5K, ${runsAt75} governed batches at 75/run, weekly schedule, ${totalTheoretical} atoms available`);
+pass(`[validate:citation-velocity-automation] OK: ${currentCount} admitted, ${needed} to 5K, ${runsAt75} governed batches at 75/run, routed through consolidated Spry Content Release, ${totalTheoretical} atoms available`);
