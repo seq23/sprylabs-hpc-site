@@ -499,6 +499,29 @@
           }
         ]
       }
+    },
+    "daily-citation-intelligence": {
+      "command": "npm run workflow:daily-citation-intelligence",
+      "default_mode": "shadow",
+      "modes": [
+        "shadow"
+      ],
+      "replaces": [
+        "ad hoc traffic-qualified release planning"
+      ],
+      "lane_owner": "citation-intelligence",
+      "stages_by_mode": {
+        "shadow": [
+          {
+            "label": "release:daily-citation-intelligence",
+            "command": [
+              "npm",
+              "run",
+              "release:daily-citation-intelligence"
+            ]
+          }
+        ]
+      }
     }
   },
   "deprecated_public_entrypoints": {

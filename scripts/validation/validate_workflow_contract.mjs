@@ -17,6 +17,7 @@ const expectedWorkflows = [
   'validate.yml',
   'whitepaper-release.yml',
   'workflow-monitor.yml',
+  'daily-citation-intelligence.yml',
 ];
 const mutationWorkflows = new Set([
   'citation-velocity-5k.yml',

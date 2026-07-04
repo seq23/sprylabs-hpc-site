@@ -1,0 +1,67 @@
+{
+  "schema_version": "1.4",
+  "repo": "seq23/sprylabs-hpc-site",
+  "default_public_mutation": "shadow_noop_until_local_validation",
+  "release_unit_types": [
+    "create",
+    "repair",
+    "atom_update",
+    "answer_block_update",
+    "entity_context_update",
+    "internal_link_update",
+    "schema_update",
+    "source_update",
+    "distribution_update",
+    "block",
+    "quarantine"
+  ],
+  "allowed_generated_mutations": [
+    "data/signals/**",
+    "artifacts/validation/**",
+    "reports/**",
+    "data/content/**",
+    "data/citation_velocity/**",
+    "sitemap*.xml",
+    "sitemaps/**",
+    "llms*.txt",
+    "feed.*",
+    "*.html"
+  ],
+  "forbidden_runtime_mutations": [
+    ".github/**",
+    "package.json",
+    "package-lock.json",
+    "scripts/**",
+    "docs/**",
+    "_repo*.json",
+    "_validation_registry.json",
+    "_citation_intelligence_contract.json",
+    "_content_release_contract.json",
+    "data/workflows/**",
+    "data/strategy/**"
+  ],
+  "apply_policy": {
+    "shadow_mode_writes_only_reports": true,
+    "public_route_creation_requires_existing_page_admission_contract": true,
+    "no_op_reason_required": true
+  },
+  "proof_required": true,
+  "batch_d_controlled_release": {
+    "status": "enabled_structural_shadow",
+    "cadence_class": "CADENCE_DAILY_STANDARD_CONTROLLED_LOW",
+    "manual_command": "npm run release:controlled-citation-intelligence",
+    "scheduled_workflow": ".github/workflows/daily-citation-intelligence.yml",
+    "public_content_mutation_enabled": false,
+    "max_release_units_per_day": 25,
+    "target_release_units_per_day": 15,
+    "proof_required": [
+      "fixture trace",
+      "release planner",
+      "shadow apply ledger",
+      "daily proof packet",
+      "browserless mock backup",
+      "workflow validators"
+    ],
+    "local_validation_required_before_complete": true
+  }
+}

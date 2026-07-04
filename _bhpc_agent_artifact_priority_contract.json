@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "status": "ACTIVE",
+  "repo": "sprylabs-hpc-site",
+  "law": "BHPC agent-exact artifacts have mutation priority over daily citation-intelligence shadow plans.",
+  "allowed_agent_scopes": ["bhpc", "aplayer", "a-player", "a-player-mode"],
+  "forbidden_scopes": ["uscis-medical", "personal-injury", "dentistry", "trt", "neuro"],
+  "mutation_lanes": {
+    "agent_artifact_content_mutation": ["release:agent-intake", "agent:bhpc:apply-exact"],
+    "shadow_citation_intelligence": ["release:daily-citation-intelligence", "release:controlled-citation-intelligence"]
+  },
+  "forbidden_shadow_mutations": [
+    "data/report_fixes/agent_runs/**",
+    "data/report_fixes/normalized_agent_runs/**",
+    "data/report_fixes/agent_exact_implementation_plan.json",
+    "data/report_fixes/agent_acceptance_manifest.generated.json"
+  ]
+}

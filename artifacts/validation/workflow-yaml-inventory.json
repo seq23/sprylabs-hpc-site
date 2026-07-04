@@ -1,0 +1,561 @@
+{
+  "schema_version": "1.4",
+  "repo": "seq23/sprylabs-hpc-site",
+  "generated_at": "2026-07-03T21:52:24.450748+00:00",
+  "workflow_count": 13,
+  "workflows": [
+    {
+      "path": ".github/workflows/citation-velocity-5k.yml",
+      "name": "Citation Velocity 5K",
+      "trigger": [
+        "workflow_dispatch",
+        "schedule"
+      ],
+      "primary_command": "npm run workflow:run",
+      "repo_lane": "citation-expansion",
+      "current_status": "modify_alias",
+      "reason": "Legacy 5K citation workflow converted to canonical citation-expansion alias; superseded by traffic-qualified planner when active.",
+      "allowed_runtime_mutations": [
+        "data/**",
+        "artifacts/validation/**",
+        "reports/**",
+        "*.html",
+        "sitemap*.xml",
+        "sitemaps/**",
+        "llms*.txt",
+        "feed.*",
+        "_public_route_manifest.json",
+        "_critical_browser_route_manifest.json"
+      ],
+      "forbidden_runtime_mutations": [
+        ".github/**",
+        "package.json",
+        "package-lock.json",
+        "scripts/**",
+        "docs/**",
+        "_repo*.json",
+        "_validation_registry.json",
+        "_repo_validation_matrix.json",
+        "_citation_intelligence_contract.json",
+        "_content_release_contract.json",
+        "data/strategy/**",
+        "data/workflows/**"
+      ],
+      "required_artifacts": [
+        "reports/workflows/citation-velocity-5k/"
+      ],
+      "validation_owner": "traffic-qualified workflow validators"
+    },
+    {
+      "path": ".github/workflows/content-authority-pipeline.yml",
+      "name": "Content Authority Pipeline",
+      "trigger": [
+        "workflow_dispatch",
+        "schedule",
+        "push"
+      ],
+      "primary_command": "npm run workflow:run",
+      "repo_lane": "content-authority",
+      "current_status": "keep",
+      "reason": "Canonical content authority lane.",
+      "allowed_runtime_mutations": [
+        "data/**",
+        "artifacts/validation/**",
+        "reports/**",
+        "*.html",
+        "sitemap*.xml",
+        "sitemaps/**",
+        "llms*.txt",
+        "feed.*",
+        "_public_route_manifest.json",
+        "_critical_browser_route_manifest.json"
+      ],
+      "forbidden_runtime_mutations": [
+        ".github/**",
+        "package.json",
+        "package-lock.json",
+        "scripts/**",
+        "docs/**",
+        "_repo*.json",
+        "_validation_registry.json",
+        "_repo_validation_matrix.json",
+        "_citation_intelligence_contract.json",
+        "_content_release_contract.json",
+        "data/strategy/**",
+        "data/workflows/**"
+      ],
+      "required_artifacts": [
+        "reports/workflows/content-authority-pipeline/"
+      ],
+      "validation_owner": "traffic-qualified workflow validators"
+    },
+    {
+      "path": ".github/workflows/daily-citation-intelligence.yml",
+      "name": "Daily Citation Intelligence",
+      "trigger": [
+        "workflow_dispatch",
+        "schedule"
+      ],
+      "primary_command": "npm run workflow:daily-citation-intelligence",
+      "repo_lane": "daily-citation-intelligence",
+      "current_status": "add",
+      "reason": "Daily traffic-qualified citation intelligence controlled shadow/proof lane.",
+      "allowed_runtime_mutations": [
+        "data/signals/**",
+        "artifacts/validation/**",
+        "reports/**"
+      ],
+      "forbidden_runtime_mutations": [
+        ".github/**",
+        "package.json",
+        "package-lock.json",
+        "scripts/**",
+        "docs/**",
+        "_repo*.json",
+        "_validation_registry.json",
+        "_repo_validation_matrix.json",
+        "_citation_intelligence_contract.json",
+        "_content_release_contract.json",
+        "data/strategy/**",
+        "data/workflows/**"
+      ],
+      "required_artifacts": [
+        "data/signals/**",
+        "artifacts/validation/**",
+        "reports/**"
+      ],
+      "validation_owner": "traffic-qualified workflow validators"
+    },
+    {
+      "path": ".github/workflows/daily-insight.yml",
+      "name": "Daily Insight",
+      "trigger": [
+        "workflow_dispatch",
+        "schedule"
+      ],
+      "primary_command": "npm run workflow:run",
+      "repo_lane": "content-expansion",
+      "current_status": "modify_alias",
+      "reason": "Daily insight workflow converted to content-expansion alias.",
+      "allowed_runtime_mutations": [
+        "data/**",
+        "artifacts/validation/**",
+        "reports/**",
+        "*.html",
+        "sitemap*.xml",
+        "sitemaps/**",
+        "llms*.txt",
+        "feed.*",
+        "_public_route_manifest.json",
+        "_critical_browser_route_manifest.json"
+      ],
+      "forbidden_runtime_mutations": [
+        ".github/**",
+        "package.json",
+        "package-lock.json",
+        "scripts/**",
+        "docs/**",
+        "_repo*.json",
+        "_validation_registry.json",
+        "_repo_validation_matrix.json",
+        "_citation_intelligence_contract.json",
+        "_content_release_contract.json",
+        "data/strategy/**",
+        "data/workflows/**"
+      ],
+      "required_artifacts": [
+        "reports/workflows/daily-insight/"
+      ],
+      "validation_owner": "traffic-qualified workflow validators"
+    },
+    {
+      "path": ".github/workflows/deploy-distribution.yml",
+      "name": "Deploy Distribution",
+      "trigger": [
+        "workflow_dispatch",
+        "workflow_run"
+      ],
+      "primary_command": "npm run release:ci-validate",
+      "repo_lane": "deploy",
+      "current_status": "keep",
+      "reason": "Deployment/distribution lane remains separate from content release.",
+      "allowed_runtime_mutations": [
+        ".build/**",
+        "reports/**",
+        "artifacts/validation/**"
+      ],
+      "forbidden_runtime_mutations": [
+        ".github/**",
+        "package.json",
+        "package-lock.json",
+        "scripts/**",
+        "docs/**",
+        "_repo*.json",
+        "_validation_registry.json",
+        "_repo_validation_matrix.json",
+        "_citation_intelligence_contract.json",
+        "_content_release_contract.json",
+        "data/strategy/**",
+        "data/workflows/**"
+      ],
+      "required_artifacts": [
+        ".build/**",
+        "reports/**"
+      ],
+      "validation_owner": "traffic-qualified workflow validators"
+    },
+    {
+      "path": ".github/workflows/execution-strict.yml",
+      "name": "Execution Strict",
+      "trigger": [
+        "workflow_dispatch",
+        "schedule"
+      ],
+      "primary_command": "npm run workflow:run",
+      "repo_lane": "content-expansion",
+      "current_status": "modify_alias",
+      "reason": "Execution strict workflow converted to content-expansion strict-mode alias.",
+      "allowed_runtime_mutations": [
+        "data/**",
+        "artifacts/validation/**",
+        "reports/**",
+        "*.html",
+        "sitemap*.xml",
+        "sitemaps/**",
+        "llms*.txt",
+        "feed.*",
+        "_public_route_manifest.json",
+        "_critical_browser_route_manifest.json"
+      ],
+      "forbidden_runtime_mutations": [
+        ".github/**",
+        "package.json",
+        "package-lock.json",
+        "scripts/**",
+        "docs/**",
+        "_repo*.json",
+        "_validation_registry.json",
+        "_repo_validation_matrix.json",
+        "_citation_intelligence_contract.json",
+        "_content_release_contract.json",
+        "data/strategy/**",
+        "data/workflows/**"
+      ],
+      "required_artifacts": [
+        "reports/workflows/execution-strict/"
+      ],
+      "validation_owner": "traffic-qualified workflow validators"
+    },
+    {
+      "path": ".github/workflows/reddit-daily.yml",
+      "name": "Reddit Daily",
+      "trigger": [
+        "workflow_dispatch",
+        "schedule"
+      ],
+      "primary_command": "npm run workflow:run",
+      "repo_lane": "signal-intake",
+      "current_status": "modify_alias",
+      "reason": "Reddit daily workflow converted to signal-intake daily alias.",
+      "allowed_runtime_mutations": [
+        "data/**",
+        "artifacts/validation/**",
+        "reports/**",
+        "*.html",
+        "sitemap*.xml",
+        "sitemaps/**",
+        "llms*.txt",
+        "feed.*",
+        "_public_route_manifest.json",
+        "_critical_browser_route_manifest.json"
+      ],
+      "forbidden_runtime_mutations": [
+        ".github/**",
+        "package.json",
+        "package-lock.json",
+        "scripts/**",
+        "docs/**",
+        "_repo*.json",
+        "_validation_registry.json",
+        "_repo_validation_matrix.json",
+        "_citation_intelligence_contract.json",
+        "_content_release_contract.json",
+        "data/strategy/**",
+        "data/workflows/**"
+      ],
+      "required_artifacts": [
+        "reports/workflows/reddit-daily/"
+      ],
+      "validation_owner": "traffic-qualified workflow validators"
+    },
+    {
+      "path": ".github/workflows/reddit-evening.yml",
+      "name": "Reddit Evening",
+      "trigger": [
+        "workflow_dispatch",
+        "schedule"
+      ],
+      "primary_command": "npm run workflow:run",
+      "repo_lane": "signal-intake",
+      "current_status": "modify_alias",
+      "reason": "Reddit evening workflow converted to signal-intake evening alias.",
+      "allowed_runtime_mutations": [
+        "data/**",
+        "artifacts/validation/**",
+        "reports/**",
+        "*.html",
+        "sitemap*.xml",
+        "sitemaps/**",
+        "llms*.txt",
+        "feed.*",
+        "_public_route_manifest.json",
+        "_critical_browser_route_manifest.json"
+      ],
+      "forbidden_runtime_mutations": [
+        ".github/**",
+        "package.json",
+        "package-lock.json",
+        "scripts/**",
+        "docs/**",
+        "_repo*.json",
+        "_validation_registry.json",
+        "_repo_validation_matrix.json",
+        "_citation_intelligence_contract.json",
+        "_content_release_contract.json",
+        "data/strategy/**",
+        "data/workflows/**"
+      ],
+      "required_artifacts": [
+        "reports/workflows/reddit-evening/"
+      ],
+      "validation_owner": "traffic-qualified workflow validators"
+    },
+    {
+      "path": ".github/workflows/social-signal-processing.yml",
+      "name": "Social Signal Processing",
+      "trigger": [
+        "workflow_dispatch",
+        "schedule"
+      ],
+      "primary_command": "npm run workflow:run",
+      "repo_lane": "signal-intake",
+      "current_status": "modify_alias",
+      "reason": "Social signal workflow converted to signal-intake social alias.",
+      "allowed_runtime_mutations": [
+        "data/**",
+        "artifacts/validation/**",
+        "reports/**",
+        "*.html",
+        "sitemap*.xml",
+        "sitemaps/**",
+        "llms*.txt",
+        "feed.*",
+        "_public_route_manifest.json",
+        "_critical_browser_route_manifest.json"
+      ],
+      "forbidden_runtime_mutations": [
+        ".github/**",
+        "package.json",
+        "package-lock.json",
+        "scripts/**",
+        "docs/**",
+        "_repo*.json",
+        "_validation_registry.json",
+        "_repo_validation_matrix.json",
+        "_citation_intelligence_contract.json",
+        "_content_release_contract.json",
+        "data/strategy/**",
+        "data/workflows/**"
+      ],
+      "required_artifacts": [
+        "reports/workflows/social-signal-processing/"
+      ],
+      "validation_owner": "traffic-qualified workflow validators"
+    },
+    {
+      "path": ".github/workflows/synthesis-weekly.yml",
+      "name": "Weekly Synthesis Builder",
+      "trigger": [
+        "workflow_dispatch",
+        "schedule"
+      ],
+      "primary_command": "npm run workflow:run",
+      "repo_lane": "content-expansion",
+      "current_status": "modify_alias",
+      "reason": "Weekly synthesis workflow converted to content-expansion synthesis alias.",
+      "allowed_runtime_mutations": [
+        "data/**",
+        "artifacts/validation/**",
+        "reports/**",
+        "*.html",
+        "sitemap*.xml",
+        "sitemaps/**",
+        "llms*.txt",
+        "feed.*",
+        "_public_route_manifest.json",
+        "_critical_browser_route_manifest.json"
+      ],
+      "forbidden_runtime_mutations": [
+        ".github/**",
+        "package.json",
+        "package-lock.json",
+        "scripts/**",
+        "docs/**",
+        "_repo*.json",
+        "_validation_registry.json",
+        "_repo_validation_matrix.json",
+        "_citation_intelligence_contract.json",
+        "_content_release_contract.json",
+        "data/strategy/**",
+        "data/workflows/**"
+      ],
+      "required_artifacts": [
+        "reports/workflows/synthesis-weekly/"
+      ],
+      "validation_owner": "traffic-qualified workflow validators"
+    },
+    {
+      "path": ".github/workflows/validate.yml",
+      "name": "Validate",
+      "trigger": [
+        "workflow_dispatch",
+        "push",
+        "pull_request"
+      ],
+      "primary_command": "npm run release:ci-validate",
+      "repo_lane": "validate",
+      "current_status": "modify",
+      "reason": "Canonical validation lane.",
+      "allowed_runtime_mutations": [
+        "artifacts/validation/**",
+        "reports/**",
+        ".build/**"
+      ],
+      "forbidden_runtime_mutations": [
+        ".github/**",
+        "package.json",
+        "package-lock.json",
+        "scripts/**",
+        "docs/**",
+        "_repo*.json",
+        "_validation_registry.json",
+        "_repo_validation_matrix.json",
+        "_citation_intelligence_contract.json",
+        "_content_release_contract.json",
+        "data/strategy/**",
+        "data/workflows/**"
+      ],
+      "required_artifacts": [
+        "artifacts/validation/**",
+        "reports/**"
+      ],
+      "validation_owner": "traffic-qualified workflow validators"
+    },
+    {
+      "path": ".github/workflows/whitepaper-release.yml",
+      "name": "Whitepaper Release",
+      "trigger": [
+        "workflow_dispatch",
+        "schedule"
+      ],
+      "primary_command": "npm run workflow:run",
+      "repo_lane": "content-expansion",
+      "current_status": "modify_alias",
+      "reason": "Whitepaper workflow converted to content-expansion whitepaper alias.",
+      "allowed_runtime_mutations": [
+        "data/**",
+        "artifacts/validation/**",
+        "reports/**",
+        "*.html",
+        "sitemap*.xml",
+        "sitemaps/**",
+        "llms*.txt",
+        "feed.*",
+        "_public_route_manifest.json",
+        "_critical_browser_route_manifest.json"
+      ],
+      "forbidden_runtime_mutations": [
+        ".github/**",
+        "package.json",
+        "package-lock.json",
+        "scripts/**",
+        "docs/**",
+        "_repo*.json",
+        "_validation_registry.json",
+        "_repo_validation_matrix.json",
+        "_citation_intelligence_contract.json",
+        "_content_release_contract.json",
+        "data/strategy/**",
+        "data/workflows/**"
+      ],
+      "required_artifacts": [
+        "reports/workflows/whitepaper-release/"
+      ],
+      "validation_owner": "traffic-qualified workflow validators"
+    },
+    {
+      "path": ".github/workflows/workflow-monitor.yml",
+      "name": "Workflow Monitor",
+      "trigger": [
+        "workflow_dispatch",
+        "schedule"
+      ],
+      "primary_command": "npm run workflow:monitor",
+      "repo_lane": "manual-maintenance",
+      "current_status": "keep",
+      "reason": "Workflow monitor lane preserved as manual-maintenance/observability.",
+      "allowed_runtime_mutations": [
+        "data/**",
+        "artifacts/validation/**",
+        "reports/**",
+        "*.html",
+        "sitemap*.xml",
+        "sitemaps/**",
+        "llms*.txt",
+        "feed.*",
+        "_public_route_manifest.json",
+        "_critical_browser_route_manifest.json"
+      ],
+      "forbidden_runtime_mutations": [
+        ".github/**",
+        "package.json",
+        "package-lock.json",
+        "scripts/**",
+        "docs/**",
+        "_repo*.json",
+        "_validation_registry.json",
+        "_repo_validation_matrix.json",
+        "_citation_intelligence_contract.json",
+        "_content_release_contract.json",
+        "data/strategy/**",
+        "data/workflows/**"
+      ],
+      "required_artifacts": [
+        "reports/**"
+      ],
+      "validation_owner": "traffic-qualified workflow validators"
+    }
+  ],
+  "canonical_lanes": [
+    "citation-expansion",
+    "content-authority",
+    "content-expansion",
+    "daily-citation-intelligence",
+    "deploy",
+    "manual-maintenance",
+    "signal-intake",
+    "validate"
+  ],
+  "batch_e_status": "COMPLETE_STRUCTURAL",
+  "schedule_policy": "Daily Citation Intelligence may schedule only after fixture trace, release planner, proof packet, build/validator or fallback proof passes structurally.",
+  "lanes": [
+    "citation-expansion",
+    "content-authority",
+    "content-expansion",
+    "daily-citation-intelligence",
+    "deploy",
+    "manual-maintenance",
+    "signal-intake",
+    "validate"
+  ]
+}

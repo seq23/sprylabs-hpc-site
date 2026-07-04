@@ -89,3 +89,8 @@ The distribution layer includes robots access, sitemaps, `llms.txt`, `llms-full.
 - No fake client outcomes.
 - No cross-linking to unrelated Industry Guides properties.
 - No exact citation/surfacing volume is promised.
+
+
+## Traffic-Qualified Strategy Authority Patch
+
+This strategy is upgraded by `docs/strategy/TRAFFIC_QUALIFIED_AEO_GEO_GROWTH_6MO_PLAN.md`. Existing BHPC/APlayer authority, citation, and programmatic expansion lanes remain valid where they are source-backed and validator-admitted. Page production is subordinated to traffic-qualified AEO/GEO/SEO release planning. The repo must not claim actual traffic, indexation, rankings, backlinks, AI Overview visibility, or LLM citations without external telemetry recorded in the proof packet. Live firehose sources remain disabled, shadowed, or credential/terms-gated until authority exists.

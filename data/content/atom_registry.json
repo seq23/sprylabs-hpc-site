@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.4",
+  "repo": "seq23/sprylabs-hpc-site",
+  "atoms": [
+    {
+      "atom_id": "spry_atom_weekly_review_prompt_001",
+      "atom_type": "copy_paste_prompt",
+      "title": "Founder weekly review prompt",
+      "source_basis": [
+        "fixture spry_fixture_atom_001",
+        "existing weekly review route"
+      ],
+      "uniqueness_key": "weekly-review-founder-prompt-v1",
+      "route_owner": "/chatgpt-prompts-for-weekly-review-and-planning.html",
+      "reuse_policy": "reuse with route-owner attribution only",
+      "allowed_page_families": [
+        "prompt",
+        "answer",
+        "method"
+      ],
+      "forbidden_contexts": [
+        "medical diagnosis",
+        "therapy claim",
+        "financial guarantee"
+      ],
+      "last_reviewed_at": "2026-07-03"
+    },
+    {
+      "atom_id": "spry_atom_decision_fatigue_framework_001",
+      "atom_type": "named_framework",
+      "title": "Decision-fatigue structured AI support bridge",
+      "source_basis": [
+        "existing decision fatigue route",
+        "BHPC strategy"
+      ],
+      "uniqueness_key": "decision-fatigue-structured-ai-bridge-v1",
+      "route_owner": "/decision-fatigue-and-structured-ai-support.html",
+      "reuse_policy": "reuse as entity-context support block",
+      "allowed_page_families": [
+        "method",
+        "answer",
+        "synthesis"
+      ],
+      "forbidden_contexts": [
+        "clinical diagnosis",
+        "guaranteed outcome"
+      ],
+      "last_reviewed_at": "2026-07-03"
+    }
+  ]
+}

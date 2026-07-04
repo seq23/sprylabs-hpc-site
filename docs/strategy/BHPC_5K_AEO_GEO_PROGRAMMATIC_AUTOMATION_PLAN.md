@@ -93,3 +93,8 @@ The system is protected by:
 None for daily production after merge.
 
 Human action is needed only if GitHub Actions fails, an external platform changes behavior, or the repo-level validation gates block publication.
+
+
+## Traffic-Qualified Automation Authority Patch
+
+This strategy is upgraded by `docs/strategy/TRAFFIC_QUALIFIED_AEO_GEO_GROWTH_6MO_PLAN.md`. Existing BHPC/APlayer authority, citation, and programmatic expansion lanes remain valid where they are source-backed and validator-admitted. Page production is subordinated to traffic-qualified AEO/GEO/SEO release planning. The repo must not claim actual traffic, indexation, rankings, backlinks, AI Overview visibility, or LLM citations without external telemetry recorded in the proof packet. Live firehose sources remain disabled, shadowed, or credential/terms-gated until authority exists.

@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "repo": "sprylabs-hpc-site",
+  "contract": "Every generated or generated-adjacent BHPC/Spry content path must self-heal and prevalidate before the release workflow can finish.",
+  "applies_to": [
+    "BHPC agent exact implementation pages",
+    "fallback gap-fill pages",
+    "manual expansion pages",
+    "APlayer phase expansion pages",
+    "citation velocity batches",
+    "content-authority lane outputs",
+    "content-expansion lane outputs"
+  ],
+  "required_finish_sequence": [
+    "build_or_mutate_generated_content",
+    "self_heal_generated_content",
+    "restore_exact_agent_semantics_after_build",
+    "validate_programmatic_admission",
+    "validate_bhpc_page_family_contract",
+    "validate_bhpc_rich_new_page_contract",
+    "validate_no_marker_only_agent_pass",
+    "validate_claim_safety",
+    "validate_no_keyword_swap_pages",
+    "write_evidence_artifact"
+  ],
+  "release_blocking": true,
+  "finish_command": "npm run release:content-finalize",
+  "forbidden_finish_states": [
+    "agent_exact_applied_without_trace",
+    "manual_expansion_built_without_content_release_validation",
+    "fallback_gap_fill_unseparated_from_exact_agent_content",
+    "citation_batch_without_strategy_gap_proof"
+  ],
+  "evidence_file": "artifacts/validation/generated-content-finalization-contract.json"
+}

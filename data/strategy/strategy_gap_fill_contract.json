@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0",
+  "repo": "sprylabs-hpc-site",
+  "contract": "Spry cannot rely on BHPC agent runs alone to satisfy the 6-month AEO/GEO growth spine. A deterministic non-agent gap-fill backlog must cover the full daily release-unit floor and remain separate from exact agent acceptance.",
+  "time_horizon_days": 180,
+  "source_strategy_profile": "data/strategy/citation_strategy_profile.json",
+  "minimum_backlog_multiplier": 1,
+  "release_gap_policy": {
+    "daily_target_units_from_profile": true,
+    "respect_max_new_pages_per_day": true,
+    "agent_artifacts_priority": true,
+    "gap_fill_only_after_shortfall": true,
+    "gap_fill_admission_basis": "BHPC_STRATEGY_GAP_FILL_NON_AGENT",
+    "separate_from_exact_agent_content": true
+  },
+  "required_candidate_fields": [
+    "id",
+    "source",
+    "admission_basis",
+    "pillar",
+    "query_family",
+    "operation",
+    "query",
+    "status",
+    "page_family",
+    "target_path",
+    "prevalidation_required",
+    "self_healing_required",
+    "claim_boundary",
+    "strategy_role"
+  ],
+  "evidence_files": [
+    "data/strategy/strategy_gap_fill_backlog.json",
+    "artifacts/validation/strategy-gap-fill-contract.json"
+  ],
+  "release_blocking": true
+}

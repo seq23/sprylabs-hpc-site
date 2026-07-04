@@ -1,11 +1,11 @@
 {
   "schema_version": "1.1",
-  "generated_at": "2026-07-04T04:13:42.324Z",
+  "generated_at": "2026-07-04T12:28:10.547Z",
   "status": "PASS",
-  "canonical_lane_count": 5,
+  "canonical_lane_count": 6,
   "governed_workflow_count": 9,
   "alias_workflow_count": 8,
-  "stage_count": 47,
+  "stage_count": 48,
   "canonical_lanes": {
     "content-authority": {
       "command": "npm run workflow:content-authority",
@@ -103,6 +103,18 @@
         "local": 1,
         "postpush": 1
       }
+    },
+    "daily-citation-intelligence": {
+      "command": "npm run workflow:daily-citation-intelligence",
+      "modes": [
+        "shadow"
+      ],
+      "replaces": [
+        "ad hoc traffic-qualified release planning"
+      ],
+      "stage_modes": {
+        "shadow": 1
+      }
     }
   },
   "aliases": [
@@ -156,6 +168,8 @@
     }
   ],
   "warnings": [
+    "workflow:content-authority:raw: workflow script is neither canonical nor governed alias",
+    "workflow:content-expansion:raw: workflow script is neither canonical nor governed alias",
     "reddit:daily:legacy: still present as a direct component command; target=workflow:signal-intake --mode=daily",
     "reddit:evening:legacy: still present as a direct component command; target=workflow:signal-intake --mode=evening",
     "social:daily: still present as a direct component command; target=workflow:signal-intake --mode=daily",

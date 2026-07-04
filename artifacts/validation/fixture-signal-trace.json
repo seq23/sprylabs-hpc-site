@@ -1,0 +1,96 @@
+{
+  "schema_version": "1.4",
+  "repo": "seq23/sprylabs-hpc-site",
+  "run_id": "fixture-trace-1783115576890",
+  "started_at": "2026-07-03T21:52:56.890Z",
+  "steps": [
+    {
+      "label": "firehose:collect",
+      "command": "npm run firehose:collect",
+      "started_at": "2026-07-03T21:52:56.890Z",
+      "completed_at": "2026-07-03T21:52:57.198Z",
+      "exit_code": 0
+    },
+    {
+      "label": "firehose:normalize",
+      "command": "npm run firehose:normalize",
+      "started_at": "2026-07-03T21:52:57.198Z",
+      "completed_at": "2026-07-03T21:52:57.466Z",
+      "exit_code": 0
+    },
+    {
+      "label": "firehose:health",
+      "command": "npm run firehose:health",
+      "started_at": "2026-07-03T21:52:57.466Z",
+      "completed_at": "2026-07-03T21:52:57.756Z",
+      "exit_code": 0
+    },
+    {
+      "label": "signals:cluster",
+      "command": "npm run signals:cluster",
+      "started_at": "2026-07-03T21:52:57.756Z",
+      "completed_at": "2026-07-03T21:52:58.040Z",
+      "exit_code": 0
+    },
+    {
+      "label": "signals:score",
+      "command": "npm run signals:score",
+      "started_at": "2026-07-03T21:52:58.040Z",
+      "completed_at": "2026-07-03T21:52:58.326Z",
+      "exit_code": 0
+    },
+    {
+      "label": "signals:candidates",
+      "command": "npm run signals:candidates",
+      "started_at": "2026-07-03T21:52:58.326Z",
+      "completed_at": "2026-07-03T21:52:58.622Z",
+      "exit_code": 0
+    },
+    {
+      "label": "signals:opportunity-map",
+      "command": "npm run signals:opportunity-map",
+      "started_at": "2026-07-03T21:52:58.622Z",
+      "completed_at": "2026-07-03T21:52:58.957Z",
+      "exit_code": 0
+    },
+    {
+      "label": "release:plan",
+      "command": "npm run release:plan",
+      "started_at": "2026-07-03T21:52:58.957Z",
+      "completed_at": "2026-07-03T21:52:59.263Z",
+      "exit_code": 0
+    },
+    {
+      "label": "release:content:intelligence",
+      "command": "npm run release:content:intelligence",
+      "started_at": "2026-07-03T21:52:59.263Z",
+      "completed_at": "2026-07-03T21:52:59.604Z",
+      "exit_code": 0
+    },
+    {
+      "label": "release:daily-proof",
+      "command": "npm run release:daily-proof",
+      "started_at": "2026-07-03T21:52:59.604Z",
+      "completed_at": "2026-07-03T21:52:59.991Z",
+      "exit_code": 0
+    }
+  ],
+  "status": "PASS",
+  "completed_at": "2026-07-03T21:52:59.992Z",
+  "required_candidate_actions": [
+    "create",
+    "repair",
+    "atom_update",
+    "internal_link_update",
+    "block"
+  ],
+  "observed_candidate_actions": [
+    "create",
+    "repair",
+    "atom_update",
+    "internal_link_update",
+    "block"
+  ],
+  "selected_count": 4,
+  "blocked_count": 1
+}

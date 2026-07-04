@@ -16,6 +16,7 @@ for (const entry of findAgentManifests()) {
   if (!dateRe.test(entry.runDate)) errors.push(`${context}: parent folder must be YYYY-MM-DD`);
   if (manifest.run_date !== entry.runDate) errors.push(`${context}: run_date must match folder ${entry.runDate}`);
   if (!scope || !/^[a-z0-9][a-z0-9-]*$/.test(scope)) errors.push(`${context}: scope must be a safe slug`);
+  if (!['bhpc','aplayer','a-player','a-player-mode'].includes(scope)) errors.push(`${context}: non-BHPC artifact scope is not allowed in Spry: ${scope}`);
   if (manifest.scope && safeScope(manifest.scope) !== safeScope(entry.scopeDirName)) warnings.push(`${context}: scope ${manifest.scope} differs from folder ${entry.scopeDirName}; folder remains the source location`);
   if (!manifest.source || !/^twin_agent|ai_agent|citation_velocity_monitor$/i.test(String(manifest.source))) warnings.push(`${context}: source should identify Twin/Citation Velocity Monitor`);
   if (!VALID_STATUSES.has(manifest.status)) errors.push(`${context}: status must be one of ${Array.from(VALID_STATUSES).join(', ')}`);

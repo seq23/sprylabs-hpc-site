@@ -40,8 +40,12 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
+      - name: Run BHPC agent artifact intake first when manifest artifacts changed
+        run: npm run release:agent-intake
       - run: |
           npm run workflow:run -- --workflow content-authority -- npm run programmatic:run-lane -- --lane authority -- npm run workflow:content-authority
+      - name: Re-apply BHPC exact agent artifacts after content generation
+        run: npm run release:agent-intake
       - run: |
           ./.github/scripts/commit_and_push_if_changed.sh "Run content authority pipeline" content-authority
       - uses: actions/upload-artifact@v4

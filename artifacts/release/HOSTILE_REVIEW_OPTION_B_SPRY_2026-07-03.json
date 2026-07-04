@@ -1,0 +1,102 @@
+{
+  "schema_version": "1.0",
+  "repo": "seq23/sprylabs-hpc-site",
+  "source_zip": "sprylabs-hpc-site-main_BASELINE_07-03-26_3cba4563d60a.zip",
+  "generated_at": "2026-07-03T21:38:06Z",
+  "mode": "hostile_review_double_check",
+  "status": "PASS",
+  "checks": [
+    {
+      "name": "presence:artifacts/validation/strategy-gate.json",
+      "status": "PASS",
+      "details": {
+        "path": "artifacts/validation/strategy-gate.json"
+      }
+    },
+    {
+      "name": "presence:artifacts/validation/fixture-signal-trace.json",
+      "status": "PASS",
+      "details": {
+        "path": "artifacts/validation/fixture-signal-trace.json"
+      }
+    },
+    {
+      "name": "presence:artifacts/validation/daily-citation-release-plan.json",
+      "status": "PASS",
+      "details": {
+        "path": "artifacts/validation/daily-citation-release-plan.json"
+      }
+    },
+    {
+      "name": "presence:artifacts/validation/daily-proof-packet.json",
+      "status": "PASS",
+      "details": {
+        "path": "artifacts/validation/daily-proof-packet.json"
+      }
+    },
+    {
+      "name": "presence:artifacts/validation/workflow-yaml-inventory.json",
+      "status": "PASS",
+      "details": {
+        "path": "artifacts/validation/workflow-yaml-inventory.json"
+      }
+    },
+    {
+      "name": "presence:data/strategy/citation_strategy_profile.json",
+      "status": "PASS",
+      "details": {
+        "path": "data/strategy/citation_strategy_profile.json"
+      }
+    },
+    {
+      "name": "presence:_citation_intelligence_contract.json",
+      "status": "PASS",
+      "details": {
+        "path": "_citation_intelligence_contract.json"
+      }
+    },
+    {
+      "name": "presence:_content_release_contract.json",
+      "status": "PASS",
+      "details": {
+        "path": "_content_release_contract.json"
+      }
+    },
+    {
+      "name": "external telemetry truth boundary",
+      "status": "PASS",
+      "details": {
+        "external_telemetry_present": false
+      }
+    },
+    {
+      "name": "release planner select/block behavior",
+      "status": "PASS",
+      "details": {
+        "selected": 4,
+        "blocked": 1
+      }
+    },
+    {
+      "name": "no fake live source enablement",
+      "status": "PASS",
+      "details": {
+        "unsafe_enabled_sources": []
+      }
+    },
+    {
+      "name": "workflow inventory coverage",
+      "status": "PASS",
+      "details": {
+        "inventory": 13,
+        "actual": 13
+      }
+    }
+  ],
+  "truth_notes": [
+    "No live traffic, ranking, indexing, AI Overview, backlink, or LLM citation claim is made.",
+    "Daily Citation Intelligence workflow is workflow_dispatch only; schedule is withheld until local validation.",
+    "release:prepush:container was attempted but timed out inside the existing heavy repo repair chain; isolated validators passed after the repair chain was completed in smaller commands.",
+    "Local browser/deployed/GitHub Actions/updater validation did not run in this container."
+  ]
+}

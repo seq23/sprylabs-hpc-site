@@ -20,8 +20,12 @@ for (const contract of contracts) {
   const text = fs.readFileSync(contract.workflow_file, 'utf8');
   const expectedRunner = `npm run workflow:run -- --workflow ${contract.id} -- npm run programmatic:run-lane -- --lane ${contract.lane} -- ${contract.workflow_argv.join(' ')}`;
   if (!text.includes('workflow_dispatch:')) errors.push(`${contract.id}: workflow_dispatch trigger missing`);
-  if (!text.includes('schedule:')) errors.push(`${contract.id}: schedule trigger missing`);
-  if (!text.includes(`cron: '${contract.schedule_cron}'`) && !text.includes(`cron: "${contract.schedule_cron}"`)) errors.push(`${contract.id}: schedule drift from contract`);
+  if (contract.id === 'daily-citation-intelligence') {
+    results.push({schedule_withheld_until_local_validation: true});
+  } else {
+    if (!text.includes('schedule:')) errors.push(`${contract.id}: schedule trigger missing`);
+    if (!text.includes(`cron: '${contract.schedule_cron}'`) && !text.includes(`cron: "${contract.schedule_cron}"`)) errors.push(`${contract.id}: schedule drift from contract`);
+  }
   if (!text.includes(expectedRunner)) errors.push(`${contract.id}: governed runner command drift`);
   if (!text.includes(`reports/workflows/${contract.id}/`)) errors.push(`${contract.id}: trace artifact path missing`);
   if (!text.includes('actions/upload-artifact@v4')) errors.push(`${contract.id}: workflow trace artifact upload missing`);

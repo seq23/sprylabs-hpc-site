@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.4",
+  "repo": "seq23/sprylabs-hpc-site",
+  "mode": "SHADOW_MODE",
+  "signals_inform_release_plans": true,
+  "release_plans_govern_publication": true,
+  "live_ingestion_claims_allowed": false,
+  "adapter_output_schema": {
+    "adapter": "string",
+    "source": "string",
+    "mode": "manual|api|rss|firehose|export|fixture",
+    "terms_status": "allowed|requires_review|requires_credentials|blocked",
+    "collected_at": "ISO-8601",
+    "records": "array",
+    "errors": "array",
+    "warnings": "array",
+    "status": "PASS|WARN|BLOCKED|FAIL"
+  },
+  "allowed_live_sources_policy": {
+    "manual_import": "allowed",
+    "agent_artifacts": "allowed",
+    "search_console": "requires_credentials",
+    "forums_rss": "requires_review",
+    "reddit": "requires_credentials",
+    "bluesky": "requires_review",
+    "x": "requires_credentials",
+    "youtube": "requires_credentials"
+  },
+  "external_outcome_claims": {
+    "traffic": false,
+    "ranking": false,
+    "indexing": false,
+    "ai_overview": false,
+    "llm_citation": false,
+    "backlinks": false
+  },
+  "required_outputs": [
+    "artifacts/validation/firehose-collection.json",
+    "artifacts/validation/signal-normalization.json",
+    "artifacts/validation/source-health-ledger.json",
+    "artifacts/validation/fixture-signal-trace.json",
+    "artifacts/validation/daily-citation-release-plan.json",
+    "artifacts/validation/daily-proof-packet.json"
+  ]
+}

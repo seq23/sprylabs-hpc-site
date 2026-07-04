@@ -1,0 +1,79 @@
+{
+  "schema_version": "1.4",
+  "repo": "seq23/sprylabs-hpc-site",
+  "default_mode": "fixture_shadow",
+  "sources": [
+    {
+      "id": "fixture_raw_signals",
+      "adapter": "fixture",
+      "mode": "fixture",
+      "terms_status": "allowed",
+      "enabled": true,
+      "description": "Deterministic offline fixture demand signals."
+    },
+    {
+      "id": "manual_import",
+      "adapter": "manual_import",
+      "mode": "manual",
+      "terms_status": "allowed",
+      "enabled": true,
+      "description": "Operator-provided source-compliant demand records."
+    },
+    {
+      "id": "agent_artifacts",
+      "adapter": "agent_artifacts",
+      "mode": "export",
+      "terms_status": "allowed",
+      "enabled": true,
+      "description": "Owned agent artifact manifests and reports."
+    },
+    {
+      "id": "forums_rss",
+      "adapter": "forums_rss",
+      "mode": "rss",
+      "terms_status": "requires_review",
+      "enabled": false,
+      "description": "Public RSS/forum feeds only after terms review."
+    },
+    {
+      "id": "reddit",
+      "adapter": "reddit",
+      "mode": "api",
+      "terms_status": "requires_credentials",
+      "enabled": false,
+      "description": "Reddit API or manual exports only; no unauthorized scraping."
+    },
+    {
+      "id": "bluesky",
+      "adapter": "bluesky",
+      "mode": "firehose",
+      "terms_status": "requires_review",
+      "enabled": false,
+      "description": "ATProto/firehose only after source authority review."
+    },
+    {
+      "id": "x",
+      "adapter": "x",
+      "mode": "api",
+      "terms_status": "requires_credentials",
+      "enabled": false,
+      "description": "X API filtered stream only with credentials and terms authority."
+    },
+    {
+      "id": "youtube",
+      "adapter": "youtube",
+      "mode": "api",
+      "terms_status": "requires_credentials",
+      "enabled": false,
+      "description": "YouTube API/search only with credentials and quota authority."
+    },
+    {
+      "id": "search_console",
+      "adapter": "search_console",
+      "mode": "export",
+      "terms_status": "requires_credentials",
+      "enabled": false,
+      "description": "Owned GSC export/API only."
+    }
+  ]
+}

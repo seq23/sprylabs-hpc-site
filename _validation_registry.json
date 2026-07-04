@@ -2859,6 +2859,1077 @@
         "MX-089"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-090",
+      "status": "ADMITTED",
+      "name": "validate:strategy-gate",
+      "check_type": "validator",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "existing_coverage_gap": "Existing Spry validators cover citation surfaces and programmatic pages, but not the v1.4 traffic-qualified end-to-end signal trace and proof-packet spine.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:strategy-gate",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/traffic_qualified/pass.json",
+      "negative_fixture": "fixtures/validation/traffic_qualified/fail.json",
+      "evidence_output": "artifacts/validation/<command>.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements existing citation strategy, claim safety, sitemap, llms, and workflow topology validators."
+      ],
+      "retirement_offset": "No old validator retired; this is an admitted gap-specific spine validator.",
+      "decision": "Admitted for Traffic-Qualified AEO/GEO/SEO Citation Intelligence v1.4 implementation.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-090"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-091",
+      "status": "ADMITTED",
+      "name": "validate:firehose-source-contract",
+      "check_type": "validator",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "existing_coverage_gap": "Existing Spry validators cover citation surfaces and programmatic pages, but not the v1.4 traffic-qualified end-to-end signal trace and proof-packet spine.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:firehose-source-contract",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/traffic_qualified/pass.json",
+      "negative_fixture": "fixtures/validation/traffic_qualified/fail.json",
+      "evidence_output": "artifacts/validation/<command>.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements existing citation strategy, claim safety, sitemap, llms, and workflow topology validators."
+      ],
+      "retirement_offset": "No old validator retired; this is an admitted gap-specific spine validator.",
+      "decision": "Admitted for Traffic-Qualified AEO/GEO/SEO Citation Intelligence v1.4 implementation.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-091"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-092",
+      "status": "ADMITTED",
+      "name": "validate:signal-normalization",
+      "check_type": "validator",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "existing_coverage_gap": "Existing Spry validators cover citation surfaces and programmatic pages, but not the v1.4 traffic-qualified end-to-end signal trace and proof-packet spine.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:signal-normalization",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/traffic_qualified/pass.json",
+      "negative_fixture": "fixtures/validation/traffic_qualified/fail.json",
+      "evidence_output": "artifacts/validation/<command>.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements existing citation strategy, claim safety, sitemap, llms, and workflow topology validators."
+      ],
+      "retirement_offset": "No old validator retired; this is an admitted gap-specific spine validator.",
+      "decision": "Admitted for Traffic-Qualified AEO/GEO/SEO Citation Intelligence v1.4 implementation.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-092"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-093",
+      "status": "ADMITTED",
+      "name": "validate:release-plan-integrity",
+      "check_type": "validator",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "existing_coverage_gap": "Existing Spry validators cover citation surfaces and programmatic pages, but not the v1.4 traffic-qualified end-to-end signal trace and proof-packet spine.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:release-plan-integrity",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/traffic_qualified/pass.json",
+      "negative_fixture": "fixtures/validation/traffic_qualified/fail.json",
+      "evidence_output": "artifacts/validation/<command>.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements existing citation strategy, claim safety, sitemap, llms, and workflow topology validators."
+      ],
+      "retirement_offset": "No old validator retired; this is an admitted gap-specific spine validator.",
+      "decision": "Admitted for Traffic-Qualified AEO/GEO/SEO Citation Intelligence v1.4 implementation.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-093"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-094",
+      "status": "ADMITTED",
+      "name": "validate:daily-proof-packet",
+      "check_type": "validator",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "existing_coverage_gap": "Existing Spry validators cover citation surfaces and programmatic pages, but not the v1.4 traffic-qualified end-to-end signal trace and proof-packet spine.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:daily-proof-packet",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/traffic_qualified/pass.json",
+      "negative_fixture": "fixtures/validation/traffic_qualified/fail.json",
+      "evidence_output": "artifacts/validation/<command>.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements existing citation strategy, claim safety, sitemap, llms, and workflow topology validators."
+      ],
+      "retirement_offset": "No old validator retired; this is an admitted gap-specific spine validator.",
+      "decision": "Admitted for Traffic-Qualified AEO/GEO/SEO Citation Intelligence v1.4 implementation.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-094"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-095",
+      "status": "ADMITTED",
+      "name": "validate:structural-graph-live-policy",
+      "check_type": "validator",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "existing_coverage_gap": "Existing Spry validators cover citation surfaces and programmatic pages, but not the v1.4 traffic-qualified end-to-end signal trace and proof-packet spine.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:structural-graph-live-policy",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/traffic_qualified/pass.json",
+      "negative_fixture": "fixtures/validation/traffic_qualified/fail.json",
+      "evidence_output": "artifacts/validation/<command>.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements existing citation strategy, claim safety, sitemap, llms, and workflow topology validators."
+      ],
+      "retirement_offset": "No old validator retired; this is an admitted gap-specific spine validator.",
+      "decision": "Admitted for Traffic-Qualified AEO/GEO/SEO Citation Intelligence v1.4 implementation.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-095"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-096",
+      "status": "ADMITTED",
+      "name": "validate:atom-contract",
+      "check_type": "validator",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "existing_coverage_gap": "Existing Spry validators cover citation surfaces and programmatic pages, but not the v1.4 traffic-qualified end-to-end signal trace and proof-packet spine.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:atom-contract",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/traffic_qualified/pass.json",
+      "negative_fixture": "fixtures/validation/traffic_qualified/fail.json",
+      "evidence_output": "artifacts/validation/<command>.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements existing citation strategy, claim safety, sitemap, llms, and workflow topology validators."
+      ],
+      "retirement_offset": "No old validator retired; this is an admitted gap-specific spine validator.",
+      "decision": "Admitted for Traffic-Qualified AEO/GEO/SEO Citation Intelligence v1.4 implementation.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-096"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-097",
+      "status": "ADMITTED",
+      "name": "validate:workflow-yaml-inventory",
+      "check_type": "validator",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "existing_coverage_gap": "Existing Spry validators cover citation surfaces and programmatic pages, but not the v1.4 traffic-qualified end-to-end signal trace and proof-packet spine.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:workflow-yaml-inventory",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/traffic_qualified/pass.json",
+      "negative_fixture": "fixtures/validation/traffic_qualified/fail.json",
+      "evidence_output": "artifacts/validation/<command>.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements existing citation strategy, claim safety, sitemap, llms, and workflow topology validators."
+      ],
+      "retirement_offset": "No old validator retired; this is an admitted gap-specific spine validator.",
+      "decision": "Admitted for Traffic-Qualified AEO/GEO/SEO Citation Intelligence v1.4 implementation.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-097"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-098",
+      "status": "ADMITTED",
+      "name": "validate:workflow-runtime-mutations",
+      "check_type": "validator",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "existing_coverage_gap": "Existing Spry validators cover citation surfaces and programmatic pages, but not the v1.4 traffic-qualified end-to-end signal trace and proof-packet spine.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:workflow-runtime-mutations",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/traffic_qualified/pass.json",
+      "negative_fixture": "fixtures/validation/traffic_qualified/fail.json",
+      "evidence_output": "artifacts/validation/<command>.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements existing citation strategy, claim safety, sitemap, llms, and workflow topology validators."
+      ],
+      "retirement_offset": "No old validator retired; this is an admitted gap-specific spine validator.",
+      "decision": "Admitted for Traffic-Qualified AEO/GEO/SEO Citation Intelligence v1.4 implementation.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-098"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-099",
+      "status": "ADMITTED",
+      "name": "validate:workflow-artifacts",
+      "check_type": "validator",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "existing_coverage_gap": "Existing Spry validators cover citation surfaces and programmatic pages, but not the v1.4 traffic-qualified end-to-end signal trace and proof-packet spine.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:workflow-artifacts",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/traffic_qualified/pass.json",
+      "negative_fixture": "fixtures/validation/traffic_qualified/fail.json",
+      "evidence_output": "artifacts/validation/<command>.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements existing citation strategy, claim safety, sitemap, llms, and workflow topology validators."
+      ],
+      "retirement_offset": "No old validator retired; this is an admitted gap-specific spine validator.",
+      "decision": "Admitted for Traffic-Qualified AEO/GEO/SEO Citation Intelligence v1.4 implementation.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-099"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-100",
+      "status": "ADMITTED",
+      "name": "validate:traffic-qualified-citation-intelligence",
+      "check_type": "validator",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "existing_coverage_gap": "Existing Spry validators cover citation surfaces and programmatic pages, but not the v1.4 traffic-qualified end-to-end signal trace and proof-packet spine.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:traffic-qualified-citation-intelligence",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/traffic_qualified/pass.json",
+      "negative_fixture": "fixtures/validation/traffic_qualified/fail.json",
+      "evidence_output": "artifacts/validation/<command>.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements existing citation strategy, claim safety, sitemap, llms, and workflow topology validators."
+      ],
+      "retirement_offset": "No old validator retired; this is an admitted gap-specific spine validator.",
+      "decision": "Admitted for Traffic-Qualified AEO/GEO/SEO Citation Intelligence v1.4 implementation.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-100"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-101",
+      "status": "ADMITTED",
+      "name": "validate:traffic-qualified-suite",
+      "check_type": "validator",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "existing_coverage_gap": "Existing Spry validators cover citation surfaces and programmatic pages, but not the v1.4 traffic-qualified end-to-end signal trace and proof-packet spine.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:traffic-qualified-suite",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/traffic_qualified/pass.json",
+      "negative_fixture": "fixtures/validation/traffic_qualified/fail.json",
+      "evidence_output": "artifacts/validation/<command>.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements existing citation strategy, claim safety, sitemap, llms, and workflow topology validators."
+      ],
+      "retirement_offset": "No old validator retired; this is an admitted gap-specific spine validator.",
+      "decision": "Admitted for Traffic-Qualified AEO/GEO/SEO Citation Intelligence v1.4 implementation.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-101"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-102",
+      "status": "ADMITTED",
+      "name": "release:plan",
+      "check_type": "validator",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "existing_coverage_gap": "Existing Spry validators cover citation surfaces and programmatic pages, but not the v1.4 traffic-qualified end-to-end signal trace and proof-packet spine.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run release:plan",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/traffic_qualified/pass.json",
+      "negative_fixture": "fixtures/validation/traffic_qualified/fail.json",
+      "evidence_output": "artifacts/validation/<command>.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements existing citation strategy, claim safety, sitemap, llms, and workflow topology validators."
+      ],
+      "retirement_offset": "No old validator retired; this is an admitted gap-specific spine validator.",
+      "decision": "Admitted for Traffic-Qualified AEO/GEO/SEO Citation Intelligence v1.4 implementation.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-102"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-103",
+      "status": "ADMITTED",
+      "name": "release:content:intelligence",
+      "check_type": "validator",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "existing_coverage_gap": "Existing Spry validators cover citation surfaces and programmatic pages, but not the v1.4 traffic-qualified end-to-end signal trace and proof-packet spine.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run release:content:intelligence",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/traffic_qualified/pass.json",
+      "negative_fixture": "fixtures/validation/traffic_qualified/fail.json",
+      "evidence_output": "artifacts/validation/<command>.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements existing citation strategy, claim safety, sitemap, llms, and workflow topology validators."
+      ],
+      "retirement_offset": "No old validator retired; this is an admitted gap-specific spine validator.",
+      "decision": "Admitted for Traffic-Qualified AEO/GEO/SEO Citation Intelligence v1.4 implementation.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-103"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-104",
+      "status": "ADMITTED",
+      "name": "release:daily-proof",
+      "check_type": "validator",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "existing_coverage_gap": "Existing Spry validators cover citation surfaces and programmatic pages, but not the v1.4 traffic-qualified end-to-end signal trace and proof-packet spine.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run release:daily-proof",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/traffic_qualified/pass.json",
+      "negative_fixture": "fixtures/validation/traffic_qualified/fail.json",
+      "evidence_output": "artifacts/validation/<command>.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements existing citation strategy, claim safety, sitemap, llms, and workflow topology validators."
+      ],
+      "retirement_offset": "No old validator retired; this is an admitted gap-specific spine validator.",
+      "decision": "Admitted for Traffic-Qualified AEO/GEO/SEO Citation Intelligence v1.4 implementation.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-104"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-105",
+      "status": "ADMITTED",
+      "name": "release:daily-citation-intelligence",
+      "check_type": "validator",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "existing_coverage_gap": "Existing Spry validators cover citation surfaces and programmatic pages, but not the v1.4 traffic-qualified end-to-end signal trace and proof-packet spine.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run release:daily-citation-intelligence",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/traffic_qualified/pass.json",
+      "negative_fixture": "fixtures/validation/traffic_qualified/fail.json",
+      "evidence_output": "artifacts/validation/<command>.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements existing citation strategy, claim safety, sitemap, llms, and workflow topology validators."
+      ],
+      "retirement_offset": "No old validator retired; this is an admitted gap-specific spine validator.",
+      "decision": "Admitted for Traffic-Qualified AEO/GEO/SEO Citation Intelligence v1.4 implementation.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-105"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-106",
+      "status": "ADMITTED",
+      "name": "Daily Citation Intelligence Workflow",
+      "check_type": "validator",
+      "owning_lane": "workflow-yaml",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "existing_coverage_gap": "Existing Spry validators cover citation surfaces and programmatic pages, but not the v1.4 traffic-qualified end-to-end signal trace and proof-packet spine.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/daily-citation-intelligence.yml",
+      "implementation_path": ".github/workflows/daily-citation-intelligence.yml",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/traffic_qualified/pass.json",
+      "negative_fixture": "fixtures/validation/traffic_qualified/fail.json",
+      "evidence_output": "artifacts/validation/<command>.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements existing citation strategy, claim safety, sitemap, llms, and workflow topology validators."
+      ],
+      "retirement_offset": "No old validator retired; this is an admitted gap-specific spine validator.",
+      "decision": "Admitted for Traffic-Qualified AEO/GEO/SEO Citation Intelligence v1.4 implementation.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-106"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-107",
+      "status": "ADMITTED",
+      "name": "validate:browserless-mock-backup",
+      "check_type": "validator",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents Batch D/E controlled release, scheduling, browserless fallback, or checklist regressions from entering the release lifecycle.",
+      "existing_coverage_gap": "Existing Spry validators cover the traffic-qualified spine but did not bind Batch D/E controlled cadence, fallback proof, and completion checklist into a single admitted release gate.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:browserless-mock-backup",
+      "implementation_path": "scripts/validators/validate_browserless_mock_backup.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/traffic_qualified/pass.json",
+      "negative_fixture": "fixtures/validation/traffic_qualified/fail.json",
+      "evidence_output": "artifacts/validation/<command>.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements existing traffic-qualified, workflow topology, validation registry, and release plan validators."
+      ],
+      "retirement_offset": "No old validator retired; this closes Batch D/E completion gap.",
+      "decision": "Admitted for Batch D/E controlled release and workflow scheduling completion.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-107"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-108",
+      "status": "ADMITTED",
+      "name": "validate:controlled-release-readiness",
+      "check_type": "validator",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents Batch D/E controlled release, scheduling, browserless fallback, or checklist regressions from entering the release lifecycle.",
+      "existing_coverage_gap": "Existing Spry validators cover the traffic-qualified spine but did not bind Batch D/E controlled cadence, fallback proof, and completion checklist into a single admitted release gate.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:controlled-release-readiness",
+      "implementation_path": "scripts/validators/validate_controlled_release_readiness.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/traffic_qualified/pass.json",
+      "negative_fixture": "fixtures/validation/traffic_qualified/fail.json",
+      "evidence_output": "artifacts/validation/<command>.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements existing traffic-qualified, workflow topology, validation registry, and release plan validators."
+      ],
+      "retirement_offset": "No old validator retired; this closes Batch D/E completion gap.",
+      "decision": "Admitted for Batch D/E controlled release and workflow scheduling completion.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-108"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-109",
+      "status": "ADMITTED",
+      "name": "validate:batch-de-completion",
+      "check_type": "validator",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents Batch D/E controlled release, scheduling, browserless fallback, or checklist regressions from entering the release lifecycle.",
+      "existing_coverage_gap": "Existing Spry validators cover the traffic-qualified spine but did not bind Batch D/E controlled cadence, fallback proof, and completion checklist into a single admitted release gate.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:batch-de-completion",
+      "implementation_path": "scripts/validators/validate_batch_de_completion.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/traffic_qualified/pass.json",
+      "negative_fixture": "fixtures/validation/traffic_qualified/fail.json",
+      "evidence_output": "artifacts/validation/<command>.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements existing traffic-qualified, workflow topology, validation registry, and release plan validators."
+      ],
+      "retirement_offset": "No old validator retired; this closes Batch D/E completion gap.",
+      "decision": "Admitted for Batch D/E controlled release and workflow scheduling completion.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-109"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-110",
+      "status": "ADMITTED",
+      "name": "release:controlled-citation-intelligence",
+      "check_type": "validator",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents Batch D/E controlled release, scheduling, browserless fallback, or checklist regressions from entering the release lifecycle.",
+      "existing_coverage_gap": "Existing Spry validators cover the traffic-qualified spine but did not bind Batch D/E controlled cadence, fallback proof, and completion checklist into a single admitted release gate.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run release:controlled-citation-intelligence",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/traffic_qualified/pass.json",
+      "negative_fixture": "fixtures/validation/traffic_qualified/fail.json",
+      "evidence_output": "artifacts/validation/<command>.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements existing traffic-qualified, workflow topology, validation registry, and release plan validators."
+      ],
+      "retirement_offset": "No old validator retired; this closes Batch D/E completion gap.",
+      "decision": "Admitted for Batch D/E controlled release and workflow scheduling completion.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-110"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-111",
+      "status": "ADMITTED",
+      "name": "release:complete-traffic-qualified-spine",
+      "check_type": "validator",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents Batch D/E controlled release, scheduling, browserless fallback, or checklist regressions from entering the release lifecycle.",
+      "existing_coverage_gap": "Existing Spry validators cover the traffic-qualified spine but did not bind Batch D/E controlled cadence, fallback proof, and completion checklist into a single admitted release gate.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run release:complete-traffic-qualified-spine",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/traffic_qualified/pass.json",
+      "negative_fixture": "fixtures/validation/traffic_qualified/fail.json",
+      "evidence_output": "artifacts/validation/<command>.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements existing traffic-qualified, workflow topology, validation registry, and release plan validators."
+      ],
+      "retirement_offset": "No old validator retired; this closes Batch D/E completion gap.",
+      "decision": "Admitted for Batch D/E controlled release and workflow scheduling completion.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-111"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-BATCH-F-001",
+      "status": "ADMITTED",
+      "name": "validate:bhpc-agent-artifact-continuity",
+      "check_type": "validator",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Prevents non-BHPC artifacts or incomplete BHPC agent runs from entering the Spry mutation lane.",
+      "existing_coverage_gap": "Batch F protects agent artifact continuity, dynamic page authority, rich page generation, and priority over shadow citation intelligence.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:bhpc-agent-artifact-continuity",
+      "implementation_path": "scripts/validators/validate_bhpc_agent_artifact_continuity.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/validate-bhpc-agent-artifact-continuity.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted by Batch F agent continuity hostile review.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-112"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-BATCH-F-002",
+      "status": "ADMITTED",
+      "name": "validate:bhpc-dynamic-page-contract",
+      "check_type": "validator",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Prevents static topic policy from overriding BHPC artifact-admitted route authority.",
+      "existing_coverage_gap": "Batch F protects agent artifact continuity, dynamic page authority, rich page generation, and priority over shadow citation intelligence.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:bhpc-dynamic-page-contract",
+      "implementation_path": "scripts/validators/validate_bhpc_dynamic_page_contract.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/validate-bhpc-dynamic-page-contract.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted by Batch F agent continuity hostile review.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-113"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-BATCH-F-003",
+      "status": "ADMITTED",
+      "name": "validate:bhpc-rich-new-page-contract",
+      "check_type": "validator",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Prevents BHPC new-page recommendations from becoming marker-only or generic thin pages.",
+      "existing_coverage_gap": "Batch F protects agent artifact continuity, dynamic page authority, rich page generation, and priority over shadow citation intelligence.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:bhpc-rich-new-page-contract",
+      "implementation_path": "scripts/validators/validate_bhpc_rich_new_page_contract.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/validate-bhpc-rich-new-page-contract.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted by Batch F agent continuity hostile review.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-114"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-BATCH-F-004",
+      "status": "ADMITTED",
+      "name": "validate:bhpc-agent-artifact-priority",
+      "check_type": "validator",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Prevents daily shadow citation intelligence from replacing BHPC exact mutation lanes.",
+      "existing_coverage_gap": "Batch F protects agent artifact continuity, dynamic page authority, rich page generation, and priority over shadow citation intelligence.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:bhpc-agent-artifact-priority",
+      "implementation_path": "scripts/validators/validate_bhpc_agent_artifact_priority.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/validate-bhpc-agent-artifact-priority.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted by Batch F agent continuity hostile review.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-115"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-BATCH-F-005",
+      "status": "ADMITTED",
+      "name": "validate:bhpc-agent-improvement-capability",
+      "check_type": "validator",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Prevents rigid contracts from blocking legitimate BHPC/A Player improvement primitives while preserving claim safety.",
+      "existing_coverage_gap": "Batch F protects agent artifact continuity, dynamic page authority, rich page generation, and priority over shadow citation intelligence.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:bhpc-agent-improvement-capability",
+      "implementation_path": "scripts/validators/validate_bhpc_agent_improvement_capability.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/validate-bhpc-agent-improvement-capability.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted by Batch F agent continuity hostile review.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-116"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-BATCH-F-006",
+      "status": "ADMITTED",
+      "name": "validate:batch-f-continuity",
+      "check_type": "validator",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Batch F agent continuity release gate.",
+      "existing_coverage_gap": "Aggregate Batch F command was not admitted before this patch.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:batch-f-continuity",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/batch-f-continuity.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted by Batch F execution.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-117"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-BATCH-F-007",
+      "status": "ADMITTED",
+      "name": "release:batch-f-agent-continuity",
+      "check_type": "validator",
+      "owning_lane": "release",
+      "risk_prevented": "Batch F agent continuity release gate.",
+      "existing_coverage_gap": "Aggregate Batch F command was not admitted before this patch.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run release:batch-f-agent-continuity",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/batch-f-continuity.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted by Batch F execution.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-118"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-BATCHG-120",
+      "status": "ADMITTED",
+      "name": "validate:generated-content-finalization",
+      "check_type": "validator",
+      "owning_lane": "content",
+      "risk_prevented": "Generated content could finish without self-healing/prevalidation or without a non-agent six-month gap-fill backlog.",
+      "existing_coverage_gap": "Batch F proved agent boundaries; this Batch G validator proves all generated content finish paths and non-agent gap-fill capacity.",
+      "scope": [
+        "repository",
+        "generated-content",
+        "strategy-gap-fill"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:generated-content-finalization",
+      "implementation_path": "scripts/validators/validate_generated_content_finalization_contract.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/batch-g/pass.json",
+      "negative_fixture": "fixtures/validation/batch-g/fail.json",
+      "evidence_output": "artifacts/validation/generated-content-finalization-contract.json",
+      "runtime_budget_seconds": 180,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted for Batch G generated-content finalization and strategy gap-fill hardening.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-BATCHG"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-BATCHG-121",
+      "status": "ADMITTED",
+      "name": "validate:strategy-gap-fill",
+      "check_type": "validator",
+      "owning_lane": "content",
+      "risk_prevented": "Generated content could finish without self-healing/prevalidation or without a non-agent six-month gap-fill backlog.",
+      "existing_coverage_gap": "Batch F proved agent boundaries; this Batch G validator proves all generated content finish paths and non-agent gap-fill capacity.",
+      "scope": [
+        "repository",
+        "generated-content",
+        "strategy-gap-fill"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:strategy-gap-fill",
+      "implementation_path": "scripts/validators/validate_strategy_gap_fill_contract.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/batch-g/pass.json",
+      "negative_fixture": "fixtures/validation/batch-g/fail.json",
+      "evidence_output": "artifacts/validation/strategy-gap-fill-contract.json",
+      "runtime_budget_seconds": 180,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted for Batch G generated-content finalization and strategy gap-fill hardening.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-119"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-BATCHG-122",
+      "status": "ADMITTED",
+      "name": "release:agent-intake:raw",
+      "check_type": "release",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Generated content can finish without self-healing/prevalidation or without enough non-agent gap-fill backlog to meet the six-month strategy.",
+      "existing_coverage_gap": "Batch F guards agent artifacts; Batch G guards finish-state and non-agent gap-fill capacity.",
+      "scope": [
+        "repository",
+        "generated-content"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run release:agent-intake:raw",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/batch-g/pass.json",
+      "negative_fixture": "fixtures/validation/batch-g/fail.json",
+      "evidence_output": "artifacts/validation/agent-exact-implementation-apply.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted for Batch G generated content finalization and six-month gap-fill continuity.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-120"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-BATCHG-123",
+      "status": "ADMITTED",
+      "name": "release:content-finalize",
+      "check_type": "release",
+      "owning_lane": "content",
+      "risk_prevented": "Generated content can finish without self-healing/prevalidation or without enough non-agent gap-fill backlog to meet the six-month strategy.",
+      "existing_coverage_gap": "Batch F guards agent artifacts; Batch G guards finish-state and non-agent gap-fill capacity.",
+      "scope": [
+        "repository",
+        "generated-content"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run release:content-finalize",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/batch-g/pass.json",
+      "negative_fixture": "fixtures/validation/batch-g/fail.json",
+      "evidence_output": "artifacts/validation/generated-content-finalization-contract.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted for Batch G generated content finalization and six-month gap-fill continuity.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-121"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-BATCHG-124",
+      "status": "ADMITTED",
+      "name": "validate:batch-g-continuity",
+      "check_type": "validator",
+      "owning_lane": "content",
+      "risk_prevented": "Generated content can finish without self-healing/prevalidation or without enough non-agent gap-fill backlog to meet the six-month strategy.",
+      "existing_coverage_gap": "Batch F guards agent artifacts; Batch G guards finish-state and non-agent gap-fill capacity.",
+      "scope": [
+        "repository",
+        "generated-content"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:batch-g-continuity",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/batch-g/pass.json",
+      "negative_fixture": "fixtures/validation/batch-g/fail.json",
+      "evidence_output": "artifacts/validation/batch-g-continuity-contract.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted for Batch G generated content finalization and six-month gap-fill continuity.",
+      "decision_date": "2026-07-03",
+      "matrix_ids": [
+        "MX-122"
+      ],
+      "not_applicable_reason": null
     }
   ]
 }

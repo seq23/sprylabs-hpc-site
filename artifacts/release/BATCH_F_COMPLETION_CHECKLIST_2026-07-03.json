@@ -1,0 +1,77 @@
+{
+  "schema_version": "1.0",
+  "repo": "sprylabs-hpc-site",
+  "batch": "F",
+  "status": "STRUCTURALLY_CHECKED_LOCAL_VALIDATION_REQUIRED",
+  "generated_at": "2026-07-03",
+  "items": [
+    {
+      "id": "F1",
+      "name": "BHPC artifact intake continuity",
+      "status": "DONE",
+      "evidence": "validate:bhpc-agent-artifact-continuity PASS"
+    },
+    {
+      "id": "F2",
+      "name": "BHPC dynamic page contract",
+      "status": "DONE",
+      "evidence": "validate:bhpc-dynamic-page-contract PASS; admitted=244"
+    },
+    {
+      "id": "F3",
+      "name": "BHPC rich new page/repair contract",
+      "status": "DONE",
+      "evidence": "validate:bhpc-rich-new-page-contract PASS; checked=50"
+    },
+    {
+      "id": "F4",
+      "name": "BHPC agent-exact priority over shadow intelligence",
+      "status": "DONE",
+      "evidence": "validate:bhpc-agent-artifact-priority PASS"
+    },
+    {
+      "id": "F5",
+      "name": "BHPC improvement capability contract",
+      "status": "DONE",
+      "evidence": "validate:bhpc-agent-improvement-capability PASS"
+    },
+    {
+      "id": "F6",
+      "name": "Product-boundary guard",
+      "status": "DONE",
+      "evidence": "validate_bhpc_agent_runs now hard-fails non-BHPC scopes"
+    },
+    {
+      "id": "F7",
+      "name": "Workflow protection",
+      "status": "DONE",
+      "evidence": "content-authority workflow runs release:agent-intake before and after content generation"
+    },
+    {
+      "id": "F8",
+      "name": "Registry/matrix admission",
+      "status": "DONE",
+      "evidence": "validate:validation-registry PASS"
+    },
+    {
+      "id": "F9",
+      "name": "Traffic-qualified suite preserved",
+      "status": "DONE",
+      "evidence": "validate:traffic-qualified-suite PASS"
+    },
+    {
+      "id": "F10",
+      "name": "Repo/workflow validation",
+      "status": "DONE",
+      "evidence": "validate:repo + workflow contract/topology/lineage PASS"
+    }
+  ],
+  "local_validation_not_run": [
+    "local updater",
+    "real browser",
+    "GitHub Actions",
+    "deployment",
+    "postdeploy audit",
+    "external traffic/ranking/citation telemetry"
+  ]
+}
