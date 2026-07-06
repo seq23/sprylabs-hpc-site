@@ -41,10 +41,26 @@ const plan = readJson('artifacts/validation/agent-exact-implementation-plan.json
 const apply = readJson('artifacts/validation/agent-exact-implementation-apply.json', {applied: [], skipped: []});
 const errors = [];
 const checked = [];
+const skipped = [];
+const activeSpecs = (plan.specs || []).filter(spec => spec.status !== 'BLOCKED');
+const activeAcceptanceIds = new Set(activeSpecs.flatMap(spec => spec.acceptance_ids || []).map(String));
 const appliedIds = new Set((apply.applied || []).flatMap(item => item.acceptance_ids || [item.record_id]).map(String));
-const plannedPaths = new Set((plan.specs || []).filter(spec => spec.status !== 'BLOCKED').map(spec => spec.implementation_path));
+const plannedPaths = new Set(activeSpecs.map(spec => spec.implementation_path));
+
+if ((manifest.entries || []).length && !activeAcceptanceIds.size) {
+  errors.push('active_plan_has_no_acceptance_ids');
+}
 
 for (const entry of manifest.entries || []) {
+  if (!activeAcceptanceIds.has(String(entry.id))) {
+    skipped.push({
+      record_id: entry.record_id,
+      acceptance_id: entry.id,
+      implementation_path: entry.implementation_path || '',
+      reason: 'outside_active_implementation_plan'
+    });
+    continue;
+  }
   if (entry.acceptance_status === 'BLOCKED') {
     if (!entry.blocked_reason) errors.push(`${entry.record_id}:blocked_without_reason`);
     continue;
@@ -79,9 +95,15 @@ const report = {
   validator: 'bhpc-agent-recommendation-driven-output',
   generated_at: new Date().toISOString(),
   status: errors.length ? 'FAIL' : 'PASS',
-  rule: 'Every required agent recommendation must drive visible output through an agent_directive block containing the source instruction, query target, required quoted/named phrases, and page-level proof marker.',
+  rule: 'Every active-plan agent recommendation must drive visible output through an agent_directive block containing the source instruction, query target, required quoted/named phrases, and page-level proof marker. Cumulative manifest entries outside the active implementation plan are reported as skipped, not failed.',
+  scope: 'active_agent_exact_implementation_plan',
+  manifest_entry_count: (manifest.entries || []).length,
+  active_plan_spec_count: activeSpecs.length,
+  active_acceptance_id_count: activeAcceptanceIds.size,
   checked_count: checked.length,
+  skipped_count: skipped.length,
   checked: checked.slice(0, 150),
+  skipped: skipped.slice(0, 150),
   errors,
 };
 writeJson('artifacts/validation/bhpc-agent-recommendation-driven-output.json', report);
@@ -91,4 +113,4 @@ if (errors.length) {
   for (const error of errors.slice(0, 80)) console.error(` - ${error}`);
   process.exit(1);
 }
-console.log(`[bhpc-agent-recommendation-driven-output] PASS: checked=${checked.length}`);
+console.log(`[bhpc-agent-recommendation-driven-output] PASS: checked=${checked.length}; skipped=${skipped.length}; active_specs=${activeSpecs.length}`);

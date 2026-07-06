@@ -113,6 +113,7 @@ for (const name of actualWorkflows) {
       if (contract.id === 'spry-content-release') {
         has(text, 'schedule:', name, 'scheduled consolidated release trigger');
         has(text, 'data/report_fixes/agent_runs/**/agent_run_manifest.json', name, 'manifest-only agent artifact trigger');
+        has(text, "github.event_name != 'push' || !contains(github.event.head_commit.message, 'snapshot update from baseline ZIP')", name, 'baseline snapshot reentry guard');
         has(text, 'full-content-cycle', name, 'full-content-cycle mode');
         has(text, 'agent-intake', name, 'agent-intake mode');
         has(text, 'signal-intake', name, 'signal-intake mode');
@@ -169,6 +170,15 @@ else {
   const helperText = fs.readFileSync(helper, 'utf8');
   for (const required of ['workflow_id=', 'git reset --hard', 'git clean -fd', 'Regenerating governed workflow', 'workflow_argv', 'git merge-base --is-ancestor']) {
     if (!helperText.includes(required)) errors.push(`${helper}: missing reset-regenerate retry behavior: ${required}`);
+  }
+}
+
+const recommendationValidator = 'scripts/validators/validate_bhpc_agent_recommendation_driven_output.mjs';
+if (!fs.existsSync(recommendationValidator)) errors.push(`missing ${recommendationValidator}`);
+else {
+  const validatorText = fs.readFileSync(recommendationValidator, 'utf8');
+  for (const required of ['activeAcceptanceIds', 'outside_active_implementation_plan', 'active_plan_spec_count', 'skipped_count']) {
+    if (!validatorText.includes(required)) errors.push(`${recommendationValidator}: missing active-plan scoped recommendation validation marker: ${required}`);
   }
 }
 

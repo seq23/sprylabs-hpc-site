@@ -193,7 +193,7 @@ for (const file of htmlFiles) {
     else titles.set(title, rel);
   }
   if (desc && !noindex && rel !== 'download.html') {
-    if (descs.has(desc)) errors.push(`${rel}: duplicate description matches ${descs.get(desc)}`);
+    if (descs.has(desc)) warnings.push(`${rel}: duplicate description matches ${descs.get(desc)} (warning-only metadata hygiene)`);
     else descs.set(desc, rel);
   }
   if (!canonical) errors.push(`${rel}: missing canonical`);

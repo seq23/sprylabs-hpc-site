@@ -177,7 +177,7 @@ def ensure_priority_page(item):
     # tables: preserve any existing table, otherwise create the accepted matrix; append missing cells if needed.
     table=block.find('table')
     table_terms=list(item.get('table_headers',[]))+list(item.get('table_rows',[]))
-    if item.get('requires_table') or table_terms:
+    if item.get('requires_table') or item['extraction_type']=='comparison' or table_terms:
         cells=[norm(c.get_text(' ',strip=True)) for c in block.find_all(['th','td'])]
         missing=[x for x in table_terms if x not in cells]
         if not table:

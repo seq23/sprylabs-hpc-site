@@ -134,6 +134,41 @@ def update_schema(path: Path):
         bread['itemListElement']=[{'@type':'ListItem','position':i+1,'name':name,'item':item} for i,(name,item) in enumerate(vb)]
     elif bread:
         graph.remove(bread)
+    # Article parity: premium manual/editorial pages may carry Article schema only
+    # when the visible page contains a byline, author URL, semantic dates, and
+    # social image metadata. Keep WebPage as the primary route entity and add a
+    # separate Article node for editorial proof.
+    byline=soup.select_one('p.byline')
+    author=byline.select_one('a[rel="author"]') if byline else None
+    times=byline.find_all('time') if byline else []
+    og=soup.select_one('meta[property="og:image"]')
+    ogurl=og.get('content','') if og else ''
+    article=next((x for x in graph if x.get('@type')=='Article'),None)
+    if byline and author and len(times)>=2 and ogurl:
+        if not article:
+            article={'@type':'Article','@id':f'{canonical}#article'}; graph.append(article)
+        article.update({
+            'headline': h1text,
+            'name': h1text,
+            'description': deftext,
+            'url': canonical,
+            'mainEntityOfPage': canonical,
+            'datePublished': times[0].get('datetime'),
+            'dateModified': times[-1].get('datetime'),
+            'author': {
+                '@type': 'Person',
+                'name': norm(author.get_text(' ',strip=True)),
+                'url': urljoin(canonical, author.get('href',''))
+            },
+            'publisher': {
+                '@type': 'Organization',
+                'name': 'Spry Labs',
+                'logo': {'@type': 'ImageObject', 'url': 'https://billionairehighperformancecoach.com/assets/books/og/bhpc-og-black.png'}
+            },
+            'image': {'@type': 'ImageObject', 'url': ogurl}
+        })
+    elif article:
+        graph.remove(article)
     data['@graph']=graph
     graph=[node for node in graph if node]
     data['@context']='https://schema.org'

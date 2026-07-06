@@ -166,3 +166,26 @@ Generated normalized files, social bridge files, reports, public pages, and vali
 
 A raw run folder may be removed only through an explicit retirement artifact or manual governance decision. Silent deletion is invalid.
 
+## Baseline snapshot reentry law
+
+Full baseline snapshot commits may include already-absorbed raw agent manifests under:
+
+```text
+data/report_fixes/agent_runs/**/agent_run_manifest.json
+```
+
+Those commits must not cause GitHub Actions to reprocess the same agent run as a new push-triggered intake. The `spry-content-release` workflow therefore skips push-triggered runs when the head commit message contains:
+
+```text
+snapshot update from baseline ZIP
+```
+
+Manual `workflow_dispatch` and scheduled runs remain valid. This prevents a repo-update snapshot from turning already-applied artifacts into a stale/batch-scoped release job.
+
+## Active-plan validation scope
+
+`data/report_fixes/agent_acceptance_manifest.generated.json` is cumulative. It can contain many historical acceptance entries.
+
+`artifacts/validation/agent-exact-implementation-plan.json` is the active implementation plan for the current pass. Recommendation-driven output validation must check only acceptance IDs present in the active non-blocked plan. Cumulative manifest entries outside that plan are reported as skipped, not failed.
+
+This keeps the validator strict about the pages actually being applied while preventing a current batch from being compared against stale cumulative evidence.

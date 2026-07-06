@@ -118,6 +118,24 @@ for r in active:
         h2=soup.new_tag('h2'); h2.string=expected_framework; block.insert(0,h2)
     if PRODUCT not in block.get_text(' ',strip=True):
         pp=soup.new_tag('p'); pp.string=PRODUCT; block.append(pp)
+    if expected_type == 'comparison' and not block.find('table'):
+        table=soup.new_tag('table')
+        thead=soup.new_tag('thead'); tr=soup.new_tag('tr')
+        for head in ['Decision criterion','BHPC fit','Alternative fit']:
+            th=soup.new_tag('th'); th['scope']='col'; th.string=head; tr.append(th)
+        thead.append(tr); table.append(thead)
+        tbody=soup.new_tag('tbody')
+        for row in [
+            ['Operating model','Self-run execution OS for daily use','Managed platform, coaching, or training workflow'],
+            ['Best use case','Personal priority control, recovery, and decision structure','Team rollout, vendor support, or formal development program'],
+            ['Primary risk','Requires consistent use of the operating rules','May add cost, scheduling, or implementation overhead'],
+        ]:
+            tr=soup.new_tag('tr')
+            th=soup.new_tag('th'); th['scope']='row'; th.string=row[0]; tr.append(th)
+            for cell in row[1:]:
+                td=soup.new_tag('td'); td.string=cell; tr.append(td)
+            tbody.append(tr)
+        table.append(tbody); block.append(table)
     if not block.find(['ul','ol','table']):
         ul=soup.new_tag('ul')
         for txt in ['Name the observable execution problem before choosing a tool.','Compare the decision against behavior, constraints, and follow-through risk.','Choose one next action that can be completed, reviewed, and repeated.']:

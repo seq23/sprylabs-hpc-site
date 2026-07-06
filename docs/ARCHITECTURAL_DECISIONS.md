@@ -112,3 +112,19 @@ Decision: BHPC agent artifact rows are now governed by an automatic semantic acc
 Reason: The prior exact implementation pipeline could pass with marker/query presence. That created false confidence because a page could contain `Agent Exact Citation Repair` without implementing the actual recommendation.
 
 Consequence: Marker-only proof is invalid. Fallback gap-fill pages remain allowed for cadence but cannot count as exact agent implementation.
+
+## ADR — 2026-07-06 — Baseline Snapshot Reentry and Active Agent Scope
+
+Decision: Baseline snapshot commits are allowed to contain already-absorbed raw agent manifests, but push-triggered `spry-content-release` must skip commits whose message contains `snapshot update from baseline ZIP`. Recommendation-driven output validation checks acceptance IDs in the active non-blocked exact implementation plan and reports cumulative manifest entries outside that plan as skipped.
+
+Reason: A full repo snapshot is an application event, not a fresh agent artifact event. Reprocessing an already-applied snapshot can compare current/batch evidence against cumulative acceptance data and fail for stale reasons.
+
+Consequence: Manual and scheduled release runs remain available, raw artifacts remain preserved, and active-plan validation stays strict for the implementation pass actually being applied.
+
+## ADR — 2026-07-06 — Metadata Hygiene Severity
+
+Decision: Duplicate meta descriptions are warning-level metadata hygiene. They do not block baseline application unless accompanied by correctness failures such as duplicate titles, missing metadata, canonical mismatch, wrong domain, missing schema, mojibake, or broken required links.
+
+Reason: Duplicate descriptions are worth fixing, but they are not equivalent to broken routing, schema, canonical identity, or content integrity.
+
+Consequence: The release gate still protects page correctness while avoiding failed baseline updates for a low-risk SEO copy collision.

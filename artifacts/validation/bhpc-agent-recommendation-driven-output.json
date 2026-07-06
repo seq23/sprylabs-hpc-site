@@ -1,10 +1,15 @@
 {
   "schema_version": "1.0",
   "validator": "bhpc-agent-recommendation-driven-output",
-  "generated_at": "2026-07-05T15:39:25.456Z",
+  "generated_at": "2026-07-06T16:46:27.346Z",
   "status": "PASS",
-  "rule": "Every required agent recommendation must drive visible output through an agent_directive block containing the source instruction, query target, required quoted/named phrases, and page-level proof marker.",
+  "rule": "Every active-plan agent recommendation must drive visible output through an agent_directive block containing the source instruction, query target, required quoted/named phrases, and page-level proof marker. Cumulative manifest entries outside the active implementation plan are reported as skipped, not failed.",
+  "scope": "active_agent_exact_implementation_plan",
+  "manifest_entry_count": 429,
+  "active_plan_spec_count": 57,
+  "active_acceptance_id_count": 429,
   "checked_count": 429,
+  "skipped_count": 0,
   "checked": [
     {
       "record_id": "2026-06-27-bhpc-001",
@@ -1535,5 +1540,6 @@
       "fixCovered": true
     }
   ],
+  "skipped": [],
   "errors": []
 }
