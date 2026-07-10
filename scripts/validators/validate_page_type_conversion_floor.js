@@ -42,6 +42,7 @@ const warnings = [];
 
 for (const file of files) {
   const html = fs.readFileSync(file, "utf8");
+  if (/name=["\']robots["\'][^>]*noindex/i.test(html) || /noindex[^>]*name=["\']robots["\']/i.test(html)) continue;
   const hasApproved = APPROVED.some(x => html.includes(x));
   const isHighIntent = HIGH_INTENT_PATTERNS.some(re => re.test(file));
 

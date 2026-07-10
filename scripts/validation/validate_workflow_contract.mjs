@@ -11,6 +11,8 @@ const expectedWorkflows = [
   'spry-content-release.yml',
   'spry-full-rebuild.yml',
   'validate-repo.yml',
+  'admin-command.yml',
+  'admin-operations.yml',
 ].sort();
 const retiredWorkflows = [
   'citation-velocity-5k.yml',
@@ -137,8 +139,22 @@ for (const name of actualWorkflows) {
     if (!/permissions:\s*\n\s{2}contents:\s*read\s*\n\s{2}actions:\s*read/m.test(text)) errors.push(`${name}: deployment workflow must declare contents: read and actions: read`);
   }
   if (name === 'daily-citation-intelligence.yml') {
-    has(text, 'npm run workflow:daily-citation-intelligence', name);
-    if (!/permissions:\s*\n\s{2}contents:\s*read/m.test(text)) errors.push(`${name}: citation intelligence workflow must be read-only`);
+    has(text, 'npm run workflow:zero-dollar-autonomous', name);
+    if (!/permissions:\s*\n\s{2}contents:\s*write/m.test(text)) errors.push(`${name}: autonomous citation intelligence workflow requires contents: write`);
+    has(text, 'npm run validate:ownership', name);
+    has(text, 'npm run safe-harbor:validate', name);
+  }
+  if (name === 'admin-operations.yml') {
+    has(text, 'name: Admin Operations', name);
+    has(text, 'workflow_dispatch:', name);
+    has(text, 'npm run distribution:prepare', name);
+    has(text, 'npm run self-heal:generated-content', name);
+    has(text, 'npm run citation:self-heal', name);
+    if (!/permissions:\s*\n\s{2}contents:\s*write/m.test(text)) errors.push(`${name}: admin operations require contents: write`);
+  }
+  if (name === 'admin-command.yml') {
+    has(text, 'node scripts/admin/run_admin_command.mjs', name);
+    has(text, 'npm run validate:full-safe-autonomy', name);
   }
   if (name === 'postdeploy-public-audit.yml') {
     has(text, 'npm run postdeploy:public-click-audit', name);

@@ -49,3 +49,13 @@ Important observed fixes:
 ## Packaging Notes
 
 Generated/heavy local dependency folders are excluded. The ZIP is packaged from the true repo root with no wrapper folder.
+
+## Full Safe Autonomy Hybrid Citation Engine — 2026-07-10
+
+- Paid-agent page-production lane preserved and owner-locked.
+- Daily $0 gap-filling lane activated with fixture mutation disabled by default.
+- Safe Harbor skip-record-continue policy installed.
+- Content ownership registry and protected-lane validation added.
+- 100K/90-day growth strategy, cadence, citation scoreboard, and Growth Health added.
+- Secure `/admin/` operations command center and Cloudflare Pages Functions auth bridge added.
+- Routine content approval remains disabled.

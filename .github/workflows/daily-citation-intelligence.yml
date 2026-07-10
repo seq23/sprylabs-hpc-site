@@ -1,34 +1,55 @@
 name: Daily Citation Intelligence
-
 on:
   workflow_dispatch:
   schedule:
     - cron: "37 13 * * *"
-
 env:
   NODE_OPTIONS: --max-old-space-size=3072
-
 permissions:
-  contents: read
-
+  contents: write
 concurrency:
   group: daily-citation-intelligence-main
   cancel-in-progress: false
-
 jobs:
   daily-citation-intelligence:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 55
     steps:
       - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
       - uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: npm
+        with: {node-version: 24, cache: npm}
       - run: npm ci --ignore-scripts
-      - name: Run shadow citation intelligence proof lane
+      - name: Check autonomous runtime state
+        id: runtime
         run: |
-          npm run workflow:daily-citation-intelligence
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            node - <<'NODE' >> "$GITHUB_OUTPUT"
+          const fs = require('fs');
+          const state = fs.existsSync('data/admin/runtime_control.json') ? JSON.parse(fs.readFileSync('data/admin/runtime_control.json','utf8')) : {};
+          console.log(`run=${state.autopublishing === 'paused' || state.emergency_stop === true ? 'false' : 'true'}`);
+          NODE
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Run autonomous zero-dollar gap-filling lane
+        if: steps.runtime.outputs.run == 'true'
+        run: npm run workflow:zero-dollar-autonomous
+      - name: Validate ownership and Safe Harbor
+        if: steps.runtime.outputs.run == 'true'
+        run: npm run validate:ownership && npm run safe-harbor:validate
+      - name: Commit validated changes
+        if: steps.runtime.outputs.run == 'true'
+        run: |
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git config user.name "spry-zero-dollar-bot"
+            git config user.email "actions@users.noreply.github.com"
+            git add -A
+            git commit -m "zero-dollar citation intelligence: autonomous gap fill"
+            git push
+          else
+            echo "No eligible changes."
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -36,5 +57,9 @@ jobs:
           if-no-files-found: warn
           path: |
             data/signals/**
+            data/governance/**
+            data/health/**
+            data/metrics/**
+            data/admin/**
             artifacts/validation/**
             reports/**

@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "targets": {
+    "new_pages_daily": {
+      "target": [
+        12,
+        20
+      ],
+      "tolerance": [
+        8,
+        25
+      ],
+      "hard_failure": false
+    },
+    "refreshes_daily": {
+      "target": [
+        25,
+        50
+      ],
+      "tolerance": [
+        15,
+        65
+      ],
+      "hard_failure": false
+    },
+    "answer_atoms_daily": {
+      "target": [
+        40,
+        80
+      ],
+      "tolerance": [
+        25,
+        100
+      ],
+      "hard_failure": false
+    },
+    "graph_updates_daily": {
+      "target": [
+        100,
+        250
+      ],
+      "tolerance": [
+        60,
+        325
+      ],
+      "hard_failure": false
+    },
+    "metadata_schema_repairs_daily": {
+      "target": [
+        25,
+        75
+      ],
+      "tolerance": [
+        10,
+        100
+      ],
+      "hard_failure": false
+    }
+  },
+  "targets_are_hard_failures": false,
+  "paid_agent_excluded_from_zero_dollar_targets": true
+}

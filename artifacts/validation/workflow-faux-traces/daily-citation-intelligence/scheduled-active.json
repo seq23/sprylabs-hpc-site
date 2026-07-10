@@ -1,0 +1,23 @@
+{
+  "workflow": "daily-citation-intelligence.yml",
+  "scenario": "scheduled-active",
+  "trigger": "schedule",
+  "status": "TRACE_ONLY_PASS",
+  "execution": "none_trace_only",
+  "included_steps": [
+    "actions/checkout@v4",
+    "actions/setup-node@v4",
+    "daily-citation-intelligence:step-3",
+    "Check autonomous runtime state",
+    "Run autonomous zero-dollar gap-filling lane",
+    "Validate ownership and Safe Harbor",
+    "Commit validated changes",
+    "actions/upload-artifact@v4"
+  ],
+  "skipped_steps": [],
+  "assertions": [
+    "paid-agent ownership validation runs before commit",
+    "fixture data remains nonpublishable",
+    "artifact upload always"
+  ]
+}

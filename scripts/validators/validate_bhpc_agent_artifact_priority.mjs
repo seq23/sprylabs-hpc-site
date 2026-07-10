@@ -13,8 +13,12 @@ const content = Object.entries(texts).find(([name,text]) => (name === 'spry-cont
 if (!content) errors.push('bhpc_agent_content_authority_workflow_missing');
 const daily = Object.entries(texts).find(([name]) => name === 'daily-citation-intelligence.yml');
 if (daily) {
-  if (!/contents:\s*read/.test(daily[1])) errors.push('daily_citation_intelligence_must_be_read_only');
-  if (/release:agent-intake|agent:bhpc:apply-exact/.test(daily[1])) errors.push('daily_citation_intelligence_calls_bhpc_mutation_lane');
+  const text = daily[1];
+  if (!/contents:\s*write/.test(text)) errors.push('daily_citation_intelligence_requires_bounded_write_permission');
+  if (!/workflow:zero-dollar-autonomous/.test(text)) errors.push('daily_citation_intelligence_zero_dollar_lane_missing');
+  if (!/validate:ownership/.test(text) || !/safe-harbor:validate/.test(text)) errors.push('daily_citation_intelligence_protection_gates_missing');
+  if (/release:agent-intake|agent:bhpc:apply-exact/.test(text)) errors.push('daily_citation_intelligence_calls_bhpc_mutation_lane');
+  if (/data\/report_fixes\/agent_runs|data\/report_fixes\/normalized_agent_runs|scripts\/agent_intake/.test(text)) errors.push('daily_citation_intelligence_references_paid_agent_protected_paths');
 }
 const report = {schema_version:'1.0', validator:'bhpc-agent-artifact-priority', status:errors.length?'FAIL':'PASS', errors};
 writeJson('artifacts/validation/bhpc-agent-artifact-priority.json', report);

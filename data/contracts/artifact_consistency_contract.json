@@ -1,0 +1,123 @@
+{
+  "schema_version": "1.0",
+  "status_vocabulary": [
+    "COMPLETED_WITH_CHANGES",
+    "COMPLETED_NO_CHANGES",
+    "COMPLETED_ALL_SKIPPED",
+    "COMPLETED_NO_INPUT",
+    "PARTIAL_WITH_RECORDED_SKIPS",
+    "BLOCKED",
+    "FAILED"
+  ],
+  "path_classes": {
+    "RUNTIME_REQUIRED": [
+      "package.json",
+      "_validation_registry.json",
+      "_repo_validation_matrix.json",
+      "data/content_ownership_registry.json",
+      "data/governance/full_safe_autonomy_policy.json"
+    ],
+    "CANONICAL_PROOF": [
+      "artifacts/validation/daily-citation-release-plan.json",
+      "artifacts/validation/daily-proof-packet.json",
+      "artifacts/validation/workflow-faux-trace-all.json",
+      "artifacts/validation/workflow-yaml-inventory.json"
+    ],
+    "PRESENTATION_ONLY": [
+      "reports/**/*.md",
+      "reports/**/*.html"
+    ],
+    "EPHEMERAL": [
+      "reports/workflows/**",
+      "artifacts/diagnostics/**"
+    ],
+    "CACHE": [
+      ".build/**"
+    ],
+    "DIAGNOSTIC": [
+      "test-results/**",
+      "playwright-report/**"
+    ]
+  },
+  "artifacts": [
+    {
+      "id": "daily_release_plan",
+      "path": "artifacts/validation/daily-citation-release-plan.json",
+      "class": "CANONICAL_PROOF",
+      "required_in_working_tree": true,
+      "required_in_baseline_zip": true,
+      "allow_empty": true,
+      "canonical_arrays": [
+        "selected",
+        "skipped",
+        "blocked"
+      ],
+      "summary_map": {
+        "selected_units": "selected",
+        "skipped_units": "skipped",
+        "blocked_units": "blocked"
+      },
+      "status_field": "status",
+      "presentation_only": false
+    },
+    {
+      "id": "daily_proof_packet",
+      "path": "artifacts/validation/daily-proof-packet.json",
+      "class": "CANONICAL_PROOF",
+      "required_in_working_tree": true,
+      "required_in_baseline_zip": true,
+      "allow_empty": true,
+      "presentation_only": false
+    },
+    {
+      "id": "workflow_inventory",
+      "path": "artifacts/validation/workflow-yaml-inventory.json",
+      "class": "CANONICAL_PROOF",
+      "required_in_working_tree": true,
+      "required_in_baseline_zip": true,
+      "allow_empty": false,
+      "presentation_only": false
+    },
+    {
+      "id": "workflow_inventory_markdown",
+      "path": "reports/workflow-yaml-inventory.md",
+      "class": "PRESENTATION_ONLY",
+      "required_in_working_tree": false,
+      "required_in_baseline_zip": false,
+      "allow_empty": true,
+      "presentation_only": true
+    }
+  ],
+  "field_aliases": {
+    "reason": [
+      "reason",
+      "safe_harbor_reason",
+      "decision_reason",
+      "skip_reason",
+      "ownership_reason"
+    ]
+  },
+  "reconciliation": {
+    "candidate_equation": "input = selected + skipped + blocked + rejected + deferred",
+    "application_equation": "planned = applied + runtime_skipped + failed"
+  },
+  "severity": {
+    "hard_fail": [
+      "missing canonical proof",
+      "canonical count mismatch",
+      "protected lane mutation",
+      "fabricated evidence",
+      "secret exposure",
+      "wrong canonical/domain",
+      "arbitrary admin dispatch"
+    ],
+    "warning_only": [
+      "word count",
+      "page count",
+      "cadence variation",
+      "optional metadata",
+      "presentation report missing",
+      "cosmetic copy length"
+    ]
+  }
+}

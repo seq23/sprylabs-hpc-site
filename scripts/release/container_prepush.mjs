@@ -43,6 +43,7 @@ for (const [label,args] of [
   ['validate:ui-test-parity',['run','validate:ui-test-parity']],
   ['validate:browser-suite-contract',['run','validate:browser-suite-contract']],
   ['validate:traffic-qualified-suite',['run','validate:traffic-qualified-suite']],
+  ['validate:artifact-consistency-e2e',['run','validate:artifact-consistency-e2e']],
   ['validate:batch-f-continuity',['run','validate:batch-f-continuity']],
   ['validate:batch-g-continuity',['run','validate:batch-g-continuity']]
 ]) run(label,args);

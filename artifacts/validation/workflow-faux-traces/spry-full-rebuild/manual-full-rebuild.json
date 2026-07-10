@@ -1,0 +1,22 @@
+{
+  "workflow": "spry-full-rebuild.yml",
+  "scenario": "manual-full-rebuild",
+  "trigger": "workflow_dispatch",
+  "status": "TRACE_ONLY_PASS",
+  "execution": "none_trace_only",
+  "included_steps": [
+    "actions/checkout@v4",
+    "Sync latest main before install",
+    "actions/setup-node@v4",
+    "rebuild:step-4",
+    "Run governed full rebuild",
+    "Commit validated Spry full rebuild",
+    "actions/upload-artifact@v4"
+  ],
+  "skipped_steps": [],
+  "assertions": [
+    "governed full rebuild command exists",
+    "commit helper exists",
+    "diagnostics always upload"
+  ]
+}

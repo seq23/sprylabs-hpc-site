@@ -1,0 +1,27 @@
+{
+  "workflow": "admin-operations.yml",
+  "scenario": "submit_updated_pages",
+  "trigger": "workflow_dispatch",
+  "status": "TRACE_ONLY_PASS",
+  "execution": "none_trace_only",
+  "included_steps": [
+    "actions/checkout@v4",
+    "actions/setup-node@v4",
+    "operate:step-3",
+    "Submit updated pages",
+    "actions/upload-artifact@v4"
+  ],
+  "skipped_steps": [
+    "Refresh authority surfaces",
+    "Run self-healing",
+    "Fix eligible failed pages",
+    "Rerun distribution",
+    "Commit validated repository changes"
+  ],
+  "assertions": [
+    "operation is enumerated choice",
+    "nonmatching operation steps skip",
+    "mutating repo operations commit only validated diffs",
+    "artifacts upload always"
+  ]
+}

@@ -51,21 +51,41 @@ jobs:
         run: |
           git fetch origin main
           git reset --hard origin/main
+      - name: Check autonomous runtime state
+        id: runtime
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            node - <<'NODE' >> "$GITHUB_OUTPUT"
+          const fs = require('fs');
+          const state = fs.existsSync('data/admin/runtime_control.json') ? JSON.parse(fs.readFileSync('data/admin/runtime_control.json','utf8')) : {};
+          console.log(`run=${state.autopublishing === 'paused' || state.emergency_stop === true ? 'false' : 'true'}`);
+          NODE
+          fi
       - uses: actions/setup-node@v4
+        if: steps.runtime.outputs.run == 'true'
         with:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
+        if: steps.runtime.outputs.run == 'true'
       - name: Resolve release mode
+        if: steps.runtime.outputs.run == 'true'
         run: |
           RELEASE_MODE="${{ github.event.inputs.mode }}"
           if [ -z "$RELEASE_MODE" ]; then RELEASE_MODE="full-content-cycle"; fi
           if [ "${GITHUB_EVENT_NAME}" = "push" ]; then RELEASE_MODE="agent-intake"; fi
           echo "RELEASE_MODE=$RELEASE_MODE" >> "$GITHUB_ENV"
       - name: Run governed Spry content release
+        if: steps.runtime.outputs.run == 'true'
         run: |
           npm run workflow:run -- --workflow spry-content-release -- npm run workflow:spry-content-release -- --mode "$RELEASE_MODE"
+      - name: Rebuild ownership and admin snapshots
+        if: steps.runtime.outputs.run == 'true'
+        run: npm run ownership:build && npm run admin:build
       - name: Commit validated Spry content release
+        if: steps.runtime.outputs.run == 'true'
         run: |
           ./.github/scripts/commit_and_push_if_changed.sh "spry content release" spry-content-release
       - uses: actions/upload-artifact@v4

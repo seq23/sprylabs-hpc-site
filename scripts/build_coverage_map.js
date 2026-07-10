@@ -17,6 +17,7 @@ const CLUSTERS_PATH = path.join(ROOT, "content", "insights", "_clusters.json");
 const OUT_DIR = path.join(ROOT, "coverage");
 const OUT_JSON = path.join(OUT_DIR, "coverage.json");
 const OUT_HTML = path.join(OUT_DIR, "index.html");
+const ADMIN_COVERAGE_JSON = path.join(ROOT, "data", "admin", "coverage_operations.json");
 const COVERAGE_URL = "https://spryexecutiveos.com/coverage/";
 const OG_IMAGE = "https://spryexecutiveos.com/assets/img/bhpc-hero-square.png";
 const PUBLISHED_REDDIT_PATH = path.join(ROOT, "data", "reddit", "published_manifest.json");
@@ -203,28 +204,35 @@ function escapeHtml(s) {
 
 function renderRows(report) {
   return report.clusters
+    .filter((c) => c.live > 0)
     .slice(0, 16)
-    .map((c) => {
-      const range = c.draftDateRange.min
-        ? `${c.draftDateRange.min} → ${c.draftDateRange.max || c.draftDateRange.min}`
-        : "—";
-      return `
+    .map((c) => `
         <tr>
           <td><a href="/pillars/${escapeHtml(c.id)}/">${escapeHtml(c.name)}</a></td>
           <td class="num">${c.live}</td>
-          <td class="num">${c.draft}</td>
-          <td class="num">${c.total}</td>
-          <td class="small">${escapeHtml(range)}</td>
-        </tr>`;
-    })
+          <td>${escapeHtml(c.description || "Published coverage cluster")}</td>
+        </tr>`)
     .join("\n");
 }
 
-function renderNextDates(report) {
-  if (!report.runway.next10DraftDates.length) return "<p>No dated drafts were found in the current snapshot.</p>";
-  return `<p>${report.runway.next10DraftDates.map((d) => `<code>${escapeHtml(d)}</code>`).join(" ")}</p>`;
+function publicCoverageReport(report) {
+  return {
+    generatedAtUtc: report.generatedAtUtc,
+    totals: {
+      live: report.totals.live,
+      publishedClusters: report.clusters.filter((c) => c.live > 0).length,
+    },
+    redditVelocity: report.redditVelocity,
+    clusters: report.clusters
+      .filter((c) => c.live > 0)
+      .map((c) => ({
+        id: c.id,
+        name: c.name,
+        description: c.description,
+        live: c.live,
+      })),
+  };
 }
-
 
 function renderRedditVelocity(report) {
   if (!report.redditVelocity || !report.redditVelocity.totalPublished) {
@@ -376,21 +384,19 @@ function renderHtml(report) {
 </section>
 <section>
 <div class="container">
-<h2>Live coverage snapshot</h2>
-<p>This snapshot is generated from the current repo state. It does not try to guess future content. It simply reports what is live, what is drafted, and how the current clusters are distributed.</p>
+<h2>Published coverage snapshot</h2>
+<p>This snapshot is generated from the current public content library. It reports published coverage only. Draft schedules, release runway, and production backlog remain inside the private admin command center.</p>
 <div class="table-wrap">
 <table>
 <thead>
-<tr><th>Cluster</th><th>Live</th><th>Draft</th><th>Total</th><th>Draft runway</th></tr>
+<tr><th>Cluster</th><th>Published pages</th><th>Coverage focus</th></tr>
 </thead>
 <tbody>
 ${renderRows(report)}
 </tbody>
 </table>
 </div>
-<h2>Upcoming dated drafts</h2>
-${renderNextDates(report)}
-<p class="small">Generated ${escapeHtml(report.generatedAtUtc)}. Totals: ${report.totals.live} live, ${report.totals.drafts} drafts, ${report.totals.clusters} tracked clusters.</p>
+<p class="small">Generated ${escapeHtml(report.generatedAtUtc)}. Totals: ${report.totals.live} published pages across ${report.clusters.filter((c) => c.live > 0).length} published clusters.</p>
 </div>
 </section>
 <section>
@@ -435,8 +441,11 @@ function main() {
     redditPages: loadPublishedRedditPages(),
   });
 
-  fs.writeFileSync(OUT_JSON, JSON.stringify(report, null, 2) + "\n", "utf8");
+  ensureDir(path.dirname(ADMIN_COVERAGE_JSON));
+  fs.writeFileSync(ADMIN_COVERAGE_JSON, JSON.stringify(report, null, 2) + "\n", "utf8");
+  fs.writeFileSync(OUT_JSON, JSON.stringify(publicCoverageReport(report), null, 2) + "\n", "utf8");
   fs.writeFileSync(OUT_HTML, renderHtml(report), "utf8");
+  console.log(`Wrote ${path.relative(ROOT, ADMIN_COVERAGE_JSON)}`);
   console.log(`Wrote ${path.relative(ROOT, OUT_JSON)}`);
   console.log(`Wrote ${path.relative(ROOT, OUT_HTML)}`);
 }

@@ -28,3 +28,8 @@ Day-0 setup:
 ## Machine Readability System Layer
 
 This repo includes machine-readable entry points (`llms.txt`, `answers.json`, `coverage.json`, query maps, entity registry, and internal authority graph), a strict backlog-controlled generation layer, social/reddit firehose controls, answer-surface monitoring outputs, distribution artifacts, and validators for crawl, sitemap, CTA, schema, entity, query, authority, and conversion contracts.
+
+
+## Autonomous authority architecture
+
+This repo is an LLM-ingestion, AEO/SEO/GEO, and citation-authority system. `/download` is the commercial page and Gumroad remains the external checkout. A paid weekly AI-agent lane creates and owns its pages. A separate daily `$0` lane fills uncovered gaps under Full Safe Autonomy. Routine approval is disabled. `/admin/` provides visibility, diagnostics, configuration, proof, and emergency controls.

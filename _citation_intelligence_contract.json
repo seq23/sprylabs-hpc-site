@@ -1,7 +1,7 @@
 {
-  "schema_version": "1.4",
+  "schema_version": "2.0",
   "repo": "seq23/sprylabs-hpc-site",
-  "mode": "SHADOW_MODE",
+  "mode": "FULL_SAFE_AUTONOMY_GAP_FILL",
   "signals_inform_release_plans": true,
   "release_plans_govern_publication": true,
   "live_ingestion_claims_allowed": false,
@@ -35,11 +35,104 @@
     "backlinks": false
   },
   "required_outputs": [
+    "artifacts/validation/daily-citation-release-plan.json",
+    "artifacts/validation/daily-proof-packet.json",
     "artifacts/validation/firehose-collection.json",
+    "artifacts/validation/fixture-signal-trace.json",
     "artifacts/validation/signal-normalization.json",
     "artifacts/validation/source-health-ledger.json",
-    "artifacts/validation/fixture-signal-trace.json",
-    "artifacts/validation/daily-citation-release-plan.json",
-    "artifacts/validation/daily-proof-packet.json"
+    "data/admin/growth_health.json",
+    "data/content_ownership_registry.json",
+    "data/governance/safe_harbor_audit_ledger.json",
+    "data/governance/safe_harbor_rewrite_ledger.json",
+    "data/health/growth_health_snapshot.json",
+    "data/metrics/citation_scoreboard.json"
+  ],
+  "operating_model": "FULL_SAFE_AUTONOMY",
+  "routine_human_approval": false,
+  "exception_behavior": "skip_record_continue",
+  "paid_agent_pages_owner_locked": true,
+  "primary_goal": {
+    "metric": "citation_ready_surfaces_observed_opportunities_mentions_or_attributable_impressions",
+    "target": 100000,
+    "time_horizon_days": 90,
+    "guaranteed": false
+  },
+  "cadence_targets": {
+    "new_pages_daily": {
+      "target": [
+        12,
+        20
+      ],
+      "tolerance": [
+        8,
+        25
+      ],
+      "hard_failure": false
+    },
+    "refreshes_daily": {
+      "target": [
+        25,
+        50
+      ],
+      "tolerance": [
+        15,
+        65
+      ],
+      "hard_failure": false
+    },
+    "answer_atoms_daily": {
+      "target": [
+        40,
+        80
+      ],
+      "tolerance": [
+        25,
+        100
+      ],
+      "hard_failure": false
+    },
+    "graph_updates_daily": {
+      "target": [
+        100,
+        250
+      ],
+      "tolerance": [
+        60,
+        325
+      ],
+      "hard_failure": false
+    },
+    "metadata_schema_repairs_daily": {
+      "target": [
+        25,
+        75
+      ],
+      "tolerance": [
+        10,
+        100
+      ],
+      "hard_failure": false
+    }
+  },
+  "protected_paid_agent_paths": [
+    "data/report_fixes/agent_runs/**",
+    "data/report_fixes/normalized_agent_runs/**",
+    "data/report_fixes/agent_exact_implementation_plan.json",
+    "data/report_fixes/agent_acceptance_manifest.generated.json",
+    "scripts/agent_intake/**"
+  ],
+  "safe_harbor_decisions": [
+    "SAFE_AUTOPUBLISH",
+    "REWRITTEN_AND_AUTOPUBLISHED",
+    "SKIPPED_PROTECTED_OWNER",
+    "SKIPPED_UNSUPPORTED_CLAIM",
+    "SKIPPED_PROHIBITED_ACTION",
+    "SKIPPED_DUPLICATE_INTENT",
+    "SELF_REPAIRED",
+    "PUBLISHED",
+    "DISTRIBUTED",
+    "MEASURED",
+    "SYSTEM_BLOCKED"
   ]
 }

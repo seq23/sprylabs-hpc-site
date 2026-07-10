@@ -1,0 +1,818 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-07-10T19:52:57.424129+00:00",
+  "status": "PASS",
+  "workflow_count": 8,
+  "scenario_count": 33,
+  "workflows": [
+    "admin-command.yml",
+    "admin-operations.yml",
+    "daily-citation-intelligence.yml",
+    "deploy-distribution.yml",
+    "postdeploy-public-audit.yml",
+    "spry-content-release.yml",
+    "spry-full-rebuild.yml",
+    "validate-repo.yml"
+  ],
+  "errors": [],
+  "warnings": [],
+  "traces": [
+    {
+      "workflow": "admin-command.yml",
+      "scenario": "pause_autopublishing",
+      "trigger": "workflow_dispatch",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "actions/setup-node@v4",
+        "command:step-3",
+        "Execute registered command",
+        "command:step-5",
+        "Commit control state"
+      ],
+      "skipped_steps": [],
+      "assertions": [
+        "server allowlist supplies fixed action",
+        "admin command script exists",
+        "full-safe-autonomy validation follows mutation",
+        "commit only when diff exists"
+      ]
+    },
+    {
+      "workflow": "admin-command.yml",
+      "scenario": "resume_autopublishing",
+      "trigger": "workflow_dispatch",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "actions/setup-node@v4",
+        "command:step-3",
+        "Execute registered command",
+        "command:step-5",
+        "Commit control state"
+      ],
+      "skipped_steps": [],
+      "assertions": [
+        "server allowlist supplies fixed action",
+        "admin command script exists",
+        "full-safe-autonomy validation follows mutation",
+        "commit only when diff exists"
+      ]
+    },
+    {
+      "workflow": "admin-command.yml",
+      "scenario": "set_aggressiveness",
+      "trigger": "workflow_dispatch",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "actions/setup-node@v4",
+        "command:step-3",
+        "Execute registered command",
+        "command:step-5",
+        "Commit control state"
+      ],
+      "skipped_steps": [],
+      "assertions": [
+        "server allowlist supplies fixed action",
+        "admin command script exists",
+        "full-safe-autonomy validation follows mutation",
+        "commit only when diff exists"
+      ]
+    },
+    {
+      "workflow": "admin-command.yml",
+      "scenario": "rebuild_admin",
+      "trigger": "workflow_dispatch",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "actions/setup-node@v4",
+        "command:step-3",
+        "Execute registered command",
+        "command:step-5",
+        "Commit control state"
+      ],
+      "skipped_steps": [],
+      "assertions": [
+        "server allowlist supplies fixed action",
+        "admin command script exists",
+        "full-safe-autonomy validation follows mutation",
+        "commit only when diff exists"
+      ]
+    },
+    {
+      "workflow": "admin-command.yml",
+      "scenario": "emergency_stop",
+      "trigger": "workflow_dispatch",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "actions/setup-node@v4",
+        "command:step-3",
+        "Execute registered command",
+        "command:step-5",
+        "Commit control state"
+      ],
+      "skipped_steps": [],
+      "assertions": [
+        "server allowlist supplies fixed action",
+        "admin command script exists",
+        "full-safe-autonomy validation follows mutation",
+        "commit only when diff exists"
+      ]
+    },
+    {
+      "workflow": "admin-operations.yml",
+      "scenario": "refresh_surfaces",
+      "trigger": "workflow_dispatch",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "actions/setup-node@v4",
+        "operate:step-3",
+        "Refresh authority surfaces",
+        "Commit validated repository changes",
+        "actions/upload-artifact@v4"
+      ],
+      "skipped_steps": [
+        "Submit updated pages",
+        "Run self-healing",
+        "Fix eligible failed pages",
+        "Rerun distribution"
+      ],
+      "assertions": [
+        "operation is enumerated choice",
+        "nonmatching operation steps skip",
+        "mutating repo operations commit only validated diffs",
+        "artifacts upload always"
+      ]
+    },
+    {
+      "workflow": "admin-operations.yml",
+      "scenario": "submit_updated_pages",
+      "trigger": "workflow_dispatch",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "actions/setup-node@v4",
+        "operate:step-3",
+        "Submit updated pages",
+        "actions/upload-artifact@v4"
+      ],
+      "skipped_steps": [
+        "Refresh authority surfaces",
+        "Run self-healing",
+        "Fix eligible failed pages",
+        "Rerun distribution",
+        "Commit validated repository changes"
+      ],
+      "assertions": [
+        "operation is enumerated choice",
+        "nonmatching operation steps skip",
+        "mutating repo operations commit only validated diffs",
+        "artifacts upload always"
+      ]
+    },
+    {
+      "workflow": "admin-operations.yml",
+      "scenario": "run_self_healing",
+      "trigger": "workflow_dispatch",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "actions/setup-node@v4",
+        "operate:step-3",
+        "Run self-healing",
+        "Commit validated repository changes",
+        "actions/upload-artifact@v4"
+      ],
+      "skipped_steps": [
+        "Refresh authority surfaces",
+        "Submit updated pages",
+        "Fix eligible failed pages",
+        "Rerun distribution"
+      ],
+      "assertions": [
+        "operation is enumerated choice",
+        "nonmatching operation steps skip",
+        "mutating repo operations commit only validated diffs",
+        "artifacts upload always"
+      ]
+    },
+    {
+      "workflow": "admin-operations.yml",
+      "scenario": "fix_failed_pages",
+      "trigger": "workflow_dispatch",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "actions/setup-node@v4",
+        "operate:step-3",
+        "Fix eligible failed pages",
+        "Commit validated repository changes",
+        "actions/upload-artifact@v4"
+      ],
+      "skipped_steps": [
+        "Refresh authority surfaces",
+        "Submit updated pages",
+        "Run self-healing",
+        "Rerun distribution"
+      ],
+      "assertions": [
+        "operation is enumerated choice",
+        "nonmatching operation steps skip",
+        "mutating repo operations commit only validated diffs",
+        "artifacts upload always"
+      ]
+    },
+    {
+      "workflow": "admin-operations.yml",
+      "scenario": "rerun_distribution",
+      "trigger": "workflow_dispatch",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "actions/setup-node@v4",
+        "operate:step-3",
+        "Rerun distribution",
+        "actions/upload-artifact@v4"
+      ],
+      "skipped_steps": [
+        "Refresh authority surfaces",
+        "Submit updated pages",
+        "Run self-healing",
+        "Fix eligible failed pages",
+        "Commit validated repository changes"
+      ],
+      "assertions": [
+        "operation is enumerated choice",
+        "nonmatching operation steps skip",
+        "mutating repo operations commit only validated diffs",
+        "artifacts upload always"
+      ]
+    },
+    {
+      "workflow": "daily-citation-intelligence.yml",
+      "scenario": "manual",
+      "trigger": "workflow_dispatch",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "actions/setup-node@v4",
+        "daily-citation-intelligence:step-3",
+        "Check autonomous runtime state",
+        "Run autonomous zero-dollar gap-filling lane",
+        "Validate ownership and Safe Harbor",
+        "Commit validated changes",
+        "actions/upload-artifact@v4"
+      ],
+      "skipped_steps": [],
+      "assertions": [
+        "paid-agent ownership validation runs before commit",
+        "fixture data remains nonpublishable",
+        "artifact upload always"
+      ]
+    },
+    {
+      "workflow": "daily-citation-intelligence.yml",
+      "scenario": "scheduled-active",
+      "trigger": "schedule",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "actions/setup-node@v4",
+        "daily-citation-intelligence:step-3",
+        "Check autonomous runtime state",
+        "Run autonomous zero-dollar gap-filling lane",
+        "Validate ownership and Safe Harbor",
+        "Commit validated changes",
+        "actions/upload-artifact@v4"
+      ],
+      "skipped_steps": [],
+      "assertions": [
+        "paid-agent ownership validation runs before commit",
+        "fixture data remains nonpublishable",
+        "artifact upload always"
+      ]
+    },
+    {
+      "workflow": "daily-citation-intelligence.yml",
+      "scenario": "scheduled-paused",
+      "trigger": "schedule",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "actions/setup-node@v4",
+        "daily-citation-intelligence:step-3",
+        "Check autonomous runtime state",
+        "actions/upload-artifact@v4"
+      ],
+      "skipped_steps": [
+        "Run autonomous zero-dollar gap-filling lane",
+        "Validate ownership and Safe Harbor",
+        "Commit validated changes"
+      ],
+      "assertions": [
+        "pause state skips mutation",
+        "fixture data remains nonpublishable",
+        "artifact upload always"
+      ]
+    },
+    {
+      "workflow": "deploy-distribution.yml",
+      "scenario": "manual-valid-artifact",
+      "trigger": "workflow_dispatch",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "actions/setup-node@v4",
+        "deploy:step-3",
+        "Resolve validated artifact identity",
+        "actions/download-artifact@v4",
+        "Normalize downloaded validation artifact",
+        "Verify attestation and deploy distribution"
+      ],
+      "skipped_steps": [],
+      "assertions": [
+        "exact validated artifact identity required",
+        "attestation checked before distribution",
+        "failed upstream run does not deploy"
+      ]
+    },
+    {
+      "workflow": "deploy-distribution.yml",
+      "scenario": "workflow-run-success-main",
+      "trigger": "workflow_run",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "actions/setup-node@v4",
+        "deploy:step-3",
+        "Resolve validated artifact identity",
+        "actions/download-artifact@v4",
+        "Normalize downloaded validation artifact",
+        "Verify attestation and deploy distribution"
+      ],
+      "skipped_steps": [],
+      "assertions": [
+        "exact validated artifact identity required",
+        "attestation checked before distribution",
+        "failed upstream run does not deploy"
+      ]
+    },
+    {
+      "workflow": "deploy-distribution.yml",
+      "scenario": "workflow-run-failed",
+      "trigger": "workflow_run",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [],
+      "skipped_steps": [
+        "actions/checkout@v4",
+        "actions/setup-node@v4",
+        "deploy:step-3",
+        "Resolve validated artifact identity",
+        "actions/download-artifact@v4",
+        "Normalize downloaded validation artifact",
+        "Verify attestation and deploy distribution"
+      ],
+      "assertions": [
+        "exact validated artifact identity required",
+        "attestation checked before distribution",
+        "failed upstream run does not deploy"
+      ]
+    },
+    {
+      "workflow": "postdeploy-public-audit.yml",
+      "scenario": "manual-public-audit",
+      "trigger": "workflow_dispatch",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "actions/setup-node@v4",
+        "audit:step-3",
+        "Install Playwright runtime",
+        "Run deployed public route audit",
+        "actions/upload-artifact@v4"
+      ],
+      "skipped_steps": [],
+      "assertions": [
+        "base_url required",
+        "Chromium installed before test",
+        "diagnostics uploaded on failure"
+      ]
+    },
+    {
+      "workflow": "spry-content-release.yml",
+      "scenario": "manual-full-content-cycle",
+      "trigger": "workflow_dispatch",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "Sync latest main before install",
+        "Check autonomous runtime state",
+        "actions/setup-node@v4",
+        "release:step-5",
+        "Resolve release mode",
+        "Run governed Spry content release",
+        "Rebuild ownership and admin snapshots",
+        "Commit validated Spry content release",
+        "actions/upload-artifact@v4"
+      ],
+      "skipped_steps": [],
+      "assertions": [
+        "mode resolves to full-content-cycle",
+        "governed runner wraps release",
+        "ownership/admin snapshots built before commit",
+        "diagnostics always upload"
+      ]
+    },
+    {
+      "workflow": "spry-content-release.yml",
+      "scenario": "manual-agent-intake",
+      "trigger": "workflow_dispatch",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "Sync latest main before install",
+        "Check autonomous runtime state",
+        "actions/setup-node@v4",
+        "release:step-5",
+        "Resolve release mode",
+        "Run governed Spry content release",
+        "Rebuild ownership and admin snapshots",
+        "Commit validated Spry content release",
+        "actions/upload-artifact@v4"
+      ],
+      "skipped_steps": [],
+      "assertions": [
+        "mode resolves to agent-intake",
+        "governed runner wraps release",
+        "ownership/admin snapshots built before commit",
+        "diagnostics always upload"
+      ]
+    },
+    {
+      "workflow": "spry-content-release.yml",
+      "scenario": "manual-daily-insight",
+      "trigger": "workflow_dispatch",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "Sync latest main before install",
+        "Check autonomous runtime state",
+        "actions/setup-node@v4",
+        "release:step-5",
+        "Resolve release mode",
+        "Run governed Spry content release",
+        "Rebuild ownership and admin snapshots",
+        "Commit validated Spry content release",
+        "actions/upload-artifact@v4"
+      ],
+      "skipped_steps": [],
+      "assertions": [
+        "mode resolves to daily-insight",
+        "governed runner wraps release",
+        "ownership/admin snapshots built before commit",
+        "diagnostics always upload"
+      ]
+    },
+    {
+      "workflow": "spry-content-release.yml",
+      "scenario": "manual-signal-intake",
+      "trigger": "workflow_dispatch",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "Sync latest main before install",
+        "Check autonomous runtime state",
+        "actions/setup-node@v4",
+        "release:step-5",
+        "Resolve release mode",
+        "Run governed Spry content release",
+        "Rebuild ownership and admin snapshots",
+        "Commit validated Spry content release",
+        "actions/upload-artifact@v4"
+      ],
+      "skipped_steps": [],
+      "assertions": [
+        "mode resolves to signal-intake",
+        "governed runner wraps release",
+        "ownership/admin snapshots built before commit",
+        "diagnostics always upload"
+      ]
+    },
+    {
+      "workflow": "spry-content-release.yml",
+      "scenario": "manual-synthesis",
+      "trigger": "workflow_dispatch",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "Sync latest main before install",
+        "Check autonomous runtime state",
+        "actions/setup-node@v4",
+        "release:step-5",
+        "Resolve release mode",
+        "Run governed Spry content release",
+        "Rebuild ownership and admin snapshots",
+        "Commit validated Spry content release",
+        "actions/upload-artifact@v4"
+      ],
+      "skipped_steps": [],
+      "assertions": [
+        "mode resolves to synthesis",
+        "governed runner wraps release",
+        "ownership/admin snapshots built before commit",
+        "diagnostics always upload"
+      ]
+    },
+    {
+      "workflow": "spry-content-release.yml",
+      "scenario": "manual-whitepaper",
+      "trigger": "workflow_dispatch",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "Sync latest main before install",
+        "Check autonomous runtime state",
+        "actions/setup-node@v4",
+        "release:step-5",
+        "Resolve release mode",
+        "Run governed Spry content release",
+        "Rebuild ownership and admin snapshots",
+        "Commit validated Spry content release",
+        "actions/upload-artifact@v4"
+      ],
+      "skipped_steps": [],
+      "assertions": [
+        "mode resolves to whitepaper",
+        "governed runner wraps release",
+        "ownership/admin snapshots built before commit",
+        "diagnostics always upload"
+      ]
+    },
+    {
+      "workflow": "spry-content-release.yml",
+      "scenario": "manual-citation-expansion",
+      "trigger": "workflow_dispatch",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "Sync latest main before install",
+        "Check autonomous runtime state",
+        "actions/setup-node@v4",
+        "release:step-5",
+        "Resolve release mode",
+        "Run governed Spry content release",
+        "Rebuild ownership and admin snapshots",
+        "Commit validated Spry content release",
+        "actions/upload-artifact@v4"
+      ],
+      "skipped_steps": [],
+      "assertions": [
+        "mode resolves to citation-expansion",
+        "governed runner wraps release",
+        "ownership/admin snapshots built before commit",
+        "diagnostics always upload"
+      ]
+    },
+    {
+      "workflow": "spry-content-release.yml",
+      "scenario": "manual-strict",
+      "trigger": "workflow_dispatch",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "Sync latest main before install",
+        "Check autonomous runtime state",
+        "actions/setup-node@v4",
+        "release:step-5",
+        "Resolve release mode",
+        "Run governed Spry content release",
+        "Rebuild ownership and admin snapshots",
+        "Commit validated Spry content release",
+        "actions/upload-artifact@v4"
+      ],
+      "skipped_steps": [],
+      "assertions": [
+        "mode resolves to strict",
+        "governed runner wraps release",
+        "ownership/admin snapshots built before commit",
+        "diagnostics always upload"
+      ]
+    },
+    {
+      "workflow": "spry-content-release.yml",
+      "scenario": "scheduled-active",
+      "trigger": "schedule",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "Sync latest main before install",
+        "Check autonomous runtime state",
+        "actions/setup-node@v4",
+        "release:step-5",
+        "Resolve release mode",
+        "Run governed Spry content release",
+        "Rebuild ownership and admin snapshots",
+        "Commit validated Spry content release",
+        "actions/upload-artifact@v4"
+      ],
+      "skipped_steps": [],
+      "assertions": [
+        "runtime/commit guard honored",
+        "paid-agent scripts remain canonical",
+        "protected lane validation remains in release command"
+      ]
+    },
+    {
+      "workflow": "spry-content-release.yml",
+      "scenario": "scheduled-paused",
+      "trigger": "schedule",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "Sync latest main before install",
+        "Check autonomous runtime state",
+        "actions/upload-artifact@v4"
+      ],
+      "skipped_steps": [
+        "actions/setup-node@v4",
+        "release:step-5",
+        "Resolve release mode",
+        "Run governed Spry content release",
+        "Rebuild ownership and admin snapshots",
+        "Commit validated Spry content release"
+      ],
+      "assertions": [
+        "runtime/commit guard honored",
+        "paid-agent scripts remain canonical",
+        "protected lane validation remains in release command"
+      ]
+    },
+    {
+      "workflow": "spry-content-release.yml",
+      "scenario": "agent-manifest-push",
+      "trigger": "push",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "Sync latest main before install",
+        "Check autonomous runtime state",
+        "actions/setup-node@v4",
+        "release:step-5",
+        "Resolve release mode",
+        "Run governed Spry content release",
+        "Rebuild ownership and admin snapshots",
+        "Commit validated Spry content release",
+        "actions/upload-artifact@v4"
+      ],
+      "skipped_steps": [],
+      "assertions": [
+        "push manifest forces agent-intake",
+        "paid-agent scripts remain canonical",
+        "protected lane validation remains in release command"
+      ]
+    },
+    {
+      "workflow": "spry-content-release.yml",
+      "scenario": "snapshot-update-push-skipped",
+      "trigger": "push",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "Sync latest main before install",
+        "Check autonomous runtime state",
+        "actions/upload-artifact@v4"
+      ],
+      "skipped_steps": [
+        "actions/setup-node@v4",
+        "release:step-5",
+        "Resolve release mode",
+        "Run governed Spry content release",
+        "Rebuild ownership and admin snapshots",
+        "Commit validated Spry content release"
+      ],
+      "assertions": [
+        "runtime/commit guard honored",
+        "paid-agent scripts remain canonical",
+        "protected lane validation remains in release command"
+      ]
+    },
+    {
+      "workflow": "spry-full-rebuild.yml",
+      "scenario": "manual-full-rebuild",
+      "trigger": "workflow_dispatch",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "Sync latest main before install",
+        "actions/setup-node@v4",
+        "rebuild:step-4",
+        "Run governed full rebuild",
+        "Commit validated Spry full rebuild",
+        "actions/upload-artifact@v4"
+      ],
+      "skipped_steps": [],
+      "assertions": [
+        "governed full rebuild command exists",
+        "commit helper exists",
+        "diagnostics always upload"
+      ]
+    },
+    {
+      "workflow": "validate-repo.yml",
+      "scenario": "workflow_dispatch",
+      "trigger": "workflow_dispatch",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "actions/setup-node@v4",
+        "validate:step-3",
+        "Build and validate exact distribution artifact",
+        "actions/upload-artifact@v4",
+        "actions/upload-artifact@v4"
+      ],
+      "skipped_steps": [],
+      "assertions": [
+        "exact artifact built and validated",
+        "success artifact name matches deploy workflow expectation",
+        "diagnostics always upload"
+      ]
+    },
+    {
+      "workflow": "validate-repo.yml",
+      "scenario": "push-main",
+      "trigger": "push",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "actions/setup-node@v4",
+        "validate:step-3",
+        "Build and validate exact distribution artifact",
+        "actions/upload-artifact@v4",
+        "actions/upload-artifact@v4"
+      ],
+      "skipped_steps": [],
+      "assertions": [
+        "exact artifact built and validated",
+        "success artifact name matches deploy workflow expectation",
+        "diagnostics always upload"
+      ]
+    },
+    {
+      "workflow": "validate-repo.yml",
+      "scenario": "pull_request-main",
+      "trigger": "pull_request",
+      "status": "TRACE_ONLY_PASS",
+      "execution": "none_trace_only",
+      "included_steps": [
+        "actions/checkout@v4",
+        "actions/setup-node@v4",
+        "validate:step-3",
+        "Build and validate exact distribution artifact",
+        "actions/upload-artifact@v4",
+        "actions/upload-artifact@v4"
+      ],
+      "skipped_steps": [],
+      "assertions": [
+        "exact artifact built and validated",
+        "success artifact name matches deploy workflow expectation",
+        "diagnostics always upload"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "mode": "FULL_SAFE_AUTONOMY",
+  "routine_human_approval": false,
+  "approval_queue": false,
+  "exception_behavior": "skip_record_continue",
+  "self_repair": true,
+  "paid_agent_owner_locked": true,
+  "system_block_conditions": [
+    "contract_corruption",
+    "lost_provenance",
+    "secret_exposure",
+    "canonical_corruption",
+    "protected_lane_mutation",
+    "fabricated_evidence",
+    "unsafe_publish_escape"
+  ]
+}

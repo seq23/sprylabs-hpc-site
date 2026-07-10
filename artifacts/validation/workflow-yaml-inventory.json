@@ -1,10 +1,88 @@
 {
   "schema_version": "2.0",
   "repo": "seq23/sprylabs-hpc-site",
-  "generated_at": "2026-07-04T13:05:00Z",
-  "workflow_count": 6,
-  "topology": "velocity_aligned_six_workflow_surface",
+  "generated_at": "2026-07-10T18:30:00Z",
+  "workflow_count": 8,
+  "topology": "full_safe_autonomy_eight_workflow_surface",
   "workflows": [
+    {
+      "current_status": "keep_admitted",
+      "reason": "User-approved admin command-center workflow with bounded, allowlisted server-side dispatch.",
+      "forbidden_runtime_mutations": [
+        ".github/**",
+        "package.json",
+        "package-lock.json",
+        "scripts/**",
+        "docs/**",
+        "_repo*.json",
+        "_validation_registry.json",
+        "_repo_validation_matrix.json",
+        "data/workflows/**"
+      ],
+      "required_artifacts": [
+        "artifacts/validation/**",
+        "reports/**",
+        "data/admin/**"
+      ],
+      "validation_owner": "workflow inventory, all-YAML faux trace, write-scope, runtime-mutation, and admin bridge validators",
+      "path": ".github/workflows/admin-command.yml",
+      "name": "Admin Command",
+      "trigger": [
+        "workflow_dispatch"
+      ],
+      "primary_command": "node scripts/admin/run_admin_command.mjs",
+      "repo_lane": "admin-control",
+      "allowed_runtime_mutations": [
+        "data/admin/**",
+        "data/strategy/**",
+        "admin/**",
+        "artifacts/validation/**",
+        "reports/**"
+      ]
+    },
+    {
+      "current_status": "keep_admitted",
+      "reason": "User-approved admin command-center workflow with bounded, allowlisted server-side dispatch.",
+      "forbidden_runtime_mutations": [
+        ".github/**",
+        "package.json",
+        "package-lock.json",
+        "scripts/**",
+        "docs/**",
+        "_repo*.json",
+        "_validation_registry.json",
+        "_repo_validation_matrix.json",
+        "data/workflows/**"
+      ],
+      "required_artifacts": [
+        "artifacts/validation/**",
+        "reports/**",
+        "data/admin/**"
+      ],
+      "validation_owner": "workflow inventory, all-YAML faux trace, write-scope, runtime-mutation, and admin bridge validators",
+      "path": ".github/workflows/admin-operations.yml",
+      "name": "Admin Operations",
+      "trigger": [
+        "workflow_dispatch"
+      ],
+      "primary_command": "operation-specific allowlisted npm command",
+      "repo_lane": "admin-operations",
+      "allowed_runtime_mutations": [
+        "data/**",
+        "admin/**",
+        "artifacts/validation/**",
+        "reports/**",
+        "*.html",
+        "answers/**",
+        "clusters/**",
+        "comparisons/**",
+        "content/**",
+        "coverage/**",
+        "llms*.txt",
+        "sitemap*.xml",
+        "feed.*"
+      ]
+    },
     {
       "path": ".github/workflows/daily-citation-intelligence.yml",
       "name": "Daily Citation Intelligence",

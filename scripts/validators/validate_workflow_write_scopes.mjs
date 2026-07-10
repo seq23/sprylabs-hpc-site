@@ -1,0 +1,2 @@
+#!/usr/bin/env node
+import fs from 'node:fs';const wf=fs.readFileSync('.github/workflows/daily-citation-intelligence.yml','utf8');const errors=[];if(!/contents:\s*write/.test(wf))errors.push('daily lane must be able to commit safe changes');if(!wf.includes('validate:ownership'))errors.push('ownership validation missing');if(!wf.includes('safe-harbor:validate'))errors.push('Safe Harbor validation missing');console.log(JSON.stringify({status:errors.length?'FAIL':'PASS',errors},null,2));if(errors.length)process.exit(1);

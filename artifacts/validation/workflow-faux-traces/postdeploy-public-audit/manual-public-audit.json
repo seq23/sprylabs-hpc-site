@@ -1,0 +1,21 @@
+{
+  "workflow": "postdeploy-public-audit.yml",
+  "scenario": "manual-public-audit",
+  "trigger": "workflow_dispatch",
+  "status": "TRACE_ONLY_PASS",
+  "execution": "none_trace_only",
+  "included_steps": [
+    "actions/checkout@v4",
+    "actions/setup-node@v4",
+    "audit:step-3",
+    "Install Playwright runtime",
+    "Run deployed public route audit",
+    "actions/upload-artifact@v4"
+  ],
+  "skipped_steps": [],
+  "assertions": [
+    "base_url required",
+    "Chromium installed before test",
+    "diagnostics uploaded on failure"
+  ]
+}

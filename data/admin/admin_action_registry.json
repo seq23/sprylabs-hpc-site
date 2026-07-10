@@ -1,0 +1,207 @@
+{
+  "schema_version": "2.0",
+  "repository": "seq23/sprylabs-hpc-site",
+  "actions": [
+    {
+      "id": "publish_new_content",
+      "label": "Publish New Content Now",
+      "description": "Run the governed full content cycle. Validated changes are committed to main and deployed through the existing release chain.",
+      "workflow": "spry-content-release.yml",
+      "inputs": {
+        "mode": "full-content-cycle"
+      },
+      "changes_public_site": true,
+      "risk": "bounded",
+      "confirmation": "Run the full content cycle now? This may publish validated content."
+    },
+    {
+      "id": "run_zero_dollar",
+      "label": "Run the $0 Citation Engine",
+      "description": "Run the autonomous gap-filling lane. Paid-agent-owned pages remain protected.",
+      "workflow": "daily-citation-intelligence.yml",
+      "inputs": {},
+      "changes_public_site": true,
+      "risk": "bounded",
+      "confirmation": "Run the autonomous $0 citation engine now?"
+    },
+    {
+      "id": "run_paid_agent_intake",
+      "label": "Run Paid-Agent Intake",
+      "description": "Reprocess the latest complete paid-agent artifacts through the canonical agent-intake release mode.",
+      "workflow": "spry-content-release.yml",
+      "inputs": {
+        "mode": "agent-intake"
+      },
+      "changes_public_site": true,
+      "risk": "bounded",
+      "confirmation": "Run paid-agent intake now? The paid lane retains ownership of its output."
+    },
+    {
+      "id": "push_changes_live",
+      "label": "Push Validated Changes Live",
+      "description": "Run the repository validator. A successful validation automatically hands the exact artifact to the existing distribution workflow.",
+      "workflow": "validate-repo.yml",
+      "inputs": {},
+      "changes_public_site": true,
+      "risk": "bounded",
+      "confirmation": "Validate the current main branch and push the exact validated artifact live?"
+    },
+    {
+      "id": "rebuild_site",
+      "label": "Rebuild the Site",
+      "description": "Run the governed full rebuild, commit valid generated changes, and trigger the existing deployment chain.",
+      "workflow": "spry-full-rebuild.yml",
+      "inputs": {},
+      "changes_public_site": true,
+      "risk": "high",
+      "confirmation": "Run a complete governed site rebuild now?"
+    },
+    {
+      "id": "refresh_surfaces",
+      "label": "Refresh Sitemaps and LLM Files",
+      "description": "Rebuild machine-readable answer, sitemap, feed, Atlas, and LLM surfaces; validate them; and commit changes.",
+      "workflow": "admin-operations.yml",
+      "inputs": {
+        "operation": "refresh_surfaces"
+      },
+      "changes_public_site": true,
+      "risk": "bounded",
+      "confirmation": "Refresh and publish all machine-readable authority surfaces?"
+    },
+    {
+      "id": "submit_updated_pages",
+      "label": "Submit Updated Pages",
+      "description": "Prepare current distribution artifacts and submit eligible URLs through the configured IndexNow path.",
+      "workflow": "admin-operations.yml",
+      "inputs": {
+        "operation": "submit_updated_pages"
+      },
+      "changes_public_site": false,
+      "risk": "bounded",
+      "confirmation": "Submit the current eligible URL set to configured search endpoints?"
+    },
+    {
+      "id": "run_self_healing",
+      "label": "Run Self-Healing",
+      "description": "Run the canonical generated-content and citation self-healing chain, then commit only validated repairs.",
+      "workflow": "admin-operations.yml",
+      "inputs": {
+        "operation": "run_self_healing"
+      },
+      "changes_public_site": true,
+      "risk": "bounded",
+      "confirmation": "Run automatic repair and publish valid fixes?"
+    },
+    {
+      "id": "fix_failed_pages",
+      "label": "Fix Failed Pages",
+      "description": "Run targeted repair, Safe Harbor review, ownership validation, and finalization against eligible non-agent pages.",
+      "workflow": "admin-operations.yml",
+      "inputs": {
+        "operation": "fix_failed_pages"
+      },
+      "changes_public_site": true,
+      "risk": "bounded",
+      "confirmation": "Repair eligible failed pages now? Protected paid-agent pages will not be edited."
+    },
+    {
+      "id": "rerun_distribution",
+      "label": "Rerun Distribution",
+      "description": "Rebuild and deploy current distribution artifacts without regenerating content.",
+      "workflow": "admin-operations.yml",
+      "inputs": {
+        "operation": "rerun_distribution"
+      },
+      "changes_public_site": false,
+      "risk": "bounded",
+      "confirmation": "Rerun distribution for the current validated site?"
+    },
+    {
+      "id": "pause_autopublishing",
+      "label": "Pause Automation",
+      "description": "Pause autonomous publishing while preserving diagnostics and read-only reporting.",
+      "workflow": "admin-command.yml",
+      "inputs": {
+        "action": "pause_autopublishing"
+      },
+      "changes_public_site": false,
+      "risk": "high",
+      "confirmation": "Pause autonomous publishing?"
+    },
+    {
+      "id": "resume_autopublishing",
+      "label": "Resume Automation",
+      "description": "Resume scheduled autonomous publishing using the current growth setting.",
+      "workflow": "admin-command.yml",
+      "inputs": {
+        "action": "resume_autopublishing"
+      },
+      "changes_public_site": false,
+      "risk": "bounded",
+      "confirmation": "Resume autonomous publishing?"
+    },
+    {
+      "id": "set_growth_normal",
+      "label": "Set Growth Speed: Normal",
+      "description": "Set conservative daily content budgets. These are targets, not hard validation gates.",
+      "workflow": "admin-command.yml",
+      "inputs": {
+        "action": "set_aggressiveness",
+        "target_id": "normal"
+      },
+      "changes_public_site": false,
+      "risk": "bounded",
+      "confirmation": "Set growth speed to Normal?"
+    },
+    {
+      "id": "set_growth_aggressive",
+      "label": "Set Growth Speed: Aggressive",
+      "description": "Restore the approved aggressive 100K operating cadence.",
+      "workflow": "admin-command.yml",
+      "inputs": {
+        "action": "set_aggressiveness",
+        "target_id": "aggressive"
+      },
+      "changes_public_site": false,
+      "risk": "bounded",
+      "confirmation": "Set growth speed to Aggressive?"
+    },
+    {
+      "id": "set_growth_maximum",
+      "label": "Set Growth Speed: Maximum",
+      "description": "Use the highest approved target budgets while retaining Safe Harbor and ownership protections.",
+      "workflow": "admin-command.yml",
+      "inputs": {
+        "action": "set_aggressiveness",
+        "target_id": "maximum"
+      },
+      "changes_public_site": false,
+      "risk": "high",
+      "confirmation": "Set growth speed to Maximum?"
+    },
+    {
+      "id": "rebuild_admin",
+      "label": "Refresh This Dashboard",
+      "description": "Rebuild admin snapshots from current repository truth and commit the refreshed dashboard.",
+      "workflow": "admin-command.yml",
+      "inputs": {
+        "action": "rebuild_admin"
+      },
+      "changes_public_site": false,
+      "risk": "low",
+      "confirmation": "Refresh the admin dashboard now?"
+    },
+    {
+      "id": "emergency_stop",
+      "label": "Emergency Stop",
+      "description": "Stop autonomous mutation and publishing immediately while retaining proof and diagnostics.",
+      "workflow": "admin-command.yml",
+      "inputs": {
+        "action": "emergency_stop"
+      },
+      "changes_public_site": false,
+      "risk": "critical",
+      "confirmation": "EMERGENCY STOP all autonomous publishing?"
+    }
+  ]
+}

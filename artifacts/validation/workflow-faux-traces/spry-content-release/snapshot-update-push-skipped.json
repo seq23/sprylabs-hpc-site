@@ -1,0 +1,26 @@
+{
+  "workflow": "spry-content-release.yml",
+  "scenario": "snapshot-update-push-skipped",
+  "trigger": "push",
+  "status": "TRACE_ONLY_PASS",
+  "execution": "none_trace_only",
+  "included_steps": [
+    "actions/checkout@v4",
+    "Sync latest main before install",
+    "Check autonomous runtime state",
+    "actions/upload-artifact@v4"
+  ],
+  "skipped_steps": [
+    "actions/setup-node@v4",
+    "release:step-5",
+    "Resolve release mode",
+    "Run governed Spry content release",
+    "Rebuild ownership and admin snapshots",
+    "Commit validated Spry content release"
+  ],
+  "assertions": [
+    "runtime/commit guard honored",
+    "paid-agent scripts remain canonical",
+    "protected lane validation remains in release command"
+  ]
+}

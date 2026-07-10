@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 const fs=require('fs');
-const files=['admin.html','download.html','index.html','comparisons/bhpc-vs-betterup.html','comparisons/bhpc-vs-hone.html','comparisons/bhpc-vs-culture-amp.html'];
+const files=['download.html','index.html','comparisons/bhpc-vs-betterup.html','comparisons/bhpc-vs-hone.html','comparisons/bhpc-vs-culture-amp.html'];
 const homepageFiles=['download.html','index.html','scripts/lib/audience_frame.js','scripts/apply_citation_layer.js'];
 const need=['founder','executive','athlete','parent'];
 const forbidden=['also known as the A Player Mode system','Download the A Player Mode system','Canonical redirect: https://aplayermode.com'];

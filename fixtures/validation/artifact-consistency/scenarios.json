@@ -1,0 +1,540 @@
+{
+  "schema_version": "1.0",
+  "scenarios": [
+    {
+      "id": "normal-mixed",
+      "kind": "release_plan",
+      "expected": "PASS",
+      "data": {
+        "external_telemetry_present": false,
+        "selected": [
+          {
+            "candidate_id": "c1",
+            "action": "create",
+            "route_owner": "zero_dollar",
+            "source_basis": [
+              "fixture"
+            ],
+            "risk_level": "low",
+            "decision": "SAFE_AUTOPUBLISH",
+            "reason": "ok"
+          }
+        ],
+        "skipped": [
+          {
+            "candidate_id": "c2",
+            "action": "create",
+            "route_owner": "zero_dollar",
+            "source_basis": [
+              "fixture"
+            ],
+            "risk_level": "low",
+            "decision": "SKIPPED_DUPLICATE_INTENT",
+            "reason": "duplicate"
+          }
+        ],
+        "blocked": [],
+        "summary": {
+          "selected_units": 1,
+          "skipped_units": 1,
+          "blocked_units": 0,
+          "release_units_planned": 2
+        }
+      }
+    },
+    {
+      "id": "all-skipped-valid",
+      "kind": "release_plan",
+      "expected": "PASS",
+      "data": {
+        "external_telemetry_present": false,
+        "selected": [],
+        "skipped": [
+          {
+            "candidate_id": "c1",
+            "action": "create",
+            "route_owner": "zero_dollar",
+            "source_basis": [
+              "fixture"
+            ],
+            "risk_level": "low",
+            "decision": "SKIPPED_PROTECTED_OWNER",
+            "reason": "ok",
+            "safe_harbor_reason": "paid owner"
+          }
+        ],
+        "blocked": [],
+        "summary": {
+          "selected_units": 0,
+          "skipped_units": 1,
+          "blocked_units": 0,
+          "release_units_planned": 1
+        },
+        "status": "COMPLETED_ALL_SKIPPED"
+      }
+    },
+    {
+      "id": "empty-input-valid",
+      "kind": "release_plan",
+      "expected": "PASS",
+      "data": {
+        "external_telemetry_present": false,
+        "selected": [],
+        "skipped": [],
+        "blocked": [],
+        "summary": {
+          "selected_units": 0,
+          "skipped_units": 0,
+          "blocked_units": 0,
+          "release_units_planned": 0,
+          "input_units": 0
+        },
+        "status": "COMPLETED_NO_INPUT"
+      }
+    },
+    {
+      "id": "empty-array-valid",
+      "kind": "release_plan",
+      "expected": "PASS",
+      "data": {
+        "external_telemetry_present": false,
+        "selected": [],
+        "skipped": [],
+        "blocked": [],
+        "summary": {
+          "selected_units": 0,
+          "skipped_units": 0,
+          "blocked_units": 0,
+          "release_units_planned": 0
+        },
+        "status": "COMPLETED_NO_CHANGES"
+      }
+    },
+    {
+      "id": "missing-arrays-invalid",
+      "kind": "release_plan",
+      "expected": "FAIL",
+      "data": {
+        "external_telemetry_present": false,
+        "summary": {},
+        "status": "COMPLETED_NO_CHANGES"
+      }
+    },
+    {
+      "id": "count-mismatch-invalid",
+      "kind": "release_plan",
+      "expected": "FAIL",
+      "data": {
+        "external_telemetry_present": false,
+        "selected": [
+          {
+            "candidate_id": "c1",
+            "action": "create",
+            "route_owner": "zero_dollar",
+            "source_basis": [
+              "fixture"
+            ],
+            "risk_level": "low",
+            "decision": "SAFE_AUTOPUBLISH",
+            "reason": "ok"
+          }
+        ],
+        "skipped": [],
+        "blocked": [],
+        "summary": {
+          "selected_units": 0,
+          "skipped_units": 0,
+          "blocked_units": 0,
+          "release_units_planned": 1
+        }
+      }
+    },
+    {
+      "id": "reason-alias-valid",
+      "kind": "release_plan",
+      "expected": "PASS",
+      "data": {
+        "external_telemetry_present": false,
+        "selected": [],
+        "skipped": [
+          {
+            "candidate_id": "c1",
+            "action": "create",
+            "route_owner": "zero_dollar",
+            "source_basis": [
+              "fixture"
+            ],
+            "risk_level": "low",
+            "decision": "SAFE_AUTOPUBLISH",
+            "reason": null,
+            "safe_harbor_reason": "fixture"
+          }
+        ],
+        "blocked": [],
+        "summary": {
+          "selected_units": 0,
+          "skipped_units": 1,
+          "blocked_units": 0,
+          "release_units_planned": 1
+        }
+      }
+    },
+    {
+      "id": "additive-field-valid",
+      "kind": "release_plan",
+      "expected": "PASS",
+      "data": {
+        "external_telemetry_present": false,
+        "selected": [
+          {
+            "candidate_id": "c1",
+            "action": "create",
+            "route_owner": "zero_dollar",
+            "source_basis": [
+              "fixture"
+            ],
+            "risk_level": "low",
+            "decision": "SAFE_AUTOPUBLISH",
+            "reason": "ok",
+            "future_field": {
+              "x": 1
+            }
+          }
+        ],
+        "skipped": [],
+        "blocked": [],
+        "summary": {
+          "selected_units": 1,
+          "skipped_units": 0,
+          "blocked_units": 0,
+          "release_units_planned": 1
+        },
+        "new_top_level": true
+      }
+    },
+    {
+      "id": "external-telemetry-invalid",
+      "kind": "release_plan",
+      "expected": "FAIL",
+      "data": {
+        "external_telemetry_present": true,
+        "selected": [
+          {
+            "candidate_id": "c1",
+            "action": "create",
+            "route_owner": "zero_dollar",
+            "source_basis": [
+              "fixture"
+            ],
+            "risk_level": "low",
+            "decision": "SAFE_AUTOPUBLISH",
+            "reason": "ok"
+          }
+        ],
+        "skipped": [],
+        "blocked": [],
+        "summary": {
+          "selected_units": 1,
+          "skipped_units": 0,
+          "blocked_units": 0,
+          "release_units_planned": 1
+        }
+      }
+    },
+    {
+      "id": "duplicate-identical-valid",
+      "kind": "duplicate_ids",
+      "expected": "PASS",
+      "data": {
+        "records": [
+          {
+            "candidate_id": "c1",
+            "action": "create",
+            "route_owner": "zero_dollar",
+            "source_basis": [
+              "fixture"
+            ],
+            "risk_level": "low",
+            "decision": "SAFE_AUTOPUBLISH",
+            "reason": "ok"
+          },
+          {
+            "candidate_id": "c1",
+            "action": "create",
+            "route_owner": "zero_dollar",
+            "source_basis": [
+              "fixture"
+            ],
+            "risk_level": "low",
+            "decision": "SAFE_AUTOPUBLISH",
+            "reason": "ok"
+          }
+        ]
+      }
+    },
+    {
+      "id": "duplicate-conflict-invalid",
+      "kind": "duplicate_ids",
+      "expected": "FAIL",
+      "data": {
+        "records": [
+          {
+            "candidate_id": "c1",
+            "action": "create",
+            "route_owner": "zero_dollar",
+            "source_basis": [
+              "fixture"
+            ],
+            "risk_level": "low",
+            "decision": "SAFE_AUTOPUBLISH",
+            "reason": "ok"
+          },
+          {
+            "candidate_id": "c1",
+            "action": "refresh",
+            "route_owner": "zero_dollar",
+            "source_basis": [
+              "fixture"
+            ],
+            "risk_level": "low",
+            "decision": "SAFE_AUTOPUBLISH",
+            "reason": "ok"
+          }
+        ]
+      }
+    },
+    {
+      "id": "partial-application-valid",
+      "kind": "application",
+      "expected": "PASS",
+      "data": {
+        "planned": 5,
+        "applied": 4,
+        "runtime_skipped": 1,
+        "failed": 0
+      }
+    },
+    {
+      "id": "application-mismatch-invalid",
+      "kind": "application",
+      "expected": "FAIL",
+      "data": {
+        "planned": 5,
+        "applied": 4,
+        "runtime_skipped": 0,
+        "failed": 0
+      }
+    },
+    {
+      "id": "no-semantic-change-valid",
+      "kind": "semantic_change",
+      "expected": "PASS",
+      "data": {
+        "before": {
+          "a": 1,
+          "generated_at": "x"
+        },
+        "after": {
+          "a": 1,
+          "generated_at": "y"
+        }
+      }
+    },
+    {
+      "id": "semantic-change-valid",
+      "kind": "semantic_change",
+      "expected": "PASS_CHANGE",
+      "data": {
+        "before": {
+          "a": 1
+        },
+        "after": {
+          "a": 2
+        }
+      }
+    },
+    {
+      "id": "null-vs-zero-distinct",
+      "kind": "null_zero",
+      "expected": "PASS",
+      "data": {
+        "unknown": null,
+        "measured_zero": 0
+      }
+    },
+    {
+      "id": "missing-optional-report-valid",
+      "kind": "packaging",
+      "expected": "PASS",
+      "data": {
+        "missing": "reports/workflow-yaml-inventory.md",
+        "class": "PRESENTATION_ONLY"
+      }
+    },
+    {
+      "id": "missing-canonical-invalid",
+      "kind": "packaging",
+      "expected": "FAIL",
+      "data": {
+        "missing": "artifacts/validation/workflow-yaml-inventory.json",
+        "class": "CANONICAL_PROOF"
+      }
+    },
+    {
+      "id": "private-admin-excluded",
+      "kind": "route",
+      "expected": "PASS",
+      "data": {
+        "route": "/admin/",
+        "classification": "private_noindex"
+      }
+    },
+    {
+      "id": "coverage-directory-resolution",
+      "kind": "route",
+      "expected": "PASS",
+      "data": {
+        "route": "/coverage/",
+        "target": "coverage/index.html"
+      }
+    },
+    {
+      "id": "workflow-output-mismatch-invalid",
+      "kind": "workflow",
+      "expected": "FAIL",
+      "data": {
+        "produces": "artifact-a",
+        "expects": "artifact-b"
+      }
+    },
+    {
+      "id": "workflow-no-commit-valid",
+      "kind": "workflow",
+      "expected": "PASS",
+      "data": {
+        "status": "success",
+        "commit": null,
+        "reason": "no semantic changes"
+      }
+    },
+    {
+      "id": "commit-deploy-fail-valid",
+      "kind": "workflow",
+      "expected": "PASS",
+      "data": {
+        "commit": "abc",
+        "deploy": "failed",
+        "retryable_stage": "deployment"
+      }
+    },
+    {
+      "id": "deploy-postaudit-fail-valid",
+      "kind": "workflow",
+      "expected": "PASS",
+      "data": {
+        "commit": "abc",
+        "deploy": "success",
+        "postdeploy": "failed"
+      }
+    },
+    {
+      "id": "validator-exit-receipt-mismatch-invalid",
+      "kind": "validator_receipt",
+      "expected": "FAIL",
+      "data": {
+        "exit_code": 0,
+        "receipt_status": "failed"
+      }
+    },
+    {
+      "id": "validator-crash-invalid",
+      "kind": "validator_receipt",
+      "expected": "FAIL",
+      "data": {
+        "exit_code": 1,
+        "receipt": null
+      }
+    },
+    {
+      "id": "warning-does-not-block",
+      "kind": "severity",
+      "expected": "PASS",
+      "data": {
+        "rule": "word count",
+        "severity": "WARNING"
+      }
+    },
+    {
+      "id": "hard-fail-cannot-downgrade",
+      "kind": "severity",
+      "expected": "FAIL",
+      "data": {
+        "rule": "secret exposure",
+        "severity": "WARNING"
+      }
+    },
+    {
+      "id": "paid-owner-skip-valid",
+      "kind": "ownership",
+      "expected": "PASS",
+      "data": {
+        "attempted": false,
+        "decision": "SKIPPED_PROTECTED_OWNER"
+      }
+    },
+    {
+      "id": "paid-owner-write-invalid",
+      "kind": "ownership",
+      "expected": "FAIL",
+      "data": {
+        "attempted": true,
+        "decision": "PUBLISHED"
+      }
+    },
+    {
+      "id": "idempotent-rerun-valid",
+      "kind": "idempotency",
+      "expected": "PASS",
+      "data": {
+        "first_applied": 3,
+        "second_applied": 0,
+        "second_skipped": 3
+      }
+    },
+    {
+      "id": "stale-plan-skip-valid",
+      "kind": "stale",
+      "expected": "PASS",
+      "data": {
+        "decision": "SKIPPED_STALE_PLAN"
+      }
+    },
+    {
+      "id": "owned-vs-observed-valid",
+      "kind": "telemetry",
+      "expected": "PASS",
+      "data": {
+        "owned_surfaces_created": 20,
+        "observed_external_citations": null
+      }
+    },
+    {
+      "id": "arbitrary-admin-input-invalid",
+      "kind": "admin",
+      "expected": "FAIL",
+      "data": {
+        "allowlisted": false,
+        "workflow": "evil.yml"
+      }
+    },
+    {
+      "id": "allowlisted-admin-action-valid",
+      "kind": "admin",
+      "expected": "PASS",
+      "data": {
+        "allowlisted": true,
+        "workflow": "daily-citation-intelligence.yml"
+      }
+    }
+  ]
+}

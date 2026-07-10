@@ -1,0 +1,290 @@
+{
+  "schema_version": "1.0",
+  "status": "PASS",
+  "scenario_count": 35,
+  "passed": 35,
+  "failed": 0,
+  "results": [
+    {
+      "id": "normal-mixed",
+      "kind": "release_plan",
+      "expected": "PASS",
+      "observed_ok": true,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "all-skipped-valid",
+      "kind": "release_plan",
+      "expected": "PASS",
+      "observed_ok": true,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "empty-input-valid",
+      "kind": "release_plan",
+      "expected": "PASS",
+      "observed_ok": true,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "empty-array-valid",
+      "kind": "release_plan",
+      "expected": "PASS",
+      "observed_ok": true,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "missing-arrays-invalid",
+      "kind": "release_plan",
+      "expected": "FAIL",
+      "observed_ok": false,
+      "matched": true,
+      "detail": "missing array selected; missing array skipped; missing array blocked"
+    },
+    {
+      "id": "count-mismatch-invalid",
+      "kind": "release_plan",
+      "expected": "FAIL",
+      "observed_ok": false,
+      "matched": true,
+      "detail": "selected_units mismatch"
+    },
+    {
+      "id": "reason-alias-valid",
+      "kind": "release_plan",
+      "expected": "PASS",
+      "observed_ok": true,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "additive-field-valid",
+      "kind": "release_plan",
+      "expected": "PASS",
+      "observed_ok": true,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "external-telemetry-invalid",
+      "kind": "release_plan",
+      "expected": "FAIL",
+      "observed_ok": false,
+      "matched": true,
+      "detail": "external telemetry must be false"
+    },
+    {
+      "id": "duplicate-identical-valid",
+      "kind": "duplicate_ids",
+      "expected": "PASS",
+      "observed_ok": true,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "duplicate-conflict-invalid",
+      "kind": "duplicate_ids",
+      "expected": "FAIL",
+      "observed_ok": false,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "partial-application-valid",
+      "kind": "application",
+      "expected": "PASS",
+      "observed_ok": true,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "application-mismatch-invalid",
+      "kind": "application",
+      "expected": "FAIL",
+      "observed_ok": false,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "no-semantic-change-valid",
+      "kind": "semantic_change",
+      "expected": "PASS",
+      "observed_ok": true,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "semantic-change-valid",
+      "kind": "semantic_change",
+      "expected": "PASS_CHANGE",
+      "observed_ok": true,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "null-vs-zero-distinct",
+      "kind": "null_zero",
+      "expected": "PASS",
+      "observed_ok": true,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "missing-optional-report-valid",
+      "kind": "packaging",
+      "expected": "PASS",
+      "observed_ok": true,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "missing-canonical-invalid",
+      "kind": "packaging",
+      "expected": "FAIL",
+      "observed_ok": false,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "private-admin-excluded",
+      "kind": "route",
+      "expected": "PASS",
+      "observed_ok": true,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "coverage-directory-resolution",
+      "kind": "route",
+      "expected": "PASS",
+      "observed_ok": true,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "workflow-output-mismatch-invalid",
+      "kind": "workflow",
+      "expected": "FAIL",
+      "observed_ok": false,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "workflow-no-commit-valid",
+      "kind": "workflow",
+      "expected": "PASS",
+      "observed_ok": true,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "commit-deploy-fail-valid",
+      "kind": "workflow",
+      "expected": "PASS",
+      "observed_ok": true,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "deploy-postaudit-fail-valid",
+      "kind": "workflow",
+      "expected": "PASS",
+      "observed_ok": true,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "validator-exit-receipt-mismatch-invalid",
+      "kind": "validator_receipt",
+      "expected": "FAIL",
+      "observed_ok": false,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "validator-crash-invalid",
+      "kind": "validator_receipt",
+      "expected": "FAIL",
+      "observed_ok": false,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "warning-does-not-block",
+      "kind": "severity",
+      "expected": "PASS",
+      "observed_ok": true,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "hard-fail-cannot-downgrade",
+      "kind": "severity",
+      "expected": "FAIL",
+      "observed_ok": false,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "paid-owner-skip-valid",
+      "kind": "ownership",
+      "expected": "PASS",
+      "observed_ok": true,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "paid-owner-write-invalid",
+      "kind": "ownership",
+      "expected": "FAIL",
+      "observed_ok": false,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "idempotent-rerun-valid",
+      "kind": "idempotency",
+      "expected": "PASS",
+      "observed_ok": true,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "stale-plan-skip-valid",
+      "kind": "stale",
+      "expected": "PASS",
+      "observed_ok": true,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "owned-vs-observed-valid",
+      "kind": "telemetry",
+      "expected": "PASS",
+      "observed_ok": true,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "arbitrary-admin-input-invalid",
+      "kind": "admin",
+      "expected": "FAIL",
+      "observed_ok": false,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "allowlisted-admin-action-valid",
+      "kind": "admin",
+      "expected": "PASS",
+      "observed_ok": true,
+      "matched": true,
+      "detail": ""
+    }
+  ],
+  "failures": []
+}

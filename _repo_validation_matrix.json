@@ -1187,8 +1187,148 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-VAL-FSA-OWNERSHIP",
+      "validation_id": "VAL-FSA-OWNERSHIP",
+      "lane": "ownership",
+      "command": "npm run validate:ownership",
+      "order": 133,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-VAL-FSA-SAFE",
+      "validation_id": "VAL-FSA-SAFE",
+      "lane": "content",
+      "command": "npm run safe-harbor:validate",
+      "order": 134,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-VAL-FSA-WRITE",
+      "validation_id": "VAL-FSA-WRITE",
+      "lane": "workflow",
+      "command": "npm run validate:workflow-write-scopes",
+      "order": 135,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-VAL-FSA-RELEASE",
+      "validation_id": "VAL-FSA-RELEASE",
+      "lane": "citation-intelligence",
+      "command": "npm run release:zero-dollar-autonomous",
+      "order": 136,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-VAL-FSA-ALL",
+      "validation_id": "VAL-FSA-ALL",
+      "lane": "release",
+      "command": "npm run validate:full-safe-autonomy",
+      "order": 137,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-VAL-WF-ADMIN",
+      "validation_id": "VAL-WF-ADMIN",
+      "lane": "admin",
+      "command": ".github/workflows/admin-command.yml",
+      "order": 138,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-VAL-FSA-SELFHEAL",
+      "validation_id": "VAL-FSA-SELFHEAL",
+      "lane": "citation-intelligence",
+      "command": "npm run citation:self-heal",
+      "order": 139,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-VAL-FSA-SCORE",
+      "validation_id": "VAL-FSA-SCORE",
+      "lane": "citation-intelligence",
+      "command": "npm run citation:scoreboard",
+      "order": 140,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-VAL-WF-ADMIN-OPS",
+      "validation_id": "VAL-WF-ADMIN-OPS",
+      "lane": "admin",
+      "command": ".github/workflows/admin-operations.yml",
+      "order": 141,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-ADMIN-GITHUB-BRIDGE",
+      "validation_id": "VAL-ADMIN-GITHUB-BRIDGE",
+      "lane": "admin-runtime",
+      "command": "npm run validate:admin-github-bridge",
+      "order": 128,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-COVERAGE-ROUTE-CONTRACT",
+      "validation_id": "VAL-COVERAGE-ROUTE-CONTRACT",
+      "lane": "public-authority",
+      "command": "npm run validate:coverage-route",
+      "order": 129,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-ARTIFACT-CONSISTENCY",
+      "validation_id": "VAL-ARTIFACT-CONSISTENCY",
+      "lane": "artifact-consistency",
+      "command": "npm run validate:artifact-consistency-e2e",
+      "order": 150,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-ARTIFACT-PACKAGING-PARITY",
+      "validation_id": "VAL-ARTIFACT-PACKAGING-PARITY",
+      "lane": "artifact-consistency",
+      "command": "npm run validate:artifact-packaging-parity",
+      "order": 151,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-ARTIFACT-HARDENING-SUITE",
+      "validation_id": "VAL-ARTIFACT-HARDENING-SUITE",
+      "lane": "artifact-consistency",
+      "command": "npm run validate:artifact-hardening-suite",
+      "order": 152,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 116,
+  "entry_count": 132,
   "generated_at": "2026-07-04T13:00:00Z"
 }

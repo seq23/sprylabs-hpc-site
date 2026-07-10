@@ -1,0 +1,22 @@
+{
+  "workflow": "admin-command.yml",
+  "scenario": "emergency_stop",
+  "trigger": "workflow_dispatch",
+  "status": "TRACE_ONLY_PASS",
+  "execution": "none_trace_only",
+  "included_steps": [
+    "actions/checkout@v4",
+    "actions/setup-node@v4",
+    "command:step-3",
+    "Execute registered command",
+    "command:step-5",
+    "Commit control state"
+  ],
+  "skipped_steps": [],
+  "assertions": [
+    "server allowlist supplies fixed action",
+    "admin command script exists",
+    "full-safe-autonomy validation follows mutation",
+    "commit only when diff exists"
+  ]
+}

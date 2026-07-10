@@ -1,0 +1,33 @@
+name: Admin Command
+on:
+  workflow_dispatch:
+    inputs:
+      action: {description: "Registered command", required: true, type: string}
+      target_id: {description: "Optional target", required: false, type: string}
+      reason: {description: "Optional reason", required: false, type: string}
+env:
+  NODE_OPTIONS: --max-old-space-size=3072
+permissions:
+  contents: write
+jobs:
+  command:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: 24, cache: npm}
+      - run: npm ci --ignore-scripts
+      - name: Execute registered command
+        env:
+          ADMIN_ACTION: ${{ inputs.action }}
+          ADMIN_TARGET: ${{ inputs.target_id }}
+          ADMIN_REASON: ${{ inputs.reason }}
+        run: node scripts/admin/run_admin_command.mjs
+      - run: npm run admin:build && npm run validate:full-safe-autonomy
+      - name: Commit control state
+        run: |
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git config user.name "spry-admin-bot"
+            git config user.email "actions@users.noreply.github.com"
+            git add -A && git commit -m "admin command: ${{ inputs.action }}" && git push
+          fi

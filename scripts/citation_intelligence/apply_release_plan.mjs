@@ -1,11 +1,15 @@
 #!/usr/bin/env node
-import fs from 'node:fs';
-import {readJson, writeJson} from './pipeline_lib.mjs';
-const plan = readJson('artifacts/validation/daily-citation-release-plan.json');
-const apply = process.argv.includes('--apply');
-const result = {schema_version:'1.4', repo:'seq23/sprylabs-hpc-site', generated_at:new Date().toISOString(), mode: apply ? 'CONTROLLED_APPLY_REQUESTED' : 'SHADOW_MODE', status:'PASS', release_units_applied:0, public_mutation:false, no_op_reason:null, selected:plan.selected.map(x=>x.candidate_id)};
-if (!apply) result.no_op_reason = 'Shadow mode: release plan proved candidate selection without public route mutation.';
-else result.no_op_reason = 'Controlled public mutation is not enabled in this container handoff; local updater validation required.';
-writeJson('artifacts/validation/release-plan-application.json', result);
-writeJson('reports/release-plan-application.json', result);
-console.log(`[release:content:intelligence] PASS shadow_noop=${!apply}`);
+import fs from 'node:fs';import crypto from 'node:crypto';
+import {readJson,writeJson,renderAnswerPage} from './pipeline_lib.mjs';
+const plan=readJson('artifacts/validation/daily-citation-release-plan.json');
+const ledger=readJson('data/governance/safe_harbor_audit_ledger.json',{schema_version:'1.0',entries:[]});
+const ownership=readJson('data/content_ownership_registry.json',{schema_version:'1.0',routes:[]});
+const routeManifest=readJson('_public_route_manifest.json',{schema_version:'1.0',routes:[]});
+const applied=[],skipped=[...(plan.skipped||[]),...(plan.blocked||[])];
+function inject(file,item){const before=fs.readFileSync(file,'utf8');if(before.includes(`data-zero-dollar-action="${item.action_id}"`))return null;const block=`<section data-zero-dollar-action="${item.action_id}" data-safe-harbor="SAFE_AUTOPUBLISH"><h2>${item.title}</h2><p>${item.query} is best handled with a clear outcome, a bounded next action, and a continuity plan that survives difficult days.</p><p><a href="/download">Explore the complete BHPC operating system</a></p></section>`;const after=before.includes('</body>')?before.replace('</body>',`${block}</body>`):before+block;fs.writeFileSync(file,after);return after;}
+function register(item){if(!routeManifest.routes.some(r=>r.source_file===item.source_file)){routeManifest.routes.push({route_id:`ROUTE-${String(routeManifest.routes.length+1).padStart(4,'0')}`,path:item.route_owner,source_file:item.source_file,canonical_url:`https://spryexecutiveos.com${item.route_owner}`,canonical_domain:'spryexecutiveos.com',h1:item.title,framework:'Zero Dollar Gap Fill',safe_controls:['internal-links'],priority:false,content_owner:'zero_dollar'});}if(!ownership.routes.some(r=>r.source_file===item.source_file))ownership.routes.push({route:item.route_owner,source_file:item.source_file,owner:'zero_dollar',source_run:new Date().toISOString().slice(0,10),semantic_intent_ids:[item.query],mutation_policy:'safe_harbor',protected:false});}
+for(const item of plan.selected||[]){const p=item.source_file;let html=null;if(item.action==='create'){if(fs.existsSync(p)){skipped.push({...item,decision:'SKIPPED_DUPLICATE_INTENT',reason:'route already exists'});continue;}fs.mkdirSync(p.split('/').slice(0,-1).join('/'),{recursive:true});html=renderAnswerPage(item);fs.writeFileSync(p,html);register(item);}else{if(!fs.existsSync(p)){skipped.push({...item,decision:'SKIPPED_MISSING_ROUTE',reason:'repair target does not exist'});continue;}html=inject(p,item);if(!html){skipped.push({...item,decision:'SKIPPED_ALREADY_APPLIED',reason:'action marker already exists'});continue;}}
+applied.push({...item,decision:'PUBLISHED',sha256:crypto.createHash('sha256').update(html).digest('hex')});}
+ownership.generated_at=new Date().toISOString();ownership.route_count=ownership.routes.length;ownership.summary=ownership.routes.reduce((a,r)=>(a[r.owner]=(a[r.owner]||0)+1,a),{});routeManifest.route_count=routeManifest.routes.length;routeManifest.generated_at=new Date().toISOString();writeJson('data/content_ownership_registry.json',ownership);writeJson('_public_route_manifest.json',routeManifest);
+ledger.entries.push(...applied.map(x=>({timestamp:new Date().toISOString(),action_id:x.action_id,route:x.route_owner,decision:'PUBLISHED',owner:'zero_dollar'})),...skipped.map(x=>({timestamp:new Date().toISOString(),action_id:x.action_id||x.candidate_id,route:x.route_owner,decision:x.decision||x.safe_harbor||'SKIPPED',reason:x.reason||x.safe_harbor_reason||''})) );writeJson('data/governance/safe_harbor_audit_ledger.json',ledger);
+const result={schema_version:'2.0',repo:'seq23/sprylabs-hpc-site',generated_at:new Date().toISOString(),mode:'FULL_SAFE_AUTONOMY_GAP_FILL',status:'PASS',release_units_applied:applied.length,release_units_skipped:skipped.length,public_mutation:applied.length>0,applied,skipped};writeJson('artifacts/validation/release-plan-application.json',result);writeJson('reports/release-plan-application.json',result);console.log(`[release:content:intelligence] PASS applied=${applied.length} skipped=${skipped.length}`);

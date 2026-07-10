@@ -3,7 +3,7 @@
 const fs=require('fs');
 const discovery='https://aplayermode.com';
 const purchase='https://sprylabs.gumroad.com/l/billionaire-high-performance-coach';
-const requiredDiscovery=['admin.html','index.html','comparisons/bhpc-vs-betterup.html','comparisons/bhpc-vs-hone.html','comparisons/bhpc-vs-culture-amp.html'];
+const requiredDiscovery=['index.html','comparisons/bhpc-vs-betterup.html','comparisons/bhpc-vs-hone.html','comparisons/bhpc-vs-culture-amp.html'];
 const requiredPurchase=['download.html','index.html'];
 const bad=[];
 for(const f of requiredDiscovery){ if(!fs.existsSync(f)) bad.push(`${f}: missing`); else if(!fs.readFileSync(f,'utf8').includes(discovery)) bad.push(`${f}: missing discovery CTA`);}

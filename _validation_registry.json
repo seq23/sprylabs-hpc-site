@@ -3780,8 +3780,449 @@
       "matrix_ids": [
         "MX-BHPC-AGENT-RECDRIVEN-01"
       ]
+    },
+    {
+      "validation_id": "VAL-FSA-OWNERSHIP",
+      "status": "ADMITTED",
+      "name": "validate:ownership",
+      "check_type": "validator",
+      "owning_lane": "ownership",
+      "risk_prevented": "Protects Full Safe Autonomy, paid-agent ownership, or admin command integrity.",
+      "existing_coverage_gap": "Introduced by the hybrid autonomous authority upgrade.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:ownership",
+      "implementation_path": "scripts/validators/validate_content_ownership_boundaries.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/full-safe-autonomy.json",
+      "runtime_budget_seconds": 900,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted for the Full Safe Autonomy hybrid citation engine.",
+      "decision_date": "2026-07-10",
+      "matrix_ids": [
+        "MX-VAL-FSA-OWNERSHIP"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-FSA-SAFE",
+      "status": "ADMITTED",
+      "name": "safe-harbor:validate",
+      "check_type": "validator",
+      "owning_lane": "content",
+      "risk_prevented": "Protects Full Safe Autonomy, paid-agent ownership, or admin command integrity.",
+      "existing_coverage_gap": "Introduced by the hybrid autonomous authority upgrade.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run safe-harbor:validate",
+      "implementation_path": "scripts/validators/validate_safe_harbor_autopublish.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/full-safe-autonomy.json",
+      "runtime_budget_seconds": 900,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted for the Full Safe Autonomy hybrid citation engine.",
+      "decision_date": "2026-07-10",
+      "matrix_ids": [
+        "MX-VAL-FSA-SAFE"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-FSA-WRITE",
+      "status": "ADMITTED",
+      "name": "validate:workflow-write-scopes",
+      "check_type": "validator",
+      "owning_lane": "workflow",
+      "risk_prevented": "Protects Full Safe Autonomy, paid-agent ownership, or admin command integrity.",
+      "existing_coverage_gap": "Introduced by the hybrid autonomous authority upgrade.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:workflow-write-scopes",
+      "implementation_path": "scripts/validators/validate_workflow_write_scopes.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/full-safe-autonomy.json",
+      "runtime_budget_seconds": 900,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted for the Full Safe Autonomy hybrid citation engine.",
+      "decision_date": "2026-07-10",
+      "matrix_ids": [
+        "MX-VAL-FSA-WRITE"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-FSA-RELEASE",
+      "status": "ADMITTED",
+      "name": "release:zero-dollar-autonomous",
+      "check_type": "release-stage",
+      "owning_lane": "citation-intelligence",
+      "risk_prevented": "Protects Full Safe Autonomy, paid-agent ownership, or admin command integrity.",
+      "existing_coverage_gap": "Introduced by the hybrid autonomous authority upgrade.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run release:zero-dollar-autonomous",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/full-safe-autonomy.json",
+      "runtime_budget_seconds": 900,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted for the Full Safe Autonomy hybrid citation engine.",
+      "decision_date": "2026-07-10",
+      "matrix_ids": [
+        "MX-VAL-FSA-RELEASE"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-FSA-ALL",
+      "status": "ADMITTED",
+      "name": "validate:full-safe-autonomy",
+      "check_type": "validator",
+      "owning_lane": "release",
+      "risk_prevented": "Protects Full Safe Autonomy, paid-agent ownership, or admin command integrity.",
+      "existing_coverage_gap": "Introduced by the hybrid autonomous authority upgrade.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:full-safe-autonomy",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/full-safe-autonomy.json",
+      "runtime_budget_seconds": 900,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted for the Full Safe Autonomy hybrid citation engine.",
+      "decision_date": "2026-07-10",
+      "matrix_ids": [
+        "MX-VAL-FSA-ALL"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-WF-ADMIN",
+      "status": "ADMITTED",
+      "name": "admin-command.yml",
+      "check_type": "workflow",
+      "owning_lane": "admin",
+      "risk_prevented": "Protects Full Safe Autonomy, paid-agent ownership, or admin command integrity.",
+      "existing_coverage_gap": "Introduced by the hybrid autonomous authority upgrade.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/admin-command.yml",
+      "implementation_path": ".github/workflows/admin-command.yml",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/full-safe-autonomy.json",
+      "runtime_budget_seconds": 900,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted for the Full Safe Autonomy hybrid citation engine.",
+      "decision_date": "2026-07-10",
+      "matrix_ids": [
+        "MX-VAL-WF-ADMIN"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-FSA-SELFHEAL",
+      "status": "ADMITTED",
+      "name": "citation:self-heal",
+      "check_type": "validator",
+      "owning_lane": "citation-intelligence",
+      "risk_prevented": "Protects autonomous citation self-healing and proof generation.",
+      "existing_coverage_gap": "Introduced by Full Safe Autonomy.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run citation:self-heal",
+      "implementation_path": "scripts/content/self_heal_citation_os.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/full-safe-autonomy.json",
+      "runtime_budget_seconds": 900,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted for Full Safe Autonomy.",
+      "decision_date": "2026-07-10",
+      "matrix_ids": [
+        "MX-VAL-FSA-SELFHEAL"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-FSA-SCORE",
+      "status": "ADMITTED",
+      "name": "citation:scoreboard",
+      "check_type": "validator",
+      "owning_lane": "citation-intelligence",
+      "risk_prevented": "Protects autonomous citation self-healing and proof generation.",
+      "existing_coverage_gap": "Introduced by Full Safe Autonomy.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run citation:scoreboard",
+      "implementation_path": "scripts/citation_intelligence/build_daily_proof_packet.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/full-safe-autonomy.json",
+      "runtime_budget_seconds": 900,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted for Full Safe Autonomy.",
+      "decision_date": "2026-07-10",
+      "matrix_ids": [
+        "MX-VAL-FSA-SCORE"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-WF-ADMIN-OPS",
+      "status": "ADMITTED",
+      "name": "admin-operations.yml",
+      "check_type": "workflow",
+      "owning_lane": "admin-operations",
+      "risk_prevented": "Prevents unregistered admin buttons from invoking arbitrary repository mutations.",
+      "existing_coverage_gap": "Provides the admitted bounded workflow for machine-readable refresh, submission, self-healing, eligible failure repair, and distribution reruns.",
+      "scope": [
+        "repository",
+        "admin",
+        "github-actions"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/admin-operations.yml",
+      "implementation_path": ".github/workflows/admin-operations.yml",
+      "environment": "github-actions",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/admin-operations/pass.json",
+      "negative_fixture": "fixtures/validation/admin-operations/fail.json",
+      "evidence_output": "GitHub Actions run and uploaded admin-operation artifact",
+      "runtime_budget_seconds": 7200,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "admin-command.yml handles state controls only"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted for the approved fine-grained-token admin action bridge.",
+      "decision_date": "2026-07-10",
+      "matrix_ids": [
+        "MX-VAL-WF-ADMIN-OPS"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-ADMIN-GITHUB-BRIDGE",
+      "status": "ADMITTED",
+      "name": "validate:admin-github-bridge",
+      "check_type": "integration",
+      "owning_lane": "admin-runtime",
+      "risk_prevented": "Prevents unauthenticated or arbitrary GitHub workflow dispatch.",
+      "existing_coverage_gap": "Admin bridge lacked mocked end-to-end proof.",
+      "scope": [
+        "functions/api/admin",
+        "functions/_lib/github-admin.js",
+        "data/admin/admin_action_registry.json",
+        ".github/workflows"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:admin-github-bridge",
+      "implementation_path": "scripts/validators/validate_admin_github_bridge.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/admin-github-bridge/pass.json",
+      "negative_fixture": "fixtures/validation/admin-github-bridge/fail.json",
+      "evidence_output": "stdout",
+      "runtime_budget_seconds": 20,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted during hostile E2E review of the admin GitHub bridge.",
+      "decision_date": "2026-07-10",
+      "matrix_ids": [
+        "MX-ADMIN-GITHUB-BRIDGE"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-COVERAGE-ROUTE-CONTRACT",
+      "status": "ADMITTED",
+      "name": "validate:coverage-route",
+      "check_type": "artifact-packaging",
+      "owning_lane": "public-authority",
+      "risk_prevented": "Prevents the public /coverage/ knowledge-map route from disappearing during packaging or exposing private draft runway data.",
+      "existing_coverage_gap": "The baseline packager excluded coverage/ as if it were test output, even though /coverage/ is a required public route.",
+      "scope": [
+        "coverage/index.html",
+        "coverage/coverage.json",
+        "data/admin/coverage_operations.json",
+        "scripts/build_coverage_map.js",
+        "scripts/release/package_baseline.mjs",
+        "_baseline_packaging_contract.json"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:coverage-route",
+      "implementation_path": "scripts/validators/validate_coverage_route_contract.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/coverage-route/pass.json",
+      "negative_fixture": "fixtures/validation/coverage-route/fail.json",
+      "evidence_output": "stdout",
+      "runtime_budget_seconds": 20,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted after hostile review found that artifact packaging removed the valid public /coverage/ route.",
+      "decision_date": "2026-07-10",
+      "matrix_ids": [
+        "MX-COVERAGE-ROUTE-CONTRACT"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-ARTIFACT-CONSISTENCY",
+      "status": "ADMITTED",
+      "name": "validate:artifact-consistency-e2e",
+      "check_type": "validator",
+      "owning_lane": "artifact-consistency",
+      "risk_prevented": "Prevents valid no-op/all-skipped runs, field aliases, packaging exclusions, and cross-artifact reconciliation from being misclassified while preserving real hard failures.",
+      "existing_coverage_gap": "No single validator exercised cross-artifact empty states, count reconciliation, packaging classes, validator severity drift, and protected-lane edge cases.",
+      "scope": [
+        "repository",
+        "packaged-artifact"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:artifact-consistency-e2e",
+      "implementation_path": "scripts/validators/validate_artifact_consistency_e2e.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/artifact-consistency/pass.json",
+      "negative_fixture": "fixtures/validation/artifact-consistency/fail.json",
+      "evidence_output": "artifacts/validation/artifact-consistency-e2e.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements release-plan, proof-packet, workflow, ownership, and packaging validators without replacing them."
+      ],
+      "retirement_offset": "Retire only when equivalent cross-artifact property tests cover all scenarios.",
+      "decision": "Admitted for no-op and artifact mismatch hardening.",
+      "decision_date": "2026-07-10",
+      "matrix_ids": [
+        "MX-ARTIFACT-CONSISTENCY"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-ARTIFACT-PACKAGING-PARITY",
+      "status": "ADMITTED",
+      "name": "validate:artifact-packaging-parity",
+      "check_type": "validator",
+      "owning_lane": "artifact-consistency",
+      "risk_prevented": "Ensures required canonical artifacts survive baseline packaging while optional presentation files remain optional.",
+      "existing_coverage_gap": "Cross-artifact and packaged-artifact mismatch behavior was not comprehensively admitted.",
+      "scope": [
+        "repository",
+        "packaged-artifact"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:artifact-packaging-parity",
+      "implementation_path": "scripts/validation/validate_artifact_packaging_parity.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/artifact-consistency/pass.json",
+      "negative_fixture": "fixtures/validation/artifact-consistency/fail.json",
+      "evidence_output": "artifacts/validation/artifact-consistency-e2e.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements existing release and packaging validators."
+      ],
+      "retirement_offset": "Retire only when equivalent coverage exists.",
+      "decision": "Admitted for artifact mismatch and no-op hardening.",
+      "decision_date": "2026-07-10",
+      "matrix_ids": [
+        "MX-ARTIFACT-PACKAGING-PARITY"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-ARTIFACT-HARDENING-SUITE",
+      "status": "ADMITTED",
+      "name": "validate:artifact-hardening-suite",
+      "check_type": "validator",
+      "owning_lane": "artifact-consistency",
+      "risk_prevented": "Aggregates artifact consistency, release-plan integrity, and proof-packet integrity.",
+      "existing_coverage_gap": "Cross-artifact and packaged-artifact mismatch behavior was not comprehensively admitted.",
+      "scope": [
+        "repository",
+        "packaged-artifact"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:artifact-hardening-suite",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/artifact-consistency/pass.json",
+      "negative_fixture": "fixtures/validation/artifact-consistency/fail.json",
+      "evidence_output": "artifacts/validation/artifact-consistency-e2e.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements existing release and packaging validators."
+      ],
+      "retirement_offset": "Retire only when equivalent coverage exists.",
+      "decision": "Admitted for artifact mismatch and no-op hardening.",
+      "decision_date": "2026-07-10",
+      "matrix_ids": [
+        "MX-ARTIFACT-HARDENING-SUITE"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 117,
+  "record_count": 133,
   "generated_at": "2026-07-04T13:00:00Z"
 }

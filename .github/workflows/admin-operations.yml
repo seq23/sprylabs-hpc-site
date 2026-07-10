@@ -1,0 +1,69 @@
+name: Admin Operations
+on:
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: "Registered admin operation"
+        required: true
+        type: choice
+        options:
+          - refresh_surfaces
+          - submit_updated_pages
+          - run_self_healing
+          - fix_failed_pages
+          - rerun_distribution
+permissions:
+  contents: write
+concurrency:
+  group: admin-operation-${{ inputs.operation }}
+  cancel-in-progress: false
+env:
+  NODE_OPTIONS: --max-old-space-size=3072
+jobs:
+  operate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: 24, cache: npm}
+      - run: npm ci --ignore-scripts
+      - name: Refresh authority surfaces
+        if: inputs.operation == 'refresh_surfaces'
+        run: npm run distribution:prepare && npm run ownership:build && npm run admin:build
+      - name: Submit updated pages
+        if: inputs.operation == 'submit_updated_pages'
+        run: npm run distribution:prepare && npm run distribution:indexnow
+      - name: Run self-healing
+        if: inputs.operation == 'run_self_healing'
+        run: npm run self-heal:generated-content && npm run citation:self-heal && npm run validate:full-safe-autonomy && npm run admin:build
+      - name: Fix eligible failed pages
+        if: inputs.operation == 'fix_failed_pages'
+        run: npm run self-heal:generated-content && npm run citation:self-heal && npm run validate:ownership && npm run safe-harbor:validate && npm run release:content-finalize && npm run admin:build
+      - name: Rerun distribution
+        if: inputs.operation == 'rerun_distribution'
+        run: npm run distribution:prepare && npm run distribution:deploy
+      - name: Commit validated repository changes
+        if: inputs.operation != 'submit_updated_pages' && inputs.operation != 'rerun_distribution'
+        run: |
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git config user.name "spry-admin-bot"
+            git config user.email "actions@users.noreply.github.com"
+            git add -A
+            git commit -m "admin operation: ${{ inputs.operation }}"
+            git push
+          else
+            echo "No repository changes produced."
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: admin-operation-${{ inputs.operation }}-${{ github.run_id }}
+          if-no-files-found: warn
+          path: |
+            reports/**
+            artifacts/validation/**
+            data/admin/**
+            data/health/**
+            data/metrics/**

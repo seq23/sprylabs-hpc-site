@@ -1,18 +1,51 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "2.1",
   "status": "ACTIVE",
   "repo": "sprylabs-hpc-site",
-  "law": "BHPC agent-exact artifacts have mutation priority over daily citation-intelligence shadow plans.",
-  "allowed_agent_scopes": ["bhpc", "aplayer", "a-player", "a-player-mode"],
-  "forbidden_scopes": ["uscis-medical", "personal-injury", "dentistry", "trt", "neuro"],
+  "law": "Paid BHPC agent artifacts, pages, and exact plans are owner-locked and retain mutation priority. The autonomous $0 lane may write only to eligible non-paid-agent surfaces after ownership and Safe Harbor gates.",
+  "allowed_agent_scopes": [
+    "bhpc",
+    "aplayer",
+    "a-player",
+    "a-player-mode"
+  ],
+  "forbidden_scopes": [
+    "uscis-medical",
+    "personal-injury",
+    "dentistry",
+    "trt",
+    "neuro"
+  ],
   "mutation_lanes": {
-    "agent_artifact_content_mutation": ["release:agent-intake", "agent:bhpc:apply-exact"],
-    "shadow_citation_intelligence": ["release:daily-citation-intelligence", "release:controlled-citation-intelligence"]
+    "agent_artifact_content_mutation": [
+      "release:agent-intake",
+      "agent:bhpc:apply-exact"
+    ],
+    "zero_dollar_autonomous_gap_filler": [
+      "release:daily-citation-intelligence",
+      "release:controlled-citation-intelligence"
+    ]
   },
-  "forbidden_shadow_mutations": [
+  "paid_agent_page_ownership": "OWNER_LOCKED",
+  "zero_dollar_conflict_behavior": "SKIP_RECORD_CONTINUE",
+  "current_run_artifact_contract": [
+    "agent_run_manifest.json",
+    "bhpc.csv",
+    "bhpc.html",
+    "bhpc.json"
+  ],
+  "legacy_run_policy": "manifest_driven_tolerant",
+  "forbidden_zero_dollar_mutations": [
+    "data/report_fixes/agent_acceptance_manifest.generated.json",
+    "data/report_fixes/agent_exact_implementation_plan.json",
     "data/report_fixes/agent_runs/**",
     "data/report_fixes/normalized_agent_runs/**",
-    "data/report_fixes/agent_exact_implementation_plan.json",
-    "data/report_fixes/agent_acceptance_manifest.generated.json"
-  ]
+    "paid_agent_owned_routes",
+    "scripts/agent_intake/**"
+  ],
+  "zero_dollar_required_gates": [
+    "validate:ownership",
+    "safe-harbor:validate"
+  ],
+  "zero_dollar_permission_policy": "BOUNDED_CONTENTS_WRITE_ALLOWED"
 }

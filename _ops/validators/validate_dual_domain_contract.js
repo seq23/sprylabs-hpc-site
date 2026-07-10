@@ -55,6 +55,17 @@ function hasNoindex(html) {
   return robots.includes('noindex');
 }
 const htmlFiles = walk(root);
+
+const routeManifestPath = path.join(root, '_public_route_manifest.json');
+const routeManifest = fs.existsSync(routeManifestPath) ? JSON.parse(fs.readFileSync(routeManifestPath, 'utf8')) : { routes: [] };
+const privateNoindexFiles = new Set((routeManifest.routes || routeManifest.items || [])
+  .filter((item) => item && item.visibility === 'private_noindex' && item.source_file)
+  .map((item) => String(item.source_file).replace(/\\/g, '/')));
+function isPrivateNoindex(rel, html) {
+  if (privateNoindexFiles.has(rel)) return true;
+  if ((rel === 'admin.html' || rel.startsWith('admin/')) && hasNoindex(html)) return true;
+  return rel === 'admin.html' && /http-equiv=["']refresh["'][^>]*\/admin\//i.test(html);
+}
 const errors = [];
 const warnings = [];
 const titles = new Map();
@@ -99,6 +110,11 @@ if (generatedOnly) {
     const rel = path.relative(root, file).replace(/\\/g, '/');
     if (!generatedRouteMap.has(rel)) continue;
     const html = fs.readFileSync(file, 'utf8');
+  const privateNoindex = isPrivateNoindex(rel, html);
+  if (privateNoindex) {
+    if (!hasNoindex(html)) errors.push(`${rel}: private admin surface must declare noindex`);
+    continue;
+  }
     const page = generatedRouteMap.get(rel);
     const words = stripText(html).split(/\s+/).filter(Boolean).length;
     if (words < GENERATED_MIN_WORDS || words > GENERATED_MAX_WORDS) warnings.push(`${rel}: generated page word count out of range ${words} (warning-only)`);
@@ -149,6 +165,11 @@ for (const file of htmlFiles) {
   const host = hostFor(route);
   const expectedCanonical = host + route;
   const html = fs.readFileSync(file, 'utf8');
+  const privateNoindex = isPrivateNoindex(rel, html);
+  if (privateNoindex) {
+    if (!hasNoindex(html)) errors.push(`${rel}: private admin surface must declare noindex`);
+    continue;
+  }
   if (!html.includes('/assets/domain-context.js')) errors.push(`${rel}: missing domain-context.js include`);
   if (/Sequoia Taylor/.test(html)) errors.push(`${rel}: founder naming regression uses Sequoia Taylor`);
   if (founderPages.has(rel) && !html.includes('>personal website<')) errors.push(`${rel}: missing exact personal website anchor`);

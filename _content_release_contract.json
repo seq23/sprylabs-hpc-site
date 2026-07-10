@@ -1,7 +1,7 @@
 {
-  "schema_version": "1.4",
+  "schema_version": "2.0",
   "repo": "seq23/sprylabs-hpc-site",
-  "default_public_mutation": "shadow_noop_until_local_validation",
+  "default_public_mutation": "full_safe_autonomy_gap_fill",
   "release_unit_types": [
     "create",
     "repair",
@@ -41,9 +41,12 @@
     "data/strategy/**"
   ],
   "apply_policy": {
-    "shadow_mode_writes_only_reports": true,
+    "shadow_mode_writes_only_reports": false,
     "public_route_creation_requires_existing_page_admission_contract": true,
-    "no_op_reason_required": true
+    "no_op_reason_required": true,
+    "ownership_check_required": true,
+    "safe_harbor_required": true,
+    "continue_after_isolated_skip": true
   },
   "proof_required": true,
   "batch_d_controlled_release": {
@@ -63,5 +66,15 @@
       "workflow validators"
     ],
     "local_validation_required_before_complete": true
+  },
+  "routine_human_approval": false,
+  "exception_behavior": "skip_record_continue",
+  "zero_dollar_autonomous_release": {
+    "status": "enabled",
+    "scheduled_workflow": ".github/workflows/daily-citation-intelligence.yml",
+    "public_content_mutation_enabled": true,
+    "paid_agent_routes_excluded": true,
+    "targets_are_non_blocking": true,
+    "proof_required": true
   }
 }

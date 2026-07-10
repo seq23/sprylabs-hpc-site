@@ -1,0 +1,21 @@
+{
+  "workflow": "validate-repo.yml",
+  "scenario": "workflow_dispatch",
+  "trigger": "workflow_dispatch",
+  "status": "TRACE_ONLY_PASS",
+  "execution": "none_trace_only",
+  "included_steps": [
+    "actions/checkout@v4",
+    "actions/setup-node@v4",
+    "validate:step-3",
+    "Build and validate exact distribution artifact",
+    "actions/upload-artifact@v4",
+    "actions/upload-artifact@v4"
+  ],
+  "skipped_steps": [],
+  "assertions": [
+    "exact artifact built and validated",
+    "success artifact name matches deploy workflow expectation",
+    "diagnostics always upload"
+  ]
+}

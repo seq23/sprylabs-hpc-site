@@ -66,4 +66,10 @@ fs.writeFileSync('artifacts/validation/workflow-topology-fixture-trace.json', `$
 fs.writeFileSync('reports/workflow-topology-fixture-trace.json', `${JSON.stringify(report, null, 2)}\n`);
 writeSummary('validate-workflow-topology-fixtures', report);
 if (errors.length) fail(`[validate:workflow-topology-fixtures] FAIL: ${errors.length} issue(s)`, errors);
-pass(`[validate:workflow-topology-fixtures] OK: traced ${traces.length} governed workflow(s) with fake data`);
+const allYaml = spawnSync('python3', ['scripts/validation/faux_trace_all_workflows.py'], {cwd: root, stdio: 'pipe', encoding: 'utf8'});
+if (allYaml.status !== 0) {
+  fail('[validate:workflow-topology-fixtures] all-YAML faux trace failed', [allYaml.stderr || allYaml.stdout]);
+}
+let allYamlSummary = {};
+try { allYamlSummary = JSON.parse(allYaml.stdout); } catch {}
+pass(`[validate:workflow-topology-fixtures] OK: traced ${traces.length} governed topology workflow(s) plus ${allYamlSummary.workflow_count || 0} GitHub YAML workflow(s) across ${allYamlSummary.scenario_count || 0} faux scenarios`);

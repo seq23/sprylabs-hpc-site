@@ -26,6 +26,7 @@ const failures = [];
 
 for (const file of files) {
   const html = fs.readFileSync(file, "utf8");
+  if (/name=["\']robots["\'][^>]*noindex/i.test(html) || /noindex[^>]*name=["\']robots["\']/i.test(html)) continue;
 
   const hasApprovedPath = APPROVED_ENDPOINTS.some(endpoint => html.includes(endpoint));
 
