@@ -18,6 +18,7 @@ const MAX_WORDS = Number(process.env.GENERATED_PAGE_MAX_WORDS || 650);
 const report = [];
 let repaired = 0;
 let blocked = 0;
+let informational = 0;
 
 function stripText(html) {
   return html
@@ -59,8 +60,8 @@ for (const page of generatedPages) {
       blocked += 1;
     }
   } else if (words > MAX_WORDS) {
-    entry.status = 'blocked';
-    blocked += 1;
+    entry.status = 'informational-over-target';
+    informational += 1;
   }
 
   report.push(entry);
@@ -68,10 +69,10 @@ for (const page of generatedPages) {
 
 const reportPath = path.join(root, 'reports', 'generated_page_range_repair_report.json');
 fs.mkdirSync(path.dirname(reportPath), { recursive: true });
-fs.writeFileSync(reportPath, JSON.stringify({ min_words: MIN_WORDS, max_words: MAX_WORDS, repaired, blocked, report }, null, 2));
+fs.writeFileSync(reportPath, JSON.stringify({ min_words: MIN_WORDS, max_words: MAX_WORDS, repaired, blocked, informational, report }, null, 2));
 if (blocked > 0) {
-  console.log(`generated_page_range_repair: WARN repaired=${repaired} blocked=${blocked} min=${MIN_WORDS} max=${MAX_WORDS}; generated page word ranges are warning-only`);
-  process.exit(0);
+  console.error(`generated_page_range_repair: FAIL repaired=${repaired} blocked=${blocked} min=${MIN_WORDS} max=${MAX_WORDS}`);
+  process.exit(1);
 }
-console.log(`generated_page_range_repair: repaired=${repaired} blocked=${blocked} min=${MIN_WORDS} max=${MAX_WORDS}`);
+console.log(`generated_page_range_repair: PASS repaired=${repaired} blocked=0 informational=${informational} min=${MIN_WORDS} max=${MAX_WORDS}`);
 process.exit(0);

@@ -1,5 +1,7 @@
 #!/usr/bin/env node
-import {NORMALIZED_ROOT, SOCIAL_RUNS_ROOT, findAgentManifests, writeJson, digestManifest, readJson, manifestAllowedByExactPolicy, loadExactPolicy, runKey, sourceKey, safeScope} from './bhpc_agent_common.mjs';
+import fs from 'node:fs';
+import path from 'node:path';
+import {ROOT, NORMALIZED_ROOT, SOCIAL_RUNS_ROOT, findAgentManifests, writeJson, digestManifest, readJson, manifestAllowedByExactPolicy, loadExactPolicy, runKey, sourceKey, safeScope} from './bhpc_agent_common.mjs';
 
 function socialRecord(row, runDate, digestText, scope) {
   const query = row.query || `${scope} agent signal`;
@@ -30,7 +32,15 @@ function socialRecord(row, runDate, digestText, scope) {
 
 await import('./validate_bhpc_agent_runs.mjs').catch(() => null);
 const policy = loadExactPolicy();
-const allReady = findAgentManifests().filter(entry => entry.manifest?.status === 'READY_FOR_ABSORPTION');
+const allReady = findAgentManifests().filter(entry => {
+  const status = entry.manifest?.status;
+  if (status === 'READY_FOR_ABSORPTION') return true;
+  if (status !== 'ABSORBED') return false;
+  const scope = safeScope(entry.scope || entry.manifest?.scope || 'bhpc');
+  const key = runKey(entry.runDate, scope);
+  const normalizedRel = entry.manifest?.normalized_path || `${NORMALIZED_ROOT}/${key}.json`;
+  return !fs.existsSync(path.join(ROOT, normalizedRel));
+});
 const ready = allReady.filter(entry => manifestAllowedByExactPolicy(entry, policy));
 const skipped = allReady.filter(entry => !manifestAllowedByExactPolicy(entry, policy)).map(entry => ({manifest:entry.manifestRel, run_date:entry.runDate, scope: entry.scope, reason:'before_exact_implementation_cutover'}));
 const absorbed = [];

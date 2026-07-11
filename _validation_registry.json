@@ -4221,8 +4221,131 @@
         "MX-ARTIFACT-HARDENING-SUITE"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-REPAIR-AGENT-NORMALIZATION",
+      "status": "ADMITTED",
+      "name": "release:repair-agent-normalization",
+      "check_type": "repair",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Reconstructs normalized agent payloads before downstream source coverage validation.",
+      "existing_coverage_gap": "The release lifecycle previously lacked this explicit repair/attestation governance boundary.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run release:repair-agent-normalization",
+      "implementation_path": "scripts/agent_intake/absorb_bhpc_agent_runs.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/bhpc-agent-run-intake.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted during the 2026-07-11 validation simplification and self-healing overhaul.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-REPAIR-AGENT-NORMALIZATION"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-RELEASE-ATTEST",
+      "status": "ADMITTED",
+      "name": "release:attest",
+      "check_type": "attestation",
+      "owning_lane": "release",
+      "risk_prevented": "Prevents a release from reporting success with unresolved internal errors or warnings.",
+      "existing_coverage_gap": "The release lifecycle previously lacked this explicit repair/attestation governance boundary.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run release:attest",
+      "implementation_path": "scripts/release/release_attestation.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/release-clean-summary.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted during the 2026-07-11 validation simplification and self-healing overhaul.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-RELEASE-ATTEST"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-VALIDATION-INVENTORY",
+      "status": "ADMITTED",
+      "name": "validation:inventory",
+      "check_type": "governance",
+      "owning_lane": "validation-governance",
+      "risk_prevented": "Maintains a machine-readable inventory of hard-gate and warning-emission sources.",
+      "existing_coverage_gap": "The release lifecycle previously lacked this explicit repair/attestation governance boundary.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validation:inventory",
+      "implementation_path": "scripts/validation/inventory_validation_sources.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/validation-source-inventory.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted during the 2026-07-11 validation simplification and self-healing overhaul.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-VALIDATION-INVENTORY"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-REPAIR-DUAL-DOMAIN-METADATA",
+      "status": "ADMITTED",
+      "name": "repair:dual-domain-metadata",
+      "check_type": "repair",
+      "owning_lane": "dual-domain",
+      "risk_prevented": "Repairs canonical and og:url metadata after generators mutate dual-domain pages.",
+      "existing_coverage_gap": "Build generators could overwrite route ownership metadata after source files were already correct.",
+      "scope": [
+        "repository",
+        "public-html"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run repair:dual-domain-metadata",
+      "implementation_path": "scripts/repair/repair_dual_domain_metadata.js",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/dual-domain-metadata-repair.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Shares the canonical route ownership policy with validate_dual_domain_contract.js."
+      ],
+      "retirement_offset": "Retire only when every generator consumes the shared route ownership policy directly.",
+      "decision": "Admitted as an intent-preserving self-heal after local deep validation isolated post-build canonical drift.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-REPAIR-DUAL-DOMAIN-METADATA"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 133,
+  "record_count": 136,
   "generated_at": "2026-07-04T13:00:00Z"
 }

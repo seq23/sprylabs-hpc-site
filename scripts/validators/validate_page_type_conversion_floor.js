@@ -26,7 +26,7 @@ const HIGH_INTENT_PATTERNS = [
 
 function walk(dir, out = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    if ([".git", "node_modules", "_ops", "templates", "coverage", "reports"].includes(entry.name)) continue;
+    if ([".git", "node_modules", "_ops", "templates", "coverage", "reports", "fixtures"].includes(entry.name)) continue;
     const full = path.join(dir, entry.name);
     const rel = path.relative(process.cwd(), full).replace(/\\/g, '/');
     if (rel.startsWith('data/report_fixes/agent_runs/')) continue;

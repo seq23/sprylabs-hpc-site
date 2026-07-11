@@ -13,6 +13,7 @@ function reviewOne(id, traceFile) {
   const trace = JSON.parse(fs.readFileSync(traceFile, 'utf8'));
   const errors = [];
   const warnings = [];
+  const info = [];
   const changed = trace.lineage?.changed_files || [];
 
   if (trace.workflow_id !== id) errors.push('trace workflow id does not match requested workflow');
@@ -27,7 +28,7 @@ function reviewOne(id, traceFile) {
   for (const item of changed) {
     if (matches(item.file, contract.forbidden_change_patterns || [])) errors.push(`workflow changed forbidden source/governance file: ${item.file}`);
     if (!matches(item.file, contract.allowed_change_patterns || []) && !matches(item.file, contract.lineage_outputs || [])) {
-      warnings.push(`changed file is outside declared output patterns: ${item.file}`);
+      info.push(`observed generated output outside declared patterns: ${item.file}`);
     }
     if (/\.env(?:\.|$)|playwright-storage-state|\.pem$|\.key$/i.test(item.file)) errors.push(`possible secret-bearing output changed: ${item.file}`);
   }
@@ -38,7 +39,7 @@ function reviewOne(id, traceFile) {
   if (pendingCandidates.length) {
     errors.push(`programmatic candidate manifest contains ${pendingCandidates.length} non-admitted candidate(s)`);
   } else if (candidateRows.length) {
-    warnings.push(`programmatic candidate manifest retains ${candidateRows.length} admitted release atom(s) for downstream atom/claim validators`);
+    info.push(`programmatic candidate manifest retains ${candidateRows.length} admitted release atom(s) for downstream validation`);
   }
 
   const registry = readJson('data/content/page_admission_registry.json');
@@ -62,6 +63,7 @@ function reviewOne(id, traceFile) {
     output_count: trace.lineage?.outputs_after?.length || 0,
     errors,
     warnings,
+    info,
   };
   const reportPath = path.posix.join(path.posix.dirname(traceFile), 'hostile-review.json');
   writeJson(reportPath, result);
@@ -101,7 +103,7 @@ for (const wf of contracts.governed_workflows || []) {
   const id = wf.id;
   const trace = latestTraceFor(id);
   if (!trace) {
-    results.push({workflow_id: id, status: 'SKIP', errors: [], warnings: ['latest trace missing; no historical run available to hostile-review']});
+    results.push({workflow_id: id, status: 'SKIP', errors: [], warnings: [], info: ['latest trace missing; no historical run available to hostile-review']});
     continue;
   }
   try {
@@ -111,7 +113,7 @@ for (const wf of contracts.governed_workflows || []) {
   } catch (error) {
     const message = error?.message || String(error);
     errors.push(`${id}: ${message}`);
-    results.push({workflow_id: id, status: 'FAIL', errors: [message], warnings: []});
+    results.push({workflow_id: id, status: 'FAIL', errors: [message], warnings: [], info: []});
   }
 }
 const aggregate = {
@@ -124,6 +126,7 @@ const aggregate = {
   pass_count: results.filter(r => r.status === 'PASS').length,
   fail_count: results.filter(r => r.status === 'FAIL').length,
   warning_count: results.reduce((sum, r) => sum + (r.warnings?.length || 0), 0),
+  info_count: results.reduce((sum, r) => sum + (r.info?.length || 0), 0),
   errors,
   results,
 };

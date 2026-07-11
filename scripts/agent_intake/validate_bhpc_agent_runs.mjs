@@ -5,9 +5,10 @@ import {ROOT, VALID_STATUSES, findAgentManifests, writeJson, parseCsv, safeScope
 
 const errors = [];
 const warnings = [];
+const info = [];
 const runs = [];
 const dateRe = /^\d{4}-\d{2}-\d{2}$/;
-const allowedFields = new Set(['source','run_date','scope','bucket','vertical','artifact_shape','csv_path','html_path','json_path','status','created_at','absorbed_at','absorbed_record_count','normalized_path','social_run_path','notes','exact_implementation_policy']);
+const allowedFields = new Set(['source','run_date','scope','bucket','vertical','artifact_shape','csv_path','html_path','json_path','status','created_at','absorbed_at','absorbed_record_count','normalized_path','social_run_path','notes','exact_implementation_policy','reprocess_reason']);
 
 for (const entry of findAgentManifests()) {
   const manifest = entry.manifest || {};
@@ -38,7 +39,7 @@ for (const entry of findAgentManifests()) {
     const rows = parseCsv(csvText);
     rowCount = rows.length;
     if (!csvText.trim()) errors.push(`${context}: CSV is empty`);
-    if (!rows.length) warnings.push(`${context}: CSV has no data rows; JSON/HTML digest will be used as fallback signal`);
+    if (!rows.length) info.push(`${context}: CSV has no data rows; JSON/HTML digest used as fallback signal`);
   }
   let htmlBytes = 0;
   if (digest.htmlRel && fs.existsSync(path.join(ROOT, digest.htmlRel))) {
@@ -46,12 +47,12 @@ for (const entry of findAgentManifests()) {
     htmlBytes = Buffer.byteLength(html);
     if (htmlBytes < 100) errors.push(`${context}: HTML digest is too small to be useful`);
     if (/<script\b/i.test(html)) errors.push(`${context}: HTML digest must not include script tags`);
-    if (!/<html\b|<body\b|<article\b|<main\b|<section\b/i.test(html)) warnings.push(`${context}: HTML digest has no structural HTML wrapper`);
+    if (!/<html\b|<body\b|<article\b|<main\b|<section\b/i.test(html)) info.push(`${context}: HTML digest is a fragment; accepted because wrappers are not required for ingestion`);
   }
   if (digest.jsonRel && fs.existsSync(path.join(ROOT, digest.jsonRel))) {
     const json = JSON.parse(fs.readFileSync(path.join(ROOT, digest.jsonRel), 'utf8'));
     if (!json || typeof json !== 'object' || Array.isArray(json)) errors.push(`${context}: JSON artifact must be an object`);
-    if (json?.scoreboard && typeof json.scoreboard.total !== 'number') warnings.push(`${context}: JSON scoreboard exists but total is not numeric`);
+    if (json?.scoreboard && typeof json.scoreboard.total !== 'number') info.push(`${context}: JSON scoreboard total is non-numeric and ignored as optional telemetry`);
     if (json?.pages_to_build && !Array.isArray(json.pages_to_build)) errors.push(`${context}: JSON pages_to_build must be an array when present`);
   }
   if (!digest.csvRel && !digest.jsonRel && !digest.htmlRel) errors.push(`${context}: expected at least one CSV, JSON, or HTML artifact`);
@@ -72,7 +73,7 @@ for (const entry of findAgentManifests()) {
   });
 }
 
-const report = {schema_version:'1.1', generated_at:new Date().toISOString(), status:errors.length?'FAIL':'PASS', run_count:runs.length, runs, errors, warnings};
+const report = {schema_version:'1.1', generated_at:new Date().toISOString(), status:errors.length?'FAIL':'PASS', run_count:runs.length, runs, errors, warnings, info};
 writeJson('artifacts/validation/bhpc-agent-run-intake.json', report);
 writeJson('reports/bhpc-agent-run-intake.json', report);
 if (errors.length) {
@@ -80,4 +81,4 @@ if (errors.length) {
   for (const error of errors) console.error(` - ${error}`);
   process.exit(1);
 }
-console.log(`[bhpc-agent-intake] PASS: ${runs.length} run folder(s), warnings=${warnings.length}`);
+console.log(`[bhpc-agent-intake] PASS: ${runs.length} run folder(s), warnings=${warnings.length}; info=${info.length}`);

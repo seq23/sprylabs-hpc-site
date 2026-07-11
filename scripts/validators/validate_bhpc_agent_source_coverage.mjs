@@ -47,10 +47,32 @@ for (const entry of findAgentManifests().filter(shouldCheck)) {
   }));
   const expected = [...expectedRows, ...expectedPages];
 
-  const normalizedRecords = normalized ? [
+  if (!normalized) {
+    errors.push(`${entry.runDate}/${scope}: normalized prerequisite missing after repair phase: ${normalizedRel}`);
+    runs.push({
+      run_date: entry.runDate,
+      scope,
+      manifest: entry.manifestRel,
+      normalized_path: normalizedRel,
+      source_record_count: expectedRows.length,
+      new_page_source_record_count: expectedPages.length,
+      canonical_new_page_count: new Set(expectedPages.map(item => item.implementation_path).filter(Boolean)).size,
+      normalized_record_count: 0,
+      missing_from_normalized_count: null,
+      unaddressed_count: null,
+      content_proof_missing_count: null,
+      built_new_page_count: null,
+      queued_new_page_count: null,
+      missing_built_new_page_count: null,
+      root_cause: 'NORMALIZED_PREREQUISITE_MISSING',
+    });
+    continue;
+  }
+
+  const normalizedRecords = [
     ...((normalized.records || []).map(row => ({kind:'record', key: recordKey(row), id: row.id, query: row.query, implementation_path: row.implementation_path || row.intended_winner_path || ''}))),
     ...((normalized.page_specs || []).map(spec => ({kind:'new_page_opportunity', key: recordKey(spec), id: spec.id, query: spec.query, implementation_path: spec.implementation_path || ''}))),
-  ] : [];
+  ];
   const normalizedKeys = new Set(normalizedRecords.map(record => record.key));
 
   const acceptance = readJson(`data/report_fixes/agent_acceptance_manifests/${key}.json`, {entries: []});
@@ -74,7 +96,6 @@ for (const entry of findAgentManifests().filter(shouldCheck)) {
     return !(accepted || planned || applied || skipped);
   });
 
-  if (!normalized) errors.push(`${entry.runDate}/${scope}: missing normalized payload ${normalizedRel}`);
   for (const item of missingFromNormalized.slice(0, 40)) {
     errors.push(`${entry.runDate}/${scope}: source item missing from normalized output: ${item.kind}:${item.query}`);
   }
@@ -134,14 +155,14 @@ for (const entry of findAgentManifests().filter(shouldCheck)) {
 }
 
 const report = {
-  schema_version: '1.0',
+  schema_version: '2.0',
   validator: 'bhpc-agent-source-coverage',
   generated_at: new Date().toISOString(),
   status: errors.length ? 'FAIL' : 'PASS',
   policy: {
     checked_statuses: ['READY_FOR_ABSORPTION', 'ABSORBED'],
     coverage_from: process.env.BHPC_AGENT_SOURCE_COVERAGE_FROM || '2026-07-04',
-    rule: 'Every actionable source item from agent artifacts must be normalized, represented by its own source id, applied to page-level proof or explicitly skipped/blocked with a reason; every canonical new-page target must be built.'
+    rule: 'The repair phase must normalize every eligible agent run before coverage validation. Every actionable source item must then be represented, represented by its own source id, applied to page-level proof or explicitly skipped/blocked with a reason; every canonical new-page target must be built.'
   },
   run_count: runs.length,
   runs,

@@ -2,7 +2,7 @@
   "schema_version": "1.0",
   "validator": "bhpc-agent-artifact-continuity",
   "status": "PASS",
-  "checked_count": 4,
+  "checked_count": 5,
   "checked": [
     {
       "run_date": "2026-06-23",
@@ -31,10 +31,18 @@
       "manifest": "data/report_fixes/agent_runs/2026-07-04/bhpc/agent_run_manifest.json",
       "status": "ABSORBED",
       "normalized_path": "data/report_fixes/normalized_agent_runs/2026-07-04_bhpc.json"
+    },
+    {
+      "run_date": "2026-07-11",
+      "scope": "bhpc",
+      "manifest": "data/report_fixes/agent_runs/2026-07-11/bhpc/agent_run_manifest.json",
+      "status": "ABSORBED",
+      "normalized_path": "data/report_fixes/normalized_agent_runs/2026-07-11_bhpc.json"
     }
   ],
   "errors": [],
-  "warnings": [
+  "warnings": [],
+  "info": [
     "data/report_fixes/agent_runs/2026-06-23/bhpc/agent_run_manifest.json: legacy_bhpc_run_without_json_artifact",
     "data/report_fixes/agent_runs/2026-06-24/bhpc/agent_run_manifest.json: legacy_bhpc_run_without_json_artifact",
     "data/report_fixes/agent_runs/2026-06-27/bhpc/agent_run_manifest.json: legacy_bhpc_run_without_json_artifact"

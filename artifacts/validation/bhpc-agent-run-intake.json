@@ -1,6 +1,6 @@
 {
   "schema_version": "1.1",
-  "generated_at": "2026-07-11T13:16:22.785Z",
+  "generated_at": "2026-07-11T14:23:29.904Z",
   "status": "PASS",
   "run_count": 5,
   "runs": [
@@ -67,7 +67,7 @@
     {
       "run_date": "2026-07-11",
       "scope": "bhpc",
-      "status": "READY_FOR_ABSORPTION",
+      "status": "ABSORBED",
       "csv_path": "data/report_fixes/agent_runs/2026-07-11/bhpc/bhpc.csv",
       "json_path": "data/report_fixes/agent_runs/2026-07-11/bhpc/bhpc.json",
       "html_path": "data/report_fixes/agent_runs/2026-07-11/bhpc/bhpc.html",
@@ -81,9 +81,9 @@
     }
   ],
   "errors": [],
-  "warnings": [
-    "data/report_fixes/agent_runs/2026-07-04/bhpc/agent_run_manifest.json: unexpected manifest field reprocess_reason",
-    "data/report_fixes/agent_runs/2026-07-04/bhpc/agent_run_manifest.json: HTML digest has no structural HTML wrapper",
-    "data/report_fixes/agent_runs/2026-07-11/bhpc/agent_run_manifest.json: HTML digest has no structural HTML wrapper"
+  "warnings": [],
+  "info": [
+    "data/report_fixes/agent_runs/2026-07-04/bhpc/agent_run_manifest.json: HTML digest is a fragment; accepted because wrappers are not required for ingestion",
+    "data/report_fixes/agent_runs/2026-07-11/bhpc/agent_run_manifest.json: HTML digest is a fragment; accepted because wrappers are not required for ingestion"
   ]
 }

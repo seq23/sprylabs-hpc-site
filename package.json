@@ -72,7 +72,7 @@
     "validate:browser-suite-contract": "node scripts/validation/validate_browser_suite_contract.mjs",
     "validate:artifact-source-parity": "node scripts/validation/validate_artifact_source_parity.mjs",
     "validate:reopened-baseline": "node scripts/validation/validate_reopened_baseline.mjs",
-    "validate:warnings": "node scripts/validators/validate_velocity_warnings.js && node scripts/validate_fanout_warning.js",
+    "validate:warnings": "node scripts/validators/validate_velocity_warnings.js && node scripts/validate_fanout_warning.js && npm run release:attest",
     "validate:all": "npm run validate:repo && npm run validate:hpc-pantry && npm run trace:hpc-pantry && npm run validate:validation-registry && npm run validate:workflow-contract && npm run validate:workflow-lineage && npm run validate:workflow-monitor && npm run validate:workflow-topology && npm run validate:workflow-topology:fixtures && npm run agent:artifact-shape:self-test && npm run validate:agent-run && npm run agent:bhpc:validate && npm run agent:bhpc:trace && npm run agent:bhpc:plan-exact && npm run agent:bhpc:apply-exact && npm run agent:bhpc:trace-exact && npm run agent:bhpc:validate-exact && npm run validate:citation-velocity-automation && npm run validate:disavow-asset && npm run validate:programmatic-provenance && npm run repair:programmatic-registry-owners && npm run validate:programmatic-registry && npm run repair:citation-contract-surfaces && npm run validate:citation-contract && npm run validate:citation-strategy && npm run validate:rendered-schema-parity && npm run validate:retired-route-references && npm run validate:content && npm run validate:graph && npm run validate:distribution && npm run validate:ui-test-parity && npm run validate:browser-suite-contract && node scripts/validation/validate_release_atom_contract.mjs && node scripts/validation/validate_release_mix_policy.mjs && node scripts/validation/validate_citation_phase_manifest.mjs && node scripts/validation/validate_no_keyword_swap_pages.mjs && node scripts/validation/validate_claim_safety.mjs && node scripts/validation/validate_internal_link_velocity.mjs && node scripts/validation/validate_llms_full_coverage.mjs && node scripts/validation/validate_sitemap_coverage.mjs && npm run validate:traffic-qualified-suite",
     "guardrails:all": "npm run release:prepush:container",
     "full:loop": "npm run build:all && npm run validate:all",
@@ -236,7 +236,11 @@
     "validate:coverage-route": "node scripts/validators/validate_coverage_route_contract.mjs",
     "validate:artifact-consistency-e2e": "node scripts/validators/validate_artifact_consistency_e2e.mjs",
     "validate:artifact-packaging-parity": "node scripts/validation/validate_artifact_packaging_parity.mjs",
-    "validate:artifact-hardening-suite": "npm run validate:artifact-consistency-e2e && npm run validate:release-plan-integrity && npm run validate:daily-proof-packet"
+    "validate:artifact-hardening-suite": "npm run validate:artifact-consistency-e2e && npm run validate:release-plan-integrity && npm run validate:daily-proof-packet",
+    "validation:inventory": "node scripts/validation/inventory_validation_sources.mjs",
+    "release:repair-agent-normalization": "npm run agent:bhpc:validate && npm run agent:bhpc:absorb && npm run agent:bhpc:trace",
+    "release:attest": "node scripts/release/release_attestation.mjs",
+    "repair:dual-domain-metadata": "node scripts/repair/repair_dual_domain_metadata.js"
   },
   "engines": {
     "node": ">=24.0.0"

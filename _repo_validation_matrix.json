@@ -1327,8 +1327,48 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-REPAIR-AGENT-NORMALIZATION",
+      "validation_id": "VAL-REPAIR-AGENT-NORMALIZATION",
+      "lane": "agent-intake",
+      "command": "npm run release:repair-agent-normalization",
+      "order": 153,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-RELEASE-ATTEST",
+      "validation_id": "VAL-RELEASE-ATTEST",
+      "lane": "release",
+      "command": "npm run release:attest",
+      "order": 154,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-VALIDATION-INVENTORY",
+      "validation_id": "VAL-VALIDATION-INVENTORY",
+      "lane": "validation-governance",
+      "command": "npm run validation:inventory",
+      "order": 155,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-REPAIR-DUAL-DOMAIN-METADATA",
+      "validation_id": "VAL-REPAIR-DUAL-DOMAIN-METADATA",
+      "lane": "dual-domain",
+      "command": "npm run repair:dual-domain-metadata",
+      "order": 156,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 132,
+  "entry_count": 135,
   "generated_at": "2026-07-04T13:00:00Z"
 }

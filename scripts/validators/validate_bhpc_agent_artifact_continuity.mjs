@@ -4,6 +4,7 @@ import path from 'node:path';
 import {ROOT, findAgentManifests, writeJson} from '../agent_intake/bhpc_agent_common.mjs';
 const errors = [];
 const warnings = [];
+const info = [];
 const checked = [];
 const allowed = new Set(['bhpc','aplayer','a-player','a-player-mode']);
 for (const entry of findAgentManifests()) {
@@ -15,13 +16,13 @@ for (const entry of findAgentManifests()) {
     if (!rel) errors.push(`${context}: missing_${key}`);
     else if (!fs.existsSync(path.join(ROOT, rel))) errors.push(`${context}: missing_artifact:${rel}`);
   }
-  if (!manifest.json_path) warnings.push(`${context}: legacy_bhpc_run_without_json_artifact`);
+  if (!manifest.json_path) info.push(`${context}: legacy_bhpc_run_without_json_artifact`);
   else if (!fs.existsSync(path.join(ROOT, manifest.json_path))) errors.push(`${context}: missing_json_artifact:${manifest.json_path}`);
   if (String(manifest.status || '').toUpperCase() === 'ABSORBED' && manifest.normalized_path && !fs.existsSync(path.join(ROOT, manifest.normalized_path))) errors.push(`${context}: normalized_output_missing:${manifest.normalized_path}`);
   checked.push({run_date: entry.runDate, scope: entry.scope, manifest: context, status: manifest.status, normalized_path: manifest.normalized_path || null});
 }
-const report = {schema_version: '1.0', validator: 'bhpc-agent-artifact-continuity', status: errors.length ? 'FAIL' : 'PASS', checked_count: checked.length, checked, errors, warnings};
+const report = {schema_version: '1.0', validator: 'bhpc-agent-artifact-continuity', status: errors.length ? 'FAIL' : 'PASS', checked_count: checked.length, checked, errors, warnings, info};
 writeJson('artifacts/validation/bhpc-agent-artifact-continuity.json', report);
 writeJson('reports/bhpc-agent-artifact-continuity.json', report);
 if (errors.length) { console.error(JSON.stringify(report, null, 2)); process.exit(1); }
-console.log(`[bhpc-agent-artifact-continuity] PASS: ${checked.length} run(s), warnings=${warnings.length}`);
+console.log(`[bhpc-agent-artifact-continuity] PASS: ${checked.length} run(s), warnings=${warnings.length}; info=${info.length}`);

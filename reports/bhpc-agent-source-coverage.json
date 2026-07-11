@@ -1,7 +1,7 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "2.0",
   "validator": "bhpc-agent-source-coverage",
-  "generated_at": "2026-07-11T13:16:47.496Z",
+  "generated_at": "2026-07-11T14:23:32.551Z",
   "status": "PASS",
   "policy": {
     "checked_statuses": [
@@ -9,7 +9,7 @@
       "ABSORBED"
     ],
     "coverage_from": "2026-07-04",
-    "rule": "Every actionable source item from agent artifacts must be normalized, represented by its own source id, applied to page-level proof or explicitly skipped/blocked with a reason; every canonical new-page target must be built."
+    "rule": "The repair phase must normalize every eligible agent run before coverage validation. Every actionable source item must then be represented, represented by its own source id, applied to page-level proof or explicitly skipped/blocked with a reason; every canonical new-page target must be built."
   },
   "run_count": 2,
   "runs": [

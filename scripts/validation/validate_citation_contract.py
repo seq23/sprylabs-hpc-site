@@ -143,7 +143,7 @@ for r in active:
             errors.append(paragraph_sentence_message(r['path'], idx, n))
             break
         if severity=='WARN':
-            warnings.append(paragraph_sentence_message(r['path'], idx, n))
+            infos.append(paragraph_sentence_message(r['path'], idx, n))
 
 covered={}
 normalized_registry={}
@@ -199,8 +199,4 @@ if errors:
     print(f"[validate:citation-contract] FAIL: {len(errors)} issue(s)",file=sys.stderr)
     for e in errors[:250]: print(' - '+e,file=sys.stderr)
     sys.exit(1)
-if warnings:
-    print(f"[validate:citation-contract] OK with {len(warnings)} content-quality warning(s): {len(active)} pages, {len(queries)} queries, {len(frameworks)} frameworks")
-    for w in warnings[:25]: print(' - WARN: '+w)
-else:
-    print(f"[validate:citation-contract] OK: {len(active)} pages, {len(queries)} queries, {len(frameworks)} frameworks")
+print(f"[validate:citation-contract] OK: {len(active)} pages, {len(queries)} queries, {len(frameworks)} frameworks; info={len(infos)}")

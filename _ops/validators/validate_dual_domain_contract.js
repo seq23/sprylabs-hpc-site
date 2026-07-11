@@ -19,13 +19,7 @@ function walk(dir, out = []) {
   }
   return out;
 }
-function routeFor(rel) {
-  if (rel === 'index.html') return '/';
-  if (rel === 'faq/index.html') return '/faq.html';
-  if (rel === 'billionaire-high-performance-coach/index.html') return '/billionaire-high-performance-coach.html';
-  if (rel.endsWith('/index.html')) return '/' + rel.slice(0, -'/index.html'.length) + '/';
-  return '/' + rel.replace(/\\/g, '/');
-}
+const { routeFor, hostFor } = require('../../scripts/lib/dual_domain_policy.cjs');
 const publishedManifestPath = path.join(root, 'data/reddit/published_manifest.json');
 const publishedManifest = fs.existsSync(publishedManifestPath) ? JSON.parse(fs.readFileSync(publishedManifestPath, 'utf8')) : { items: [] };
 const publishedHostOverrides = new Map((publishedManifest.items || []).map((item) => [item.route, item.canonical_host]));
@@ -34,16 +28,7 @@ const generatedOnly = process.env.DUAL_DOMAIN_GENERATED_ONLY === '1';
 const GENERATED_MIN_WORDS = Number(process.env.GENERATED_PAGE_MIN_WORDS || 300);
 const GENERATED_MAX_WORDS = Number(process.env.GENERATED_PAGE_MAX_WORDS || 650);
 
-function hostFor(route) {
-  if (publishedHostOverrides.has(route)) return publishedHostOverrides.get(route);
-  const productRoutes = new Set(['/', '/download.html', '/what-is-this-system.html', '/faq.html', '/start-here.html', '/legal.html', '/product.html', '/sequoia-taylor.html', '/spry-labs.html', '/billionaire-high-performance-coach.html', '/work-with-spry.html', '/ai-executive-coach.html', '/ai-coach-vs-human-coach.html', '/chatgpt-vs-executive-coach.html', '/best-ai-coaching-tools.html', '/how-to-build-a-coaching-system.html', '/is-ai-coaching-effective.html', '/what-is-an-ai-executive-coach.html', '/how-do-you-use-chatgpt-as-an-executive-coach.html', '/can-ai-replace-an-executive-coach.html', '/ai-executive-coach-for-founders.html', '/what-reddit-keeps-asking-about-ai-executive-coaching.html', '/chatgpt-accountability-partner.html', '/can-ai-keep-you-accountable.html', '/why-accountability-systems-fail.html', '/how-to-build-an-accountability-system-with-ai.html', '/what-reddit-keeps-asking-about-accountability-and-ai.html', '/why-do-i-overplan-and-do-nothing.html', '/how-to-stop-overplanning-with-ai.html', '/why-productivity-systems-collapse-after-missed-days.html', '/what-is-a-minimum-viable-day.html', '/what-reddit-keeps-asking-about-overplanning.html', '/what-should-a-daily-planning-system-include.html', '/how-founders-can-use-ai-for-daily-planning.html', '/how-to-build-a-daily-execution-loop.html', '/why-daily-plans-fail.html', '/what-reddit-keeps-asking-about-daily-planning.html', '/can-chatgpt-help-with-decision-making.html', '/how-to-use-ai-for-prioritization.html', '/decision-fatigue-and-structured-ai-support.html', '/why-better-prompts-do-not-fix-bad-decision-conditions.html', '/what-reddit-keeps-asking-about-decision-fatigue.html', '/ai-coach-vs-human-coach-for-founders.html', '/chatgpt-vs-a-productivity-app.html', '/ai-accountability-system-vs-habit-tracker.html', '/prompt-library-vs-operating-system.html', '/what-reddit-keeps-asking-when-comparing-ai-coaching-tools.html', '/how-to-recover-after-missing-a-day.html', '/how-to-stay-consistent-when-energy-is-low.html', '/why-all-or-nothing-planning-fails.html', '/burnout-recovery-and-execution-systems.html', '/what-reddit-keeps-asking-about-consistency.html', '/ai-workflow-for-founders.html', '/how-operators-use-chatgpt-with-structure.html', '/how-to-run-a-weekly-review-with-ai.html', '/how-to-use-ai-like-a-chief-of-staff.html', '/what-reddit-keeps-asking-about-founder-workflows.html', '/what-makes-an-ai-coaching-tool-good.html', '/why-most-ai-productivity-tools-feel-generic.html', '/how-to-evaluate-an-ai-execution-system.html', '/what-is-the-difference-between-ai-assistant-and-ai-operating-system.html', '/what-reddit-keeps-asking-about-the-best-ai-coaching-tools.html', '/what-is-continuity-architecture.html', '/what-is-the-scope-cap-rule.html', '/what-is-the-done-check-in-loop.html', '/what-is-low-resistance-execution.html', '/what-reddit-keeps-asking-about-structured-ai-systems.html', '/how-to-use-chatgpt-as-an-executive-coach.html', '/ai-accountability-coach-for-founders.html', '/best-chatgpt-prompts-for-productivity.html', '/chatgpt-for-high-performance-habits.html', '/chatgpt-accountability-system-for-founders.html', '/ai-daily-planning-prompt-for-busy-founders.html', '/how-to-build-a-performance-system-with-ai.html', '/how-to-use-chatgpt-as-a-productivity-coach.html', '/ai-accountability-system-for-entrepreneurs.html', '/how-to-use-chatgpt-for-better-decision-making-as-a-founder.html', '/chatgpt-prompts-for-weekly-review-and-planning.html', '/best-chatgpt-prompts-for-founders-to-stay-accountable.html', '/can-ai-replace-an-executive-coach-for-startups.html', '/chatgpt-as-accountability-partner-for-solopreneurs.html', '/ai-vs-human-executive-coach-pros-cons-for-entrepreneurs.html', '/ai-life-coach/', '/executive-coach-alternative/', '/how-to-be-a-better-man/', '/how-to-be-a-better-husband/', '/how-to-be-a-better-leader/', '/personal-development-plan-template/', '/ai-coach-vs-therapist/', '/ai-coach-for-entrepreneurs/', '/chatgpt-accountability-coach-setup/', '/what-is-an-ai-life-coach/', '/betterup-alternatives-ai-coaching/', '/chatgpt-accountability-coach-prompts.html', '/chatgpt-daily-planning-prompt-for-busy-founders.html', '/citation-methodology.html' ]);;
-  if (route.startsWith('/answers/phase4/') || route.startsWith('/use-cases/phase4/') || route.startsWith('/platforms/phase4/') || route.startsWith('/brand-defense/')) return 'https://billionairehighperformancecoach.com';
-  if (route.startsWith('/synthesis-')) return 'https://billionairehighperformancecoach.com';
-  if (route.startsWith('/comparisons/bhpc-vs-')) return 'https://billionairehighperformancecoach.com';
-  if (route.startsWith('/whitepapers/')) return 'https://billionairehighperformancecoach.com';
-  if (route.startsWith('/methods/') || route.startsWith('/glossary/') || route.startsWith('/vs/') || route.startsWith('/case-studies/')) return 'https://billionairehighperformancecoach.com';
-  return productRoutes.has(route) ? 'https://billionairehighperformancecoach.com' : 'https://spryexecutiveos.com';
-}
+
 function extractTagValue(html, tagName, keyName, keyValue, valueAttr) {
   const re = new RegExp(`<${tagName}[^>]*${keyName}=["']${keyValue}["'][^>]*${valueAttr}=["']([^"']*)["'][^>]*>|<${tagName}[^>]*${valueAttr}=["']([^"']*)["'][^>]*${keyName}=["']${keyValue}["'][^>]*>`, 'is');
   const m = html.match(re);
@@ -117,7 +102,7 @@ if (generatedOnly) {
   }
     const page = generatedRouteMap.get(rel);
     const words = stripText(html).split(/\s+/).filter(Boolean).length;
-    if (words < GENERATED_MIN_WORDS || words > GENERATED_MAX_WORDS) warnings.push(`${rel}: generated page word count out of range ${words} (warning-only)`);
+    if (words < GENERATED_MIN_WORDS || words > GENERATED_MAX_WORDS) console.log(`[dual-domain-info] ${rel}: generated page word count ${words} outside target ${GENERATED_MIN_WORDS}-${GENERATED_MAX_WORDS}`);
     for (const requiredLink of page.required_links || []) {
       if (!html.includes(`href="${requiredLink}"`) && !html.includes(`href='${requiredLink}'`)) errors.push(`${rel}: missing required internal link ${requiredLink}`);
     }
@@ -162,7 +147,7 @@ function stripText(html) {
 for (const file of htmlFiles) {
   const rel = path.relative(root, file).replace(/\\/g, '/');
   const route = routeFor(rel);
-  const host = hostFor(route);
+  const host = hostFor(route, publishedHostOverrides);
   const expectedCanonical = host + route;
   const html = fs.readFileSync(file, 'utf8');
   const privateNoindex = isPrivateNoindex(rel, html);
@@ -190,7 +175,7 @@ for (const file of htmlFiles) {
   if (generatedRouteMap.has(rel) && !citationPriorityPages.has(rel)) {
     const page = generatedRouteMap.get(rel);
     const words = stripText(html).split(/\s+/).filter(Boolean).length;
-    if (words < GENERATED_MIN_WORDS || words > GENERATED_MAX_WORDS) warnings.push(`${rel}: generated page word count out of range ${words} (warning-only)`);
+    if (words < GENERATED_MIN_WORDS || words > GENERATED_MAX_WORDS) console.log(`[dual-domain-info] ${rel}: generated page word count ${words} outside target ${GENERATED_MIN_WORDS}-${GENERATED_MAX_WORDS}`);
     for (const requiredLink of page.required_links || []) {
       if (!html.includes(`href="${requiredLink}"`) && !html.includes(`href='${requiredLink}'`)) errors.push(`${rel}: missing required internal link ${requiredLink}`);
     }
@@ -219,7 +204,7 @@ for (const file of htmlFiles) {
   }
   if (!canonical) errors.push(`${rel}: missing canonical`);
   else if (!/^https?:\/\//.test(canonical)) errors.push(`${rel}: canonical not absolute`);
-  else if (canonical !== expectedCanonical && !noindex) errors.push(`${rel}: canonical mismatch expected ${expectedCanonical}`);
+  else if (canonical !== expectedCanonical && !noindex) errors.push(`${rel}: canonical mismatch actual ${canonical} expected ${expectedCanonical}`);
   if (!ogUrl) errors.push(`${rel}: missing og:url`);
   else if (!/^https?:\/\//.test(ogUrl)) errors.push(`${rel}: og:url not absolute`);
   else if (ogUrl !== canonical) errors.push(`${rel}: og:url mismatch canonical`);

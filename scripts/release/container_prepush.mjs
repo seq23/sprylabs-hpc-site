@@ -16,7 +16,9 @@ function node(label, script){
 // Bounded container prepush: same hard gates, reduced duplicate rebuild/repair loops for large 2K+ page baselines.
 for (const [label,args] of [
   ['build:all',['run','build:all']],
+  ['repair:dual-domain-metadata',['run','repair:dual-domain-metadata']],
   ['agent:bhpc:apply-report-contract',['run','agent:bhpc:apply-report-contract']],
+  ['release:repair-agent-normalization',['run','release:repair-agent-normalization']],
   ['repair:programmatic-registry-owners',['run','repair:programmatic-registry-owners']],
   ['repair:citation-contract-surfaces',['run','repair:citation-contract-surfaces']],
   ['validate:repo',['run','validate:repo']],
@@ -31,6 +33,7 @@ for (const [label,args] of [
   ['agent:bhpc:validate',['run','agent:bhpc:validate']],
   ['agent:bhpc:trace',['run','agent:bhpc:trace']],
   ['validate:agent-run',['run','validate:agent-run']],
+  ['repair:dual-domain-metadata:final',['run','repair:dual-domain-metadata']],
   ['validate:content-release',['run','validate:content-release']],
   ['validate:citation-velocity-automation',['run','validate:citation-velocity-automation']],
   ['validate:disavow-asset',['run','validate:disavow-asset']],
@@ -57,4 +60,6 @@ for (const [label,script] of [
   ['validate:llms-full-coverage','scripts/validation/validate_llms_full_coverage.mjs'],
   ['validate:sitemap-coverage','scripts/validation/validate_sitemap_coverage.mjs']
 ]) node(label,script);
-console.log('[release:prepush:container] OK');
+run('validation:inventory',['run','validation:inventory']);
+run('validate:warnings',['run','validate:warnings']);
+console.log('[release:prepush:container] OK: zero errors, zero warnings');
