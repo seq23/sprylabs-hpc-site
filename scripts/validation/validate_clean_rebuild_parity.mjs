@@ -22,9 +22,49 @@ function publicFiles(base,dir=base,out=[]){
   }
   return out.sort();
 }
-function hashFile(f){return crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex');}
-function snapshot(base){const o={};for(const rel of publicFiles(base))o[rel]=hashFile(path.join(base,rel));return o;}
-function compare(a,b){const changed=[];for(const k of new Set([...Object.keys(a),...Object.keys(b)]))if(a[k]!==b[k])changed.push(k);return changed.sort();}
+const semanticJsonFiles = new Set([
+  'data/citation/agent_page_specs.generated.json',
+  'data/citation/agent_repair_specs.generated.json',
+]);
+const approvedVolatileKeys = new Set(['generated_at']);
+
+function hashBuffer(value){
+  return crypto.createHash('sha256').update(value).digest('hex');
+}
+function hashFile(f){
+  return hashBuffer(fs.readFileSync(f));
+}
+function normalizeSemanticJson(value){
+  if(Array.isArray(value)) return value.map(normalizeSemanticJson);
+  if(value && typeof value === 'object'){
+    const out={};
+    for(const key of Object.keys(value).sort()){
+      if(approvedVolatileKeys.has(key)) continue;
+      out[key]=normalizeSemanticJson(value[key]);
+    }
+    return out;
+  }
+  return value;
+}
+function artifactHash(base,rel){
+  const full=path.join(base,rel);
+  if(!semanticJsonFiles.has(rel)) return {mode:'strict-byte',hash:hashFile(full)};
+  const parsed=JSON.parse(fs.readFileSync(full,'utf8'));
+  const normalized=JSON.stringify(normalizeSemanticJson(parsed));
+  return {mode:'semantic-json',hash:hashBuffer(normalized)};
+}
+function snapshot(base){
+  const o={};
+  for(const rel of publicFiles(base)) o[rel]=artifactHash(base,rel);
+  return o;
+}
+function compare(a,b){
+  const changed=[];
+  for(const k of new Set([...Object.keys(a),...Object.keys(b)])){
+    if(!a[k]||!b[k]||a[k].mode!==b[k].mode||a[k].hash!==b[k].hash) changed.push(k);
+  }
+  return changed.sort();
+}
 function copySource(src,dst){
   fs.cpSync(src,dst,{recursive:true,filter:(source)=>{
     const rel=path.relative(src,source).split(path.sep).join('/');
@@ -56,7 +96,11 @@ try{
     build_a_files:Object.keys(buildA).length,
     build_b_files:Object.keys(buildB).length,
     changed,
-    proof:'two independent clean-copy build:all executions compared across public/distribution files',
+    strict_byte_files:Object.values(buildB).filter(entry=>entry.mode==='strict-byte').length,
+    semantic_json_files:Object.values(buildB).filter(entry=>entry.mode==='semantic-json').length,
+    semantic_json_allowlist:[...semanticJsonFiles].sort(),
+    normalized_volatile_keys:[...approvedVolatileKeys].sort(),
+    proof:'two independent clean-copy build:all executions compared using strict byte parity except explicitly allowlisted semantic JSON metadata',
   });
   if(changed.length) fail(`[validate:clean-rebuild-parity] FAIL: ${changed.length} public/distribution files differ between two isolated clean-copy rebuilds`,changed.slice(0,200));
   pass(`[validate:clean-rebuild-parity] OK: two isolated clean-copy rebuilds match ${Object.keys(buildB).length} public/distribution files`);

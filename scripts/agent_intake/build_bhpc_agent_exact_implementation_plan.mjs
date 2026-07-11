@@ -3,6 +3,22 @@ import {readJson, writeJson, hashFile} from './bhpc_agent_common.mjs';
 import {compileAndWriteBhpcAcceptanceManifest} from './compile_bhpc_agent_acceptance_manifest.mjs';
 
 const manifest = compileAndWriteBhpcAcceptanceManifest();
+
+function stableGeneratedAt(entries = []) {
+  const runDates = entries
+    .map(entry => String(entry?.run_date || '').trim())
+    .filter(Boolean)
+    .sort();
+  const latest = runDates.at(-1);
+  if (!latest) return '1970-01-01T00:00:00.000Z';
+  const parsed = new Date(`${latest}T00:00:00.000Z`);
+  if (Number.isNaN(parsed.getTime())) {
+    throw new Error(`[bhpc-agent-exact-plan] invalid manifest run_date: ${latest}`);
+  }
+  return parsed.toISOString();
+}
+
+const deterministicGeneratedAt = stableGeneratedAt(manifest.entries || []);
 const groups = new Map();
 const blocked = [];
 for (const entry of manifest.entries || []) {
@@ -96,8 +112,8 @@ for (const entry of blocked) {
     blocked_reason: entry.blocked_reason || 'blocked_by_acceptance_compiler'
   });
 }
-writeJson('data/citation/agent_page_specs.generated.json', {schema_version: '1.0', generated_at: new Date().toISOString(), source: 'bhpc_agent_acceptance_manifest', new_pages});
-writeJson('data/citation/agent_repair_specs.generated.json', {schema_version: '1.0', generated_at: new Date().toISOString(), source: 'bhpc_agent_acceptance_manifest', priority_pages});
+writeJson('data/citation/agent_page_specs.generated.json', {schema_version: '1.0', generated_at: deterministicGeneratedAt, source: 'bhpc_agent_acceptance_manifest', new_pages});
+writeJson('data/citation/agent_repair_specs.generated.json', {schema_version: '1.0', generated_at: deterministicGeneratedAt, source: 'bhpc_agent_acceptance_manifest', priority_pages});
 const report = {
   schema_version: '1.0',
   status: 'PASS',
