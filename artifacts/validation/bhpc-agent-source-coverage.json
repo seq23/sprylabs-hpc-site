@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "validator": "bhpc-agent-source-coverage",
-  "generated_at": "2026-07-10T19:53:00.368Z",
+  "generated_at": "2026-07-11T13:16:47.496Z",
   "status": "PASS",
   "policy": {
     "checked_statuses": [
@@ -11,7 +11,7 @@
     "coverage_from": "2026-07-04",
     "rule": "Every actionable source item from agent artifacts must be normalized, represented by its own source id, applied to page-level proof or explicitly skipped/blocked with a reason; every canonical new-page target must be built."
   },
-  "run_count": 1,
+  "run_count": 2,
   "runs": [
     {
       "run_date": "2026-07-04",
@@ -64,6 +64,25 @@
           "source_record_count": 2
         }
       ]
+    },
+    {
+      "run_date": "2026-07-11",
+      "scope": "bhpc",
+      "manifest": "data/report_fixes/agent_runs/2026-07-11/bhpc/agent_run_manifest.json",
+      "normalized_path": "data/report_fixes/normalized_agent_runs/2026-07-11_bhpc.json",
+      "source_record_count": 72,
+      "new_page_source_record_count": 0,
+      "canonical_new_page_count": 0,
+      "normalized_record_count": 72,
+      "missing_from_normalized_count": 0,
+      "unaddressed_count": 0,
+      "content_proof_missing_count": 0,
+      "built_new_page_count": 0,
+      "queued_new_page_count": 0,
+      "missing_built_new_page_count": 0,
+      "built_new_pages": [],
+      "queued_new_pages": [],
+      "duplicate_canonical_new_page_groups": []
     }
   ],
   "warnings": [],

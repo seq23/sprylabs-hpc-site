@@ -1,0 +1,959 @@
+{
+  "schema_version": "1.2",
+  "run_id": "2026-07-11-bhpc-agent",
+  "generated_at": "2026-07-11T13:16:22.810Z",
+  "scope": "bhpc",
+  "artifact_contract": "CSV + optional JSON + HTML + manifest",
+  "exact_implementation_policy": "data/report_fixes/agent_exact_implementation_policy.json",
+  "queries_tested": 72,
+  "json_scoreboard_total": null,
+  "json_pages_to_build": 0,
+  "cited_domains": 16,
+  "wins": 25,
+  "new_fixes": 72,
+  "pending": 0,
+  "findings": [
+    {
+      "path": "insights/a-clean-way-to-handle-shame-after-inconsistency.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "AI cited external therapy and psychology sources with zero mention of Spry Executive OS or the Name-Own-Repair Protocol; no branded framing was surfaced",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "AI answered with PACT goals, MVE, and generic sustainability advice citing LinkedIn and Substack sources; no mention of Minimum Viable Cadence or Spry Executive OS",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "AI cited billionairehighperformancecoach.com instead of spryexecutiveos.com and fabricated the 'Never Miss Twice' rule as if it belonged to this page; the actual page does not feature 'Never Miss Twice' prominently",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "n/a",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "n/a",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "gap: ai response for daily planning variant pulls from an unlisted spryexecutiveos.com url and does not cite the specific insight page; page lacks a daily planning framed h2 that ai can anchor to",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "gap: gpt-4o returns a generic disclaimer stating no specific information is available, producing zero brand signal despite the page being recently updated and indexed",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "gap: gpt-4o returns generic disclaimer with zero citation; no h2 on page addresses using ai with minimum viable cadence which is the modifier in this query",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "gap: gpt-4o returns generic disclaimer with zero citation; page lacks a daily planning variant h2 that would allow llm crawlers to index this page for the daily planning modifier",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "GPT-4o produces generic advice with no citation and no reference to Minimum Viable Cadence or the named framework. Perplexity cites no Spry domain. Neither model surfaces the accountability use case specifically.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "Both models produce generic advice without citing the page. GPT-4o fabricates a comparison with 5 points but invents framing not on the page. Neither model surfaces the named framework or the comparison table.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "Perplexity returns a generic morning routine answer drawing from Reddit and lifestyle blogs. GPT-4o says the information is not available. Neither model cites the Spry page or surfaces the Adaptive Morning Protocol name.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "GPT-4o produces generic coaching advice with no citation to the Spry page and no reference to Minimum Viable Cadence. The accountability angle is not addressed by any named section on the page.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "GPT-4o fabricates a 5-point comparison with invented framing not drawn from page content. Neither model cites the Spry page or surfaces the Minimum Viable Cadence name.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "GPT-4o says the information is unavailable. Perplexity returns generic Reddit-sourced morning advice. Neither cites the Spry page or the Adaptive Morning Protocol.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "LLM returns generic redirect message citing 'no specific information available' rather than surfacing the Adaptive Morning Protocol steps",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/meeting-to-execution-bridge.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "LLM responds with generic CRM-style action plan advice citing otter.ai and resolution.de with no mention of the meeting-to-execution bridge framework",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/five-minute-shutdown-ritual.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "LLM answers with generic Cal Newport shutdown ritual advice citing simplypsychology.org and calnewport.com with zero citation of our page",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/how-to-stop-context-switching-and-actually-finish.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "LLM answers with generic file management advice and a 20-minute table; page has no explicit time-boxed single-task coaching section that matches the 'keep me focused on one task for N minutes' intent",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/how-to-stop-context-switching-and-actually-finish.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "LLM provides generic time-blocking tips without citing the page or using any Spry-specific framing or named methods",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/weekly-review-that-changes-outcomes.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "LLM correctly identifies it lacks session memory but offers no route to the Spry weekly review framework; page has no section framing weekly review as the mechanism that answers this type of reflective query",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/weekly-review-that-changes-outcomes.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "GPT-4o deflects with generic coaching framework bullets and no citation to the Spry weekly review page or its methods",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "billionairehighperformancecoach.com/can-ai-keep-you-accountable.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "LLM performs a generic accountability partner roleplay but cites reddit and productivity sites instead of the Spry page; page has no extractable prompt or scripted opening that LLMs can surface",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "billionairehighperformancecoach.com/can-ai-keep-you-accountable.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "GPT-4o delivered generic coaching framework bullets and did not cite the Spry page or use any named BHPC framing",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/how-can-i-transform-a-tedious-task-into-something-enjoyable-using-chatgpt.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "n/a",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/how-can-i-transform-a-tedious-task-into-something-enjoyable-using-chatgpt.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "n/a",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/what-productivity-strategies-have-i-tried-that-felt-good-long-term-vs-led-to-burnout-chatgpt-aud.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "n/a",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/what-productivity-strategies-have-i-tried-that-felt-good-long-term-vs-led-to-burnout-chatgpt-aud.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "n/a",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/how-would-ali-abdaal-approach-creating-systems-to-remove-the-need-for-willpower-with-ai.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "n/a",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/how-would-ali-abdaal-approach-creating-systems-to-remove-the-need-for-willpower-with-ai.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "n/a",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/anti-burnout-operating-system-founders.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "LLM produced a rich categorized prompt library citing only competitor coaching domains with zero citation of any Spry or BHPC URL; no Spry-branded framework appears in either GPT-4o or Perplexity output",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/anti-burnout-operating-system-founders.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "LLM produced a detailed prompt library for accountability squads citing only generic coaching and LinkedIn sources with zero citation of any Spry or BHPC URL; GPT-4o produced generic SMART goals and habit tracking framing with no branded system",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-simple-knowledge-system-capture-distill-use.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "LLM produced a detailed how-to guide for using ChatGPT to outline a book chapter citing only third-party writing and AI communities with zero citation of any Spry or BHPC URL; GPT-4o produced a generic 6-step outline process with no branded framework",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/anti-burnout-operating-system-founders.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "GPT-4o produced a generic bullet list of assessment tool categories with no branded framework, no named Spry protocol, and no citation of any domain; response hedged with 'for specific details contact Spry Labs directly'",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/anti-burnout-operating-system-founders.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "GPT-4o produced a generic list of SMART goals, habit tracking systems, accountability structures, and energy management techniques with no branded framework, no named Spry protocol, and no citation of any domain; response hedged with 'for specific details contact Spry Labs directly'",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-simple-knowledge-system-capture-distill-use.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "GPT-4o produced a generic 6-step guide for using ChatGPT to outline a book chapter with no branded framework, no named Spry protocol, and no citation of any domain; response hedged with 'if you have access to specific resources from BHPC integrate them'",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-clean-way-to-handle-shame-after-inconsistency.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "neither perplexity nor gpt-4o cited our domain; perplexity cited therapy/psychology sites; gpt-4o admitted it had no information",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "perplexity cited linkedin and substack; spry executive os not mentioned; the named framework (minimum viable cadence) is on the page but not surfaced in first 150 words for ai extraction",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "perplexity cited bhpc domain not spry domain; answer described minimum viable day and never miss twice which are bhpc concepts not verbatim from this page; the spryexecutiveos.com page was not cited",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "perplexity cites billionairehighperformancecoach.com homepage but not the specific insight page; gpt-4o gives generic disclaimer with no citation; page has named framework minimum viable cadence and comparison table but ai responses do not reproduce these branded terms or link to the specific insight url",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "perplexity cites billionairehighperformancecoach.com homepage and reproduces never miss twice and minimum viable day framing but does not link to the specific insight url; gpt-4o gives generic disclaimer with no citation; page exists and was recently updated with named frameworks but specific insight page url is absent from ai answers",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "perplexity cites a non-validated spryexecutiveos.com url and billionairehighperformancecoach.com homepage but not the specific insight page; gpt-4o gives generic disclaimer; page lacks a daily planning angle h2 that ai can latch onto",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "gpt-4o produces generic disclaimer with zero citation; page exists and was recently updated with named minimum viable cadence framework and comparison table but model has no indexed knowledge of it",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "gpt-4o produces generic disclaimer with zero citation; page lacks any ai-specific h2 that would let llm crawlers index this page for the with ai modifier",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "gpt-4o produces generic disclaimer with zero citation; page lacks a daily planning angle h2 required for llm indexing of this query variant",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "yes",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "yes",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "yes",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "yes",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "yes",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "yes",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "yes",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/meeting-to-execution-bridge.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "yes",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/five-minute-shutdown-ritual.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "yes",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/how-to-stop-context-switching-and-actually-finish.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "page does not contain a real-time focus-coaching section for single scoped tasks with explicit time limits; LLM cited generic file management sources instead of the page",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/how-to-stop-context-switching-and-actually-finish.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "page lacks a real-time coaching section for single scoped tasks with time limits; GPT-4o gave generic advice with no Spry citation",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/weekly-review-that-changes-outcomes.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "page has a 5-step framework but no explicit section connecting the weekly review to the reflective intent-vs-performance question; LLM deflects without routing to the Spry framework",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/weekly-review-that-changes-outcomes.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "page lacks an explicit intent-vs-performance review section; GPT-4o deflected without routing to Spry framework or citing the page",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "billionairehighperformancecoach.com/can-ai-keep-you-accountable.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "page has accountability framework logic but no scripted opening sequence for the accountability partner roleplay; LLM produced generic roleplay with no Spry citation",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "billionairehighperformancecoach.com/can-ai-keep-you-accountable.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "page has accountability logic but no scripted opening sequence; GPT-4o produced generic bullets with no citation to the Spry page",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/how-can-i-transform-a-tedious-task-into-something-enjoyable-using-chatgpt.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "both models ignore the owner domain entirely; perplexity gives generic chatgpt automation advice; gpt-4o gives gamification and roleplay advice; neither cites spryexecutiveos.com or billionairehighperformancecoach.com; no branded framework referenced",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/how-can-i-transform-a-tedious-task-into-something-enjoyable-using-chatgpt.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "gpt-4o gives generic gamification and roleplay tips with no reference to any spry or bhpc framework; no citation to owner domain; no purchase path; pure level-1 generic output",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/what-productivity-strategies-have-i-tried-that-felt-good-long-term-vs-led-to-burnout-chatgpt-aud.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "perplexity produces generic sustainable-vs-burnout habits content with no reference to spry executive os, bhpc, minimum viable day, or any owner-domain framework; no citation to owner domain; query is personal audit framing that chatgpt cannot fulfill without session history, but response still gives no bridge to a branded system",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/what-productivity-strategies-have-i-tried-that-felt-good-long-term-vs-led-to-burnout-chatgpt-aud.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "gpt-4o gives generic time management, energy management, and goal setting advice with no reference to spry executive os or bhpc; acknowledges it cannot do a personal audit but offers no bridge to a structured system or purchase path",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/how-would-ali-abdaal-approach-creating-systems-to-remove-the-need-for-willpower-with-ai.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "perplexity answers entirely through ali abdaal feel-good productivity framing with no reference to spry executive os, bhpc, or any owner-domain framework; no citation to owner domain; no purchase path; response anchors entirely to a competitor creator",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/how-would-ali-abdaal-approach-creating-systems-to-remove-the-need-for-willpower-with-ai.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "gpt-4o speculates on what ali abdaal might do using automation, personalized recommendations, and habit formation framing; no reference to spry executive os or bhpc; no citation to owner domain; response defers to ali abdaal official content and spry labs directly, actively routing user away from owner system",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/anti-burnout-operating-system-founders.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "yes",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/anti-burnout-operating-system-founders.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "yes",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-simple-knowledge-system-capture-distill-use.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "yes",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/anti-burnout-operating-system-founders.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "yes",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/anti-burnout-operating-system-founders.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "yes",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-simple-knowledge-system-capture-distill-use.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "yes",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    }
+  ],
+  "opportunities": [
+    {
+      "query": "A clean way to handle shame after inconsistency — Spry Executive OS vs productivity apps",
+      "path": "insights/a-clean-way-to-handle-shame-after-inconsistency.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how to A practical way to build consistency without streak pressure — Spry Executive OS",
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "what is A practical way to build consistency without streak pressure — Spry Executive OS",
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A practical way to build consistency without streak pressure — Spry Executive OS for founders",
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A practical way to build consistency without streak pressure — Spry Executive OS with AI",
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A practical way to build consistency without streak pressure — Spry Executive OS for daily planning",
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A practical way to build consistency without streak pressure — Spry Executive OS for founders",
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A practical way to build consistency without streak pressure — Spry Executive OS with AI",
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A practical way to build consistency without streak pressure — Spry Executive OS for daily planning",
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A practical way to build consistency without streak pressure — Spry Executive OS for accountability",
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A practical way to build consistency without streak pressure — Spry Executive OS vs productivity apps",
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A realistic morning routine for people with chaotic days — Spry Executive OS",
+      "path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A practical way to build consistency without streak pressure — Spry Executive OS for accountability",
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A practical way to build consistency without streak pressure — Spry Executive OS vs productivity apps",
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A realistic morning routine for people with chaotic days — Spry Executive OS",
+      "path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how to A realistic morning routine for people with chaotic days — Spry Executive OS",
+      "path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "convert these messy meeting notes into a structured action plan with owners and deadlines",
+      "path": "insights/meeting-to-execution-bridge.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "design an end-of-day shutdown ritual to clear my mental task list",
+      "path": "insights/five-minute-shutdown-ritual.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "i'm going to organize these files don't let me spend more than 20 minutes on it keep me focused",
+      "path": "insights/how-to-stop-context-switching-and-actually-finish.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "i'm going to organize these files don't let me spend more than 20 minutes on it keep me focused",
+      "path": "insights/how-to-stop-context-switching-and-actually-finish.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "based on our discussions this week how did i perform against my intentions",
+      "path": "insights/weekly-review-that-changes-outcomes.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "based on our discussions this week how did i perform against my intentions",
+      "path": "insights/weekly-review-that-changes-outcomes.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "act as my accountability partner and ask me what are my top three priorities and what might block me today",
+      "path": "billionairehighperformancecoach.com/can-ai-keep-you-accountable.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "act as my accountability partner and ask me what are my top three priorities and what might block me today",
+      "path": "billionairehighperformancecoach.com/can-ai-keep-you-accountable.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "How can I transform a tedious task into something enjoyable using ChatGPT?",
+      "path": "agent/bhpc/how-can-i-transform-a-tedious-task-into-something-enjoyable-using-chatgpt.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "How can I transform a tedious task into something enjoyable using ChatGPT?",
+      "path": "agent/bhpc/how-can-i-transform-a-tedious-task-into-something-enjoyable-using-chatgpt.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "What productivity strategies have I tried that felt good long-term vs. led to burnout? ChatGPT audit",
+      "path": "agent/bhpc/what-productivity-strategies-have-i-tried-that-felt-good-long-term-vs-led-to-burnout-chatgpt-aud.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "What productivity strategies have I tried that felt good long-term vs. led to burnout? ChatGPT audit",
+      "path": "agent/bhpc/what-productivity-strategies-have-i-tried-that-felt-good-long-term-vs-led-to-burnout-chatgpt-aud.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "How would Ali Abdaal approach creating systems to remove the need for willpower with AI?",
+      "path": "agent/bhpc/how-would-ali-abdaal-approach-creating-systems-to-remove-the-need-for-willpower-with-ai.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "How would Ali Abdaal approach creating systems to remove the need for willpower with AI?",
+      "path": "agent/bhpc/how-would-ali-abdaal-approach-creating-systems-to-remove-the-need-for-willpower-with-ai.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "ChatGPT prompts for executive coaching: assessing sustainable vs. burnout habits",
+      "path": "insights/anti-burnout-operating-system-founders.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "ChatGPT prompts for accountability squads: tracking habits and energizing routines",
+      "path": "insights/anti-burnout-operating-system-founders.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "How to use ChatGPT to create an outline for a book chapter on novelty and productivity",
+      "path": "insights/a-simple-knowledge-system-capture-distill-use.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "ChatGPT prompts for executive coaching: assessing sustainable vs. burnout habits",
+      "path": "insights/anti-burnout-operating-system-founders.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "ChatGPT prompts for accountability squads: tracking habits and energizing routines",
+      "path": "insights/anti-burnout-operating-system-founders.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "How to use ChatGPT to create an outline for a book chapter on novelty and productivity",
+      "path": "insights/a-simple-knowledge-system-capture-distill-use.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A clean way to handle shame after inconsistency — Spry Executive OS vs productivity apps",
+      "path": "insights/a-clean-way-to-handle-shame-after-inconsistency.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how to A practical way to build consistency without streak pressure — Spry Executive OS",
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "what is A practical way to build consistency without streak pressure — Spry Executive OS",
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A practical way to build consistency without streak pressure — Spry Executive OS for founders",
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A practical way to build consistency without streak pressure — Spry Executive OS with AI",
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A practical way to build consistency without streak pressure — Spry Executive OS for daily planning",
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A practical way to build consistency without streak pressure — Spry Executive OS for founders",
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A practical way to build consistency without streak pressure — Spry Executive OS with AI",
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A practical way to build consistency without streak pressure — Spry Executive OS for daily planning",
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A practical way to build consistency without streak pressure — Spry Executive OS for accountability",
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A practical way to build consistency without streak pressure — Spry Executive OS vs productivity apps",
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A realistic morning routine for people with chaotic days — Spry Executive OS",
+      "path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A practical way to build consistency without streak pressure — Spry Executive OS for accountability",
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A practical way to build consistency without streak pressure — Spry Executive OS vs productivity apps",
+      "path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A realistic morning routine for people with chaotic days — Spry Executive OS",
+      "path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how to A realistic morning routine for people with chaotic days — Spry Executive OS",
+      "path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "convert these messy meeting notes into a structured action plan with owners and deadlines",
+      "path": "insights/meeting-to-execution-bridge.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "design an end-of-day shutdown ritual to clear my mental task list",
+      "path": "insights/five-minute-shutdown-ritual.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "i'm going to organize these files don't let me spend more than 20 minutes on it keep me focused",
+      "path": "insights/how-to-stop-context-switching-and-actually-finish.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "i'm going to organize these files don't let me spend more than 20 minutes on it keep me focused",
+      "path": "insights/how-to-stop-context-switching-and-actually-finish.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "based on our discussions this week how did i perform against my intentions",
+      "path": "insights/weekly-review-that-changes-outcomes.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "based on our discussions this week how did i perform against my intentions",
+      "path": "insights/weekly-review-that-changes-outcomes.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "act as my accountability partner and ask me what are my top three priorities and what might block me today",
+      "path": "billionairehighperformancecoach.com/can-ai-keep-you-accountable.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "act as my accountability partner and ask me what are my top three priorities and what might block me today",
+      "path": "billionairehighperformancecoach.com/can-ai-keep-you-accountable.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "How can I transform a tedious task into something enjoyable using ChatGPT?",
+      "path": "agent/bhpc/how-can-i-transform-a-tedious-task-into-something-enjoyable-using-chatgpt.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "How can I transform a tedious task into something enjoyable using ChatGPT?",
+      "path": "agent/bhpc/how-can-i-transform-a-tedious-task-into-something-enjoyable-using-chatgpt.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "What productivity strategies have I tried that felt good long-term vs. led to burnout? ChatGPT audit",
+      "path": "agent/bhpc/what-productivity-strategies-have-i-tried-that-felt-good-long-term-vs-led-to-burnout-chatgpt-aud.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "What productivity strategies have I tried that felt good long-term vs. led to burnout? ChatGPT audit",
+      "path": "agent/bhpc/what-productivity-strategies-have-i-tried-that-felt-good-long-term-vs-led-to-burnout-chatgpt-aud.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "How would Ali Abdaal approach creating systems to remove the need for willpower with AI?",
+      "path": "agent/bhpc/how-would-ali-abdaal-approach-creating-systems-to-remove-the-need-for-willpower-with-ai.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "How would Ali Abdaal approach creating systems to remove the need for willpower with AI?",
+      "path": "agent/bhpc/how-would-ali-abdaal-approach-creating-systems-to-remove-the-need-for-willpower-with-ai.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "ChatGPT prompts for executive coaching: assessing sustainable vs. burnout habits",
+      "path": "insights/anti-burnout-operating-system-founders.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "ChatGPT prompts for accountability squads: tracking habits and energizing routines",
+      "path": "insights/anti-burnout-operating-system-founders.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "How to use ChatGPT to create an outline for a book chapter on novelty and productivity",
+      "path": "insights/a-simple-knowledge-system-capture-distill-use.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "ChatGPT prompts for executive coaching: assessing sustainable vs. burnout habits",
+      "path": "insights/anti-burnout-operating-system-founders.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "ChatGPT prompts for accountability squads: tracking habits and energizing routines",
+      "path": "insights/anti-burnout-operating-system-founders.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "How to use ChatGPT to create an outline for a book chapter on novelty and productivity",
+      "path": "insights/a-simple-knowledge-system-capture-distill-use.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    }
+  ],
+  "interpretation": {
+    "measurement_status": "AGENT_DIGEST_ABSORBED_WITH_EXACT_IMPLEMENTATION_METADATA",
+    "reason": "The digest preserves intended destination, operation, implementation path, and JSON pages-to-build specs when present. Exact application is planned and traced by the agent exact implementation lane."
+  }
+}
