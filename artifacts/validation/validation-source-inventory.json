@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-07-11T14:24:08.222Z",
-  "files_scanned": 348,
-  "source_count": 175,
-  "hard_gate_source_count": 162,
-  "warning_source_count": 23,
+  "generated_at": "2026-07-11T22:23:02.012Z",
+  "files_scanned": 374,
+  "source_count": 187,
+  "hard_gate_source_count": 174,
+  "warning_source_count": 28,
   "records": [
     {
       "file": "_ops/validators/validate_distribution_contract.js",
@@ -296,14 +296,14 @@
     },
     {
       "file": "scripts/release/postpush.mjs",
-      "hard_gate_signals": 3,
+      "hard_gate_signals": 5,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
     {
       "file": "scripts/release/release_attestation.mjs",
       "hard_gate_signals": 1,
-      "warning_signals": 2,
+      "warning_signals": 3,
       "classification": "mixed"
     },
     {
@@ -409,16 +409,70 @@
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/validation/add_validator.mjs",
+      "hard_gate_signals": 7,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/validation/common.mjs",
       "hard_gate_signals": 3,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/validation/discover_validators.mjs",
+      "hard_gate_signals": 2,
+      "warning_signals": 1,
+      "classification": "mixed"
+    },
+    {
       "file": "scripts/validation/inventory_validation_sources.mjs",
       "hard_gate_signals": 1,
       "warning_signals": 1,
       "classification": "mixed"
+    },
+    {
+      "file": "scripts/validation/python_runtime.mjs",
+      "hard_gate_signals": 7,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validation/run_extraction_contract_final_state_sharded.mjs",
+      "hard_gate_signals": 4,
+      "warning_signals": 1,
+      "classification": "mixed"
+    },
+    {
+      "file": "scripts/validation/run_rendered_schema_parity_sharded.mjs",
+      "hard_gate_signals": 3,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validation/self_test_orchestration_contract.mjs",
+      "hard_gate_signals": 6,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validation/self_test_python_runtime.mjs",
+      "hard_gate_signals": 2,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validation/self_test_validation_cache.mjs",
+      "hard_gate_signals": 2,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validation/self_test_validation_control_plane.mjs",
+      "hard_gate_signals": 2,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
     },
     {
       "file": "scripts/validation/style_policy.py",
@@ -446,9 +500,9 @@
     },
     {
       "file": "scripts/validation/validate_citation_contract.py",
-      "hard_gate_signals": 0,
-      "warning_signals": 1,
-      "classification": "warning-source"
+      "hard_gate_signals": 1,
+      "warning_signals": 2,
+      "classification": "mixed"
     },
     {
       "file": "scripts/validation/validate_citation_phase_manifest.mjs",
@@ -493,9 +547,21 @@
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/validation/validate_profile.mjs",
+      "hard_gate_signals": 5,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/validation/validate_programmatic_admission.py",
       "hard_gate_signals": 0,
       "warning_signals": 1,
+      "classification": "warning-source"
+    },
+    {
+      "file": "scripts/validation/validate_programmatic_registry.mjs",
+      "hard_gate_signals": 0,
+      "warning_signals": 9,
       "classification": "warning-source"
     },
     {
@@ -519,7 +585,7 @@
     {
       "file": "scripts/validation/validate_validation_registry.mjs",
       "hard_gate_signals": 0,
-      "warning_signals": 1,
+      "warning_signals": 3,
       "classification": "warning-source"
     },
     {
@@ -543,6 +609,12 @@
     {
       "file": "scripts/validators/validate_aeo_contract.js",
       "hard_gate_signals": 2,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/validate_agent_live.mjs",
+      "hard_gate_signals": 5,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -651,8 +723,8 @@
     {
       "file": "scripts/validators/validate_bhpc_browser_structural.mjs",
       "hard_gate_signals": 3,
-      "warning_signals": 0,
-      "classification": "hard-gate-source"
+      "warning_signals": 4,
+      "classification": "mixed"
     },
     {
       "file": "scripts/validators/validate_bhpc_dynamic_page_contract.mjs",
@@ -711,8 +783,8 @@
     {
       "file": "scripts/validators/validate_content_ownership_boundaries.mjs",
       "hard_gate_signals": 1,
-      "warning_signals": 0,
-      "classification": "hard-gate-source"
+      "warning_signals": 1,
+      "classification": "mixed"
     },
     {
       "file": "scripts/validators/validate_content_routing.js",

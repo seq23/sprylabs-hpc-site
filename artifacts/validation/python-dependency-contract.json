@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0",
+  "status": "PASS",
+  "python_files_scanned": 27,
+  "requirements": {
+    "beautifulsoup4": {
+      "name": "beautifulsoup4",
+      "version": "4.12.3"
+    },
+    "lxml": {
+      "name": "lxml",
+      "version": "5.4.0"
+    },
+    "pyyaml": {
+      "name": "PyYAML",
+      "version": "6.0.2"
+    }
+  },
+  "third_party_imports": {
+    "bs4": {
+      "package": "beautifulsoup4",
+      "files": [
+        "scripts/citation/apply_citation_program.py",
+        "scripts/citation/extraction_contract.py",
+        "scripts/citation/repair_active_citation_contract.py",
+        "scripts/citation/repair_agent_recommendations.py",
+        "scripts/citation/repair_citation_contract_surfaces.py",
+        "scripts/citation/repair_extraction_contracts.py",
+        "scripts/citation/repair_manual_expansion_parity.py",
+        "scripts/citation/repair_priority_citation_pages.py",
+        "scripts/citation/repair_schema_parity.py",
+        "scripts/validation/extraction_surface_guard.py",
+        "scripts/validation/self_test_extraction_contract.py",
+        "scripts/validation/trace_extraction_pipeline.py",
+        "scripts/validation/validate_agent_recommendations.py",
+        "scripts/validation/validate_citation_contract.py",
+        "scripts/validation/validate_extraction_contract_final_state.py",
+        "scripts/validation/validate_manual_expansion.py",
+        "scripts/validation/validate_priority_citation_pages.py",
+        "scripts/validation/validate_programmatic_admission.py",
+        "scripts/validation/validate_rendered_schema_parity.py"
+      ]
+    },
+    "yaml": {
+      "package": "PyYAML",
+      "files": [
+        "scripts/validation/faux_trace_all_workflows.py"
+      ]
+    }
+  },
+  "unknown_imports": [],
+  "errors": []
+}

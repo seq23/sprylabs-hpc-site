@@ -14,17 +14,13 @@ def save(path, data):
     (ROOT/path).write_text(json.dumps(data,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
 
 manual=load('data/content/manual_expansion_pages.json',{'pages':[]}).get('pages',[])
-agent=load('data/citation/agent_recommendation_acceptance.json',{})
 # Path-level source of truth for pages with exact acceptance contracts.
 updates={}
 for p in manual:
     updates[p['path']]={'query':p['h1'],'definition':p['definition'],'framework':p['framework'],'extraction_type':p.get('type','concept')}
-for p in agent.get('fixes',[]):
-    if p.get('h1'):
-        updates.setdefault(p['path'],{})['query']=p['h1']
-for p in agent.get('opportunities',[]):
-    if p.get('query'):
-        updates.setdefault(p['path'],{})['query']=p['query']
+# Agent recommendations may repair page presentation, but they are not
+# authoritative for canonical query ownership. Query ownership is maintained
+# by the canonical query registry and explicit manual expansion contracts.
 
 changed=0
 citable=load('data/citation/citable_pages.json',{'pages':[]})

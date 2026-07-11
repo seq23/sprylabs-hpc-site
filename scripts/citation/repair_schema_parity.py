@@ -8,6 +8,9 @@ sys.dont_write_bytecode=True
 VENDOR_DIR = Path(__file__).resolve().parents[1] / "_vendor"
 if VENDOR_DIR.is_dir(): sys.path.insert(0, str(VENDOR_DIR))
 from bs4 import BeautifulSoup
+CITATION_DIR = Path(__file__).resolve().parent
+sys.path.insert(0, str(CITATION_DIR))
+from extraction_contract import extract_scope_steps
 ROOT=Path.cwd()
 
 def norm(v): return ' '.join((v or '').split())
@@ -23,24 +26,19 @@ def visible_steps(soup):
     block=soup.select_one('[data-llm-answer="true"][data-extraction-type="howto"]')
     if not block: return []
     out=[]
-    for h in block.find_all(['h2','h3']):
-        name=norm(h.get_text(' ',strip=True))
-        if not re.match(r'^(?:Step|Phase|Stage|Block)\s+\d+\b',name,re.I): continue
+    for step in extract_scope_steps(block):
+        source_name=step.get('source_heading') or f"Step {step['number']}: {step['title']}"
+        name=f"Step {step['number']}: {step['title']}"
+        h=None
+        for cand in block.find_all(['h2','h3','h4']):
+            if norm(cand.get_text(' ',strip=True))==source_name:
+                h=cand; break
+        if h is None:
+            continue
         if not h.get('id'):
             h['id']=re.sub(r'[^a-z0-9]+','-',name.lower()).strip('-')
-        parts=[]
-        n=h.find_next_sibling()
-        while n and getattr(n,'name',None) not in ('h2','h3'):
-            if getattr(n,'name',None) in ('p','li'):
-                value=norm(n.get_text(' ',strip=True))
-                if value: parts.append(value)
-            n=n.find_next_sibling()
-        if not parts:
-            p=soup.new_tag('p')
-            p.string=f"Use {name.lower()} as a bounded operating step, then record the observable result before continuing."
-            h.insert_after(p)
-            parts.append(norm(p.get_text(' ',strip=True)))
-        out.append((name,norm(' '.join(parts)),h.get('id')))
+        text=step.get('description') or f"Use {name.lower()} as a bounded operating step, then record the observable result before continuing."
+        out.append((name,norm(text),h.get('id')))
     return out
 
 def visible_breadcrumbs(soup, canonical):
@@ -67,7 +65,7 @@ def visible_faq(soup):
 
 def update_schema(path: Path):
     raw=path.read_text(encoding='utf-8', errors='ignore')
-    soup=BeautifulSoup(raw,'html.parser')
+    soup=BeautifulSoup(raw,'lxml')
     # Final editorial citation pages use one CITATION_PAGE_SCHEMA graph only.
     # Remove older blanket GEO/Product/Software schema fragments that the
     # contract explicitly bans on editorial citation surfaces.

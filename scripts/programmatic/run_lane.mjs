@@ -144,7 +144,7 @@ fs.writeFileSync('data/content/programmatic_candidate_manifest.json',JSON.string
 const runtimeDir=path.join(os.tmpdir(), 'sprylabs-programmatic-admission');
 fs.mkdirSync(runtimeDir,{recursive:true});
 const resultPath=path.join(runtimeDir, `programmatic-candidate-results-${runId}.json`);
-run('python3',['scripts/validation/validate_programmatic_admission.py','--candidate-only','--json-output',resultPath,'--no-fail-quality']);
+run(process.execPath,['scripts/validation/python_runtime.mjs','run','scripts/validation/validate_programmatic_admission.py','--candidate-only','--json-output',resultPath,'--no-fail-quality']);
 const result=JSON.parse(fs.readFileSync(resultPath,'utf8'));
 fs.rmSync(resultPath,{force:true});
 const registry=JSON.parse(fs.readFileSync('data/content/page_admission_registry.json','utf8'));

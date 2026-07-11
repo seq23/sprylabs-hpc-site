@@ -4344,8 +4344,932 @@
         "MX-REPAIR-DUAL-DOMAIN-METADATA"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-AGENT-LIVE",
+      "status": "ADMITTED",
+      "name": "validate:agent-live",
+      "check_type": "live-proof",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Prevents an absorbed agent run from being treated as complete when required record markers are absent from deployed public HTML.",
+      "existing_coverage_gap": "Repository-level acceptance and source-coverage checks did not verify that deployed pages contained every required agent record.",
+      "scope": [
+        "public-html",
+        "agent-runs"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:agent-live",
+      "implementation_path": "scripts/validators/validate_agent_live.mjs",
+      "environment": "postdeploy",
+      "proof_tier": 3,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/agent-live-attestation.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements repository-level BHPC acceptance and source-coverage validators by testing deployed HTML."
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted to close the exact 2026-07-11 live-proof gap without adding a new workflow.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-AGENT-LIVE"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-QUERY-OWNER-UNIQUENESS",
+      "status": "ADMITTED",
+      "name": "validate:query-owner-uniqueness",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:query-owner-uniqueness",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-query-owner-uniqueness/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-123"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-VALIDATION-PROFILE",
+      "status": "ADMITTED",
+      "name": "validate:profile",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:profile",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-profile/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-124"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-EXTRACTION-CONTRACT-FINAL-STATE",
+      "status": "ADMITTED",
+      "name": "validate:extraction-contract-final-state",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:extraction-contract-final-state",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-extraction-contract-final-state/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-125"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-EXTRACTION-CONTRACT-SELF-TEST",
+      "status": "ADMITTED",
+      "name": "validate:extraction-contract:self-test",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:extraction-contract:self-test",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-extraction-contract-self-test/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-126"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-EXTRACTION-SURFACE-GUARD-SNAPSHOT",
+      "status": "ADMITTED",
+      "name": "validate:extraction-surface-guard:snapshot",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:extraction-surface-guard:snapshot",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-extraction-surface-guard-snapshot/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-127"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-EXTRACTION-SURFACE-GUARD-CHECK",
+      "status": "ADMITTED",
+      "name": "validate:extraction-surface-guard:check",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:extraction-surface-guard:check",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-extraction-surface-guard-check/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-128"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-EXTRACTION-PIPELINE-TRACE",
+      "status": "ADMITTED",
+      "name": "trace:extraction-pipeline",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run trace:extraction-pipeline",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/trace-extraction-pipeline/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-129"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-EXTRACTION-FINAL-NORMALIZATION",
+      "status": "ADMITTED",
+      "name": "repair:extraction-final-state",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run repair:extraction-final-state",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/repair-extraction-final-state/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-130"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-INCREMENTAL-PAGE-AUDIT",
+      "status": "ADMITTED",
+      "name": "validate:incremental-page-audit",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents stale or mismatched page-validation proof from producing a false release pass.",
+      "existing_coverage_gap": "Adds dependency-aware content-addressed reuse of exact prior page proof with safe full-validation fallback.",
+      "scope": [
+        "repository",
+        "citation-pages"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:incremental-page-audit",
+      "implementation_path": "scripts/validation/run_incremental_page_audit.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "artifacts/validation/validation-cache-self-test.json",
+      "negative_fixture": "artifacts/validation/validation-cache-self-test.json",
+      "evidence_output": "artifacts/validation/incremental-page-audit.json",
+      "runtime_budget_seconds": 600,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:extraction-contract-final-state",
+        "validate:rendered-schema-parity"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted for incremental page validation and cache-safe release orchestration.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-131"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-FULL-PAGE-AUDIT",
+      "status": "ADMITTED",
+      "name": "validate:full-page-audit",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents stale or mismatched page-validation proof from producing a false release pass.",
+      "existing_coverage_gap": "Adds dependency-aware content-addressed reuse of exact prior page proof with safe full-validation fallback.",
+      "scope": [
+        "repository",
+        "citation-pages"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:full-page-audit",
+      "implementation_path": "scripts/validation/run_incremental_page_audit.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "artifacts/validation/validation-cache-self-test.json",
+      "negative_fixture": "artifacts/validation/validation-cache-self-test.json",
+      "evidence_output": "artifacts/validation/incremental-page-audit.json",
+      "runtime_budget_seconds": 600,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:extraction-contract-final-state",
+        "validate:rendered-schema-parity"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted for incremental page validation and cache-safe release orchestration.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-132"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-VALIDATION-CACHE-SELF-TEST",
+      "status": "ADMITTED",
+      "name": "validation:cache:self-test",
+      "check_type": "fixture-validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents stale or mismatched page-validation proof from producing a false release pass.",
+      "existing_coverage_gap": "Adds dependency-aware content-addressed reuse of exact prior page proof with safe full-validation fallback.",
+      "scope": [
+        "repository",
+        "citation-pages"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validation:cache:self-test",
+      "implementation_path": "scripts/validation/self_test_validation_cache.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "artifacts/validation/validation-cache-self-test.json",
+      "negative_fixture": "artifacts/validation/validation-cache-self-test.json",
+      "evidence_output": "artifacts/validation/validation-cache-self-test.json",
+      "runtime_budget_seconds": 600,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:extraction-contract-final-state",
+        "validate:rendered-schema-parity"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted for incremental page validation and cache-safe release orchestration.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-133"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-VALIDATION-CACHE-HEALTH",
+      "status": "ADMITTED",
+      "name": "validation:cache:inspect",
+      "check_type": "governance",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents stale or mismatched page-validation proof from producing a false release pass.",
+      "existing_coverage_gap": "Adds dependency-aware content-addressed reuse of exact prior page proof with safe full-validation fallback.",
+      "scope": [
+        "repository",
+        "citation-pages"
+      ],
+      "proposed_severity": "STRONG_WARNING",
+      "command": "npm run validation:cache:inspect",
+      "implementation_path": "scripts/validation/cache/validation_cache.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "artifacts/validation/validation-cache-self-test.json",
+      "negative_fixture": "artifacts/validation/validation-cache-self-test.json",
+      "evidence_output": "artifacts/validation/cache-summary.json",
+      "runtime_budget_seconds": 600,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:extraction-contract-final-state",
+        "validate:rendered-schema-parity"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted for incremental page validation and cache-safe release orchestration.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-134"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "REPAIR-VALIDATION-CACHE-PREPARE",
+      "status": "ADMITTED",
+      "name": "validation:cache:clear",
+      "check_type": "repair",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents stale or mismatched page-validation proof from producing a false release pass.",
+      "existing_coverage_gap": "Adds dependency-aware content-addressed reuse of exact prior page proof with safe full-validation fallback.",
+      "scope": [
+        "repository",
+        "citation-pages"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validation:cache:clear",
+      "implementation_path": "scripts/validation/cache/validation_cache.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "artifacts/validation/validation-cache-self-test.json",
+      "negative_fixture": "artifacts/validation/validation-cache-self-test.json",
+      "evidence_output": "none",
+      "runtime_budget_seconds": 600,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:extraction-contract-final-state",
+        "validate:rendered-schema-parity"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted for incremental page validation and cache-safe release orchestration.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-135"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-VALIDATE-CHANGED",
+      "status": "ADMITTED",
+      "name": "validate:changed",
+      "check_type": "orchestrator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Provides a canonical admitted validation profile entrypoint.",
+      "existing_coverage_gap": "Prevents unregistered package aliases from bypassing the matrix.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:changed",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "artifacts/validation/validation-cache-self-test.json",
+      "negative_fixture": "artifacts/validation/validation-cache-self-test.json",
+      "evidence_output": "artifacts/validation/profile-*.json",
+      "runtime_budget_seconds": 1800,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:profile"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted canonical profile alias.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-136"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-VALIDATE-RELEASE",
+      "status": "ADMITTED",
+      "name": "validate:release",
+      "check_type": "orchestrator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Provides a canonical admitted validation profile entrypoint.",
+      "existing_coverage_gap": "Prevents unregistered package aliases from bypassing the matrix.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:release",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "artifacts/validation/validation-cache-self-test.json",
+      "negative_fixture": "artifacts/validation/validation-cache-self-test.json",
+      "evidence_output": "artifacts/validation/profile-*.json",
+      "runtime_budget_seconds": 1800,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:profile"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted canonical profile alias.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-137"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-VALIDATE-FULL",
+      "status": "ADMITTED",
+      "name": "validate:full",
+      "check_type": "orchestrator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Provides a canonical admitted validation profile entrypoint.",
+      "existing_coverage_gap": "Prevents unregistered package aliases from bypassing the matrix.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:full",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "artifacts/validation/validation-cache-self-test.json",
+      "negative_fixture": "artifacts/validation/validation-cache-self-test.json",
+      "evidence_output": "artifacts/validation/profile-*.json",
+      "runtime_budget_seconds": 1800,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:profile"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted canonical profile alias.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-138"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "status": "ADMITTED",
+      "owning_lane": "validation-control-plane",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "environment": "container",
+      "proof_tier": 1,
+      "runtime_budget_seconds": 600,
+      "maintenance_owner": "repo",
+      "retirement_offset": null,
+      "decision_date": "2026-07-11",
+      "not_applicable_reason": null,
+      "validation_id": "VAL-PYTHON-RUNTIME-BOOTSTRAP",
+      "name": "validation:python-runtime:bootstrap",
+      "check_type": "runtime-bootstrap",
+      "risk_prevented": "Prevents machine-dependent Python parser failures during governed validation.",
+      "existing_coverage_gap": "The repo previously assumed lxml existed on the host and failed mid-profile.",
+      "command": "npm run validation:python-runtime:bootstrap",
+      "implementation_path": "scripts/validation/python_runtime.mjs",
+      "positive_fixture": "artifacts/validation/python-runtime-self-test.json",
+      "negative_fixture": "artifacts/validation/python-runtime-self-test.json",
+      "evidence_output": "artifacts/validation/python-runtime.json",
+      "overlap_analysis": [
+        "validation:python-runtime:bootstrap"
+      ],
+      "decision": "Admitted pinned managed runtime bootstrap.",
+      "matrix_ids": [
+        "MX-139"
+      ]
+    },
+    {
+      "status": "ADMITTED",
+      "owning_lane": "validation-control-plane",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "environment": "container",
+      "proof_tier": 1,
+      "runtime_budget_seconds": 600,
+      "maintenance_owner": "repo",
+      "retirement_offset": null,
+      "decision_date": "2026-07-11",
+      "not_applicable_reason": null,
+      "validation_id": "VAL-PYTHON-RUNTIME-PREFLIGHT",
+      "name": "validation:python-runtime:preflight",
+      "check_type": "runtime-preflight",
+      "risk_prevented": "Prevents build or repair mutation from starting without the required parser.",
+      "existing_coverage_gap": "No parser availability gate existed before mutation stages.",
+      "command": "npm run validation:python-runtime:preflight",
+      "implementation_path": "scripts/validation/python_runtime.mjs",
+      "positive_fixture": "artifacts/validation/python-runtime-self-test.json",
+      "negative_fixture": "artifacts/validation/python-runtime-self-test.json",
+      "evidence_output": "artifacts/validation/python-runtime.json",
+      "overlap_analysis": [
+        "validation:python-runtime:bootstrap"
+      ],
+      "decision": "Admitted pre-mutation parser preflight.",
+      "matrix_ids": [
+        "MX-140"
+      ]
+    },
+    {
+      "status": "ADMITTED",
+      "owning_lane": "validation-control-plane",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "environment": "container",
+      "proof_tier": 1,
+      "runtime_budget_seconds": 600,
+      "maintenance_owner": "repo",
+      "retirement_offset": null,
+      "decision_date": "2026-07-11",
+      "not_applicable_reason": null,
+      "validation_id": "VAL-PYTHON-RUNTIME-SELF-TEST",
+      "name": "validation:python-runtime:self-test",
+      "check_type": "fixture-validator",
+      "risk_prevented": "Prevents runtime drift, missing parser registration, and incomplete identity receipts.",
+      "existing_coverage_gap": "The managed runtime needed executable regression proof.",
+      "command": "npm run validation:python-runtime:self-test",
+      "implementation_path": "scripts/validation/self_test_python_runtime.mjs",
+      "positive_fixture": "artifacts/validation/python-runtime-self-test.json",
+      "negative_fixture": "artifacts/validation/python-runtime-self-test.json",
+      "evidence_output": "artifacts/validation/python-runtime-self-test.json",
+      "overlap_analysis": [
+        "validation:python-runtime:bootstrap"
+      ],
+      "decision": "Admitted managed runtime fixture suite.",
+      "matrix_ids": [
+        "MX-141"
+      ]
+    },
+    {
+      "status": "ADMITTED",
+      "owning_lane": "validation-control-plane",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "environment": "container",
+      "proof_tier": 1,
+      "runtime_budget_seconds": 600,
+      "maintenance_owner": "repo",
+      "retirement_offset": null,
+      "decision_date": "2026-07-11",
+      "not_applicable_reason": null,
+      "validation_id": "VAL-PYTHON-DEPENDENCY-CONTRACT",
+      "name": "validate:python-dependency-contract",
+      "check_type": "dependency-contract",
+      "risk_prevented": "Prevents undeclared Python imports and indirect Node-to-Python dependency failures from appearing mid-profile.",
+      "existing_coverage_gap": "The managed runtime verified only selected parser imports and missed PyYAML used by an indirectly launched workflow fixture.",
+      "command": "npm run validate:python-dependency-contract",
+      "implementation_path": "scripts/validation/validate_python_dependency_contract.py",
+      "positive_fixture": "artifacts/validation/python-dependency-contract.json",
+      "negative_fixture": "artifacts/validation/python-dependency-contract.json",
+      "evidence_output": "artifacts/validation/python-dependency-contract.json",
+      "overlap_analysis": [
+        "validation:python-runtime:preflight"
+      ],
+      "decision": "Admitted complete governed Python import and pin contract.",
+      "matrix_ids": [
+        "MX-142"
+      ]
+    },
+    {
+      "validation_id": "VAL-ORCHESTRATION-CONTRACT",
+      "status": "ADMITTED",
+      "name": "validate:orchestration-contract",
+      "check_type": "orchestration-contract",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents conflicting orchestration authorities, stale literal package-chain assumptions, unreachable mandatory validators, and cyclic aliases.",
+      "existing_coverage_gap": "The matrix became canonical while a legacy validator still inspected the literal validate:all package string.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:orchestration-contract",
+      "implementation_path": "scripts/validation/validate_orchestration_contract.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "artifacts/validation/orchestration-contract-self-test.json",
+      "negative_fixture": "artifacts/validation/orchestration-contract-self-test.json",
+      "evidence_output": "artifacts/diagnostics/container-current/validate-orchestration-contract/summary.json",
+      "runtime_budget_seconds": 60,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:validation-registry",
+        "validate:profile"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted canonical execution-graph governance gate before mutation.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-143"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-ORCHESTRATION-CONTRACT-SELF-TEST",
+      "status": "ADMITTED",
+      "name": "validate:orchestration-contract:self-test",
+      "check_type": "fixture-validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents false-positive reachability and missed broken aliases, missing profiles, and cycles.",
+      "existing_coverage_gap": "No hostile fixtures proved direct, profile, nested, missing, and cyclic orchestration cases.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:orchestration-contract:self-test",
+      "implementation_path": "scripts/validation/self_test_orchestration_contract.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "artifacts/validation/orchestration-contract-self-test.json",
+      "negative_fixture": "artifacts/validation/orchestration-contract-self-test.json",
+      "evidence_output": "artifacts/validation/orchestration-contract-self-test.json",
+      "runtime_budget_seconds": 60,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:orchestration-contract"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted hostile orchestration graph fixture suite.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-144"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-AGENT-APPLY-REPORT-CONTRACT",
+      "status": "ADMITTED",
+      "name": "agent:bhpc:apply-report-contract",
+      "check_type": "repair",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents a direct canonical profile step from bypassing registry and matrix governance.",
+      "existing_coverage_gap": "The command was executed directly by container-prepush but had no explicit control-plane admission.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run agent:bhpc:apply-report-contract",
+      "implementation_path": "scripts/agent_intake/apply_bhpc_html_report_contract.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "artifacts/validation/profile-container-prepush.json",
+      "negative_fixture": "artifacts/validation/orchestration-contract-self-test.json",
+      "evidence_output": "artifacts/validation/profile-container-prepush.json",
+      "runtime_budget_seconds": 1800,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:profile"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted because it is a direct canonical container-prepush profile step.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-145"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-REPAIR-CITATION-CONTRACT-SURFACES",
+      "status": "ADMITTED",
+      "name": "repair:citation-contract-surfaces",
+      "check_type": "repair",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents a direct canonical profile step from bypassing registry and matrix governance.",
+      "existing_coverage_gap": "The command was executed directly by container-prepush but had no explicit control-plane admission.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run repair:citation-contract-surfaces",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "artifacts/validation/profile-container-prepush.json",
+      "negative_fixture": "artifacts/validation/orchestration-contract-self-test.json",
+      "evidence_output": "artifacts/validation/profile-container-prepush.json",
+      "runtime_budget_seconds": 1800,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:profile"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted because it is a direct canonical container-prepush profile step.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-146"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-WORKFLOW-HOSTILE-REVIEW",
+      "status": "ADMITTED",
+      "name": "workflow:hostile-review",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents a direct canonical profile step from bypassing registry and matrix governance.",
+      "existing_coverage_gap": "The command was executed directly by container-prepush but had no explicit control-plane admission.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run workflow:hostile-review",
+      "implementation_path": "scripts/workflow/hostile_review.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "artifacts/validation/profile-container-prepush.json",
+      "negative_fixture": "artifacts/validation/orchestration-contract-self-test.json",
+      "evidence_output": "artifacts/validation/profile-container-prepush.json",
+      "runtime_budget_seconds": 1800,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:profile"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted because it is a direct canonical container-prepush profile step.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-147"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-AGENT-ARTIFACT-SHAPE-SELF-TEST",
+      "status": "ADMITTED",
+      "name": "agent:artifact-shape:self-test",
+      "check_type": "fixture-validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents a direct canonical profile step from bypassing registry and matrix governance.",
+      "existing_coverage_gap": "The command was executed directly by container-prepush but had no explicit control-plane admission.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run agent:artifact-shape:self-test",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "artifacts/validation/profile-container-prepush.json",
+      "negative_fixture": "artifacts/validation/orchestration-contract-self-test.json",
+      "evidence_output": "artifacts/validation/profile-container-prepush.json",
+      "runtime_budget_seconds": 1800,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:profile"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted because it is a direct canonical container-prepush profile step.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-148"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-AGENT-BHPC-VALIDATE",
+      "status": "ADMITTED",
+      "name": "agent:bhpc:validate",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents a direct canonical profile step from bypassing registry and matrix governance.",
+      "existing_coverage_gap": "The command was executed directly by container-prepush but had no explicit control-plane admission.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run agent:bhpc:validate",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "artifacts/validation/profile-container-prepush.json",
+      "negative_fixture": "artifacts/validation/orchestration-contract-self-test.json",
+      "evidence_output": "artifacts/validation/profile-container-prepush.json",
+      "runtime_budget_seconds": 1800,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:profile"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted because it is a direct canonical container-prepush profile step.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-149"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-AGENT-BHPC-TRACE",
+      "status": "ADMITTED",
+      "name": "agent:bhpc:trace",
+      "check_type": "trace-validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents a direct canonical profile step from bypassing registry and matrix governance.",
+      "existing_coverage_gap": "The command was executed directly by container-prepush but had no explicit control-plane admission.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run agent:bhpc:trace",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "artifacts/validation/profile-container-prepush.json",
+      "negative_fixture": "artifacts/validation/orchestration-contract-self-test.json",
+      "evidence_output": "artifacts/validation/profile-container-prepush.json",
+      "runtime_budget_seconds": 1800,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:profile"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted because it is a direct canonical container-prepush profile step.",
+      "decision_date": "2026-07-11",
+      "matrix_ids": [
+        "MX-150"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 136,
-  "generated_at": "2026-07-04T13:00:00Z"
+  "record_count": 158,
+  "generated_at": "2026-07-11T21:53:53.358661Z"
 }

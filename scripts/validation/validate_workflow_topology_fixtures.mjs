@@ -3,7 +3,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
 import {readJson, fail, pass, writeSummary} from './common.mjs';
+import {ensureRuntime,managedPython} from './python_runtime.mjs';
 
+ensureRuntime();
 const errors = [];
 const traces = [];
 const contracts = readJson('data/workflows/workflow_contracts.json').governed_workflows || [];
@@ -66,7 +68,7 @@ fs.writeFileSync('artifacts/validation/workflow-topology-fixture-trace.json', `$
 fs.writeFileSync('reports/workflow-topology-fixture-trace.json', `${JSON.stringify(report, null, 2)}\n`);
 writeSummary('validate-workflow-topology-fixtures', report);
 if (errors.length) fail(`[validate:workflow-topology-fixtures] FAIL: ${errors.length} issue(s)`, errors);
-const allYaml = spawnSync('python3', ['scripts/validation/faux_trace_all_workflows.py'], {cwd: root, stdio: 'pipe', encoding: 'utf8'});
+const allYaml = spawnSync(managedPython(), ['scripts/validation/faux_trace_all_workflows.py'], {cwd: root, stdio: 'pipe', encoding: 'utf8'});
 if (allYaml.status !== 0) {
   fail('[validate:workflow-topology-fixtures] all-YAML faux trace failed', [allYaml.stderr || allYaml.stdout]);
 }

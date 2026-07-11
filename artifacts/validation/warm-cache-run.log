@@ -1,0 +1,26 @@
+
+> sprylabs-hpc-site@0.0.0-snapshot validate:incremental-page-audit
+> node scripts/validation/run_incremental_page_audit.mjs
+
+[validate:extraction-contract-final-state] PASS shard 4/8: 285 pages; types={'concept': 205, 'howto': 48, 'comparison': 31, 'decision': 1}; warnings=0; cache_hits=285; cache_misses=0
+[validate:extraction-contract-final-state] PASS shard 8/8: 284 pages; types={'concept': 204, 'howto': 47, 'decision': 2, 'comparison': 31}; warnings=0; cache_hits=284; cache_misses=0
+[validate:extraction-contract-final-state] PASS shard 2/8: 285 pages; types={'concept': 202, 'comparison': 35, 'decision': 3, 'howto': 45}; warnings=0; cache_hits=285; cache_misses=0
+[validate:extraction-contract-final-state] PASS shard 5/8: 285 pages; types={'concept': 201, 'howto': 47, 'comparison': 35, 'decision': 2}; warnings=0; cache_hits=285; cache_misses=0
+[validate:extraction-contract-final-state] PASS shard 6/8: 285 pages; types={'concept': 202, 'comparison': 34, 'howto': 47, 'decision': 2}; warnings=0; cache_hits=285; cache_misses=0
+[validate:extraction-contract-final-state] PASS shard 1/8: 285 pages; types={'howto': 44, 'concept': 207, 'decision': 2, 'comparison': 32}; warnings=0; cache_hits=285; cache_misses=0
+[validate:extraction-contract-final-state] PASS shard 7/8: 285 pages; types={'howto': 51, 'comparison': 31, 'concept': 200, 'decision': 3}; warnings=0; cache_hits=285; cache_misses=0
+[validate:extraction-contract-final-state] PASS shard 3/8: 285 pages; types={'concept': 206, 'comparison': 31, 'howto': 46, 'transactional': 1, 'decision': 1}; warnings=0; cache_hits=285; cache_misses=0
+[validate:extraction-contract-final-state] PASS: 2279 pages; types={"howto":375,"concept":1627,"decision":16,"comparison":260,"transactional":1}; warnings=0; shards=8
+[validate:rendered-schema-parity] OK shard 8/8: 284 pages; FAQ=10, HowTo=47, Breadcrumb=22, Article=5
+[validate:rendered-schema-parity] OK shard 6/8: 285 pages; FAQ=11, HowTo=47, Breadcrumb=28, Article=9
+[validate:rendered-schema-parity] OK shard 7/8: 285 pages; FAQ=10, HowTo=51, Breadcrumb=23, Article=8
+[validate:rendered-schema-parity] OK shard 2/8: 285 pages; FAQ=12, HowTo=45, Breadcrumb=23, Article=9
+[validate:rendered-schema-parity] OK shard 3/8: 285 pages; FAQ=8, HowTo=46, Breadcrumb=27, Article=6
+[validate:rendered-schema-parity] OK shard 1/8: 285 pages; FAQ=14, HowTo=44, Breadcrumb=31, Article=13
+[validate:rendered-schema-parity] OK shard 5/8: 285 pages; FAQ=13, HowTo=47, Breadcrumb=23, Article=6
+[validate:rendered-schema-parity] OK shard 4/8: 285 pages; FAQ=8, HowTo=48, Breadcrumb=30, Article=6
+[validate:rendered-schema-parity] OK: 2279 pages; FAQ=86, HowTo=375, Breadcrumb=207, Article=62; shards=8
+[validate:incremental-page-audit] PASS: mode=incremental; elapsed_ms=20625
+real 20.89
+user 89.03
+sys 20.15

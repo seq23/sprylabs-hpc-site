@@ -1,30 +1,69 @@
 {
   "schema_version": "1.0",
   "validator": "bhpc-route-resolution-self-test",
-  "generated_at": "2026-07-11T15:17:26.876Z",
+  "generated_at": "2026-07-11T22:21:26.538Z",
   "status": "PASS",
   "cases": {
-    "existingTitleTypo": {
+    "unambiguousTitleTypo": {
       "status": "TYPO_RESOLVED_REGISTRY_REPAIR",
       "page_family": "intended_winner_repair",
-      "implementation_path": "ai-executive-coach/index.html",
+      "implementation_path": "minimum-viable-day/index.html",
       "blocked_reason": "",
       "route_resolution": {
         "ambiguous": false,
         "best": {
-          "path": "ai-executive-coach/index.html",
-          "score": 0.9444444444444444,
+          "path": "minimum-viable-day/index.html",
+          "score": 0.9642857142857143,
           "matched_on": "query_registry_similarity",
-          "label": "AI Executive Coach",
-          "query_id": "QRY-0299"
+          "label": "minimum viable execution day",
+          "query_id": "SELFTEST-QRY-001"
         },
         "alternatives": [
           {
-            "path": "ai-executive-coach/index.html",
-            "score": 0.9444444444444444,
+            "path": "minimum-viable-day/index.html",
+            "score": 0.9642857142857143,
             "matched_on": "query_registry_similarity",
-            "label": "AI Executive Coach",
-            "query_id": "QRY-0299"
+            "label": "minimum viable execution day",
+            "query_id": "SELFTEST-QRY-001"
+          }
+        ]
+      }
+    },
+    "ambiguousTitleTypo": {
+      "status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
+      "page_family": "blocked_route_resolution",
+      "implementation_path": "",
+      "blocked_reason": "ambiguous query registry typo resolution: minimum-viable-day/index.html vs what-is-a-minimum-viable-day.html",
+      "route_resolution": {
+        "ambiguous": true,
+        "best": {
+          "path": "minimum-viable-day/index.html",
+          "score": 1,
+          "matched_on": "query_registry_similarity",
+          "label": "Minimum Viable Day",
+          "query_id": "SELFTEST-QRY-001"
+        },
+        "second": {
+          "path": "what-is-a-minimum-viable-day.html",
+          "score": 1,
+          "matched_on": "query_registry_similarity",
+          "label": "Minimum Viable Day",
+          "query_id": "SELFTEST-QRY-002"
+        },
+        "alternatives": [
+          {
+            "path": "minimum-viable-day/index.html",
+            "score": 1,
+            "matched_on": "query_registry_similarity",
+            "label": "Minimum Viable Day",
+            "query_id": "SELFTEST-QRY-001"
+          },
+          {
+            "path": "what-is-a-minimum-viable-day.html",
+            "score": 1,
+            "matched_on": "query_registry_similarity",
+            "label": "Minimum Viable Day",
+            "query_id": "SELFTEST-QRY-002"
           }
         ]
       }

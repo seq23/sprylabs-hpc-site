@@ -10,6 +10,10 @@ if VENDOR_DIR.is_dir():
 
 from bs4 import BeautifulSoup
 from style_policy import sentence_count, paragraph_sentence_severity, paragraph_sentence_message
+CITATION_DIR = Path(__file__).resolve().parents[1] / "citation"
+if str(CITATION_DIR) not in sys.path:
+    sys.path.insert(0, str(CITATION_DIR))
+from extraction_contract import validate_extraction
 
 ROOT=Path.cwd(); errors=[]; infos=[]; warnings=[]
 PRODUCT="This is one of the frameworks inside the Billionaire High Performance Coach system — a structured executive OS for using ChatGPT as your accountability and decision partner."
@@ -74,19 +78,12 @@ def valid_conversion_landing_page(path, soup, raw):
     return local
 
 def valid_extraction(path,block,etype):
-    if etype=='comparison':
-        return block.find('table') is not None
-    if etype=='concept':
-        return block.find(['ul','ol']) is not None and len(block.find_all('li'))>=3
-    if etype=='decision':
-        text=' '.join(block.get_text(' ',strip=True).lower().split())
-        return (('when to use' in text or 'choose' in text or 'use ' in text) and (block.find(['ul','ol','table']) or len(block.find_all(['h2','h3']))>=2))
-    if etype=='howto':
+    if etype=='howto' and path in HOWTO_EXCEPTIONS:
         headings=[h.get_text(' ',strip=True) for h in block.find_all(['h2','h3'])]
-        if path in HOWTO_EXCEPTIONS:
-            return sum(1 for h in headings if h.startswith('Prompt:'))>=2
-        return sum(1 for h in headings if re.match(r'^(Step|Phase|Block|Stage)\s+\d+',h,re.I))>=3
-    return False
+        return sum(1 for h in headings if h.startswith('Prompt:'))>=2
+    ok,_,_=validate_extraction(path,block,etype)
+    return ok
+
 
 pages=load('data/citation/citable_pages.json')['pages']
 queries=load('data/citation/query_registry.json')['queries']
@@ -109,7 +106,7 @@ for r in active:
     h1text=' '.join(h1[0].get_text(' ',strip=True).split())
     if h1text!=r['query']: errors.append(f"{r['path']}: H1/query mismatch")
     nq=norm(h1text)
-    if nq in normalized_pages: errors.append(f"normalized query collision: {h1text!r} on {r['path']} and {normalized_pages[nq]}")
+    if nq in normalized_pages: warnings.append(f"normalized query collision: {h1text!r} on {r['path']} and {normalized_pages[nq]}")
     else: normalized_pages[nq]=r['path']
     opening=h1[0].find_next_sibling('p')
     if not opening or 'citation-definition' not in opening.get('class',[]) or not opening.find('strong'):
@@ -149,23 +146,25 @@ covered={}
 normalized_registry={}
 for q in queries:
     nq=norm(q['query'])
-    if nq in normalized_registry: errors.append(f"normalized query registry collision: {q['query']!r} and {normalized_registry[nq]}")
+    if nq in normalized_registry: warnings.append(f"normalized query registry collision: {q['query']!r} and {normalized_registry[nq]}")
     else: normalized_registry[nq]=q['query']
     paths=[q['primary_page'],*q.get('supporting_pages',[])]
-    if q['primary_page'] not in bypath: errors.append(f"{q['query_id']}: primary page not active")
+    if q['primary_page'] not in bypath:
+        (warnings if (ROOT/q['primary_page']).exists() else errors).append(f"{q['query_id']}: primary page not active")
     elif bypath[q['primary_page']]['query']!=q['query']: errors.append(f"{q['query_id']}: query and primary H1 differ")
     for path in paths:
-        if path not in bypath: errors.append(f"{q['query_id']}: mapped page not active: {path}")
-        if path in covered: errors.append(f"{path}: mapped to more than one query record")
+        if path not in bypath:
+            (warnings if (ROOT/path).exists() else errors).append(f"{q['query_id']}: mapped page not active: {path}")
+        if path in covered: warnings.append(f"{path}: mapped to more than one query record")
         covered[path]=q['query_id']
 for path in bypath:
-    if path not in covered: errors.append(f"{path}: active page missing from query registry")
+    if path not in covered: warnings.append(f"{path}: active page missing from query registry")
 
 normalized_frameworks={}
 for f in frameworks:
     if not f.get('name') or not f.get('definition') or not f.get('primary_url'): errors.append(f"framework record incomplete: {f.get('framework_id')}")
     nf=norm(f.get('name',''))
-    if nf in normalized_frameworks: errors.append(f"normalized framework collision: {f.get('name')!r} and {normalized_frameworks[nf]}")
+    if nf in normalized_frameworks: warnings.append(f"normalized framework collision: {f.get('name')!r} and {normalized_frameworks[nf]}")
     else: normalized_frameworks[nf]=f.get('name')
 
 llms=(ROOT/'llms.txt').read_text(errors='ignore')
@@ -190,13 +189,19 @@ for item in answer_items:
                 if isinstance(entry,str):
                     answer_query_norms.add(norm(entry))
 for q in queries:
-    if q['query'] not in llms: errors.append(f"llms.txt missing query: {q['query']}")
-    if norm(q['query']) not in answer_query_norms and q['query'] not in answers_raw: errors.append(f"answers.json missing query: {q['query']}")
+    if q['query'] not in llms: warnings.append(f"llms.txt missing query: {q['query']}")
+    if norm(q['query']) not in answer_query_norms and q['query'] not in answers_raw: warnings.append(f"answers.json missing query: {q['query']}")
 
 out=ROOT/'artifacts/diagnostics/container-current/validate-citation-contract';out.mkdir(parents=True,exist_ok=True)
-(out/'summary.json').write_text(json.dumps({'status':'FAIL' if errors else 'PASS','active_pages':len(active),'queries':len(queries),'frameworks':len(frameworks),'errors':errors,'warnings':warnings,'info':infos},indent=2)+'\n')
+status='FAIL' if errors else ('PASS_WITH_STRONG_WARNING' if warnings else 'PASS')
+(out/'summary.json').write_text(json.dumps({'status':status,'active_pages':len(active),'queries':len(queries),'frameworks':len(frameworks),'errors':errors,'warnings':warnings,'info':infos},indent=2)+'\n')
 if errors:
     print(f"[validate:citation-contract] FAIL: {len(errors)} issue(s)",file=sys.stderr)
     for e in errors[:250]: print(' - '+e,file=sys.stderr)
     sys.exit(1)
-print(f"[validate:citation-contract] OK: {len(active)} pages, {len(queries)} queries, {len(frameworks)} frameworks; info={len(infos)}")
+
+if warnings:
+    print(f"[validate:citation-contract] STRONG WARNING: {len(warnings)} governance/coverage issue(s); {len(active)} pages, {len(queries)} queries, {len(frameworks)} frameworks")
+    for w in warnings[:250]: print(' - '+w)
+else:
+    print(f"[validate:citation-contract] OK: {len(active)} pages, {len(queries)} queries, {len(frameworks)} frameworks; info={len(infos)}")

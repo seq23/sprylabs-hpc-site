@@ -1367,8 +1367,612 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-AGENT-LIVE",
+      "validation_id": "VAL-AGENT-LIVE",
+      "lane": "agent-intake",
+      "command": "npm run validate:agent-live",
+      "order": 157,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-123",
+      "validation_id": "VAL-QUERY-OWNER-UNIQUENESS",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:query-owner-uniqueness",
+      "order": 123,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-124",
+      "validation_id": "VAL-VALIDATION-PROFILE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:profile",
+      "order": 124,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-125",
+      "validation_id": "VAL-EXTRACTION-CONTRACT-FINAL-STATE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:extraction-contract-final-state",
+      "order": 125,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-126",
+      "validation_id": "VAL-EXTRACTION-CONTRACT-SELF-TEST",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:extraction-contract:self-test",
+      "order": 126,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-127",
+      "validation_id": "VAL-EXTRACTION-SURFACE-GUARD-SNAPSHOT",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:extraction-surface-guard:snapshot",
+      "order": 127,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-128",
+      "validation_id": "VAL-EXTRACTION-SURFACE-GUARD-CHECK",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:extraction-surface-guard:check",
+      "order": 128,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-129",
+      "validation_id": "VAL-EXTRACTION-PIPELINE-TRACE",
+      "lane": "validation-control-plane",
+      "command": "npm run trace:extraction-pipeline",
+      "order": 129,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-130",
+      "validation_id": "VAL-EXTRACTION-FINAL-NORMALIZATION",
+      "lane": "validation-control-plane",
+      "command": "npm run repair:extraction-final-state",
+      "order": 130,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-131",
+      "validation_id": "VAL-INCREMENTAL-PAGE-AUDIT",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:incremental-page-audit",
+      "order": 131,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-132",
+      "validation_id": "VAL-FULL-PAGE-AUDIT",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:full-page-audit",
+      "order": 132,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-133",
+      "validation_id": "VAL-VALIDATION-CACHE-SELF-TEST",
+      "lane": "validation-control-plane",
+      "command": "npm run validation:cache:self-test",
+      "order": 133,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-134",
+      "validation_id": "VAL-VALIDATION-CACHE-HEALTH",
+      "lane": "validation-control-plane",
+      "command": "npm run validation:cache:inspect",
+      "order": 134,
+      "severity": "STRONG_WARNING",
+      "release_effect": false,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-135",
+      "validation_id": "REPAIR-VALIDATION-CACHE-PREPARE",
+      "lane": "validation-control-plane",
+      "command": "npm run validation:cache:clear",
+      "order": 135,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-136",
+      "validation_id": "VAL-VALIDATE-CHANGED",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:changed",
+      "order": 136,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-137",
+      "validation_id": "VAL-VALIDATE-RELEASE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:release",
+      "order": 137,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-138",
+      "validation_id": "VAL-VALIDATE-FULL",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:full",
+      "order": 138,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-139",
+      "validation_id": "VAL-PYTHON-RUNTIME-BOOTSTRAP",
+      "lane": "validation-control-plane",
+      "command": "npm run validation:python-runtime:bootstrap",
+      "order": 139,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-140",
+      "validation_id": "VAL-PYTHON-RUNTIME-PREFLIGHT",
+      "lane": "validation-control-plane",
+      "command": "npm run validation:python-runtime:preflight",
+      "order": 140,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-141",
+      "validation_id": "VAL-PYTHON-RUNTIME-SELF-TEST",
+      "lane": "validation-control-plane",
+      "command": "npm run validation:python-runtime:self-test",
+      "order": 141,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-142",
+      "validation_id": "VAL-PYTHON-DEPENDENCY-CONTRACT",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:python-dependency-contract",
+      "order": 142,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-143",
+      "validation_id": "VAL-ORCHESTRATION-CONTRACT",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:orchestration-contract",
+      "order": 143,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-144",
+      "validation_id": "VAL-ORCHESTRATION-CONTRACT-SELF-TEST",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:orchestration-contract:self-test",
+      "order": 144,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-145",
+      "validation_id": "VAL-AGENT-APPLY-REPORT-CONTRACT",
+      "lane": "validation-control-plane",
+      "command": "npm run agent:bhpc:apply-report-contract",
+      "order": 145,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-146",
+      "validation_id": "VAL-REPAIR-CITATION-CONTRACT-SURFACES",
+      "lane": "validation-control-plane",
+      "command": "npm run repair:citation-contract-surfaces",
+      "order": 146,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-147",
+      "validation_id": "VAL-WORKFLOW-HOSTILE-REVIEW",
+      "lane": "validation-control-plane",
+      "command": "npm run workflow:hostile-review",
+      "order": 147,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-148",
+      "validation_id": "VAL-AGENT-ARTIFACT-SHAPE-SELF-TEST",
+      "lane": "validation-control-plane",
+      "command": "npm run agent:artifact-shape:self-test",
+      "order": 148,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-149",
+      "validation_id": "VAL-AGENT-BHPC-VALIDATE",
+      "lane": "validation-control-plane",
+      "command": "npm run agent:bhpc:validate",
+      "order": 149,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-150",
+      "validation_id": "VAL-AGENT-BHPC-TRACE",
+      "lane": "validation-control-plane",
+      "command": "npm run agent:bhpc:trace",
+      "order": 150,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 135,
-  "generated_at": "2026-07-04T13:00:00Z"
+  "entry_count": 157,
+  "generated_at": "2026-07-11T21:53:53.358717Z",
+  "profiles": {
+    "container-prepush": {
+      "description": "Canonical bounded container prepush profile.",
+      "extends": [],
+      "steps": [
+        {
+          "id": "VAL-ORCHESTRATION-CONTRACT",
+          "command": "npm run validate:orchestration-contract"
+        },
+        {
+          "id": "VAL-ORCHESTRATION-CONTRACT-SELF-TEST",
+          "command": "npm run validate:orchestration-contract:self-test"
+        },
+        {
+          "id": "VAL-PYTHON-RUNTIME-BOOTSTRAP",
+          "command": "npm run validation:python-runtime:bootstrap"
+        },
+        {
+          "id": "VAL-PYTHON-RUNTIME-PREFLIGHT",
+          "command": "npm run validation:python-runtime:preflight"
+        },
+        {
+          "id": "VAL-PYTHON-RUNTIME-SELF-TEST",
+          "command": "npm run validation:python-runtime:self-test"
+        },
+        {
+          "id": "build:all",
+          "command": "npm run build:all"
+        },
+        {
+          "id": "repair:dual-domain-metadata",
+          "command": "npm run repair:dual-domain-metadata"
+        },
+        {
+          "id": "agent:bhpc:apply-report-contract",
+          "command": "npm run agent:bhpc:apply-report-contract"
+        },
+        {
+          "id": "release:repair-agent-normalization",
+          "command": "npm run release:repair-agent-normalization"
+        },
+        {
+          "id": "repair:citation-contract-surfaces",
+          "command": "npm run repair:citation-contract-surfaces"
+        },
+        {
+          "id": "VAL-QUERY-OWNER-UNIQUENESS",
+          "command": "npm run validate:query-owner-uniqueness"
+        },
+        {
+          "id": "validate:repo",
+          "command": "npm run validate:repo"
+        },
+        {
+          "id": "validate:validation-registry",
+          "command": "npm run validate:validation-registry"
+        },
+        {
+          "id": "VAL-VALIDATION-CACHE-CONTROL-PLANE",
+          "command": "npm run validation:cache:self-test"
+        },
+        {
+          "id": "VAL-VALIDATION-CACHE-HEALTH",
+          "command": "npm run validation:cache:inspect"
+        },
+        {
+          "id": "validate:workflow-contract",
+          "command": "npm run validate:workflow-contract"
+        },
+        {
+          "id": "validate:workflow-lineage",
+          "command": "npm run validate:workflow-lineage"
+        },
+        {
+          "id": "validate:workflow-monitor",
+          "command": "npm run validate:workflow-monitor"
+        },
+        {
+          "id": "validate:workflow-topology",
+          "command": "npm run validate:workflow-topology"
+        },
+        {
+          "id": "validate:workflow-topology:fixtures",
+          "command": "npm run validate:workflow-topology:fixtures"
+        },
+        {
+          "id": "workflow:hostile-review",
+          "command": "npm run workflow:hostile-review"
+        },
+        {
+          "id": "agent:artifact-shape:self-test",
+          "command": "npm run agent:artifact-shape:self-test"
+        },
+        {
+          "id": "agent:bhpc:validate",
+          "command": "npm run agent:bhpc:validate"
+        },
+        {
+          "id": "agent:bhpc:trace",
+          "command": "npm run agent:bhpc:trace"
+        },
+        {
+          "id": "validate:agent-run",
+          "command": "npm run validate:agent-run"
+        },
+        {
+          "id": "VAL-EXTRACTION-FINAL-NORMALIZATION",
+          "command": "npm run repair:extraction-final-state"
+        },
+        {
+          "id": "validate:content-release",
+          "command": "npm run validate:content-release"
+        },
+        {
+          "id": "validate:citation-velocity-automation",
+          "command": "npm run validate:citation-velocity-automation"
+        },
+        {
+          "id": "validate:disavow-asset",
+          "command": "npm run validate:disavow-asset"
+        },
+        {
+          "id": "validate:programmatic-provenance",
+          "command": "npm run validate:programmatic-provenance"
+        },
+        {
+          "id": "validate:programmatic-registry",
+          "command": "npm run validate:programmatic-registry"
+        },
+        {
+          "id": "validate:citation-contract",
+          "command": "npm run validate:citation-contract"
+        },
+        {
+          "id": "validate:citation-strategy",
+          "command": "npm run validate:citation-strategy"
+        },
+        {
+          "id": "VAL-INCREMENTAL-PAGE-AUDIT",
+          "command": "npm run validate:incremental-page-audit"
+        },
+        {
+          "id": "validate:retired-route-references",
+          "command": "npm run validate:retired-route-references"
+        },
+        {
+          "id": "validate:ui-test-parity",
+          "command": "npm run validate:ui-test-parity"
+        },
+        {
+          "id": "validate:browser-suite-contract",
+          "command": "npm run validate:browser-suite-contract"
+        },
+        {
+          "id": "validate:traffic-qualified-suite",
+          "command": "npm run validate:traffic-qualified-suite"
+        },
+        {
+          "id": "validate:artifact-consistency-e2e",
+          "command": "npm run validate:artifact-consistency-e2e"
+        },
+        {
+          "id": "validate:batch-f-continuity",
+          "command": "npm run validate:batch-f-continuity"
+        },
+        {
+          "id": "validate:batch-g-continuity",
+          "command": "npm run validate:batch-g-continuity"
+        },
+        {
+          "id": "repair:extraction-final-state",
+          "command": "npm run repair:extraction-final-state"
+        },
+        {
+          "id": "VAL-EXTRACTION-SURFACE-GUARD-SNAPSHOT",
+          "command": "npm run validate:extraction-surface-guard:snapshot"
+        },
+        {
+          "id": "validate:release-atom-contract",
+          "command": "node scripts/validation/validate_release_atom_contract.mjs"
+        },
+        {
+          "id": "validate:release-mix-policy",
+          "command": "node scripts/validation/validate_release_mix_policy.mjs"
+        },
+        {
+          "id": "validate:citation-phase-manifest",
+          "command": "node scripts/validation/validate_citation_phase_manifest.mjs"
+        },
+        {
+          "id": "validate:no-keyword-swap-pages",
+          "command": "node scripts/validation/validate_no_keyword_swap_pages.mjs"
+        },
+        {
+          "id": "validate:claim-safety",
+          "command": "node scripts/validation/validate_claim_safety.mjs"
+        },
+        {
+          "id": "validate:internal-link-velocity",
+          "command": "node scripts/validation/validate_internal_link_velocity.mjs"
+        },
+        {
+          "id": "validate:llms-full-coverage",
+          "command": "node scripts/validation/validate_llms_full_coverage.mjs"
+        },
+        {
+          "id": "validate:sitemap-coverage",
+          "command": "node scripts/validation/validate_sitemap_coverage.mjs"
+        },
+        {
+          "id": "validation:inventory",
+          "command": "npm run validation:inventory"
+        },
+        {
+          "id": "validate:warnings",
+          "command": "npm run validate:warnings"
+        },
+        {
+          "id": "VAL-EXTRACTION-CONTRACT-SELF-TEST",
+          "command": "npm run validate:extraction-contract:self-test"
+        },
+        {
+          "id": "VAL-EXTRACTION-PIPELINE-TRACE",
+          "command": "npm run trace:extraction-pipeline"
+        },
+        {
+          "id": "VAL-EXTRACTION-SURFACE-GUARD-CHECK",
+          "command": "npm run validate:extraction-surface-guard:check"
+        }
+      ]
+    },
+    "changed": {
+      "description": "Incremental validation profile for ordinary development and updater runs.",
+      "extends": [],
+      "steps": [
+        {
+          "id": "VAL-ORCHESTRATION-CONTRACT",
+          "command": "npm run validate:orchestration-contract"
+        },
+        {
+          "id": "VAL-ORCHESTRATION-CONTRACT-SELF-TEST",
+          "command": "npm run validate:orchestration-contract:self-test"
+        },
+        {
+          "id": "VAL-PYTHON-RUNTIME-BOOTSTRAP",
+          "command": "npm run validation:python-runtime:bootstrap"
+        },
+        {
+          "id": "VAL-PYTHON-RUNTIME-PREFLIGHT",
+          "command": "npm run validation:python-runtime:preflight"
+        },
+        {
+          "id": "VAL-PYTHON-RUNTIME-SELF-TEST",
+          "command": "npm run validation:python-runtime:self-test"
+        },
+        {
+          "id": "validate:validation-registry",
+          "command": "npm run validate:validation-registry"
+        },
+        {
+          "id": "VAL-VALIDATION-CACHE-CONTROL-PLANE",
+          "command": "npm run validation:cache:self-test"
+        },
+        {
+          "id": "VAL-INCREMENTAL-PAGE-AUDIT",
+          "command": "npm run validate:incremental-page-audit"
+        },
+        {
+          "id": "VAL-QUERY-OWNER-UNIQUENESS",
+          "command": "npm run validate:query-owner-uniqueness"
+        },
+        {
+          "id": "validate:repo",
+          "command": "npm run validate:repo"
+        },
+        {
+          "id": "VAL-VALIDATION-CACHE-HEALTH",
+          "command": "npm run validation:cache:inspect"
+        },
+        {
+          "id": "validate:warnings",
+          "command": "npm run validate:warnings"
+        }
+      ]
+    },
+    "full-audit": {
+      "description": "Uncached full page validation plus complete container prepush proof.",
+      "extends": [
+        "container-prepush"
+      ],
+      "steps": [
+        {
+          "id": "VAL-PYTHON-RUNTIME-BOOTSTRAP",
+          "command": "npm run validation:python-runtime:bootstrap"
+        },
+        {
+          "id": "VAL-PYTHON-RUNTIME-PREFLIGHT",
+          "command": "npm run validation:python-runtime:preflight"
+        },
+        {
+          "id": "VAL-PYTHON-RUNTIME-SELF-TEST",
+          "command": "npm run validation:python-runtime:self-test"
+        },
+        {
+          "id": "VAL-FULL-PAGE-AUDIT",
+          "command": "npm run validate:full-page-audit"
+        },
+        {
+          "id": "VAL-VALIDATION-CACHE-HEALTH",
+          "command": "npm run validation:cache:inspect"
+        }
+      ]
+    }
+  }
 }

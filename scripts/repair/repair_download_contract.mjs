@@ -16,6 +16,11 @@ let html = fs.readFileSync(file, 'utf8');
 
 const before = html;
 
+const downloadTitle = 'Billionaire High Performance Coach — Download the AI Executive OS';
+html = html.replace(/<title>[\s\S]*?<\/title>/i, `<title>${downloadTitle}</title>`);
+html = html.replace(/<meta\b[^>]*property=["']og:title["'][^>]*>/i, `<meta property="og:title" content="${downloadTitle}">`);
+html = html.replace(/<meta\b[^>]*name=["']twitter:title["'][^>]*>/i, `<meta name="twitter:title" content="${downloadTitle}">`);
+
 html = html.replace(
   /<section\b[^>]*class=["'][^"']*contract-cta[^"']*["'][\s\S]*?<\/section>/gi,
   (block) => /aplayermode\.com|A Player Mode/i.test(block) ? '' : block
@@ -23,7 +28,7 @@ html = html.replace(
 
 html = html.replace(
   /<p\b[^>]*>[\s\S]*?<a\b[^>]*href=["']https:\/\/aplayermode\.com\/?["'][\s\S]*?<\/a>[\s\S]*?<\/p>/gi,
-  ''
+  (block) => /data-llm-answer|citation-definition/i.test(block) ? block.replace(/<a\b[^>]*href=["']https:\/\/aplayermode\.com\/?["'][\s\S]*?<\/a>/gi, '') : ''
 );
 
 html = html.replace(

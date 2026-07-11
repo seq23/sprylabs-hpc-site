@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-07-11T15:09:15.307710Z",
+  "status": "PASS",
+  "audit_scope": {
+    "validation_scripts_scanned": 135,
+    "admitted_validation_records": 138,
+    "workflow_files": 8
+  },
+  "severity_changes": [
+    {
+      "command": "npm run validate:ownership",
+      "warning_classes": [
+        "protected baseline hash drift"
+      ],
+      "hard_fail_classes": [
+        "missing protected file",
+        "duplicate owner",
+        "paid route not protected"
+      ]
+    },
+    {
+      "command": "npm run validate:programmatic-registry",
+      "warning_classes": [
+        "missing/stale admission registration",
+        "duplicate query label",
+        "query ownership collision"
+      ],
+      "hard_fail_classes": [
+        "missing active public file",
+        "duplicate path",
+        "malformed record",
+        "unknown lane",
+        "invalid admission state"
+      ]
+    },
+    {
+      "command": "npm run validate:citation-contract",
+      "warning_classes": [
+        "normalized query collision",
+        "query registry collision",
+        "page mapped to multiple query records",
+        "coverage drift"
+      ],
+      "hard_fail_classes": [
+        "missing public file",
+        "schema failure",
+        "invalid extraction structure",
+        "unsafe or malformed content"
+      ]
+    },
+    {
+      "command": "npm run release:attest",
+      "warning_classes": [
+        "warning count",
+        "accounted blocked count"
+      ],
+      "hard_fail_classes": [
+        "report errors",
+        "invalid JSON"
+      ]
+    },
+    {
+      "command": "npm run validate:browser-structural",
+      "warning_classes": [
+        "semantic block quality gap"
+      ],
+      "hard_fail_classes": [
+        "missing html/main",
+        "unresolved template"
+      ]
+    }
+  ],
+  "verification": {
+    "full_safe_autonomy": "PASS",
+    "full_validation_chain": "PASS_THROUGH_WARNING_BOUNDARY",
+    "programmatic_registry": "PASS_WITH_STRONG_WARNING",
+    "citation_contract": "PASS_WITH_STRONG_WARNING",
+    "ownership_warning_fixture_exit_code": 0,
+    "hard_gates_preserved": true
+  },
+  "known_strong_warnings": [
+    "AI Executive Coach Alternative for High Performers query ownership collision",
+    "AI Executive Coach query ownership collision"
+  ]
+}

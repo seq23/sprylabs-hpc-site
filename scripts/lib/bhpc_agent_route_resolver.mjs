@@ -4,7 +4,8 @@ import {ROOT, repoPathFromIntendedWinnerPage, readJson, slug, loadExactPolicy} f
 import {classifyBhpcPageFamily, pathForBhpcPageFamily} from './bhpc_page_family_router.mjs';
 
 function safeRelative(rel = '') {
-  const value = String(rel || '').replace(/^\/+/, '');
+  let value = String(rel || '').replace(/^\/+/, '');
+  value = value.replace(/^(?:billionairehighperformancecoach\.com|spryexecutiveos\.com)\//i, '');
   if (!value || /^n\/?a(?:\/index\.html)?$/i.test(value) || value.includes('..') || path.isAbsolute(value)) return '';
   return value;
 }
@@ -64,9 +65,11 @@ function walkHtml(dir = ROOT, prefix = '') {
   return out;
 }
 
-function activeRegistryRows() {
-  const registry = readJson('data/citation/query_registry.json', {queries: []});
-  return (registry.queries || [])
+function activeRegistryRows(registryRows = null) {
+  const rows = Array.isArray(registryRows)
+    ? registryRows
+    : (readJson('data/citation/query_registry.json', {queries: []}).queries || []);
+  return rows
     .filter(row => row && row.release_status === 'ACTIVE' && row.primary_page && fs.existsSync(path.join(ROOT, row.primary_page)))
     .map(row => ({
       path: safeRelative(row.primary_page),
@@ -119,12 +122,12 @@ function resolvePathTypo(candidatePath = '') {
   return bestMatch(candidates, 0.93);
 }
 
-function resolveRegistryTypo(row = {}) {
+function resolveRegistryTypo(row = {}, registryRows = null) {
   if (!hasPageFixIntent(row)) return null;
   const query = clean(row.query || row.title || row.topic || '');
   if (!query) return null;
   const candidates = [];
-  for (const owner of activeRegistryRows()) {
+  for (const owner of activeRegistryRows(registryRows)) {
     for (const label of owner.labels) {
       candidates.push({
         path: owner.path,
@@ -148,7 +151,7 @@ function typoBlocked(match, reason) {
   };
 }
 
-export function resolveBhpcAgentRoute(row = {}, {owner = null, policy = null} = {}) {
+export function resolveBhpcAgentRoute(row = {}, {owner = null, policy = null, registryRows = null} = {}) {
   const activePolicy = policy || loadExactPolicy();
   const ownerPath = safeRelative(owner?.primary_page || '');
   const intendedPath = safeRelative(row.intended_winner_path || repoPathFromIntendedWinnerPage(row.intended_winner_page, activePolicy) || '');
@@ -159,7 +162,10 @@ export function resolveBhpcAgentRoute(row = {}, {owner = null, policy = null} = 
     return {status: 'BLOCKED_SOURCE_ROW', page_family: pageFamily, implementation_path: declaredPath, blocked_reason: row.blocked_reason || row.operation};
   }
 
-  const repairPath = ownerPath || intendedPath;
+  // An explicit intended public URL is stronger than a registry owner path.
+  // Registry rows may contain a legacy host-prefixed repo path; never let that
+  // create a duplicate /<hostname>/ route instead of repairing the live route.
+  const repairPath = intendedPath || ownerPath;
   if (repairPath) {
     const exists = fs.existsSync(path.join(ROOT, repairPath));
     if (exists) {
@@ -197,7 +203,7 @@ export function resolveBhpcAgentRoute(row = {}, {owner = null, policy = null} = 
     return {status: 'DECLARED_CREATE', page_family: declaredFamily, implementation_path: declaredPath, blocked_reason: ''};
   }
 
-  const registryTypo = resolveRegistryTypo(row);
+  const registryTypo = resolveRegistryTypo(row, registryRows);
   if (registryTypo?.ambiguous) return typoBlocked(registryTypo, 'ambiguous query registry typo resolution');
   if (registryTypo?.best) {
     return {status: 'TYPO_RESOLVED_REGISTRY_REPAIR', page_family: 'intended_winner_repair', implementation_path: registryTypo.best.path, blocked_reason: '', route_resolution: registryTypo};

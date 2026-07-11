@@ -1,0 +1,344 @@
+{
+  "profile": "container-prepush",
+  "started_at": "2026-07-11T22:20:26.555Z",
+  "steps": [
+    {
+      "id": "VAL-ORCHESTRATION-CONTRACT",
+      "command": "npm run validate:orchestration-contract",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-ORCHESTRATION-CONTRACT-SELF-TEST",
+      "command": "npm run validate:orchestration-contract:self-test",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-PYTHON-RUNTIME-BOOTSTRAP",
+      "command": "npm run validation:python-runtime:bootstrap",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-PYTHON-RUNTIME-PREFLIGHT",
+      "command": "npm run validation:python-runtime:preflight",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-PYTHON-RUNTIME-SELF-TEST",
+      "command": "npm run validation:python-runtime:self-test",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "build:all",
+      "command": "npm run build:all",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "repair:dual-domain-metadata",
+      "command": "npm run repair:dual-domain-metadata",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "agent:bhpc:apply-report-contract",
+      "command": "npm run agent:bhpc:apply-report-contract",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "release:repair-agent-normalization",
+      "command": "npm run release:repair-agent-normalization",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "repair:citation-contract-surfaces",
+      "command": "npm run repair:citation-contract-surfaces",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-QUERY-OWNER-UNIQUENESS",
+      "command": "npm run validate:query-owner-uniqueness",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:repo",
+      "command": "npm run validate:repo",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:validation-registry",
+      "command": "npm run validate:validation-registry",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-VALIDATION-CACHE-CONTROL-PLANE",
+      "command": "npm run validation:cache:self-test",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-VALIDATION-CACHE-HEALTH",
+      "command": "npm run validation:cache:inspect",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:workflow-contract",
+      "command": "npm run validate:workflow-contract",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:workflow-lineage",
+      "command": "npm run validate:workflow-lineage",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:workflow-monitor",
+      "command": "npm run validate:workflow-monitor",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:workflow-topology",
+      "command": "npm run validate:workflow-topology",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:workflow-topology:fixtures",
+      "command": "npm run validate:workflow-topology:fixtures",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "workflow:hostile-review",
+      "command": "npm run workflow:hostile-review",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "agent:artifact-shape:self-test",
+      "command": "npm run agent:artifact-shape:self-test",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "agent:bhpc:validate",
+      "command": "npm run agent:bhpc:validate",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "agent:bhpc:trace",
+      "command": "npm run agent:bhpc:trace",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:agent-run",
+      "command": "npm run validate:agent-run",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-EXTRACTION-FINAL-NORMALIZATION",
+      "command": "npm run repair:extraction-final-state",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:content-release",
+      "command": "npm run validate:content-release",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:citation-velocity-automation",
+      "command": "npm run validate:citation-velocity-automation",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:disavow-asset",
+      "command": "npm run validate:disavow-asset",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:programmatic-provenance",
+      "command": "npm run validate:programmatic-provenance",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:programmatic-registry",
+      "command": "npm run validate:programmatic-registry",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:citation-contract",
+      "command": "npm run validate:citation-contract",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:citation-strategy",
+      "command": "npm run validate:citation-strategy",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-INCREMENTAL-PAGE-AUDIT",
+      "command": "npm run validate:incremental-page-audit",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:retired-route-references",
+      "command": "npm run validate:retired-route-references",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:ui-test-parity",
+      "command": "npm run validate:ui-test-parity",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:browser-suite-contract",
+      "command": "npm run validate:browser-suite-contract",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:traffic-qualified-suite",
+      "command": "npm run validate:traffic-qualified-suite",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:artifact-consistency-e2e",
+      "command": "npm run validate:artifact-consistency-e2e",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:batch-f-continuity",
+      "command": "npm run validate:batch-f-continuity",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:batch-g-continuity",
+      "command": "npm run validate:batch-g-continuity",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "repair:extraction-final-state",
+      "command": "npm run repair:extraction-final-state",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-EXTRACTION-SURFACE-GUARD-SNAPSHOT",
+      "command": "npm run validate:extraction-surface-guard:snapshot",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:release-atom-contract",
+      "command": "node scripts/validation/validate_release_atom_contract.mjs",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:release-mix-policy",
+      "command": "node scripts/validation/validate_release_mix_policy.mjs",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:citation-phase-manifest",
+      "command": "node scripts/validation/validate_citation_phase_manifest.mjs",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:no-keyword-swap-pages",
+      "command": "node scripts/validation/validate_no_keyword_swap_pages.mjs",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:claim-safety",
+      "command": "node scripts/validation/validate_claim_safety.mjs",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:internal-link-velocity",
+      "command": "node scripts/validation/validate_internal_link_velocity.mjs",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:llms-full-coverage",
+      "command": "node scripts/validation/validate_llms_full_coverage.mjs",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:sitemap-coverage",
+      "command": "node scripts/validation/validate_sitemap_coverage.mjs",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validation:inventory",
+      "command": "npm run validation:inventory",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:warnings",
+      "command": "npm run validate:warnings",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-EXTRACTION-CONTRACT-SELF-TEST",
+      "command": "npm run validate:extraction-contract:self-test",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-EXTRACTION-PIPELINE-TRACE",
+      "command": "npm run trace:extraction-pipeline",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-EXTRACTION-SURFACE-GUARD-CHECK",
+      "command": "npm run validate:extraction-surface-guard:check",
+      "exit_code": 0,
+      "status": "PASS"
+    }
+  ],
+  "status": "PASS",
+  "finished_at": "2026-07-11T22:23:08.698Z"
+}

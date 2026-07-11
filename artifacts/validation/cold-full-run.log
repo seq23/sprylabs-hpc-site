@@ -1,0 +1,21 @@
+
+> sprylabs-hpc-site@0.0.0-snapshot validate:full-page-audit
+> node scripts/validation/run_incremental_page_audit.mjs --full
+
+[validate:extraction-contract-final-state] PASS shard 8/8: 284 pages; types={'concept': 204, 'howto': 47, 'decision': 2, 'comparison': 31}; warnings=0; cache_hits=0; cache_misses=284
+[validate:extraction-contract-final-state] PASS shard 7/8: 285 pages; types={'howto': 51, 'comparison': 31, 'concept': 200, 'decision': 3}; warnings=0; cache_hits=0; cache_misses=285
+[validate:extraction-contract-final-state] PASS shard 1/8: 285 pages; types={'howto': 44, 'concept': 207, 'decision': 2, 'comparison': 32}; warnings=0; cache_hits=0; cache_misses=285
+[validate:extraction-contract-final-state] PASS shard 2/8: 285 pages; types={'concept': 202, 'comparison': 35, 'decision': 3, 'howto': 45}; warnings=0; cache_hits=0; cache_misses=285
+[validate:extraction-contract-final-state] PASS shard 6/8: 285 pages; types={'concept': 202, 'comparison': 34, 'howto': 47, 'decision': 2}; warnings=0; cache_hits=0; cache_misses=285
+[validate:extraction-contract-final-state] PASS shard 5/8: 285 pages; types={'concept': 201, 'howto': 47, 'comparison': 35, 'decision': 2}; warnings=0; cache_hits=0; cache_misses=285
+[validate:extraction-contract-final-state] PASS shard 3/8: 285 pages; types={'concept': 206, 'comparison': 31, 'howto': 46, 'transactional': 1, 'decision': 1}; warnings=0; cache_hits=0; cache_misses=285
+[validate:extraction-contract-final-state] PASS shard 4/8: 285 pages; types={'concept': 205, 'howto': 48, 'comparison': 31, 'decision': 1}; warnings=0; cache_hits=0; cache_misses=285
+[validate:extraction-contract-final-state] PASS: 2279 pages; types={"howto":375,"concept":1627,"decision":16,"comparison":260,"transactional":1}; warnings=0; shards=8
+[validate:rendered-schema-parity] shard 7/8 progress 100/285
+[validate:rendered-schema-parity] shard 2/8 progress 100/286
+[validate:rendered-schema-parity] shard 6/8 progress 100/285
+[validate:rendered-schema-parity] shard 8/8 progress 100/285
+[validate:rendered-schema-parity] shard 3/8 progress 100/285
+[validate:rendered-schema-parity] shard 1/8 progress 100/286
+[validate:rendered-schema-parity] shard 5/8 progress 100/285
+[validate:rendered-schema-parity] shard 4/8 progress 100/285

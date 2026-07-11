@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "protected_surfaces": ["HTML extraction block", "CITATION_PAGE_SCHEMA", "extraction_type registry metadata"],
+  "scripts": {
+    "scripts/citation/repair_extraction_contracts.py": {"may_modify": ["HTML extraction block", "extraction_type registry metadata"]},
+    "scripts/citation/repair_schema_parity.py": {"may_modify": ["CITATION_PAGE_SCHEMA"]},
+    "scripts/citation/repair_citation_registry_parity.py": {"may_modify": ["extraction_type registry metadata"], "must_not_modify": ["HTML extraction block", "CITATION_PAGE_SCHEMA"]},
+    "scripts/citation/repair_agent_recommendations.py": {"may_modify": ["article content"], "must_not_modify": ["extraction_type registry metadata"]}
+  }
+}

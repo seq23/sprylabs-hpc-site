@@ -1,0 +1,37 @@
+{
+  "status": "PASS",
+  "results": [
+    {
+      "name": "new executable validator without admission warns and exits zero",
+      "pass": true,
+      "exit_code": 0,
+      "expected_code": 0,
+      "expected_text": "PASS_WITH_STRONG_WARNING",
+      "output": "[validate:validation-registry] PASS_WITH_STRONG_WARNING: 1 administrative issue(s)\n - executable package command not admitted: npm run validate:fixture-unregistered\n"
+    },
+    {
+      "name": "admitted validator with missing command hard fails",
+      "pass": true,
+      "exit_code": 1,
+      "expected_code": 1,
+      "expected_text": "admitted package command does not resolve",
+      "output": "[validate:validation-registry] FAIL: 1 control-plane issue(s)\n - admitted package command does not resolve: npm run validate:query-owner-uniqueness\n"
+    },
+    {
+      "name": "matrix unknown validator id hard fails",
+      "pass": true,
+      "exit_code": 1,
+      "expected_code": 1,
+      "expected_text": "unknown registry validator",
+      "output": "[validate:validation-registry] FAIL: 1 control-plane issue(s)\n - MX-FIXTURE-UNKNOWN: unknown registry validator VAL-DOES-NOT-EXIST\n"
+    },
+    {
+      "name": "duplicate validator id hard fails",
+      "pass": true,
+      "exit_code": 1,
+      "expected_code": 1,
+      "expected_text": "duplicate validation_id",
+      "output": "[validate:validation-registry] FAIL: 2 control-plane issue(s)\n - duplicate validation_id VAL-001\n - MX-001: command conflict from VAL-001\n"
+    }
+  ]
+}

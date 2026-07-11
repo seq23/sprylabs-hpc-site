@@ -1,17 +1,21 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from __future__ import annotations
-import json, re, sys
+import json, re, sys, os
 from pathlib import Path
 from urllib.parse import urljoin
 sys.dont_write_bytecode=True
 VENDOR=Path(__file__).resolve().parents[1]/'_vendor'
 if VENDOR.is_dir(): sys.path.insert(0,str(VENDOR))
 from bs4 import BeautifulSoup
+CITATION_DIR=Path(__file__).resolve().parents[1]/"citation"
+sys.path.insert(0,str(CITATION_DIR))
+from extraction_contract import extract_scope_steps
+from cache.page_cache import lookup as cache_lookup, store as cache_store
 
 ROOT=Path(__file__).resolve().parents[2]
 REG=json.loads((ROOT/'data/citation/citable_pages.json').read_text(encoding='utf-8'))
-errors=[]; counts={'pages':0,'faq_pages':0,'howto_pages':0,'breadcrumb_pages':0,'article_pages':0}
+errors=[]; counts={'pages':0,'faq_pages':0,'howto_pages':0,'breadcrumb_pages':0,'article_pages':0}; cache_hits=0; cache_misses=0
 
 def norm(value): return ' '.join((value or '').split())
 def fail(path,msg): errors.append(f'{path}: {msg}')
@@ -38,17 +42,15 @@ def visible_steps(soup):
     block=soup.select_one('[data-llm-answer="true"][data-extraction-type="howto"]')
     if not block: return []
     out=[]
-    for h in block.find_all(['h2','h3']):
-        name=norm(h.get_text(' ',strip=True))
-        if not re.match(r'^(?:Step|Phase|Stage|Block)\s+\d+\b',name,re.I): continue
-        parts=[]
-        n=h.find_next_sibling()
-        while n and getattr(n,'name',None) not in ('h2','h3'):
-            if getattr(n,'name',None) in ('p','li'):
-                value=norm(n.get_text(' ',strip=True))
-                if value: parts.append(value)
-            n=n.find_next_sibling()
-        out.append((name,norm(' '.join(parts)),h.get('id')))
+    for step in extract_scope_steps(block):
+        source=step.get('source_heading') or f"Step {step['number']}: {step['title']}"
+        h=None
+        for cand in block.find_all(['h2','h3','h4']):
+            if norm(cand.get_text(' ',strip=True))==source:
+                h=cand; break
+        if h is None: continue
+        name=f"Step {step['number']}: {step['title']}"
+        out.append((name,norm(step.get('description') or ''),h.get('id')))
     return out
 
 def visible_breadcrumbs(soup, canonical):
@@ -62,15 +64,26 @@ def visible_breadcrumbs(soup, canonical):
     if current: items.append((norm(current[-1].get_text(' ',strip=True)),canonical))
     return items
 
-pages=REG.get('pages',REG if isinstance(REG,list) else [])
+all_pages=REG.get('pages',REG if isinstance(REG,list) else [])
+shard_count=max(1,int(os.environ.get('SCHEMA_PARITY_SHARD_COUNT','1')))
+shard_index=int(os.environ.get('SCHEMA_PARITY_SHARD_INDEX','0'))
+pages=[rec for idx,rec in enumerate(all_pages) if idx % shard_count == shard_index]
 for rec in pages:
     if rec.get('status','ACTIVE')!='ACTIVE': continue
     rel=rec.get('path') or rec.get('source_file')
     if not rel: continue
+    cached=cache_lookup(rel,rec,'rendered-schema-parity')
+    if cached:
+        cache_hits+=1
+        for k,v in cached.get('result',{}).get('counts',{}).items(): counts[k]=counts.get(k,0)+int(v or 0)
+        continue
+    cache_misses+=1
     fp=ROOT/rel
     if not fp.is_file(): fail(rel,'active page missing'); continue
-    counts['pages']+=1
-    soup=BeautifulSoup(fp.read_text(encoding='utf-8'),'html.parser')
+    before_errors=len(errors); page_counts={'pages':1,'faq_pages':0,'howto_pages':0,'breadcrumb_pages':0,'article_pages':0}; counts['pages']+=1
+    if counts['pages'] % 100 == 0:
+        print(f"[validate:rendered-schema-parity] shard {shard_index+1}/{shard_count} progress {counts['pages']}/{len(pages)}", flush=True)
+    soup=BeautifulSoup(fp.read_text(encoding='utf-8'),'lxml')
     if soup.select('script[data-geo-semantic="true"]'): fail(rel,'stale blanket GEO schema present')
     script=soup.find('script',id='CITATION_PAGE_SCHEMA')
     if not script: fail(rel,'CITATION_PAGE_SCHEMA missing'); continue
@@ -98,7 +111,7 @@ for rec in pages:
 
     vf=visible_faq(soup); faq=next((x for x in graph if x.get('@type')=='FAQPage'),None)
     if vf:
-        counts['faq_pages']+=1
+        counts['faq_pages']+=1; page_counts['faq_pages']+=1
         if not faq: fail(rel,'visible FAQ exists without FAQPage schema')
         else:
             sf=[(norm(x.get('name')),norm((x.get('acceptedAnswer') or {}).get('text'))) for x in faq.get('mainEntity',[])]
@@ -107,7 +120,7 @@ for rec in pages:
 
     vs=visible_steps(soup); how=next((x for x in graph if x.get('@type')=='HowTo'),None)
     if how:
-        counts['howto_pages']+=1
+        counts['howto_pages']+=1; page_counts['howto_pages']+=1
         hs=[(norm(x.get('name')),norm(x.get('text')),x.get('url')) for x in how.get('step',[])]
         expected=[(name,text,f'{canonical}#{ident}' if ident else None) for name,text,ident in vs]
         if hs!=expected: fail(rel,'HowTo steps do not exactly match visible steps/order/URLs')
@@ -117,7 +130,7 @@ for rec in pages:
 
     vb=visible_breadcrumbs(soup,canonical); bread=next((x for x in graph if x.get('@type')=='BreadcrumbList'),None)
     if vb:
-        counts['breadcrumb_pages']+=1
+        counts['breadcrumb_pages']+=1; page_counts['breadcrumb_pages']+=1
         if not bread: fail(rel,'visible breadcrumb exists without BreadcrumbList schema')
         else:
             sb=[(norm(x.get('name')),x.get('item')) for x in bread.get('itemListElement',[])]
@@ -128,7 +141,7 @@ for rec in pages:
 
     article=next((x for x in graph if x.get('@type') in ('Article','BlogPosting')),None)
     if article:
-        counts['article_pages']+=1
+        counts['article_pages']+=1; page_counts['article_pages']+=1
         by=soup.select_one('p.byline')
         if not by: fail(rel,'Article schema exists without visible byline')
         else:
@@ -142,12 +155,14 @@ for rec in pages:
     for n in graph:
         blob=json.dumps(n).casefold()
         if any(k in blob for k in ('aggregaterating','ratingvalue','ratingcount','reviewcount')): fail(rel,'unsupported rating/review schema present')
+    if len(errors)==before_errors:
+        cache_store(rel,rec,'rendered-schema-parity',{'counts':page_counts})
 
-out=ROOT/'artifacts/diagnostics/container-current/validate-rendered-schema-parity/summary.json'
+out=ROOT/f'artifacts/diagnostics/container-current/validate-rendered-schema-parity/summary-shard-{shard_index}.json' if shard_count>1 else ROOT/'artifacts/diagnostics/container-current/validate-rendered-schema-parity/summary.json'
 out.parent.mkdir(parents=True,exist_ok=True)
-out.write_text(json.dumps({'status':'FAIL' if errors else 'PASS','counts':counts,'errors':errors},indent=2),encoding='utf-8')
+out.write_text(json.dumps({'status':'FAIL' if errors else 'PASS','counts':counts,'errors':errors,'cache':{'hits':cache_hits,'misses':cache_misses}},indent=2),encoding='utf-8')
 if errors:
     print('[validate:rendered-schema-parity] FAIL')
     for e in errors: print(' -',e)
     raise SystemExit(1)
-print(f"[validate:rendered-schema-parity] OK: {counts['pages']} pages; FAQ={counts['faq_pages']}, HowTo={counts['howto_pages']}, Breadcrumb={counts['breadcrumb_pages']}, Article={counts['article_pages']}")
+print(f"[validate:rendered-schema-parity] OK shard {shard_index+1}/{shard_count}: {counts['pages']} pages; FAQ={counts['faq_pages']}, HowTo={counts['howto_pages']}, Breadcrumb={counts['breadcrumb_pages']}, Article={counts['article_pages']}")

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import {readJson, fail, pass, writeSummary} from './common.mjs';
+import {buildExecutionGraph, assertReachable} from './orchestration_graph.mjs';
 
 const errors = [];
 function exists(file) { if (!fs.existsSync(file)) errors.push(`missing required file: ${file}`); }
@@ -54,7 +55,8 @@ for (const script of ['citation:5k:daily','citation:5k:plan','validate:citation-
 }
 if (!String(pkg.scripts?.['citation:5k:daily'] || '').includes('generate_citation_velocity_batch.mjs')) errors.push('citation:5k:daily must run the atom batch generator');
 if (!String(pkg.scripts?.['workflow:citation-velocity-5k'] || '').includes('workflow:citation-expansion')) errors.push('legacy citation workflow alias must route through canonical citation-expansion lane');
-if (!String(pkg.scripts?.['validate:all'] || '').includes('validate:citation-velocity-automation')) errors.push('validate:all must include citation velocity automation validator');
+const orchestrationGraph = buildExecutionGraph({pkg, matrix: readJson('_repo_validation_matrix.json')});
+if (!assertReachable(orchestrationGraph, 'validate:all', 'validate:citation-velocity-automation')) errors.push('validate:citation-velocity-automation must be reachable from validate:all execution graph');
 
 const workflow = workflows.find(item => item.id === 'spry-content-release');
 if (!workflow) errors.push('spry-content-release governed workflow contract missing');

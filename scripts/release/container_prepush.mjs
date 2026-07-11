@@ -1,65 +1,7 @@
 #!/usr/bin/env node
 import {spawnSync} from 'node:child_process';
 const major=Number(process.versions.node.split('.')[0]);
-process.env.PYTHONDONTWRITEBYTECODE = '1';
-console.log(`[release-profile] environment=container profile=release:prepush:container node=${major}`);
-function run(label, args){
-  console.log(`[release:prepush:container] ${label}`);
-  const r=spawnSync('npm',args,{stdio:'inherit',env:process.env});
-  if(r.status!==0)process.exit(r.status??1);
-}
-function node(label, script){
-  console.log(`[release:prepush:container] ${label}`);
-  const r=spawnSync('node',[script],{stdio:'inherit',env:process.env});
-  if(r.status!==0)process.exit(r.status??1);
-}
-// Bounded container prepush: same hard gates, reduced duplicate rebuild/repair loops for large 2K+ page baselines.
-for (const [label,args] of [
-  ['build:all',['run','build:all']],
-  ['repair:dual-domain-metadata',['run','repair:dual-domain-metadata']],
-  ['agent:bhpc:apply-report-contract',['run','agent:bhpc:apply-report-contract']],
-  ['release:repair-agent-normalization',['run','release:repair-agent-normalization']],
-  ['repair:programmatic-registry-owners',['run','repair:programmatic-registry-owners']],
-  ['repair:citation-contract-surfaces',['run','repair:citation-contract-surfaces']],
-  ['validate:repo',['run','validate:repo']],
-  ['validate:validation-registry',['run','validate:validation-registry']],
-  ['validate:workflow-contract',['run','validate:workflow-contract']],
-  ['validate:workflow-lineage',['run','validate:workflow-lineage']],
-  ['validate:workflow-monitor',['run','validate:workflow-monitor']],
-  ['validate:workflow-topology',['run','validate:workflow-topology']],
-  ['validate:workflow-topology:fixtures',['run','validate:workflow-topology:fixtures']],
-  ['workflow:hostile-review',['run','workflow:hostile-review']],
-  ['agent:artifact-shape:self-test',['run','agent:artifact-shape:self-test']],
-  ['agent:bhpc:validate',['run','agent:bhpc:validate']],
-  ['agent:bhpc:trace',['run','agent:bhpc:trace']],
-  ['validate:agent-run',['run','validate:agent-run']],
-  ['repair:dual-domain-metadata:final',['run','repair:dual-domain-metadata']],
-  ['validate:content-release',['run','validate:content-release']],
-  ['validate:citation-velocity-automation',['run','validate:citation-velocity-automation']],
-  ['validate:disavow-asset',['run','validate:disavow-asset']],
-  ['validate:programmatic-provenance',['run','validate:programmatic-provenance']],
-  ['validate:programmatic-registry',['run','validate:programmatic-registry']],
-  ['validate:citation-contract',['run','validate:citation-contract']],
-  ['validate:citation-strategy',['run','validate:citation-strategy']],
-  ['validate:rendered-schema-parity',['run','validate:rendered-schema-parity']],
-  ['validate:retired-route-references',['run','validate:retired-route-references']],
-  ['validate:ui-test-parity',['run','validate:ui-test-parity']],
-  ['validate:browser-suite-contract',['run','validate:browser-suite-contract']],
-  ['validate:traffic-qualified-suite',['run','validate:traffic-qualified-suite']],
-  ['validate:artifact-consistency-e2e',['run','validate:artifact-consistency-e2e']],
-  ['validate:batch-f-continuity',['run','validate:batch-f-continuity']],
-  ['validate:batch-g-continuity',['run','validate:batch-g-continuity']]
-]) run(label,args);
-for (const [label,script] of [
-  ['validate:release-atom-contract','scripts/validation/validate_release_atom_contract.mjs'],
-  ['validate:release-mix-policy','scripts/validation/validate_release_mix_policy.mjs'],
-  ['validate:citation-phase-manifest','scripts/validation/validate_citation_phase_manifest.mjs'],
-  ['validate:no-keyword-swap-pages','scripts/validation/validate_no_keyword_swap_pages.mjs'],
-  ['validate:claim-safety','scripts/validation/validate_claim_safety.mjs'],
-  ['validate:internal-link-velocity','scripts/validation/validate_internal_link_velocity.mjs'],
-  ['validate:llms-full-coverage','scripts/validation/validate_llms_full_coverage.mjs'],
-  ['validate:sitemap-coverage','scripts/validation/validate_sitemap_coverage.mjs']
-]) node(label,script);
-run('validation:inventory',['run','validation:inventory']);
-run('validate:warnings',['run','validate:warnings']);
-console.log('[release:prepush:container] OK: zero errors, zero warnings');
+process.env.PYTHONDONTWRITEBYTECODE='1';
+console.log(`[release-profile] environment=container profile=container-prepush node=${major}`);
+const r=spawnSync('npm',['run','validate:profile','--','container-prepush'],{stdio:'inherit',env:process.env});
+process.exit(r.status??2);

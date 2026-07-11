@@ -10,6 +10,7 @@ if VENDOR_DIR.is_dir():
     sys.path.insert(0, str(VENDOR_DIR))
 
 from bs4 import BeautifulSoup, Comment, NavigableString, Tag
+from extraction_contract import extract_article_steps, extract_scope_procedure_candidates, validate_extraction
 
 ROOT = Path(__file__).resolve().parents[2]
 TODAY = "2026-06-20"
@@ -220,6 +221,14 @@ OWNER_INSIGHT_PATHS = {
     "insights/a-simple-knowledge-system-capture-distill-use.html",
     "insights/how-to-end-the-day-so-tomorrow-starts-fast.html",
 }
+
+
+def repair_mojibake(value: str) -> str:
+    replacements={
+        "â€™":"’","â€œ":"“","â€":"”","â€“":"–","â€”":"—","Â©":"©","Â®":"®","Â·":"·","Â ":" ","â€¢":"•"
+    }
+    for bad,good in replacements.items(): value=value.replace(bad,good)
+    return value
 
 def clean_text(value: str) -> str:
     return re.sub(r"\s+", " ", value or "").strip()
@@ -738,170 +747,115 @@ def build_definition(framework: str, h1: str, extraction_type: str) -> str:
         return f"{framework} is a decision framework for choosing how to respond to {topic} under real constraints."
     return f"{framework} is a named operating framework for understanding {topic} through observable signals, decision criteria, and practical next actions."
 
-def repair_mojibake(value: str) -> str:
-    for bad,good in MOJIBAKE_REPLACEMENTS.items():
-        value=value.replace(bad,good)
-    return value
-
 SENTENCE_RE = re.compile(r'[.!?](?:[”"\']?)(?=\s|$)')
 
 def _paragraph_chunks(p: Tag) -> list[str]:
-    # Remove the legacy fake-break markers first. They were visual-only and accumulated on repeated builds.
     for br in list(p.find_all("br",class_="sentence-break")):
         br.decompose()
-    components=[]
-    flat=""
+    components=[];flat=""
     for child in list(p.contents):
         if isinstance(child,NavigableString):
-            text=str(child)
-            components.append({"kind":"text","start":len(flat),"end":len(flat)+len(text),"text":text,"html":None})
-            flat+=text
+            text=str(child);components.append({"kind":"text","start":len(flat),"end":len(flat)+len(text),"text":text,"html":None});flat+=text
         elif isinstance(child,Tag):
             text=" " if child.name=="br" else child.get_text(" ",strip=False)
-            components.append({"kind":"tag","start":len(flat),"end":len(flat)+len(text),"text":text,"html":str(child)})
-            flat+=text
+            components.append({"kind":"tag","start":len(flat),"end":len(flat)+len(text),"text":text,"html":str(child)});flat+=text
     ends=[m.end() for m in SENTENCE_RE.finditer(flat)]
-    if len(ends)<=3:
-        return []
-    protected=[(c["start"],c["end"]) for c in components if c["kind"]=="tag" and c["end"]>c["start"]]
-    breaks=[]
+    if len(ends)<=3:return []
+    protected=[(c["start"],c["end"]) for c in components if c["kind"]=="tag" and c["end"]>c["start"]];breaks=[]
     for idx in range(2,len(ends),3):
         b=ends[idx]
-        if not flat[b:].strip():
-            continue
+        if not flat[b:].strip():continue
         for a,z in protected:
-            if a < b < z:
-                b=z
-                break
-        if b>0 and (not breaks or b>breaks[-1]) and flat[b:].strip():
-            breaks.append(b)
-    if not breaks:
-        return []
-    ranges=[];start=0
-    for b in breaks:
-        ranges.append((start,b));start=b
-    ranges.append((start,len(flat)))
-    chunks=[]
+            if a < b < z:b=z;break
+        if b>0 and (not breaks or b>breaks[-1]) and flat[b:].strip():breaks.append(b)
+    if not breaks:return []
+    ranges=[];st=0
+    for b in breaks:ranges.append((st,b));st=b
+    ranges.append((st,len(flat)));chunks=[]
     for rs,re_ in ranges:
         out=[]
         for c in components:
             if c["start"]==c["end"]:
-                if rs<=c["start"]<re_:
-                    out.append(c["html"] or "")
+                if rs<=c["start"]<re_:out.append(c["html"] or "")
                 continue
-            if c["end"]<=rs or c["start"]>=re_:
-                continue
+            if c["end"]<=rs or c["start"]>=re_:continue
             if c["kind"]=="tag":
-                if rs<=c["start"] and c["end"]<=re_:
-                    out.append(c["html"])
+                if rs<=c["start"] and c["end"]<=re_:out.append(c["html"])
                 else:
-                    # A protected inline tag should never be split; fall back to visible text if malformed.
-                    lo=max(rs,c["start"])-c["start"]; hi=min(re_,c["end"])-c["start"]
-                    out.append(html.escape(c["text"][lo:hi]))
+                    lo=max(rs,c["start"])-c["start"];hi=min(re_,c["end"])-c["start"];out.append(html.escape(c["text"][lo:hi]))
             else:
-                lo=max(rs,c["start"])-c["start"]; hi=min(re_,c["end"])-c["start"]
-                out.append(html.escape(c["text"][lo:hi]))
+                lo=max(rs,c["start"])-c["start"];hi=min(re_,c["end"])-c["start"];out.append(html.escape(c["text"][lo:hi]))
         chunk="".join(out).strip()
-        if chunk:
-            chunks.append(chunk)
+        if chunk:chunks.append(chunk)
     return chunks if len(chunks)>1 else []
 
 def split_plain_paragraphs(soup: BeautifulSoup):
     for p in list(soup.find_all("p")):
         chunks=_paragraph_chunks(p)
-        if not chunks:
-            continue
+        if not chunks:continue
         attrs=dict(p.attrs)
         for idx,chunk in enumerate(chunks):
             newp=soup.new_tag("p",attrs=dict(attrs))
-            if idx>0:
-                newp.attrs.pop("id",None)
+            if idx>0:newp.attrs.pop("id",None)
             frag=BeautifulSoup(chunk,"html.parser")
-            for child in list(frag.contents):
-                newp.append(child)
+            for child in list(frag.contents):newp.append(child)
             p.insert_before(newp)
         p.decompose()
 
 def _meaningful_headings(soup: BeautifulSoup, limit: int=3) -> list[str]:
-    headings=[]
-    banned=("related","source","next step","frequently asked","quick answer","direct answer","definition","close variants","adjacent decision")
+    headings=[];banned=("related","source","next step","frequently asked","quick answer","direct answer","definition","close variants","adjacent decision")
     for h in soup.find_all(["h2","h3"]):
         text=clean_text(h.get_text(" ",strip=True))
-        if not text or any(text.lower().startswith(x) for x in banned):
-            continue
-        if text not in headings:
-            headings.append(text)
-        if len(headings)==limit:
-            break
+        if not text or any(text.lower().startswith(x) for x in banned):continue
+        if text not in headings:headings.append(text)
+        if len(headings)==limit:break
     return headings
 
 def normalize_extraction_container(soup: BeautifulSoup, block: Tag) -> Tag:
-    if block.name in {"section","div","article","aside"}:
-        return block
+    if block.name in {"section","div","article","aside"}:return block
     wrapper=soup.new_tag("section",attrs={"class":"card citation-extraction"})
     for key in ["data-llm-answer","data-extraction-type","data-named-framework","id"]:
-        if block.get(key) is not None:
-            wrapper[key]=block.get(key)
-            block.attrs.pop(key,None)
-    block.wrap(wrapper)
-    return wrapper
+        if block.get(key) is not None:wrapper[key]=block.get(key);block.attrs.pop(key,None)
+    block.wrap(wrapper);return wrapper
 
 def ensure_extraction_structure(soup: BeautifulSoup, block: Tag, framework: str, extraction_type: str):
-    for old in list(block.select('[data-generated-extraction-structure="true"]')):
-        old.decompose()
+    scope_candidates=extract_scope_procedure_candidates(block) if extraction_type=="howto" else []
+    if extraction_type=="howto":
+        ok,_,_=validate_extraction("",block,"howto")
+        if ok:return
+    for old in list(block.select('[data-generated-extraction-structure="true"]')):old.decompose()
     headings=_meaningful_headings(soup,3)
     if extraction_type=="concept":
-        if block.find(["ul","ol"]) and len(block.find_all("li"))>=3:
-            return
-        wrap=soup.new_tag("div",attrs={"data-generated-extraction-structure":"true"})
-        h2=soup.new_tag("h2"); h2.string=f"{framework}: Key Criteria"; wrap.append(h2)
-        ul=soup.new_tag("ul",attrs={"class":"citation-criteria"})
+        if block.find(["ul","ol"]) and len(block.find_all("li"))>=3:return
+        wrap=soup.new_tag("div",attrs={"data-generated-extraction-structure":"true"});h2=soup.new_tag("h2");h2.string=f"{framework}: Key Criteria";wrap.append(h2);ul=soup.new_tag("ul",attrs={"class":"citation-criteria"})
         labels=headings or ["Definition and scope","Observable signals","Practical next action"]
-        for label in labels[:3]:
-            li=soup.new_tag("li"); li.string=label; ul.append(li)
-        wrap.append(ul); block.insert(0,wrap); return
+        for label in labels[:3]:li=soup.new_tag("li");li.string=label;ul.append(li)
+        wrap.append(ul);block.insert(0,wrap);return
     if extraction_type=="comparison":
-        if block.find("table"):
-            return
-        wrap=soup.new_tag("div",attrs={"data-generated-extraction-structure":"true"})
-        h2=soup.new_tag("h2"); h2.string=f"{framework}: Comparison"; wrap.append(h2)
-        parts=re.split(r"\s+(?:vs\.?|versus)\s+",framework,flags=re.I,maxsplit=1)
-        left=clean_text(parts[0]) if parts else "Structured option"
-        right=clean_text(parts[1]) if len(parts)>1 else "Alternative option"
-        table=soup.new_tag("table",attrs={"class":"table"}); caption=soup.new_tag("caption"); caption.string=f"{left} compared with {right}"; table.append(caption)
-        thead=soup.new_tag("thead"); tr=soup.new_tag("tr")
-        for label in ["Dimension",left,right]:
-            th=soup.new_tag("th",scope="col"); th.string=label; tr.append(th)
-        thead.append(tr); table.append(thead); tbody=soup.new_tag("tbody")
-        rows=[("Primary function","Use the structured criteria on this page","Use the alternative when its conditions fit better"),("Best fit","When repeatable structure and explicit evidence matter","When a different tool or human judgment is required"),("Tradeoff","Requires clear inputs and review","May provide context the structured option cannot")]
-        for dim,a,b in rows:
-            tr=soup.new_tag("tr"); th=soup.new_tag("th",scope="row"); th.string=dim; tr.append(th)
-            for value in [a,b]: td=soup.new_tag("td"); td.string=value; tr.append(td)
+        if block.find("table"):return
+        wrap=soup.new_tag("div",attrs={"data-generated-extraction-structure":"true"});h2=soup.new_tag("h2");h2.string=f"{framework}: Comparison";wrap.append(h2)
+        parts=re.split(r"\s+(?:vs\.?|versus)\s+",framework,flags=re.I,maxsplit=1);left=clean_text(parts[0]) if parts else "Structured option";right=clean_text(parts[1]) if len(parts)>1 else "Alternative option"
+        table=soup.new_tag("table",attrs={"class":"table"});caption=soup.new_tag("caption");caption.string=f"{left} compared with {right}";table.append(caption);thead=soup.new_tag("thead");tr=soup.new_tag("tr")
+        for label in ["Dimension",left,right]:th=soup.new_tag("th",scope="col");th.string=label;tr.append(th)
+        thead.append(tr);table.append(thead);tbody=soup.new_tag("tbody")
+        for dim,a,b in [("Primary function","Use the structured criteria on this page","Use the alternative when its conditions fit better"),("Best fit","When repeatable structure and explicit evidence matter","When a different tool or human judgment is required"),("Tradeoff","Requires clear inputs and review","May provide context the structured option cannot")]:
+            tr=soup.new_tag("tr");th=soup.new_tag("th",scope="row");th.string=dim;tr.append(th)
+            for value in [a,b]:td=soup.new_tag("td");td.string=value;tr.append(td)
             tbody.append(tr)
-        table.append(tbody); wrap.append(table); block.insert(0,wrap); return
+        table.append(tbody);wrap.append(table);block.insert(0,wrap);return
     if extraction_type=="decision":
         text=clean_text(block.get_text(" ",strip=True)).lower()
-        if ("when to use" in text or "choose" in text) and (block.find(["ul","ol","table"]) or len(block.find_all(["h2","h3"]))>=2):
-            return
-        wrap=soup.new_tag("div",attrs={"data-generated-extraction-structure":"true"})
-        h2=soup.new_tag("h2"); h2.string=f"When to Use {framework}"; wrap.append(h2)
-        ul=soup.new_tag("ul")
-        for label in ["Use it when the decision criteria are explicit.","Use it when the next action can be verified.","Escalate when legal, medical, financial, relational, or other high-consequence judgment is required."]:
-            li=soup.new_tag("li"); li.string=label; ul.append(li)
-        wrap.append(ul); block.insert(0,wrap); return
+        if ("when to use" in text or "choose" in text) and (block.find(["ul","ol","table"]) or len(block.find_all(["h2","h3"]))>=2):return
+        wrap=soup.new_tag("div",attrs={"data-generated-extraction-structure":"true"});h2=soup.new_tag("h2");h2.string=f"When to Use {framework}";wrap.append(h2);ul=soup.new_tag("ul")
+        for label in ["Use it when the decision criteria are explicit.","Use it when the next action can be verified.","Escalate when legal, medical, financial, relational, or other high-consequence judgment is required."]:li=soup.new_tag("li");li.string=label;ul.append(li)
+        wrap.append(ul);block.insert(0,wrap);return
     if extraction_type=="howto":
-        step_headings=[h.get_text(" ",strip=True) for h in block.find_all(["h2","h3"]) if re.match(r"^(Step|Phase|Block|Stage)\s+\d+",h.get_text(" ",strip=True),re.I)]
-        if len(step_headings)>=3:
-            return
-        wrap=soup.new_tag("div",attrs={"data-generated-extraction-structure":"true"})
-        h2=soup.new_tag("h2"); h2.string=f"How to Apply {framework}"; wrap.append(h2)
-        labels=headings or ["Define the outcome and constraint","Apply the smallest valid action","Review the evidence and adjust"]
-        while len(labels)<3: labels.append(["Define the outcome","Apply the method","Review the result"][len(labels)])
-        for i,label in enumerate(labels[:3],1):
-            h3=soup.new_tag("h3"); h3.string=f"Step {i}: {label}"; wrap.append(h3)
-            p=soup.new_tag("p"); p.string="Use the instructions and evidence already documented on this page to complete this step."; wrap.append(p)
+        steps=extract_article_steps(soup,block) or scope_candidates
+        if len(steps)<3:raise ValueError(f"Cannot build valid howto extraction for {framework}: fewer than three ordered article steps")
+        wrap=soup.new_tag("div",attrs={"data-generated-extraction-structure":"true"});h2=soup.new_tag("h2");h2.string=f"How to Apply {framework}";wrap.append(h2)
+        for i,step in enumerate(steps,1):
+            h3=soup.new_tag("h3");h3.string=f"Step {i}: {step['title']}";wrap.append(h3);p=soup.new_tag("p");p.string=step['description'] or "Use the instructions and evidence already documented on this page to complete this step.";wrap.append(p)
         block.insert(0,wrap)
-
 
 
 def admitted_public_paths() -> set[str]:
@@ -1129,11 +1083,23 @@ def preserve_excluded_prefix_registry_rows(bypath: dict[str, dict]) -> None:
 
 def build_registries(records: list[dict]):
     d=ROOT/"data/citation";d.mkdir(parents=True,exist_ok=True)
+    # Preserve canonical query ownership independently from page-display specs.
+    # Agent H1/query recommendations may repair page presentation, but must not
+    # silently reassign an existing canonical query owner.
+    existing_registry_path = d/"query_registry.json"
+    existing_registry = json.loads(existing_registry_path.read_text(encoding="utf-8")) if existing_registry_path.exists() else {"queries": []}
+    canonical_owner_by_path = {
+        row.get("primary_page"): row
+        for row in existing_registry.get("queries", [])
+        if row.get("release_status") == "ACTIVE" and row.get("primary_page") and row.get("query")
+    }
     # priority overrides
     bypath={r["path"]:r for r in records}
     preserve_excluded_prefix_registry_rows(bypath)
     for path,spec in {**PRIORITY,**NEW_PAGES,**MANUAL_PAGES}.items():
-        bypath[path]={"path":path,"canonical_url":canonical_for(path),"canonical_domain":re.sub(r"^https?://([^/]+).*$",r"\1",canonical_for(path)),"query":spec["h1"],"framework":spec["framework"],"extraction_type":spec["type"],"schema_type":"HowTo" if spec["type"]=="howto" else "DefinedTerm","status":"ACTIVE","definition":spec["definition"],"priority":True}
+        owner = canonical_owner_by_path.get(path, {})
+        canonical_query = owner.get("query") or spec["h1"]
+        bypath[path]={"path":path,"canonical_url":canonical_for(path),"canonical_domain":re.sub(r"^https?://([^/]+).*$",r"\1",canonical_for(path)),"query":canonical_query,"framework":spec["framework"],"extraction_type":owner.get("intent_class") or spec["type"],"schema_type":"HowTo" if (owner.get("intent_class") or spec["type"])=="howto" else "DefinedTerm","status":"ACTIVE","definition":spec["definition"],"priority":True,"canonical_owner_metadata":owner}
     exclusions=[{"path":x,"status":"EXCLUDED","exclusion_reason":"Owner-approved exclusion or non-public operator surface"} for x in sorted(EXCLUDED)]
     pages=sorted(bypath.values(),key=lambda x:x["path"])+exclusions
     (d/"citable_pages.json").write_text(json.dumps({"version":"1.0","generated_at":TODAY,"pages":pages},indent=2,ensure_ascii=False)+"\n")
@@ -1151,7 +1117,8 @@ def build_registries(records: list[dict]):
         for alias in [*row_aliases,*manual_aliases]:
             if alias and normalize_query(alias)!=normalize_query(primary["query"]) and alias not in aliases:
                 aliases.append(alias)
-        query_row={"query_id":f"QRY-{i:04d}","query":primary["query"],"intent_class":primary["extraction_type"],"primary_page":primary["path"],"supporting_pages":[r["path"] for r in rows if r["path"]!=primary["path"]],"canonical_domain":primary["canonical_domain"],"priority":"P1" if primary.get("priority") else "P3","release_status":"ACTIVE","aliases":aliases,"observation_cluster":"general"}
+        owner_meta=primary.get("canonical_owner_metadata") or {}
+        query_row={"query_id":owner_meta.get("query_id") or f"QRY-{i:04d}","query":primary["query"],"intent_class":owner_meta.get("intent_class") or primary["extraction_type"],"primary_page":primary["path"],"supporting_pages":[r["path"] for r in rows if r["path"]!=primary["path"]],"canonical_domain":primary["canonical_domain"],"priority":owner_meta.get("priority") or ("P1" if primary.get("priority") else "P3"),"release_status":"ACTIVE","aliases":owner_meta.get("aliases") or aliases,"observation_cluster":owner_meta.get("observation_cluster") or "general"}
         if primary.get("source"):
             query_row["source"]=primary["source"]
         queries.append(query_row)
