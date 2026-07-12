@@ -9,12 +9,24 @@ import {
   runGovernanceFindingSelfTest,
   summarizeFindings,
 } from '../validation/governance_findings.mjs';
+import {runGovernanceBlockerAudit} from '../validation/governance_blocker_audit.mjs';
 
 const argv = process.argv.slice(2);
 function value(flag) { const index = argv.indexOf(flag); return index >= 0 ? argv[index + 1] : null; }
 const workflowId = value('--workflow');
 const tracePath = value('--trace');
 const selfTest = argv.includes('--self-test');
+
+function requireGovernanceFixtures() {
+  const result = runGovernanceFindingSelfTest();
+  if (result.failures.length) {
+    const details = result.failures.map(failure => `${failure.name}: expected=${failure.expected}`);
+    const error = new Error(`governance finding fixtures failed ${result.failures.length}/${result.fixtures}`);
+    error.details = details;
+    throw error;
+  }
+  return result;
+}
 
 function reviewOne(id, traceFile) {
   const contract = workflowContract(id);
@@ -74,7 +86,7 @@ function reviewOne(id, traceFile) {
   const safeNoise = findings.filter(finding => finding.classification === FINDING_CLASSES.SAFE_NOISE).map(finding => finding.message);
 
   const result = {
-    schema_version: '1.2',
+    schema_version: '1.3',
     workflow_id: id,
     run_id: trace.run_id,
     generated_at: new Date().toISOString(),
@@ -106,14 +118,26 @@ function latestTraceFor(id) {
 }
 
 if (selfTest) {
-  const result = runGovernanceFindingSelfTest();
-  if (result.failures.length) {
-    console.error(`[workflow:hostile-review:self-test] FAIL ${result.failures.length}/${result.fixtures}`);
-    for (const failure of result.failures) console.error(` - ${failure.name}: expected=${failure.expected}`);
+  try {
+    const result = requireGovernanceFixtures();
+    console.log(`[workflow:hostile-review:self-test] PASS fixtures=${result.fixtures}`);
+    process.exit(0);
+  } catch (error) {
+    console.error(`[workflow:hostile-review:self-test] FAIL ${error.message}`);
+    for (const detail of error.details || []) console.error(` - ${detail}`);
     process.exit(1);
   }
-  console.log(`[workflow:hostile-review:self-test] PASS fixtures=${result.fixtures}`);
-  process.exit(0);
+}
+
+let fixtureResult;
+let blockerAudit;
+try {
+  fixtureResult = requireGovernanceFixtures();
+  blockerAudit = runGovernanceBlockerAudit();
+} catch (error) {
+  console.error(`[workflow:hostile-review] INTERNAL_ERROR ${error.message}`);
+  for (const detail of error.details || []) console.error(` - ${detail}`);
+  process.exit(2);
 }
 
 if (workflowId || tracePath) {
@@ -122,12 +146,19 @@ if (workflowId || tracePath) {
     process.exit(2);
   }
   const result = reviewOne(workflowId, tracePath);
+  result.governance_fixture_count = fixtureResult.fixtures;
+  result.governance_blocker_audit = {
+    admitted_hard_fail_count: blockerAudit.admitted_hard_fail_count,
+    suggested_review_counts: blockerAudit.suggested_review_counts,
+  };
+  const reportPath = path.posix.join(path.posix.dirname(tracePath), 'hostile-review.json');
+  writeJson(reportPath, result);
   if (result.errors.length) {
     console.error(`[workflow:hostile-review] FAIL ${workflowId}`);
     for (const error of result.errors) console.error(` - ${error}`);
     process.exit(1);
   }
-  console.log(`[workflow:hostile-review] ${result.status} ${workflowId}; changed=${result.changed_file_count}; warnings=${result.warnings.length}; safe_noise=${result.safe_noise.length}`);
+  console.log(`[workflow:hostile-review] ${result.status} ${workflowId}; changed=${result.changed_file_count}; warnings=${result.warnings.length}; safe_noise=${result.safe_noise.length}; fixtures=${fixtureResult.fixtures}`);
   process.exit(0);
 }
 
@@ -152,7 +183,7 @@ for (const wf of contracts.governed_workflows || []) {
   }
 }
 const aggregate = {
-  schema_version: '1.1',
+  schema_version: '1.2',
   generated_at: new Date().toISOString(),
   status: errors.length ? 'FAIL' : results.some(result => result.status === 'PASS_WITH_WARNING') ? 'PASS_WITH_WARNING' : 'PASS',
   workflow_count: results.length,
@@ -163,6 +194,11 @@ const aggregate = {
   warning_count: results.reduce((sum, result) => sum + (result.warnings?.length || 0), 0),
   safe_noise_count: results.reduce((sum, result) => sum + (result.safe_noise?.length || 0), 0),
   info_count: results.reduce((sum, result) => sum + (result.info?.length || 0), 0),
+  governance_fixture_count: fixtureResult.fixtures,
+  governance_blocker_audit: {
+    admitted_hard_fail_count: blockerAudit.admitted_hard_fail_count,
+    suggested_review_counts: blockerAudit.suggested_review_counts,
+  },
   errors,
   results,
 };
@@ -173,4 +209,4 @@ if (errors.length) {
   for (const error of errors) console.error(` - ${error}`);
   process.exit(1);
 }
-console.log(`[workflow:hostile-review] ${aggregate.status} all governed workflows=${aggregate.workflow_count}; warnings=${aggregate.warning_count}; safe_noise=${aggregate.safe_noise_count}`);
+console.log(`[workflow:hostile-review] ${aggregate.status} all governed workflows=${aggregate.workflow_count}; warnings=${aggregate.warning_count}; safe_noise=${aggregate.safe_noise_count}; fixtures=${fixtureResult.fixtures}; hard_fail_audit=${blockerAudit.admitted_hard_fail_count}`);
