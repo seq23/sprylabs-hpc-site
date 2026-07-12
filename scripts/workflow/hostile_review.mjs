@@ -17,25 +17,86 @@ const workflowId = value('--workflow');
 const tracePath = value('--trace');
 const selfTest = argv.includes('--self-test');
 
+const AGGREGATABLE_KINDS = new Set(['undeclared_generated_output']);
+const AGGREGATE_SAMPLE_LIMIT = 8;
+
+function aggregateFindings(findings = []) {
+  const passthrough = [];
+  const groups = new Map();
+
+  for (const finding of findings) {
+    const eligible = AGGREGATABLE_KINDS.has(finding.kind)
+      && ![FINDING_CLASSES.TRUE_BLOCKER, FINDING_CLASSES.INTERNAL_ERROR].includes(finding.classification);
+    if (!eligible) {
+      passthrough.push(finding);
+      continue;
+    }
+
+    const key = `${finding.classification}:${finding.kind}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(finding);
+  }
+
+  const aggregated = [...passthrough];
+  for (const group of groups.values()) {
+    const first = group[0];
+    const sampleFiles = group.map(item => item.file).filter(Boolean).slice(0, AGGREGATE_SAMPLE_LIMIT);
+    aggregated.push({
+      ...first,
+      id: `aggregate:${first.kind}`,
+      file: null,
+      message: `${group.length} generated output(s) were outside declared workflow patterns`,
+      occurrence_count: group.length,
+      sample_files: sampleFiles,
+      evidence: [
+        ...(first.evidence || []),
+        {occurrence_count: group.length, sample_files: sampleFiles},
+      ],
+    });
+  }
+
+  return aggregated;
+}
+
+function runAggregationSelfTest() {
+  const raw = [
+    makeFinding({kind: 'undeclared_generated_output', file: 'public/a.html', material: false, optional: true, message: 'a'}),
+    makeFinding({kind: 'undeclared_generated_output', file: 'public/b.html', material: false, optional: true, message: 'b'}),
+    makeFinding({kind: 'secret_exposure', file: 'config/private.key', message: 'blocker'}),
+  ];
+  const aggregated = aggregateFindings(raw);
+  const warning = aggregated.find(item => item.kind === 'undeclared_generated_output');
+  const blocker = aggregated.find(item => item.classification === FINDING_CLASSES.TRUE_BLOCKER);
+  const failures = [];
+  if (aggregated.length !== 2) failures.push(`expected 2 findings after aggregation, got ${aggregated.length}`);
+  if (warning?.occurrence_count !== 2) failures.push(`expected warning occurrence_count=2, got ${warning?.occurrence_count ?? 'missing'}`);
+  if (!blocker) failures.push('true blocker was hidden by aggregation');
+  return {fixtures: 3, failures};
+}
+
 function requireGovernanceFixtures() {
-  const result = runGovernanceFindingSelfTest();
-  if (result.failures.length) {
-    const details = result.failures.map(failure => `${failure.name}: expected=${failure.expected}`);
-    const error = new Error(`governance finding fixtures failed ${result.failures.length}/${result.fixtures}`);
-    error.details = details;
+  const classifier = runGovernanceFindingSelfTest();
+  const aggregation = runAggregationSelfTest();
+  const failures = [
+    ...classifier.failures.map(failure => `${failure.name}: expected=${failure.expected}`),
+    ...aggregation.failures,
+  ];
+  if (failures.length) {
+    const error = new Error(`governance fixtures failed ${failures.length}/${classifier.fixtures + aggregation.fixtures}`);
+    error.details = failures;
     throw error;
   }
-  return result;
+  return {fixtures: classifier.fixtures + aggregation.fixtures};
 }
 
 function reviewOne(id, traceFile) {
   const contract = workflowContract(id);
   const trace = JSON.parse(fs.readFileSync(traceFile, 'utf8'));
-  const findings = [];
+  const rawFindings = [];
   const info = [];
   const changed = trace.lineage?.changed_files || [];
 
-  const add = input => findings.push(makeFinding(input));
+  const add = input => rawFindings.push(makeFinding(input));
 
   if (trace.workflow_id !== id) add({kind: 'canonical_corruption', message: 'trace workflow id does not match requested workflow'});
   if (trace.command_exit_code !== 0) add({kind: 'workflow_failed', message: `workflow command exit code was ${trace.command_exit_code}`});
@@ -80,18 +141,21 @@ function reviewOne(id, traceFile) {
     }
   }
 
+  const findings = aggregateFindings(rawFindings);
   const findingSummary = summarizeFindings(findings);
   const errors = findings.filter(finding => [FINDING_CLASSES.TRUE_BLOCKER, FINDING_CLASSES.INTERNAL_ERROR].includes(finding.classification)).map(finding => finding.message);
   const warnings = findings.filter(finding => [FINDING_CLASSES.WARNING, FINDING_CLASSES.SELF_HEALABLE, FINDING_CLASSES.ITEM_SKIP].includes(finding.classification)).map(finding => finding.message);
   const safeNoise = findings.filter(finding => finding.classification === FINDING_CLASSES.SAFE_NOISE).map(finding => finding.message);
 
   const result = {
-    schema_version: '1.3',
+    schema_version: '1.4',
     workflow_id: id,
     run_id: trace.run_id,
     generated_at: new Date().toISOString(),
     status: findingStatus(findings),
     changed_file_count: changed.length,
+    raw_finding_count: rawFindings.length,
+    aggregated_finding_count: findings.length,
     input_count: trace.lineage?.inputs_before?.length || 0,
     output_count: trace.lineage?.outputs_after?.length || 0,
     finding_summary: findingSummary,
@@ -158,7 +222,7 @@ if (workflowId || tracePath) {
     for (const error of result.errors) console.error(` - ${error}`);
     process.exit(1);
   }
-  console.log(`[workflow:hostile-review] ${result.status} ${workflowId}; changed=${result.changed_file_count}; warnings=${result.warnings.length}; safe_noise=${result.safe_noise.length}; fixtures=${fixtureResult.fixtures}`);
+  console.log(`[workflow:hostile-review] ${result.status} ${workflowId}; changed=${result.changed_file_count}; raw_findings=${result.raw_finding_count}; findings=${result.aggregated_finding_count}; warnings=${result.warnings.length}; safe_noise=${result.safe_noise.length}; fixtures=${fixtureResult.fixtures}`);
   process.exit(0);
 }
 
@@ -183,7 +247,7 @@ for (const wf of contracts.governed_workflows || []) {
   }
 }
 const aggregate = {
-  schema_version: '1.2',
+  schema_version: '1.3',
   generated_at: new Date().toISOString(),
   status: errors.length ? 'FAIL' : results.some(result => result.status === 'PASS_WITH_WARNING') ? 'PASS_WITH_WARNING' : 'PASS',
   workflow_count: results.length,
@@ -193,6 +257,8 @@ const aggregate = {
   fail_count: results.filter(result => ['FAIL', 'INTERNAL_ERROR'].includes(result.status)).length,
   warning_count: results.reduce((sum, result) => sum + (result.warnings?.length || 0), 0),
   safe_noise_count: results.reduce((sum, result) => sum + (result.safe_noise?.length || 0), 0),
+  raw_finding_count: results.reduce((sum, result) => sum + (result.raw_finding_count || 0), 0),
+  aggregated_finding_count: results.reduce((sum, result) => sum + (result.aggregated_finding_count || 0), 0),
   info_count: results.reduce((sum, result) => sum + (result.info?.length || 0), 0),
   governance_fixture_count: fixtureResult.fixtures,
   governance_blocker_audit: {
@@ -209,4 +275,4 @@ if (errors.length) {
   for (const error of errors) console.error(` - ${error}`);
   process.exit(1);
 }
-console.log(`[workflow:hostile-review] ${aggregate.status} all governed workflows=${aggregate.workflow_count}; warnings=${aggregate.warning_count}; safe_noise=${aggregate.safe_noise_count}; fixtures=${fixtureResult.fixtures}; hard_fail_audit=${blockerAudit.admitted_hard_fail_count}`);
+console.log(`[workflow:hostile-review] ${aggregate.status} all governed workflows=${aggregate.workflow_count}; warnings=${aggregate.warning_count}; raw_findings=${aggregate.raw_finding_count}; findings=${aggregate.aggregated_finding_count}; safe_noise=${aggregate.safe_noise_count}; fixtures=${fixtureResult.fixtures}; hard_fail_audit=${blockerAudit.admitted_hard_fail_count}`);
