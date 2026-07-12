@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0",
+  "decisions": [
+    {
+      "validation_id": "VAL-RELEASE-ATTEST",
+      "migration_status": "REVIEWED_NO_CHANGE",
+      "decision": "KEEP_HARD_FAIL_BOUNDARY",
+      "evidence": [
+        "scripts/release/release_attestation.mjs: warnings produce PASS_WITH_STRONG_WARNING and exit 0",
+        "scripts/release/release_attestation.mjs: only report errors or invalid JSON produce exit 1",
+        "artifacts/validation/validation-severity-audit.json: warning counts are warning-class findings and hard gates remain preserved"
+      ]
+    }
+  ]
+}
