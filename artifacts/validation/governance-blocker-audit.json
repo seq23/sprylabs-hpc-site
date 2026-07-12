@@ -1,0 +1,2412 @@
+{
+  "schema_version": "1.2",
+  "generated_at": "2026-07-12T21:32:09.160Z",
+  "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
+  "admitted_hard_fail_count": 156,
+  "reviewed_count": 8,
+  "unreviewed_count": 148,
+  "suggested_review_counts": {
+    "REVIEW_REQUIRED": 121,
+    "EXISTING_REPAIR_AVAILABLE": 5,
+    "TRUE_BLOCKER": 22,
+    "REVIEW_WARNING_BOUNDARY": 8
+  },
+  "unresolved_review_counts": {
+    "REVIEW_REQUIRED": 121,
+    "EXISTING_REPAIR_AVAILABLE": 5,
+    "TRUE_BLOCKER": 22
+  },
+  "migration_status_counts": {
+    "UNREVIEWED": 148,
+    "REVIEWED_NO_CHANGE": 8
+  },
+  "rows": [
+    {
+      "validation_id": "VAL-001",
+      "name": "build:all",
+      "command": "npm run build:all",
+      "owning_lane": "build",
+      "risk_prevented": "Prevents unproven or inconsistent build behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-001"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-002",
+      "name": "build:generated-content",
+      "command": "npm run build:generated-content",
+      "owning_lane": "build",
+      "risk_prevented": "Prevents unproven or inconsistent build behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-002"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-003",
+      "name": "citation:all",
+      "command": "npm run citation:all",
+      "owning_lane": "citation-contract",
+      "risk_prevented": "Prevents unproven or inconsistent citation-contract behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-003"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-004",
+      "name": "citation:build",
+      "command": "npm run citation:build",
+      "owning_lane": "citation-contract",
+      "risk_prevented": "Prevents unproven or inconsistent citation-contract behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-004"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-005",
+      "name": "citation:warn",
+      "command": "npm run citation:warn",
+      "owning_lane": "citation-contract",
+      "risk_prevented": "Prevents unproven or inconsistent citation-contract behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-005"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-006",
+      "name": "full:loop",
+      "command": "npm run full:loop",
+      "owning_lane": "release",
+      "risk_prevented": "Prevents unproven or inconsistent release behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-006"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-007",
+      "name": "guardrails:all",
+      "command": "npm run guardrails:all",
+      "owning_lane": "release",
+      "risk_prevented": "Prevents unproven or inconsistent release behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-007"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-010",
+      "name": "postdeploy:click-audit:all",
+      "command": "npm run postdeploy:click-audit:all",
+      "owning_lane": "deployed-runtime",
+      "risk_prevented": "Prevents unproven or inconsistent deployed-runtime behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-010"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-011",
+      "name": "postdeploy:public-click-audit",
+      "command": "npm run postdeploy:public-click-audit",
+      "owning_lane": "deployed-runtime",
+      "risk_prevented": "Prevents unproven or inconsistent deployed-runtime behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-011"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-014",
+      "name": "release:close-lifecycle",
+      "command": "npm run release:close-lifecycle",
+      "owning_lane": "deployed-runtime",
+      "risk_prevented": "Prevents unproven or inconsistent deployed-runtime behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-014"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-016",
+      "name": "release:local-visual-proof",
+      "command": "npm run release:local-visual-proof",
+      "owning_lane": "browser",
+      "risk_prevented": "Prevents unproven or inconsistent browser behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-016"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-017",
+      "name": "release:package-baseline",
+      "command": "npm run release:package-baseline",
+      "owning_lane": "artifact",
+      "risk_prevented": "Prevents unproven or inconsistent artifact behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-017"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-018",
+      "name": "release:postpush",
+      "command": "npm run release:postpush",
+      "owning_lane": "deployed-runtime",
+      "risk_prevented": "Prevents unproven or inconsistent deployed-runtime behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-018"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-019",
+      "name": "release:prepush",
+      "command": "npm run release:prepush",
+      "owning_lane": "release",
+      "risk_prevented": "Prevents unproven or inconsistent release behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-019"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-020",
+      "name": "release:prepush:container",
+      "command": "npm run release:prepush:container",
+      "owning_lane": "release",
+      "risk_prevented": "Prevents unproven or inconsistent release behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-020"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-021",
+      "name": "release:prepush:local",
+      "command": "npm run release:prepush:local",
+      "owning_lane": "release",
+      "risk_prevented": "Provides explicit local-profile attestation and guarantees real browser execution before commit.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-021"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-022",
+      "name": "release:report",
+      "command": "npm run release:report",
+      "owning_lane": "release",
+      "risk_prevented": "Prevents unproven or inconsistent release behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-022"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-023",
+      "name": "validate:all",
+      "command": "npm run validate:all",
+      "owning_lane": "release",
+      "risk_prevented": "Prevents unproven or inconsistent release behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-023"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-024",
+      "name": "validate:artifact-source-parity",
+      "command": "npm run validate:artifact-source-parity",
+      "owning_lane": "artifact",
+      "risk_prevented": "Prevents unproven or inconsistent artifact behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-024"
+      ],
+      "suggested_review": "EXISTING_REPAIR_AVAILABLE",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-025",
+      "name": "validate:browser-suite-contract",
+      "command": "npm run validate:browser-suite-contract",
+      "owning_lane": "browser",
+      "risk_prevented": "Prevents unproven or inconsistent browser behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-025"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-026",
+      "name": "validate:citation-contract",
+      "command": "npm run validate:citation-contract",
+      "owning_lane": "citation-contract",
+      "risk_prevented": "Prevents weak citation surfaces, normalized query collisions, malformed encoding, prose blocks longer than three sentences, registry drift, and extraction blocks that do not match their declared page type.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-026"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-027",
+      "name": "validate:content",
+      "command": "npm run validate:content",
+      "owning_lane": "content",
+      "risk_prevented": "Prevents unproven or inconsistent content behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-027"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-028",
+      "name": "validate:distribution",
+      "command": "npm run validate:distribution",
+      "owning_lane": "distribution",
+      "risk_prevented": "Prevents unproven or inconsistent distribution behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-028"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-029",
+      "name": "validate:graph",
+      "command": "npm run validate:graph",
+      "owning_lane": "graph",
+      "risk_prevented": "Prevents unproven or inconsistent graph behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-029"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-030",
+      "name": "validate:reopened-baseline",
+      "command": "npm run validate:reopened-baseline",
+      "owning_lane": "artifact",
+      "risk_prevented": "Prevents unproven or inconsistent artifact behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-030"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-031",
+      "name": "validate:repo",
+      "command": "npm run validate:repo",
+      "owning_lane": "repo-governance",
+      "risk_prevented": "Prevents unproven or inconsistent repo-governance behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-031"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-032",
+      "name": "validate:ui-test-parity",
+      "command": "npm run validate:ui-test-parity",
+      "owning_lane": "browser",
+      "risk_prevented": "Prevents unproven or inconsistent browser behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-032"
+      ],
+      "suggested_review": "EXISTING_REPAIR_AVAILABLE",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-033",
+      "name": "validate:validation-registry",
+      "command": "npm run validate:validation-registry",
+      "owning_lane": "repo-governance",
+      "risk_prevented": "Prevents unproven or inconsistent repo-governance behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-033"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-045",
+      "name": "validate:priority-citation-pages",
+      "command": "npm run validate:priority-citation-pages",
+      "owning_lane": "citation-contract",
+      "risk_prevented": "Prevents the 24 owner-specified citation page requirements from drifting behind generic registry validation.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-045"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-046",
+      "name": "validate:release-portability",
+      "command": "npm run validate:release-portability",
+      "owning_lane": "release",
+      "risk_prevented": "Prevents internal registry URLs, undeclared Python dependencies, browser-video dependencies, Node-version drift, and missing release-critical files from reaching the local updater.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-046"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-047",
+      "name": "validate:agent-recommendations",
+      "command": "npm run validate:agent-recommendations",
+      "owning_lane": "citation-contract",
+      "risk_prevented": "Prevents the complete BHPC agent recommendation set from drifting after implementation, including existing-page fixes, exact-query opportunity pages, and explicit low-relevance skips.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-047"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-048",
+      "name": "validate:page-admission",
+      "command": "npm run validate:page-admission",
+      "owning_lane": "content",
+      "risk_prevented": "Prevents thin, duplicate, query-colliding, unsupported, or schema-inconsistent manual and future programmatic pages from becoming indexable.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-048"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-049",
+      "name": "validate:rendered-schema-parity",
+      "command": "npm run validate:rendered-schema-parity",
+      "owning_lane": "citation-contract",
+      "risk_prevented": "Prevents final rendered HTML from diverging from FAQ, HowTo, Breadcrumb, Article, author, date, image, canonical, and visible-content schema contracts after post-build processing.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-049"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-050",
+      "name": "validate:workflow-contract",
+      "command": "npm run validate:workflow-contract",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents GitHub Actions from bypassing canonical validation, invoking missing commands, using the wrong Node/runtime profile, losing provider credentials, or shipping workflow files that are absent from artifact parity.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-050"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-051",
+      "name": "redirects:apply",
+      "command": "npm run redirects:apply",
+      "owning_lane": "content",
+      "risk_prevented": "Prevents retired URLs from remaining in generated pages, source registries, templates, or distribution surfaces.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-051"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-052",
+      "name": "programmatic:run-lane",
+      "command": "npm run programmatic:run-lane",
+      "owning_lane": "content",
+      "risk_prevented": "Prevents workflow-generated pages from publishing without candidate detection, lane-specific admission, quarantine, and full validation.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-052"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-053",
+      "name": "programmatic:generate",
+      "command": "npm run programmatic:generate",
+      "owning_lane": "content",
+      "risk_prevented": "Provides a source-first generator for admitted entity-use-case, comparison-graph, and question-cluster specifications.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-053"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-054",
+      "name": "validate:programmatic-registry",
+      "command": "npm run validate:programmatic-registry",
+      "owning_lane": "content",
+      "risk_prevented": "Prevents active pages, query owners, lanes, and admission records from drifting apart.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-054"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-055",
+      "name": "validate:programmatic-admission",
+      "command": "npm run validate:programmatic-admission",
+      "owning_lane": "content",
+      "risk_prevented": "Prevents thin, duplicate, unsupported, CTA-less, or lane-incomplete programmatic pages from becoming public.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-055"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-056",
+      "name": "validate:retired-route-references",
+      "command": "npm run validate:retired-route-references",
+      "owning_lane": "routing",
+      "risk_prevented": "Prevents active pages and generation sources from linking to retired routes or redirect chains.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-056"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-057",
+      "name": "validate:clean-rebuild-parity",
+      "command": "npm run validate:clean-rebuild-parity",
+      "owning_lane": "build",
+      "risk_prevented": "Prevents nondeterministic public output and source/build divergence from passing CI.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-057"
+      ],
+      "suggested_review": "EXISTING_REPAIR_AVAILABLE",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-058",
+      "name": "release:ci-validate",
+      "command": "npm run release:ci-validate",
+      "owning_lane": "ci",
+      "risk_prevented": "Produces one fully validated, idempotent, attested distribution artifact for downstream deployment.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-058"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-059",
+      "name": "release:create-attestation",
+      "command": "npm run release:create-attestation",
+      "owning_lane": "ci",
+      "risk_prevented": "Creates a commit-bound source and distribution hash attestation after validation.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-059"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-060",
+      "name": "release:verify-attestation",
+      "command": "npm run release:verify-attestation",
+      "owning_lane": "deployment",
+      "risk_prevented": "Prevents deployment of a distribution artifact that does not match the validated commit and hash manifest.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-060"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-061",
+      "name": "build:postprocess",
+      "command": "npm run build:postprocess",
+      "owning_lane": "build",
+      "risk_prevented": "Prevents quarantined or restored pages from leaving stale citation, redirect, graph, and distribution outputs.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-061"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-062",
+      "name": "validate:workflow-lineage",
+      "command": "npm run validate:workflow-lineage",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents scheduled generators from becoming opaque or mutating undeclared data surfaces.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-062"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-063",
+      "name": "validate:workflow-monitor",
+      "command": "npm run validate:workflow-monitor",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents silent schedule drift, lost manual dispatch support, missing traces, and stale workflow health monitoring.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-063"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-065",
+      "name": "validate:disavow-asset",
+      "command": "npm run validate:disavow-asset",
+      "owning_lane": "seo-governance",
+      "risk_prevented": "Prevents malformed, duplicate, or self-domain disavow directives from being handed to Search Console.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-065"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-066",
+      "name": "validate:programmatic-provenance",
+      "command": "npm run validate:programmatic-provenance",
+      "owning_lane": "content",
+      "risk_prevented": "Prevents a scheduled rebuild from reclassifying an existing admitted manual page into the active workflow lane.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-066"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-067",
+      "name": "search:prepare-submission",
+      "command": "npm run search:prepare-submission",
+      "owning_lane": "seo-governance",
+      "risk_prevented": "Prevents changed priority pages from being omitted from IndexNow, Google Search Console, and Bing Webmaster submission handoff.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-067"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-068",
+      "name": "validate:citation-strategy",
+      "command": "npm run validate:citation-strategy",
+      "owning_lane": "seo-governance",
+      "risk_prevented": "Prevents the four-layer citation strategy from being only partially implemented or drifting away from the priority pages identified by the citation monitor.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-068"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-069",
+      "name": "citation:5k:daily",
+      "command": "npm run citation:5k:daily",
+      "owning_lane": "citation-velocity",
+      "risk_prevented": "Prevents the 5K AEO/GEO expansion from relying on manual page creation, ungoverned atom fanout, or unvalidated workflow mutation.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-069"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-070",
+      "name": "citation:5k:plan",
+      "command": "npm run citation:5k:plan",
+      "owning_lane": "citation-velocity",
+      "risk_prevented": "Prevents the 5K AEO/GEO expansion from relying on manual page creation, ungoverned atom fanout, or unvalidated workflow mutation.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-070"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-071",
+      "name": "validate:citation-velocity-automation",
+      "command": "npm run validate:citation-velocity-automation",
+      "owning_lane": "citation-velocity",
+      "risk_prevented": "Prevents the 5K AEO/GEO expansion from relying on manual page creation, ungoverned atom fanout, or unvalidated workflow mutation.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-071"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-073",
+      "name": "agent:bhpc:plan-exact",
+      "command": "node scripts/agent_intake/build_bhpc_agent_exact_implementation_plan.mjs",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Prevents BHPC agent page-fix recommendations from being satisfied only by social fallback or unrelated generated pages.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-073"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-074",
+      "name": "agent:bhpc:trace-exact",
+      "command": "node scripts/agent_intake/trace_bhpc_agent_exact_implementation.mjs",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Prevents BHPC agent page-fix recommendations from being satisfied only by social fallback or unrelated generated pages.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-074"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-075",
+      "name": "agent:bhpc:validate-exact",
+      "command": "node scripts/agent_intake/validate_bhpc_agent_exact_implementation.mjs",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Prevents BHPC agent page-fix recommendations from being satisfied only by social fallback or unrelated generated pages.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-075"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-076",
+      "name": "validate:indexnow-batch-budget",
+      "command": "npm run validate:indexnow-batch-budget",
+      "owning_lane": "indexnow",
+      "risk_prevented": "Prevents unvalidated validate:indexnow-batch-budget behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-076"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "REVIEWED_NO_CHANGE",
+      "decision": "KEEP_REQUIRED_OUTPUT_AND_LIMIT_BOUNDARY",
+      "evidence": [
+        "scripts/validation/validate_indexnow_batch_budget.mjs: fails only when required active/deferred batch artifacts are missing or the active provider batch exceeds its configured safety limit",
+        "Missing required distribution output and provider-limit violations are material release defects, not target-volume warnings"
+      ]
+    },
+    {
+      "validation_id": "VAL-077",
+      "name": "validate:hpc-pantry",
+      "command": "npm run validate:hpc-pantry",
+      "owning_lane": "content-pantry",
+      "risk_prevented": "Prevents unvalidated validate:hpc-pantry behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-077"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-078",
+      "name": "trace:hpc-pantry",
+      "command": "npm run trace:hpc-pantry",
+      "owning_lane": "content-pantry",
+      "risk_prevented": "Prevents unvalidated trace:hpc-pantry behavior from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-078"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-079",
+      "name": "validate:bhpc-agent-acceptance",
+      "command": "npm run validate:bhpc-agent-acceptance",
+      "owning_lane": "content-agent",
+      "risk_prevented": "Validates that every BHPC agent row has generated semantic acceptance criteria or a blocked reason.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-079"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-080",
+      "name": "validate:bhpc-no-marker-only-agent-pass",
+      "command": "npm run validate:bhpc-no-marker-only-agent-pass",
+      "owning_lane": "content-agent",
+      "risk_prevented": "Prevents marker-only agent proof from counting as implementation.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-080"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-081",
+      "name": "validate:bhpc-page-family-contract",
+      "command": "npm run validate:bhpc-page-family-contract",
+      "owning_lane": "routing",
+      "risk_prevented": "Ensures every BHPC agent row has a route and page-family decision before implementation.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-081"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-082",
+      "name": "validate:bhpc-fallback-gap-separation",
+      "command": "npm run validate:bhpc-fallback-gap-separation",
+      "owning_lane": "content-agent",
+      "risk_prevented": "Ensures fallback gap-fill pages cannot satisfy exact agent recommendations.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-082"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-084",
+      "name": "validate:agent-run",
+      "command": "npm run validate:agent-run",
+      "owning_lane": "content-agent",
+      "risk_prevented": "Runs the BHPC agent artifact semantic acceptance lane end to end.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-084"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-085",
+      "name": "validate:content-release",
+      "command": "npm run validate:content-release",
+      "owning_lane": "content",
+      "risk_prevented": "Runs lean content release checks without local-only browser proof.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-085"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-087",
+      "name": "release:agent-intake",
+      "command": "npm run release:agent-intake",
+      "owning_lane": "content-agent",
+      "risk_prevented": "Runs the BHPC/Spry agent artifact intake lane through validation, absorption, route authority, exact semantic implementation, and trace without expanding validate:all.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-087"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-088",
+      "name": "validate:workflow-topology",
+      "command": "npm run validate:workflow-topology",
+      "owning_lane": "workflow-governance",
+      "risk_prevented": "Prevents scheduled workflows and public package commands from bypassing the canonical workflow topology lanes.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-088"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-089",
+      "name": "validate:workflow-topology:fixtures",
+      "command": "npm run validate:workflow-topology:fixtures",
+      "owning_lane": "workflow-governance",
+      "risk_prevented": "Proves every governed workflow can be data-traced through its canonical topology lane and mode without executing components or mutating operational workflow reports.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-089"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-090",
+      "name": "validate:strategy-gate",
+      "command": "npm run validate:strategy-gate",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-090"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-091",
+      "name": "validate:firehose-source-contract",
+      "command": "npm run validate:firehose-source-contract",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-091"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-092",
+      "name": "validate:signal-normalization",
+      "command": "npm run validate:signal-normalization",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-092"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-093",
+      "name": "validate:release-plan-integrity",
+      "command": "npm run validate:release-plan-integrity",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-093"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-094",
+      "name": "validate:daily-proof-packet",
+      "command": "npm run validate:daily-proof-packet",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-094"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-095",
+      "name": "validate:structural-graph-live-policy",
+      "command": "npm run validate:structural-graph-live-policy",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-095"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-096",
+      "name": "validate:atom-contract",
+      "command": "npm run validate:atom-contract",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-096"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-097",
+      "name": "validate:workflow-yaml-inventory",
+      "command": "npm run validate:workflow-yaml-inventory",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-097"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-098",
+      "name": "validate:workflow-runtime-mutations",
+      "command": "npm run validate:workflow-runtime-mutations",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-098"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-099",
+      "name": "validate:workflow-artifacts",
+      "command": "npm run validate:workflow-artifacts",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-099"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-100",
+      "name": "validate:traffic-qualified-citation-intelligence",
+      "command": "npm run validate:traffic-qualified-citation-intelligence",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-100"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-101",
+      "name": "validate:traffic-qualified-suite",
+      "command": "npm run validate:traffic-qualified-suite",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-101"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-102",
+      "name": "release:plan",
+      "command": "npm run release:plan",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-102"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-103",
+      "name": "release:content:intelligence",
+      "command": "npm run release:content:intelligence",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-103"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-104",
+      "name": "release:daily-proof",
+      "command": "npm run release:daily-proof",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-104"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-105",
+      "name": "release:daily-citation-intelligence",
+      "command": "npm run release:daily-citation-intelligence",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents traffic-qualified citation intelligence, workflow topology, proof-packet, or release planning regressions from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-105"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-107",
+      "name": "validate:browserless-mock-backup",
+      "command": "npm run validate:browserless-mock-backup",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents Batch D/E controlled release, scheduling, browserless fallback, or checklist regressions from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-107"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-108",
+      "name": "validate:controlled-release-readiness",
+      "command": "npm run validate:controlled-release-readiness",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents Batch D/E controlled release, scheduling, browserless fallback, or checklist regressions from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-108"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "REVIEWED_NO_CHANGE",
+      "decision": "KEEP_AUTONOMY_CONTRACT_BOUNDARY",
+      "evidence": [
+        "scripts/validators/validate_controlled_release_readiness.mjs: fails only when full-safe-autonomy mode, workflow write permission, disabled routine approval, or nonblocking cadence-target policy is violated",
+        "The validator explicitly rejects cadence targets configured as hard failures, preventing petty target-volume blockers"
+      ]
+    },
+    {
+      "validation_id": "VAL-109",
+      "name": "validate:batch-de-completion",
+      "command": "npm run validate:batch-de-completion",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents Batch D/E controlled release, scheduling, browserless fallback, or checklist regressions from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-109"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-110",
+      "name": "release:controlled-citation-intelligence",
+      "command": "npm run release:controlled-citation-intelligence",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents Batch D/E controlled release, scheduling, browserless fallback, or checklist regressions from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-110"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-111",
+      "name": "release:complete-traffic-qualified-spine",
+      "command": "npm run release:complete-traffic-qualified-spine",
+      "owning_lane": "traffic-qualified-citation-intelligence",
+      "risk_prevented": "Prevents Batch D/E controlled release, scheduling, browserless fallback, or checklist regressions from entering the release lifecycle.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-111"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-BATCH-F-001",
+      "name": "validate:bhpc-agent-artifact-continuity",
+      "command": "npm run validate:bhpc-agent-artifact-continuity",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Prevents non-BHPC artifacts or incomplete BHPC agent runs from entering the Spry mutation lane.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-112"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-BATCH-F-002",
+      "name": "validate:bhpc-dynamic-page-contract",
+      "command": "npm run validate:bhpc-dynamic-page-contract",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Prevents static topic policy from overriding BHPC artifact-admitted route authority.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-113"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-BATCH-F-003",
+      "name": "validate:bhpc-rich-new-page-contract",
+      "command": "npm run validate:bhpc-rich-new-page-contract",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Prevents BHPC new-page recommendations from becoming marker-only or generic thin pages.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-114"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-BATCH-F-004",
+      "name": "validate:bhpc-agent-artifact-priority",
+      "command": "npm run validate:bhpc-agent-artifact-priority",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Prevents daily shadow citation intelligence from replacing BHPC exact mutation lanes.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-115"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-BATCH-F-005",
+      "name": "validate:bhpc-agent-improvement-capability",
+      "command": "npm run validate:bhpc-agent-improvement-capability",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Prevents rigid contracts from blocking legitimate BHPC/A Player improvement primitives while preserving claim safety.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-116"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-BATCH-F-006",
+      "name": "validate:batch-f-continuity",
+      "command": "npm run validate:batch-f-continuity",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Batch F agent continuity release gate.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-117"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-BATCH-F-007",
+      "name": "release:batch-f-agent-continuity",
+      "command": "npm run release:batch-f-agent-continuity",
+      "owning_lane": "release",
+      "risk_prevented": "Batch F agent continuity release gate.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-118"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-BATCHG-120",
+      "name": "validate:generated-content-finalization",
+      "command": "npm run validate:generated-content-finalization",
+      "owning_lane": "content",
+      "risk_prevented": "Generated content could finish without self-healing/prevalidation or without a non-agent six-month gap-fill backlog.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-BATCHG"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-BATCHG-121",
+      "name": "validate:strategy-gap-fill",
+      "command": "npm run validate:strategy-gap-fill",
+      "owning_lane": "content",
+      "risk_prevented": "Generated content could finish without self-healing/prevalidation or without a non-agent six-month gap-fill backlog.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-119"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-BATCHG-122",
+      "name": "release:agent-intake:raw",
+      "command": "npm run release:agent-intake:raw",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Generated content can finish without self-healing/prevalidation or without enough non-agent gap-fill backlog to meet the six-month strategy.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-120"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-BATCHG-123",
+      "name": "release:content-finalize",
+      "command": "npm run release:content-finalize",
+      "owning_lane": "content",
+      "risk_prevented": "Generated content can finish without self-healing/prevalidation or without enough non-agent gap-fill backlog to meet the six-month strategy.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-121"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-BATCHG-124",
+      "name": "validate:batch-g-continuity",
+      "command": "npm run validate:batch-g-continuity",
+      "owning_lane": "content",
+      "risk_prevented": "Generated content can finish without self-healing/prevalidation or without enough non-agent gap-fill backlog to meet the six-month strategy.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-122"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-WF-SIM-01",
+      "name": "daily-citation-intelligence",
+      "command": ".github/workflows/daily-citation-intelligence.yml",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents the simplified public GitHub Actions surface from bypassing canonical validation, self-healing, and artifact handoff.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-WF-SIM-01"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-WF-SIM-02",
+      "name": "deploy-distribution",
+      "command": ".github/workflows/deploy-distribution.yml",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents the simplified public GitHub Actions surface from bypassing canonical validation, self-healing, and artifact handoff.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-WF-SIM-02"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-WF-SIM-03",
+      "name": "postdeploy-public-audit",
+      "command": ".github/workflows/postdeploy-public-audit.yml",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents the simplified public GitHub Actions surface from bypassing canonical validation, self-healing, and artifact handoff.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-WF-SIM-03"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-WF-SIM-04",
+      "name": "spry-content-release",
+      "command": ".github/workflows/spry-content-release.yml",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents the simplified public GitHub Actions surface from bypassing canonical validation, self-healing, and artifact handoff.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-WF-SIM-04"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-WF-SIM-05",
+      "name": "spry-full-rebuild",
+      "command": ".github/workflows/spry-full-rebuild.yml",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents the simplified public GitHub Actions surface from bypassing canonical validation, self-healing, and artifact handoff.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-WF-SIM-05"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-WF-SIM-06",
+      "name": "validate-repo",
+      "command": ".github/workflows/validate-repo.yml",
+      "owning_lane": "ci",
+      "risk_prevented": "Prevents the simplified public GitHub Actions surface from bypassing canonical validation, self-healing, and artifact handoff.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-WF-SIM-06"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-BHPC-AGENT-COVERAGE-01",
+      "name": "validate:bhpc-agent-source-coverage",
+      "command": "npm run validate:bhpc-agent-source-coverage",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Agent-run source recommendations can be accepted structurally but silently dropped before normalization, page application, queueing, or explicit blocking.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-BHPC-AGENT-COVERAGE-01"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "REVIEWED_NO_CHANGE",
+      "decision": "KEEP_SOURCE_PROVENANCE_AND_ADDRESSABILITY_BOUNDARY",
+      "evidence": [
+        "scripts/validators/validate_bhpc_agent_source_coverage.mjs: fails on missing normalized prerequisites, lost source records, unaddressed actionable records, missing canonical pages, or absent page-level proof",
+        "Skipped records are accepted when explicitly represented by the apply phase; unrelated safe work is not blocked by mere skip status"
+      ]
+    },
+    {
+      "validation_id": "VAL-BHPC-AGENT-RECDRIVEN-01",
+      "name": "validate:bhpc-agent-recommendation-driven-output",
+      "command": "npm run validate:bhpc-agent-recommendation-driven-output",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Agent-run recommendations can be transformed into generic/precontracted page blocks that pass marker coverage without implementing the actual recommendation text.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-BHPC-AGENT-RECDRIVEN-01"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "REVIEWED_NO_CHANGE",
+      "decision": "KEEP_ACTIVE_PLAN_OUTPUT_PROOF_BOUNDARY",
+      "evidence": [
+        "scripts/validators/validate_bhpc_agent_recommendation_driven_output.mjs: cumulative manifest entries outside the active plan are reported as skipped rather than failed",
+        "Failures are limited to missing active-plan output, missing source instruction/proof markers, or unapplied accepted work"
+      ]
+    },
+    {
+      "validation_id": "VAL-FSA-OWNERSHIP",
+      "name": "validate:ownership",
+      "command": "npm run validate:ownership",
+      "owning_lane": "ownership",
+      "risk_prevented": "Protects Full Safe Autonomy, paid-agent ownership, or admin command integrity.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-VAL-FSA-OWNERSHIP"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-FSA-SAFE",
+      "name": "safe-harbor:validate",
+      "command": "npm run safe-harbor:validate",
+      "owning_lane": "content",
+      "risk_prevented": "Protects Full Safe Autonomy, paid-agent ownership, or admin command integrity.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-VAL-FSA-SAFE"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-FSA-WRITE",
+      "name": "validate:workflow-write-scopes",
+      "command": "npm run validate:workflow-write-scopes",
+      "owning_lane": "workflow",
+      "risk_prevented": "Protects Full Safe Autonomy, paid-agent ownership, or admin command integrity.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-VAL-FSA-WRITE"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-FSA-RELEASE",
+      "name": "release:zero-dollar-autonomous",
+      "command": "npm run release:zero-dollar-autonomous",
+      "owning_lane": "citation-intelligence",
+      "risk_prevented": "Protects Full Safe Autonomy, paid-agent ownership, or admin command integrity.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-VAL-FSA-RELEASE"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-FSA-ALL",
+      "name": "validate:full-safe-autonomy",
+      "command": "npm run validate:full-safe-autonomy",
+      "owning_lane": "release",
+      "risk_prevented": "Protects Full Safe Autonomy, paid-agent ownership, or admin command integrity.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-VAL-FSA-ALL"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-WF-ADMIN",
+      "name": "admin-command.yml",
+      "command": ".github/workflows/admin-command.yml",
+      "owning_lane": "admin",
+      "risk_prevented": "Protects Full Safe Autonomy, paid-agent ownership, or admin command integrity.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-VAL-WF-ADMIN"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-FSA-SELFHEAL",
+      "name": "citation:self-heal",
+      "command": "npm run citation:self-heal",
+      "owning_lane": "citation-intelligence",
+      "risk_prevented": "Protects autonomous citation self-healing and proof generation.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-VAL-FSA-SELFHEAL"
+      ],
+      "suggested_review": "EXISTING_REPAIR_AVAILABLE",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-FSA-SCORE",
+      "name": "citation:scoreboard",
+      "command": "npm run citation:scoreboard",
+      "owning_lane": "citation-intelligence",
+      "risk_prevented": "Protects autonomous citation self-healing and proof generation.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-VAL-FSA-SCORE"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-WF-ADMIN-OPS",
+      "name": "admin-operations.yml",
+      "command": ".github/workflows/admin-operations.yml",
+      "owning_lane": "admin-operations",
+      "risk_prevented": "Prevents unregistered admin buttons from invoking arbitrary repository mutations.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-VAL-WF-ADMIN-OPS"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-ADMIN-GITHUB-BRIDGE",
+      "name": "validate:admin-github-bridge",
+      "command": "npm run validate:admin-github-bridge",
+      "owning_lane": "admin-runtime",
+      "risk_prevented": "Prevents unauthenticated or arbitrary GitHub workflow dispatch.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-ADMIN-GITHUB-BRIDGE"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-COVERAGE-ROUTE-CONTRACT",
+      "name": "validate:coverage-route",
+      "command": "npm run validate:coverage-route",
+      "owning_lane": "public-authority",
+      "risk_prevented": "Prevents the public /coverage/ knowledge-map route from disappearing during packaging or exposing private draft runway data.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-COVERAGE-ROUTE-CONTRACT"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "REVIEWED_NO_CHANGE",
+      "decision": "KEEP_PUBLIC_ROUTE_AND_PRIVACY_BOUNDARY",
+      "evidence": [
+        "scripts/validators/validate_coverage_route_contract.mjs: fails on missing required public coverage artifacts, packaging exclusion, operational-data exposure, or missing published-snapshot labeling",
+        "These conditions affect required route availability or expose non-public operational data and are material"
+      ]
+    },
+    {
+      "validation_id": "VAL-ARTIFACT-CONSISTENCY",
+      "name": "validate:artifact-consistency-e2e",
+      "command": "npm run validate:artifact-consistency-e2e",
+      "owning_lane": "artifact-consistency",
+      "risk_prevented": "Prevents valid no-op/all-skipped runs, field aliases, packaging exclusions, and cross-artifact reconciliation from being misclassified while preserving real hard failures.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-ARTIFACT-CONSISTENCY"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-ARTIFACT-PACKAGING-PARITY",
+      "name": "validate:artifact-packaging-parity",
+      "command": "npm run validate:artifact-packaging-parity",
+      "owning_lane": "artifact-consistency",
+      "risk_prevented": "Ensures required canonical artifacts survive baseline packaging while optional presentation files remain optional.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-ARTIFACT-PACKAGING-PARITY"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-ARTIFACT-HARDENING-SUITE",
+      "name": "validate:artifact-hardening-suite",
+      "command": "npm run validate:artifact-hardening-suite",
+      "owning_lane": "artifact-consistency",
+      "risk_prevented": "Aggregates artifact consistency, release-plan integrity, and proof-packet integrity.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-ARTIFACT-HARDENING-SUITE"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-REPAIR-AGENT-NORMALIZATION",
+      "name": "release:repair-agent-normalization",
+      "command": "npm run release:repair-agent-normalization",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Reconstructs normalized agent payloads before downstream source coverage validation.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-REPAIR-AGENT-NORMALIZATION"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "REVIEWED_NO_CHANGE",
+      "decision": "KEEP_REPAIR_CHAIN_FAILURE_BOUNDARY",
+      "evidence": [
+        "package.json release:repair-agent-normalization runs agent validation, absorption, and trace in sequence",
+        "The chain fails only when a required repair/normalization stage fails; successful no-op absorption remains a pass"
+      ]
+    },
+    {
+      "validation_id": "VAL-RELEASE-ATTEST",
+      "name": "release:attest",
+      "command": "npm run release:attest",
+      "owning_lane": "release",
+      "risk_prevented": "Prevents a release from reporting success with unresolved internal errors or warnings.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-RELEASE-ATTEST"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "REVIEWED_NO_CHANGE",
+      "decision": "KEEP_HARD_FAIL_BOUNDARY",
+      "evidence": [
+        "scripts/release/release_attestation.mjs: warnings produce PASS_WITH_STRONG_WARNING and exit 0",
+        "scripts/release/release_attestation.mjs: only report errors or invalid JSON produce exit 1",
+        "artifacts/validation/validation-severity-audit.json: warning counts are warning-class findings and hard gates remain preserved"
+      ]
+    },
+    {
+      "validation_id": "VAL-VALIDATION-INVENTORY",
+      "name": "validation:inventory",
+      "command": "npm run validation:inventory",
+      "owning_lane": "validation-governance",
+      "risk_prevented": "Maintains a machine-readable inventory of hard-gate and warning-emission sources.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-VALIDATION-INVENTORY"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "REVIEWED_NO_CHANGE",
+      "decision": "KEEP_NONBLOCKING_DIAGNOSTIC",
+      "evidence": [
+        "scripts/validation/inventory_validation_sources.mjs only inventories hard-gate and warning signals, writes reports, and exits successfully",
+        "The command cannot create a petty blocker in its current implementation"
+      ]
+    },
+    {
+      "validation_id": "VAL-REPAIR-DUAL-DOMAIN-METADATA",
+      "name": "repair:dual-domain-metadata",
+      "command": "npm run repair:dual-domain-metadata",
+      "owning_lane": "dual-domain",
+      "risk_prevented": "Repairs canonical and og:url metadata after generators mutate dual-domain pages.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-REPAIR-DUAL-DOMAIN-METADATA"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-AGENT-LIVE",
+      "name": "validate:agent-live",
+      "command": "npm run validate:agent-live",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Prevents an absorbed agent run from being treated as complete when required record markers are absent from deployed public HTML.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-AGENT-LIVE"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-QUERY-OWNER-UNIQUENESS",
+      "name": "validate:query-owner-uniqueness",
+      "command": "npm run validate:query-owner-uniqueness",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-123"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-VALIDATION-PROFILE",
+      "name": "validate:profile",
+      "command": "npm run validate:profile",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-124"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-EXTRACTION-CONTRACT-FINAL-STATE",
+      "name": "validate:extraction-contract-final-state",
+      "command": "npm run validate:extraction-contract-final-state",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-125"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-EXTRACTION-CONTRACT-SELF-TEST",
+      "name": "validate:extraction-contract:self-test",
+      "command": "npm run validate:extraction-contract:self-test",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-126"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-EXTRACTION-SURFACE-GUARD-SNAPSHOT",
+      "name": "validate:extraction-surface-guard:snapshot",
+      "command": "npm run validate:extraction-surface-guard:snapshot",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-127"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-EXTRACTION-SURFACE-GUARD-CHECK",
+      "name": "validate:extraction-surface-guard:check",
+      "command": "npm run validate:extraction-surface-guard:check",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-128"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-EXTRACTION-PIPELINE-TRACE",
+      "name": "trace:extraction-pipeline",
+      "command": "npm run trace:extraction-pipeline",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-129"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-EXTRACTION-FINAL-NORMALIZATION",
+      "name": "repair:extraction-final-state",
+      "command": "npm run repair:extraction-final-state",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-130"
+      ],
+      "suggested_review": "EXISTING_REPAIR_AVAILABLE",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-INCREMENTAL-PAGE-AUDIT",
+      "name": "validate:incremental-page-audit",
+      "command": "npm run validate:incremental-page-audit",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents stale or mismatched page-validation proof from producing a false release pass.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-131"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-FULL-PAGE-AUDIT",
+      "name": "validate:full-page-audit",
+      "command": "npm run validate:full-page-audit",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents stale or mismatched page-validation proof from producing a false release pass.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-132"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-VALIDATION-CACHE-SELF-TEST",
+      "name": "validation:cache:self-test",
+      "command": "npm run validation:cache:self-test",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents stale or mismatched page-validation proof from producing a false release pass.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-133"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "REPAIR-VALIDATION-CACHE-PREPARE",
+      "name": "validation:cache:clear",
+      "command": "npm run validation:cache:clear",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents stale or mismatched page-validation proof from producing a false release pass.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-135"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-VALIDATE-CHANGED",
+      "name": "validate:changed",
+      "command": "npm run validate:changed",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Provides a canonical admitted validation profile entrypoint.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-136"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-VALIDATE-RELEASE",
+      "name": "validate:release",
+      "command": "npm run validate:release",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Provides a canonical admitted validation profile entrypoint.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-137"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-VALIDATE-FULL",
+      "name": "validate:full",
+      "command": "npm run validate:full",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Provides a canonical admitted validation profile entrypoint.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-138"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-PYTHON-RUNTIME-BOOTSTRAP",
+      "name": "validation:python-runtime:bootstrap",
+      "command": "npm run validation:python-runtime:bootstrap",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents machine-dependent Python parser failures during governed validation.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-139"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-PYTHON-RUNTIME-PREFLIGHT",
+      "name": "validation:python-runtime:preflight",
+      "command": "npm run validation:python-runtime:preflight",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents build or repair mutation from starting without the required parser.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-140"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-PYTHON-RUNTIME-SELF-TEST",
+      "name": "validation:python-runtime:self-test",
+      "command": "npm run validation:python-runtime:self-test",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents runtime drift, missing parser registration, and incomplete identity receipts.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-141"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-PYTHON-DEPENDENCY-CONTRACT",
+      "name": "validate:python-dependency-contract",
+      "command": "npm run validate:python-dependency-contract",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents undeclared Python imports and indirect Node-to-Python dependency failures from appearing mid-profile.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-142"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-ORCHESTRATION-CONTRACT",
+      "name": "validate:orchestration-contract",
+      "command": "npm run validate:orchestration-contract",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents conflicting orchestration authorities, stale literal package-chain assumptions, unreachable mandatory validators, and cyclic aliases.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-143"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-ORCHESTRATION-CONTRACT-SELF-TEST",
+      "name": "validate:orchestration-contract:self-test",
+      "command": "npm run validate:orchestration-contract:self-test",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents false-positive reachability and missed broken aliases, missing profiles, and cycles.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-144"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-AGENT-APPLY-REPORT-CONTRACT",
+      "name": "agent:bhpc:apply-report-contract",
+      "command": "npm run agent:bhpc:apply-report-contract",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents a direct canonical profile step from bypassing registry and matrix governance.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-145"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-REPAIR-CITATION-CONTRACT-SURFACES",
+      "name": "repair:citation-contract-surfaces",
+      "command": "npm run repair:citation-contract-surfaces",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents a direct canonical profile step from bypassing registry and matrix governance.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-146"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-WORKFLOW-HOSTILE-REVIEW",
+      "name": "workflow:hostile-review",
+      "command": "npm run workflow:hostile-review",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents a direct canonical profile step from bypassing registry and matrix governance.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-147"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-AGENT-ARTIFACT-SHAPE-SELF-TEST",
+      "name": "agent:artifact-shape:self-test",
+      "command": "npm run agent:artifact-shape:self-test",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents a direct canonical profile step from bypassing registry and matrix governance.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-148"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-AGENT-BHPC-VALIDATE",
+      "name": "agent:bhpc:validate",
+      "command": "npm run agent:bhpc:validate",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents a direct canonical profile step from bypassing registry and matrix governance.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-149"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-AGENT-BHPC-TRACE",
+      "name": "agent:bhpc:trace",
+      "command": "npm run agent:bhpc:trace",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents a direct canonical profile step from bypassing registry and matrix governance.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-150"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    }
+  ],
+  "findings": [],
+  "finding_summary": {
+    "counts": {
+      "SAFE_NOISE": 0,
+      "WARNING": 0,
+      "SELF_HEALABLE": 0,
+      "ITEM_SKIP": 0,
+      "TRUE_BLOCKER": 0,
+      "INTERNAL_ERROR": 0
+    },
+    "blocking_count": 0,
+    "warning_count": 0,
+    "safe_noise_count": 0,
+    "self_healable_count": 0,
+    "item_skip_count": 0
+  },
+  "rules": {
+    "preserve_existing_control_plane": true,
+    "no_severity_changes_without_fixture_evidence": true,
+    "no_generic_repair_for_secrets_provenance_or_protected_ownership": true,
+    "reviewed_decisions_require_source_evidence": true
+  }
+}
