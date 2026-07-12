@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "governance": "This map may reference only existing deterministic repair commands. It is not an arbitrary command executor.",
+  "repairs": {
+    "schema_parity_drift": {
+      "command": "npm run schema:repair-parity",
+      "rerun": "npm run validate:rendered-schema-parity",
+      "max_attempts": 1,
+      "forbidden_for": [
+        "secret_exposure",
+        "protected_lane_mutation",
+        "provenance_loss",
+        "canonical_corruption",
+        "unsafe_provider_mutation"
+      ]
+    },
+    "generated_content_finalization": {
+      "command": "npm run self-heal:generated-content",
+      "rerun": "npm run validate:generated-content-finalization",
+      "max_attempts": 1,
+      "forbidden_for": [
+        "secret_exposure",
+        "protected_lane_mutation",
+        "provenance_loss",
+        "canonical_corruption",
+        "unsafe_provider_mutation"
+      ]
+    },
+    "extraction_contract_drift": {
+      "command": "npm run repair:extraction-final-state",
+      "rerun": "npm run validate:extraction-contract-final-state",
+      "max_attempts": 1,
+      "forbidden_for": [
+        "secret_exposure",
+        "protected_lane_mutation",
+        "provenance_loss",
+        "canonical_corruption",
+        "unsafe_provider_mutation"
+      ]
+    }
+  }
+}
