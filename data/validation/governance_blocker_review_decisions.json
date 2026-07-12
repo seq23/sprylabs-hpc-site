@@ -10,6 +10,69 @@
         "scripts/release/release_attestation.mjs: only report errors or invalid JSON produce exit 1",
         "artifacts/validation/validation-severity-audit.json: warning counts are warning-class findings and hard gates remain preserved"
       ]
+    },
+    {
+      "validation_id": "VAL-076",
+      "migration_status": "REVIEWED_NO_CHANGE",
+      "decision": "KEEP_REQUIRED_OUTPUT_AND_LIMIT_BOUNDARY",
+      "evidence": [
+        "scripts/validation/validate_indexnow_batch_budget.mjs: fails only when required active/deferred batch artifacts are missing or the active provider batch exceeds its configured safety limit",
+        "Missing required distribution output and provider-limit violations are material release defects, not target-volume warnings"
+      ]
+    },
+    {
+      "validation_id": "VAL-108",
+      "migration_status": "REVIEWED_NO_CHANGE",
+      "decision": "KEEP_AUTONOMY_CONTRACT_BOUNDARY",
+      "evidence": [
+        "scripts/validators/validate_controlled_release_readiness.mjs: fails only when full-safe-autonomy mode, workflow write permission, disabled routine approval, or nonblocking cadence-target policy is violated",
+        "The validator explicitly rejects cadence targets configured as hard failures, preventing petty target-volume blockers"
+      ]
+    },
+    {
+      "validation_id": "VAL-BHPC-AGENT-COVERAGE-01",
+      "migration_status": "REVIEWED_NO_CHANGE",
+      "decision": "KEEP_SOURCE_PROVENANCE_AND_ADDRESSABILITY_BOUNDARY",
+      "evidence": [
+        "scripts/validators/validate_bhpc_agent_source_coverage.mjs: fails on missing normalized prerequisites, lost source records, unaddressed actionable records, missing canonical pages, or absent page-level proof",
+        "Skipped records are accepted when explicitly represented by the apply phase; unrelated safe work is not blocked by mere skip status"
+      ]
+    },
+    {
+      "validation_id": "VAL-BHPC-AGENT-RECDRIVEN-01",
+      "migration_status": "REVIEWED_NO_CHANGE",
+      "decision": "KEEP_ACTIVE_PLAN_OUTPUT_PROOF_BOUNDARY",
+      "evidence": [
+        "scripts/validators/validate_bhpc_agent_recommendation_driven_output.mjs: cumulative manifest entries outside the active plan are reported as skipped rather than failed",
+        "Failures are limited to missing active-plan output, missing source instruction/proof markers, or unapplied accepted work"
+      ]
+    },
+    {
+      "validation_id": "VAL-COVERAGE-ROUTE-CONTRACT",
+      "migration_status": "REVIEWED_NO_CHANGE",
+      "decision": "KEEP_PUBLIC_ROUTE_AND_PRIVACY_BOUNDARY",
+      "evidence": [
+        "scripts/validators/validate_coverage_route_contract.mjs: fails on missing required public coverage artifacts, packaging exclusion, operational-data exposure, or missing published-snapshot labeling",
+        "These conditions affect required route availability or expose non-public operational data and are material"
+      ]
+    },
+    {
+      "validation_id": "VAL-REPAIR-AGENT-NORMALIZATION",
+      "migration_status": "REVIEWED_NO_CHANGE",
+      "decision": "KEEP_REPAIR_CHAIN_FAILURE_BOUNDARY",
+      "evidence": [
+        "package.json release:repair-agent-normalization runs agent validation, absorption, and trace in sequence",
+        "The chain fails only when a required repair/normalization stage fails; successful no-op absorption remains a pass"
+      ]
+    },
+    {
+      "validation_id": "VAL-VALIDATION-INVENTORY",
+      "migration_status": "REVIEWED_NO_CHANGE",
+      "decision": "KEEP_NONBLOCKING_DIAGNOSTIC",
+      "evidence": [
+        "scripts/validation/inventory_validation_sources.mjs only inventories hard-gate and warning signals, writes reports, and exits successfully",
+        "The command cannot create a petty blocker in its current implementation"
+      ]
     }
   ]
 }
