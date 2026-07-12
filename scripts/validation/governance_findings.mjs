@@ -1,5 +1,3 @@
-import path from 'node:path';
-
 export const FINDING_CLASSES = Object.freeze({
   SAFE_NOISE: 'SAFE_NOISE',
   WARNING: 'WARNING',
