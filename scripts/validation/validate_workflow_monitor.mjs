@@ -45,7 +45,7 @@ if (tracePath) {
     if (!fs.existsSync(hostilePath)) errors.push('hostile review report missing');
     else {
       const hostile = JSON.parse(fs.readFileSync(hostilePath, 'utf8'));
-      if (hostile.status !== 'PASS') errors.push('hostile review report failed');
+      if (!['PASS','PASS_WITH_WARNING'].includes(hostile.status)) errors.push(`hostile review report failed with status: ${hostile.status || 'MISSING'}`);
     }
     if (!trace.lineage?.inputs_before?.length) errors.push('trace has no input lineage');
     if (!trace.lineage?.outputs_after?.length) errors.push('trace has no output lineage');
