@@ -254,7 +254,7 @@
     "validate:extraction-surface-guard:snapshot": "node scripts/validation/python_runtime.mjs run scripts/validation/extraction_surface_guard.py snapshot",
     "validate:extraction-surface-guard:check": "node scripts/validation/python_runtime.mjs run scripts/validation/extraction_surface_guard.py check",
     "trace:extraction-pipeline": "node scripts/validation/python_runtime.mjs run scripts/validation/trace_extraction_pipeline.py",
-    "repair:extraction-final-state": "npm run repair:download-contract && npm run repair:extraction-contracts && node scripts/validation/python_runtime.mjs run scripts/citation/repair_schema_parity.py && npm run repair:programmatic-registry-owners && npm run validate:query-owner-uniqueness",
+    "repair:extraction-final-state": "npm run repair:download-contract && npm run repair:extraction-contracts && node scripts/validation/python_runtime.mjs run scripts/citation/repair_schema_parity.py && npm run repair:programmatic-registry-owners && npm run validate:query-owner-uniqueness && npm run repair:dual-domain-metadata",
     "validate:incremental-page-audit": "node scripts/validation/run_incremental_page_audit.mjs",
     "validate:full-page-audit": "node scripts/validation/run_incremental_page_audit.mjs --full",
     "validation:cache:self-test": "node scripts/validation/self_test_validation_cache.mjs",
