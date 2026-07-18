@@ -3,6 +3,8 @@ import fs from 'node:fs';
 
 const registryPath = 'data/content/page_admission_registry.json';
 const queryPath = 'data/citation/query_registry.json';
+const answersPath = 'answers.json';
+const llmsPath = 'llms.txt';
 const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
 const queryRegistry = JSON.parse(fs.readFileSync(queryPath, 'utf8'));
 const normalize = value => String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
@@ -48,6 +50,13 @@ function uniqueQueryFor(row, seenKeys) {
   }
   return candidate;
 }
+function canonicalUrlFor(row) {
+  const route = String(row.primary_page || '').replace(/index\.html$/, '').replace(/\\/g, '/');
+  return `https://${row.canonical_domain || 'spryexecutiveos.com'}/${route}`;
+}
+function targetFor(row) {
+  return `/${String(row.primary_page || '').replace(/\\/g, '/')}`;
+}
 function repairDuplicateActiveQueryOwners(data) {
   const seen = new Map();
   const seenKeys = new Set();
@@ -60,7 +69,7 @@ function repairDuplicateActiveQueryOwners(data) {
       const oldQuery = row.query;
       row.query = uniqueQueryFor(row, seenKeys);
       if (Array.isArray(row.aliases)) row.aliases = row.aliases.filter(alias => normalize(alias) !== key);
-      repairs.push({primary_page: row.primary_page, duplicate_of: prior.primary_page, old_query: oldQuery, new_query: row.query});
+      repairs.push({primary_page: row.primary_page, canonical_domain: row.canonical_domain, duplicate_of: prior.primary_page, old_query: oldQuery, new_query: row.query});
       key = normalize(row.query);
     }
     if (!seen.has(key)) seen.set(key, {primary_page: row.primary_page, query_id: row.query_id || ''});
@@ -68,8 +77,53 @@ function repairDuplicateActiveQueryOwners(data) {
   }
   return repairs;
 }
+function syncDistributionSurfacesForQueryRepairs(repairs, data) {
+  if (!repairs.length) return {answers_updates: 0, llms_updates: 0};
+  const rowsByPage = new Map((data.queries || []).filter(row => row && row.primary_page).map(row => [row.primary_page, row]));
+  let answersUpdates = 0;
+  let llmsUpdates = 0;
+  const answers = fs.existsSync(answersPath) ? JSON.parse(fs.readFileSync(answersPath, 'utf8')) : {items: []};
+  answers.items = answers.items || [];
+  let llms = fs.existsSync(llmsPath) ? fs.readFileSync(llmsPath, 'utf8') : '# Billionaire High Performance Coach / Spry Executive OS\n\n## Citation-ready questions and pages\n';
+  for (const repair of repairs) {
+    const row = rowsByPage.get(repair.primary_page) || repair;
+    const url = canonicalUrlFor(row);
+    const target = targetFor(row);
+    let item = answers.items.find(entry =>
+      entry &&
+      ((entry.primary_citation_targets || []).includes(target) || entry.url === url)
+    );
+    if (!item) {
+      item = {
+        url,
+        title: repair.new_query,
+        description: `${repair.new_query} is a registered Spry Executive OS query surface.`,
+        queries_supported: [],
+        primary_citation_targets: [target],
+        named_framework: `${repair.new_query} Framework`,
+        citation_strategy: 'registered_primary_page'
+      };
+      answers.items.push(item);
+      answersUpdates++;
+    }
+    item.queries_supported = Array.isArray(item.queries_supported) ? item.queries_supported : [];
+    if (!item.queries_supported.includes(repair.new_query)) {
+      item.queries_supported.push(repair.new_query);
+      answersUpdates++;
+    }
+    if (!llms.includes(repair.new_query)) {
+      const framework = item.named_framework || `${repair.new_query} Framework`;
+      llms += `- Query: ${repair.new_query} | Page: ${url} | Framework: ${framework}\n`;
+      llmsUpdates++;
+    }
+  }
+  if (answersUpdates) fs.writeFileSync(answersPath, `${JSON.stringify(answers, null, 2)}\n`, 'utf8');
+  if (llmsUpdates) fs.writeFileSync(llmsPath, llms.endsWith('\n') ? llms : `${llms}\n`, 'utf8');
+  return {answers_updates: answersUpdates, llms_updates: llmsUpdates};
+}
 const queryOwnerConflictRepairs = repairDuplicateActiveQueryOwners(queryRegistry);
 if (queryOwnerConflictRepairs.length) fs.writeFileSync(queryPath, `${JSON.stringify(queryRegistry, null, 2)}\n`, 'utf8');
+const querySurfaceSync = syncDistributionSurfacesForQueryRepairs(queryOwnerConflictRepairs, queryRegistry);
 const activeQueries = (queryRegistry.queries || [])
   .filter(q => q && q.release_status === 'ACTIVE' && q.primary_page && !/^reports\//.test(q.primary_page) && !/^coverage\//.test(q.primary_page));
 const active = new Set(activeQueries.map(q => q.primary_page));
@@ -142,6 +196,7 @@ fs.writeFileSync('reports/programmatic-registry-owner-repair.json', `${JSON.stri
   updated_count: updated,
   query_owner_conflict_repairs: queryOwnerConflictRepairs.length,
   query_owner_conflict_repair_details: queryOwnerConflictRepairs,
+  query_surface_sync: querySurfaceSync,
   removed: removed.map(r => ({path: r.path, primary_query: r.primary_query, source: r.source}))
 }, null, 2)}\n`, 'utf8');
-console.log(`[programmatic-registry-owner-repair] PASS: removed=${removed.length}; added=${added}; updated=${updated}; owner_conflict_repairs=${queryOwnerConflictRepairs.length}; active=${active.size}; remaining=${registry.records.length}`);
+console.log(`[programmatic-registry-owner-repair] PASS: removed=${removed.length}; added=${added}; updated=${updated}; owner_conflict_repairs=${queryOwnerConflictRepairs.length}; answer_sync=${querySurfaceSync.answers_updates}; llms_sync=${querySurfaceSync.llms_updates}; active=${active.size}; remaining=${registry.records.length}`);
