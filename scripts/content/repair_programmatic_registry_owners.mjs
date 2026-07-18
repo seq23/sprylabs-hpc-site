@@ -4,8 +4,11 @@ import fs from 'node:fs';
 const registryPath = 'data/content/page_admission_registry.json';
 const queryPath = 'data/citation/query_registry.json';
 const citablePath = 'data/citation/citable_pages.json';
+const publicRouteManifestPath = '_public_route_manifest.json';
+const criticalRouteManifestPath = '_critical_browser_route_manifest.json';
 const answersPath = 'answers.json';
 const llmsPath = 'llms.txt';
+const llmsFullPath = 'llms-full.txt';
 const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
 const queryRegistry = JSON.parse(fs.readFileSync(queryPath, 'utf8'));
 const citableRegistry = JSON.parse(fs.readFileSync(citablePath, 'utf8'));
@@ -68,6 +71,12 @@ function uniqueQueryFor(row, seenKeys) {
 function canonicalUrlFor(row) {
   const route = String(row.primary_page || '').replace(/index\.html$/, '').replace(/\\/g, '/');
   return `https://${row.canonical_domain || 'spryexecutiveos.com'}/${route}`;
+}
+function routeForPath(primaryPage = '') {
+  const path = String(primaryPage || '').replace(/\\/g, '/');
+  if (path === 'index.html') return '/';
+  if (path.endsWith('/index.html')) return `/${path.slice(0, -'/index.html'.length)}/`;
+  return `/${path}`;
 }
 function targetFor(row) {
   return `/${String(row.primary_page || '').replace(/\\/g, '/')}`;
@@ -156,6 +165,54 @@ function syncCanonicalCitationSurfacesForQueryRepairs(repairs) {
   if (citableUpdates) fs.writeFileSync(citablePath, `${JSON.stringify(citableRegistry, null, 2)}\n`, 'utf8');
   return {citable_updates: citableUpdates, html_updates: htmlUpdates, schema_updates: schemaUpdates};
 }
+function syncRouteManifestsForQueryRepairs(repairs) {
+  if (!repairs.length) return {public_updates: 0, critical_updates: 0};
+  const changedPaths = new Set(repairs.map(repair => repair.primary_page));
+  const byPath = new Map((citableRegistry.pages || []).filter(row => row && row.path).map(row => [row.path, row]));
+  let publicUpdates = 0;
+  let criticalUpdates = 0;
+  if (fs.existsSync(publicRouteManifestPath)) {
+    const manifest = JSON.parse(fs.readFileSync(publicRouteManifestPath, 'utf8'));
+    for (const route of manifest.routes || []) {
+      if (!route || !changedPaths.has(route.source_file)) continue;
+      const page = byPath.get(route.source_file);
+      if (!page) continue;
+      const nextRoute = routeForPath(page.path);
+      const nextCanonical = page.canonical_url || `https://${page.canonical_domain || 'spryexecutiveos.com'}${nextRoute}`;
+      const before = JSON.stringify(route);
+      route.path = nextRoute;
+      route.canonical_url = nextCanonical;
+      route.canonical_domain = page.canonical_domain || new URL(nextCanonical).hostname;
+      route.h1 = page.query || route.h1 || '';
+      route.framework = page.framework || route.framework || '';
+      route.priority = Boolean(page.priority);
+      if (JSON.stringify(route) !== before) publicUpdates++;
+    }
+    if (publicUpdates) fs.writeFileSync(publicRouteManifestPath, `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
+  }
+  if (fs.existsSync(criticalRouteManifestPath)) {
+    const manifest = JSON.parse(fs.readFileSync(criticalRouteManifestPath, 'utf8'));
+    for (const route of manifest.routes || []) {
+      if (!route || !changedPaths.has(route.source_file)) continue;
+      const page = byPath.get(route.source_file);
+      if (!page) continue;
+      const nextRoute = routeForPath(page.path);
+      const nextCanonical = page.canonical_url || `https://${page.canonical_domain || 'spryexecutiveos.com'}${nextRoute}`;
+      const before = JSON.stringify(route);
+      route.path = nextRoute;
+      route.canonical_url = nextCanonical;
+      route.canonical_domain = page.canonical_domain || new URL(nextCanonical).hostname;
+      route.h1 = page.query || route.h1 || '';
+      route.framework = page.framework || route.framework || '';
+      route.definition = page.definition || route.definition || '';
+      route.extraction_type = page.extraction_type || route.extraction_type || '';
+      route.priority = true;
+      if (JSON.stringify(route) !== before) criticalUpdates++;
+    }
+    if (criticalUpdates) fs.writeFileSync(criticalRouteManifestPath, `${JSON.stringify(manifest, null, 2)}\n`, 'utf8');
+  }
+  return {public_updates: publicUpdates, critical_updates: criticalUpdates};
+}
 function repairDuplicateActiveQueryOwners(data) {
   const seen = new Map();
   const seenKeys = new Set();
@@ -220,15 +277,54 @@ function syncDistributionSurfacesForQueryRepairs(repairs, data) {
   if (llmsUpdates) fs.writeFileSync(llmsPath, llms.endsWith('\n') ? llms : `${llms}\n`, 'utf8');
   return {answers_updates: answersUpdates, llms_updates: llmsUpdates};
 }
+function llmsFullEntry(row, page) {
+  return [
+    `## ${row.query}`,
+    `- URL: ${page.canonical_url || canonicalUrlFor(row)}`,
+    `- Framework: ${page.framework || `${row.query} Framework`}`,
+    `- Intent: ${page.extraction_type || row.intent_class || 'concept'}`,
+    `- Definition: ${page.definition || `${row.query} is a registered citation surface.`}`,
+    `- Supporting pages: ${(row.supporting_pages || []).length ? row.supporting_pages.join(', ') : 'None'}`,
+    ''
+  ].join('\n');
+}
+function syncLlmsCoverage(activeRows, pagesByPath) {
+  let llmsUpdates = 0;
+  let llmsFullUpdates = 0;
+  let llms = fs.existsSync(llmsPath)
+    ? fs.readFileSync(llmsPath, 'utf8')
+    : '# Billionaire High Performance Coach / Spry Executive OS\n\n## Citation-ready questions and pages\n';
+  let llmsFull = fs.existsSync(llmsFullPath)
+    ? fs.readFileSync(llmsFullPath, 'utf8')
+    : '# BHPC / Spry Full Citation Index\n\nEach entry names the canonical query owner, framework, intent, definition, and URL.\n\n';
+  for (const row of activeRows) {
+    const page = pagesByPath.get(row.primary_page);
+    if (!page) continue;
+    const url = page.canonical_url || canonicalUrlFor(row);
+    if (!llms.includes(url) || !llms.includes(row.query)) {
+      llms += `${llms.endsWith('\n') ? '' : '\n'}- Query: ${row.query} | Page: ${url} | Framework: ${page.framework || `${row.query} Framework`}\n`;
+      llmsUpdates++;
+    }
+    if (!llmsFull.includes(url) || !llmsFull.includes(row.query)) {
+      llmsFull += `${llmsFull.endsWith('\n') ? '' : '\n'}${llmsFullEntry(row, page)}`;
+      llmsFullUpdates++;
+    }
+  }
+  if (llmsUpdates) fs.writeFileSync(llmsPath, llms.endsWith('\n') ? llms : `${llms}\n`, 'utf8');
+  if (llmsFullUpdates) fs.writeFileSync(llmsFullPath, llmsFull.endsWith('\n') ? llmsFull : `${llmsFull}\n`, 'utf8');
+  return {llms_updates: llmsUpdates, llms_full_updates: llmsFullUpdates};
+}
 const queryOwnerConflictRepairs = repairDuplicateActiveQueryOwners(queryRegistry);
 if (queryOwnerConflictRepairs.length) fs.writeFileSync(queryPath, `${JSON.stringify(queryRegistry, null, 2)}\n`, 'utf8');
 const canonicalSurfaceSync = syncCanonicalCitationSurfacesForQueryRepairs(queryOwnerConflictRepairs);
+const routeManifestSync = syncRouteManifestsForQueryRepairs(queryOwnerConflictRepairs);
 const querySurfaceSync = syncDistributionSurfacesForQueryRepairs(queryOwnerConflictRepairs, queryRegistry);
 const activeQueries = (queryRegistry.queries || [])
   .filter(q => q && q.release_status === 'ACTIVE' && q.primary_page && !/^reports\//.test(q.primary_page) && !/^coverage\//.test(q.primary_page));
 const active = new Set(activeQueries.map(q => q.primary_page));
 const citable = JSON.parse(fs.readFileSync('data/citation/citable_pages.json', 'utf8')).pages || [];
 const citableByPath = new Map(citable.filter(p => p && p.path).map(p => [p.path, p]));
+const llmsCoverageSync = syncLlmsCoverage(activeQueries, citableByPath);
 const before = registry.records || [];
 const removed = before.filter(r => r && r.path && !active.has(r.path));
 registry.records = before.filter(r => r && r.path && active.has(r.path));
@@ -297,7 +393,9 @@ fs.writeFileSync('reports/programmatic-registry-owner-repair.json', `${JSON.stri
   query_owner_conflict_repairs: queryOwnerConflictRepairs.length,
   query_owner_conflict_repair_details: queryOwnerConflictRepairs,
   canonical_surface_sync: canonicalSurfaceSync,
+  route_manifest_sync: routeManifestSync,
   query_surface_sync: querySurfaceSync,
+  llms_coverage_sync: llmsCoverageSync,
   removed: removed.map(r => ({path: r.path, primary_query: r.primary_query, source: r.source}))
 }, null, 2)}\n`, 'utf8');
-console.log(`[programmatic-registry-owner-repair] PASS: removed=${removed.length}; added=${added}; updated=${updated}; owner_conflict_repairs=${queryOwnerConflictRepairs.length}; citable_sync=${canonicalSurfaceSync.citable_updates}; html_sync=${canonicalSurfaceSync.html_updates}; schema_sync=${canonicalSurfaceSync.schema_updates}; answer_sync=${querySurfaceSync.answers_updates}; llms_sync=${querySurfaceSync.llms_updates}; active=${active.size}; remaining=${registry.records.length}`);
+console.log(`[programmatic-registry-owner-repair] PASS: removed=${removed.length}; added=${added}; updated=${updated}; owner_conflict_repairs=${queryOwnerConflictRepairs.length}; citable_sync=${canonicalSurfaceSync.citable_updates}; html_sync=${canonicalSurfaceSync.html_updates}; schema_sync=${canonicalSurfaceSync.schema_updates}; public_route_sync=${routeManifestSync.public_updates}; critical_route_sync=${routeManifestSync.critical_updates}; answer_sync=${querySurfaceSync.answers_updates}; llms_sync=${querySurfaceSync.llms_updates}; llms_coverage_sync=${llmsCoverageSync.llms_updates}; llms_full_sync=${llmsCoverageSync.llms_full_updates}; active=${active.size}; remaining=${registry.records.length}`);

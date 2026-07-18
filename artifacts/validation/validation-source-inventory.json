@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-07-11T22:23:02.012Z",
-  "files_scanned": 374,
-  "source_count": 187,
-  "hard_gate_source_count": 174,
-  "warning_source_count": 28,
+  "generated_at": "2026-07-18T15:15:24.227Z",
+  "files_scanned": 376,
+  "source_count": 190,
+  "hard_gate_source_count": 176,
+  "warning_source_count": 30,
   "records": [
     {
       "file": "_ops/validators/validate_distribution_contract.js",
@@ -87,6 +87,12 @@
     {
       "file": "scripts/agent_intake/apply_bhpc_html_report_contract.mjs",
       "hard_gate_signals": 3,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/agent_intake/build_bhpc_agent_exact_implementation_plan.mjs",
+      "hard_gate_signals": 1,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -425,6 +431,18 @@
       "hard_gate_signals": 2,
       "warning_signals": 1,
       "classification": "mixed"
+    },
+    {
+      "file": "scripts/validation/governance_blocker_audit.mjs",
+      "hard_gate_signals": 1,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validation/governance_findings.mjs",
+      "hard_gate_signals": 0,
+      "warning_signals": 7,
+      "classification": "warning-source"
     },
     {
       "file": "scripts/validation/inventory_validation_sources.mjs",
@@ -1100,9 +1118,9 @@
     },
     {
       "file": "scripts/workflow/hostile_review.mjs",
-      "hard_gate_signals": 8,
-      "warning_signals": 0,
-      "classification": "hard-gate-source"
+      "hard_gate_signals": 12,
+      "warning_signals": 1,
+      "classification": "mixed"
     },
     {
       "file": "scripts/workflow/lib.mjs",
