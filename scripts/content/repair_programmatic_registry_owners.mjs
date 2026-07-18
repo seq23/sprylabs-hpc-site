@@ -5,6 +5,71 @@ const registryPath = 'data/content/page_admission_registry.json';
 const queryPath = 'data/citation/query_registry.json';
 const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
 const queryRegistry = JSON.parse(fs.readFileSync(queryPath, 'utf8'));
+const normalize = value => String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+function pageQualifier(primaryPage = '') {
+  if (primaryPage.startsWith('agent/bhpc/')) return 'BHPC agent page';
+  if (primaryPage.startsWith('answers/')) return 'answer page';
+  if (primaryPage.startsWith('comparisons/')) return 'comparison page';
+  if (primaryPage.startsWith('pillars/')) return 'pillar page';
+  if (primaryPage.startsWith('insights/') || primaryPage.startsWith('content/insights/')) return 'insight page';
+  if (primaryPage.startsWith('coverage/')) return 'coverage page';
+  if (/framework/i.test(primaryPage)) return 'framework page';
+  return 'supporting page';
+}
+function routeToken(primaryPage = '') {
+  return String(primaryPage)
+    .replace(/\/index\.html$/, '')
+    .replace(/\.html$/, '')
+    .split('/')
+    .filter(Boolean)
+    .slice(-2)
+    .join(' ')
+    .replace(/[-_]+/g, ' ')
+    .replace(/\b\w/g, c => c.toUpperCase())
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+function uniqueQueryFor(row, seenKeys) {
+  const base = String(row.query || '').replace(/\s+/g, ' ').trim();
+  const qualifier = pageQualifier(row.primary_page);
+  const token = routeToken(row.primary_page);
+  const candidates = [
+    `${base} (${qualifier})`,
+    token ? `${base} (${qualifier}: ${token})` : ''
+  ].filter(Boolean);
+  for (const candidate of candidates) {
+    if (!seenKeys.has(normalize(candidate))) return candidate;
+  }
+  let n = 2;
+  let candidate = `${base} (${qualifier}: ${token || 'route'} ${n})`;
+  while (seenKeys.has(normalize(candidate))) {
+    n++;
+    candidate = `${base} (${qualifier}: ${token || 'route'} ${n})`;
+  }
+  return candidate;
+}
+function repairDuplicateActiveQueryOwners(data) {
+  const seen = new Map();
+  const seenKeys = new Set();
+  const repairs = [];
+  for (const row of data.queries || []) {
+    if (!row || row.release_status !== 'ACTIVE' || !row.query || !row.primary_page) continue;
+    let key = normalize(row.query);
+    const prior = seen.get(key);
+    if (prior && prior.primary_page !== row.primary_page) {
+      const oldQuery = row.query;
+      row.query = uniqueQueryFor(row, seenKeys);
+      if (Array.isArray(row.aliases)) row.aliases = row.aliases.filter(alias => normalize(alias) !== key);
+      repairs.push({primary_page: row.primary_page, duplicate_of: prior.primary_page, old_query: oldQuery, new_query: row.query});
+      key = normalize(row.query);
+    }
+    if (!seen.has(key)) seen.set(key, {primary_page: row.primary_page, query_id: row.query_id || ''});
+    seenKeys.add(key);
+  }
+  return repairs;
+}
+const queryOwnerConflictRepairs = repairDuplicateActiveQueryOwners(queryRegistry);
+if (queryOwnerConflictRepairs.length) fs.writeFileSync(queryPath, `${JSON.stringify(queryRegistry, null, 2)}\n`, 'utf8');
 const activeQueries = (queryRegistry.queries || [])
   .filter(q => q && q.release_status === 'ACTIVE' && q.primary_page && !/^reports\//.test(q.primary_page) && !/^coverage\//.test(q.primary_page));
 const active = new Set(activeQueries.map(q => q.primary_page));
@@ -75,6 +140,8 @@ fs.writeFileSync('reports/programmatic-registry-owner-repair.json', `${JSON.stri
   removed_count: removed.length,
   added_count: added,
   updated_count: updated,
+  query_owner_conflict_repairs: queryOwnerConflictRepairs.length,
+  query_owner_conflict_repair_details: queryOwnerConflictRepairs,
   removed: removed.map(r => ({path: r.path, primary_query: r.primary_query, source: r.source}))
 }, null, 2)}\n`, 'utf8');
-console.log(`[programmatic-registry-owner-repair] PASS: removed=${removed.length}; added=${added}; updated=${updated}; active=${active.size}; remaining=${registry.records.length}`);
+console.log(`[programmatic-registry-owner-repair] PASS: removed=${removed.length}; added=${added}; updated=${updated}; owner_conflict_repairs=${queryOwnerConflictRepairs.length}; active=${active.size}; remaining=${registry.records.length}`);
