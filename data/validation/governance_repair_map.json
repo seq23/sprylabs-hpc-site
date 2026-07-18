@@ -37,6 +37,18 @@
         "canonical_corruption",
         "unsafe_provider_mutation"
       ]
+    },
+    "dual_domain_metadata_drift": {
+      "command": "npm run repair:dual-domain-metadata",
+      "rerun": "node _ops/validators/validate_dual_domain_contract.js",
+      "max_attempts": 1,
+      "forbidden_for": [
+        "secret_exposure",
+        "protected_lane_mutation",
+        "provenance_loss",
+        "canonical_corruption",
+        "unsafe_provider_mutation"
+      ]
     }
   }
 }
