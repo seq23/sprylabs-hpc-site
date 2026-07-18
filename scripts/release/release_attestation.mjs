@@ -7,6 +7,7 @@ const known = [
   'reports/workflow-hostile-review-all.json',
   'reports/bhpc-agent-source-coverage.json',
   'reports/generated_page_range_repair_report.json',
+  'reports/citation-postbuild-repair.json',
   'reports/fanout-coverage-info.json',
 ];
 const errors = [];

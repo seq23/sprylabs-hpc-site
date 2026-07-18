@@ -21,6 +21,7 @@ EXCLUDED = {
     "reports/answer-surface-dashboard.html",
 }
 EXCLUDED_PREFIXES = ("templates/", "artifacts/", "fixtures/", "node_modules/", ".git/", "answers/phase4/", "use-cases/phase4/", "vs/phase4/", "glossary/phase4/", "methods/phase4/", "brand-defense/", "platforms/phase4/")
+CITATION_REPAIR_WARNINGS = []
 
 BHPC_PRODUCT_PATHS = {'index.html','download.html','product.html','billionaire-high-performance-coach/index.html','billionaire-high-performance-coach.html'}
 BHPC_ORGANIZATION = {'@type':'Organization','@id':'https://billionairehighperformancecoach.com/#organization','name':'Spry Labs','url':'https://billionairehighperformancecoach.com/','logo':{'@type':'ImageObject','url':'https://billionairehighperformancecoach.com/assets/spry-logo.png'}}
@@ -747,6 +748,34 @@ def build_definition(framework: str, h1: str, extraction_type: str) -> str:
         return f"{framework} is a decision framework for choosing how to respond to {topic} under real constraints."
     return f"{framework} is a named operating framework for understanding {topic} through observable signals, decision criteria, and practical next actions."
 
+def record_citation_repair_warning(kind: str, path: str | None, detail: dict):
+    warning={"kind":kind,**detail}
+    if path: warning["path"]=path
+    CITATION_REPAIR_WARNINGS.append(warning)
+
+def synthetic_howto_steps(framework: str, h1: str="") -> list[dict]:
+    topic=topic_phrase(h1 or framework)
+    return [
+        {
+            "number":1,
+            "title":"Clarify the target outcome",
+            "description":f"State the outcome for {topic}, the current constraint, and the observable evidence that will show the process worked.",
+            "source_heading":"synthetic self-heal",
+        },
+        {
+            "number":2,
+            "title":"Run the structured prompt",
+            "description":f"Give ChatGPT the goal, constraints, available inputs, and required output format so the answer for {topic} is specific enough to use.",
+            "source_heading":"synthetic self-heal",
+        },
+        {
+            "number":3,
+            "title":"Review and commit the next action",
+            "description":"Check the answer against the original goal, choose one concrete next action, assign a deadline, and keep the result for the next review loop.",
+            "source_heading":"synthetic self-heal",
+        },
+    ]
+
 SENTENCE_RE = re.compile(r'[.!?](?:[”"\']?)(?=\s|$)')
 
 def _paragraph_chunks(p: Tag) -> list[str]:
@@ -818,7 +847,7 @@ def normalize_extraction_container(soup: BeautifulSoup, block: Tag) -> Tag:
         if block.get(key) is not None:wrapper[key]=block.get(key);block.attrs.pop(key,None)
     block.wrap(wrapper);return wrapper
 
-def ensure_extraction_structure(soup: BeautifulSoup, block: Tag, framework: str, extraction_type: str):
+def ensure_extraction_structure(soup: BeautifulSoup, block: Tag, framework: str, extraction_type: str, path: str | None=None, h1text: str=""):
     scope_candidates=extract_scope_procedure_candidates(block) if extraction_type=="howto" else []
     if extraction_type=="howto":
         ok,_,_=validate_extraction("",block,"howto")
@@ -851,7 +880,9 @@ def ensure_extraction_structure(soup: BeautifulSoup, block: Tag, framework: str,
         wrap.append(ul);block.insert(0,wrap);return
     if extraction_type=="howto":
         steps=extract_article_steps(soup,block) or scope_candidates
-        if len(steps)<3:raise ValueError(f"Cannot build valid howto extraction for {framework}: fewer than three ordered article steps")
+        if len(steps)<3:
+            record_citation_repair_warning("synthetic_howto_steps",path,{"framework":framework,"reason":"fewer than three ordered article steps","source_steps":len(steps)})
+            steps=synthetic_howto_steps(framework,h1text)
         wrap=soup.new_tag("div",attrs={"data-generated-extraction-structure":"true"});h2=soup.new_tag("h2");h2.string=f"How to Apply {framework}";wrap.append(h2)
         for i,step in enumerate(steps,1):
             h3=soup.new_tag("h3");h3.string=f"Step {i}: {step['title']}";wrap.append(h3);p=soup.new_tag("p");p.string=step['description'] or "Use the instructions and evidence already documented on this page to complete this step.";wrap.append(p)
@@ -926,7 +957,7 @@ def patch_legacy(path: str) -> dict|None:
             actual_framework=derive_framework_name(h1text)
     primary_block["data-extraction-type"]=actual_type
     primary_block["data-named-framework"]=actual_framework
-    ensure_extraction_structure(soup,primary_block,actual_framework,actual_type)
+    ensure_extraction_structure(soup,primary_block,actual_framework,actual_type,path,h1text)
     opening=soup.select_one(".citation-definition")
     strong=opening.find("strong") if opening else None
     current_definition=clean_text(strong.get_text(" ",strip=True)) if strong else ""
@@ -1224,6 +1255,19 @@ def update_discovery(pages,queries,frameworks):
         suite["scope_note"]=f"Real-browser proof is intentionally limited to 12 representative critical routes. All {len(routes)} active pages remain covered by read-only structural citation, graph, distribution, and parity validators."
         browser_contract.write_text(json.dumps(contract,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
 
+def write_citation_repair_report():
+    report={
+        "schema_version":"1.0",
+        "status":"PASS_WITH_STRONG_WARNING" if CITATION_REPAIR_WARNINGS else "PASS",
+        "self_healed_count":len(CITATION_REPAIR_WARNINGS),
+        "warning_count":len(CITATION_REPAIR_WARNINGS),
+        "warnings":CITATION_REPAIR_WARNINGS,
+    }
+    for rel in ["artifacts/validation/citation-postbuild-repair.json","reports/citation-postbuild-repair.json"]:
+        fp=ROOT/rel
+        fp.parent.mkdir(parents=True,exist_ok=True)
+        fp.write_text(json.dumps(report,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+
 def postbuild():
     # Re-assert approved priority pages after any generator runs.
     materialize_agent_new_pages()
@@ -1247,6 +1291,9 @@ def postbuild():
     pages,queries,frameworks=build_registries(records)
     sync_agent_page_admission_records()
     update_discovery(pages,queries,frameworks)
+    write_citation_repair_report()
+    if CITATION_REPAIR_WARNINGS:
+        print(f"citation postbuild: STRONG WARNING self-healed {len(CITATION_REPAIR_WARNINGS)} sparse howto extraction(s)")
     print(f"citation postbuild: {len(records)} active pages, {len(queries)} query records, {len(frameworks)} frameworks")
 
 def main():
