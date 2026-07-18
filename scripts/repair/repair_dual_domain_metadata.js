@@ -29,10 +29,69 @@ function replaceTagValue(html, tag, keyName, keyValue, valueAttr, value) {
   html=html.replace(b,(_m,x,y,z)=>{changed=true;return `<${tag}${x}${valueAttr}="${value}"${y}${keyName}="${keyValue}"${z}>`;});
   return {html,changed};
 }
+function extractTagValue(html, tagName, keyName, keyValue, valueAttr) {
+  const re = new RegExp(`<${tagName}[^>]*${keyName}=["']${keyValue}["'][^>]*${valueAttr}=["']([^"']*)["'][^>]*>|<${tagName}[^>]*${valueAttr}=["']([^"']*)["'][^>]*${keyName}=["']${keyValue}["'][^>]*>`, 'is');
+  const m = html.match(re);
+  if (!m) return '';
+  return m[1] || m[2] || '';
+}
+function hasNoindex(html) {
+  return extractTagValue(html, 'meta', 'name', 'robots', 'content').toLowerCase().includes('noindex');
+}
+function normalizeTitle(title) {
+  return String(title || '').replace(/\s+/g, ' ').trim();
+}
+function escapeAttr(value) {
+  return String(value).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function titleQualifier(rel) {
+  if (rel.startsWith('agent/bhpc/')) return 'BHPC Agent Page';
+  if (rel.startsWith('answers/')) return 'Answer Page';
+  if (rel.startsWith('comparisons/')) return 'Comparison Page';
+  if (rel.startsWith('pillars/')) return 'Pillar Page';
+  if (rel.startsWith('insights/') || rel.startsWith('content/insights/')) return 'Insight Page';
+  if (rel.startsWith('coverage/')) return 'Coverage Page';
+  if (/framework/i.test(rel)) return 'Framework Page';
+  return 'Spry Page';
+}
+function routeToken(rel) {
+  return rel
+    .replace(/\/index\.html$/,'')
+    .replace(/\.html$/,'')
+    .split('/')
+    .filter(Boolean)
+    .slice(-2)
+    .join(' ')
+    .replace(/[-_]+/g,' ')
+    .replace(/\b\w/g,(c)=>c.toUpperCase())
+    .replace(/\s+/g,' ')
+    .trim();
+}
+function titleWithQualifier(title, qualifier) {
+  const siteSuffix = ' | Spry Executive OS';
+  if (title.endsWith(siteSuffix)) return `${title.slice(0, -siteSuffix.length)} | ${qualifier}${siteSuffix}`;
+  return `${title} | ${qualifier}`;
+}
+function uniqueTitleFor(rel, title, seenTitles) {
+  const qualifier = titleQualifier(rel);
+  const candidates = [titleWithQualifier(title, qualifier)];
+  const token = routeToken(rel);
+  if (token) candidates.push(titleWithQualifier(title, `${qualifier}: ${token}`));
+  for (const candidate of candidates) {
+    if (!seenTitles.has(candidate)) return candidate;
+  }
+  let n = 2;
+  while (seenTitles.has(titleWithQualifier(title, `${qualifier}: ${token || 'Route'} ${n}`))) n++;
+  return titleWithQualifier(title, `${qualifier}: ${token || 'Route'} ${n}`);
+}
+function replaceTitle(html, title) {
+  return html.replace(/<title>[\s\S]*?<\/title>/i, `<title>${title}</title>`);
+}
 let changedFiles=0;
 let inserted=0;
 const changes=[];
-for (const file of walk(root)) {
+const files = walk(root);
+for (const file of files) {
   const rel=path.relative(root,file).replace(/\\/g,'/');
   const route=routeFor(rel);
   const canonical=hostFor(route,publishedHostOverrides)+route;
@@ -51,7 +110,32 @@ for (const file of walk(root)) {
     changes.push({path:rel,canonical});
   }
 }
-const report={status:'PASS',changed_files:changedFiles,inserted_canonicals:inserted,changes};
+const seenTitles = new Map();
+const titleRepairs = [];
+for (const file of files) {
+  const rel=path.relative(root,file).replace(/\\/g,'/');
+  let html=fs.readFileSync(file,'utf8');
+  if (hasNoindex(html)) continue;
+  const currentTitle = normalizeTitle(((html.match(/<title>([\s\S]*?)<\/title>/i) || [,''])[1] || ''));
+  if (!currentTitle) continue;
+  if (!seenTitles.has(currentTitle)) {
+    seenTitles.set(currentTitle, rel);
+    continue;
+  }
+  const duplicateOf = seenTitles.get(currentTitle);
+  const repairedTitle = uniqueTitleFor(rel, currentTitle, seenTitles);
+  const before = html;
+  html = replaceTitle(html, repairedTitle);
+  let r = replaceTagValue(html,'meta','property','og:title','content',escapeAttr(repairedTitle)); html = r.html;
+  r = replaceTagValue(html,'meta','name','twitter:title','content',escapeAttr(repairedTitle)); html = r.html;
+  if (html !== before) {
+    fs.writeFileSync(file,html);
+    changedFiles++;
+    titleRepairs.push({path:rel,duplicate_of:duplicateOf,old_title:currentTitle,new_title:repairedTitle});
+  }
+  seenTitles.set(repairedTitle, rel);
+}
+const report={status:'PASS',changed_files:changedFiles,inserted_canonicals:inserted,title_repairs:titleRepairs.length,changes,title_repair_details:titleRepairs};
 fs.mkdirSync(path.join(root,'artifacts/validation'),{recursive:true});
 fs.writeFileSync(path.join(root,'artifacts/validation/dual-domain-metadata-repair.json'),JSON.stringify(report,null,2)+'\n');
-console.log(`[repair:dual-domain-metadata] PASS: changed=${changedFiles}; inserted=${inserted}`);
+console.log(`[repair:dual-domain-metadata] PASS: changed=${changedFiles}; inserted=${inserted}; title_repairs=${titleRepairs.length}`);
