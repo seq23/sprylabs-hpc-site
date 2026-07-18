@@ -3,11 +3,26 @@ import fs from 'node:fs';
 
 const registryPath = 'data/content/page_admission_registry.json';
 const queryPath = 'data/citation/query_registry.json';
+const citablePath = 'data/citation/citable_pages.json';
 const answersPath = 'answers.json';
 const llmsPath = 'llms.txt';
 const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
 const queryRegistry = JSON.parse(fs.readFileSync(queryPath, 'utf8'));
+const citableRegistry = JSON.parse(fs.readFileSync(citablePath, 'utf8'));
 const normalize = value => String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+function escapeHtml(value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+function escapeAttr(value) {
+  return escapeHtml(value).replace(/'/g, '&#39;');
+}
+function escapeRegExp(value) {
+  return String(value || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 function pageQualifier(primaryPage = '') {
   if (primaryPage.startsWith('agent/bhpc/')) return 'BHPC agent page';
   if (primaryPage.startsWith('answers/')) return 'answer page';
@@ -56,6 +71,90 @@ function canonicalUrlFor(row) {
 }
 function targetFor(row) {
   return `/${String(row.primary_page || '').replace(/\\/g, '/')}`;
+}
+function updateTitleText(raw, oldQuery, newQuery) {
+  const oldTitle = new RegExp(escapeRegExp(oldQuery), 'i');
+  return raw.replace(/<title>([\s\S]*?)<\/title>/i, (_match, title) => {
+    const cleanTitle = String(title || '').trim();
+    const nextTitle = oldTitle.test(cleanTitle)
+      ? cleanTitle.replace(oldTitle, newQuery)
+      : `${newQuery} | Spry Executive OS`;
+    return `<title>${escapeHtml(nextTitle)}</title>`;
+  });
+}
+function updateMetaTitle(raw, propertyName, oldQuery, newQuery) {
+  const tagPattern = new RegExp(`<meta([^>]+(?:property|name)=["']${escapeRegExp(propertyName)}["'][^>]*)>`, 'i');
+  return raw.replace(tagPattern, match => {
+    const contentPattern = /content=(["'])(.*?)\1/i;
+    if (!contentPattern.test(match)) return match;
+    return match.replace(contentPattern, (_content, quote, value) => {
+      const nextValue = String(value || '').replace(new RegExp(escapeRegExp(oldQuery), 'i'), newQuery);
+      return `content=${quote}${escapeAttr(nextValue)}${quote}`;
+    });
+  });
+}
+function updateCitationSchema(raw, oldQuery, newQuery) {
+  const schemaPattern = /<script\b([^>]*\bid=["']CITATION_PAGE_SCHEMA["'][^>]*)>([\s\S]*?)<\/script>/i;
+  const match = raw.match(schemaPattern);
+  if (!match) return {raw, changed: false};
+  let data;
+  try {
+    data = JSON.parse(match[2]);
+  } catch {
+    return {raw, changed: false};
+  }
+  const graph = Array.isArray(data['@graph']) ? data['@graph'] : [];
+  let changed = false;
+  for (const node of graph) {
+    if (!node || typeof node !== 'object') continue;
+    const types = Array.isArray(node['@type']) ? node['@type'] : [node['@type']];
+    const shouldTrackH1 = types.some(type => ['Article', 'BlogPosting', 'WebPage', 'HowTo'].includes(type));
+    if (!shouldTrackH1) continue;
+    for (const key of ['headline', 'name']) {
+      if (typeof node[key] === 'string' && node[key] !== newQuery) {
+        node[key] = newQuery;
+        changed = true;
+      }
+    }
+  }
+  if (!changed) return {raw, changed: false};
+  const json = JSON.stringify(data, null, 2).replace(/</g, '\\u003c');
+  return {raw: raw.replace(schemaPattern, `<script${match[1]}>${json}</script>`), changed: true};
+}
+function syncCanonicalCitationSurfacesForQueryRepairs(repairs) {
+  if (!repairs.length) return {citable_updates: 0, html_updates: 0, schema_updates: 0};
+  const byPath = new Map((citableRegistry.pages || []).filter(row => row && row.path).map(row => [row.path, row]));
+  let citableUpdates = 0;
+  let htmlUpdates = 0;
+  let schemaUpdates = 0;
+  for (const repair of repairs) {
+    const page = byPath.get(repair.primary_page);
+    if (page) {
+      if (page.query !== repair.new_query) {
+        page.query = repair.new_query;
+        citableUpdates++;
+      }
+      if (page.canonical_owner_metadata && page.canonical_owner_metadata.query !== repair.new_query) {
+        page.canonical_owner_metadata.query = repair.new_query;
+        citableUpdates++;
+      }
+    }
+    if (!fs.existsSync(repair.primary_page)) continue;
+    const before = fs.readFileSync(repair.primary_page, 'utf8');
+    let next = before.replace(/<h1(\s[^>]*)?>[\s\S]*?<\/h1>/i, (_match, attrs = '') => `<h1${attrs}>${escapeHtml(repair.new_query)}</h1>`);
+    next = updateTitleText(next, repair.old_query, repair.new_query);
+    next = updateMetaTitle(next, 'og:title', repair.old_query, repair.new_query);
+    next = updateMetaTitle(next, 'twitter:title', repair.old_query, repair.new_query);
+    const schemaResult = updateCitationSchema(next, repair.old_query, repair.new_query);
+    next = schemaResult.raw;
+    if (next !== before) {
+      fs.writeFileSync(repair.primary_page, next, 'utf8');
+      htmlUpdates++;
+      if (schemaResult.changed) schemaUpdates++;
+    }
+  }
+  if (citableUpdates) fs.writeFileSync(citablePath, `${JSON.stringify(citableRegistry, null, 2)}\n`, 'utf8');
+  return {citable_updates: citableUpdates, html_updates: htmlUpdates, schema_updates: schemaUpdates};
 }
 function repairDuplicateActiveQueryOwners(data) {
   const seen = new Map();
@@ -123,6 +222,7 @@ function syncDistributionSurfacesForQueryRepairs(repairs, data) {
 }
 const queryOwnerConflictRepairs = repairDuplicateActiveQueryOwners(queryRegistry);
 if (queryOwnerConflictRepairs.length) fs.writeFileSync(queryPath, `${JSON.stringify(queryRegistry, null, 2)}\n`, 'utf8');
+const canonicalSurfaceSync = syncCanonicalCitationSurfacesForQueryRepairs(queryOwnerConflictRepairs);
 const querySurfaceSync = syncDistributionSurfacesForQueryRepairs(queryOwnerConflictRepairs, queryRegistry);
 const activeQueries = (queryRegistry.queries || [])
   .filter(q => q && q.release_status === 'ACTIVE' && q.primary_page && !/^reports\//.test(q.primary_page) && !/^coverage\//.test(q.primary_page));
@@ -196,7 +296,8 @@ fs.writeFileSync('reports/programmatic-registry-owner-repair.json', `${JSON.stri
   updated_count: updated,
   query_owner_conflict_repairs: queryOwnerConflictRepairs.length,
   query_owner_conflict_repair_details: queryOwnerConflictRepairs,
+  canonical_surface_sync: canonicalSurfaceSync,
   query_surface_sync: querySurfaceSync,
   removed: removed.map(r => ({path: r.path, primary_query: r.primary_query, source: r.source}))
 }, null, 2)}\n`, 'utf8');
-console.log(`[programmatic-registry-owner-repair] PASS: removed=${removed.length}; added=${added}; updated=${updated}; owner_conflict_repairs=${queryOwnerConflictRepairs.length}; answer_sync=${querySurfaceSync.answers_updates}; llms_sync=${querySurfaceSync.llms_updates}; active=${active.size}; remaining=${registry.records.length}`);
+console.log(`[programmatic-registry-owner-repair] PASS: removed=${removed.length}; added=${added}; updated=${updated}; owner_conflict_repairs=${queryOwnerConflictRepairs.length}; citable_sync=${canonicalSurfaceSync.citable_updates}; html_sync=${canonicalSurfaceSync.html_updates}; schema_sync=${canonicalSurfaceSync.schema_updates}; answer_sync=${querySurfaceSync.answers_updates}; llms_sync=${querySurfaceSync.llms_updates}; active=${active.size}; remaining=${registry.records.length}`);
