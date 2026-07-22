@@ -2,7 +2,22 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = process.cwd();
-const EXCLUDE_DIRS = new Set(['node_modules', '.git', 'templates', '_ops', 'releases']);
+const EXCLUDE_DIRS = new Set([
+  '.git',
+  '.build',
+  '.validation-cache',
+  '.validation-runtime',
+  '_ops',
+  'coverage',
+  'node_modules',
+  'playwright-report',
+  'releases',
+  'reports',
+  'templates',
+  'test-results',
+  'validation_cache',
+  'validation_runtime'
+]);
 const CHECK_EXTS = new Set(['.html', '.js', '.xml']);
 const FORBIDDEN_COVERAGE_LITERALS = [
   '/coverage/',

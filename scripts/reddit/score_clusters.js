@@ -74,7 +74,7 @@ function buildQueueItem(cluster) {
     publish_reason: publishReason,
     source_count: cluster.size,
     supporting_sources: cluster.items.slice(0, 5).map((item) => ({ subreddit: item.subreddit, permalink: item.permalink, title: item.title, created_at: item.created_at })),
-    required_links: [config.cta_link || '/download.html', config.hub_link || '/answers/', config.pillar_link || '/models/', config.related_link || '/ai-executive-coach.html'],
+    required_links: [config.cta_link || '/download.html', config.hub_link || '/answers/', config.pillar_link || '/models/', config.related_link || '/guides/ai-executive-coach.html'],
     cluster_label: config.label || cluster.label,
     score: scoreCluster(cluster),
     cluster

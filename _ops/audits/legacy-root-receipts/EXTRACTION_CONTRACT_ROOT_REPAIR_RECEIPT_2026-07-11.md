@@ -9,7 +9,7 @@
 - Citation repair pipeline now normalizes extraction contracts before release validation.
 
 ## Root failure repaired
-`insights/how-to-end-the-day-so-tomorrow-starts-fast.html` now contains five canonical Step headings inside its LLM extraction block.
+`insights/guides/how-to-end-the-day-so-tomorrow-starts-fast.html` now contains five canonical Step headings inside its LLM extraction block.
 
 ## Validation
 - Citation contract: PASS — 2,279 pages, 2,279 queries.

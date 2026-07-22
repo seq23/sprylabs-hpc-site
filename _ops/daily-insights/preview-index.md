@@ -11,9 +11,9 @@ Source markdown drafts live in:
 - `content/insights/_drafts/`
 
 ### New mechanism / product pages added in the current repo phase
-- How Tracks Work → `/how-tracks-work.html`
-- Arbitration Engine → `/arbitration-engine.html`
-- One System for Multiple Priorities → `/one-system-for-multiple-priorities.html`
+- How Tracks Work → `/guides/how-tracks-work.html`
+- Arbitration Engine → `/guides/arbitration-engine.html`
+- One System for Multiple Priorities → `/guides/one-system-for-multiple-priorities.html`
 
 ### Repo-level endpoint policy
 - broader repo body content routes to `/download.html`

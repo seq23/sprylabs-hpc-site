@@ -449,7 +449,7 @@ function buildPillars(posts, clusters) {
         <div><strong>Target coverage:</strong> ${c.query_goal_per_day ? htmlEscape(String(c.query_goal_per_day)) : "—"} queries/day</div>
         <div style="margin-top:6px"><strong>Revenue path:</strong> ${c.revenue_path ? htmlEscape(c.revenue_path) : "—"}</div>
         ${c.atlas_take ? `<div style="margin-top:10px"><strong>Atlas take:</strong> ${htmlEscape(c.atlas_take)}</div>` : ""}
-        <div style="margin-top:10px"><a class="btn" href="/atlas.html#${htmlEscape(c.id)}">See Atlas for this pillar</a></div>
+        <div style="margin-top:10px"><a class="btn" href="/guides/atlas.html#${htmlEscape(c.id)}">See Atlas for this pillar</a></div>
       </div>
       <section class="card" style="margin-top:18px">
         <h2>How to use this pillar</h2>
@@ -717,18 +717,18 @@ function buildAtlasPage(clusters, posts) {
   </section>
   ${sections}`;
 
-  const canonical = `${SITE_BASE}/atlas.html`;
+  const canonical = `${SITE_BASE}/guides/atlas.html`;
   const page = renderPage({
     title: "Atlas — Spry Executive OS",
     description: "An opinionated map of Spry: the pillars, what they cover, and where to start.",
     canonical,
-    activePath: "/atlas.html",
+    activePath: "/guides/atlas.html",
     contentHtml,
     atlasNavHtml, // subtle and non-broken (no margin overflow) if CSS supports it
     jsonLd: jsonLdCollection({ title: "Atlas", description: "Spry Atlas page", url: canonical }),
   });
 
-  writeUtf8(path.join(ROOT, "atlas.html"), page);
+  writeUtf8(path.join(ROOT, "guides/atlas.html"), page);
 }
 
 // --- sitemap + llms.txt ---
@@ -913,7 +913,7 @@ const DOMINANCE_PAGES = [
     ...posts.map((p) => `${SITE_BASE}/insights/${p.slug}.html`),
     `${SITE_BASE}/pillars/index.html`,
     ...clusters.map((c) => `${SITE_BASE}/pillars/${c.id}/index.html`),
-    `${SITE_BASE}/atlas.html`,
+    `${SITE_BASE}/guides/atlas.html`,
     `${SITE_BASE}/ai-execution-atlas/`,
     `${SITE_BASE}/continuity-collapse-pattern/`,
     `${SITE_BASE}/how-to-stay-consistent/`,
@@ -933,7 +933,7 @@ const DOMINANCE_PAGES = [
     ...topics.map((t) => `${SITE_BASE}/topics/${t}/index.html`),
     `${SITE_BASE}/pillars/index.html`,
     `${SITE_BASE}/insights/index.html`,
-    `${SITE_BASE}/atlas.html`,
+    `${SITE_BASE}/guides/atlas.html`,
     `${SITE_BASE}/ai-execution-atlas/`,
     `${SITE_BASE}/clusters/ai-executive-coaching.html`,
     `${SITE_BASE}/clusters/accountability-systems.html`,

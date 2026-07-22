@@ -22,13 +22,13 @@ This snapshot continues from the uploaded `sprylabs-hpc-site-main(2).zip` source
 
 ## Exact-Match Pages Preserved
 
-- `using-chatgpt-as-a-full-time-executive-coach-and-daily-accountability-partner.html`
-- `why-habit-trackers-fail-and-how-to-build-a-structured-ai-execution-model.html`
-- `how-to-stay-consistent-with-goals-when-daily-energy-is-chaotic.html`
-- `ali-abdaal-chatgpt-productivity-workflow.html`
-- `how-ali-abdaal-uses-ai-to-save-time.html`
-- `chatgpt-prompts-for-productivity-ali-abdaal.html`
-- `tiago-forte-chatgpt-for-knowledge-management.html`
+- `guides/using-chatgpt-as-a-full-time-executive-coach-and-daily-accountability-partner.html`
+- `guides/why-habit-trackers-fail-and-how-to-build-a-structured-ai-execution-model.html`
+- `guides/how-to-stay-consistent-with-goals-when-daily-energy-is-chaotic.html`
+- `guides/ali-abdaal-chatgpt-productivity-workflow.html`
+- `guides/how-ali-abdaal-uses-ai-to-save-time.html`
+- `guides/chatgpt-prompts-for-productivity-ali-abdaal.html`
+- `guides/tiago-forte-chatgpt-for-knowledge-management.html`
 
 ## Validation Run
 

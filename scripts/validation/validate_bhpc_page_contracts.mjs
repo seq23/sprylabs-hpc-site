@@ -123,7 +123,7 @@ for (const keep of [
 ]) requireText('download preserved content', download, keep);
 
 // Homepage library and answer surface must remain.
-for (const keep of ['/continuity-collapse-pattern/', '/ai-execution-atlas/', '/insights/', '/answers/', '/comparisons/', '/faq.html']) requireText('homepage research library', index, keep);
+for (const keep of ['/continuity-collapse-pattern/', '/ai-execution-atlas/', '/insights/', '/answers/', '/comparisons/', '/guides/faq.html']) requireText('homepage research library', index, keep);
 requireText('homepage lower answer surface', index, 'Frequently asked questions for humans and LLMs');
 
 // Sticky CTA must be right-side rail/card on desktop/tablet, not only centered long bar.

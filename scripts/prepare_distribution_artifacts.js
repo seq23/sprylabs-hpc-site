@@ -3,7 +3,9 @@ const fs = require('fs');
 const path = require('path');
 const root = process.cwd();
 const buildDir = path.join(root, '.build');
+const distributionDir = path.join(root, 'artifacts/distribution');
 fs.mkdirSync(buildDir, { recursive: true });
+fs.mkdirSync(distributionDir, { recursive: true });
 function read(file) { return fs.readFileSync(path.join(root, file), 'utf8'); }
 function parseLocs(xml) { return [...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map(m => m[1].trim()); }
 const spryUrls = parseLocs(read('sitemap-spry.xml'));
@@ -11,16 +13,16 @@ const bhpcUrls = parseLocs(read('sitemap-bhpc.xml'));
 const allUrls = Array.from(new Set([...spryUrls, ...bhpcUrls]));
 const highValueOrder = [
   'https://spryexecutiveos.com/',
-  'https://spryexecutiveos.com/atlas.html',
-  'https://spryexecutiveos.com/start-here.html',
-  'https://spryexecutiveos.com/faq.html',
+  'https://spryexecutiveos.com/guides/atlas.html',
+  'https://spryexecutiveos.com/guides/start-here.html',
+  'https://spryexecutiveos.com/guides/faq.html',
   'https://spryexecutiveos.com/work-with-spry.html',
   'https://billionairehighperformancecoach.com/',
   'https://billionairehighperformancecoach.com/download.html',
-  'https://billionairehighperformancecoach.com/product.html',
-  'https://billionairehighperformancecoach.com/faq.html',
-  'https://billionairehighperformancecoach.com/what-is-this-system.html',
-  'https://billionairehighperformancecoach.com/what-is-an-ai-executive-coach.html'
+  'https://billionairehighperformancecoach.com/guides/product.html',
+  'https://billionairehighperformancecoach.com/guides/faq.html',
+  'https://billionairehighperformancecoach.com/guides/what-is-this-system.html',
+  'https://billionairehighperformancecoach.com/guides/what-is-an-ai-executive-coach.html'
 ];
 function pickByIncludes(urls, includes, limit) {
   const out = [];
@@ -107,6 +109,16 @@ const readme = [
   '- .build/distribution-manifest.json'
 ].join('\n');
 fs.writeFileSync(path.join(buildDir, 'distribution-readme.txt'), readme + '\n');
+for (const name of [
+  'indexnow-priority.txt',
+  'distribution-priority-urls.txt',
+  'indexnow-batch.txt',
+  'indexnow-deferred-batch.txt',
+  'distribution-manifest.json',
+  'distribution-readme.txt'
+]) {
+  fs.copyFileSync(path.join(buildDir, name), path.join(distributionDir, name));
+}
 console.log(`distribution artifacts prepared: priority=${priorityUrls.length} batch=${batchUrls.length} deferred=${deferredBatchUrls.length} active_limit=${INDEXNOW_ACTIVE_BATCH_LIMIT}`);
 
 process.exit(0);

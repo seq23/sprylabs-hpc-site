@@ -40,9 +40,9 @@ const helpfulSection = `<section class="card preserved-download-paths" data-down
 <h2>Helpful paths before you decide.</h2>
 <p>Use these pages if you want more context before downloading the system.</p>
 <ul>
-<li><a href="/billionaire-high-performance-coach.html">Billionaire High Performance Coach overview</a></li>
-<li><a href="/how-tracks-work.html">How tracks work</a></li>
-<li><a href="/what-is-this-system.html">What this system is</a></li>
+<li><a href="/guides/billionaire-high-performance-coach.html">Billionaire High Performance Coach overview</a></li>
+<li><a href="/guides/how-tracks-work.html">How tracks work</a></li>
+<li><a href="/guides/what-is-this-system.html">What this system is</a></li>
 </ul>
 </section>`;
 

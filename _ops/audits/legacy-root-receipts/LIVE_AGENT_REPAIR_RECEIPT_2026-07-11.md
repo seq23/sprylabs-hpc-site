@@ -19,7 +19,7 @@
 - 2026-07-11 acceptance records: 72.
 - Resolved public pages: 13.
 - Local exact-page simulation: 72 passed, 0 failed.
-- Four BHPC accountability markers now exist on `can-ai-keep-you-accountable.html`.
+- Four BHPC accountability markers now exist on `guides/can-ai-keep-you-accountable.html`.
 - Live validation remains authoritative after local updater deployment.
 
 ## Local updater compatibility repair

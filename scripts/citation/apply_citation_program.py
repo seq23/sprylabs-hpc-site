@@ -22,7 +22,13 @@ EXCLUDED = {
 EXCLUDED_PREFIXES = ("templates/", "artifacts/", "fixtures/", "node_modules/", ".git/", "answers/phase4/", "use-cases/phase4/", "vs/phase4/", "glossary/phase4/", "methods/phase4/", "brand-defense/", "platforms/phase4/")
 CITATION_REPAIR_WARNINGS = []
 
-BHPC_PRODUCT_PATHS = {'index.html','download.html','product.html','billionaire-high-performance-coach/index.html','billionaire-high-performance-coach.html'}
+BHPC_PRODUCT_PATHS = {
+    'index.html',
+    'download.html',
+    'product.html',
+    'billionaire-high-performance-coach/index.html',
+    'billionaire-high-performance-coach.html',
+}
 BHPC_ORGANIZATION = {'@type':'Organization','@id':'https://billionairehighperformancecoach.com/#organization','name':'Spry Labs','url':'https://billionairehighperformancecoach.com/','logo':{'@type':'ImageObject','url':'https://billionairehighperformancecoach.com/assets/spry-logo.png'}}
 BHPC_WEBSITE = {'@type':'WebSite','@id':'https://billionairehighperformancecoach.com/#website','name':'Billionaire High Performance Coach','url':'https://billionairehighperformancecoach.com/','publisher':{'@id':'https://billionairehighperformancecoach.com/#organization'}}
 BHPC_MENTION_TERMS = [
@@ -1195,6 +1201,19 @@ def update_discovery(pages,queries,frameworks):
             f"- Intent: {p['extraction_type']}",
             f"- Definition: {p['definition']}",
             f"- Supporting pages: {', '.join(q.get('supporting_pages',[])) or 'None'}",
+            "",
+        ])
+    primary_paths={q["primary_page"] for q in queries}
+    for p in active:
+        if p["path"] in primary_paths:
+            continue
+        full.extend([
+            f"## {p['query']}",
+            f"- URL: {p['canonical_url']}",
+            f"- Framework: {p['framework']}",
+            f"- Intent: {p['extraction_type']}",
+            f"- Definition: {p['definition']}",
+            "- Supporting pages: None",
             "",
         ])
     (ROOT/"llms-full.txt").write_text("\n".join(full)+"\n",encoding="utf-8")

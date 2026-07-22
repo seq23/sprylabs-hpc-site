@@ -9,7 +9,7 @@
 
 ## Repairs
 
-- Corrected query ownership for `download.html`, `ai-executive-coach/index.html`, `ai-executive-coach-alternative-for-high-performers.html`, and `insights/how-to-end-the-day-so-tomorrow-starts-fast.html`.
+- Corrected query ownership for `download.html`, `ai-executive-coach/index.html`, `guides/ai-executive-coach-alternative-for-high-performers.html`, and `insights/guides/how-to-end-the-day-so-tomorrow-starts-fast.html`.
 - Synchronized page admission, citation registry, query registry, `llms.txt`, and `answers.json`.
 - Expanded all 75 July 11 fallback citation pages above the 1,080-word safe-publish guidance.
 - Updated the fallback-page generator so rebuilds retain the deeper content standard.

@@ -7,8 +7,27 @@ const ROOT = process.cwd();
 const config = JSON.parse(fs.readFileSync('data/content/manual_redirects.json', 'utf8'));
 const redirects = config.redirects || [];
 const errors = [];
-const skipDirs = new Set(['.git', 'node_modules', 'artifacts', 'coverage', 'reports', '.build', 'test-results', 'playwright-report']);
-const allowedFiles = new Set(['data/content/manual_redirects.json', '_redirects', 'docs/REDIRECT_MIGRATION_HISTORY.md', 'scripts/validation/validate_manual_expansion.py']);
+const skipDirs = new Set([
+  '.git',
+  '.build',
+  '.validation-cache',
+  '.validation-runtime',
+  'artifacts',
+  'coverage',
+  'node_modules',
+  'playwright-report',
+  'reports',
+  'test-results',
+  'validation_cache',
+  'validation_runtime'
+]);
+const allowedFiles = new Set([
+  'data/content/manual_redirects.json',
+  'data/content/root_page_migration_map.json',
+  '_redirects',
+  'docs/REDIRECT_MIGRATION_HISTORY.md',
+  'scripts/validation/validate_manual_expansion.py'
+]);
 const scanExtensions = new Set(['.html', '.xml', '.txt', '.json', '.md', '.js', '.mjs', '.cjs']);
 
 function routeFromSource(sourcePath) {
@@ -23,6 +42,11 @@ function variants(sourcePath) {
     for (const value of [...out]) out.add(`https://${domain}${value}`);
   }
   return [...out];
+}
+
+function containsStandaloneRoute(text, value) {
+  const escaped = value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp(`(^|[^A-Za-z0-9_./:-])${escaped}($|[^A-Za-z0-9_./:-])`).test(text);
 }
 
 const routeMap = new Map();
@@ -64,7 +88,7 @@ function walk(dir) {
       }
       for (const redirect of redirects) {
         for (const value of variants(redirect.source_path)) {
-          if (text.includes(value)) errors.push(`${rel}: retired route reference ${value}`);
+          if (containsStandaloneRoute(text, value)) errors.push(`${rel}: retired route reference ${value}`);
         }
       }
     }

@@ -21,7 +21,7 @@ const fixtureRegistryRows = [
     query_id: 'SELFTEST-QRY-002',
     query: 'Minimum Viable Day',
     aliases: [],
-    primary_page: 'what-is-a-minimum-viable-day.html',
+    primary_page: 'guides/what-is-a-minimum-viable-day.html',
     release_status: 'ACTIVE'
   }
 ];
@@ -62,7 +62,7 @@ const existingPathTypo = resolveBhpcAgentRoute({
   primary_fix_type: 'completeness',
   fix_recommendation: 'Fix the existing AI executive coach page.'
 });
-expect('intended URL slug typo resolves to existing page', existingPathTypo.implementation_path === 'arbitration-engine.html', JSON.stringify(existingPathTypo));
+expect('intended URL slug typo resolves to existing page', existingPathTypo.implementation_path === 'guides/arbitration-engine.html', JSON.stringify(existingPathTypo));
 expect('path typo is marked as typo-resolved repair', /^TYPO_RESOLVED_/.test(existingPathTypo.status), existingPathTypo.status);
 
 const newPageSpec = resolveBhpcAgentRoute({
