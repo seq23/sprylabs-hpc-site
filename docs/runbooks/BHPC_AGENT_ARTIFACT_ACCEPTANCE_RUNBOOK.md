@@ -7,15 +7,9 @@ Every explicit BHPC agent recommendation must either be implemented as visible s
 ## Flow
 
 1. Normalize the agent run artifacts.
-2. Compile row-level acceptance criteria:
-   `npm run agent:bhpc:compile-acceptance`
-3. Build the exact implementation plan:
-   `npm run agent:bhpc:plan-exact`
-4. Apply semantic blocks to the intended winner or routed page:
-   `npm run agent:bhpc:apply-exact`
-5. Trace rendered proof:
-   `npm run agent:bhpc:trace-exact`
-6. Validate the agent-run lane:
+2. Apply the explicit execution lane when implementation is intended:
+   `npm run execute:agent-run:apply-exact`
+3. Validate the already-applied agent-run lane:
    `npm run validate:agent-run`
 
 ## Non-negotiables
@@ -24,3 +18,4 @@ Every explicit BHPC agent recommendation must either be implemented as visible s
 - Required strings and block types must be rendered in HTML.
 - Legacy `Agent Exact Citation Repair` / `exact intended-winner pipeline` marker-only proof must fail.
 - Fallback gap-fill pages must be labeled separately and cannot satisfy exact agent rows.
+- `validate:*` commands inspect existing state only. Compile, plan, apply, absorb, trace, build, and self-heal work belongs in `execute:*`, `agent:*`, `release:*`, or `workflow:*` lanes.

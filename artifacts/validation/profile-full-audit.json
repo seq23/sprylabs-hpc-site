@@ -1,0 +1,230 @@
+{
+  "profile": "full-audit",
+  "started_at": "2026-07-22T22:15:30.054Z",
+  "steps": [
+    {
+      "id": "VAL-ORCHESTRATION-CONTRACT",
+      "command": "npm run validate:orchestration-contract",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-ORCHESTRATION-CONTRACT-SELF-TEST",
+      "command": "npm run validate:orchestration-contract:self-test",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-QUERY-OWNER-UNIQUENESS",
+      "command": "npm run validate:query-owner-uniqueness",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:repo",
+      "command": "npm run validate:repo",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:validation-registry",
+      "command": "npm run validate:validation-registry",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-VALIDATION-CACHE-CONTROL-PLANE",
+      "command": "npm run validation:cache:self-test",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-VALIDATION-CACHE-HEALTH",
+      "command": "npm run validation:cache:inspect",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:workflow-contract",
+      "command": "npm run validate:workflow-contract",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:workflow-lineage",
+      "command": "npm run validate:workflow-lineage",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:workflow-monitor",
+      "command": "npm run validate:workflow-monitor",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:workflow-topology",
+      "command": "npm run validate:workflow-topology",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "agent:artifact-shape:self-test",
+      "command": "npm run agent:artifact-shape:self-test",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "agent:bhpc:validate",
+      "command": "npm run agent:bhpc:validate",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:citation-velocity-automation",
+      "command": "npm run validate:citation-velocity-automation",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:disavow-asset",
+      "command": "npm run validate:disavow-asset",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:programmatic-provenance",
+      "command": "npm run validate:programmatic-provenance",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:programmatic-registry",
+      "command": "npm run validate:programmatic-registry",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:citation-strategy",
+      "command": "npm run validate:citation-strategy",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:retired-route-references",
+      "command": "npm run validate:retired-route-references",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:ui-test-parity",
+      "command": "npm run validate:ui-test-parity",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:browser-suite-contract",
+      "command": "npm run validate:browser-suite-contract",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:traffic-qualified-suite",
+      "command": "npm run validate:traffic-qualified-suite",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:artifact-consistency-e2e",
+      "command": "npm run validate:artifact-consistency-e2e",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:batch-f-continuity",
+      "command": "npm run validate:batch-f-continuity",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:release-atom-contract",
+      "command": "node scripts/validation/validate_release_atom_contract.mjs",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:release-mix-policy",
+      "command": "node scripts/validation/validate_release_mix_policy.mjs",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:citation-phase-manifest",
+      "command": "node scripts/validation/validate_citation_phase_manifest.mjs",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:no-keyword-swap-pages",
+      "command": "node scripts/validation/validate_no_keyword_swap_pages.mjs",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:claim-safety",
+      "command": "node scripts/validation/validate_claim_safety.mjs",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:internal-link-velocity",
+      "command": "node scripts/validation/validate_internal_link_velocity.mjs",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:llms-full-coverage",
+      "command": "node scripts/validation/validate_llms_full_coverage.mjs",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:sitemap-coverage",
+      "command": "node scripts/validation/validate_sitemap_coverage.mjs",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validation:inventory",
+      "command": "npm run validation:inventory",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-SPRY-PROFILE-PURITY",
+      "command": "npm run validate:validation-profile-purity",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-SPRY-CADENCE-QUEUE-SELF-HEAL",
+      "command": "npm run validate:spry-cadence-queue-self-heal",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-SPRY-TREE-HYGIENE",
+      "command": "npm run validate:spry-tree-hygiene",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-SPRY-AGENT-ARTIFACT-PLACEMENT",
+      "command": "npm run validate:spry-agent-artifact-placement",
+      "exit_code": 0,
+      "status": "PASS"
+    }
+  ],
+  "status": "PASS",
+  "finished_at": "2026-07-22T22:15:39.318Z"
+}

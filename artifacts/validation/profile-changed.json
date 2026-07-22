@@ -1,0 +1,74 @@
+{
+  "profile": "changed",
+  "started_at": "2026-07-22T22:15:18.490Z",
+  "steps": [
+    {
+      "id": "VAL-ORCHESTRATION-CONTRACT",
+      "command": "npm run validate:orchestration-contract",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-ORCHESTRATION-CONTRACT-SELF-TEST",
+      "command": "npm run validate:orchestration-contract:self-test",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:validation-registry",
+      "command": "npm run validate:validation-registry",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-VALIDATION-CACHE-CONTROL-PLANE",
+      "command": "npm run validation:cache:self-test",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-QUERY-OWNER-UNIQUENESS",
+      "command": "npm run validate:query-owner-uniqueness",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:repo",
+      "command": "npm run validate:repo",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-VALIDATION-CACHE-HEALTH",
+      "command": "npm run validation:cache:inspect",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-SPRY-PROFILE-PURITY",
+      "command": "npm run validate:validation-profile-purity",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-SPRY-CADENCE-QUEUE-SELF-HEAL",
+      "command": "npm run validate:spry-cadence-queue-self-heal",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-SPRY-TREE-HYGIENE",
+      "command": "npm run validate:spry-tree-hygiene",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-SPRY-AGENT-ARTIFACT-PLACEMENT",
+      "command": "npm run validate:spry-agent-artifact-placement",
+      "exit_code": 0,
+      "status": "PASS"
+    }
+  ],
+  "status": "PASS",
+  "finished_at": "2026-07-22T22:15:20.603Z"
+}

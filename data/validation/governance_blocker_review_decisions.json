@@ -48,15 +48,6 @@
       ]
     },
     {
-      "validation_id": "VAL-COVERAGE-ROUTE-CONTRACT",
-      "migration_status": "REVIEWED_NO_CHANGE",
-      "decision": "KEEP_PUBLIC_ROUTE_AND_PRIVACY_BOUNDARY",
-      "evidence": [
-        "scripts/validators/validate_coverage_route_contract.mjs: fails on missing required public coverage artifacts, packaging exclusion, operational-data exposure, or missing published-snapshot labeling",
-        "These conditions affect required route availability or expose non-public operational data and are material"
-      ]
-    },
-    {
       "validation_id": "VAL-REPAIR-AGENT-NORMALIZATION",
       "migration_status": "REVIEWED_NO_CHANGE",
       "decision": "KEEP_REPAIR_CHAIN_FAILURE_BOUNDARY",

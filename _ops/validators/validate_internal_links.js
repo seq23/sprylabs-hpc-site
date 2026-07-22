@@ -5,10 +5,12 @@ const ROOT = process.cwd();
 const EXCLUDE_DIRS = new Set(['node_modules', '.git', 'templates', '_ops', 'releases']);
 const CHECK_EXTS = new Set(['.html', '.js', '.xml']);
 const FORBIDDEN_COVERAGE_LITERALS = [
+  '/coverage/',
   '/coverage/index.html',
   'https://billionairehighperformancecoach.com/coverage/index.html',
   'https://spryexecutiveos.com/coverage/index.html',
-  'https://billionairehighperformancecoach.com/coverage/'
+  'https://billionairehighperformancecoach.com/coverage/',
+  'https://spryexecutiveos.com/coverage/'
 ];
 
 function walk(dir, out = []) {

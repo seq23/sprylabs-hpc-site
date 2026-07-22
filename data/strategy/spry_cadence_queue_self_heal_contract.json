@@ -1,0 +1,109 @@
+{
+  "schema_version": "1.0",
+  "repo": "sprylabs-hpc-site",
+  "purpose": "Defines Spry's cadence, queue, and self-heal proof boundaries without letting validation drive generation, release, repair, or workflow execution.",
+  "validation_is_read_only": true,
+  "cadence_source": "data/strategy/content_release_cadence.json",
+  "targets_are_release_guidance_not_hard_gates": true,
+  "queue_files": [
+    {
+      "id": "reddit_publish",
+      "path": "data/reddit/publish_queue.json",
+      "array_field": "items",
+      "status_field": "status",
+      "empty_is_warning": false
+    },
+    {
+      "id": "social_publish",
+      "path": "data/social/publish_queue.json",
+      "array_field": "items",
+      "status_field": "status",
+      "empty_is_warning": false
+    },
+    {
+      "id": "synthesis",
+      "path": "data/synthesis/queue.json",
+      "array_field": "items",
+      "status_field": "status",
+      "empty_is_warning": false
+    },
+    {
+      "id": "whitepapers",
+      "path": "data/whitepapers/queue.json",
+      "array_field": "items",
+      "status_field": "status",
+      "empty_is_warning": false
+    },
+    {
+      "id": "strategy_gap_backlog",
+      "path": "data/strategy/strategy_gap_fill_backlog.json",
+      "array_field": "candidates",
+      "status_field": "status",
+      "empty_is_warning": false
+    },
+    {
+      "id": "strategy_gap_release_queue",
+      "path": "data/strategy/strategy_gap_fill_release_queue.json",
+      "array_field": "selected",
+      "status_field": "status",
+      "empty_is_warning": false
+    }
+  ],
+  "self_heal_lanes": [
+    {
+      "id": "citation_safe_harbor_rewrite",
+      "command": "npm run citation:self-heal",
+      "execution_only": true,
+      "evidence_file": "data/governance/safe_harbor_rewrite_ledger.json",
+      "forbidden_for": [
+        "secret_exposure",
+        "protected_lane_mutation",
+        "provenance_loss",
+        "canonical_corruption",
+        "unsafe_provider_mutation"
+      ]
+    },
+    {
+      "id": "generated_content_finalization",
+      "command": "npm run self-heal:generated-content",
+      "execution_only": true,
+      "evidence_file": "artifacts/validation/generated-content-self-heal.json",
+      "forbidden_for": [
+        "secret_exposure",
+        "protected_lane_mutation",
+        "provenance_loss",
+        "canonical_corruption",
+        "unsafe_provider_mutation"
+      ]
+    }
+  ],
+  "hard_fail_boundaries": {
+    "fail_for": [
+      "missing_or_malformed_contract",
+      "missing_required_queue_file",
+      "unsafe_queue_path",
+      "cadence_target_marked_as_hard_failure",
+      "missing_self_heal_command",
+      "repair_lane_missing_forbidden_boundary",
+      "validation_profile_invokes_execution_command"
+    ],
+    "warn_for": [
+      "empty_optional_queue",
+      "stale_queue_timestamp",
+      "below_target_release_volume",
+      "cadence_variance",
+      "opportunity_shortfall_without_integrity_failure"
+    ],
+    "forbidden_self_heal_for": [
+      "secret_exposure",
+      "protected_lane_mutation",
+      "provenance_loss",
+      "canonical_corruption",
+      "unsafe_provider_mutation"
+    ],
+    "info_for": [
+      "empty_optional_queue_with_no_due_items"
+    ]
+  },
+  "output_receipt": "artifacts/validation/spry-cadence-queue-self-heal.json"
+}

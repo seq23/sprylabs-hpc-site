@@ -1,23 +1,24 @@
 # Artifact Manifest
 
-Artifact: `sprylabs-hpc-site-main_BASELINE_05-24-26_1c1cb28.zip`
+Artifact: `sprylabs-hpc-site-main_BASELINE_07-22-26_<sha12>.zip`
 Repo: `sprylabs-hpc-site`
 Mode: full baseline snapshot
-Packaged root: `/mnt/data/spry_fix_work`
+Packaged root: `sprylabs-hpc-site-main`
 Branch target: `main`
-Status: `LOCAL VALIDATION PASSED — LOCAL UPDATER REQUIRED`
+Status: `STRUCTURALLY CHECKED — LOCAL VALIDATION REQUIRED`
 
 ## Source Basis
 
-This snapshot continues from `sprylabs-hpc-site-main_BASELINE_05-24-26_411592d.zip` and fixes the answer-surface validation failure from the exact-match page pass.
+This snapshot continues from the uploaded `sprylabs-hpc-site-main(2).zip` source snapshot and implements the Spry cadence / queue / self-heal repair phase.
 
 ## Implemented Fixes
 
-- Added deterministic answer-surface observation generation to `scripts/validate_all.sh` before scoring.
-- Generated answer-surface monitoring candidates so score history no longer records zero-cluster runs.
-- Corrected canonical/OG URLs for the 7 exact-match pages to `https://spryexecutiveos.com/...` where required by the dual-domain validator.
-- Added supplemental `data-geo-semantic="true"` JSON-LD with `SoftwareApplication`, `FAQPage`, and `WebPage` schema to the 7 exact-match pages.
-- Preserved all previously added exact-match pages and purchase-path routing.
+- Added read-only validation profile purity enforcement.
+- Added Spry cadence / queue / self-heal contract and validator.
+- Added Spry tree-hygiene validator and moved legacy root receipts to `_ops/audits/legacy-root-receipts/`.
+- Added external AI agent artifact placement validator for the BHPC/Spry agent lane.
+- Updated validation registry and matrix for the new Spry phase validators and composite phase check.
+- Preserved the external agent artifact placement and processing lane.
 
 ## Exact-Match Pages Preserved
 
@@ -31,24 +32,21 @@ This snapshot continues from `sprylabs-hpc-site-main_BASELINE_05-24-26_411592d.z
 
 ## Validation Run
 
-Command:
+Commands:
 
-`NODE_OPTIONS='--max-old-space-size=3072' npm run validate:all`
+- `npm run validate:spry-phase`
+- `npm run validate:profile -- changed`
+- `npm run agent:bhpc:validate`
 
-Result:
+Results:
 
-`[validate_all] OK`
-
-Important observed fixes:
-
-- `ANSWER SURFACE HISTORY PASS: runs=5 clusters=11`
-- `validate_dual_domain_contract: OK`
-- `validate_geo_semantics: OK`
-- `PAGE TYPE CONVERSION FLOOR PASS`
+- `validate:spry-phase`: PASS.
+- `validate:profile -- changed`: PASS.
+- `agent:bhpc:validate`: PASS, 6 run folders, 0 warnings.
 
 ## Packaging Notes
 
-Generated/heavy local dependency folders are excluded. The ZIP is packaged from the true repo root with no wrapper folder.
+Generated/heavy local dependency folders are excluded. The ZIP is packaged with the `sprylabs-hpc-site-main/` repo wrapper folder for snapshot updater compatibility.
 
 ## Full Safe Autonomy Hybrid Citation Engine — 2026-07-10
 

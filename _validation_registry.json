@@ -4089,41 +4089,6 @@
       "not_applicable_reason": null
     },
     {
-      "validation_id": "VAL-COVERAGE-ROUTE-CONTRACT",
-      "status": "ADMITTED",
-      "name": "validate:coverage-route",
-      "check_type": "artifact-packaging",
-      "owning_lane": "public-authority",
-      "risk_prevented": "Prevents the public /coverage/ knowledge-map route from disappearing during packaging or exposing private draft runway data.",
-      "existing_coverage_gap": "The baseline packager excluded coverage/ as if it were test output, even though /coverage/ is a required public route.",
-      "scope": [
-        "coverage/index.html",
-        "coverage/coverage.json",
-        "data/admin/coverage_operations.json",
-        "scripts/build_coverage_map.js",
-        "scripts/release/package_baseline.mjs",
-        "_baseline_packaging_contract.json"
-      ],
-      "proposed_severity": "HARD_FAIL",
-      "command": "npm run validate:coverage-route",
-      "implementation_path": "scripts/validators/validate_coverage_route_contract.mjs",
-      "environment": "container",
-      "proof_tier": 1,
-      "positive_fixture": "fixtures/validation/coverage-route/pass.json",
-      "negative_fixture": "fixtures/validation/coverage-route/fail.json",
-      "evidence_output": "stdout",
-      "runtime_budget_seconds": 20,
-      "maintenance_owner": "repo",
-      "overlap_analysis": [],
-      "retirement_offset": null,
-      "decision": "Admitted after hostile review found that artifact packaging removed the valid public /coverage/ route.",
-      "decision_date": "2026-07-10",
-      "matrix_ids": [
-        "MX-COVERAGE-ROUTE-CONTRACT"
-      ],
-      "not_applicable_reason": null
-    },
-    {
       "validation_id": "VAL-ARTIFACT-CONSISTENCY",
       "status": "ADMITTED",
       "name": "validate:artifact-consistency-e2e",
@@ -5268,8 +5233,163 @@
         "MX-150"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-SPRY-PROFILE-PURITY",
+      "status": "ADMITTED",
+      "name": "validate:validation-profile-purity",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents validation profiles from driving build, release, repair, self-heal, or workflow mutations.",
+      "existing_coverage_gap": "Spry phase repair requires explicit read-only validation coverage for cadence, queues, self-heal boundaries, and validation profile purity.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:validation-profile-purity",
+      "implementation_path": "scripts/validators/validate_validation_profile_purity.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-validation-profile-purity/summary.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted during Spry cadence/queue/self-heal repair to keep validation read-only and severity scoped to integrity risk.",
+      "decision_date": "2026-07-22",
+      "matrix_ids": [
+        "MX-151"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-SPRY-CADENCE-QUEUE-SELF-HEAL",
+      "status": "ADMITTED",
+      "name": "validate:spry-cadence-queue-self-heal",
+      "check_type": "validator",
+      "owning_lane": "cadence-queue-self-heal",
+      "risk_prevented": "Prevents Spry cadence, queue, or self-heal contract drift while keeping targets and opportunities non-blocking.",
+      "existing_coverage_gap": "Spry phase repair requires explicit read-only validation coverage for cadence, queues, self-heal boundaries, and validation profile purity.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:spry-cadence-queue-self-heal",
+      "implementation_path": "scripts/validators/validate_spry_cadence_queue_self_heal.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-spry-cadence-queue-self-heal/summary.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted during Spry cadence/queue/self-heal repair to keep validation read-only and severity scoped to integrity risk.",
+      "decision_date": "2026-07-22",
+      "matrix_ids": [
+        "MX-152"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-SPRY-TREE-HYGIENE",
+      "status": "ADMITTED",
+      "name": "validate:spry-tree-hygiene",
+      "check_type": "validator",
+      "owning_lane": "tree-hygiene",
+      "risk_prevented": "Prevents new root sprawl, ungoverned public-page growth, misplaced generated outputs, and disappearance of the source-first tree architecture contract.",
+      "existing_coverage_gap": "SpryLabs HPC previously allowed root HTML/JSON/directory sprawl. This validator now freezes the legacy root compatibility surface and forces future page growth through content/data/programmatic lanes.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:spry-tree-hygiene",
+      "implementation_path": "scripts/validators/validate_spry_tree_hygiene.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-spry-tree-hygiene/summary.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Updated during SpryLabs HPC tree architecture refactor to enforce the source-first target tree, freeze legacy root output surfaces, and keep the programmatic page-generation boundary visible in CI/updater validation.",
+      "decision_date": "2026-07-22",
+      "matrix_ids": [
+        "MX-153"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-SPRY-AGENT-ARTIFACT-PLACEMENT",
+      "status": "ADMITTED",
+      "name": "validate:spry-agent-artifact-placement",
+      "check_type": "validator",
+      "owning_lane": "paid-agent-artifact-lane",
+      "risk_prevented": "Prevents cadence/tree/self-heal changes from breaking external AI agent artifact placement, protection, or downstream processing paths.",
+      "existing_coverage_gap": "Spry external AI agent artifacts are repo inputs that must remain placeable, protected, and processable while validation remains read/check only.",
+      "scope": [
+        "repository",
+        "paid-agent-artifact-lane"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:spry-agent-artifact-placement",
+      "implementation_path": "scripts/validators/validate_spry_agent_artifact_placement.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-spry-agent-artifact-placement/summary.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Complements agent:bhpc:validate without absorbing or applying agent artifacts."
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted during Spry cadence/queue/self-heal repair to protect external AI agent artifact placement and processing contracts.",
+      "decision_date": "2026-07-22",
+      "matrix_ids": [
+        "MX-154"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-SPRY-PHASE",
+      "status": "ADMITTED",
+      "name": "validate:spry-phase",
+      "check_type": "validator-profile",
+      "owning_lane": "spry-phase",
+      "risk_prevented": "Provides a single read-only Spry phase structural check without running release, build, repair, absorption, or publication lanes.",
+      "existing_coverage_gap": "The composite phase command was executable but not admitted in the registry.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:spry-phase",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-spry-phase/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "Composes admitted validators only."
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted during Spry phase repair after registry warned that the composite command was unregistered.",
+      "decision_date": "2026-07-22",
+      "matrix_ids": [
+        "MX-155"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 158,
+  "record_count": 171,
   "generated_at": "2026-07-11T21:53:53.358661Z"
 }

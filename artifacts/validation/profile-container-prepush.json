@@ -1,6 +1,6 @@
 {
   "profile": "container-prepush",
-  "started_at": "2026-07-18T15:34:51.970Z",
+  "started_at": "2026-07-22T22:21:05.843Z",
   "steps": [
     {
       "id": "VAL-ORCHESTRATION-CONTRACT",
@@ -11,54 +11,6 @@
     {
       "id": "VAL-ORCHESTRATION-CONTRACT-SELF-TEST",
       "command": "npm run validate:orchestration-contract:self-test",
-      "exit_code": 0,
-      "status": "PASS"
-    },
-    {
-      "id": "VAL-PYTHON-RUNTIME-BOOTSTRAP",
-      "command": "npm run validation:python-runtime:bootstrap",
-      "exit_code": 0,
-      "status": "PASS"
-    },
-    {
-      "id": "VAL-PYTHON-RUNTIME-PREFLIGHT",
-      "command": "npm run validation:python-runtime:preflight",
-      "exit_code": 0,
-      "status": "PASS"
-    },
-    {
-      "id": "VAL-PYTHON-RUNTIME-SELF-TEST",
-      "command": "npm run validation:python-runtime:self-test",
-      "exit_code": 0,
-      "status": "PASS"
-    },
-    {
-      "id": "build:all",
-      "command": "npm run build:all",
-      "exit_code": 0,
-      "status": "PASS"
-    },
-    {
-      "id": "repair:dual-domain-metadata",
-      "command": "npm run repair:dual-domain-metadata",
-      "exit_code": 0,
-      "status": "PASS"
-    },
-    {
-      "id": "agent:bhpc:apply-report-contract",
-      "command": "npm run agent:bhpc:apply-report-contract",
-      "exit_code": 0,
-      "status": "PASS"
-    },
-    {
-      "id": "release:repair-agent-normalization",
-      "command": "npm run release:repair-agent-normalization",
-      "exit_code": 0,
-      "status": "PASS"
-    },
-    {
-      "id": "repair:citation-contract-surfaces",
-      "command": "npm run repair:citation-contract-surfaces",
       "exit_code": 0,
       "status": "PASS"
     },
@@ -117,18 +69,6 @@
       "status": "PASS"
     },
     {
-      "id": "validate:workflow-topology:fixtures",
-      "command": "npm run validate:workflow-topology:fixtures",
-      "exit_code": 0,
-      "status": "PASS"
-    },
-    {
-      "id": "workflow:hostile-review",
-      "command": "npm run workflow:hostile-review",
-      "exit_code": 0,
-      "status": "PASS"
-    },
-    {
       "id": "agent:artifact-shape:self-test",
       "command": "npm run agent:artifact-shape:self-test",
       "exit_code": 0,
@@ -137,30 +77,6 @@
     {
       "id": "agent:bhpc:validate",
       "command": "npm run agent:bhpc:validate",
-      "exit_code": 0,
-      "status": "PASS"
-    },
-    {
-      "id": "agent:bhpc:trace",
-      "command": "npm run agent:bhpc:trace",
-      "exit_code": 0,
-      "status": "PASS"
-    },
-    {
-      "id": "validate:agent-run",
-      "command": "npm run validate:agent-run",
-      "exit_code": 0,
-      "status": "PASS"
-    },
-    {
-      "id": "VAL-EXTRACTION-FINAL-NORMALIZATION",
-      "command": "npm run repair:extraction-final-state",
-      "exit_code": 0,
-      "status": "PASS"
-    },
-    {
-      "id": "validate:content-release",
-      "command": "npm run validate:content-release",
       "exit_code": 0,
       "status": "PASS"
     },
@@ -189,20 +105,8 @@
       "status": "PASS"
     },
     {
-      "id": "validate:citation-contract",
-      "command": "npm run validate:citation-contract",
-      "exit_code": 0,
-      "status": "PASS"
-    },
-    {
       "id": "validate:citation-strategy",
       "command": "npm run validate:citation-strategy",
-      "exit_code": 0,
-      "status": "PASS"
-    },
-    {
-      "id": "VAL-INCREMENTAL-PAGE-AUDIT",
-      "command": "npm run validate:incremental-page-audit",
       "exit_code": 0,
       "status": "PASS"
     },
@@ -239,24 +143,6 @@
     {
       "id": "validate:batch-f-continuity",
       "command": "npm run validate:batch-f-continuity",
-      "exit_code": 0,
-      "status": "PASS"
-    },
-    {
-      "id": "validate:batch-g-continuity",
-      "command": "npm run validate:batch-g-continuity",
-      "exit_code": 0,
-      "status": "PASS"
-    },
-    {
-      "id": "repair:extraction-final-state",
-      "command": "npm run repair:extraction-final-state",
-      "exit_code": 0,
-      "status": "PASS"
-    },
-    {
-      "id": "VAL-EXTRACTION-SURFACE-GUARD-SNAPSHOT",
-      "command": "npm run validate:extraction-surface-guard:snapshot",
       "exit_code": 0,
       "status": "PASS"
     },
@@ -315,30 +201,30 @@
       "status": "PASS"
     },
     {
-      "id": "validate:warnings",
-      "command": "npm run validate:warnings",
+      "id": "VAL-SPRY-PROFILE-PURITY",
+      "command": "npm run validate:validation-profile-purity",
       "exit_code": 0,
       "status": "PASS"
     },
     {
-      "id": "VAL-EXTRACTION-CONTRACT-SELF-TEST",
-      "command": "npm run validate:extraction-contract:self-test",
+      "id": "VAL-SPRY-CADENCE-QUEUE-SELF-HEAL",
+      "command": "npm run validate:spry-cadence-queue-self-heal",
       "exit_code": 0,
       "status": "PASS"
     },
     {
-      "id": "VAL-EXTRACTION-PIPELINE-TRACE",
-      "command": "npm run trace:extraction-pipeline",
+      "id": "VAL-SPRY-TREE-HYGIENE",
+      "command": "npm run validate:spry-tree-hygiene",
       "exit_code": 0,
       "status": "PASS"
     },
     {
-      "id": "VAL-EXTRACTION-SURFACE-GUARD-CHECK",
-      "command": "npm run validate:extraction-surface-guard:check",
+      "id": "VAL-SPRY-AGENT-ARTIFACT-PLACEMENT",
+      "command": "npm run validate:spry-agent-artifact-placement",
       "exit_code": 0,
       "status": "PASS"
     }
   ],
   "status": "PASS",
-  "finished_at": "2026-07-18T15:37:59.912Z"
+  "finished_at": "2026-07-22T22:21:15.350Z"
 }

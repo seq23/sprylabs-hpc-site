@@ -1,12 +1,24 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import {readJson,runCommand} from './validation_control_plane.mjs';
+import {profilePurityFindings} from './profile_purity_lib.mjs';
 const name=process.argv[2]; if(!name){console.error('usage: npm run validate:profile -- <profile>');process.exit(2)}
 const matrix=readJson('_repo_validation_matrix.json'); const profile=matrix.profiles?.[name];
 if(!profile){console.error(`[validate:profile] INTERNAL_ERROR: unknown profile ${name}`);process.exit(2)}
 const steps=[]; const seen=new Set();
 function addProfile(n,stack=[]){if(stack.includes(n)){throw new Error(`profile cycle: ${[...stack,n].join(' -> ')}`)} const p=matrix.profiles?.[n]; if(!p) throw new Error(`unknown inherited profile ${n}`); for(const base of p.extends||[]) addProfile(base,[...stack,n]); for(const s of p.steps||[]){const key=s.id||s.command;if(!seen.has(key)){seen.add(key);steps.push(s)}}}
 try{addProfile(name)}catch(e){console.error(`[validate:profile] INTERNAL_ERROR: ${e.message}`);process.exit(2)}
+const scripts = JSON.parse(fs.readFileSync('package.json','utf8')).scripts || {};
+const profileOnlyMatrix = {profiles:{[name]:{steps}}};
+const purityFindings = profilePurityFindings(profileOnlyMatrix, scripts);
+if(purityFindings.length){
+  const receipt={profile:name,started_at:new Date().toISOString(),steps:[],status:'FAIL',errors:purityFindings};
+  fs.mkdirSync('artifacts/validation',{recursive:true});
+  fs.writeFileSync(`artifacts/validation/profile-${name}.json`,JSON.stringify(receipt,null,2)+'\n');
+  console.error(`[validate:profile] FAIL: ${name} contains ${purityFindings.length} execution/mutation step(s); run release/workflow commands outside validation profiles`);
+  for(const finding of purityFindings) console.error(` - ${finding.id}: ${finding.reasons.join('; ')}`);
+  process.exit(1);
+}
 const receipt={profile:name,started_at:new Date().toISOString(),steps:[],status:'PASS'};
 for(const step of steps){console.log(`[validate:profile:${name}] ${step.id||step.command}`); const code=runCommand(step.command); receipt.steps.push({...step,exit_code:code,status:code===0?'PASS':code===1?'FAIL':'INTERNAL_ERROR'}); if(code!==0){receipt.status=code===1?'FAIL':'INTERNAL_ERROR';break}}
 receipt.finished_at=new Date().toISOString(); fs.mkdirSync('artifacts/validation',{recursive:true}); fs.writeFileSync(`artifacts/validation/profile-${name}.json`,JSON.stringify(receipt,null,2)+'\n');

@@ -17,7 +17,7 @@ case 'application': ok=Number(d.planned)===Number(d.applied)+Number(d.runtime_sk
 case 'semantic_change': {const changed=hash(d.before)!==hash(d.after); ok=s.expected==='PASS_CHANGE'?changed:!changed; break;}
 case 'null_zero': ok=d.unknown===null&&d.measured_zero===0; break;
 case 'packaging': ok=d.class==='PRESENTATION_ONLY'; break;
-case 'route': ok=(d.route==='/coverage/'&&d.target==='coverage/index.html')||(d.route==='/admin/'&&d.classification==='private_noindex'); break;
+case 'route': ok=d.route==='/admin/'&&d.classification==='private_noindex'; break;
 case 'workflow': ok=d.produces?d.produces===d.expects:Boolean((d.status==='success'&&d.commit===null&&d.reason)||d.retryable_stage||d.postdeploy==='failed'); break;
 case 'validator_receipt': ok=d.exit_code===0&&d.receipt_status!=='failed'&&d.receipt!==null; break;
 case 'severity': ok=!(contract.severity.hard_fail.includes(d.rule)&&d.severity!=='HARD_FAIL'); break;

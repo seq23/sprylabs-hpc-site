@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-07-18T15:37:51.808Z",
-  "files_scanned": 376,
-  "source_count": 191,
-  "hard_gate_source_count": 176,
-  "warning_source_count": 31,
+  "generated_at": "2026-07-22T22:21:14.593Z",
+  "files_scanned": 379,
+  "source_count": 193,
+  "hard_gate_source_count": 175,
+  "warning_source_count": 35,
   "records": [
     {
       "file": "_ops/validators/validate_distribution_contract.js",
@@ -572,7 +572,7 @@
     },
     {
       "file": "scripts/validation/validate_profile.mjs",
-      "hard_gate_signals": 5,
+      "hard_gate_signals": 9,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -639,8 +639,8 @@
     {
       "file": "scripts/validators/validate_agent_live.mjs",
       "hard_gate_signals": 5,
-      "warning_signals": 0,
-      "classification": "hard-gate-source"
+      "warning_signals": 2,
+      "classification": "mixed"
     },
     {
       "file": "scripts/validators/validate_answer_surface_dashboard_gates.js",
@@ -835,12 +835,6 @@
       "classification": "hard-gate-source"
     },
     {
-      "file": "scripts/validators/validate_coverage_route_contract.mjs",
-      "hard_gate_signals": 2,
-      "warning_signals": 0,
-      "classification": "hard-gate-source"
-    },
-    {
       "file": "scripts/validators/validate_crawl_contract.js",
       "hard_gate_signals": 3,
       "warning_signals": 0,
@@ -1031,6 +1025,24 @@
       "hard_gate_signals": 3,
       "warning_signals": 0,
       "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/validate_spry_agent_artifact_placement.mjs",
+      "hard_gate_signals": 0,
+      "warning_signals": 1,
+      "classification": "warning-source"
+    },
+    {
+      "file": "scripts/validators/validate_spry_cadence_queue_self_heal.mjs",
+      "hard_gate_signals": 0,
+      "warning_signals": 1,
+      "classification": "warning-source"
+    },
+    {
+      "file": "scripts/validators/validate_spry_tree_hygiene.mjs",
+      "hard_gate_signals": 0,
+      "warning_signals": 4,
+      "classification": "warning-source"
     },
     {
       "file": "scripts/validators/validate_strategy_gap_fill_contract.mjs",

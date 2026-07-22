@@ -54,11 +54,28 @@ function similarity(a = '', b = '') {
 function walkHtml(dir = ROOT, prefix = '') {
   const out = [];
   if (!fs.existsSync(dir)) return out;
+  const skippedRoots = new Set([
+    '.git',
+    '.build',
+    '.cache',
+    '.validation-cache',
+    '.validation-runtime',
+    '.wrangler',
+    'coverage',
+    'dist',
+    'node_modules',
+    'playwright-report',
+    'reports',
+    'test-results',
+    'validation_cache',
+    'validation_runtime'
+  ]);
   for (const name of fs.readdirSync(dir)) {
-    if (['.git','node_modules','.wrangler','.cache','dist'].includes(name)) continue;
+    if (skippedRoots.has(name)) continue;
     const abs = path.join(dir, name);
     const rel = prefix ? `${prefix}/${name}` : name;
-    const stat = fs.statSync(abs);
+    const stat = fs.lstatSync(abs);
+    if (stat.isSymbolicLink()) continue;
     if (stat.isDirectory()) out.push(...walkHtml(abs, rel));
     else if (/\.html$/i.test(name) && !rel.startsWith('reports/') && !rel.startsWith('artifacts/')) out.push(rel);
   }

@@ -17,7 +17,6 @@ TODAY = "2026-06-20"
 PRODUCT_ANCHOR_TEXT = "This is one of the frameworks inside the Billionaire High Performance Coach system — a structured executive OS for using ChatGPT as your accountability and decision partner."
 EXCLUDED = {
     "admin.html",
-    "coverage/index.html",
     "reports/answer-surface-dashboard.html",
 }
 EXCLUDED_PREFIXES = ("templates/", "artifacts/", "fixtures/", "node_modules/", ".git/", "answers/phase4/", "use-cases/phase4/", "vs/phase4/", "glossary/phase4/", "methods/phase4/", "brand-defense/", "platforms/phase4/")
