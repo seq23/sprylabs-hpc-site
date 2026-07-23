@@ -17,7 +17,11 @@ if(failures.length){
 console.log('[release:postpush] OK: both public domains respond');
 
 try {
-  await validateAgentLive({quiet: true});
+  await validateAgentLive({
+    quiet: true,
+    attempts: Number.parseInt(process.env.AGENT_LIVE_ATTEMPTS || '18', 10),
+    delayMs: Number.parseInt(process.env.AGENT_LIVE_RETRY_DELAY_MS || '10000', 10)
+  });
 } catch {
   console.error('[release:postpush] FAIL: latest absorbed agent run is not fully live');
   process.exit(1);

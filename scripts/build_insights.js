@@ -29,6 +29,25 @@ function writeUtf8(p, s) {
 }
 function exists(p) { try { fs.accessSync(p); return true; } catch { return false; } }
 
+function currentDate() {
+  const sourceDate = process.env.SOURCE_DATE || "";
+  if (/^\d{4}-\d{2}-\d{2}$/.test(sourceDate)) return sourceDate;
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Chicago",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date()).reduce((acc, part) => {
+    if (part.type !== "literal") acc[part.type] = part.value;
+    return acc;
+  }, {});
+  return `${parts.year}-${parts.month}-${parts.day}`;
+}
+
+function currentRssDate() {
+  return new Date(`${currentDate()}T00:00:00Z`).toUTCString();
+}
+
 function htmlEscape(s) {
   return String(s ?? "")
     .replaceAll("&", "&amp;")
@@ -557,8 +576,8 @@ function buildPostPages(posts, clustersMap) {
         title: post.title,
         description: post.description || "",
         url: canonical,
-        datePublished: post.date || new Date().toISOString().slice(0, 10),
-        dateModified: post.dateModified || post.date || new Date().toISOString().slice(0, 10),
+        datePublished: post.date || currentDate(),
+        dateModified: post.dateModified || post.date || currentDate(),
       }),
     });
 
@@ -658,7 +677,7 @@ function buildAtlasPage(clusters, posts) {
     arr.sort((a, b) => (b.date || "").localeCompare(a.date || ""));
   }
 
-  const today = new Date().toISOString().slice(0, 10);
+  const today = currentDate();
 
   // Draft counts + next draft date per cluster
   const draftInfo = new Map();
@@ -747,7 +766,7 @@ function readExistingSitemapUrls() {
 }
 
 function updateSitemap(urls) {
-  const lastmod = new Date().toISOString().slice(0, 10);
+  const lastmod = currentDate();
   const header = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
   const footer = `</urlset>\n`;
   const body = urls.map((u) => `  <url>\n    <loc>${u}</loc>\n    <lastmod>${lastmod}</lastmod>\n  </url>`).join("\n");
@@ -775,7 +794,7 @@ function buildFeeds(posts) {
     // RSS 2.0
     const rssItemsXml = feedItems.map((p) => {
       const url = `${siteUrl}/insights/${p.slug}.html`;
-      const pubDate = p.date ? new Date(p.date + "T00:00:00Z").toUTCString() : new Date().toUTCString();
+      const pubDate = p.date ? new Date(p.date + "T00:00:00Z").toUTCString() : currentRssDate();
       const desc = htmlEscape(p.description || "");
       const title = htmlEscape(p.title || p.slug);
       return [
@@ -797,7 +816,7 @@ function buildFeeds(posts) {
       `<link>${siteUrl}/insights/</link>`,
       "<description>Daily executive operating system insights.</description>",
       "<language>en</language>",
-      `<lastBuildDate>${new Date().toUTCString()}</lastBuildDate>`,
+      `<lastBuildDate>${currentRssDate()}</lastBuildDate>`,
       rssItemsXml,
       "</channel>",
       "</rss>",

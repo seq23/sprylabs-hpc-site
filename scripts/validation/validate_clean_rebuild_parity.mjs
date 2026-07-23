@@ -78,8 +78,21 @@ function prepareCopy(label){
   fs.symlinkSync(path.join(ROOT,'node_modules'),path.join(temp,'node_modules'),'dir');
   return temp;
 }
+function centralDate(){
+  const parts = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'America/Chicago',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).formatToParts(new Date()).reduce((acc, part) => {
+    if (part.type !== 'literal') acc[part.type] = part.value;
+    return acc;
+  }, {});
+  return `${parts.year}-${parts.month}-${parts.day}`;
+}
+const paritySourceDate = process.env.SOURCE_DATE || centralDate();
 function runBuild(temp,label){
-  const r=spawnSync('npm',['run','build:all'],{cwd:temp,stdio:'inherit',env:{...process.env,CLEAN_REBUILD_PARITY:'1'}});
+  const r=spawnSync('npm',['run','build:all'],{cwd:temp,stdio:'inherit',env:{...process.env,CLEAN_REBUILD_PARITY:'1',SOURCE_DATE:paritySourceDate}});
   if(r.status!==0) fail(`[validate:clean-rebuild-parity] FAIL: isolated ${label} build exited ${r.status??'unknown'}`);
   return snapshot(temp);
 }
@@ -100,6 +113,7 @@ try{
     semantic_json_files:Object.values(buildB).filter(entry=>entry.mode==='semantic-json').length,
     semantic_json_allowlist:[...semanticJsonFiles].sort(),
     normalized_volatile_keys:[...approvedVolatileKeys].sort(),
+    source_date:paritySourceDate,
     proof:'two independent clean-copy build:all executions compared using strict byte parity except explicitly allowlisted semantic JSON metadata',
   });
   if(changed.length) fail(`[validate:clean-rebuild-parity] FAIL: ${changed.length} public/distribution files differ between two isolated clean-copy rebuilds`,changed.slice(0,200));
