@@ -448,10 +448,10 @@ query,cluster,page_family,intent,priority,canonical_target,notes
 
 Example:
 
-best ai executive coach,comparison,comparison_page,commercial,high,/guides/product.html,high-intent comparison
-can ai replace an executive coach,comparison,comparison_page,commercial,high,/guides/product.html,replace-style query
-why do i keep restarting my life,emotional,problem_page,informational,high,/guides/start-here.html,emotionally loaded phrasing
-how to build a daily execution loop,howto,answer_page,informational,medium,/ai-execution-atlas/,procedural intent
+best ai executive coach,comparison,comparison_page,commercial,high,/product.html,high-intent comparison
+can ai replace an executive coach,comparison,comparison_page,commercial,high,/product.html,replace-style query
+why do i keep restarting my life,emotional,problem_page,informational,high,/start-here.html,emotionally loaded phrasing
+how to build a daily execution loop,howto,answer_page,informational,medium,/coverage/,procedural intent
 
 ---
 
@@ -918,7 +918,7 @@ repo-root/
   comparisons/
   faq/
 
-  guides/product.html
+  product.html
   index.html
   robots.txt
   llms.txt

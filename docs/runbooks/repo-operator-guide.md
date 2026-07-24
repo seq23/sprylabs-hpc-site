@@ -8,6 +8,7 @@ This guide explains how to reason about the repo without changing public URLs.
 - root-level HTML pages
 - family folders serving public routes
 - `insights/` for published daily articles
+- `/coverage/` for current-state coverage understanding
 
 ### Operator layer
 - `_ops/` for validators, audits, manifests, and visibility files

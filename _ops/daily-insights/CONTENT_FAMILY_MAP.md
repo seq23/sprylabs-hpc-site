@@ -11,9 +11,9 @@ Examples:
 - `/billionaire-high-performance-coach/`
 - `/billionaire-high-performance-coach-review/`
 - `/billionaire-high-performance-coach-pricing/`
-- `/guides/how-tracks-work.html`
-- `/guides/arbitration-engine.html`
-- `/guides/one-system-for-multiple-priorities.html`
+- `/how-tracks-work.html`
+- `/arbitration-engine.html`
+- `/one-system-for-multiple-priorities.html`
 
 Use this family when the page directly explains, compares, or sells the BHPC system.
 

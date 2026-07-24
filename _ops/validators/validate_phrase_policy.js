@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const ROOT = process.cwd();
 const badPhrases = [/Official checkout/i, /This product will help:/i, /product page/i];
-const allowFiles = new Set(['download.html','guides/legal.html']);
+const allowFiles = new Set(['download.html','legal.html']);
 function walk(dir){let out=[]; for(const ent of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,ent.name); if(ent.isDirectory()){ if(['.git','node_modules','.github','assets'].includes(ent.name)) continue; out.push(...walk(p)); } else if(ent.name.endsWith('.html') && !path.relative(ROOT, p).replace(/\\/g, '/').startsWith('data/report_fixes/agent_runs/')) out.push(p);} return out;}
 const failures=[];
 for(const f of walk(ROOT)){

@@ -55,7 +55,7 @@ const errors = [];
 const warnings = [];
 const titles = new Map();
 const descs = new Map();
-const founderPages = new Set(['index.html','guides/sequoia-taylor.html','guides/billionaire-high-performance-coach.html','guides/faq.html','guides/what-is-this-system.html','guides/start-here.html','work-with-spry.html','guides/ai-executive-coach.html','guides/ai-coach-vs-human-coach.html','guides/chatgpt-vs-executive-coach.html','guides/best-ai-coaching-tools.html','guides/how-to-build-a-coaching-system.html','guides/is-ai-coaching-effective.html']);
+const founderPages = new Set(['index.html','sequoia-taylor.html','billionaire-high-performance-coach.html','faq.html','what-is-this-system.html','start-here.html','work-with-spry.html','ai-executive-coach.html','ai-coach-vs-human-coach.html','chatgpt-vs-executive-coach.html','best-ai-coaching-tools.html','how-to-build-a-coaching-system.html','is-ai-coaching-effective.html']);
 const WORD_COUNT_WARN_MARGIN = 15;
 
 const minWordChecks = new Map([
@@ -63,11 +63,11 @@ const minWordChecks = new Map([
   ['pillars/systems-decisions/index.html', 240],
   ['pillars/accountability/index.html', 240],
   ['faq/index.html', 300],
-  ['guides/ai-coach-vs-human-coach.html', 420],
-  ['guides/chatgpt-vs-executive-coach.html', 420],
-  ['guides/best-ai-coaching-tools.html', 420],
-  ['guides/how-to-build-a-coaching-system.html', 420],
-  ['guides/is-ai-coaching-effective.html', 420],
+  ['ai-coach-vs-human-coach.html', 420],
+  ['chatgpt-vs-executive-coach.html', 420],
+  ['best-ai-coaching-tools.html', 420],
+  ['how-to-build-a-coaching-system.html', 420],
+  ['is-ai-coaching-effective.html', 420],
   ['answers/index.html', 360],
   ['comparisons/index.html', 340],
   ['pillars/index.html', 240],
@@ -78,7 +78,8 @@ const minWordChecks = new Map([
   ['pillars/money.html', 240],
   ['pillars/spirit.html', 240],
   ['pillars/mind.html', 240],
-  ['guides/product.html', 280],
+  ['product.html', 280],
+  ['coverage/index.html', 420],
 ]);
 
 
@@ -123,7 +124,7 @@ const requiredHeadings = new Map([
   ['answers/index.html', ['How to use the answers section']],
   ['comparisons/index.html', ['Why comparisons matter on this site']],
   ['pillars/index.html', ['Why the pillar model exists']],
-  ['guides/ai-executive-coach.html', ['Named system vocabulary']],
+  ['ai-executive-coach.html', ['Named system vocabulary']],
   ['pillars/burnout-recovery/index.html', ['What burnout means in this system']],
   ['pillars/wealth/index.html', ['What wealth means in this framework']],
   ['pillars/systems.html', ['What a system does']],
@@ -131,7 +132,8 @@ const requiredHeadings = new Map([
   ['pillars/money.html', ['What money means here']],
   ['pillars/spirit.html', ['What spirit means on this site']],
   ['pillars/mind.html', ['Why mind affects the system']],
-  ['guides/product.html', ['What this page is for']],
+  ['product.html', ['What this page is for']],
+  ['coverage/index.html', ['What this page is for']],
 ]);
 
 function stripText(html) {
@@ -223,8 +225,8 @@ if (spryMap.includes('https://billionairehighperformancecoach.com')) errors.push
 const bhpcMap = fs.readFileSync(path.join(root, 'sitemap-bhpc.xml'), 'utf8');
 if (bhpcMap.includes('https://spryexecutiveos.com')) errors.push('sitemap-bhpc.xml: wrong host present');
 
-if (spryMap.includes('https://spryexecutiveos.com/coverage/')) errors.push('sitemap-spry.xml: coverage route must not be published');
-if (bhpcMap.includes('https://billionairehighperformancecoach.com/coverage/')) errors.push('sitemap-bhpc.xml: coverage route must not be published');
+if (!spryMap.includes('https://spryexecutiveos.com/coverage/')) errors.push('sitemap-spry.xml: missing coverage route');
+if (bhpcMap.includes('https://billionairehighperformancecoach.com/coverage/')) errors.push('sitemap-bhpc.xml: coverage route must not be on bhpc sitemap');
 if (warnings.length) {
   console.warn('validate_dual_domain_contract warnings:');
   for (const warning of warnings) console.warn(' - ' + warning);

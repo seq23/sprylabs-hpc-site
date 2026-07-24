@@ -13,6 +13,9 @@ def load(path, fallback):
 def save(path, data):
     (ROOT/path).write_text(json.dumps(data,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
 
+def norm(v):
+    return ' '.join(str(v or '').split()).casefold()
+
 manual=load('data/content/manual_expansion_pages.json',{'pages':[]}).get('pages',[])
 # Path-level source of truth for pages with exact acceptance contracts.
 updates={}
@@ -30,6 +33,17 @@ for rec in citable.get('pages',[]):
     for k,v in upd.items():
         if v and rec.get(k)!=v:
             rec[k]=v; changed+=1
+seen_canonical={}
+for rec in citable.get('pages',[]):
+    if rec.get('status','ACTIVE')!='ACTIVE': continue
+    canonical=norm(rec.get('canonical_url'))
+    if not canonical: continue
+    if canonical in seen_canonical:
+        rec['status']='EXCLUDED'
+        rec['exclusion_reason']=f"duplicate canonical URL; kept {seen_canonical[canonical]}"
+        changed+=1
+    else:
+        seen_canonical[canonical]=rec.get('path')
 save('data/citation/citable_pages.json',citable)
 
 queries=load('data/citation/query_registry.json',{'queries':[]})

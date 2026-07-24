@@ -9,26 +9,11 @@ const redirects = payload.redirects || [];
 const domains = ['spryexecutiveos.com', 'billionairehighperformancecoach.com'];
 const excluded = new Set([
   'data/content/manual_redirects.json',
-  'data/content/root_page_migration_map.json',
   '_redirects',
   'docs/REDIRECT_MIGRATION_HISTORY.md',
 ]);
 const textExtensions = new Set(['.html', '.xml', '.txt', '.json', '.md', '.js', '.mjs', '.cjs']);
-const skipDirs = new Set([
-  '.git',
-  '.build',
-  '.rsync-tmp',
-  '.validation-cache',
-  '.validation-runtime',
-  'artifacts',
-  'coverage',
-  'node_modules',
-  'playwright-report',
-  'reports',
-  'test-results',
-  'validation_cache',
-  'validation_runtime'
-]);
+const skipDirs = new Set(['.git', 'node_modules', 'artifacts', 'coverage', 'reports', '.build', 'test-results', 'playwright-report']);
 
 function routeFromSource(sourcePath) {
   const normalized = '/' + sourcePath.replace(/^\/+/, '');
@@ -38,12 +23,10 @@ function routeFromSource(sourcePath) {
 
 function variantsFor(sourcePath) {
   const route = routeFromSource(sourcePath);
-  const bareSource = sourcePath.replace(/^\/+/, '');
-  const variants = new Set([route, bareSource]);
+  const variants = new Set([route, '/' + sourcePath.replace(/^\/+/, ''), sourcePath.replace(/^\/+/, ''), route.replace(/^\//, '')]);
   if (route.endsWith('/')) variants.add(route.slice(0, -1));
   for (const domain of domains) {
     for (const value of [...variants]) {
-      if (!value.startsWith('/')) continue;
       variants.add(`https://${domain}${value}`);
     }
   }
@@ -56,18 +39,16 @@ const mappings = redirects.map((entry) => ({
   variants: variantsFor(entry.source_path),
 }));
 
+for (const mapping of mappings) {
+  fs.rmSync(path.join(ROOT, mapping.source_path), {force: true});
+}
+
 function targetForVariant(target, original) {
   if (/^https?:\/\//.test(original)) {
     const parsed = new URL(original);
     return `https://${parsed.hostname}${target}`;
   }
-  if (!original.startsWith('/')) return target.replace(/^\/+/, '');
   return target;
-}
-
-function replaceStandaloneRoute(text, variant, replacement) {
-  const escaped = variant.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  return text.replace(new RegExp(`(^|[^A-Za-z0-9_./:-])${escaped}(?=$|[^A-Za-z0-9_./:-])`, 'g'), `$1${replacement}`);
 }
 
 function replaceUrlValue(value, rel) {
@@ -99,27 +80,22 @@ function rewriteText(rel, text) {
     return `${attr}=${quote}${next}${quote}`;
   });
 
-  if (rel.endsWith('.html')) {
-    for (const mapping of mappings) {
-      for (const variant of mapping.variants.filter((value) => /^https?:\/\//i.test(value))) {
-        const next = replaceStandaloneRoute(out, variant, targetForVariant(mapping.target, variant));
-        if (next !== out) {
-          replacements += 1;
-          out = next;
-        }
-      }
-    }
-  }
-
   // Source/template/registry strings may contain literal retired routes outside HTML attributes.
   if (!rel.endsWith('.html')) {
     for (const mapping of mappings) {
       for (const variant of mapping.variants) {
-        const next = replaceStandaloneRoute(out, variant, targetForVariant(mapping.target, variant));
-        if (next !== out) {
-          replacements += 1;
-          out = next;
+        const literalTarget = targetForVariant(mapping.target, variant);
+        if (out.includes(variant)) {
+          const before = out;
+          out = out.split(variant).join(literalTarget);
+          if (out !== before) replacements += 1;
         }
+        const escaped = variant.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const pattern = new RegExp(`(["'\\x60])${escaped}([?#][^"'\\x60]*)?\\1`, 'g');
+        out = out.replace(pattern, (match, quote, suffix = '') => {
+          replacements += 1;
+          return `${quote}${targetForVariant(mapping.target, variant)}${suffix}${quote}`;
+        });
       }
     }
   }
@@ -132,14 +108,11 @@ function walk(dir) {
     if (skipDirs.has(entry.name)) continue;
     const full = path.join(dir, entry.name);
     const rel = path.relative(ROOT, full).split(path.sep).join('/');
-    if (entry.isSymbolicLink()) continue;
     if (entry.isDirectory()) walk(full);
     else if (entry.isFile() && textExtensions.has(path.extname(entry.name)) && !excluded.has(rel)) {
-      if (!fs.existsSync(full)) continue;
       const before = fs.readFileSync(full, 'utf8');
       const { out, replacements } = rewriteText(rel, before);
       if (replacements && out !== before) {
-        if (!fs.existsSync(full)) continue;
         fs.writeFileSync(full, out, 'utf8');
         changed.push({ file: rel, replacements });
       }

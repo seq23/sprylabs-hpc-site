@@ -8,7 +8,6 @@ sys.dont_write_bytecode=True
 VENDOR_DIR = Path(__file__).resolve().parents[1] / "_vendor"
 if VENDOR_DIR.is_dir(): sys.path.insert(0, str(VENDOR_DIR))
 from bs4 import BeautifulSoup
-from bs4.exceptions import FeatureNotFound
 CITATION_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(CITATION_DIR))
 from extraction_contract import extract_scope_steps
@@ -66,13 +65,7 @@ def visible_faq(soup):
 
 def update_schema(path: Path):
     raw=path.read_text(encoding='utf-8', errors='ignore')
-    try:
-        soup=BeautifulSoup(raw,'lxml')
-    except FeatureNotFound:
-        # Clean-rebuild parity can import the vendored bs4 package without
-        # seeing lxml's optional builder. The stdlib parser keeps the repair
-        # self-contained instead of failing the release path.
-        soup=BeautifulSoup(raw,'html.parser')
+    soup=BeautifulSoup(raw,'lxml')
     # Final editorial citation pages use one CITATION_PAGE_SCHEMA graph only.
     # Remove older blanket GEO/Product/Software schema fragments that the
     # contract explicitly bans on editorial citation surfaces.
@@ -99,6 +92,9 @@ def update_schema(path: Path):
     graph=data.get('@graph',[])
     block=soup.select_one('[data-llm-answer="true"]')
     primary=next((x for x in graph if x.get('@type') in ('Article','BlogPosting','WebPage')),None)
+    if not primary:
+        primary={'@type':'WebPage','@id':f'{canonical}#webpage' if canonical else None}
+        graph.insert(0, primary)
     if primary:
         if 'headline' in primary or primary.get('@type') in ('Article','BlogPosting'):
             primary['headline']=h1text

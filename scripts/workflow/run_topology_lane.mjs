@@ -1,6 +1,15 @@
 #!/usr/bin/env node
 import {spawnSync} from 'node:child_process';
-import {ROOT, readJson, writeJson, nowRunId} from './lib.mjs';
+import {
+  ROOT,
+  changedFiles,
+  nowRunId,
+  readJson,
+  selectedSnapshot,
+  snapshot,
+  workflowContract,
+  writeJson,
+} from './lib.mjs';
 
 function parseArgs(argv) {
   const out = {lane: '', mode: '', traceOnly: false, contractId: ''};
@@ -42,6 +51,13 @@ if (!stages.length) {
   console.error(`[workflow-topology] no stages configured for ${args.lane}/${mode}`);
   process.exit(2);
 }
+let contract = null;
+try {
+  contract = workflowContract(args.lane);
+} catch {
+  contract = null;
+}
+const beforeSnapshot = !args.traceOnly && contract ? snapshot() : null;
 const runId = process.env.WORKFLOW_TRACE_RUN_ID || nowRunId();
 const traceRoot = args.traceOnly ? 'artifacts/validation/workflow-topology-fixtures' : 'reports/workflows';
 const traceDir = `${traceRoot}/${args.lane}/${runId}`;
@@ -49,6 +65,8 @@ const tracePath = `${traceDir}/trace.json`;
 const trace = {
   schema_version: '1.1',
   topology_schema_version: topology.schema_version,
+  workflow_id: args.lane,
+  workflow_name: contract?.name || args.lane,
   lane: args.lane,
   mode,
   contract_id: args.contractId || null,
@@ -62,6 +80,18 @@ const trace = {
     component_count: stages.length
   } : null,
   started_at: new Date().toISOString(),
+  command: `npm run workflow:${args.lane} -- --mode ${mode}`,
+  command_exit_code: null,
+  contract_file: contract ? 'data/workflows/workflow_contracts.json' : null,
+  workflow_file: contract?.workflow_file || null,
+  validation: {status: 'RUNNING'},
+  lineage: contract ? {
+    input_patterns: contract.lineage_inputs || [],
+    output_patterns: contract.lineage_outputs || [],
+    inputs_before: beforeSnapshot ? selectedSnapshot(beforeSnapshot, contract.lineage_inputs || []) : [],
+    outputs_after: [],
+    changed_files: [],
+  } : null,
   status: 'RUNNING',
   stages: []
 };
@@ -109,6 +139,8 @@ for (const [label, command, commandArgs] of stages) {
   };
   trace.stages.push(stage);
   trace.status = stage.exit_code === 0 ? 'RUNNING' : 'FAIL';
+  trace.command_exit_code = stage.exit_code === 0 ? null : stage.exit_code;
+  trace.validation = {status: stage.exit_code === 0 ? 'RUNNING' : 'FAILED'};
   writeJson(tracePath, trace);
   if (stage.exit_code !== 0) {
     writeJson(`${traceRoot}/${args.lane}/latest.json`, trace);
@@ -118,6 +150,13 @@ for (const [label, command, commandArgs] of stages) {
 }
 trace.completed_at = new Date().toISOString();
 trace.status = args.traceOnly ? 'TRACE_ONLY_PASS' : 'PASS';
+trace.command_exit_code = 0;
+trace.validation = {status: args.traceOnly ? 'TRACE_ONLY_PASSED' : 'PASSED'};
+if (!args.traceOnly && contract && beforeSnapshot) {
+  const afterSnapshot = snapshot();
+  trace.lineage.outputs_after = selectedSnapshot(afterSnapshot, contract.lineage_outputs || []);
+  trace.lineage.changed_files = changedFiles(beforeSnapshot, afterSnapshot);
+}
 writeJson(tracePath, trace);
 writeJson(`${traceRoot}/${args.lane}/latest.json`, trace);
 console.log(`[workflow-topology:${args.lane}/${mode}] ${trace.status} trace=${tracePath}`);

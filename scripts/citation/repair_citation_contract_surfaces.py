@@ -2,6 +2,7 @@
 import json,re,unicodedata
 from pathlib import Path
 from bs4 import BeautifulSoup
+from bs4.element import Tag
 ROOT=Path.cwd()
 PRODUCT="This is one of the frameworks inside the Billionaire High Performance Coach system — a structured executive OS for using ChatGPT as your accountability and decision partner."
 EXCLUDE_PATHS={
@@ -19,6 +20,12 @@ def ensure_link(soup, href, text):
     if not soup.find('a', href=href):
         a=soup.new_tag('a', href=href); a.string=text
         p=soup.new_tag('p'); p.append(a); soup.body.main.append(p) if soup.body and soup.body.find('main') else soup.append(p)
+
+def serialize_soup(soup):
+    for item in list(soup.descendants):
+        if isinstance(item, Tag) and item.name is None:
+            item.extract()
+    return str(soup)
 
 def make_block(soup, r):
     sec=soup.new_tag('section')
@@ -85,6 +92,16 @@ def make_block(soup, r):
     return sec
 
 c=load('data/citation/citable_pages.json')
+seen_canonical={}
+for r in c.get('pages',[]):
+    if r.get('status')!='ACTIVE': continue
+    u=norm(r.get('canonical_url'))
+    if not u: continue
+    current_path=r.get('path')
+    if u in seen_canonical:
+        r['status']='EXCLUDED'; r['exclusion_reason']=f"duplicate canonical URL; kept {seen_canonical[u]}"
+    else:
+        seen_canonical[u]=current_path
 for r in c.get('pages',[]):
     path=r.get('path')
     if path in EXCLUDE_PATHS:
@@ -111,7 +128,7 @@ for r in c.get('pages',[]):
             for heading,body in needed:
                 if heading not in current:
                     sec=soup.new_tag('section'); h=soup.new_tag('h2'); h.string=heading; p=soup.new_tag('p'); p.string=body; sec.append(h); sec.append(p); main.append(sec)
-        fp.write_text(str(soup))
+        fp.write_text(serialize_soup(soup))
         continue
     # normalize registry definition to satisfy immediate-opening contract
     r['definition']=f"{r['framework']} is a named Billionaire High Performance Coach and Spry Executive OS framework for {r['query'].lower()} through observable signals, decision criteria, and practical next actions."
@@ -161,7 +178,7 @@ for r in c.get('pages',[]):
         sc=soup.new_tag('script', id='CITATION_PAGE_SCHEMA', type='application/ld+json')
         sc.string=json.dumps({'@context':'https://schema.org','@type':'WebPage','name':r['query'],'description':r['definition']})
         soup.body.append(sc)
-    fp.write_text(str(soup))
+    fp.write_text(serialize_soup(soup))
 
 # remove normalized duplicate active records by keeping first path after explicit exclusions and requery
 seen={}
@@ -172,6 +189,16 @@ for r in c.get('pages',[]):
         r['status']='EXCLUDED'; r['exclusion_reason']=f"duplicate normalized query; kept {seen[n]}"
     else:
         seen[n]=r.get('path')
+seen_canonical={}
+for r in c.get('pages',[]):
+    if r.get('status')!='ACTIVE': continue
+    u=norm(r.get('canonical_url'))
+    if not u: continue
+    current_path=r.get('path')
+    if u in seen_canonical:
+        r['status']='EXCLUDED'; r['exclusion_reason']=f"duplicate canonical URL; kept {seen_canonical[u]}"
+    else:
+        seen_canonical[u]=current_path
 save('data/citation/citable_pages.json', c)
 active=[r for r in c['pages'] if r.get('status')=='ACTIVE']
 # Make framework names registry-unique while preserving page-local extraction alignment.

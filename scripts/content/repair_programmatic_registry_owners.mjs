@@ -327,28 +327,7 @@ const citableByPath = new Map(citable.filter(p => p && p.path).map(p => [p.path,
 const llmsCoverageSync = syncLlmsCoverage(activeQueries, citableByPath);
 const before = registry.records || [];
 const removed = before.filter(r => r && r.path && !active.has(r.path));
-function recordScore(record) {
-  let score = 0;
-  if (record.admission_level === 'full') score += 100;
-  if (record.generation_lane === 'manual') score += 50;
-  if (record.source === 'manual_expansion_pages.json') score += 25;
-  if (record.source === 'programmatic_registry_owner_repair') score += 10;
-  if (record.primary_query) score += 1;
-  return score;
-}
-
-const deduped = new Map();
-const duplicateRemoved = [];
-for (const record of before.filter(r => r && r.path && active.has(r.path))) {
-  const prior = deduped.get(record.path);
-  if (!prior || recordScore(record) > recordScore(prior)) {
-    if (prior) duplicateRemoved.push(prior);
-    deduped.set(record.path, record);
-  } else {
-    duplicateRemoved.push(record);
-  }
-}
-registry.records = [...deduped.values()];
+registry.records = before.filter(r => r && r.path && active.has(r.path));
 const byPath = new Map(registry.records.map(r => [r.path, r]));
 let added = 0;
 let updated = 0;
@@ -408,8 +387,7 @@ fs.writeFileSync('reports/programmatic-registry-owner-repair.json', `${JSON.stri
   active_query_owner_count: active.size,
   before_count: before.length,
   after_count: registry.records.length,
-  removed_count: removed.length + duplicateRemoved.length,
-  duplicate_removed_count: duplicateRemoved.length,
+  removed_count: removed.length,
   added_count: added,
   updated_count: updated,
   query_owner_conflict_repairs: queryOwnerConflictRepairs.length,
@@ -418,7 +396,6 @@ fs.writeFileSync('reports/programmatic-registry-owner-repair.json', `${JSON.stri
   route_manifest_sync: routeManifestSync,
   query_surface_sync: querySurfaceSync,
   llms_coverage_sync: llmsCoverageSync,
-  removed: removed.map(r => ({path: r.path, primary_query: r.primary_query, source: r.source})),
-  duplicate_removed: duplicateRemoved.map(r => ({path: r.path, primary_query: r.primary_query, source: r.source}))
+  removed: removed.map(r => ({path: r.path, primary_query: r.primary_query, source: r.source}))
 }, null, 2)}\n`, 'utf8');
-console.log(`[programmatic-registry-owner-repair] PASS: removed=${removed.length}; duplicate_removed=${duplicateRemoved.length}; added=${added}; updated=${updated}; owner_conflict_repairs=${queryOwnerConflictRepairs.length}; citable_sync=${canonicalSurfaceSync.citable_updates}; html_sync=${canonicalSurfaceSync.html_updates}; schema_sync=${canonicalSurfaceSync.schema_updates}; public_route_sync=${routeManifestSync.public_updates}; critical_route_sync=${routeManifestSync.critical_updates}; answer_sync=${querySurfaceSync.answers_updates}; llms_sync=${querySurfaceSync.llms_updates}; llms_coverage_sync=${llmsCoverageSync.llms_updates}; llms_full_sync=${llmsCoverageSync.llms_full_updates}; active=${active.size}; remaining=${registry.records.length}`);
+console.log(`[programmatic-registry-owner-repair] PASS: removed=${removed.length}; added=${added}; updated=${updated}; owner_conflict_repairs=${queryOwnerConflictRepairs.length}; citable_sync=${canonicalSurfaceSync.citable_updates}; html_sync=${canonicalSurfaceSync.html_updates}; schema_sync=${canonicalSurfaceSync.schema_updates}; public_route_sync=${routeManifestSync.public_updates}; critical_route_sync=${routeManifestSync.critical_updates}; answer_sync=${querySurfaceSync.answers_updates}; llms_sync=${querySurfaceSync.llms_updates}; llms_coverage_sync=${llmsCoverageSync.llms_updates}; llms_full_sync=${llmsCoverageSync.llms_full_updates}; active=${active.size}; remaining=${registry.records.length}`);

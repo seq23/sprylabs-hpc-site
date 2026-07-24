@@ -18,11 +18,24 @@ function parseGraph(html, rel) {
   }
 }
 
+function resolveActivePage(rel) {
+  const file = path.join(ROOT, rel);
+  if (!fs.existsSync(file)) return null;
+  const stat = fs.statSync(file);
+  if (stat.isDirectory()) {
+    const indexFile = path.join(file, 'index.html');
+    if (fs.existsSync(indexFile) && fs.statSync(indexFile).isFile()) return indexFile;
+    return null;
+  }
+  if (stat.isFile()) return file;
+  return null;
+}
+
 for (const record of registry.pages || []) {
   if ((record.status || 'ACTIVE') !== 'ACTIVE') continue;
   const rel = record.path;
-  const file = path.join(ROOT, rel);
-  if (!fs.existsSync(file)) { errors.push(`${rel}: active page missing`); continue; }
+  const file = resolveActivePage(rel);
+  if (!file) { errors.push(`${rel}: active page missing`); continue; }
   const html = fs.readFileSync(file, 'utf8');
   if (/class=["']fanout-payload["']/i.test(html)) errors.push(`${rel}: hidden fanout payload still present`);
   if (/data-geo-semantic=["']true["']/i.test(html)) errors.push(`${rel}: obsolete blanket supplemental schema present`);

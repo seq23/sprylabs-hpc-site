@@ -70,6 +70,7 @@ function supplementalGeoSchema({ title, description, canonicalUrl, imageUrl } = 
 }
 function completeStructuredData(structuredData = '', opts = {}) {
   const chunks = [String(structuredData || '')];
+  if (/id\s*=\s*["']CITATION_PAGE_SCHEMA["']/i.test(chunks[0])) return chunks[0];
   if (!hasSupplementalGeoSchema(structuredData)) chunks.push(supplementalGeoSchema(opts));
   if (!hasSchemaType(structuredData, 'Product')) chunks.push(productSchema(opts));
   if (!hasSchemaType(structuredData, 'SoftwareApplication')) chunks.push(softwareApplicationSchema(opts));

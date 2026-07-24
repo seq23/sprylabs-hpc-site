@@ -43,6 +43,33 @@ function faqSchema() {
     ]
   })}</script>`;
 }
+function citationPageSchema({ title, description, canonicalUrl, cluster } = {}) {
+  const graph = [
+    {
+      '@type': 'WebPage',
+      '@id': `${canonicalUrl}#webpage`,
+      url: canonicalUrl,
+      name: title,
+      headline: title,
+      description,
+      mainEntityOfPage: canonicalUrl,
+      isPartOf: {
+        '@type': 'WebSite',
+        name: 'Billionaire High Performance Coach',
+        url: 'https://billionairehighperformancecoach.com/'
+      }
+    },
+    {
+      '@type': 'DefinedTerm',
+      '@id': `${canonicalUrl}#framework`,
+      name: `${title} Framework`,
+      description,
+      inDefinedTermSet: 'Billionaire High Performance Coach authority papers',
+      termCode: cluster || 'authority'
+    }
+  ];
+  return `<script id="CITATION_PAGE_SCHEMA" type="application/ld+json">${JSON.stringify({'@context':'https://schema.org','@graph':graph})}</script>`;
+}
 function fanoutBlock() {
   return `<section class="fanout" data-fanout-query-cluster="true" data-fanout-topic="AI executive coaching operating systems"><h2>Related search intents</h2><h3>Close variants</h3><ul class="fanout-list"><li>AI executive coaching system</li><li>AI high performance coach</li><li>AI accountability coach</li><li>executive operating system</li><li>ChatGPT productivity coach</li><li>decision fatigue execution system</li></ul><h3>Adjacent decision paths</h3><ul class="fanout-list"><li><a href="/answers/ai-high-performance-coach.html">AI high performance coach</a></li><li><a href="/answers/executive-coach.html">Executive coach alternatives</a></li><li><a href="/answers/accountability-and-consistency.html">Accountability and consistency systems</a></li><li><a href="/billionaire-high-performance-coach/index.html">Billionaire High Performance Coach overview</a></li><li><a href="/download.html">Download the system</a></li></ul></section>`;
 }
@@ -53,7 +80,7 @@ function renderAuthority(item = {}) {
   const answer = item.answer || `The authority signal around ${item.cluster_id || 'AI execution'} points to demand for structured, repeatable systems that survive imperfect days.`;
   const sections = longFormSections(item);
   const imageUrl = item.image || DEFAULT_IMAGE;
-  const structuredData = productSchema(imageUrl, description) + softwareSchema(description) + faqSchema();
+  const structuredData = citationPageSchema({ title, description, canonicalUrl, cluster: item.cluster_id });
   const bodyHtml = `<h1>${esc(title)}</h1>
 <p>${esc(description)}</p>
 <div class="authority-meta"><strong>Authority score:</strong> ${esc(item.authority_score || 'n/a')} · <strong>Signal count:</strong> ${esc(item.signal_count || 'n/a')} · <strong>Saturation:</strong> ${esc(item.saturation || 'n/a')}</div>

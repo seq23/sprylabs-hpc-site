@@ -18,6 +18,10 @@ function pathKey(value = '') {
   return clean(String(value || '').replace(/index\.html$/i, '').replace(/\.html$/i, '').replace(/[/-]+/g, ' '));
 }
 
+function basenamePathKey(value = '') {
+  return pathKey(path.basename(String(value || '')));
+}
+
 function levenshtein(a = '', b = '') {
   const x = clean(a);
   const y = clean(b);
@@ -54,28 +58,11 @@ function similarity(a = '', b = '') {
 function walkHtml(dir = ROOT, prefix = '') {
   const out = [];
   if (!fs.existsSync(dir)) return out;
-  const skippedRoots = new Set([
-    '.git',
-    '.build',
-    '.cache',
-    '.validation-cache',
-    '.validation-runtime',
-    '.wrangler',
-    'coverage',
-    'dist',
-    'node_modules',
-    'playwright-report',
-    'reports',
-    'test-results',
-    'validation_cache',
-    'validation_runtime'
-  ]);
   for (const name of fs.readdirSync(dir)) {
-    if (skippedRoots.has(name)) continue;
+    if (['.git','node_modules','.wrangler','.cache','dist'].includes(name)) continue;
     const abs = path.join(dir, name);
     const rel = prefix ? `${prefix}/${name}` : name;
-    const stat = fs.lstatSync(abs);
-    if (stat.isSymbolicLink()) continue;
+    const stat = fs.statSync(abs);
     if (stat.isDirectory()) out.push(...walkHtml(abs, rel));
     else if (/\.html$/i.test(name) && !rel.startsWith('reports/') && !rel.startsWith('artifacts/')) out.push(rel);
   }
@@ -131,10 +118,14 @@ function resolvePathTypo(candidatePath = '') {
   const direct = safeRelative(candidatePath);
   if (!direct || fs.existsSync(path.join(ROOT, direct))) return null;
   const directKey = pathKey(direct);
+  const directBaseKey = basenamePathKey(direct);
   const candidates = walkHtml().map(existing => ({
     path: existing,
-    score: similarity(directKey, pathKey(existing)),
-    matched_on: 'path_slug_similarity'
+    score: Math.max(
+      similarity(directKey, pathKey(existing)),
+      directBaseKey ? similarity(directBaseKey, basenamePathKey(existing)) : 0
+    ),
+    matched_on: 'path_or_basename_slug_similarity'
   }));
   return bestMatch(candidates, 0.93);
 }

@@ -82,15 +82,15 @@ function replaceShortAnswer(rel, exact){
 }
 function replaceHref(html, from, to){ return html.split(from).join(to); }
 function fixHowTracks(){
-  const rel='guides/how-tracks-work.html'; const fp=path.join(ROOT,rel); let html=read(fp); if(!html) return {path:rel, changed:false, error:'missing_file'};
+  const rel='how-tracks-work.html'; const fp=path.join(ROOT,rel); let html=read(fp); if(!html) return {path:rel, changed:false, error:'missing_file'};
   const before=html;
   const replacements={
-    'href="/guides/ai-executive-coach.html"':'href="https://billionairehighperformancecoach.com/guides/ai-executive-coach.html"',
-    'href="/guides/ai-coach-vs-human-coach-for-founders.html"':'href="https://billionairehighperformancecoach.com/guides/ai-coach-vs-human-coach-for-founders.html"',
-    'href="/guides/can-ai-replace-an-executive-coach.html"':'href="https://billionairehighperformancecoach.com/guides/can-ai-replace-an-executive-coach.html"',
-    'href="/guides/ai-workflow-for-founders.html"':'href="https://billionairehighperformancecoach.com/guides/ai-workflow-for-founders.html"',
-    'href="/guides/decision-fatigue-and-structured-ai-support.html"':'href="https://billionairehighperformancecoach.com/guides/decision-fatigue-and-structured-ai-support.html"',
-    'href="/guides/ai-accountability-system-vs-habit-tracker.html"':'href="https://billionairehighperformancecoach.com/guides/ai-accountability-system-vs-habit-tracker.html"'
+    'href="/ai-executive-coach.html"':'href="https://billionairehighperformancecoach.com/ai-executive-coach.html"',
+    'href="/ai-coach-vs-human-coach-for-founders.html"':'href="https://billionairehighperformancecoach.com/ai-coach-vs-human-coach-for-founders.html"',
+    'href="/can-ai-replace-an-executive-coach.html"':'href="https://billionairehighperformancecoach.com/can-ai-replace-an-executive-coach.html"',
+    'href="/ai-workflow-for-founders.html"':'href="https://billionairehighperformancecoach.com/ai-workflow-for-founders.html"',
+    'href="/decision-fatigue-and-structured-ai-support.html"':'href="https://billionairehighperformancecoach.com/decision-fatigue-and-structured-ai-support.html"',
+    'href="/ai-accountability-system-vs-habit-tracker.html"':'href="https://billionairehighperformancecoach.com/ai-accountability-system-vs-habit-tracker.html"'
   };
   for (const [from,to] of Object.entries(replacements)) html=replaceHref(html,from,to);
   write(fp,html); return {path:rel, changed:html!==before};
@@ -160,7 +160,7 @@ function verify(fixes, specs){
     ['insights/how-to-act-confident-before-you-feel-confident.html','Acting confident before you feel confident means anchoring behavior'],
     ['insights/system-for-confidence.html','confidence system is a repeatable sequence of small, completable actions'],
     ['insights/the-difference-between-confidence-and-certainty-and-why-it-matters.html','Confidence is the willingness to act despite incomplete information'],
-    ['guides/how-tracks-work.html','https://billionairehighperformancecoach.com/guides/ai-executive-coach.html'],
+    ['how-tracks-work.html','https://billionairehighperformancecoach.com/ai-executive-coach.html'],
     ['clusters/life-coach-alternatives.html','https://spryexecutiveos.com/answers/ai-executive-coach-alternative.html']
   ];
   for (const [rel,phrase] of checks) if (!read(path.join(ROOT,rel)).includes(phrase)) errors.push(`${rel}: missing expected phrase ${phrase}`);

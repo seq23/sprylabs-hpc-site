@@ -1,6 +1,8 @@
 {
   "schema_version": "1.1",
   "topology_schema_version": "1.2",
+  "workflow_id": "spry-full-rebuild",
+  "workflow_name": "Spry Full Rebuild",
   "lane": "spry-full-rebuild",
   "mode": "full",
   "contract_id": "spry-full-rebuild",
@@ -13,14 +15,49 @@
     "mode": "full",
     "component_count": 5
   },
-  "started_at": "2026-07-22T22:14:23.119Z",
+  "started_at": "2026-07-24T00:12:57.577Z",
+  "command": "npm run workflow:spry-full-rebuild -- --mode full",
+  "command_exit_code": 0,
+  "contract_file": "data/workflows/workflow_contracts.json",
+  "workflow_file": ".github/workflows/spry-full-rebuild.yml",
+  "validation": {
+    "status": "TRACE_ONLY_PASSED"
+  },
+  "lineage": {
+    "input_patterns": [
+      "data/**",
+      "content/**",
+      "scripts/**",
+      "package.json",
+      "package-lock.json",
+      "_public_route_manifest.json",
+      "_critical_browser_route_manifest.json"
+    ],
+    "output_patterns": [
+      "*.html",
+      "answers/**",
+      "clusters/**",
+      "comparisons/**",
+      "content/**",
+      "whitepapers/**",
+      "data/**",
+      "releases/**",
+      "sitemap*.xml",
+      "llms*.txt",
+      "reports/workflows/spry-full-rebuild/**",
+      "artifacts/validation/**"
+    ],
+    "inputs_before": [],
+    "outputs_after": [],
+    "changed_files": []
+  },
   "status": "TRACE_ONLY_PASS",
   "stages": [
     {
       "label": "strategy:gap-fill:backlog",
       "command": "npm run strategy:gap-fill:backlog",
-      "started_at": "2026-07-22T22:14:23.120Z",
-      "completed_at": "2026-07-22T22:14:23.120Z",
+      "started_at": "2026-07-24T00:12:57.579Z",
+      "completed_at": "2026-07-24T00:12:57.579Z",
       "exit_code": 0,
       "signal": null,
       "execution": "skipped_trace_only",
@@ -32,8 +69,8 @@
     {
       "label": "strategy:gap-fill:release-gap",
       "command": "npm run strategy:gap-fill:release-gap",
-      "started_at": "2026-07-22T22:14:23.121Z",
-      "completed_at": "2026-07-22T22:14:23.121Z",
+      "started_at": "2026-07-24T00:12:57.579Z",
+      "completed_at": "2026-07-24T00:12:57.579Z",
       "exit_code": 0,
       "signal": null,
       "execution": "skipped_trace_only",
@@ -45,8 +82,8 @@
     {
       "label": "build:all",
       "command": "npm run build:all",
-      "started_at": "2026-07-22T22:14:23.121Z",
-      "completed_at": "2026-07-22T22:14:23.121Z",
+      "started_at": "2026-07-24T00:12:57.579Z",
+      "completed_at": "2026-07-24T00:12:57.579Z",
       "exit_code": 0,
       "signal": null,
       "execution": "skipped_trace_only",
@@ -58,8 +95,8 @@
     {
       "label": "release:content-finalize",
       "command": "npm run release:content-finalize",
-      "started_at": "2026-07-22T22:14:23.121Z",
-      "completed_at": "2026-07-22T22:14:23.121Z",
+      "started_at": "2026-07-24T00:12:57.579Z",
+      "completed_at": "2026-07-24T00:12:57.579Z",
       "exit_code": 0,
       "signal": null,
       "execution": "skipped_trace_only",
@@ -71,8 +108,8 @@
     {
       "label": "validate:full-audit",
       "command": "npm run validate:full-audit",
-      "started_at": "2026-07-22T22:14:23.121Z",
-      "completed_at": "2026-07-22T22:14:23.121Z",
+      "started_at": "2026-07-24T00:12:57.579Z",
+      "completed_at": "2026-07-24T00:12:57.579Z",
       "exit_code": 0,
       "signal": null,
       "execution": "skipped_trace_only",
@@ -82,5 +119,5 @@
       }
     }
   ],
-  "completed_at": "2026-07-22T22:14:23.121Z"
+  "completed_at": "2026-07-24T00:12:57.579Z"
 }

@@ -1,6 +1,8 @@
 
 const fs = require('fs');
 const path = require('path');
+const { execFileSync } = require('child_process');
+
 const ROOT = process.cwd();
 const published = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/reddit/published_manifest.json'), 'utf8'));
 const llmsPath = path.join(ROOT, 'llms.txt');
@@ -31,6 +33,11 @@ function updateSitemap() {
   }
 }
 
+function rebuildCoverage() {
+  execFileSync(process.execPath, [path.join(ROOT, 'scripts/build_coverage_map.js')], { stdio: 'inherit' });
+}
+
 updateLlms();
 updateSitemap();
-console.log('update_velocity_indexes: updated llms and sitemap');
+rebuildCoverage();
+console.log('update_velocity_indexes: updated llms, sitemap, and coverage');

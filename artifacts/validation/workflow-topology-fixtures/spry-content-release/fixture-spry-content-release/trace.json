@@ -1,6 +1,8 @@
 {
   "schema_version": "1.1",
   "topology_schema_version": "1.2",
+  "workflow_id": "spry-content-release",
+  "workflow_name": "Spry Content Release",
   "lane": "spry-content-release",
   "mode": "full-content-cycle",
   "contract_id": "spry-content-release",
@@ -13,14 +15,53 @@
     "mode": "full-content-cycle",
     "component_count": 7
   },
-  "started_at": "2026-07-22T22:14:23.071Z",
+  "started_at": "2026-07-24T00:12:57.532Z",
+  "command": "npm run workflow:spry-content-release -- --mode full-content-cycle",
+  "command_exit_code": 0,
+  "contract_file": "data/workflows/workflow_contracts.json",
+  "workflow_file": ".github/workflows/spry-content-release.yml",
+  "validation": {
+    "status": "TRACE_ONLY_PASSED"
+  },
+  "lineage": {
+    "input_patterns": [
+      "data/report_fixes/agent_runs/**",
+      "data/report_fixes/normalized_agent_runs/**",
+      "data/social/runs/**",
+      "data/reddit/**",
+      "data/citation_velocity/**",
+      "data/strategy/**",
+      "scripts/agent_intake/**",
+      "scripts/content/**",
+      "scripts/reddit/**",
+      "scripts/social/**",
+      "scripts/synthesis/**",
+      "scripts/whitepapers/**"
+    ],
+    "output_patterns": [
+      "data/**",
+      "answers/**",
+      "clusters/**",
+      "comparisons/**",
+      "content/**",
+      "whitepapers/**",
+      "releases/**",
+      "sitemap*.xml",
+      "llms*.txt",
+      "reports/workflows/spry-content-release/**",
+      "artifacts/validation/**"
+    ],
+    "inputs_before": [],
+    "outputs_after": [],
+    "changed_files": []
+  },
   "status": "TRACE_ONLY_PASS",
   "stages": [
     {
       "label": "strategy:gap-fill:backlog",
       "command": "npm run strategy:gap-fill:backlog",
-      "started_at": "2026-07-22T22:14:23.072Z",
-      "completed_at": "2026-07-22T22:14:23.072Z",
+      "started_at": "2026-07-24T00:12:57.534Z",
+      "completed_at": "2026-07-24T00:12:57.535Z",
       "exit_code": 0,
       "signal": null,
       "execution": "skipped_trace_only",
@@ -32,8 +73,8 @@
     {
       "label": "strategy:gap-fill:release-gap",
       "command": "npm run strategy:gap-fill:release-gap",
-      "started_at": "2026-07-22T22:14:23.072Z",
-      "completed_at": "2026-07-22T22:14:23.072Z",
+      "started_at": "2026-07-24T00:12:57.535Z",
+      "completed_at": "2026-07-24T00:12:57.535Z",
       "exit_code": 0,
       "signal": null,
       "execution": "skipped_trace_only",
@@ -45,8 +86,8 @@
     {
       "label": "release:agent-intake:raw",
       "command": "npm run release:agent-intake:raw",
-      "started_at": "2026-07-22T22:14:23.073Z",
-      "completed_at": "2026-07-22T22:14:23.073Z",
+      "started_at": "2026-07-24T00:12:57.535Z",
+      "completed_at": "2026-07-24T00:12:57.535Z",
       "exit_code": 0,
       "signal": null,
       "execution": "skipped_trace_only",
@@ -58,8 +99,8 @@
     {
       "label": "content:pipeline",
       "command": "npm run content:pipeline",
-      "started_at": "2026-07-22T22:14:23.073Z",
-      "completed_at": "2026-07-22T22:14:23.073Z",
+      "started_at": "2026-07-24T00:12:57.535Z",
+      "completed_at": "2026-07-24T00:12:57.535Z",
       "exit_code": 0,
       "signal": null,
       "execution": "skipped_trace_only",
@@ -71,8 +112,8 @@
     {
       "label": "citation:5k:plan",
       "command": "npm run citation:5k:plan",
-      "started_at": "2026-07-22T22:14:23.073Z",
-      "completed_at": "2026-07-22T22:14:23.073Z",
+      "started_at": "2026-07-24T00:12:57.535Z",
+      "completed_at": "2026-07-24T00:12:57.535Z",
       "exit_code": 0,
       "signal": null,
       "execution": "skipped_trace_only",
@@ -84,8 +125,8 @@
     {
       "label": "release:content-finalize",
       "command": "npm run release:content-finalize",
-      "started_at": "2026-07-22T22:14:23.073Z",
-      "completed_at": "2026-07-22T22:14:23.073Z",
+      "started_at": "2026-07-24T00:12:57.535Z",
+      "completed_at": "2026-07-24T00:12:57.535Z",
       "exit_code": 0,
       "signal": null,
       "execution": "skipped_trace_only",
@@ -97,8 +138,8 @@
     {
       "label": "validate:batch-g-continuity",
       "command": "npm run validate:batch-g-continuity",
-      "started_at": "2026-07-22T22:14:23.073Z",
-      "completed_at": "2026-07-22T22:14:23.073Z",
+      "started_at": "2026-07-24T00:12:57.535Z",
+      "completed_at": "2026-07-24T00:12:57.535Z",
       "exit_code": 0,
       "signal": null,
       "execution": "skipped_trace_only",
@@ -108,5 +149,5 @@
       }
     }
   ],
-  "completed_at": "2026-07-22T22:14:23.073Z"
+  "completed_at": "2026-07-24T00:12:57.535Z"
 }

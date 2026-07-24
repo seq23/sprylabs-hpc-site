@@ -74,13 +74,13 @@ npm run validate:all
 Check these pages every pass:
 - `/`
 - `/download.html`
-- `/guides/product.html`
-- `/guides/start-here.html`
+- `/product.html`
+- `/start-here.html`
 - one comparison page
 - one pain / recovery page
 - one answer page
 - one insight page
-- `/guides/legal.html`
+- `/legal.html`
 
 Confirm:
 - variants read like human search phrases

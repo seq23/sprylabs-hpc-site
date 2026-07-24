@@ -66,9 +66,6 @@ jobs:
       - name: Normalize downloaded validation artifact
         run: |
           mkdir -p .build
-          if [ -d artifacts/distribution ]; then
-            cp -n artifacts/distribution/* .build/
-          fi
           if [ ! -f .build/validation-attestation.json ] && [ -f reports/validation-attestation.json ]; then
             cp reports/validation-attestation.json .build/validation-attestation.json
           fi

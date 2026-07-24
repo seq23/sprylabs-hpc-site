@@ -23,7 +23,7 @@ export function ensureRuntime(){
  let identity=probe();
  if(!identity||marker?.requirements_sha256!==wanted){
   fs.rmSync(VENV,{recursive:true,force:true});fs.mkdirSync(RUNTIME,{recursive:true});
-  let code=run(basePython(),['-m','venv','--copies',VENV]);if(code!==0)throw new Error('unable to create validation virtual environment');
+  let code=run(basePython(),['-m','venv',VENV]);if(code!==0)throw new Error('unable to create validation virtual environment');
   code=run(PIP,['install','-r',REQ]);if(code!==0)throw new Error('unable to install pinned validation dependencies');
   identity=probe();if(!identity)throw new Error('managed validation runtime failed parser probe');
  }

@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
   "status": "PASS",
-  "scenario_count": 34,
-  "passed": 34,
+  "scenario_count": 35,
+  "passed": 35,
   "failed": 0,
   "results": [
     {
@@ -151,6 +151,14 @@
     },
     {
       "id": "private-admin-excluded",
+      "kind": "route",
+      "expected": "PASS",
+      "observed_ok": true,
+      "matched": true,
+      "detail": ""
+    },
+    {
+      "id": "coverage-directory-resolution",
       "kind": "route",
       "expected": "PASS",
       "observed_ok": true,

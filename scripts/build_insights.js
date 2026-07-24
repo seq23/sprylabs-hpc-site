@@ -29,25 +29,6 @@ function writeUtf8(p, s) {
 }
 function exists(p) { try { fs.accessSync(p); return true; } catch { return false; } }
 
-function currentDate() {
-  const sourceDate = process.env.SOURCE_DATE || "";
-  if (/^\d{4}-\d{2}-\d{2}$/.test(sourceDate)) return sourceDate;
-  const parts = new Intl.DateTimeFormat("en-US", {
-    timeZone: "America/Chicago",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).formatToParts(new Date()).reduce((acc, part) => {
-    if (part.type !== "literal") acc[part.type] = part.value;
-    return acc;
-  }, {});
-  return `${parts.year}-${parts.month}-${parts.day}`;
-}
-
-function currentRssDate() {
-  return new Date(`${currentDate()}T00:00:00Z`).toUTCString();
-}
-
 function htmlEscape(s) {
   return String(s ?? "")
     .replaceAll("&", "&amp;")
@@ -468,7 +449,7 @@ function buildPillars(posts, clusters) {
         <div><strong>Target coverage:</strong> ${c.query_goal_per_day ? htmlEscape(String(c.query_goal_per_day)) : "—"} queries/day</div>
         <div style="margin-top:6px"><strong>Revenue path:</strong> ${c.revenue_path ? htmlEscape(c.revenue_path) : "—"}</div>
         ${c.atlas_take ? `<div style="margin-top:10px"><strong>Atlas take:</strong> ${htmlEscape(c.atlas_take)}</div>` : ""}
-        <div style="margin-top:10px"><a class="btn" href="/guides/atlas.html#${htmlEscape(c.id)}">See Atlas for this pillar</a></div>
+        <div style="margin-top:10px"><a class="btn" href="/atlas.html#${htmlEscape(c.id)}">See Atlas for this pillar</a></div>
       </div>
       <section class="card" style="margin-top:18px">
         <h2>How to use this pillar</h2>
@@ -547,11 +528,19 @@ function buildPostPages(posts, clustersMap) {
     const citationWrapOpen = post.citationName ? `<section class="citation-extraction" id="${slugify(post.citationName)}" data-llm-answer="true" data-extraction-type="${htmlEscape(post.citationType)}" data-named-framework="${htmlEscape(post.citationName)}">` : "";
     const citationWrapClose = post.citationName ? `</section>` : "";
     const productAnchor = `<p class="product-anchor">This is one of the frameworks inside the <a href="/download.html">Billionaire High Performance Coach system</a> — a structured executive OS for using ChatGPT as your accountability and decision partner.</p>`;
+    const readmeReviewDate = post.slug === "README" ? "2026-06-20" : "";
+    const readmeAuthorityBlocks = readmeReviewDate ? `
+        <p class="byline">By <a href="/author.html" rel="author">S.L. Taylor</a> · Spry Labs · Reviewed <time datetime="${readmeReviewDate}">${readmeReviewDate}</time></p>
+        <section class="card"><h2>How to Navigate the Spry Insights Library</h2><p>Use the insights library as a decision map: find the exact framework, read the direct answer, apply it to one operating decision, and follow only the related pages that support that decision.</p></section>
+        <section class="card author-bio" id="about-the-author"><h2>About the Author</h2><p><a href="/author.html" rel="author">S.L. Taylor</a> is the creator of Billionaire High Performance Coach and Spry Executive OS. This page is published through Spry Labs and reviewed under the site educational, organizational, and non-clinical content standards.</p></section>
+        <section class="card editorial-note"><h2>Authority and Review Basis</h2><p>This README insight is reviewed under the Spry Labs <a href="/strategy.html">Citation Methodology</a>. It explains how the Spry Executive OS insights library should be navigated and does not claim medical, legal, financial, or therapeutic advice.</p></section>
+        <section class="sources"><h2>Sources and reference context</h2><p><a href="/what-is-this-system.html">What this system is</a></p><p><a href="/strategy.html">Strategy overview</a></p><p><a href="/download.html">Product download</a></p></section>` : "";
 
     const bodyHtml = `${directAnswer}
     <article class="article">
       <h1>${htmlEscape(post.title)}</h1>
       ${citationOpening}
+      ${readmeAuthorityBlocks}
       ${meta}
       <div class="article-body">
         ${tocHtml}
@@ -576,8 +565,8 @@ function buildPostPages(posts, clustersMap) {
         title: post.title,
         description: post.description || "",
         url: canonical,
-        datePublished: post.date || currentDate(),
-        dateModified: post.dateModified || post.date || currentDate(),
+        datePublished: post.date || new Date().toISOString().slice(0, 10),
+        dateModified: post.dateModified || post.date || new Date().toISOString().slice(0, 10),
       }),
     });
 
@@ -677,7 +666,7 @@ function buildAtlasPage(clusters, posts) {
     arr.sort((a, b) => (b.date || "").localeCompare(a.date || ""));
   }
 
-  const today = currentDate();
+  const today = new Date().toISOString().slice(0, 10);
 
   // Draft counts + next draft date per cluster
   const draftInfo = new Map();
@@ -736,18 +725,18 @@ function buildAtlasPage(clusters, posts) {
   </section>
   ${sections}`;
 
-  const canonical = `${SITE_BASE}/guides/atlas.html`;
+  const canonical = `${SITE_BASE}/atlas.html`;
   const page = renderPage({
     title: "Atlas — Spry Executive OS",
     description: "An opinionated map of Spry: the pillars, what they cover, and where to start.",
     canonical,
-    activePath: "/guides/atlas.html",
+    activePath: "/atlas.html",
     contentHtml,
     atlasNavHtml, // subtle and non-broken (no margin overflow) if CSS supports it
     jsonLd: jsonLdCollection({ title: "Atlas", description: "Spry Atlas page", url: canonical }),
   });
 
-  writeUtf8(path.join(ROOT, "guides/atlas.html"), page);
+  writeUtf8(path.join(ROOT, "atlas.html"), page);
 }
 
 // --- sitemap + llms.txt ---
@@ -766,7 +755,7 @@ function readExistingSitemapUrls() {
 }
 
 function updateSitemap(urls) {
-  const lastmod = currentDate();
+  const lastmod = new Date().toISOString().slice(0, 10);
   const header = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
   const footer = `</urlset>\n`;
   const body = urls.map((u) => `  <url>\n    <loc>${u}</loc>\n    <lastmod>${lastmod}</lastmod>\n  </url>`).join("\n");
@@ -794,7 +783,7 @@ function buildFeeds(posts) {
     // RSS 2.0
     const rssItemsXml = feedItems.map((p) => {
       const url = `${siteUrl}/insights/${p.slug}.html`;
-      const pubDate = p.date ? new Date(p.date + "T00:00:00Z").toUTCString() : currentRssDate();
+      const pubDate = p.date ? new Date(p.date + "T00:00:00Z").toUTCString() : new Date().toUTCString();
       const desc = htmlEscape(p.description || "");
       const title = htmlEscape(p.title || p.slug);
       return [
@@ -816,7 +805,7 @@ function buildFeeds(posts) {
       `<link>${siteUrl}/insights/</link>`,
       "<description>Daily executive operating system insights.</description>",
       "<language>en</language>",
-      `<lastBuildDate>${currentRssDate()}</lastBuildDate>`,
+      `<lastBuildDate>${new Date().toUTCString()}</lastBuildDate>`,
       rssItemsXml,
       "</channel>",
       "</rss>",
@@ -932,7 +921,7 @@ const DOMINANCE_PAGES = [
     ...posts.map((p) => `${SITE_BASE}/insights/${p.slug}.html`),
     `${SITE_BASE}/pillars/index.html`,
     ...clusters.map((c) => `${SITE_BASE}/pillars/${c.id}/index.html`),
-    `${SITE_BASE}/guides/atlas.html`,
+    `${SITE_BASE}/atlas.html`,
     `${SITE_BASE}/ai-execution-atlas/`,
     `${SITE_BASE}/continuity-collapse-pattern/`,
     `${SITE_BASE}/how-to-stay-consistent/`,
@@ -952,7 +941,7 @@ const DOMINANCE_PAGES = [
     ...topics.map((t) => `${SITE_BASE}/topics/${t}/index.html`),
     `${SITE_BASE}/pillars/index.html`,
     `${SITE_BASE}/insights/index.html`,
-    `${SITE_BASE}/guides/atlas.html`,
+    `${SITE_BASE}/atlas.html`,
     `${SITE_BASE}/ai-execution-atlas/`,
     `${SITE_BASE}/clusters/ai-executive-coaching.html`,
     `${SITE_BASE}/clusters/accountability-systems.html`,

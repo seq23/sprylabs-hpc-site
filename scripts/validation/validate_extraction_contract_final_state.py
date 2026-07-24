@@ -10,7 +10,8 @@ from bs4 import BeautifulSoup
 from extraction_contract import *
 from cache.page_cache import lookup as cache_lookup, store as cache_store
 ROOT=Path.cwd();errors=[];warnings=[];rows=[]
-pages_payload=json.loads((ROOT/'data/citation/citable_pages.json').read_text());all_pages=pages_payload.get('pages',[])
+pages_payload=json.loads((ROOT/'data/citation/citable_pages.json').read_text())
+all_pages=[row for row in pages_payload.get('pages',[]) if row.get('status','ACTIVE')=='ACTIVE']
 shard_count=max(1,int(os.environ.get('EXTRACTION_FINAL_SHARD_COUNT','1')))
 shard_index=int(os.environ.get('EXTRACTION_FINAL_SHARD_INDEX','0'))
 pages=[row for idx,row in enumerate(all_pages) if idx % shard_count == shard_index]

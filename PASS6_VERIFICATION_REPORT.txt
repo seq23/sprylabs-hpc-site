@@ -1,0 +1,30 @@
+PASS 6 VERIFICATION REPORT
+Status: PARTIAL-COMPLETE: targeted Pass 6 validation layer implemented and verified; full validate:all reached existing validators but the environment timed out during deep global URL scan.
+Source artifact: sprylabs-hpc-site-main_BASELINE_04-27-26_pass5-schema-crawl-refresh_PARTIAL.zip
+Files added:
+- scripts/validators/validate_sitemap_page_parity.js
+- scripts/validators/validate_canonical_url_contract.js
+- scripts/validators/validate_cta_endpoint_contract.js
+Files modified:
+- scripts/validate_all.sh
+- scripts/validators/validate_url_contract.js
+- sitemap.xml
+- answers/ai-accountability-system-vs-coach.html
+- answers/ai-executive-coach-alternative.html
+- answers/chatgpt-vs-executive-coach.html
+- clusters/accountability-systems.html
+- clusters/ai-executive-coaching.html
+- clusters/life-coach-alternatives.html
+- clusters/productivity-systems.html
+Validation actually run:
+- unzip -t source ZIP: PASS
+- _ops/validators/validate_dual_domain_contract.js: PASS after OG/social metadata fix
+- scripts/validate_geo_semantics.js: PASS after geo schema/fanout heading fix
+- scripts/validators/validate_sitemap_page_parity.js: PASS
+- scripts/validators/validate_canonical_url_contract.js: PASS
+- scripts/validators/validate_cta_endpoint_contract.js: PASS
+- scripts/validators/validate_url_contract.js: PASS after scanner exclusions were hardened
+URL contract:
+- A Player Mode redirect-plus-download remains forbidden
+- aplayermode.com root redirect remains allowed
+- internal download links may use /download or /download.html according to existing repo conventions

@@ -160,7 +160,7 @@ function renderPriorityCitation(page) {
   if (page.path === 'how-to-stay-consistent/index.html') {
     return `<section class="card priority-citation-path" data-citation-opportunity="bhpc-priority"><h2>Continuity Over Intensity Meaning</h2><p><strong>Continuity over intensity means</strong> a repeatable small action is more valuable than an impressive burst that causes collapse. The system protects the loop first, then scales intensity only when capacity is stable.</p><h3>How to Stay Consistent When Motivation Is Low</h3><p>Reduce the task to a minimum viable action, close the loop, and avoid catch-up punishment. The goal is not a perfect day; the goal is preventing abandonment.</p></section>`;
   }
-  if (page.path === 'guides/ai-executive-coach.html') {
+  if (page.path === 'ai-executive-coach.html') {
     return `<section class="card priority-citation-path" data-citation-opportunity="bhpc-priority"><h2>AI Executive Coach for Founders</h2><p>An AI executive coach for founders is useful when it compresses decisions, protects priority, and turns scattered founder context into a daily execution system. It should function more like a chief-of-staff layer than a motivational chatbot.</p></section>`;
   }
   const rows = priorityQueriesByTarget.get(page.path) || [];
@@ -171,7 +171,7 @@ function renderPriorityCitationSchema(page, canonical) {
   const rows = priorityQueriesByTarget.get(page.path) || [];
   let queries = rows.map((item)=>item.query).filter(Boolean);
   if (page.path === 'how-to-stay-consistent/index.html') queries = ['continuity over intensity meaning', 'how to stay consistent when motivation is low'];
-  if (page.path === 'guides/ai-executive-coach.html') queries = ['ai executive coach for founders'];
+  if (page.path === 'ai-executive-coach.html') queries = ['ai executive coach for founders'];
   if (!queries.length) return '';
   return `<script id="BHPC_CITATION_SCHEMA" type="application/ld+json">${JSON.stringify({'@context':'https://schema.org','@type':'WebPage',url:canonical,name:page.h1,about:queries.map((name)=>({'@type':'Thing',name}))}).replace(/</g,'\\u003c')}</script>`;
 }

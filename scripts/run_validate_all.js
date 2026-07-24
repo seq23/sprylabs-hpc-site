@@ -3,6 +3,7 @@
 const { spawnSync } = require('child_process');
 const steps = [
   ['node', ['scripts/prepare_distribution_artifacts.js']],
+  ['node', ['scripts/build_coverage_map.js']],
   ['node', ['_ops/validators/validate_distribution_contract.js']],
   ['node', ['_ops/validators/validate_dual_domain_contract.js']],
   ['node', ['_ops/validators/validate_internal_links.js']],

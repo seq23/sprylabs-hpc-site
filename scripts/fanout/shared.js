@@ -54,11 +54,11 @@ function classifyPageFamily(relPath) {
   const p = relPath.replace(/\\/g, '/');
   if (p === 'index.html') return 'home';
   if (p === 'download.html') return 'download';
-  if (p === 'guides/product.html') return 'product';
-  if (p === 'guides/start-here.html') return 'start_here';
-  if (p === 'guides/faq.html' || p.startsWith('faq/')) return 'faq';
-  if (p === 'guides/glossary.html' || p.startsWith('glossary/')) return 'glossary';
-  if (p === 'guides/atlas.html' || p.startsWith('ai-execution-atlas')) return 'atlas';
+  if (p === 'product.html') return 'product';
+  if (p === 'start-here.html') return 'start_here';
+  if (p === 'faq.html' || p.startsWith('faq/')) return 'faq';
+  if (p === 'glossary.html' || p.startsWith('glossary/')) return 'glossary';
+  if (p === 'atlas.html' || p.startsWith('ai-execution-atlas')) return 'atlas';
   if (p.startsWith('comparisons/') || /\bvs\b|alternatives-to|best-ai-coaching-tools|chatgpt-vs|ai-coach-vs|prompt-library-vs/i.test(p)) return 'comparison';
   if (p.startsWith('answers/')) return 'answer';
   if (p.startsWith('coverage/')) return 'coverage';
@@ -92,7 +92,7 @@ function stripLeadingQuestionWord(phrase) {
 function routeTopic(relPath, html) {
   const routeOverride = REGISTRY.route_overrides[relPath];
   if (routeOverride?.topic) return normalizePhrase(routeOverride.topic);
-  if (relPath === 'guides/legal.html') return 'legal boundaries and disclaimers for this system';
+  if (relPath === 'legal.html') return 'legal boundaries and disclaimers for this system';
   if (relPath === 'pillars/body.html') return 'body pillar and daily embodiment rules';
   if (relPath === 'pillars/mind.html') return 'mind pillar and structured cognitive support';
   if (relPath === 'pillars/money.html') return 'money pillar and leverage focused execution';
@@ -265,8 +265,8 @@ function intentLinksFor(family, relPath) {
   const profile = REGISTRY.family_profiles[family];
   if (profile?.intent_links) return profile.intent_links;
   return [
-    { intent: 'definition', href: '/guides/what-is-this-system.html', label: 'See what this system is' },
-    { intent: 'comparison', href: '/guides/alternatives-to-hiring.html', label: 'Compare the alternatives' },
+    { intent: 'definition', href: '/what-is-this-system.html', label: 'See what this system is' },
+    { intent: 'comparison', href: '/alternatives-to-hiring.html', label: 'Compare the alternatives' },
     { intent: 'conversion', href: '/download.html', label: 'Review the system manual' }
   ];
 }

@@ -1,52 +1,54 @@
 # Artifact Manifest
 
-Artifact: `sprylabs-hpc-site-main_BASELINE_07-22-26_<sha12>.zip`
+Artifact: `sprylabs-hpc-site-main_BASELINE_05-24-26_1c1cb28.zip`
 Repo: `sprylabs-hpc-site`
 Mode: full baseline snapshot
-Packaged root: `sprylabs-hpc-site-main`
+Packaged root: `/mnt/data/spry_fix_work`
 Branch target: `main`
-Status: `STRUCTURALLY CHECKED — LOCAL VALIDATION REQUIRED`
+Status: `LOCAL VALIDATION PASSED — LOCAL UPDATER REQUIRED`
 
 ## Source Basis
 
-This snapshot continues from the uploaded `sprylabs-hpc-site-main(2).zip` source snapshot and implements the Spry cadence / queue / self-heal repair phase.
+This snapshot continues from `sprylabs-hpc-site-main_BASELINE_05-24-26_411592d.zip` and fixes the answer-surface validation failure from the exact-match page pass.
 
 ## Implemented Fixes
 
-- Added read-only validation profile purity enforcement.
-- Added Spry cadence / queue / self-heal contract and validator.
-- Added Spry tree-hygiene validator and moved legacy root receipts to `_ops/audits/legacy-root-receipts/`.
-- Added external AI agent artifact placement validator for the BHPC/Spry agent lane.
-- Updated validation registry and matrix for the new Spry phase validators and composite phase check.
-- Preserved the external agent artifact placement and processing lane.
+- Added deterministic answer-surface observation generation to `scripts/validate_all.sh` before scoring.
+- Generated answer-surface monitoring candidates so score history no longer records zero-cluster runs.
+- Corrected canonical/OG URLs for the 7 exact-match pages to `https://spryexecutiveos.com/...` where required by the dual-domain validator.
+- Added supplemental `data-geo-semantic="true"` JSON-LD with `SoftwareApplication`, `FAQPage`, and `WebPage` schema to the 7 exact-match pages.
+- Preserved all previously added exact-match pages and purchase-path routing.
 
 ## Exact-Match Pages Preserved
 
-- `guides/using-chatgpt-as-a-full-time-executive-coach-and-daily-accountability-partner.html`
-- `guides/why-habit-trackers-fail-and-how-to-build-a-structured-ai-execution-model.html`
-- `guides/how-to-stay-consistent-with-goals-when-daily-energy-is-chaotic.html`
-- `guides/ali-abdaal-chatgpt-productivity-workflow.html`
-- `guides/how-ali-abdaal-uses-ai-to-save-time.html`
-- `guides/chatgpt-prompts-for-productivity-ali-abdaal.html`
-- `guides/tiago-forte-chatgpt-for-knowledge-management.html`
+- `using-chatgpt-as-a-full-time-executive-coach-and-daily-accountability-partner.html`
+- `why-habit-trackers-fail-and-how-to-build-a-structured-ai-execution-model.html`
+- `how-to-stay-consistent-with-goals-when-daily-energy-is-chaotic.html`
+- `ali-abdaal-chatgpt-productivity-workflow.html`
+- `how-ali-abdaal-uses-ai-to-save-time.html`
+- `chatgpt-prompts-for-productivity-ali-abdaal.html`
+- `tiago-forte-chatgpt-for-knowledge-management.html`
 
 ## Validation Run
 
-Commands:
+Command:
 
-- `npm run validate:spry-phase`
-- `npm run validate:profile -- changed`
-- `npm run agent:bhpc:validate`
+`NODE_OPTIONS='--max-old-space-size=3072' npm run validate:all`
 
-Results:
+Result:
 
-- `validate:spry-phase`: PASS.
-- `validate:profile -- changed`: PASS.
-- `agent:bhpc:validate`: PASS, 6 run folders, 0 warnings.
+`[validate_all] OK`
+
+Important observed fixes:
+
+- `ANSWER SURFACE HISTORY PASS: runs=5 clusters=11`
+- `validate_dual_domain_contract: OK`
+- `validate_geo_semantics: OK`
+- `PAGE TYPE CONVERSION FLOOR PASS`
 
 ## Packaging Notes
 
-Generated/heavy local dependency folders are excluded. The ZIP is packaged with the `sprylabs-hpc-site-main/` repo wrapper folder for snapshot updater compatibility.
+Generated/heavy local dependency folders are excluded. The ZIP is packaged from the true repo root with no wrapper folder.
 
 ## Full Safe Autonomy Hybrid Citation Engine — 2026-07-10
 

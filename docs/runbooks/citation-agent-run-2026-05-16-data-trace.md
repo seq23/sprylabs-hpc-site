@@ -6,7 +6,7 @@ Source artifacts:
 
 Implemented in this pass:
 
-1. `guides/atlas.html`
+1. `atlas.html`
    - Added explicit Atlas disambiguation above the fold.
    - Clarified that Atlas by Spry Executive OS is not a tech product, space program, recruiting platform, or map application.
    - Added founder/accountability/AI-supported execution bullets.
@@ -24,7 +24,7 @@ Implemented in this pass:
 
 Deferred intentionally:
 - New pages proposed by discovery queries were not created in this pass.
-- `guides/how-tracks-work.html` was already cited and the run did not provide a concrete new fix recommendation in the digest.
+- `how-tracks-work.html` was already cited and the run did not provide a concrete new fix recommendation in the digest.
 
 Validation path:
 - `npm run distribution:prepare`

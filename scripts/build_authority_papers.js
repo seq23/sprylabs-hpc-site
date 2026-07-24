@@ -19,7 +19,11 @@ function hasRenderedPaper(item){
   const file = paperPath(item);
   if (!fs.existsSync(file)) return false;
   const html = fs.readFileSync(file, 'utf8');
-  return html.includes('direct-answer') && html.includes('cta-block') && html.includes(item.cta_target || '');
+  return html.includes('direct-answer')
+    && html.includes('cta-block')
+    && html.includes(item.cta_target || '')
+    && html.includes('id="CITATION_PAGE_SCHEMA"')
+    && !html.includes('data-geo-semantic="true"');
 }
 
 function isEligible(item){

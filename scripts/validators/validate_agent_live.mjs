@@ -29,28 +29,28 @@ export function loadAcceptanceManifest(runDate) {
   return {date, manifestPath, manifest: JSON.parse(fs.readFileSync(manifestPath, 'utf8'))};
 }
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-function positiveInt(value, fallback) {
-  const parsed = Number.parseInt(String(value || ''), 10);
-  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
-}
-
-function cacheBust(url, attempt) {
-  const parsed = new URL(url);
-  parsed.searchParams.set('_agent_live_proof', `${Date.now()}-${attempt}`);
-  return parsed.toString();
-}
-
-async function checkPages({pages, fetchImpl, quiet, attempt}) {
-  let passed = 0;
+export async function validateAgentLive({runDate = '', fetchImpl = fetch, quiet = false} = {}) {
+  const {date, manifestPath, manifest} = loadAcceptanceManifest(runDate);
+  const entries = (manifest.entries || []).filter(entry => entry.acceptance_status === 'REQUIRED');
   const failures = [];
+  const resolved = [];
+  const pages = new Map();
 
+  for (const entry of entries) {
+    const url = resolveAgentLiveUrl(entry);
+    if (!url) {
+      failures.push({id: entry.id, error: 'Unable to resolve public URL', implementation_path: entry.implementation_path || ''});
+      continue;
+    }
+    resolved.push({id: entry.id, url});
+    if (!pages.has(url)) pages.set(url, []);
+    pages.get(url).push(entry);
+  }
+
+  let passed = 0;
   for (const [url, pageEntries] of pages) {
     try {
-      const response = await fetchImpl(cacheBust(url, attempt), {
+      const response = await fetchImpl(url, {
         redirect: 'follow',
         headers: {'cache-control': 'no-cache', 'user-agent': 'Spry-Live-Agent-Proof/1.0'}
       });
@@ -69,42 +69,6 @@ async function checkPages({pages, fetchImpl, quiet, attempt}) {
     }
   }
 
-  return {passed, failures};
-}
-
-export async function validateAgentLive({runDate = '', fetchImpl = fetch, quiet = false, attempts = positiveInt(process.env.AGENT_LIVE_ATTEMPTS, 1), delayMs = positiveInt(process.env.AGENT_LIVE_RETRY_DELAY_MS, 10000)} = {}) {
-  const strict = process.env.AGENT_LIVE_STRICT === '1';
-  const {date, manifestPath, manifest} = loadAcceptanceManifest(runDate);
-  const entries = (manifest.entries || []).filter(entry => entry.acceptance_status === 'REQUIRED');
-  let failures = [];
-  const resolved = [];
-  const pages = new Map();
-
-  for (const entry of entries) {
-    const url = resolveAgentLiveUrl(entry);
-    if (!url) {
-      failures.push({id: entry.id, error: 'Unable to resolve public URL', implementation_path: entry.implementation_path || ''});
-      continue;
-    }
-    resolved.push({id: entry.id, url});
-    if (!pages.has(url)) pages.set(url, []);
-    pages.get(url).push(entry);
-  }
-
-  let passed = 0;
-  let attempt = 0;
-  for (attempt = 1; attempt <= attempts; attempt += 1) {
-    const result = await checkPages({pages, fetchImpl, quiet, attempt});
-    passed = result.passed;
-    failures = result.failures;
-    if (!failures.length) break;
-    if (attempt < attempts) {
-      console.warn(`[validate:agent-live] waiting for deployed marker absorption: attempt ${attempt}/${attempts} still missing ${failures.length} record(s)`);
-      await sleep(delayMs);
-    }
-  }
-  const attemptsUsed = Math.min(attempt, attempts);
-
   const report = {
     schema_version: '1.0',
     generated_at: new Date().toISOString(),
@@ -114,14 +78,6 @@ export async function validateAgentLive({runDate = '', fetchImpl = fetch, quiet 
     pages_checked: pages.size,
     passed,
     failed: failures.length,
-    strict,
-    attempts_configured: attempts,
-    attempts_used: attemptsUsed,
-    retry_delay_ms: delayMs,
-    status: failures.length ? (strict ? 'FAIL' : 'PASS_WITH_STRONG_WARNING') : 'PASS',
-    proof_boundary: strict
-      ? 'Strict live deployed-site proof.'
-      : 'Non-strict local/CI run records deployed-site drift without blocking source artifact validation. Set AGENT_LIVE_STRICT=1 for hard live proof.',
     resolved,
     failures
   };
@@ -139,10 +95,6 @@ export async function validateAgentLive({runDate = '', fetchImpl = fetch, quiet 
   if (failures.length) {
     console.error('\nFAILURES');
     console.error(JSON.stringify(failures, null, 2));
-    if (!strict) {
-      console.warn(`[validate:agent-live] STRONG WARNING: ${failures.length} deployed record(s) missing live markers; non-strict local validation does not block. Set AGENT_LIVE_STRICT=1 for hard live proof.`);
-      return report;
-    }
     const error = new Error(`Agent live validation failed for ${failures.length} record(s).`);
     error.report = report;
     throw error;
