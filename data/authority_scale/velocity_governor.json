@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0",
+  "mode": "dynamic_safety_ceiling",
+  "current_default_new_page_ceiling_per_day": 25,
+  "citation_expansion_mode_batch_ceiling": 75,
+  "scale_tiers": [
+    5,
+    15,
+    25,
+    50,
+    75,
+    100
+  ],
+  "targets_are_quotas": false,
+  "scale_up_requires": [
+    "distinct admitted backlog",
+    "clean validation",
+    "acceptable semantic similarity",
+    "source coverage appropriate to claims",
+    "stable indexation/distribution"
+  ],
+  "scale_down_triggers": [
+    "duplicate pressure",
+    "validation regression",
+    "source gaps",
+    "unsafe claim risk",
+    "indexation backlog"
+  ],
+  "note": "Existing 12-20/day target and 8-25 tolerance remain observational targets. The 75 batch belongs to the explicit citation-expansion lane, not the default full-content-cycle daily publish contract."
+}

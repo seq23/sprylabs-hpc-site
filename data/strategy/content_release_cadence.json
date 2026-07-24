@@ -58,5 +58,12 @@
     }
   },
   "targets_are_hard_failures": false,
-  "paid_agent_excluded_from_zero_dollar_targets": true
+  "paid_agent_excluded_from_zero_dollar_targets": true,
+  "authority_scale_governor": "data/authority_scale/velocity_governor.json",
+  "semantics": {
+    "targets_are_observational_not_quotas": true,
+    "default_new_page_hard_safety_ceiling": 25,
+    "citation_expansion_batch_ceiling": 75,
+    "fanout_opportunity_count_is_not_publish_count": true
+  }
 }

@@ -34,6 +34,11 @@ const clusters = normalizeArray(readJson(path.join(ROOT, 'data/intake/query_clus
 
 const MIN_SCORE = 0.45;
 const MAX_RANKED_ITEMS = 25;
+const taxonomy = readJson(path.join(ROOT, 'data/intake/use_case_taxonomy.json'), { required_use_cases: [] });
+const canonicalUseCases = new Set((taxonomy.required_use_cases || []).map(uc => uc && uc.id).filter(Boolean));
+if (!canonicalUseCases.size) {
+  throw new Error('BACKLOG COVERAGE BUILD FAIL: no required_use_cases[].id found in data/intake/use_case_taxonomy.json');
+}
 
 const clusterById = new Map();
 for (const c of clusters) {
@@ -63,7 +68,7 @@ function selectedIdsForUseCaseCoverage() {
     if (id) selected.add(id);
   }
 
-  const useCases = [...new Set(clusters.map(useCaseOf).filter(Boolean))].sort();
+  const useCases = [...canonicalUseCases].sort();
   for (const uc of useCases) {
     const candidates = clusters
       .filter(c => useCaseOf(c) === uc && clusterKey(c))
@@ -153,11 +158,6 @@ for (const slug of ['bhpc-vs-betterup', 'bhpc-vs-culture-amp', 'bhpc-vs-hone']) 
   }
 }
 
-const taxonomy = readJson(path.join(ROOT, 'data/intake/use_case_taxonomy.json'), { required_use_cases: [] });
-const canonicalUseCases = new Set((taxonomy.required_use_cases || []).map(uc => uc && uc.id).filter(Boolean));
-if (!canonicalUseCases.size) {
-  throw new Error('BACKLOG COVERAGE BUILD FAIL: no required_use_cases[].id found in data/intake/use_case_taxonomy.json');
-}
 const coveredUseCases = new Set(items.map(i => i.meta?.use_case).filter(uc => canonicalUseCases.has(uc)));
 const uncovered = [...canonicalUseCases].filter(uc => !coveredUseCases.has(uc));
 if (uncovered.length) {

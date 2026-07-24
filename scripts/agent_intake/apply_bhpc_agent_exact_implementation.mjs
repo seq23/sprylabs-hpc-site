@@ -43,7 +43,9 @@ function cleanExistingSemanticSections(html = '', recordIds = []) {
   let out = String(html || '');
   for (const recordId of recordIds) {
     const escaped = recordId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const pattern = new RegExp(`\\n?<section\\b[^>]*data-bhpc-agent-record=["']${escaped}["'][\\s\\S]*?<\\/section>\\n?`, 'gi');
+    // Consume surrounding horizontal/blank-line whitespace with the old semantic block so
+    // replaying an already-absorbed agent run cannot accumulate blank lines byte-by-byte.
+    const pattern = new RegExp(`(?:\\r?\\n[\\t ]*)*<section\\b[^>]*data-bhpc-agent-record=["']${escaped}["'][\\s\\S]*?<\\/section>(?:[\\t ]*\\r?\\n)*`, 'gi');
     out = out.replace(pattern, '\n');
   }
   return out;
@@ -215,7 +217,9 @@ for (const spec of plan.specs || []) {
     after = fullHtml(rel, entries);
   } else if (before && /<\/body>/i.test(before)) {
     after = cleanExistingSemanticSections(before, entries.map(e => e.record_id));
-    after = after.replace(/<\/body>/i, `${renderSections(entries)}\n</body>`);
+    const rendered = renderSections(entries).trim();
+    // Normalize the insertion boundary so repeated exact-agent application is byte-idempotent.
+    after = after.replace(/[\t ]*(?:\r?\n[\t ]*)*<\/body>/i, `\n${rendered}\n</body>`);
   } else if (before) {
     after = `${cleanExistingSemanticSections(before, entries.map(e => e.record_id))}\n${renderSections(entries)}`;
   } else {

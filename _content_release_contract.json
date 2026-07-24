@@ -76,5 +76,12 @@
     "paid_agent_routes_excluded": true,
     "targets_are_non_blocking": true,
     "proof_required": true
-  }
+  },
+  "authority_scale_standard": "MAXIMUM_FANOUT_PLUS_100K_SURFACING_ACCELERATION",
+  "max_fanout_contract": "data/authority_scale/surfacing_strategy_contract.json",
+  "fanout_runway": "data/authority_scale/fanout_100k/index.json",
+  "accepted_output_freeze": "data/release/frozen_output_registry.json",
+  "velocity_governor": "data/authority_scale/velocity_governor.json",
+  "fanout_is_page_quota": false,
+  "accepted_output_mutation_policy": "exact_route_thaw_validate_refreeze"
 }

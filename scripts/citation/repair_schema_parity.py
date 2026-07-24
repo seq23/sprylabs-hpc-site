@@ -12,6 +12,29 @@ CITATION_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(CITATION_DIR))
 from extraction_contract import extract_scope_steps
 ROOT=Path.cwd()
+ACTIVE_SCOPE=ROOT/'data/release/active_mutation_scope.json'
+
+def normalize_route(value):
+    v=str(value or '').strip()
+    if not v: return ''
+    if not v.startswith('/'): v='/'+v
+    if v=='/': return '/'
+    if v.endswith('.html'): return v
+    return v.rstrip('/')+'/'
+
+def route_from_path(value):
+    v=str(value or '').lstrip('./')
+    if not v: return ''
+    if v.endswith('/index.html'): return normalize_route('/'+v[:-len('index.html')])
+    return normalize_route('/'+v)
+
+def active_mutation_routes():
+    if not ACTIVE_SCOPE.exists(): return None
+    try:
+        payload=json.loads(ACTIVE_SCOPE.read_text(encoding='utf-8'))
+        return {normalize_route(r) for r in payload.get('routes',[]) if normalize_route(r)}
+    except Exception:
+        return set()
 
 def norm(v): return ' '.join((v or '').split())
 def schema_types(graph):
@@ -182,11 +205,15 @@ def update_schema(path: Path):
     return False
 
 pages=json.loads((ROOT/'data/citation/citable_pages.json').read_text(encoding='utf-8'))['pages']
-changed=0
+allowed=active_mutation_routes()
+changed=0; skipped_frozen_scope=0
 for rec in pages:
     if rec.get('status','ACTIVE')!='ACTIVE': continue
     rel=rec.get('path')
     if not rel: continue
+    if allowed is not None and route_from_path(rel) not in allowed:
+        skipped_frozen_scope += 1
+        continue
     fp=ROOT/rel
     if fp.is_file() and update_schema(fp): changed+=1
-print(f'repair_schema_parity: changed={changed}')
+print(f'repair_schema_parity: changed={changed}; scoped={allowed is not None}; skipped_outside_scope={skipped_frozen_scope}')
