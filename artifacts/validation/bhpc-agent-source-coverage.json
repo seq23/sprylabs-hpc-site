@@ -1,7 +1,7 @@
 {
   "schema_version": "2.0",
   "validator": "bhpc-agent-source-coverage",
-  "generated_at": "2026-07-24T21:52:45.264Z",
+  "generated_at": "2026-07-25T13:12:14.498Z",
   "status": "PASS",
   "policy": {
     "checked_statuses": [
@@ -11,7 +11,7 @@
     "coverage_from": "2026-07-04",
     "rule": "The repair phase must normalize every eligible agent run before coverage validation. Every actionable source item must then be represented, represented by its own source id, applied to page-level proof or explicitly skipped/blocked with a reason; every canonical new-page target must be built."
   },
-  "run_count": 3,
+  "run_count": 4,
   "runs": [
     {
       "run_date": "2026-07-04",
@@ -101,6 +101,33 @@
       "missing_built_new_page_count": 0,
       "built_new_pages": [],
       "queued_new_pages": [],
+      "duplicate_canonical_new_page_groups": []
+    },
+    {
+      "run_date": "2026-07-25",
+      "scope": "bhpc",
+      "manifest": "data/report_fixes/agent_runs/2026-07-25/bhpc/agent_run_manifest.json",
+      "normalized_path": "data/report_fixes/normalized_agent_runs/2026-07-25_bhpc.json",
+      "source_record_count": 74,
+      "new_page_source_record_count": 3,
+      "canonical_new_page_count": 3,
+      "normalized_record_count": 77,
+      "missing_from_normalized_count": 0,
+      "unaddressed_count": 0,
+      "content_proof_missing_count": 0,
+      "built_new_page_count": 3,
+      "queued_new_page_count": 3,
+      "missing_built_new_page_count": 0,
+      "built_new_pages": [
+        "insights/chatgpt-weekly-review-prompt-for-productivity.html",
+        "insights/chatgpt-accountability-partner-prompt-for-goals.html",
+        "insights/best-chatgpt-prompts-for-executive-functioning-and-planning.html"
+      ],
+      "queued_new_pages": [
+        "insights/chatgpt-weekly-review-prompt-for-productivity.html",
+        "insights/chatgpt-accountability-partner-prompt-for-goals.html",
+        "insights/best-chatgpt-prompts-for-executive-functioning-and-planning.html"
+      ],
       "duplicate_canonical_new_page_groups": []
     }
   ],
