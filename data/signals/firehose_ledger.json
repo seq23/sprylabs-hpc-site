@@ -2034,6 +2034,113 @@
         }
       ],
       "record_count": 5
+    },
+    {
+      "run_id": "firehose-1784990906479",
+      "generated_at": "2026-07-25T14:48:26.479Z",
+      "status": "PASS",
+      "adapters": [
+        {
+          "adapter": "fixture",
+          "source": "fixture_raw_signals",
+          "status": "PASS",
+          "terms_status": "allowed",
+          "records": 5,
+          "warnings": [
+            "offline fixture records used"
+          ],
+          "errors": []
+        },
+        {
+          "adapter": "manual_import",
+          "source": "manual_import",
+          "status": "PASS",
+          "terms_status": "allowed",
+          "records": 0,
+          "warnings": [
+            "No live collection performed; allowed manual import reads data/signals/manual_import.json when present."
+          ],
+          "errors": []
+        },
+        {
+          "adapter": "agent_artifacts",
+          "source": "agent_artifacts",
+          "status": "PASS",
+          "terms_status": "allowed",
+          "records": 0,
+          "warnings": [
+            "agent artifact root present; no ready manifest consumed in fixture run"
+          ],
+          "errors": []
+        },
+        {
+          "adapter": "forums_rss",
+          "source": "forums_rss",
+          "status": "WARN",
+          "terms_status": "requires_review",
+          "records": 0,
+          "warnings": [
+            "requires terms review before live RSS/forum collection."
+          ],
+          "errors": []
+        },
+        {
+          "adapter": "reddit",
+          "source": "reddit",
+          "status": "WARN",
+          "terms_status": "requires_credentials",
+          "records": 0,
+          "warnings": [
+            "requires credentials and API/terms authority before live collection."
+          ],
+          "errors": []
+        },
+        {
+          "adapter": "bluesky",
+          "source": "bluesky",
+          "status": "WARN",
+          "terms_status": "requires_review",
+          "records": 0,
+          "warnings": [
+            "requires ATProto/firehose terms review before live collection."
+          ],
+          "errors": []
+        },
+        {
+          "adapter": "x",
+          "source": "x",
+          "status": "WARN",
+          "terms_status": "requires_credentials",
+          "records": 0,
+          "warnings": [
+            "requires credentials and API terms before live collection."
+          ],
+          "errors": []
+        },
+        {
+          "adapter": "youtube",
+          "source": "youtube",
+          "status": "WARN",
+          "terms_status": "requires_credentials",
+          "records": 0,
+          "warnings": [
+            "requires credentials/quota and API terms before live collection."
+          ],
+          "errors": []
+        },
+        {
+          "adapter": "search_console",
+          "source": "search_console",
+          "status": "WARN",
+          "terms_status": "requires_credentials",
+          "records": 0,
+          "warnings": [
+            "requires owned Search Console credentials/export before live collection."
+          ],
+          "errors": []
+        }
+      ],
+      "record_count": 5
     }
   ],
   "truth_boundary": "No live platform collection is claimed by an empty ledger."
