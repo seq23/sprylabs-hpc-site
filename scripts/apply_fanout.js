@@ -69,7 +69,7 @@ fs.writeFileSync(path.join(ROOT, '.build/fanout_manifest.json'), JSON.stringify(
 fs.writeFileSync(path.join(ROOT, '.build/fanout_missing.json'), JSON.stringify(missing, null, 2));
 fs.writeFileSync(path.join(ROOT, '.build/fanout_duplicates.json'), JSON.stringify(duplicates, null, 2));
 fs.writeFileSync(
-  path.join(ROOT, 'releases/fanout_query_clusters.bhpc.json'),
+  path.join(ROOT, 'data/releases/fanout_query_clusters.bhpc.json'),
   JSON.stringify({ generated_at: new Date().toISOString(), page_count: manifests.length, pages: manifests }, null, 2)
 );
 

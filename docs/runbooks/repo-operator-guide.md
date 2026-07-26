@@ -11,7 +11,9 @@ This guide explains how to reason about the repo without changing public URLs.
 - `/coverage/` for current-state coverage understanding
 
 ### Operator layer
-- `_ops/` for validators, audits, manifests, and visibility files
+- `scripts/validators/legacy_ops/` for retained legacy validators
+- `reports/audits/` for audit evidence
+- `docs/operations/` for release visibility files
 - `content/insights/_drafts/` for daily insight source drafts
 - `docs/runbooks/` for workflow docs
 
@@ -24,12 +26,12 @@ Published output:
 - `insights/`
 
 Visibility layer:
-- `/_ops/daily-insights/preview-index.md`
-- `/_ops/daily-insights/touched-files-YYYY-MM-DD.txt`
-- `/_ops/daily-insights/manifest.json`
+- `/docs/operations/daily-insights/preview-index.md`
+- `/docs/operations/daily-insights/touched-files-YYYY-MM-DD.txt`
+- `/docs/operations/daily-insights/manifest.json`
 
 ## Historical artifacts
 Historical phase reports and one-off repo artifacts should live under:
-- `_ops/artifacts/root-history/`
+- `docs/receipts/archive/root-history/`
 
 They should not accumulate at the repo root unless a script explicitly requires that location.

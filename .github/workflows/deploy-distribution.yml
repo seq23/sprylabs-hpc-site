@@ -72,9 +72,34 @@ jobs:
           test -f .build/validation-attestation.json
           test -f .build/indexnow-priority.txt
           test -f .build/indexnow-batch.txt
-      - name: Verify attestation and deploy distribution
+      - name: Restore optional Google Search Console credentials
+        env:
+          GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
+        run: |
+          if [ -n "${GSC_SERVICE_ACCOUNT_JSON:-}" ]; then
+            umask 077
+            printf '%s' "$GSC_SERVICE_ACCOUNT_JSON" > .gsc-service-account.json
+          fi
+      - name: Verify attestation and deploy IndexNow distribution
         env:
           EXPECTED_COMMIT_SHA: ${{ steps.artifact.outputs.commit_sha }}
+          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
         run: |
           npm run release:verify-attestation
           npm run distribution:deploy
+      - name: Submit per-domain Search Console sitemaps and inspect priority URLs when configured
+        env:
+          GSC_SITE_URL_SPRY: ${{ secrets.GSC_SITE_URL_SPRY }}
+          GSC_SITE_URL_BHPC: ${{ secrets.GSC_SITE_URL_BHPC }}
+        run: |
+          if [ ! -f .gsc-service-account.json ]; then echo "GSC skipped: service account not configured"; exit 0; fi
+          if [ -n "${GSC_SITE_URL_SPRY:-}" ]; then
+            grep '^https://spryexecutiveos.com/' .build/indexnow-priority.txt > .build/gsc-priority-spry.txt || true
+            python3 scripts/distribution/gsc_submit_sitemaps.py .gsc-service-account.json "$GSC_SITE_URL_SPRY" https://spryexecutiveos.com/sitemap-spry.xml
+            python3 scripts/distribution/gsc_inspect_urls.py .gsc-service-account.json "$GSC_SITE_URL_SPRY" .build/gsc-priority-spry.txt .build/inspection-results-spry.json
+          fi
+          if [ -n "${GSC_SITE_URL_BHPC:-}" ]; then
+            grep '^https://billionairehighperformancecoach.com/' .build/indexnow-priority.txt > .build/gsc-priority-bhpc.txt || true
+            python3 scripts/distribution/gsc_submit_sitemaps.py .gsc-service-account.json "$GSC_SITE_URL_BHPC" https://billionairehighperformancecoach.com/sitemap-bhpc.xml
+            python3 scripts/distribution/gsc_inspect_urls.py .gsc-service-account.json "$GSC_SITE_URL_BHPC" .build/gsc-priority-bhpc.txt .build/inspection-results-bhpc.json
+          fi

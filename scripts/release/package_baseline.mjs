@@ -1,13 +1,89 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import {execFileSync} from 'node:child_process';
-const root=process.cwd(); const outDir=process.env.OUTPUT_DIR||'/mnt/data';
-const critical=JSON.parse(fs.readFileSync('_baseline_packaging_contract.json','utf8')).required_files;
-const hashes={}; for(const f of critical)hashes[f]=crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex');
-const sourceFingerprint=crypto.createHash('sha256').update(JSON.stringify(hashes)).digest('hex');
-fs.writeFileSync('_artifact_validation_manifest.json',JSON.stringify({schema_version:'1.0',generated_at:new Date().toISOString(),profile:'container',source_tree_fingerprint:sourceFingerprint,critical_file_hashes:hashes,artifact_zip_sha256:'SEE_SIDECAR_SHA256',local_browser_validation:'NOT_EXECUTED',required_local_command:'npm run release:prepush:local',repair_note:'Adds fresh faux traces for every GitHub Actions YAML workflow, updates the eight-workflow inventory, and fixes Spry Content Release snapshot sequencing so ownership/admin outputs are committed.',container_validation:{build_postprocess:'PASSED',workflow_contract_lineage_monitor:'PASSED for workflow contract, lineage, monitor, inventory, and 33 scenario-level faux traces across all 8 GitHub workflow files',direct_workflow_smokes:'TRACE_ONLY_PROVEN: all 8 GitHub YAML workflows traced across 33 non-mutating scenarios; exact live GitHub Actions execution remains local/GitHub proof',component_validation:'PASSED individually for workflow contract, workflow lineage, workflow monitor, release portability, BHPC agent intake/trace, citation contract/strategy, rendered schema parity, retired route references, PyYAML workflow syntax parse, and Cloudflare large-file scan; monolithic CI not executed in full in sandbox',exact_full_github_workflow_replay:'NOT_EXECUTED_IN_FULL: long governed run_lane workflows exceeded this container tool window; local/GitHub Actions must execute exact workflows',local_browser_validation:'NOT_EXECUTED',github_actions_validation:'NOT_EXECUTED',node_runtime_note:'Container executed with Node 22; repository declares Node 24 and local updater must run the Node 24 local profile.'}},null,2)+'\n');
-const short=sourceFingerprint.slice(0,12); const date=new Intl.DateTimeFormat('en-US',{timeZone:'America/Chicago',month:'2-digit',day:'2-digit',year:'2-digit'}).format(new Date()).replaceAll('/','-'); const name=`sprylabs-hpc-site-main_BASELINE_${date}_${short}.zip`; const zip=path.join(outDir,name); try{fs.rmSync(zip,{force:true});}catch{}
-const parent=path.dirname(root),base=path.basename(root);
-execFileSync('zip',['-q','-r',zip,base,'-x',`${base}/.git/*`,`${base}/node_modules/*`,`${base}/.env`,`${base}/.env.*`,`${base}/.auth/*`,`${base}/logs/*`,`${base}/artifacts/diagnostics/*`,`${base}/test-results/*`,`${base}/playwright-report/*`,`${base}/reports/*`,`${base}/.build/*`,`${base}/data/authority/*`,`${base}/data/answer_surface/*`,`${base}/data/answer_surface_monitoring/*`,`${base}/data/backlog/*`,`${base}/data/intake/source_ingestion/*`,`${base}/*/__pycache__/*`,`${base}/*/*/__pycache__/*`,`${base}/*/*/*/__pycache__/*`,`${base}/*.pyc`,`${base}/*/*.pyc`,`${base}/*/*/*.pyc`,`${base}/*/*/*/*.pyc`],{cwd:parent});
-const zipHash=crypto.createHash('sha256').update(fs.readFileSync(zip)).digest('hex'); fs.writeFileSync(`${zip}.sha256`,`${zipHash}  ${path.basename(zip)}\n`); console.log(JSON.stringify({zip,sha256:zipHash,source_fingerprint:sourceFingerprint},null,2));
+import { execFileSync } from 'node:child_process';
+
+const root = process.cwd();
+const outDir = process.env.OUTPUT_DIR || '/mnt/data';
+const contractPath = path.join(root, '_baseline_packaging_contract.json');
+const manifestPath = path.join(root, '_artifact_validation_manifest.json');
+const contract = JSON.parse(fs.readFileSync(contractPath, 'utf8'));
+const requiredFiles = Array.isArray(contract.required_files) ? contract.required_files : [];
+
+const missing = requiredFiles.filter((relativePath) => !fs.existsSync(path.join(root, relativePath)));
+if (missing.length) {
+  console.error('Baseline packaging blocked: required files are missing:');
+  for (const relativePath of missing) console.error(` - ${relativePath}`);
+  process.exit(1);
+}
+
+const hashes = {};
+for (const relativePath of requiredFiles) {
+  hashes[relativePath] = crypto
+    .createHash('sha256')
+    .update(fs.readFileSync(path.join(root, relativePath)))
+    .digest('hex');
+}
+const sourceFingerprint = crypto
+  .createHash('sha256')
+  .update(JSON.stringify(hashes))
+  .digest('hex');
+
+let prior = {};
+try {
+  prior = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+} catch {}
+
+const manifest = {
+  schema_version: '1.0',
+  generated_at: new Date().toISOString(),
+  profile: prior.profile || 'packaging-only',
+  source_tree_fingerprint: sourceFingerprint,
+  critical_file_hashes: hashes,
+  artifact_zip_sha256: 'SEE_SIDECAR_SHA256',
+  local_browser_validation: prior.local_browser_validation || 'NOT_EXECUTED',
+  required_local_command: prior.required_local_command || 'npm run release:prepush:local',
+  repair_note: prior.repair_note || 'Full baseline snapshot packaged from the repository root; local updater validation remains required.',
+  container_validation: prior.container_validation || {
+    packaging_required_files: 'PASSED',
+    full_build: 'NOT_EXECUTED',
+    browser_validation: 'NOT_EXECUTED',
+    github_actions_validation: 'NOT_EXECUTED',
+    local_validation_required: true
+  }
+};
+fs.writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+
+const short = sourceFingerprint.slice(0, 12);
+const date = new Intl.DateTimeFormat('en-US', {
+  timeZone: 'America/Chicago',
+  month: '2-digit',
+  day: '2-digit',
+  year: '2-digit'
+}).format(new Date()).replaceAll('/', '-');
+const name = `sprylabs-hpc-site-main_BASELINE_${date}_${short}.zip`;
+const zip = path.join(outDir, name);
+fs.rmSync(zip, { force: true });
+
+const parent = path.dirname(root);
+const base = path.basename(root);
+const excluded = Array.isArray(contract.excluded_patterns) ? contract.excluded_patterns : [];
+const zipExclusions = excluded.flatMap((pattern) => {
+  const normalized = String(pattern).replace(/^\.\//, '');
+  if (normalized.endsWith('/')) return [`${base}/${normalized}*`];
+  return [`${base}/${normalized}`];
+});
+const zipArgs = ['-q', '-r', zip, base];
+if (zipExclusions.length) zipArgs.push('-x', ...zipExclusions);
+execFileSync('zip', zipArgs, { cwd: parent, stdio: 'inherit' });
+execFileSync('unzip', ['-tqq', zip], { stdio: 'inherit' });
+
+const zipHash = crypto.createHash('sha256').update(fs.readFileSync(zip)).digest('hex');
+fs.writeFileSync(`${zip}.sha256`, `${zipHash}  ${path.basename(zip)}\n`);
+console.log(JSON.stringify({
+  zip,
+  sha256: zipHash,
+  source_fingerprint: sourceFingerprint,
+  required_files_checked: requiredFiles.length,
+  zip_integrity: 'PASS'
+}, null, 2));

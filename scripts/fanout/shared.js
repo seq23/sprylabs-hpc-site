@@ -62,7 +62,7 @@ function classifyPageFamily(relPath) {
   if (p.startsWith('comparisons/') || /\bvs\b|alternatives-to|best-ai-coaching-tools|chatgpt-vs|ai-coach-vs|prompt-library-vs/i.test(p)) return 'comparison';
   if (p.startsWith('answers/')) return 'answer';
   if (p.startsWith('coverage/')) return 'coverage';
-  if (p.startsWith('assets/') || p.startsWith('_ops/') || p.startsWith('scripts/') || p.startsWith('docs/') || p.startsWith('templates/')) return 'ignore';
+  if (p.startsWith('assets/') || p.startsWith('scripts/') || p.startsWith('docs/') || p.startsWith('reports/') || p.startsWith('templates/')) return 'ignore';
   if (p.startsWith('insights/')) return 'insight';
   if (/help-me|get-my-life-together|feel-|wasted-my-20s|stop-|burnout|collapse|lazy|procrastinating|overplanning|doomscrolling|quitting|sabotage|behind|failure/i.test(p)) return 'pain';
   if (/^what-is-|^how-to-|^can-|^why-|^best-|^what-should-|^is-|^ai-|^chatgpt-|^daily-|^decision-/i.test(path.basename(p))) return 'answer';

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from __future__ import annotations
-import json, re, sys
+import json, os, re, sys
+from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
 from urllib.parse import urljoin
 sys.dont_write_bytecode=True
@@ -204,16 +205,32 @@ def update_schema(path: Path):
         return True
     return False
 
-pages=json.loads((ROOT/'data/citation/citable_pages.json').read_text(encoding='utf-8'))['pages']
-allowed=active_mutation_routes()
-changed=0; skipped_frozen_scope=0
-for rec in pages:
-    if rec.get('status','ACTIVE')!='ACTIVE': continue
-    rel=rec.get('path')
-    if not rel: continue
-    if allowed is not None and route_from_path(rel) not in allowed:
-        skipped_frozen_scope += 1
-        continue
+def repair_one(rel: str) -> int:
     fp=ROOT/rel
-    if fp.is_file() and update_schema(fp): changed+=1
-print(f'repair_schema_parity: changed={changed}; scoped={allowed is not None}; skipped_outside_scope={skipped_frozen_scope}')
+    return 1 if fp.is_file() and update_schema(fp) else 0
+
+def main():
+    pages=json.loads((ROOT/'data/citation/citable_pages.json').read_text(encoding='utf-8'))['pages']
+    allowed=active_mutation_routes()
+    work=[]; skipped_frozen_scope=0
+    for rec in pages:
+        if rec.get('status','ACTIVE')!='ACTIVE':
+            continue
+        rel=rec.get('path')
+        if not rel:
+            continue
+        if allowed is not None and route_from_path(rel) not in allowed:
+            skipped_frozen_scope += 1
+            continue
+        work.append(rel)
+    workers=max(1, int(os.environ.get('SCHEMA_REPAIR_WORKERS', min(8, os.cpu_count() or 1))))
+    if workers == 1 or len(work) < 2:
+        changed=sum(repair_one(rel) for rel in work)
+    else:
+        chunksize=max(1, len(work)//(workers*8))
+        with ProcessPoolExecutor(max_workers=workers) as pool:
+            changed=sum(pool.map(repair_one, work, chunksize=chunksize))
+    print(f'repair_schema_parity: changed={changed}; scoped={allowed is not None}; skipped_outside_scope={skipped_frozen_scope}; workers={workers}; pages={len(work)}')
+
+if __name__ == '__main__':
+    main()

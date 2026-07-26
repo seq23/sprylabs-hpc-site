@@ -40,7 +40,7 @@
     },
     "dual_domain_metadata_drift": {
       "command": "npm run repair:dual-domain-metadata",
-      "rerun": "node _ops/validators/validate_dual_domain_contract.js",
+      "rerun": "node scripts/validators/legacy_ops/validate_dual_domain_contract.js",
       "max_attempts": 1,
       "forbidden_for": [
         "secret_exposure",

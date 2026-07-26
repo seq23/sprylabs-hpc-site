@@ -1,22 +1,22 @@
 {
   "schema_version": "1.3",
-  "generated_at": "2026-07-24T21:52:40.886Z",
-  "status": "PASS_WITH_WARNING",
+  "generated_at": "2026-07-26T13:47:48.785Z",
+  "status": "PASS",
   "workflow_count": 2,
-  "reviewed_count": 1,
-  "skipped_count": 1,
-  "pass_count": 1,
+  "reviewed_count": 0,
+  "skipped_count": 2,
+  "pass_count": 0,
   "fail_count": 0,
-  "warning_count": 1,
+  "warning_count": 0,
   "safe_noise_count": 0,
-  "raw_finding_count": 21,
-  "aggregated_finding_count": 1,
+  "raw_finding_count": 0,
+  "aggregated_finding_count": 0,
   "info_count": 2,
   "governance_fixture_count": 11,
   "governance_blocker_audit": {
-    "admitted_hard_fail_count": 156,
+    "admitted_hard_fail_count": 159,
     "suggested_review_counts": {
-      "REVIEW_REQUIRED": 121,
+      "REVIEW_REQUIRED": 124,
       "EXISTING_REPAIR_AVAILABLE": 5,
       "TRUE_BLOCKER": 22,
       "REVIEW_WARNING_BOUNDARY": 8
@@ -25,76 +25,13 @@
   "errors": [],
   "results": [
     {
-      "schema_version": "1.4",
       "workflow_id": "spry-content-release",
-      "run_id": "20260724204742-4502",
-      "generated_at": "2026-07-24T21:52:40.885Z",
-      "status": "PASS_WITH_WARNING",
-      "changed_file_count": 90,
-      "raw_finding_count": 21,
-      "aggregated_finding_count": 1,
-      "input_count": 666,
-      "output_count": 4239,
-      "finding_summary": {
-        "counts": {
-          "SAFE_NOISE": 0,
-          "WARNING": 1,
-          "SELF_HEALABLE": 0,
-          "ITEM_SKIP": 0,
-          "TRUE_BLOCKER": 0,
-          "INTERNAL_ERROR": 0
-        },
-        "blocking_count": 0,
-        "warning_count": 1,
-        "safe_noise_count": 0,
-        "self_healable_count": 0,
-        "item_skip_count": 0
-      },
-      "findings": [
-        {
-          "id": "aggregate:undeclared_generated_output",
-          "kind": "undeclared_generated_output",
-          "message": "21 generated output(s) were outside declared workflow patterns",
-          "file": null,
-          "material": false,
-          "repairable": false,
-          "item_scoped": false,
-          "evidence": [
-            {
-              "occurrence_count": 21,
-              "sample_files": [
-                "agent/bhpc/a-realistic-morning-routine-for-people-with-chaotic-days-spry-executive-os-for-accountability.html",
-                "agent/bhpc/a-realistic-morning-routine-for-people-with-chaotic-days-spry-executive-os-for-daily-planning.html",
-                "agent/bhpc/a-realistic-morning-routine-for-people-with-chaotic-days-spry-executive-os-for-founders.html",
-                "agent/bhpc/a-realistic-morning-routine-for-people-with-chaotic-days-spry-executive-os-vs-productivity-apps.html",
-                "agent/bhpc/a-realistic-morning-routine-for-people-with-chaotic-days-spry-executive-os-with-ai.html",
-                "agent/bhpc/a-simple-knowledge-system-capture-distill-use-spry-executive-os-for-founders.html",
-                "agent/bhpc/ai-prompt-to-act-as-a-creativity-coach-and-make-tasks-fun-with-who-what-why.html",
-                "agent/bhpc/chatgpt-prompt-to-assess-sustainable-vs-burnout-habits-based-on-ali-abdaal-s-energy-management.html"
-              ]
-            }
-          ],
-          "classification": "WARNING",
-          "occurrence_count": 21,
-          "sample_files": [
-            "agent/bhpc/a-realistic-morning-routine-for-people-with-chaotic-days-spry-executive-os-for-accountability.html",
-            "agent/bhpc/a-realistic-morning-routine-for-people-with-chaotic-days-spry-executive-os-for-daily-planning.html",
-            "agent/bhpc/a-realistic-morning-routine-for-people-with-chaotic-days-spry-executive-os-for-founders.html",
-            "agent/bhpc/a-realistic-morning-routine-for-people-with-chaotic-days-spry-executive-os-vs-productivity-apps.html",
-            "agent/bhpc/a-realistic-morning-routine-for-people-with-chaotic-days-spry-executive-os-with-ai.html",
-            "agent/bhpc/a-simple-knowledge-system-capture-distill-use-spry-executive-os-for-founders.html",
-            "agent/bhpc/ai-prompt-to-act-as-a-creativity-coach-and-make-tasks-fun-with-who-what-why.html",
-            "agent/bhpc/chatgpt-prompt-to-assess-sustainable-vs-burnout-habits-based-on-ali-abdaal-s-energy-management.html"
-          ]
-        }
-      ],
+      "status": "SKIP",
       "errors": [],
-      "warnings": [
-        "21 generated output(s) were outside declared workflow patterns"
-      ],
+      "warnings": [],
       "safe_noise": [],
       "info": [
-        "programmatic candidate manifest retains 1400 admitted release atom(s) for downstream validation"
+        "latest trace missing; no historical run available to hostile-review"
       ]
     },
     {

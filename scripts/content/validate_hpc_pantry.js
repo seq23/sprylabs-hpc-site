@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const fs=require('fs'); const path=require('path');
 function writeReport(report){fs.mkdirSync('reports',{recursive:true});fs.mkdirSync('artifacts/validation',{recursive:true});fs.writeFileSync('reports/hpc-pantry-validation.json',JSON.stringify(report,null,2)+'\n');fs.writeFileSync('artifacts/validation/hpc-pantry.json',JSON.stringify(report,null,2)+'\n');}
-const root=process.cwd(); const bank=path.join(root,'content-bank');
+const root=process.cwd(); const bank=path.join(root,'content/bank');
 const required=['coaching-paragraph-banks.json','execution-short-answer-banks.json','checklist-banks.json','mistake-red-flag-banks.json','founder-operator-pov-banks.json','recovery-after-missed-day-banks.json','ai-coaching-workflow-banks.json','implementation-example-banks.json','social-template-banks.json','safety-claim-rules.json','signal-classifiers.json','page-recipes.json'];
 let errors=[]; for(const f of required){const p=path.join(bank,f); if(!fs.existsSync(p)) errors.push(`missing ${f}`); else {try{JSON.parse(fs.readFileSync(p,'utf8'))}catch(e){errors.push(`invalid json ${f}: ${e.message}`)}}}
 function count(file,key){return JSON.parse(fs.readFileSync(path.join(bank,file),'utf8'))[key]?.length||0}

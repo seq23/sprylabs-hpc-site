@@ -18,7 +18,7 @@ for(const wf of fs.readdirSync('.github/workflows').filter(x=>/ya?ml$/.test(x)))
 for(const [name,cmd] of Object.entries(pkg.scripts||{})){
  for(const m of String(cmd).matchAll(/(?:node|python3|bash)\s+([^\s;&|]+)/g)){
   const f=m[1].replace(/^['"]|['"]$/g,'');
-  if((f.startsWith('scripts/')||f.startsWith('_ops/')) && !fs.existsSync(f)) errors.push(`${name}: missing script ${f}`);
+  if(f.startsWith('scripts/') && !fs.existsSync(f)) errors.push(`${name}: missing script ${f}`);
   if(fs.existsSync(f) && fs.statSync(f).isFile() && fs.statSync(f).size===0) errors.push(`${name}: zero-byte script ${f}`);
  }
 }

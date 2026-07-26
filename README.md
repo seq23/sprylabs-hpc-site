@@ -12,18 +12,18 @@ This repo uses the existing dual-sitemap architecture and does **not** add `site
 
 Day-0 setup:
 
-1. Run `bash distribution_scripts/bootstrap_distribution.sh`
+1. Run `bash scripts/distribution/bootstrap_distribution.sh`
 2. If bootstrap returns `BOOTSTRAP_OK`, commit + deploy so the committed IndexNow key file is live at repo root on both domains.
 3. Add your Search Console service-account JSON path to `distribution.config.json`.
 4. Run `npm run distribution:prepare`
-5. Run `bash distribution_scripts/deploy_distribution.sh`
+5. Run `bash scripts/distribution/deploy_distribution.sh`
 
 ### Permanent IndexNow key lifecycle
 
 - The repo now uses a committed stable IndexNow key by default.
 - Future full baseline ZIPs must include the configured root key file and `distribution.config.json` with matching `indexnow.key` + `indexnow.key_file`.
 - Snapshot updates should **not** require re-bootstrap unless you explicitly want to rotate the key.
-- To rotate intentionally, run `INDEXNOW_ROTATE=1 npm run distribution:bootstrap` or `bash distribution_scripts/bootstrap_distribution.sh --rotate`, then commit + deploy the new key file.
+- To rotate intentionally, run `INDEXNOW_ROTATE=1 npm run distribution:bootstrap` or `bash scripts/distribution/bootstrap_distribution.sh --rotate`, then commit + deploy the new key file.
 
 ## Machine Readability System Layer
 

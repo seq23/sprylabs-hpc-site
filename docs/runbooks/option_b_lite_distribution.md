@@ -40,9 +40,9 @@ push to main / manual dispatch
 → npm run validate:indexnow-workflow
 → validates mixed-host workflow, artifacts, config, key file, and report lane
 → npm run distribution:deploy
-→ distribution_scripts/deploy_distribution.sh
-→ submits priority URLs through distribution_scripts/indexnow_submit.sh
-→ submits batch URLs through distribution_scripts/indexnow_submit.sh
+→ scripts/distribution/deploy_distribution.sh
+→ submits priority URLs through scripts/distribution/indexnow_submit.sh
+→ submits batch URLs through scripts/distribution/indexnow_submit.sh
 → writes reports/indexnow-submit-report.json
 → optionally submits GSC sitemap if credentials exist
 → optionally inspects priority URLs through GSC if credentials exist

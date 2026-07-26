@@ -41,8 +41,17 @@ const allReady = findAgentManifests().filter(entry => {
   const normalizedRel = entry.manifest?.normalized_path || `${NORMALIZED_ROOT}/${key}.json`;
   return !fs.existsSync(path.join(ROOT, normalizedRel));
 });
-const ready = allReady.filter(entry => manifestAllowedByExactPolicy(entry, policy));
-const skipped = allReady.filter(entry => !manifestAllowedByExactPolicy(entry, policy)).map(entry => ({manifest:entry.manifestRel, run_date:entry.runDate, scope: entry.scope, reason:'before_exact_implementation_cutover'}));
+function isIncompleteAbsorbedRun(entry) {
+  if (entry.manifest?.status !== 'ABSORBED') return false;
+  if (policy.retroactive_processing === false && entry.runDate && policy.effective_from && entry.runDate < policy.effective_from) return false;
+  const scope = safeScope(entry.scope || entry.manifest?.scope || 'bhpc');
+  const key = runKey(entry.runDate, scope);
+  const normalizedRel = entry.manifest?.normalized_path || `${NORMALIZED_ROOT}/${key}.json`;
+  const socialRel = entry.manifest?.social_run_path || `${SOCIAL_RUNS_ROOT}/${sourceKey(entry.runDate, scope)}.json`;
+  return !fs.existsSync(path.join(ROOT, normalizedRel)) || !fs.existsSync(path.join(ROOT, socialRel));
+}
+const ready = allReady.filter(entry => manifestAllowedByExactPolicy(entry, policy) || isIncompleteAbsorbedRun(entry));
+const skipped = allReady.filter(entry => !manifestAllowedByExactPolicy(entry, policy) && !isIncompleteAbsorbedRun(entry)).map(entry => ({manifest:entry.manifestRel, run_date:entry.runDate, scope: entry.scope, reason:'before_exact_implementation_cutover'}));
 const absorbed = [];
 for (const entry of ready) {
   const scope = safeScope(entry.scope || entry.manifest?.scope || entry.manifest?.bucket || entry.manifest?.vertical || 'bhpc');

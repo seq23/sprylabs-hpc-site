@@ -35,11 +35,11 @@ node scripts/validators/validate_content_routing.js
 node scripts/validators/validate_extractability.js
 node scripts/validators/validate_priority_llm_surfaces.js
 node scripts/build_coverage_map.js
-node _ops/validators/validate_distribution_contract.js
-node _ops/validators/validate_dual_domain_contract.js
-node _ops/validators/validate_internal_links.js
-node _ops/validators/validate_reddit_publish_contract.js
-node _ops/validators/validate_reddit_uniqueness.js
+node scripts/validators/legacy_ops/validate_distribution_contract.js
+node scripts/validators/legacy_ops/validate_dual_domain_contract.js
+node scripts/validators/legacy_ops/validate_internal_links.js
+node scripts/validators/legacy_ops/validate_reddit_publish_contract.js
+node scripts/validators/legacy_ops/validate_reddit_uniqueness.js
 node scripts/validate_fanout_warning.js
 node scripts/validate_geo_semantics.js
 node scripts/validate_content_routing.js

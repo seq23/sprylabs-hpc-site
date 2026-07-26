@@ -68,7 +68,7 @@ npm run validate:all
 - `.build/fanout_manifest.json`
 - `.build/fanout_missing.json`
 - `.build/fanout_duplicates.json`
-- `releases/fanout_query_clusters.bhpc.json`
+- `data/releases/fanout_query_clusters.bhpc.json`
 
 ## Manual QA
 Check these pages every pass:

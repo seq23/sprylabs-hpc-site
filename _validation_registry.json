@@ -5268,8 +5268,104 @@
         "MX-150"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-AUTHORITY-SCALE",
+      "status": "ADMITTED",
+      "name": "validate:authority-scale",
+      "check_type": "validator",
+      "owning_lane": "authority-scale",
+      "risk_prevented": "Prevents stale accepted-output freeze state, missing 100K fanout runway, and non-operational publication windows from passing release validation.",
+      "existing_coverage_gap": "The authority-scale validator was executable and used by release workflows but had not been admitted to the validation control plane.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:authority-scale",
+      "implementation_path": "scripts/authority_scale/validate_authority_scale.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-authority-scale/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:repo"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted during 2026-07-25 deep validation because the command is an active release or repository protection.",
+      "decision_date": "2026-07-25",
+      "matrix_ids": [
+        "MX-151"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-KPI-TRUTH",
+      "status": "ADMITTED",
+      "name": "validate:kpi-truth",
+      "check_type": "validator",
+      "owning_lane": "authority-scale",
+      "risk_prevented": "Prevents owned surfaces, opportunities, observed mentions, backlinks, and verified citations from being conflated.",
+      "existing_coverage_gap": "The KPI truth validator was executable and nested under authority-scale validation but had not been admitted independently.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:kpi-truth",
+      "implementation_path": "scripts/authority_scale/validate_kpi_truth.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-kpi-truth/summary.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:authority-scale"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted during 2026-07-25 deep validation because the command is an active release or repository protection.",
+      "decision_date": "2026-07-25",
+      "matrix_ids": [
+        "MX-152"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-ROOT-TREE",
+      "status": "ADMITTED",
+      "name": "validate:root-tree",
+      "check_type": "validator",
+      "owning_lane": "repository-structure",
+      "risk_prevented": "Prevents new loose operational files, temporary outputs, and unapproved top-level directories from drifting back into the repository root.",
+      "existing_coverage_gap": "The root-tree guard was executable and called by repo validation but had not been admitted to the control plane.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:root-tree",
+      "implementation_path": "scripts/validation/validate_root_tree.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-root-tree/summary.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:repo"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted during 2026-07-25 deep validation because the command is an active release or repository protection.",
+      "decision_date": "2026-07-25",
+      "matrix_ids": [
+        "MX-153"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 158,
-  "generated_at": "2026-07-11T21:53:53.358661Z"
+  "record_count": 169,
+  "generated_at": "2026-07-25T19:00:04.038Z"
 }

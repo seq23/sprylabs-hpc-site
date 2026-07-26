@@ -1,23 +1,23 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-07-25T15:29:53.183Z",
+  "generated_at": "2026-07-26T13:47:48.784Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 156,
+  "admitted_hard_fail_count": 159,
   "reviewed_count": 8,
-  "unreviewed_count": 148,
+  "unreviewed_count": 151,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 121,
+    "REVIEW_REQUIRED": 124,
     "EXISTING_REPAIR_AVAILABLE": 5,
     "TRUE_BLOCKER": 22,
     "REVIEW_WARNING_BOUNDARY": 8
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 121,
+    "REVIEW_REQUIRED": 124,
     "EXISTING_REPAIR_AVAILABLE": 5,
     "TRUE_BLOCKER": 22
   },
   "migration_status_counts": {
-    "UNREVIEWED": 148,
+    "UNREVIEWED": 151,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -2382,6 +2382,51 @@
         "MX-150"
       ],
       "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-AUTHORITY-SCALE",
+      "name": "validate:authority-scale",
+      "command": "npm run validate:authority-scale",
+      "owning_lane": "authority-scale",
+      "risk_prevented": "Prevents stale accepted-output freeze state, missing 100K fanout runway, and non-operational publication windows from passing release validation.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-151"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-KPI-TRUTH",
+      "name": "validate:kpi-truth",
+      "command": "npm run validate:kpi-truth",
+      "owning_lane": "authority-scale",
+      "risk_prevented": "Prevents owned surfaces, opportunities, observed mentions, backlinks, and verified citations from being conflated.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-152"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-ROOT-TREE",
+      "name": "validate:root-tree",
+      "command": "npm run validate:root-tree",
+      "owning_lane": "repository-structure",
+      "risk_prevented": "Prevents new loose operational files, temporary outputs, and unapproved top-level directories from drifting back into the repository root.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-153"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",
       "decision": null,
       "evidence": []

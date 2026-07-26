@@ -4,12 +4,11 @@
   "current_default_new_page_ceiling_per_day": 25,
   "citation_expansion_mode_batch_ceiling": 75,
   "scale_tiers": [
-    5,
-    15,
     25,
     50,
     75,
-    100
+    100,
+    150
   ],
   "targets_are_quotas": false,
   "scale_up_requires": [
@@ -26,5 +25,6 @@
     "unsafe claim risk",
     "indexation backlog"
   ],
-  "note": "Existing 12-20/day target and 8-25 tolerance remain observational targets. The 75 batch belongs to the explicit citation-expansion lane, not the default full-content-cycle daily publish contract."
+  "note": "Existing 12-20/day target and 8-25 tolerance remain observational targets. The 75 batch belongs to the explicit citation-expansion lane, not the default full-content-cycle daily publish contract.",
+  "publication_budget_law": "All newly published authority URLs share the governed daily new-URL budget. Twin-driven repairs may use the separate repair budget. The historical 75 citation-expansion number is a velocity tier, not a second publishing universe."
 }

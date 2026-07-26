@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "repo": "sprylabs-hpc-site",
+  "date": "2026-07-25",
+  "source_zip": "sprylabs-hpc-site-main_BASELINE_07-25-26_6953e4c8e72a.zip",
+  "source_zip_sha256": "84749a3819f3bb174273d6014dac53f5ea9cfcf19b38d8d1aeb4cd563c5d9a98",
+  "status": "PASS_WITH_DECLARED_LOCAL_RUNTIME_BOUNDARY",
+  "proof": {
+    "build_all": "PASS",
+    "content_release": "PASS",
+    "agent_run": "PASS",
+    "full_uncached_extraction_pages": 2463,
+    "full_uncached_schema_pages": 2463,
+    "content_html_files": 2500,
+    "internal_references": 41387,
+    "clean_rebuild_public_distribution_files": 2556,
+    "clean_rebuild_changed_files": 0,
+    "authority_fanout_records": 100000,
+    "authority_operational_window": 5000,
+    "frozen_accepted_outputs": 2463,
+    "validation_registry_records": 169,
+    "validation_matrix_entries": 168,
+    "browserless_fixture_cases": 4,
+    "browser_structural_pages": 2500,
+    "browser_contract_checks": 24
+  },
+  "local_runtime_boundary": {
+    "declared_node": "24",
+    "container_node": "22.16.0",
+    "playwright_module_installed": false,
+    "chromium_installed": false,
+    "real_browser_proof": false,
+    "backup_used": "npm run validate:browserless-mock-backup"
+  },
+  "external_proof_not_run": [
+    "GitHub Actions",
+    "live deployment",
+    "provider mutations",
+    "real Playwright screenshots"
+  ]
+}

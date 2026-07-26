@@ -21,4 +21,4 @@ Source drafts from this directory are published into the public `insights/` dire
 If you want to understand what daily articles look like:
 1. inspect `content/insights/_drafts/` for source markdown
 2. inspect `insights/` for public HTML output
-3. inspect `/_ops/daily-insights/preview-index.md` and `manifest.json` for release visibility
+3. inspect `/docs/operations/daily-insights/preview-index.md` and `manifest.json` for release visibility

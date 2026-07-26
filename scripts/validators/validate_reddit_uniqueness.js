@@ -1,2 +1,2 @@
 #!/usr/bin/env node
-require('../../_ops/validators/validate_reddit_uniqueness.js');
+require('../../scripts/validators/legacy_ops/validate_reddit_uniqueness.js');

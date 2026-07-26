@@ -29,8 +29,26 @@ function collectRows(policy = loadExactPolicy()) {
     if (policy.retroactive_processing === false && payload.run_date && policy.effective_from && payload.run_date < policy.effective_from) continue;
     const runDate = payload.run_date || file.replace(/_.+$/, '');
     const scope = safeScope(payload.scope || 'bhpc');
-    for (const row of payload.records || []) rows.push({...row, scope: safeScope(row.scope || scope), run_date: runDate, normalized_path: rel});
-    for (const spec of payload.page_specs || []) rows.push({
+    const pageSpecs = payload.page_specs || [];
+    const canonicalPagePathByQuery = new Map(pageSpecs
+      .filter(spec => spec?.query && spec?.implementation_path)
+      .map(spec => [normalizeKey(spec.query), spec.implementation_path]));
+    for (const row of payload.records || []) {
+      const canonicalPath = canonicalPagePathByQuery.get(normalizeKey(row.query || '')) || '';
+      const shouldUseCanonicalOpportunityPath = Boolean(canonicalPath && !row.intended_winner_page && !row.intended_winner_path);
+      rows.push({
+        ...row,
+        ...(shouldUseCanonicalOpportunityPath ? {
+          implementation_path: canonicalPath,
+          operation: 'CREATE_NEW_TARGET_PAGE',
+          primary_fix_type: row.primary_fix_type || 'new_page_opportunity',
+        } : {}),
+        scope: safeScope(row.scope || scope),
+        run_date: runDate,
+        normalized_path: rel
+      });
+    }
+    for (const spec of pageSpecs) rows.push({
       id: spec.id || `${runDate}-${safeScope(spec.scope || scope)}-${rows.length + 1}`,
       scope: safeScope(spec.scope || scope),
       run_date: runDate,

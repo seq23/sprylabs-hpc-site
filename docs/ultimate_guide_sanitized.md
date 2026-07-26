@@ -862,7 +862,7 @@ repo-root/
       velocity-daily.yml
       velocity-evening.yml
 
-  _ops/
+  scripts/validators/legacy_ops/ and reports/audits/
 
     validators/
     audits/
@@ -1274,13 +1274,13 @@ Suggested model:
   "name": "client-velocity-site",
   "version": "0.0.0-snapshot",
   "scripts": {
-    "validate:titles": "node _ops/validators/validate_titles.js",
-    "validate:links": "node _ops/validators/validate_internal_links.js",
-    "validate:contract": "node _ops/validators/validate_page_contract.js",
-    "validate:canonicals": "node _ops/validators/validate_dual_domain_contract.js",
-    "validate:publish": "node _ops/validators/validate_publish_contract.js",
-    "validate:uniq": "node _ops/validators/validate_uniqueness.js",
-    "validate:policy": "node _ops/validators/validate_policy_compliance.js",
+    "validate:titles": "node scripts/validators/legacy_ops/validate_titles.js",
+    "validate:links": "node scripts/validators/legacy_ops/validate_internal_links.js",
+    "validate:contract": "node scripts/validators/legacy_ops/validate_page_contract.js",
+    "validate:canonicals": "node scripts/validators/legacy_ops/validate_dual_domain_contract.js",
+    "validate:publish": "node scripts/validators/legacy_ops/validate_publish_contract.js",
+    "validate:uniq": "node scripts/validators/legacy_ops/validate_uniqueness.js",
+    "validate:policy": "node scripts/validators/legacy_ops/validate_policy_compliance.js",
     "validate:all": "npm run validate:titles && npm run validate:links && npm run validate:contract && npm run validate:canonicals && npm run validate:publish && npm run validate:uniq && npm run validate:policy"
   }
 }

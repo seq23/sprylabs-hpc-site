@@ -21,7 +21,7 @@
     {
       "name": "build:generated-content",
       "command": "npm run build:generated-content",
-      "definition": "npm run intake && npm run scoring && npm run backlog && npm run fanout:auto && npm run answer:all && npm run backlog:build && node scripts/build_insights.js && node scripts/repair/auto_expand_short_pages.js && node scripts/repair/auto_repair_generated_page_ranges.js && node scripts/answer_surface/update_score_history.js && node scripts/answer_surface/build_weakness_backlog.js && npm run build:manual-expansion",
+      "definition": "npm run intake && npm run scoring && npm run backlog && npm run fanout:auto && npm run answer:all && npm run backlog:build && node scripts/build_insights.js && npm run build:authority && node scripts/repair/auto_expand_short_pages.js && node scripts/repair/auto_repair_generated_page_ranges.js && node scripts/answer_surface/update_score_history.js && node scripts/answer_surface/build_weakness_backlog.js && npm run build:manual-expansion",
       "registered": true
     },
     {
@@ -33,7 +33,7 @@
     {
       "name": "validate:repo",
       "command": "npm run validate:repo",
-      "definition": "node scripts/validation/validate_repo.mjs && npm run validate:release-portability",
+      "definition": "npm run validate:root-tree && node scripts/validation/validate_repo.mjs && npm run validate:release-portability",
       "registered": true
     },
     {
@@ -45,7 +45,7 @@
     {
       "name": "validate:citation-contract",
       "command": "npm run validate:citation-contract",
-      "definition": "python3 scripts/validation/validate_citation_contract.py",
+      "definition": "node scripts/validation/python_runtime.mjs run scripts/validation/validate_citation_contract.py",
       "registered": true
     },
     {
@@ -99,7 +99,7 @@
     {
       "name": "validate:all",
       "command": "npm run validate:all",
-      "definition": "npm run validate:repo && npm run validate:hpc-pantry && npm run trace:hpc-pantry && npm run validate:validation-registry && npm run validate:workflow-contract && npm run validate:workflow-lineage && npm run validate:workflow-monitor && npm run validate:workflow-topology && npm run validate:workflow-topology:fixtures && npm run agent:artifact-shape:self-test && npm run validate:agent-run && npm run agent:bhpc:validate && npm run agent:bhpc:trace && npm run agent:bhpc:plan-exact && npm run agent:bhpc:apply-exact && npm run agent:bhpc:trace-exact && npm run agent:bhpc:validate-exact && npm run validate:citation-velocity-automation && npm run validate:disavow-asset && npm run validate:programmatic-provenance && npm run repair:programmatic-registry-owners && npm run validate:programmatic-registry && npm run repair:citation-contract-surfaces && npm run validate:citation-contract && npm run validate:extraction-contract-final-state && npm run validate:citation-strategy && npm run validate:rendered-schema-parity && npm run validate:retired-route-references && npm run validate:content && npm run validate:graph && npm run validate:distribution && npm run validate:ui-test-parity && npm run validate:browser-suite-contract && node scripts/validation/validate_release_atom_contract.mjs && node scripts/validation/validate_release_mix_policy.mjs && node scripts/validation/validate_citation_phase_manifest.mjs && node scripts/validation/validate_no_keyword_swap_pages.mjs && node scripts/validation/validate_claim_safety.mjs && node scripts/validation/validate_internal_link_velocity.mjs && node scripts/validation/validate_llms_full_coverage.mjs && node scripts/validation/validate_sitemap_coverage.mjs && npm run validate:traffic-qualified-suite",
+      "definition": "npm run validate:profile -- container-prepush",
       "registered": true
     },
     {
@@ -207,7 +207,7 @@
     {
       "name": "validate:priority-citation-pages",
       "command": "npm run validate:priority-citation-pages",
-      "definition": "python3 scripts/validation/validate_priority_citation_pages.py",
+      "definition": "node scripts/validation/python_runtime.mjs run scripts/validation/validate_priority_citation_pages.py",
       "registered": true
     },
     {
@@ -219,19 +219,19 @@
     {
       "name": "validate:agent-recommendations",
       "command": "npm run validate:agent-recommendations",
-      "definition": "python3 scripts/validation/validate_agent_recommendations.py",
+      "definition": "node scripts/validation/python_runtime.mjs run scripts/validation/validate_agent_recommendations.py",
       "registered": true
     },
     {
       "name": "validate:page-admission",
       "command": "npm run validate:page-admission",
-      "definition": "python3 scripts/validation/validate_manual_expansion.py && npm run validate:programmatic-admission",
+      "definition": "node scripts/validation/python_runtime.mjs run scripts/validation/validate_manual_expansion.py && npm run validate:programmatic-admission",
       "registered": true
     },
     {
       "name": "validate:rendered-schema-parity",
       "command": "npm run validate:rendered-schema-parity",
-      "definition": "python3 scripts/validation/validate_rendered_schema_parity.py",
+      "definition": "node scripts/validation/run_rendered_schema_parity_sharded.mjs",
       "registered": true
     },
     {
@@ -249,7 +249,7 @@
     {
       "name": "validate:programmatic-admission",
       "command": "npm run validate:programmatic-admission",
-      "definition": "python3 scripts/validation/validate_programmatic_admission.py",
+      "definition": "node scripts/validation/python_runtime.mjs run scripts/validation/validate_programmatic_admission.py",
       "registered": true
     },
     {
@@ -381,7 +381,7 @@
     {
       "name": "release:agent-intake",
       "command": "npm run release:agent-intake",
-      "definition": "npm run release:agent-intake:raw && npm run release:content-finalize",
+      "definition": "npm run release:agent-intake:raw && npm run release:content-finalize && npm run authority:scale:freeze && npm run authority:scale:clear-scope && npm run validate:authority-scale",
       "registered": true
     },
     {
@@ -393,7 +393,7 @@
     {
       "name": "validate:full-audit",
       "command": "npm run validate:full-audit",
-      "definition": "npm run validate:agent-run && npm run validate:content-release && npm run validate:validation-registry && npm run validate:workflow-contract && npm run validate:workflow-lineage && npm run validate:workflow-monitor && npm run validate:workflow-topology && npm run validate:workflow-topology:fixtures && npm run validate:citation-strategy && node scripts/validation/validate_claim_safety.mjs && node scripts/validation/validate_llms_full_coverage.mjs && node scripts/validation/validate_sitemap_coverage.mjs",
+      "definition": "npm run validate:profile -- full-audit",
       "registered": true
     },
     {
@@ -579,7 +579,7 @@
     {
       "name": "release:agent-intake:raw",
       "command": "npm run release:agent-intake:raw",
-      "definition": "npm run agent:bhpc:validate && npm run agent:bhpc:absorb && npm run agent:bhpc:trace && npm run agent:bhpc:compile-acceptance && npm run agent:bhpc:plan-exact && npm run validate:bhpc-page-family-contract && npm run agent:bhpc:apply-exact && npm run schema:repair-parity && npm run agent:bhpc:trace-exact && npm run validate:agent-run",
+      "definition": "npm run agent:bhpc:validate && npm run agent:bhpc:absorb && npm run agent:bhpc:trace && npm run agent:bhpc:compile-acceptance && npm run agent:bhpc:plan-exact && npm run authority:scale:prepare-scope && npm run authority:scale:restore && npm run validate:bhpc-page-family-contract && npm run agent:bhpc:apply-exact && npm run schema:repair-parity && npm run agent:bhpc:trace-exact && npm run validate:agent-run",
       "registered": true
     },
     {
@@ -645,7 +645,7 @@
     {
       "name": "release:zero-dollar-autonomous",
       "command": "npm run release:zero-dollar-autonomous",
-      "definition": "npm run ownership:build && npm run strategy:gate && npm run firehose:collect && npm run firehose:normalize && npm run firehose:health && npm run signals:cluster && npm run signals:score && npm run signals:candidates && npm run release:plan && npm run release:content:intelligence && npm run citation:self-heal && npm run release:daily-proof && npm run admin:build",
+      "definition": "npm run authority:yield:build && npm run ownership:build && npm run strategy:gate && npm run firehose:collect && npm run firehose:normalize && npm run firehose:health && npm run signals:cluster && npm run signals:score && npm run signals:candidates && npm run release:plan && npm run authority:scale:prepare-scope && npm run authority:scale:restore && npm run release:content:intelligence && npm run citation:self-heal && npm run release:daily-proof && npm run admin:build && npm run authority:scale:freeze && npm run authority:scale:clear-scope && npm run validate:authority-scale",
       "registered": true
     },
     {
@@ -717,13 +717,91 @@
     {
       "name": "validate:extraction-contract-final-state",
       "command": "npm run validate:extraction-contract-final-state",
-      "definition": "python3 scripts/validation/validate_extraction_contract_final_state.py",
+      "definition": "node scripts/validation/run_extraction_contract_final_state_sharded.mjs",
       "registered": true
     },
     {
       "name": "validate:extraction-contract:self-test",
       "command": "npm run validate:extraction-contract:self-test",
-      "definition": "python3 scripts/validation/self_test_extraction_contract.py",
+      "definition": "node scripts/validation/python_runtime.mjs run scripts/validation/self_test_extraction_contract.py",
+      "registered": true
+    },
+    {
+      "name": "validate:extraction-surface-guard:snapshot",
+      "command": "npm run validate:extraction-surface-guard:snapshot",
+      "definition": "node scripts/validation/python_runtime.mjs run scripts/validation/extraction_surface_guard.py snapshot",
+      "registered": true
+    },
+    {
+      "name": "validate:extraction-surface-guard:check",
+      "command": "npm run validate:extraction-surface-guard:check",
+      "definition": "node scripts/validation/python_runtime.mjs run scripts/validation/extraction_surface_guard.py check",
+      "registered": true
+    },
+    {
+      "name": "validate:incremental-page-audit",
+      "command": "npm run validate:incremental-page-audit",
+      "definition": "node scripts/validation/run_incremental_page_audit.mjs",
+      "registered": true
+    },
+    {
+      "name": "validate:full-page-audit",
+      "command": "npm run validate:full-page-audit",
+      "definition": "node scripts/validation/run_incremental_page_audit.mjs --full",
+      "registered": true
+    },
+    {
+      "name": "validate:changed",
+      "command": "npm run validate:changed",
+      "definition": "npm run validate:profile -- changed",
+      "registered": true
+    },
+    {
+      "name": "validate:release",
+      "command": "npm run validate:release",
+      "definition": "npm run validate:profile -- container-prepush",
+      "registered": true
+    },
+    {
+      "name": "validate:full",
+      "command": "npm run validate:full",
+      "definition": "npm run validate:profile -- full-audit",
+      "registered": true
+    },
+    {
+      "name": "validate:python-dependency-contract",
+      "command": "npm run validate:python-dependency-contract",
+      "definition": "node scripts/validation/python_runtime.mjs run scripts/validation/validate_python_dependency_contract.py",
+      "registered": true
+    },
+    {
+      "name": "validate:orchestration-contract",
+      "command": "npm run validate:orchestration-contract",
+      "definition": "node scripts/validation/validate_orchestration_contract.mjs",
+      "registered": true
+    },
+    {
+      "name": "validate:orchestration-contract:self-test",
+      "command": "npm run validate:orchestration-contract:self-test",
+      "definition": "node scripts/validation/self_test_orchestration_contract.mjs",
+      "registered": true
+    },
+    {
+      "name": "validate:authority-scale",
+      "command": "npm run validate:authority-scale",
+      "definition": "node scripts/authority_scale/validate_authority_scale.mjs && node scripts/authority_scale/frozen_outputs.mjs status && npm run validate:kpi-truth && npm run authority:yield:validate",
+      "registered": true
+    },
+    {
+      "name": "validate:kpi-truth",
+      "command": "npm run validate:kpi-truth",
+      "definition": "node scripts/authority_scale/validate_kpi_truth.mjs",
+      "registered": true
+    },
+    {
+      "name": "validate:root-tree",
+      "command": "npm run validate:root-tree",
+      "definition": "node scripts/validation/validate_root_tree.mjs",
       "registered": true
     }
   ],

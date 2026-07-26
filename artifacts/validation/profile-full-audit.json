@@ -1,0 +1,26 @@
+{
+  "profile": "full-audit",
+  "started_at": "2026-07-25T18:26:06.127Z",
+  "steps": [
+    {
+      "id": "VAL-ORCHESTRATION-CONTRACT",
+      "command": "npm run validate:orchestration-contract",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-ORCHESTRATION-CONTRACT-SELF-TEST",
+      "command": "npm run validate:orchestration-contract:self-test",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-PYTHON-RUNTIME-BOOTSTRAP",
+      "command": "npm run validation:python-runtime:bootstrap",
+      "exit_code": 1,
+      "status": "FAIL"
+    }
+  ],
+  "status": "FAIL",
+  "finished_at": "2026-07-25T18:26:17.268Z"
+}

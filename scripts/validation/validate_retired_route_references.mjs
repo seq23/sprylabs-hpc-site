@@ -51,8 +51,8 @@ function walk(dir) {
     if (skipDirs.has(entry.name) || (dir === ROOT && /^(?:CHANGE_MAP_SUMMARY|FINAL_NORMALIZATION_SUMMARY|PHASE\d+_.*)\.txt$/.test(entry.name))) continue;
     const full = path.join(dir, entry.name);
     const rel = path.relative(ROOT, full).split(path.sep).join('/');
-    if (entry.isDirectory()) { if (rel.startsWith('_ops/audits')) continue; walk(full); }
-    else if (entry.isFile() && scanExtensions.has(path.extname(entry.name)) && !allowedFiles.has(rel) && !rel.startsWith('fixtures/validation/redirects/') && !rel.startsWith('_ops/daily-insights/touched-files-')) {
+    if (entry.isDirectory()) { walk(full); }
+    else if (entry.isFile() && scanExtensions.has(path.extname(entry.name)) && !allowedFiles.has(rel) && !rel.startsWith('fixtures/validation/redirects/') && !rel.startsWith('docs/operations/daily-insights/touched-files-')) {
       const text = fs.readFileSync(full, 'utf8');
       if (rel.endsWith('.html')) {
         for (const match of text.matchAll(/href=["']([^"']+)["']/gi)) {

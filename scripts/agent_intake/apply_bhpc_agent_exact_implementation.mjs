@@ -33,12 +33,25 @@ function walkHtml(dir, out = []) {
 function cleanLegacySections(html = '') {
   let out = String(html || '');
   const before = out;
-  out = out.replace(/\n?<section\b[^>]*class=["'][^"']*agent-exact-citation-repair[^"']*["'][\s\S]*?<\/section>\n?/gi, '\n');
-  out = out.replace(/\n?<section\b[^>]*>[\s\S]*?<h2>\s*Agent Exact Citation Repair\s*<\/h2>[\s\S]*?<\/section>\n?/gi, '\n');
-  out = out.replace(/Agent Exact Citation Repair/g, 'BHPC Agent Semantic Implementation');
-  out = out.replace(/exact intended-winner pipeline/g, 'semantic acceptance pipeline');
+  // Fast-path pages that never contained the retired marker. Running the
+  // broad section regexes unconditionally across thousands of normalized
+  // one-line HTML files can turn a replay into a multi-minute scan.
+  if (!/agent-exact-citation-repair|Agent Exact Citation Repair|exact intended-winner pipeline/i.test(out)) {
+    return {html: out, changed: false};
+  }
+  if (/agent-exact-citation-repair/i.test(out)) {
+    out = out.replace(/\n?<section\b[^>]*class=["'][^"']*agent-exact-citation-repair[^"']*["'][\s\S]*?<\/section>\n?/gi, '\n');
+  }
+  if (/Agent Exact Citation Repair/.test(out)) {
+    out = out.replace(/\n?<section\b[^>]*>[\s\S]*?<h2>\s*Agent Exact Citation Repair\s*<\/h2>[\s\S]*?<\/section>\n?/gi, '\n');
+    out = out.replace(/Agent Exact Citation Repair/g, 'BHPC Agent Semantic Implementation');
+  }
+  if (/exact intended-winner pipeline/i.test(out)) {
+    out = out.replace(/exact intended-winner pipeline/gi, 'semantic acceptance pipeline');
+  }
   return {html: out, changed: out !== before};
 }
+
 function cleanExistingSemanticSections(html = '', recordIds = []) {
   let out = String(html || '');
   for (const recordId of recordIds) {
@@ -75,25 +88,197 @@ function instructionTasks(value = '') {
   if (!tasks.length) tasks.push('Translate the agent recommendation into visible page content without dropping the source instruction.');
   return tasks;
 }
-function renderAgentDirectiveBlock(entry) {
+function promptTemplateFor(entry, entries = []) {
+  const pathValue = String(entry.implementation_path || '').toLowerCase();
+  const queryText = uniqueValues(entries.map(item => item.query)).join(' | ') || String(entry.query || '');
+  if (pathValue.includes('a-realistic-morning-routine-for-people-with-chaotic-days')) return `Act as my executive morning planner. Build a realistic morning routine that survives chaotic days.
+
+My available time: [MINUTES]
+My current energy (1–10): [ENERGY]
+My fixed constraints: [MEDS / CHILDCARE / COMMUTE / EARLY CALLS]
+My first meaningful work outcome today: [OUTCOME]
+
+Return exactly:
+1. A minimum-viable 3-step launch I can complete even on a bad morning.
+2. The full routine in exact order with minutes or reps.
+3. A chaos fallback for when I am interrupted.
+4. The single first work action that breaks inertia.
+5. One end-of-morning accountability question.
+
+Keep the plan practical, low-friction, and free of motivational filler.`;
+  if (pathValue.includes('a-simple-knowledge-system-capture-distill-use')) return `Act as my chief-of-staff knowledge editor. Turn the raw material below into a simple capture → distill → use system.
+
+Raw notes or source material: [PASTE]
+Current project or decision: [PROJECT]
+Where I store working knowledge: [TOOL]
+
+Return exactly:
+1. CAPTURE — the facts, quotes, links, and unresolved questions worth keeping.
+2. DISTILL — a five-bullet executive summary and the three most important principles.
+3. USE — the next decision, task, message, or asset this knowledge should produce.
+4. FILE — a suggested title, tags, and canonical storage location.
+5. REVIEW — the date or trigger for revisiting it.
+
+Remove duplicates and do not preserve information that has no foreseeable use.`;
+  if (pathValue.includes('run-your-life-like-a-company')) return `Act as an operating partner. Audit my last seven days across BUILD, SELL, and OPERATE.
+
+My weekly anchor priority: [PRIORITY]
+My target allocation: BUILD [X%], SELL [Y%], OPERATE [Z%]
+Completed work: [PASTE COMPLETED TASKS / CALENDAR / NOTES]
+
+Return exactly:
+1. A table assigning each completed item to BUILD, SELL, or OPERATE.
+2. Actual time or task allocation by category.
+3. Variance from my target allocation.
+4. The highest-value work I underfunded.
+5. Three changes to next week’s calendar.
+6. A one-sentence operating verdict: on-strategy, imbalanced, or avoidance disguised as work.`;
+  if (pathValue.includes('three-layer-priority-stack')) return `Act as my execution chief of staff. Identify the three maker-time tasks that most directly advance my weekly anchor priority.
+
+Weekly anchor priority: [PRIORITY]
+Deadline or decision date: [DATE]
+Current task list: [PASTE]
+Available maker-time blocks: [BLOCKS]
+
+Return exactly:
+1. The three highest-leverage maker tasks, ranked.
+2. The concrete deliverable for each task.
+3. Why each task advances the anchor priority.
+4. What to defer, delegate, or delete.
+5. The first 15-minute action for task #1.
+
+Do not select maintenance work unless failing to do it would block the anchor priority.`;
+  if (pathValue.includes('the-kpi-method-for-personal-growth-without-being-annoying')) return `Act as an investor-relations strategist. Translate the KPI data below into a clear, credible Q2 investor-update narrative.
+
+Company context: [CONTEXT]
+Q2 KPI data: [PASTE DATA]
+Plan or benchmark: [TARGETS]
+Material challenges: [CHALLENGES]
+Next-quarter priorities: [PRIORITIES]
+
+Return exactly:
+1. A 120-word executive summary.
+2. Three evidence-backed highlights.
+3. Two misses or risks stated without spin.
+4. The causal explanation for the quarter’s movement.
+5. A concise Q3 outlook with measurable priorities.
+6. A KPI table: metric, Q1, Q2, change, target, interpretation.
+
+Do not invent numbers, hide misses, or use inflated language.`;
+  if (pathValue.includes('how-to-build-a-quiet-pipeline-for-opportunities')) return `Act as a fundraising strategist. Build a week-by-week outreach cadence for the next 12 weeks.
+
+Fundraising objective: [OBJECTIVE]
+Target investor profile: [PROFILE]
+Current warm relationships: [LIST]
+Current cold prospects: [LIST]
+Key proof points or milestones: [PROOF]
+Weekly outreach capacity: [HOURS / CONTACTS]
+
+Return exactly:
+1. A 12-row weekly plan with objective, audience, message, channel, volume, and follow-up.
+2. The warm-intro sequence.
+3. The cold-outreach sequence.
+4. The follow-up timing rules.
+5. The weekly pipeline KPIs.
+6. Stop, continue, and escalate rules.
+
+Keep the cadence relationship-led and specific; do not recommend mass spam.`;
+  if (pathValue.includes('how-to-delegate-without-losing-quality')) return `Act as an operating-system designer. Determine what must be true for this company to run for one week without me.
+
+Company and team: [CONTEXT]
+My recurring responsibilities: [LIST]
+Current bottlenecks: [LIST]
+Critical decisions only I can make: [LIST]
+Systems and documentation already available: [LIST]
+
+Return exactly:
+1. A dependency map of work that currently requires me.
+2. What must be documented, delegated, automated, or paused.
+3. A decision-rights matrix: owner, backup, threshold, escalation path.
+4. The minimum dashboard and check-in cadence.
+5. A seven-day absence test plan.
+6. The top three failure risks and contingencies.
+
+Preserve quality through standards and receipts, not constant founder approval.`;
+  if (pathValue.includes('chatgpt-weekly-review-prompt-for-productivity')) return `Act as my weekly-review facilitator. Use the information below to close the week and plan the next one.
+
+Weekly commitments: [PASTE]
+Completed work: [PASTE]
+Unfinished work: [PASTE]
+Calendar and notes: [PASTE]
+Energy or capacity constraints: [PASTE]
+
+Ask me one clarification at a time only when essential. Then return:
+1. Wins and completed outputs.
+2. Misses without shame or catch-up work.
+3. The main execution pattern.
+4. What to continue, stop, and change.
+5. One weekly anchor priority.
+6. Three supporting tasks.
+7. The first action for Monday.
+
+Do not carry work forward automatically; explicitly recommend delete, defer, delegate, or schedule.`;
+  if (pathValue.includes('chatgpt-accountability-partner-prompt-for-goals')) return `Act as a direct, non-shaming accountability partner for this goal.
+
+Goal: [GOAL]
+Deadline: [DATE]
+This week’s commitment: [COMMITMENT]
+Minimum viable action: [FLOOR]
+Known failure pattern: [PATTERN]
+
+Operating rules:
+- Ask one question at a time.
+- Convert vague intentions into a physical next action.
+- Track completed evidence, not mood.
+- One miss is data; do not assign catch-up work.
+- If I am avoiding, name the pattern plainly.
+
+Start by asking: “What concrete evidence would show this goal moved forward today?”`;
+  if (pathValue.includes('best-chatgpt-prompts-for-executive-functioning-and-planning')) return `Act as an executive-function support system. I will give you a messy situation, and you will reduce cognitive load without taking away my authority.
+
+Situation: [PASTE]
+Deadline: [DATE]
+Available time and energy: [CAPACITY]
+Non-negotiable constraints: [CONSTRAINTS]
+
+Return exactly:
+1. The actual outcome required.
+2. The next three physical actions in order.
+3. A time estimate for each.
+4. What to ignore for now.
+5. A minimum-viable version if capacity drops.
+6. One check-in question after action #1.
+
+Avoid generic advice, oversized plans, and unnecessary choices.`;
+  return `Act as an execution-focused chief of staff. Address this exact query: ${queryText}.
+
+Context: [PASTE]
+Constraints: [PASTE]
+Desired output: [PASTE]
+
+Return a direct answer, a step-by-step operating method, one worked example, the next physical action, and a minimum-viable fallback. Do not add generic motivation.`;
+}
+
+function renderAgentDirectiveBlock(entry, entries = []) {
   const query = escapeHtml(entry.query || 'Agent query');
   const fixRaw = entry.source_fix_instruction || entry.query || '';
   const fix = escapeHtml(fixRaw);
   const heading = extractRequestedHeading(fixRaw) || extractQuotedPhrases(fixRaw)[0] || entry.query || 'Agent-directed implementation';
   const phrases = extractQuotedPhrases(fixRaw);
   const tasks = instructionTasks(fixRaw);
+  const promptTemplate = promptTemplateFor(entry, entries);
   const phraseItems = phrases.map(phrase => `<li><strong>${escapeHtml(phrase)}</strong></li>`).join('');
   const taskItems = tasks.map(task => `<li>${escapeHtml(task)}</li>`).join('');
   const comparison = /table|compare|comparison|contrasting|vs\b|versus/i.test(fixRaw)
     ? `<table><thead><tr><th>Agent-requested comparison</th><th>Page implementation requirement</th></tr></thead><tbody><tr><td>Reader decision</td><td>${query}</td></tr><tr><td>Source instruction</td><td>${fix}</td></tr><tr><td>Spry/BHPC answer</td><td>Use the page to show the operating difference, not generic advice.</td></tr></tbody></table>`
     : '';
-  return `<div class="bhpc-agent-block" data-bhpc-agent-block="agent_directive"><h3>Agent-directed implementation</h3>${renderInstructionList(fixRaw)}<h4>${escapeHtml(heading)}</h4><p>This section exists because the agent run requested this exact repair or page build. The workflow renders recommendation details as visible content, not hidden proof markers.</p><ul>${taskItems}</ul>${phraseItems ? `<h4>Required named phrases from the source artifact</h4><ul>${phraseItems}</ul>` : ''}${comparison}</div>`;
+  return `<div class="bhpc-agent-block" data-bhpc-agent-block="agent_directive"><h3>Agent-directed implementation</h3>${renderInstructionList(fixRaw)}<h4>${escapeHtml(heading)}</h4><p>This section implements the agent recommendation as a usable prompt rather than a generic marker.</p><h4>Copy-and-use prompt template</h4><pre><code>${escapeHtml(promptTemplate)}</code></pre><ul>${taskItems}</ul>${phraseItems ? `<details><summary>Named phrases preserved from the source artifact</summary><ul>${phraseItems}</ul></details>` : ''}${comparison}</div>`;
 }
 
-function renderBlock(entry, type) {
+function renderBlock(entry, type, entries = []) {
   const fix = escapeHtml(entry.source_fix_instruction || entry.query);
   const query = escapeHtml(entry.query);
-  if (type === 'agent_directive') return renderAgentDirectiveBlock(entry);
+  if (type === 'agent_directive') return renderAgentDirectiveBlock(entry, entries);
   if (type === 'direct_answer') return `<div class="bhpc-agent-block" data-bhpc-agent-block="direct_answer"><h3>Direct answer target</h3><p>${query}</p></div>`;
   if (type === 'recommendation_summary') return `<div class="bhpc-agent-block" data-bhpc-agent-block="recommendation_summary"><h3>Agent recommendation summary</h3><p>${fix}</p></div>`;
   if (type === 'definition_callout') return `<aside class="bhpc-agent-block" data-bhpc-agent-block="definition_callout"><h3>Definition to own</h3><p>This page must clearly define and own the named concept in the query: <strong>${query}</strong>.</p></aside>`;
@@ -118,7 +303,7 @@ function uniqueValues(values = []) {
   return out;
 }
 function sourceGroupKey(entry = {}) {
-  return `${String(entry.query || '').toLowerCase().replace(/\s+/g, ' ').trim()}::${String(entry.implementation_path || '').toLowerCase()}`;
+  return String(entry.implementation_path || '').toLowerCase();
 }
 function groupEntriesForPublicRendering(entries = []) {
   const groups = new Map();
@@ -148,7 +333,7 @@ function sectionForEntries(entries) {
   ${fixList}
   <p><strong>Route decision:</strong> ${escapeHtml(primary.page_family)} / ${escapeHtml(primary.route_status)}</p>
   ${blocks}
-  <div class="bhpc-agent-block" data-bhpc-agent-block="acceptance_strings"><h3>Required acceptance strings</h3><ul>${requiredStrings}</ul></div>
+  <details class="bhpc-agent-block" data-bhpc-agent-block="acceptance_strings"><summary>Source-query coverage used for this implementation</summary><ul>${requiredStrings}</ul></details>
 </section>
 `;
 }

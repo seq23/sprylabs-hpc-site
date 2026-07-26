@@ -1,77 +1,11 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-07-24T21:54:36.409Z",
-  "files_scanned": 383,
-  "source_count": 196,
-  "hard_gate_source_count": 181,
+  "generated_at": "2026-07-26T13:49:29.346Z",
+  "files_scanned": 398,
+  "source_count": 202,
+  "hard_gate_source_count": 187,
   "warning_source_count": 31,
   "records": [
-    {
-      "file": "_ops/validators/validate_distribution_contract.js",
-      "hard_gate_signals": 2,
-      "warning_signals": 0,
-      "classification": "hard-gate-source"
-    },
-    {
-      "file": "_ops/validators/validate_dual_domain_contract.js",
-      "hard_gate_signals": 8,
-      "warning_signals": 5,
-      "classification": "mixed"
-    },
-    {
-      "file": "_ops/validators/validate_extractability.js",
-      "hard_gate_signals": 3,
-      "warning_signals": 0,
-      "classification": "hard-gate-source"
-    },
-    {
-      "file": "_ops/validators/validate_indexnow_distribution_workflow.js",
-      "hard_gate_signals": 3,
-      "warning_signals": 0,
-      "classification": "hard-gate-source"
-    },
-    {
-      "file": "_ops/validators/validate_insight_schema.js",
-      "hard_gate_signals": 3,
-      "warning_signals": 0,
-      "classification": "hard-gate-source"
-    },
-    {
-      "file": "_ops/validators/validate_internal_links.js",
-      "hard_gate_signals": 3,
-      "warning_signals": 0,
-      "classification": "hard-gate-source"
-    },
-    {
-      "file": "_ops/validators/validate_phrase_policy.js",
-      "hard_gate_signals": 3,
-      "warning_signals": 0,
-      "classification": "hard-gate-source"
-    },
-    {
-      "file": "_ops/validators/validate_reddit_publish_contract.js",
-      "hard_gate_signals": 3,
-      "warning_signals": 0,
-      "classification": "hard-gate-source"
-    },
-    {
-      "file": "_ops/validators/validate_reddit_uniqueness.js",
-      "hard_gate_signals": 3,
-      "warning_signals": 0,
-      "classification": "hard-gate-source"
-    },
-    {
-      "file": "_ops/validators/validate_source_product.js",
-      "hard_gate_signals": 3,
-      "warning_signals": 0,
-      "classification": "hard-gate-source"
-    },
-    {
-      "file": "_ops/validators/validate_terminology.js",
-      "hard_gate_signals": 3,
-      "warning_signals": 0,
-      "classification": "hard-gate-source"
-    },
     {
       "file": "scripts/admin/apply_overrides.js",
       "hard_gate_signals": 1,
@@ -139,6 +73,12 @@
       "classification": "warning-source"
     },
     {
+      "file": "scripts/authority_scale/build_citation_yield_feedback.mjs",
+      "hard_gate_signals": 1,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/authority_scale/build_max_fanout.mjs",
       "hard_gate_signals": 2,
       "warning_signals": 0,
@@ -153,6 +93,12 @@
     {
       "file": "scripts/authority_scale/validate_authority_scale.mjs",
       "hard_gate_signals": 1,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/authority_scale/validate_citation_yield_feedback.mjs",
+      "hard_gate_signals": 2,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -253,6 +199,18 @@
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/legacy/root-tools/apply_guardrails.sh",
+      "hard_gate_signals": 2,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/legacy/root-tools/setup_full_automation_shape_safe.sh",
+      "hard_gate_signals": 7,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/lib/bhpc_agent_block_schema.mjs",
       "hard_gate_signals": 1,
       "warning_signals": 0,
@@ -333,6 +291,12 @@
     {
       "file": "scripts/reddit/score_clusters.js",
       "hard_gate_signals": 1,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/release/package_baseline.mjs",
+      "hard_gate_signals": 3,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -631,6 +595,12 @@
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/validation/validate_root_tree.mjs",
+      "hard_gate_signals": 3,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/validation/validate_sitemap_coverage.mjs",
       "hard_gate_signals": 3,
       "warning_signals": 0,
@@ -647,6 +617,72 @@
       "hard_gate_signals": 0,
       "warning_signals": 3,
       "classification": "warning-source"
+    },
+    {
+      "file": "scripts/validators/legacy_ops/validate_distribution_contract.js",
+      "hard_gate_signals": 2,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/legacy_ops/validate_dual_domain_contract.js",
+      "hard_gate_signals": 8,
+      "warning_signals": 5,
+      "classification": "mixed"
+    },
+    {
+      "file": "scripts/validators/legacy_ops/validate_extractability.js",
+      "hard_gate_signals": 3,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/legacy_ops/validate_indexnow_distribution_workflow.js",
+      "hard_gate_signals": 3,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/legacy_ops/validate_insight_schema.js",
+      "hard_gate_signals": 3,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/legacy_ops/validate_internal_links.js",
+      "hard_gate_signals": 3,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/legacy_ops/validate_phrase_policy.js",
+      "hard_gate_signals": 3,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/legacy_ops/validate_reddit_publish_contract.js",
+      "hard_gate_signals": 3,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/legacy_ops/validate_reddit_uniqueness.js",
+      "hard_gate_signals": 3,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/legacy_ops/validate_source_product.js",
+      "hard_gate_signals": 3,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/legacy_ops/validate_terminology.js",
+      "hard_gate_signals": 3,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
     },
     {
       "file": "scripts/validators/validate_above_fold.js",
