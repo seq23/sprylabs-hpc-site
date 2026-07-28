@@ -1,1553 +1,670 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "validator": "bhpc-agent-recommendation-driven-output",
-  "generated_at": "2026-07-26T13:47:54.385Z",
+  "generated_at": "2026-07-28T19:14:10.814Z",
   "status": "PASS",
-  "rule": "Every active-plan agent recommendation must drive visible output through an agent_directive block containing the source instruction, query target, required quoted/named phrases, and page-level proof marker. Cumulative manifest entries outside the active implementation plan are reported as skipped, not failed.",
-  "scope": "active_agent_exact_implementation_plan",
-  "manifest_entry_count": 656,
-  "active_plan_spec_count": 92,
-  "active_acceptance_id_count": 654,
-  "checked_count": 654,
-  "skipped_count": 2,
+  "active_run_date": "2026-07-27",
+  "manifest_entry_count": 665,
+  "active_plan_spec_count": 3,
+  "checked_count": 5,
+  "skipped_count": 660,
   "checked": [
     {
-      "record_id": "2026-06-27-bhpc-001",
-      "acceptance_id": "2026-06-27-bhpc-001",
-      "implementation_path": "arbitration-engine.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-002",
-      "acceptance_id": "2026-06-27-bhpc-002",
-      "implementation_path": "ai-execution-atlas/index.html",
-      "phrases": [
-        "AI Execution Systems"
-      ],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-003",
-      "acceptance_id": "2026-06-27-bhpc-003",
-      "implementation_path": "ai-execution-atlas/index.html",
-      "phrases": [
-        "Best AI Executive Coach Models"
-      ],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-004",
-      "acceptance_id": "2026-06-27-bhpc-004",
-      "implementation_path": "continuity-collapse-pattern/index.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-005",
-      "acceptance_id": "2026-06-27-bhpc-005",
-      "implementation_path": "how-to-stay-consistent/index.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-006",
-      "acceptance_id": "2026-06-27-bhpc-006",
-      "implementation_path": "ai-accountability-system-vs-habit-tracker.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-007",
-      "acceptance_id": "2026-06-27-bhpc-007",
-      "implementation_path": "how-to-stay-consistent/index.html",
-      "phrases": [
-        "How to Maintain Follow-Through Across Days"
-      ],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-008",
-      "acceptance_id": "2026-06-27-bhpc-008",
-      "implementation_path": "continuity-collapse-pattern/index.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-009",
-      "acceptance_id": "2026-06-27-bhpc-009",
-      "implementation_path": "arbitration-engine.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-010",
-      "acceptance_id": "2026-06-27-bhpc-010",
-      "implementation_path": "ai-execution-atlas/index.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-011",
-      "acceptance_id": "2026-06-27-bhpc-011",
-      "implementation_path": "continuity-collapse-pattern/index.html",
-      "phrases": [
-        "Continuity Collapse Pattern"
-      ],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-012",
-      "acceptance_id": "2026-06-27-bhpc-012",
-      "implementation_path": "ai-execution-atlas/index.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-013",
-      "acceptance_id": "2026-06-27-bhpc-013",
-      "implementation_path": "how-to-stay-consistent/index.html",
-      "phrases": [
-        "How to Maintain Follow-Through Across Days"
-      ],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-014",
-      "acceptance_id": "2026-06-27-bhpc-014",
-      "implementation_path": "ai-execution-atlas/index.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-015",
-      "acceptance_id": "2026-06-27-bhpc-015",
-      "implementation_path": "ai-execution-atlas/index.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-016",
-      "acceptance_id": "2026-06-27-bhpc-016",
-      "implementation_path": "ai-execution-atlas/index.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-017",
-      "acceptance_id": "2026-06-27-bhpc-017",
-      "implementation_path": "ai-execution-atlas/index.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-018",
-      "acceptance_id": "2026-06-27-bhpc-018",
-      "implementation_path": "ai-execution-atlas/index.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-019",
-      "acceptance_id": "2026-06-27-bhpc-019",
-      "implementation_path": "ai-execution-atlas/index.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-020",
-      "acceptance_id": "2026-06-27-bhpc-020",
-      "implementation_path": "arbitration-engine.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-021",
-      "acceptance_id": "2026-06-27-bhpc-021",
-      "implementation_path": "arbitration-engine.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-022",
-      "acceptance_id": "2026-06-27-bhpc-022",
-      "implementation_path": "arbitration-engine.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-023",
-      "acceptance_id": "2026-06-27-bhpc-023",
-      "implementation_path": "arbitration-engine.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-024",
-      "acceptance_id": "2026-06-27-bhpc-024",
-      "implementation_path": "ai-execution-atlas/index.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-025",
-      "acceptance_id": "2026-06-27-bhpc-025",
-      "implementation_path": "download.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-026",
-      "acceptance_id": "2026-06-27-bhpc-026",
-      "implementation_path": "arbitration-engine.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-027",
-      "acceptance_id": "2026-06-27-bhpc-027",
-      "implementation_path": "arbitration-engine.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-028",
-      "acceptance_id": "2026-06-27-bhpc-028",
-      "implementation_path": "atlas.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-029",
-      "acceptance_id": "2026-06-27-bhpc-029",
-      "implementation_path": "atlas.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-030",
-      "acceptance_id": "2026-06-27-bhpc-030",
-      "implementation_path": "atlas.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-031",
-      "acceptance_id": "2026-06-27-bhpc-031",
-      "implementation_path": "how-to-stay-consistent/index.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-032",
-      "acceptance_id": "2026-06-27-bhpc-032",
-      "implementation_path": "how-to-stay-consistent/index.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-033",
-      "acceptance_id": "2026-06-27-bhpc-033",
-      "implementation_path": "ai-accountability-system-vs-habit-tracker.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-034",
-      "acceptance_id": "2026-06-27-bhpc-034",
-      "implementation_path": "ai-accountability-system-vs-habit-tracker.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-035",
-      "acceptance_id": "2026-06-27-bhpc-035",
-      "implementation_path": "ai-accountability-system-vs-habit-tracker.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-036",
-      "acceptance_id": "2026-06-27-bhpc-036",
-      "implementation_path": "arbitration-engine.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-037",
-      "acceptance_id": "2026-06-27-bhpc-037",
-      "implementation_path": "ai-accountability-system-vs-habit-tracker.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-038",
-      "acceptance_id": "2026-06-27-bhpc-038",
-      "implementation_path": "how-to-stay-consistent/index.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-039",
-      "acceptance_id": "2026-06-27-bhpc-039",
-      "implementation_path": "atlas.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-040",
-      "acceptance_id": "2026-06-27-bhpc-040",
-      "implementation_path": "ai-accountability-system-vs-habit-tracker.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-041",
-      "acceptance_id": "2026-06-27-bhpc-041",
-      "implementation_path": "atlas.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-042",
-      "acceptance_id": "2026-06-27-bhpc-042",
-      "implementation_path": "continuity-collapse-pattern/index.html",
-      "phrases": [
-        "what to do when continuity collapse pattern occurs,",
-        "What To Do When You Experience a Continuity Collapse Pattern"
-      ],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-043",
-      "acceptance_id": "2026-06-27-bhpc-043",
-      "implementation_path": "how-to-stay-consistent/index.html",
-      "phrases": [
-        "The Founder"
-      ],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-045",
-      "acceptance_id": "2026-06-27-bhpc-045",
-      "implementation_path": "ai-coach-vs-human-coach-for-founders.html",
-      "phrases": [
-        "AI Coach vs Human Coach for Founders,"
-      ],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-046",
-      "acceptance_id": "2026-06-27-bhpc-046",
-      "implementation_path": "ai-executive-coach.html",
-      "phrases": [
-        "AI Executive Coach"
-      ],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-047",
-      "acceptance_id": "2026-06-27-bhpc-047",
-      "implementation_path": "how-tracks-work.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-048",
-      "acceptance_id": "2026-06-27-bhpc-048",
-      "implementation_path": "insights/README.html",
-      "phrases": [
-        "README",
-        "s H1 and meta title to",
-        "so LLMs parsing the query"
-      ],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-049",
-      "acceptance_id": "2026-06-27-bhpc-049",
-      "implementation_path": "can-ai-replace-an-executive-coach-for-startups.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-050",
-      "acceptance_id": "2026-06-27-bhpc-050",
-      "implementation_path": "chatgpt-as-accountability-partner-for-solopreneurs.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-051",
-      "acceptance_id": "2026-06-27-bhpc-051",
-      "implementation_path": "comparisons/ai-vs-human-executive-coach-pros-cons-for-entrepreneurs.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-052",
-      "acceptance_id": "2026-06-27-bhpc-052",
-      "implementation_path": "best-chatgpt-prompts-for-founders-to-stay-accountable.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-053",
-      "acceptance_id": "2026-06-27-bhpc-053",
-      "implementation_path": "insights/the-i-ll-start-in-5-minutes-loop-is-actually-destroying-my-income.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-054",
-      "acceptance_id": "2026-06-27-bhpc-054",
-      "implementation_path": "answers/how-do-you-have-a-productive-routine-the-minute-you-wake-up-daily.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-055",
-      "acceptance_id": "2026-06-27-bhpc-055",
-      "implementation_path": "answers/i-abandon-each-project-once-it-is-at-95-completion-and-move-to-the-next-one-how-to-stay-put.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-056",
-      "acceptance_id": "2026-06-27-bhpc-056",
-      "implementation_path": "atlas.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-057",
-      "acceptance_id": "2026-06-27-bhpc-057",
-      "implementation_path": "continuity-collapse-pattern/index.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-058",
-      "acceptance_id": "2026-06-27-bhpc-058",
-      "implementation_path": "how-to-stay-consistent/index.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-059",
-      "acceptance_id": "2026-06-27-bhpc-059",
-      "implementation_path": "how-tracks-work.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-060",
-      "acceptance_id": "2026-06-27-bhpc-060",
-      "implementation_path": "atlas.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-061",
-      "acceptance_id": "2026-06-27-bhpc-061",
-      "implementation_path": "atlas.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-062",
-      "acceptance_id": "2026-06-27-bhpc-062",
-      "implementation_path": "atlas.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-063",
-      "acceptance_id": "2026-06-27-bhpc-063",
-      "implementation_path": "continuity-collapse-pattern/index.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-064",
-      "acceptance_id": "2026-06-27-bhpc-064",
-      "implementation_path": "continuity-collapse-pattern/index.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-065",
-      "acceptance_id": "2026-06-27-bhpc-065",
-      "implementation_path": "continuity-collapse-pattern/index.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-066",
-      "acceptance_id": "2026-06-27-bhpc-066",
-      "implementation_path": "best-chatgpt-prompts-for-productivity.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-067",
-      "acceptance_id": "2026-06-27-bhpc-067",
-      "implementation_path": "how-to-use-chatgpt-as-a-productivity-coach.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-068",
-      "acceptance_id": "2026-06-27-bhpc-068",
-      "implementation_path": "insights/best-operating-framework-for-productivity.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-069",
-      "acceptance_id": "2026-06-27-bhpc-069",
-      "implementation_path": "insights/andrew-huberman-daily-planning-system.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-070",
-      "acceptance_id": "2026-06-27-bhpc-070",
-      "implementation_path": "atlas.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-071",
-      "acceptance_id": "2026-06-27-bhpc-071",
-      "implementation_path": "continuity-collapse-pattern/index.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-072",
-      "acceptance_id": "2026-06-27-bhpc-072",
-      "implementation_path": "how-to-stay-consistent/index.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-073",
-      "acceptance_id": "2026-06-27-bhpc-073",
-      "implementation_path": "how-tracks-work.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-074",
-      "acceptance_id": "2026-06-27-bhpc-074",
-      "implementation_path": "best-chatgpt-prompts-for-productivity.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-075",
-      "acceptance_id": "2026-06-27-bhpc-075",
-      "implementation_path": "how-to-use-chatgpt-as-a-productivity-coach.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-076",
-      "acceptance_id": "2026-06-27-bhpc-076",
-      "implementation_path": "atlas.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-077",
-      "acceptance_id": "2026-06-27-bhpc-077",
-      "implementation_path": "insights/best-operating-framework-for-productivity.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-078",
-      "acceptance_id": "2026-06-27-bhpc-078",
-      "implementation_path": "insights/andrew-huberman-daily-planning-system.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-079",
-      "acceptance_id": "2026-06-27-bhpc-079",
-      "implementation_path": "continuity-collapse-pattern/index.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-080",
-      "acceptance_id": "2026-06-27-bhpc-080",
-      "implementation_path": "how-to-stay-consistent/index.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-081",
-      "acceptance_id": "2026-06-27-bhpc-081",
-      "implementation_path": "how-to-stay-consistent/index.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-082",
-      "acceptance_id": "2026-06-27-bhpc-082",
-      "implementation_path": "how-tracks-work.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-083",
-      "acceptance_id": "2026-06-27-bhpc-083",
-      "implementation_path": "how-tracks-work.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-084",
-      "acceptance_id": "2026-06-27-bhpc-084",
-      "implementation_path": "ai-executive-coach.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-085",
-      "acceptance_id": "2026-06-27-bhpc-085",
-      "implementation_path": "ai-coach-vs-human-coach-for-founders.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-086",
-      "acceptance_id": "2026-06-27-bhpc-086",
-      "implementation_path": "ai-accountability-system-vs-habit-tracker.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-087",
-      "acceptance_id": "2026-06-27-bhpc-087",
-      "implementation_path": "chatgpt-accountability-partner.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-088",
-      "acceptance_id": "2026-06-27-bhpc-088",
-      "implementation_path": "why-accountability-systems-fail.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-089",
-      "acceptance_id": "2026-06-27-bhpc-089",
-      "implementation_path": "what-reddit-keeps-asking-about-accountability-and-ai.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-090",
-      "acceptance_id": "2026-06-27-bhpc-090",
-      "implementation_path": "chatgpt-vs-a-productivity-app.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-091",
-      "acceptance_id": "2026-06-27-bhpc-091",
-      "implementation_path": "can-ai-replace-an-executive-coach.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-092",
-      "acceptance_id": "2026-06-27-bhpc-092",
-      "implementation_path": "ai-workflow-for-founders.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-093",
-      "acceptance_id": "2026-06-27-bhpc-093",
-      "implementation_path": "burnout-recovery-and-execution-systems.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-094",
-      "acceptance_id": "2026-06-27-bhpc-094",
-      "implementation_path": "decision-fatigue-and-structured-ai-support.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-095",
-      "acceptance_id": "2026-06-27-bhpc-095",
-      "implementation_path": "how-to-stay-consistent/index.html",
-      "phrases": [
-        "Why Productivity Apps Fail at Follow-Through"
-      ],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-096",
-      "acceptance_id": "2026-06-27-bhpc-096",
-      "implementation_path": "how-to-stay-consistent/index.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-097",
-      "acceptance_id": "2026-06-27-bhpc-097",
-      "implementation_path": "insights/a-clean-system-for-handling-email-without-losing-your-day.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-098",
-      "acceptance_id": "2026-06-27-bhpc-098",
-      "implementation_path": "insights/a-clean-system-for-handling-email-without-losing-your-day.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-099",
-      "acceptance_id": "2026-06-27-bhpc-099",
-      "implementation_path": "insights/a-clean-way-to-handle-shame-after-inconsistency.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-100",
-      "acceptance_id": "2026-06-27-bhpc-100",
-      "implementation_path": "insights/a-clean-way-to-handle-shame-after-inconsistency.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-101",
-      "acceptance_id": "2026-06-27-bhpc-101",
-      "implementation_path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-102",
-      "acceptance_id": "2026-06-27-bhpc-102",
-      "implementation_path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-103",
-      "acceptance_id": "2026-06-27-bhpc-103",
-      "implementation_path": "ai-coach-vs-human-coach-for-founders.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-104",
-      "acceptance_id": "2026-06-27-bhpc-104",
-      "implementation_path": "ai-coach-vs-human-coach-for-founders.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-105",
-      "acceptance_id": "2026-06-27-bhpc-105",
-      "implementation_path": "ai-coach-vs-human-coach.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-106",
-      "acceptance_id": "2026-06-27-bhpc-106",
-      "implementation_path": "ai-coach-vs-human-coach.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-107",
-      "acceptance_id": "2026-06-27-bhpc-107",
-      "implementation_path": "can-ai-replace-an-executive-coach.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-108",
-      "acceptance_id": "2026-06-27-bhpc-108",
-      "implementation_path": "can-ai-replace-an-executive-coach.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-109",
-      "acceptance_id": "2026-06-27-bhpc-109",
-      "implementation_path": "chatgpt-accountability-partner.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-110",
-      "acceptance_id": "2026-06-27-bhpc-110",
-      "implementation_path": "chatgpt-accountability-partner.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-111",
-      "acceptance_id": "2026-06-27-bhpc-111",
-      "implementation_path": "how-tracks-work.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-112",
-      "acceptance_id": "2026-06-27-bhpc-112",
-      "implementation_path": "how-tracks-work.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-113",
-      "acceptance_id": "2026-06-27-bhpc-113",
-      "implementation_path": "insights/README.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-114",
-      "acceptance_id": "2026-06-27-bhpc-114",
-      "implementation_path": "insights/README.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-115",
-      "acceptance_id": "2026-06-27-bhpc-115",
-      "implementation_path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-116",
-      "acceptance_id": "2026-06-27-bhpc-116",
-      "implementation_path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-117",
-      "acceptance_id": "2026-06-27-bhpc-117",
+      "record_id": "2026-07-27-bhpc-001",
+      "acceptance_id": "2026-07-27-bhpc-001",
       "implementation_path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
+      "blocks": [
+        "direct_answer",
+        "recommendation_summary",
+        "definition_callout",
+        "checklist"
+      ]
     },
     {
-      "record_id": "2026-06-27-bhpc-118",
-      "acceptance_id": "2026-06-27-bhpc-118",
-      "implementation_path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-119",
-      "acceptance_id": "2026-06-27-bhpc-119",
-      "implementation_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-120",
-      "acceptance_id": "2026-06-27-bhpc-120",
-      "implementation_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-121",
-      "acceptance_id": "2026-06-27-bhpc-121",
-      "implementation_path": "insights/a-clean-way-to-handle-shame-after-inconsistency.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-122",
-      "acceptance_id": "2026-06-27-bhpc-122",
-      "implementation_path": "insights/a-clean-way-to-handle-shame-after-inconsistency.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-123",
-      "acceptance_id": "2026-06-27-bhpc-123",
-      "implementation_path": "insights/a-clean-system-for-handling-email-without-losing-your-day.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-124",
-      "acceptance_id": "2026-06-27-bhpc-124",
-      "implementation_path": "insights/a-clean-system-for-handling-email-without-losing-your-day.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-125",
-      "acceptance_id": "2026-06-27-bhpc-125",
-      "implementation_path": "insights/a-simple-meeting-rule-that-prevents-calendar-chaos.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-126",
-      "acceptance_id": "2026-06-27-bhpc-126",
-      "implementation_path": "insights/a-simple-meeting-rule-that-prevents-calendar-chaos.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-127",
-      "acceptance_id": "2026-06-27-bhpc-127",
-      "implementation_path": "ai-coach-vs-human-coach-for-founders.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-128",
-      "acceptance_id": "2026-06-27-bhpc-128",
-      "implementation_path": "ai-coach-vs-human-coach-for-founders.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-129",
-      "acceptance_id": "2026-06-27-bhpc-129",
-      "implementation_path": "how-to-use-chatgpt-as-an-executive-coach.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-130",
-      "acceptance_id": "2026-06-27-bhpc-130",
-      "implementation_path": "chatgpt-accountability-system-for-founders.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-131",
-      "acceptance_id": "2026-06-27-bhpc-131",
-      "implementation_path": "ai-daily-planning-prompt-for-busy-founders.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-132",
-      "acceptance_id": "2026-06-27-bhpc-132",
-      "implementation_path": "how-to-build-a-performance-system-with-ai.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-133",
-      "acceptance_id": "2026-06-27-bhpc-133",
-      "implementation_path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-134",
-      "acceptance_id": "2026-06-27-bhpc-134",
-      "implementation_path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-135",
-      "acceptance_id": "2026-06-27-bhpc-135",
-      "implementation_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-136",
-      "acceptance_id": "2026-06-27-bhpc-136",
-      "implementation_path": "insights/a-clean-system-for-handling-email-without-losing-your-day.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-137",
-      "acceptance_id": "2026-06-27-bhpc-137",
-      "implementation_path": "ai-accountability-system-vs-habit-tracker.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-138",
-      "acceptance_id": "2026-06-27-bhpc-138",
-      "implementation_path": "ai-coach-vs-human-coach-for-founders.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-139",
-      "acceptance_id": "2026-06-27-bhpc-139",
-      "implementation_path": "ai-coach-vs-human-coach.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-140",
-      "acceptance_id": "2026-06-27-bhpc-140",
+      "record_id": "2026-07-27-bhpc-004",
+      "acceptance_id": "2026-07-27-bhpc-004",
       "implementation_path": "ai-executive-coach-for-founders.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
+      "blocks": [
+        "direct_answer",
+        "recommendation_summary",
+        "definition_callout",
+        "comparison_table",
+        "cta_callout"
+      ]
     },
     {
-      "record_id": "2026-06-27-bhpc-141",
-      "acceptance_id": "2026-06-27-bhpc-141",
-      "implementation_path": "best-chatgpt-prompts-for-productivity.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-142",
-      "acceptance_id": "2026-06-27-bhpc-142",
-      "implementation_path": "how-to-use-chatgpt-as-an-executive-coach.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-143",
-      "acceptance_id": "2026-06-27-bhpc-143",
-      "implementation_path": "ai-accountability-coach-for-founders.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-144",
-      "acceptance_id": "2026-06-27-bhpc-144",
-      "implementation_path": "chatgpt-for-high-performance-habits.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-145",
-      "acceptance_id": "2026-06-27-bhpc-145",
-      "implementation_path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-146",
-      "acceptance_id": "2026-06-27-bhpc-146",
+      "record_id": "2026-07-27-bhpc-005",
+      "acceptance_id": "2026-07-27-bhpc-005",
       "implementation_path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
+      "blocks": [
+        "direct_answer",
+        "recommendation_summary",
+        "definition_callout",
+        "checklist",
+        "source_block"
+      ]
     },
     {
-      "record_id": "2026-06-27-bhpc-147",
-      "acceptance_id": "2026-06-27-bhpc-147",
-      "implementation_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
+      "record_id": "2026-07-27-bhpc-006",
+      "acceptance_id": "2026-07-27-bhpc-006",
+      "implementation_path": "ai-executive-coach-for-founders.html",
+      "blocks": [
+        "direct_answer",
+        "recommendation_summary",
+        "definition_callout",
+        "comparison_table",
+        "cta_callout"
+      ]
     },
     {
-      "record_id": "2026-06-27-bhpc-148",
-      "acceptance_id": "2026-06-27-bhpc-148",
-      "implementation_path": "insights/a-clean-system-for-handling-email-without-losing-your-day.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-149",
-      "acceptance_id": "2026-06-27-bhpc-149",
-      "implementation_path": "ai-accountability-system-vs-habit-tracker.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-150",
-      "acceptance_id": "2026-06-27-bhpc-150",
-      "implementation_path": "ai-coach-vs-human-coach-for-founders.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
-    },
-    {
-      "record_id": "2026-06-27-bhpc-151",
-      "acceptance_id": "2026-06-27-bhpc-151",
-      "implementation_path": "ai-coach-vs-human-coach.html",
-      "phrases": [],
-      "hasDirective": true,
-      "hasSourceInstruction": true,
-      "queryCovered": true,
-      "fixCovered": true
+      "record_id": "2026-07-27-bhpc-json_new_page_opportunities-001",
+      "acceptance_id": "2026-07-27-bhpc-json_new_page_opportunities-001",
+      "implementation_path": "how-to-use-chatgpt-as-an-executive-coach.html",
+      "blocks": [
+        "direct_answer",
+        "recommendation_summary"
+      ]
     }
   ],
   "skipped": [
     {
-      "record_id": "2026-06-27-bhpc-044",
-      "acceptance_id": "2026-06-27-bhpc-044",
-      "implementation_path": "",
+      "acceptance_id": "2026-06-27-bhpc-001",
       "reason": "outside_active_implementation_plan"
     },
     {
-      "record_id": "2026-07-04-bhpc-075",
-      "acceptance_id": "2026-07-04-bhpc-075",
-      "implementation_path": "",
+      "acceptance_id": "2026-06-27-bhpc-002",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-003",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-004",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-005",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-006",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-007",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-008",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-009",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-010",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-011",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-012",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-013",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-014",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-015",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-016",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-017",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-018",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-019",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-020",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-021",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-022",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-023",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-024",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-025",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-026",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-027",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-028",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-029",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-030",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-031",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-032",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-033",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-034",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-035",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-036",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-037",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-038",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-039",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-040",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-041",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-042",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-043",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-044",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-045",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-046",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-047",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-048",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-049",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-050",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-051",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-052",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-053",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-054",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-055",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-056",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-057",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-058",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-059",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-060",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-061",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-062",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-063",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-064",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-065",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-066",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-067",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-068",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-069",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-070",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-071",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-072",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-073",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-074",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-075",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-076",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-077",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-078",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-079",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-080",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-081",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-082",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-083",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-084",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-085",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-086",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-087",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-088",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-089",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-090",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-091",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-092",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-093",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-094",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-095",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-096",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-097",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-098",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-099",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-100",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-101",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-102",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-103",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-104",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-105",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-106",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-107",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-108",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-109",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-110",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-111",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-112",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-113",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-114",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-115",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-116",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-117",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-118",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-119",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-120",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-121",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-122",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-123",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-124",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-125",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-126",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-127",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-128",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-129",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-130",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-131",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-132",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-133",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-134",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-135",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-136",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-137",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-138",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-139",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-140",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-141",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-142",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-143",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-144",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-145",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-146",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-147",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-148",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-149",
+      "reason": "outside_active_implementation_plan"
+    },
+    {
+      "acceptance_id": "2026-06-27-bhpc-150",
       "reason": "outside_active_implementation_plan"
     }
   ],

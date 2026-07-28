@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import {normalizeBhpcSeoExecution, isNoActionSeo} from '../lib/bhpc_seo_execution_contract.mjs';
 
 export const ROOT = process.cwd();
 export const AGENT_ROOT = 'data/report_fixes/agent_runs';
@@ -229,30 +230,33 @@ function sourceSignature(row = {}, context = {}) {
 }
 
 export function classifyRow(row, htmlDigestText = '', context = {}) {
+  const seoNormalized = normalizeBhpcSeoExecution(row.seo_execution || (row.source_section === 'seo_execution' ? row : null), row);
+  const seo = seoNormalized.seo_execution;
   const combined = stringifyField(row || {}) + ' ' + htmlDigestText;
   const scope = safeScope(context.scope || row.scope || row.vertical || 'bhpc');
   const queryValue = pick(row, ['query','prompt','question','search_query','keyword','topic','title','issue','finding','intended_query']) || `${scope} agent signal`;
   const query = stringifyField(queryValue);
   const cited = stringifyField(pick(row, ['cited_domain','cited_source','cited_sources','citation','source','source_domain']));
-  const fixRecommendationRaw = pick(row, ['fix_recommendation','edit_instruction','recommendation','action','notes','why_worth_building']);
+  const fixRecommendationRaw = seo?.exact_edit || pick(row, ['fix_recommendation','edit_instruction','recommendation','action','notes','why_worth_building','exact_edit']);
   const fixRecommendation = stringifyField(fixRecommendationRaw);
   const gapRaw = pick(row, ['gap','gap_found','issue','finding','recommendation','action','notes','why_worth_building','reason']) || (typeof row.fix_recommendation === 'object' ? row.fix_recommendation?.gap : '');
   const gap = stringifyField(gapRaw);
-  const intendedWinnerPage = stringifyField(pick(row, ['intended_winner_page','page_url','target_url','url','page','target_page','intended_page','recommended_url','winner_url']));
-  const declaredRepoPath = pathFromRepoFilePath(pick(row, ['repo_file_path','intended_winner_path','implementation_path']));
-  const patchNeeded = boolish(pick(row, ['patch_needed_y_n','patch_needed','fix_needed'])) || /patch|fix|not cited|gap|weak|missing|absent|outperform|free win|page fix|authority|no incumbent/i.test(combined);
+  const intendedWinnerPage = stringifyField(seo?.target_url || pick(row, ['intended_winner_page','page_url','target_url','url','page','target_page','intended_page','recommended_url','winner_url']));
+  const declaredRepoPath = pathFromRepoFilePath(seo?.target_filepath || pick(row, ['repo_file_path','intended_winner_path','implementation_path','target_filepath']));
+  const explicitMaintain = context.source_section === 'wins' || /^(maintain page|no action|no gap)$/i.test(compact(fixRecommendation)) || (/maintain page/i.test(compact(fixRecommendation)) && /no gap|cited directly|direct citation win/i.test(`${compact(fixRecommendation)} ${compact(gap)} ${combined}`));
+  const patchNeeded = isNoActionSeo(seo) ? false : (seo ? ['repair_existing','build_new','consolidate'].includes(seo.page_decision) : (!explicitMaintain && (boolish(pick(row, ['patch_needed_y_n','patch_needed','fix_needed'])) || /patch|fix|not cited|gap|weak|missing|absent|outperform|page fix|authority|no incumbent/i.test(combined))));
   const actionTier = stringifyField(pick(row, ['action_tier','tier','category']));
   const primaryFixType = stringifyField(pick(row, ['primary_fix_type','gap_type','fix_type','recommended_cluster','cluster','category']));
   const policy = loadExactPolicy();
   const intendedPath = declaredRepoPath || repoPathFromIntendedWinnerPage(intendedWinnerPage, policy) || '';
-  let operation = row.operation || 'CREATE_NEW_TARGET_PAGE';
+  let operation = isNoActionSeo(seo) || explicitMaintain ? 'NO_ACTION_MAINTAIN' : (row.operation || 'CREATE_NEW_TARGET_PAGE');
   let blockedReason = '';
-  if (patchNeeded && intendedWinnerPage && !allowedHostFromUrl(intendedWinnerPage, policy)) {
+  if (operation !== 'NO_ACTION_MAINTAIN' && patchNeeded && intendedWinnerPage && !allowedHostFromUrl(intendedWinnerPage, policy)) {
     operation = 'BLOCKED_EXTERNAL_DOMAIN';
     blockedReason = 'intended_winner_page_not_on_allowed_host';
-  } else if (patchNeeded && intendedPath && fs.existsSync(path.join(ROOT, intendedPath))) {
+  } else if (operation !== 'NO_ACTION_MAINTAIN' && patchNeeded && intendedPath && fs.existsSync(path.join(ROOT, intendedPath))) {
     operation = 'REPAIR_INTENDED_WINNER_PAGE';
-  } else if (patchNeeded && intendedPath && !fs.existsSync(path.join(ROOT, intendedPath))) {
+  } else if (operation !== 'NO_ACTION_MAINTAIN' && patchNeeded && intendedPath && !fs.existsSync(path.join(ROOT, intendedPath))) {
     operation = 'CREATE_NEW_TARGET_PAGE';
   }
   const scoreRaw = pick(row, ['score','priority','severity','purchase_path_potential','purchase_path_potential_1_5','priority_score','progress_level_1_4','level']);
@@ -273,7 +277,14 @@ export function classifyRow(row, htmlDigestText = '', context = {}) {
     blocked_reason: blockedReason,
     implementation_path: intendedPath || pathForAgentCreate(row, scope, query),
     source_section: context.source_section || row.source_section || row.category || '',
-    source_signature: sourceSignature(row, context),
+    source_signature: sourceSignature({...row, seo_execution: seo}, context),
+    seo_execution_status: seoNormalized.status,
+    seo_execution_errors: seoNormalized.errors,
+    seo_execution: seo,
+    recommended_page_type: seo?.recommended_page_type || compact(pick(row,['recommended_page_type'])),
+    page_decision: seo?.page_decision || (operation === 'NO_ACTION_MAINTAIN' ? 'no_action' : ''),
+    search_intent: seo?.search_intent || compact(pick(row,['search_intent'])),
+    buyer_stage: seo?.buyer_stage || compact(pick(row,['buyer_stage'])),
     score,
   };
 }
@@ -302,6 +313,8 @@ function resolveArtifactRel(entry, key, defaultFile, extensions) {
 
 function canonicalPagePathForOpportunity(item, scope) {
   const query = stringifyField(pick(item, ['query','title','topic','question'])) || `${scope} page opportunity`;
+  const rootPath = `${slug(query)}.html`;
+  if (fs.existsSync(path.join(ROOT, rootPath))) return rootPath;
   const family = /\?|how can|what systems|give me|why|when|should/i.test(query) ? 'answers' : 'insights';
   return `${family}/${slug(query)}.html`;
 }
@@ -311,6 +324,7 @@ function pageSpecFromJsonItem(item, index, scope, runDate, sourceSection = 'json
   const cluster = stringifyField(pick(item, ['recommended_cluster','cluster','category'])) || 'agent-pages-to-build';
   const why = stringifyField(pick(item, ['why_worth_building','reason','recommendation','notes','gap']));
   const explicitPath = pathFromRepoFilePath(pick(item, ['implementation_path','repo_file_path','intended_winner_path']));
+  const unsupportedPersonAttribution = /\bali abdaal\b/i.test(String(query)) && !pick(item, ['source_url','source_urls','evidence_url','evidence_urls','competitor_url']);
   return {
     id: `${runDate}-${scope}-${sourceSection}-${String(index + 1).padStart(3, '0')}`,
     scope,
@@ -318,7 +332,8 @@ function pageSpecFromJsonItem(item, index, scope, runDate, sourceSection = 'json
     recommended_cluster: String(cluster).trim(),
     why_worth_building: why.trim(),
     implementation_path: explicitPath || canonicalPagePathForOpportunity(item, scope),
-    operation: 'CREATE_NEW_TARGET_PAGE',
+    operation: unsupportedPersonAttribution ? 'BLOCKED_UNSUPPORTED_PERSON_ATTRIBUTION' : 'CREATE_NEW_TARGET_PAGE',
+    blocked_reason: unsupportedPersonAttribution ? 'creator-specific behavior claim lacks source evidence' : '',
     source: sourceSection,
     source_section: sourceSection,
     source_signature: sourceSignature({...item, source_section: sourceSection}, {source_section: sourceSection}),
@@ -336,7 +351,8 @@ function parseVelocityJson(payload, scope, runDate) {
     ['authority_required', 'authority_required'],
     ['wins', 'win'],
     ['pending', 'pending'],
-    ['pending_fixes', 'pending_fix']
+    ['pending_fixes', 'pending_fix'],
+    ['seo_execution', 'seo_execution']
   ];
   const rows = [];
   for (const [key, category] of categories) {
@@ -356,7 +372,7 @@ function parseVelocityJson(payload, scope, runDate) {
       if (item && typeof item === 'object') page_specs.push(pageSpecFromJsonItem(item, page_specs.length, scope, runDate, sourceSection));
     }
   }
-  return {rows, page_specs, scoreboard: payload.scoreboard || null, json_vertical: payload.vertical || payload.scope || ''};
+  return {rows, page_specs, scoreboard: payload.scoreboard || null, json_vertical: payload.vertical || payload.scope || '', site_health: payload.site_health ?? null};
 }
 
 export function digestManifest(entry) {
@@ -413,6 +429,8 @@ export function digestManifest(entry) {
     csv_row_count: csvRows.length,
     json_fix_row_count: jsonDigest.rows.length,
     json_pages_to_build_count: jsonDigest.page_specs.length,
+    json_seo_execution_count: (jsonPayload?.seo_execution || []).length,
+    site_health: jsonDigest.site_health,
     json_scoreboard_total: jsonDigest.scoreboard?.total ?? null,
     json_scoreboard: jsonDigest.scoreboard,
     json_vertical: jsonDigest.json_vertical,
@@ -423,6 +441,8 @@ export function digestManifest(entry) {
       json: Boolean(jsonRel),
       json_scoreboard: Boolean(jsonDigest.scoreboard),
       pages_to_build: jsonDigest.page_specs.length,
+      seo_execution: (jsonPayload?.seo_execution || []).length,
+      site_health: jsonDigest.site_health !== null,
     },
   };
 }

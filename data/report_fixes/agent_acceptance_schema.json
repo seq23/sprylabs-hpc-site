@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "name": "BHPC agent semantic acceptance manifest",
   "required_entry_fields": [
     "id",
@@ -16,26 +16,44 @@
     "required_block_types",
     "required_strings"
   ],
-  "allowed_acceptance_statuses": ["REQUIRED", "BLOCKED"],
+  "allowed_acceptance_statuses": [
+    "REQUIRED",
+    "BLOCKED",
+    "NO_ACTION"
+  ],
   "allowed_page_families": [
-    "intended_winner_repair",
-    "comparison_page",
     "answer_page",
     "authority_insight",
+    "bhpc_insight",
     "cluster_page",
+    "comparison_page",
     "fallback_gap_fill",
-    "bhpc_insight"
+    "intended_winner_repair",
+    "no_action"
   ],
   "allowed_block_types": [
-    "direct_answer",
-    "recommendation_summary",
-    "definition_callout",
+    "acceptance_strings",
+    "agent_directive",
     "checklist",
     "comparison_table",
-    "protocol",
-    "source_block",
     "cta_callout",
+    "definition_callout",
+    "direct_answer",
     "gap_separation",
-    "acceptance_strings"
+    "internal_link_set",
+    "prompt_template",
+    "protocol",
+    "recommendation_summary",
+    "source_block",
+    "trust_block"
+  ],
+  "optional_entry_fields": [
+    "seo_execution",
+    "seo_execution_hash",
+    "page_decision",
+    "recommended_page_type",
+    "required_internal_links",
+    "schema_action",
+    "acceptance_checks"
   ]
 }

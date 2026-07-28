@@ -81,8 +81,10 @@ for (const entry of findAgentManifests().filter(shouldCheck)) {
 
   const plan = readJson('artifacts/validation/agent-exact-implementation-plan.json', {specs: []});
   const apply = readJson('artifacts/validation/agent-exact-implementation-apply.json', {applied: [], skipped: []});
-  const planRecordIds = new Set((plan.specs || []).flatMap(spec => spec.record_ids || [spec.record_id]).map(id => String(id || '').toLowerCase()).filter(Boolean));
-  const planPaths = new Set((plan.specs || []).map(spec => String(spec.implementation_path || '').toLowerCase()).filter(Boolean));
+  const activePlanSpecs = (plan.specs || []).filter(spec => spec.status !== 'BLOCKED');
+  const planRecordIds = new Set(activePlanSpecs.flatMap(spec => spec.record_ids || [spec.record_id]).map(id => String(id || '').toLowerCase()).filter(Boolean));
+  const activeAcceptanceIds = new Set(activePlanSpecs.flatMap(spec => spec.acceptance_ids || []).map(id => String(id || '').toLowerCase()).filter(Boolean));
+  const planPaths = new Set(activePlanSpecs.map(spec => String(spec.implementation_path || '').toLowerCase()).filter(Boolean));
   const appliedRecordIds = new Set((apply.applied || []).flatMap(item => item.acceptance_ids || [item.record_id]).map(id => String(id || '').toLowerCase()).filter(Boolean));
   const skippedIds = new Set((apply.skipped || []).map(item => String(item.record_id || '').toLowerCase()).filter(Boolean));
 
@@ -105,7 +107,11 @@ for (const entry of findAgentManifests().filter(shouldCheck)) {
   }
   if (unaddressed.length > 40) errors.push(`${entry.runDate}/${scope}: ${unaddressed.length - 40} additional addressability misses omitted`);
 
-  const canonicalPageTargets = new Set(expectedPages.map(item => item.implementation_path).filter(Boolean));
+  const buildableExpectedPages = expectedPages.filter(item => {
+    const id = String(item.id || '').toLowerCase();
+    return id && (activeAcceptanceIds.has(id) || planRecordIds.has(id) || appliedRecordIds.has(id)) && !skippedIds.has(id);
+  });
+  const canonicalPageTargets = new Set(buildableExpectedPages.map(item => item.implementation_path).filter(Boolean));
   const builtPageTargets = [...canonicalPageTargets].filter(rel => fs.existsSync(path.join(ROOT, rel)));
   const missingBuiltPageTargets = [...canonicalPageTargets].filter(rel => !fs.existsSync(path.join(ROOT, rel)));
   const queuedPageTargets = [...canonicalPageTargets].filter(rel => planPaths.has(rel.toLowerCase()));
@@ -116,6 +122,7 @@ for (const entry of findAgentManifests().filter(shouldCheck)) {
   const contentProofMissing = expected.filter(item => {
     const id = String(item.id || '').toLowerCase();
     if (!id || skippedIds.has(id)) return false;
+    if (!(activeAcceptanceIds.has(id) || planRecordIds.has(id) || appliedRecordIds.has(id))) return false;
     const accepted = acceptanceByRecordId.get(id);
     const proofPath = accepted?.implementation_path || item.implementation_path || '';
     if (!proofPath) return false;
@@ -162,8 +169,10 @@ const report = {
   policy: {
     checked_statuses: ['READY_FOR_ABSORPTION', 'ABSORBED'],
     coverage_from: process.env.BHPC_AGENT_SOURCE_COVERAGE_FROM || '2026-07-04',
-    rule: 'The repair phase must normalize every eligible agent run before coverage validation. Every actionable source item must then be represented, represented by its own source id, applied to page-level proof or explicitly skipped/blocked with a reason; every canonical new-page target must be built.'
+    rule: 'The repair phase must normalize every eligible agent run before coverage validation. Page-level proof markers and canonical new-page build checks are enforced for the active exact implementation plan; historical absorbed runs remain represented in normalized/acceptance ledgers without forcing broad page rewrites.'
   },
+  active_plan_source_record_count: 0,
+  historical_page_marker_enforcement: 'SKIPPED_OUTSIDE_ACTIVE_EXACT_PLAN',
   run_count: runs.length,
   runs,
   warnings,

@@ -5364,8 +5364,109 @@
         "MX-153"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-BHPC-SEO-EXECUTION",
+      "status": "ADMITTED",
+      "name": "validate:bhpc-seo-execution",
+      "check_type": "validator",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Prevents malformed, unsupported, or untraceable Twin SEO execution records from reaching BHPC page implementation.",
+      "existing_coverage_gap": "The enriched Twin contract was parsed but not admitted as an independent release control.",
+      "scope": [
+        "data/report_fixes/agent_runs/**",
+        "normalized_agent_runs",
+        "agent exact plan"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:bhpc-seo-execution",
+      "implementation_path": "scripts/validators/validate_bhpc_seo_execution_contract.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "data/report_fixes/fixtures/bhpc_seo_execution_contract_cases.json",
+      "negative_fixture": "data/report_fixes/fixtures/bhpc_seo_execution_contract_cases.json",
+      "evidence_output": "artifacts/validation/bhpc-seo-execution-contract.json",
+      "runtime_budget_seconds": 30,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:agent-run"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted for Phase 3 Twin SEO execution enforcement.",
+      "decision_date": "2026-07-27",
+      "matrix_ids": [
+        "MX-154"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-BHPC-PAGE-SEO",
+      "status": "ADMITTED",
+      "name": "validate:page-seo",
+      "check_type": "validator",
+      "owning_lane": "rendered-content",
+      "risk_prevented": "Prevents broken title, H1, canonical, JSON-LD, exact-link, and public operational-scaffolding regressions on active Twin pages.",
+      "existing_coverage_gap": "Existing extraction and schema validators did not enforce the combined active page SEO contract.",
+      "scope": [
+        "active exact implementation pages",
+        "all admitted HTML in full mode"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:page-seo",
+      "implementation_path": "scripts/validation/validate_page_seo_contract.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "data/report_fixes/fixtures/bhpc_seo_execution_contract_cases.json",
+      "negative_fixture": "data/report_fixes/fixtures/bhpc_seo_execution_contract_cases.json",
+      "evidence_output": "artifacts/validation/page-seo-contract.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:incremental-page-audit",
+        "validate:rendered-schema-parity"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted for Phase 3 rendered page SEO and public-content enforcement.",
+      "decision_date": "2026-07-27",
+      "matrix_ids": [
+        "MX-155"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-BHPC-PAGE-SEO-FULL",
+      "status": "ADMITTED",
+      "name": "validate:page-seo:full",
+      "check_type": "validator",
+      "owning_lane": "rendered-content",
+      "risk_prevented": "Prevents broken title, H1, canonical, JSON-LD, exact-link, and public operational-scaffolding regressions on active Twin pages.",
+      "existing_coverage_gap": "Existing extraction and schema validators did not enforce the combined active page SEO contract.",
+      "scope": [
+        "all active citable public HTML pages"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:page-seo:full",
+      "implementation_path": "scripts/validation/validate_page_seo_contract.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "data/report_fixes/fixtures/bhpc_seo_execution_contract_cases.json",
+      "negative_fixture": "data/report_fixes/fixtures/bhpc_seo_execution_contract_cases.json",
+      "evidence_output": "artifacts/validation/page-seo-contract.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:incremental-page-audit",
+        "validate:rendered-schema-parity"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted for full rendered page SEO validation.",
+      "decision_date": "2026-07-27",
+      "matrix_ids": [
+        "MX-171"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 169,
-  "generated_at": "2026-07-25T19:00:04.038Z"
+  "record_count": 172,
+  "generated_at": "2026-07-27T17:50:00.000Z"
 }

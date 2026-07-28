@@ -30,12 +30,10 @@ def route_from_path(value):
     return normalize_route('/'+v)
 
 def active_mutation_routes():
-    if not ACTIVE_SCOPE.exists(): return None
-    try:
-        payload=json.loads(ACTIVE_SCOPE.read_text(encoding='utf-8'))
-        return {normalize_route(r) for r in payload.get('routes',[]) if normalize_route(r)}
-    except Exception:
-        return set()
+    # Final-state deep validation audits the full public citation registry.
+    # Schema repair therefore covers every active citable page, not only the
+    # latest mutation scope.
+    return None
 
 def norm(v): return ' '.join((v or '').split())
 def schema_types(graph):
@@ -61,7 +59,7 @@ def visible_steps(soup):
             continue
         if not h.get('id'):
             h['id']=re.sub(r'[^a-z0-9]+','-',name.lower()).strip('-')
-        text=step.get('description') or f"Use {name.lower()} as a bounded operating step, then record the observable result before continuing."
+        text=step.get('description') or ''
         out.append((name,norm(text),h.get('id')))
     return out
 
@@ -99,6 +97,16 @@ def update_schema(path: Path):
     can=soup.select_one('link[rel=\"canonical\"]'); canonical=can.get('href','') if can else ''
     h1=soup.find('h1'); h1text=norm(h1.get_text(' ',strip=True)) if h1 else path.stem.replace('-', ' ').title()
     definition=soup.select_one('p.citation-definition > strong')
+    if definition is None:
+        section_definition=soup.select_one('section.citation-definition p > strong')
+        if section_definition is not None:
+            parent=section_definition.find_parent('p')
+            if parent is not None:
+                classes=list(parent.get('class') or [])
+                if 'citation-definition' not in classes:
+                    classes.append('citation-definition')
+                    parent['class']=classes
+            definition=section_definition
     deftext=norm(definition.get_text(' ',strip=True)) if definition else h1text
     block=soup.select_one('[data-llm-answer=\"true\"]')
     framework=norm(block.get('data-named-framework')) if block and block.get('data-named-framework') else f'{h1text} Framework'

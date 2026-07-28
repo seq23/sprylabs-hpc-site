@@ -1,0 +1,126 @@
+{
+  "schema_version": "1.2",
+  "run_id": "2026-07-27-bhpc-agent",
+  "generated_at": "2026-07-27T17:00:41.552Z",
+  "scope": "bhpc",
+  "artifact_contract": "CSV + optional JSON + HTML + manifest",
+  "exact_implementation_policy": "data/report_fixes/agent_exact_implementation_policy.json",
+  "queries_tested": 7,
+  "json_scoreboard_total": null,
+  "json_pages_to_build": 2,
+  "cited_domains": 3,
+  "wins": 2,
+  "new_fixes": 7,
+  "pending": 0,
+  "findings": [
+    {
+      "path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "Lacks distinct named framework",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "how-to-build-an-accountability-system-with-ai.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "No gap",
+      "operation": "NO_ACTION_MAINTAIN",
+      "implementation_required": false,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "a realistic morning routine for people with chaotic days",
+      "operation": "NO_ACTION_MAINTAIN",
+      "implementation_required": false,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-executive-coach-for-founders.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "AI executive coach for founders",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "Citation misallocation to sister site",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-executive-coach-for-founders.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "Lacks explicit pricing and defined AI executive roles comparison",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "how-to-build-an-accountability-system-with-ai.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "Direct citation win",
+      "operation": "NO_ACTION_MAINTAIN",
+      "implementation_required": false,
+      "blocked_reason": ""
+    }
+  ],
+  "opportunities": [
+    {
+      "query": "a realistic morning routine for people with chaotic days",
+      "path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how to build an accountability system with AI",
+      "path": "how-to-build-an-accountability-system-with-ai.html",
+      "operation": "NO_ACTION_MAINTAIN"
+    },
+    {
+      "query": "a realistic morning routine for people with chaotic days",
+      "path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "operation": "NO_ACTION_MAINTAIN"
+    },
+    {
+      "query": "AI executive coach for founders",
+      "path": "ai-executive-coach-for-founders.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "a realistic morning routine for people with chaotic days",
+      "path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI executive coach for founders",
+      "path": "ai-executive-coach-for-founders.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how to build an accountability system with AI",
+      "path": "how-to-build-an-accountability-system-with-ai.html",
+      "operation": "NO_ACTION_MAINTAIN"
+    },
+    {
+      "query": "How to use ChatGPT as an executive coach",
+      "path": "how-to-use-chatgpt-as-an-executive-coach.html",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "source": "json_pages_to_build"
+    },
+    {
+      "query": "How Ali Abdaal uses AI as a life coach",
+      "path": "insights/how-ali-abdaal-uses-ai-as-a-life-coach.html",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "source": "json_pages_to_build"
+    }
+  ],
+  "interpretation": {
+    "measurement_status": "AGENT_DIGEST_ABSORBED_WITH_EXACT_IMPLEMENTATION_METADATA",
+    "reason": "The digest preserves intended destination, operation, implementation path, and JSON pages-to-build specs when present. Exact application is planned and traced by the agent exact implementation lane."
+  }
+}

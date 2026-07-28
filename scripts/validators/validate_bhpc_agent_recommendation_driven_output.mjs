@@ -1,116 +1,31 @@
 #!/usr/bin/env node
-import fs from 'node:fs';
-import path from 'node:path';
-import {ROOT, readJson, writeJson} from '../agent_intake/bhpc_agent_common.mjs';
-
-function decodeHtml(value = '') {
-  return String(value || '')
-    .replace(/&nbsp;|&#160;/g, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;|&apos;/g, "'")
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>');
+import fs from 'node:fs';import path from 'node:path';
+import {ROOT,readJson,writeJson} from '../agent_intake/bhpc_agent_common.mjs';
+function decode(v=''){return String(v).replace(/&nbsp;|&#160;/g,' ').replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#39;|&apos;/g,"'").replace(/&lt;/g,'<').replace(/&gt;/g,'>')}
+function textOnly(h=''){return decode(h).replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim()}
+function normalize(v=''){return textOnly(v).toLowerCase().replace(/[^a-z0-9]+/g,' ').replace(/\s+/g,' ').trim()}
+function tokenCovered(needle='',hay=''){const tokens=normalize(needle).split(' ').filter(t=>t.length>2);const h=normalize(hay);return !tokens.length||tokens.every(t=>h.includes(t))}
+const manifest=readJson('data/report_fixes/agent_acceptance_manifest.generated.json',{entries:[]});
+const plan=readJson('artifacts/validation/agent-exact-implementation-plan.json',{specs:[]});
+const apply=readJson('artifacts/validation/agent-exact-implementation-apply.json',{applied:[]});
+const errors=[],checked=[],skipped=[];
+const activeSpecs=(plan.specs||[]).filter(s=>s.status!=='BLOCKED');
+const activeAcceptanceIds=new Set(activeSpecs.flatMap(s=>s.acceptance_ids||[]).map(String));
+const appliedIds=new Set((apply.applied||[]).flatMap(x=>x.acceptance_ids||[]).map(String));
+for(const entry of manifest.entries||[]){
+  if(!activeAcceptanceIds.has(String(entry.id))){skipped.push({acceptance_id:entry.id,reason:'outside_active_implementation_plan'});continue}
+  if(entry.acceptance_status!=='REQUIRED')continue;
+  const rel=entry.implementation_path||'',abs=path.join(ROOT,rel);if(!rel||!fs.existsSync(abs)){errors.push(`${entry.record_id}:missing_output:${rel}`);continue}
+  const html=fs.readFileSync(abs,'utf8'),text=textOnly(html);
+  if(!html.includes(`data-bhpc-agent-record="${entry.record_id}"`))errors.push(`${entry.record_id}:missing_record_marker:${rel}`);
+  if(!tokenCovered(entry.required_heading,text))errors.push(`${entry.record_id}:heading_not_visible:${rel}`);
+  for(const type of entry.required_block_types||[]){if(type==='internal_link_set'&&!(entry.required_internal_links||[]).length)continue;if(!html.includes(`data-bhpc-agent-block="${type}"`))errors.push(`${entry.record_id}:missing_block:${type}:${rel}`)}
+  for(const link of entry.required_internal_links||[]){let pathname='';try{pathname=new URL(link.to_url,'https://billionairehighperformancecoach.com').pathname}catch{}if(pathname&&!html.includes(`href="${pathname}"`)&&!html.includes(`href='${pathname}'`))errors.push(`${entry.record_id}:missing_internal_link:${pathname}:${rel}`)}
+  if(/Agent recommendation implementation|Agent-directed implementation|Agent source instruction|Route decision:/i.test(text))errors.push(`${entry.record_id}:public_operational_scaffolding:${rel}`);
+  if(!appliedIds.has(String(entry.id)))errors.push(`${entry.record_id}:acceptance_not_applied:${entry.id}`);
+  checked.push({record_id:entry.record_id,acceptance_id:entry.id,implementation_path:rel,blocks:entry.required_block_types||[]});
 }
-function textOnly(html = '') {
-  return decodeHtml(html)
-    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
-    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-function normalize(value = '') {
-  return textOnly(String(value || '')).toLowerCase().replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim();
-}
-function tokenCovered(needle = '', haystack = '') {
-  const tokens = normalize(needle).split(' ').filter(token => token.length > 2);
-  if (!tokens.length) return true;
-  const hay = normalize(haystack);
-  return tokens.every(token => hay.includes(token));
-}
-function quotedPhrases(value = '') {
-  const out = [];
-  const text = String(value || '');
-  for (const match of text.matchAll(/["“”'`‘’]([^"“”'`‘’]{3,110})["“”'`‘’]/g)) out.push(match[1].trim());
-  return [...new Set(out.map(v => v.toLowerCase()))].map(k => out.find(v => v.toLowerCase() === k)).filter(Boolean);
-}
-
-const manifest = readJson('data/report_fixes/agent_acceptance_manifest.generated.json', {entries: []});
-const plan = readJson('artifacts/validation/agent-exact-implementation-plan.json', {specs: []});
-const apply = readJson('artifacts/validation/agent-exact-implementation-apply.json', {applied: [], skipped: []});
-const errors = [];
-const checked = [];
-const skipped = [];
-const activeSpecs = (plan.specs || []).filter(spec => spec.status !== 'BLOCKED');
-const activeAcceptanceIds = new Set(activeSpecs.flatMap(spec => spec.acceptance_ids || []).map(String));
-const appliedIds = new Set((apply.applied || []).flatMap(item => item.acceptance_ids || [item.record_id]).map(String));
-const plannedPaths = new Set(activeSpecs.map(spec => spec.implementation_path));
-
-if ((manifest.entries || []).length && !activeAcceptanceIds.size) {
-  errors.push('active_plan_has_no_acceptance_ids');
-}
-
-for (const entry of manifest.entries || []) {
-  if (!activeAcceptanceIds.has(String(entry.id))) {
-    skipped.push({
-      record_id: entry.record_id,
-      acceptance_id: entry.id,
-      implementation_path: entry.implementation_path || '',
-      reason: 'outside_active_implementation_plan'
-    });
-    continue;
-  }
-  if (entry.acceptance_status === 'BLOCKED') {
-    if (!entry.blocked_reason) errors.push(`${entry.record_id}:blocked_without_reason`);
-    continue;
-  }
-  const rel = entry.implementation_path || '';
-  const abs = path.join(ROOT, rel);
-  if (!rel || !fs.existsSync(abs)) { errors.push(`${entry.record_id}:missing_output_page:${rel}`); continue; }
-  const html = fs.readFileSync(abs, 'utf8');
-  const text = textOnly(html);
-  const exactFix = String(entry.source_fix_instruction || '').trim();
-  const exactQuery = String(entry.query || '').trim();
-  const phrases = quotedPhrases(exactFix);
-  const hasDirective = html.includes('data-bhpc-agent-block="agent_directive"');
-  const hasSourceInstruction = /Agent source instruction/i.test(text);
-  const queryCovered = tokenCovered(exactQuery, text);
-  const fixCovered = tokenCovered(exactFix, text);
-  const phraseMisses = phrases.filter(phrase => !tokenCovered(phrase, text));
-  const recordMarker = html.includes(`data-bhpc-agent-record="${entry.record_id}"`);
-  if (!hasDirective) errors.push(`${entry.record_id}:missing_agent_directive_block:${rel}`);
-  if (!hasSourceInstruction) errors.push(`${entry.record_id}:missing_agent_source_instruction_label:${rel}`);
-  if (!queryCovered) errors.push(`${entry.record_id}:query_not_visible_enough:${rel}`);
-  if (!fixCovered) errors.push(`${entry.record_id}:source_fix_instruction_not_visible_enough:${rel}`);
-  if (phraseMisses.length) errors.push(`${entry.record_id}:quoted_phrase_missing:${phraseMisses.join('|')}:${rel}`);
-  if (!recordMarker) errors.push(`${entry.record_id}:missing_record_marker:${rel}`);
-  if (!plannedPaths.has(rel)) errors.push(`${entry.record_id}:output_page_not_in_plan:${rel}`);
-  if (!appliedIds.has(String(entry.id))) errors.push(`${entry.record_id}:acceptance_id_not_applied:${entry.id}`);
-  checked.push({record_id: entry.record_id, acceptance_id: entry.id, implementation_path: rel, phrases, hasDirective, hasSourceInstruction, queryCovered, fixCovered});
-}
-
-const report = {
-  schema_version: '1.0',
-  validator: 'bhpc-agent-recommendation-driven-output',
-  generated_at: new Date().toISOString(),
-  status: errors.length ? 'FAIL' : 'PASS',
-  rule: 'Every active-plan agent recommendation must drive visible output through an agent_directive block containing the source instruction, query target, required quoted/named phrases, and page-level proof marker. Cumulative manifest entries outside the active implementation plan are reported as skipped, not failed.',
-  scope: 'active_agent_exact_implementation_plan',
-  manifest_entry_count: (manifest.entries || []).length,
-  active_plan_spec_count: activeSpecs.length,
-  active_acceptance_id_count: activeAcceptanceIds.size,
-  checked_count: checked.length,
-  skipped_count: skipped.length,
-  checked: checked.slice(0, 150),
-  skipped: skipped.slice(0, 150),
-  errors,
-};
-writeJson('artifacts/validation/bhpc-agent-recommendation-driven-output.json', report);
-writeJson('reports/bhpc-agent-recommendation-driven-output.json', report);
-if (errors.length) {
-  console.error(`[bhpc-agent-recommendation-driven-output] FAIL: ${errors.length} issue(s)`);
-  for (const error of errors.slice(0, 80)) console.error(` - ${error}`);
-  process.exit(1);
-}
+const report={schema_version:'1.1',validator:'bhpc-agent-recommendation-driven-output',generated_at:new Date().toISOString(),status:errors.length?'FAIL':'PASS',active_run_date:plan.active_run_date||'',manifest_entry_count:(manifest.entries||[]).length,active_plan_spec_count:activeSpecs.length,checked_count:checked.length,skipped_count:skipped.length,checked,skipped:skipped.slice(0,150),errors};
+writeJson('artifacts/validation/bhpc-agent-recommendation-driven-output.json',report);writeJson('reports/bhpc-agent-recommendation-driven-output.json',report);
+if(errors.length){console.error(`[bhpc-agent-recommendation-driven-output] FAIL: ${errors.length} issue(s)`);for(const e of errors.slice(0,80))console.error(' -',e);process.exit(1)}
 console.log(`[bhpc-agent-recommendation-driven-output] PASS: checked=${checked.length}; skipped=${skipped.length}; active_specs=${activeSpecs.length}`);

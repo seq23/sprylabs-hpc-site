@@ -1687,10 +1687,40 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-154",
+      "validation_id": "VAL-BHPC-SEO-EXECUTION",
+      "lane": "agent-intake",
+      "command": "npm run validate:bhpc-seo-execution",
+      "order": 154,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-155",
+      "validation_id": "VAL-BHPC-PAGE-SEO",
+      "lane": "rendered-content",
+      "command": "npm run validate:page-seo",
+      "order": 155,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-171",
+      "validation_id": "VAL-BHPC-PAGE-SEO-FULL",
+      "lane": "rendered-content",
+      "command": "npm run validate:page-seo:full",
+      "order": 171,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 168,
-  "generated_at": "2026-07-25T19:00:04.038Z",
+  "entry_count": 171,
+  "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
       "description": "Canonical bounded container prepush profile.",
@@ -1919,6 +1949,14 @@
         {
           "id": "VAL-EXTRACTION-SURFACE-GUARD-CHECK",
           "command": "npm run validate:extraction-surface-guard:check"
+        },
+        {
+          "id": "VAL-BHPC-SEO-EXECUTION",
+          "command": "npm run validate:bhpc-seo-execution"
+        },
+        {
+          "id": "VAL-BHPC-PAGE-SEO",
+          "command": "npm run validate:page-seo"
         }
       ]
     },
@@ -1973,6 +2011,14 @@
         {
           "id": "validate:warnings",
           "command": "npm run validate:warnings"
+        },
+        {
+          "id": "VAL-BHPC-SEO-EXECUTION",
+          "command": "npm run validate:bhpc-seo-execution"
+        },
+        {
+          "id": "VAL-BHPC-PAGE-SEO",
+          "command": "npm run validate:page-seo"
         }
       ]
     },
@@ -2001,6 +2047,10 @@
         {
           "id": "VAL-VALIDATION-CACHE-HEALTH",
           "command": "npm run validation:cache:inspect"
+        },
+        {
+          "id": "VAL-BHPC-PAGE-SEO-FULL",
+          "command": "npm run validate:page-seo:full"
         }
       ]
     }

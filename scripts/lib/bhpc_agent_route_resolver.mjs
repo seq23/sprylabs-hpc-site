@@ -211,6 +211,12 @@ export function resolveBhpcAgentRoute(row = {}, {owner = null, policy = null, re
     return {status: 'DECLARED_CREATE', page_family: declaredFamily, implementation_path: declaredPath, blocked_reason: ''};
   }
 
+
+  const exactQuerySlugPath = `${slug(row.query || row.title || '')}.html`;
+  if (exactQuerySlugPath !== '.html' && fs.existsSync(path.join(ROOT, exactQuerySlugPath))) {
+    return {status: 'EXACT_QUERY_SLUG_REPAIR', page_family: 'intended_winner_repair', implementation_path: exactQuerySlugPath, blocked_reason: ''};
+  }
+
   const registryTypo = resolveRegistryTypo(row, registryRows);
   if (registryTypo?.ambiguous) return typoBlocked(registryTypo, 'ambiguous query registry typo resolution');
   if (registryTypo?.best) {

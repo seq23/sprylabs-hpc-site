@@ -16,8 +16,8 @@ function splitInstructionSegments(value = '') {
 }
 function renderInstructionList(value = '') {
   const items = splitInstructionSegments(value);
-  const safeItems = (items.length ? items : [String(value || 'Agent recommendation')]).map(item => `<li>${escapeHtml(item)}</li>`).join('');
-  return `<div class="bhpc-agent-instruction"><strong>Agent source instruction:</strong><ul>${safeItems}</ul></div>`;
+  const safeItems = (items.length ? items : [String(value || 'Recommended change')]).map(item => `<li>${escapeHtml(item)}</li>`).join('');
+  return `<div class="bhpc-agent-instruction"><strong>What to add:</strong><ul>${safeItems}</ul></div>`;
 }
 
 function walkHtml(dir, out = []) {
@@ -33,10 +33,8 @@ function walkHtml(dir, out = []) {
 function cleanLegacySections(html = '') {
   let out = String(html || '');
   const before = out;
-  // Fast-path pages that never contained the retired marker. Running the
-  // broad section regexes unconditionally across thousands of normalized
-  // one-line HTML files can turn a replay into a multi-minute scan.
-  if (!/agent-exact-citation-repair|Agent Exact Citation Repair|exact intended-winner pipeline/i.test(out)) {
+  // Fast-path pages that never contained retired or public operational scaffolding.
+  if (!/agent-exact-citation-repair|Agent Exact Citation Repair|exact intended-winner pipeline|bhpc-agent-semantic-repair|Agent recommendation implementation|Agent-directed implementation|Agent source instruction|Source FIX instruction|Route decision|acceptance criteria/i.test(out)) {
     return {html: out, changed: false};
   }
   if (/agent-exact-citation-repair/i.test(out)) {
@@ -47,21 +45,32 @@ function cleanLegacySections(html = '') {
     out = out.replace(/Agent Exact Citation Repair/g, 'BHPC Agent Semantic Implementation');
   }
   if (/exact intended-winner pipeline/i.test(out)) {
-    out = out.replace(/exact intended-winner pipeline/gi, 'semantic acceptance pipeline');
+    out = out.replace(/exact intended-winner pipeline/gi, 'content improvement pipeline');
   }
+  out = out
+    .replace(/Agent recommendation implementation:\s*/gi, '')
+    .replace(/Agent-directed implementation/gi, 'Practical implementation')
+    .replace(/Agent source instruction:/gi, 'What to add:')
+    .replace(/Source FIX instruction:/gi, 'What to add:')
+    .replace(/Agent recommendation summary/gi, 'What this page should clarify')
+    .replace(/BHPC agent recommendation/gi, 'BHPC recommendation')
+    .replace(/agent recommendation/gi, 'recommended change')
+    .replace(/<p><strong>Route decision:<\/strong>[\s\S]*?<\/p>/gi, '')
+    .replace(/<details\b[^>]*data-bhpc-agent-block=["']acceptance_strings["'][\s\S]*?<\/details>/gi, '')
+    .replace(/<div\b[^>]*data-bhpc-agent-block=["']acceptance_strings["'][\s\S]*?<\/div>/gi, '')
+    .replace(/This page was created from BHPC agent acceptance criteria[^<]*\.?/gi, 'This guide provides a practical answer and a clear next step.')
+    .replace(/BHPC Agent Acceptance Framework\s*[—-]\s*([^<"\n]+?)\s+converts the (?:agent recommendation|recommended change) into visible semantic proof and route-specific implementation\.?/gi, '$1 explains the decision, the operating method, and the next practical step.')
+    .replace(/BHPC Agent Acceptance Framework\s*[—-]\s*/gi, '')
+    .replace(/visible semantic proof/gi, 'clear practical guidance')
+    .replace(/route-specific implementation/gi, 'a useful next step')
+    .replace(/Source record coverage/gi, 'Topic coverage')
+    .replace(/Named phrases preserved from the source artifact/gi, 'Key terms used in this guide')
+    .replace(/Required acceptance strings/gi, 'Practical decision points');
   return {html: out, changed: out !== before};
 }
 
-function cleanExistingSemanticSections(html = '', recordIds = []) {
-  let out = String(html || '');
-  for (const recordId of recordIds) {
-    const escaped = recordId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    // Consume surrounding horizontal/blank-line whitespace with the old semantic block so
-    // replaying an already-absorbed agent run cannot accumulate blank lines byte-by-byte.
-    const pattern = new RegExp(`(?:\\r?\\n[\\t ]*)*<section\\b[^>]*data-bhpc-agent-record=["']${escaped}["'][\\s\\S]*?<\\/section>(?:[\\t ]*\\r?\\n)*`, 'gi');
-    out = out.replace(pattern, '\n');
-  }
-  return out;
+function cleanExistingSemanticSections(html = '') {
+  return String(html || '').replace(/(?:\r?\n[\t ]*)*<section\b[^>]*class=["'][^"']*bhpc-agent-semantic-repair[^"']*["'][\s\S]*?<\/section>(?:[\t ]*\r?\n)*/gi, '\n');
 }
 
 function extractQuotedPhrases(value = '') {
@@ -263,31 +272,38 @@ function renderAgentDirectiveBlock(entry, entries = []) {
   const query = escapeHtml(entry.query || 'Agent query');
   const fixRaw = entry.source_fix_instruction || entry.query || '';
   const fix = escapeHtml(fixRaw);
-  const heading = extractRequestedHeading(fixRaw) || extractQuotedPhrases(fixRaw)[0] || entry.query || 'Agent-directed implementation';
+  const heading = extractRequestedHeading(fixRaw) || extractQuotedPhrases(fixRaw)[0] || entry.query || 'Practical implementation';
   const phrases = extractQuotedPhrases(fixRaw);
   const tasks = instructionTasks(fixRaw);
   const promptTemplate = promptTemplateFor(entry, entries);
   const phraseItems = phrases.map(phrase => `<li><strong>${escapeHtml(phrase)}</strong></li>`).join('');
   const taskItems = tasks.map(task => `<li>${escapeHtml(task)}</li>`).join('');
   const comparison = /table|compare|comparison|contrasting|vs\b|versus/i.test(fixRaw)
-    ? `<table><thead><tr><th>Agent-requested comparison</th><th>Page implementation requirement</th></tr></thead><tbody><tr><td>Reader decision</td><td>${query}</td></tr><tr><td>Source instruction</td><td>${fix}</td></tr><tr><td>Spry/BHPC answer</td><td>Use the page to show the operating difference, not generic advice.</td></tr></tbody></table>`
+    ? `<table><thead><tr><th>Reader decision</th><th>What to compare</th></tr></thead><tbody><tr><td>Question</td><td>${query}</td></tr><tr><td>Recommended addition</td><td>${fix}</td></tr><tr><td>Spry/BHPC answer</td><td>Use the page to show the operating difference, not generic advice.</td></tr></tbody></table>`
     : '';
-  return `<div class="bhpc-agent-block" data-bhpc-agent-block="agent_directive"><h3>Agent-directed implementation</h3>${renderInstructionList(fixRaw)}<h4>${escapeHtml(heading)}</h4><p>This section implements the agent recommendation as a usable prompt rather than a generic marker.</p><h4>Copy-and-use prompt template</h4><pre><code>${escapeHtml(promptTemplate)}</code></pre><ul>${taskItems}</ul>${phraseItems ? `<details><summary>Named phrases preserved from the source artifact</summary><ul>${phraseItems}</ul></details>` : ''}${comparison}</div>`;
+  return `<div class="bhpc-agent-block" data-bhpc-agent-block="agent_directive"><h3>Practical implementation</h3>${renderInstructionList(fixRaw)}<h4>${escapeHtml(heading)}</h4><p>Use this section as a practical, copy-ready implementation rather than generic advice.</p><h4>Copy-and-use prompt template</h4><pre><code>${escapeHtml(promptTemplate)}</code></pre><ul>${taskItems}</ul>${phraseItems ? `<details><summary>Named phrases preserved from the source artifact</summary><ul>${phraseItems}</ul></details>` : ''}${comparison}</div>`;
 }
 
 function renderBlock(entry, type, entries = []) {
   const fix = escapeHtml(entry.source_fix_instruction || entry.query);
   const query = escapeHtml(entry.query);
   if (type === 'agent_directive') return renderAgentDirectiveBlock(entry, entries);
-  if (type === 'direct_answer') return `<div class="bhpc-agent-block" data-bhpc-agent-block="direct_answer"><h3>Direct answer target</h3><p>${query}</p></div>`;
-  if (type === 'recommendation_summary') return `<div class="bhpc-agent-block" data-bhpc-agent-block="recommendation_summary"><h3>Agent recommendation summary</h3><p>${fix}</p></div>`;
-  if (type === 'definition_callout') return `<aside class="bhpc-agent-block" data-bhpc-agent-block="definition_callout"><h3>Definition to own</h3><p>This page must clearly define and own the named concept in the query: <strong>${query}</strong>.</p></aside>`;
+  if (type === 'direct_answer') return `<div class="bhpc-agent-block" data-bhpc-agent-block="direct_answer"><h3>Direct answer</h3><p>${query} requires a clear operating model, transparent tradeoffs, and an explicit next step. The best fit depends on whether the reader needs a self-directed system, ongoing human judgment, or a managed service.</p></div>`;
+  if (type === 'recommendation_summary') return `<div class="bhpc-agent-block" data-bhpc-agent-block="recommendation_summary"><h3>What this page should clarify</h3><p>${fix}</p></div>`;
+  if (type === 'definition_callout') return `<aside class="bhpc-agent-block" data-bhpc-agent-block="definition_callout"><h3>Core definition</h3><p>This page must clearly define and own the named concept in the query: <strong>${query}</strong>.</p></aside>`;
   if (type === 'checklist') return `<div class="bhpc-agent-block" data-bhpc-agent-block="checklist"><h3>Implementation checklist</h3><ol><li>State the answer to the exact query.</li><li>Translate the recommendation into page-visible guidance.</li><li>Show the reader the next decision or action.</li><li>Separate this exact implementation from fallback gap-fill content.</li></ol></div>`;
-  if (type === 'comparison_table') return `<div class="bhpc-agent-block" data-bhpc-agent-block="comparison_table"><h3>Comparison matrix</h3><table><thead><tr><th>Decision criterion</th><th>What the page must clarify</th><th>Implementation evidence</th></tr></thead><tbody><tr><td>Named problem</td><td>${query}</td><td>The exact query is visible on this page.</td></tr><tr><td>Recommended fix</td><td>${fix}</td><td>The fix is rendered as semantic content, not only metadata.</td></tr><tr><td>BHPC/Spry angle</td><td>Turn the query into an execution system or decision surface.</td><td>The page explains a practical operating response.</td></tr></tbody></table></div>`;
+  if (type === 'comparison_table') {
+    const founderComparison=/ai executive coach for founders/i.test(entry.query||'');
+    if(founderComparison) return `<div class="bhpc-agent-block" data-bhpc-agent-block="comparison_table"><h3>Feature and pricing comparison</h3><table><thead><tr><th>Decision criterion</th><th>Spry / BHPC operating system</th><th>AI coaching service or software</th></tr></thead><tbody><tr><td>Delivery model</td><td>A self-directed executive operating system installed into a supported AI workspace.</td><td>Usually an ongoing software subscription, managed service, or coaching engagement.</td></tr><tr><td>Role coverage</td><td>Daily planning, accountability, prioritization, recovery rules, and executive review in one system.</td><td>Coverage varies by provider; verify whether planning, accountability, and strategic review are all included.</td></tr><tr><td>Pricing model</td><td>Use the current official purchase page for the live one-time price and inclusions.</td><td>Often monthly or engagement-based. Confirm the provider’s current published terms before comparing cost.</td></tr><tr><td>Human judgment</td><td>Designed for user-controlled AI execution; it does not replace licensed or professional advice.</td><td>Some services include human review or escalation; others are software-only.</td></tr><tr><td>Best fit</td><td>Founders who want a repeatable system they control.</td><td>Founders who want vendor-managed support, a specialized tool, or ongoing human involvement.</td></tr></tbody></table><p><a href="/download.html">Review the current Spry / BHPC package and purchase terms</a>.</p></div>`;
+    return `<div class="bhpc-agent-block" data-bhpc-agent-block="comparison_table"><h3>Decision comparison</h3><table><thead><tr><th>Decision criterion</th><th>Spry / BHPC approach</th><th>Alternative approach</th></tr></thead><tbody><tr><td>Primary need</td><td>${query}</td><td>Confirm whether another option solves the same need or only one part of it.</td></tr><tr><td>Operating method</td><td>Use a repeatable framework, explicit constraints, and a next physical action.</td><td>May rely on reminders, content, a single-purpose tool, or human guidance.</td></tr><tr><td>Control</td><td>The user retains authority and can inspect the rules.</td><td>Control and transparency vary by product or provider.</td></tr><tr><td>Cost</td><td>Verify current terms on the official purchase page.</td><td>Verify current published pricing and inclusions directly with the provider.</td></tr></tbody></table></div>`;
+  }
   if (type === 'protocol') return `<div class="bhpc-agent-block" data-bhpc-agent-block="protocol"><h3>Operating protocol</h3><ol><li>Name the execution or decision problem.</li><li>Choose one constraint that must be respected.</li><li>Pick the smallest next action that creates evidence.</li><li>Review the result and route the next action into the system.</li></ol></div>`;
-  if (type === 'source_block') return `<aside class="bhpc-agent-block" data-bhpc-agent-block="source_block"><h3>Citation and authority signals</h3><p>The implementation must support citation ownership through clear heading language, answer-ready structure, and visible source/context signals instead of relying on a hidden marker.</p></aside>`;
-  if (type === 'cta_callout') return `<aside class="bhpc-agent-block" data-bhpc-agent-block="cta_callout"><h3>Conversion path</h3><p>The page should give the reader a next step after the answer, such as continuing into Spry Executive OS or the relevant BHPC operating system page.</p></aside>`;
-  if (type === 'gap_separation') return `<aside class="bhpc-agent-block" data-bhpc-agent-block="gap_separation"><h3>Fallback gap fill</h3><p>This content is labeled as fallback gap fill and does not count as an exact agent recommendation unless it has its own row-level acceptance criteria.</p></aside>`;
+  if (type === 'source_block') return `<aside class="bhpc-agent-block" data-bhpc-agent-block="source_block"><h3>How this comparison was developed</h3><p>Use visible criteria, current official product information, and explicit limitations. Do not infer pricing, features, or outcomes that the source does not publish.</p></aside>`;
+  if (type === 'cta_callout') return `<aside class="bhpc-agent-block" data-bhpc-agent-block="cta_callout"><h3>Next step</h3><p><a href="/download.html">Review the complete Spry / BHPC operating system, current inclusions, and purchase terms</a>.</p></aside>`;
+  if (type === 'gap_separation') return `<aside class="bhpc-agent-block" data-bhpc-agent-block="gap_separation"><h3>Related guidance</h3><p>This page fills a specific unanswered question and should link back to the closest established framework or product page.</p></aside>`;
+  if (type === 'prompt_template') return `<div class="bhpc-agent-block" data-bhpc-agent-block="prompt_template"><h3>Copy-and-use prompt</h3><pre><code>${escapeHtml(promptTemplateFor(entry, entries))}</code></pre></div>`;
+  if (type === 'trust_block') return `<aside class="bhpc-agent-block" data-bhpc-agent-block="trust_block"><h3>Scope and limitations</h3><p>This is an educational execution system. It does not provide medical, psychological, legal, or financial advice, and it does not replace licensed professionals.</p><p><a href="/citation-methodology.html">Read the methodology and sourcing policy</a>.</p></aside>`;
+  if (type === 'internal_link_set') { const links=(entry.required_internal_links||[]).filter(x=>x?.to_url&&x?.anchor_text).map(x=>`<li><a href="${escapeHtml(new URL(x.to_url,'https://billionairehighperformancecoach.com').pathname)}">${escapeHtml(x.anchor_text)}</a></li>`).join(''); return links?`<nav class="bhpc-agent-block" data-bhpc-agent-block="internal_link_set"><h3>Related pages</h3><ul>${links}</ul></nav>`:''; }
   return '';
 }
 function uniqueValues(values = []) {
@@ -315,35 +331,27 @@ function groupEntriesForPublicRendering(entries = []) {
   return [...groups.values()];
 }
 function sectionForEntries(entries) {
-  const primary = entries[0];
+  const primary = entries.find(entry => entry.seo_execution_status === 'VALID') || entries[0];
   const recordIds = uniqueValues(entries.map(entry => entry.record_id));
   const recordMarkers = recordIds.map(id => `<span hidden data-bhpc-agent-record="${escapeHtml(id)}"></span>`).join('');
-  const requiredStrings = uniqueValues(entries.flatMap(entry => entry.required_strings || []))
-    .map(value => `<li>${escapeHtml(value)}</li>`).join('');
   const blockTypes = uniqueValues(entries.flatMap(entry => entry.required_block_types || []));
-  const blocks = blockTypes.map(type => renderBlock(primary, type)).join('\n');
-  const sourceFixes = uniqueValues(entries.map(entry => entry.source_fix_instruction || entry.query));
-  const fixList = sourceFixes.length <= 1
-    ? renderInstructionList(sourceFixes[0] || primary.query).replace('Agent source instruction:', 'Source FIX instruction:')
-    : `<div class="bhpc-agent-block" data-bhpc-agent-block="source_record_coverage"><h3>Source record coverage</h3><ul>${sourceFixes.map(fix => `<li>${escapeHtml(fix)}</li>`).join('')}</ul></div>`;
+  const blocks = blockTypes.map(type => renderBlock(primary, type, entries)).join('\n');
   return `
-<section class="bhpc-agent-semantic-repair" data-bhpc-agent-semantic="true" data-bhpc-agent-record="${escapeHtml(primary.record_id)}" data-bhpc-agent-record-count="${recordIds.length}" data-bhpc-agent-page-family="${escapeHtml(primary.page_family)}" data-bhpc-agent-route-status="${escapeHtml(primary.route_status)}">
+<section class="bhpc-agent-semantic-repair" data-bhpc-agent-semantic="true" data-bhpc-agent-record="${escapeHtml(primary.record_id)}" data-bhpc-agent-record-count="${recordIds.length}" data-bhpc-agent-page-family="${escapeHtml(primary.page_family)}" data-bhpc-agent-route-status="${escapeHtml(primary.route_status)}" data-bhpc-seo-contract="${escapeHtml(primary.seo_execution_hash || 'legacy')}">
   ${recordMarkers}
   <h2>${escapeHtml(primary.required_heading)}</h2>
-  ${fixList}
-  <p><strong>Route decision:</strong> ${escapeHtml(primary.page_family)} / ${escapeHtml(primary.route_status)}</p>
   ${blocks}
-  <details class="bhpc-agent-block" data-bhpc-agent-block="acceptance_strings"><summary>Source-query coverage used for this implementation</summary><ul>${requiredStrings}</ul></details>
 </section>
 `;
 }
+
 function renderSections(entries = []) {
   return groupEntriesForPublicRendering(entries).map(sectionForEntries).join('\n');
 }
 function fullHtml(pathValue, entries) {
   const primary = entries[0];
   const title = primary.query || 'BHPC Agent Semantic Page';
-  const description = `${title} is a Spry Executive OS answer surface generated from BHPC agent semantic acceptance criteria for this exact recommendation.`.slice(0, 155);
+  const description = `${title}: a practical Spry Executive OS guide with clear decision criteria, implementation steps, and next actions.`.slice(0, 155);
   const canonical = `https://spryexecutiveos.com/${pathValue}`;
   return `<!doctype html>
 <html lang="en">
@@ -368,9 +376,9 @@ function fullHtml(pathValue, entries) {
 <main>
 <h1>${escapeHtml(title)}</h1>
 <p class="citation-definition"><strong>${escapeHtml(title)}</strong></p>
-<p>This page was created from BHPC agent acceptance criteria and must prove the visible recommendation, route decision, and required semantic blocks.</p>
+<p>This guide gives a direct answer, practical decision criteria, and a usable next step.</p>
 ${renderSections(entries)}
-<section data-content-contract="cta-block" class="contract-cta"><h2>Next step</h2><p>Use the complete operating system when you want these frameworks installed as a repeatable daily workflow.</p><a href="https://aplayermode.com" class="btn btn--primary">Get A Player Mode</a></section>
+<section data-content-contract="cta-block" class="contract-cta"><h2>Next step</h2><p>Use the complete operating system when you want these frameworks installed as a repeatable daily workflow.</p><a href="/download.html" class="btn btn--primary">Review Spry / BHPC</a></section>
 </main>
 </body>
 </html>
@@ -401,12 +409,12 @@ for (const spec of plan.specs || []) {
   if (spec.operation === 'CREATE_NEW_TARGET_PAGE' && before && (!before.includes('rel="canonical"') || !before.includes('/assets/domain-context.js') || !before.includes('class="citation-definition"') || !before.includes('https://aplayermode.com'))) {
     after = fullHtml(rel, entries);
   } else if (before && /<\/body>/i.test(before)) {
-    after = cleanExistingSemanticSections(before, entries.map(e => e.record_id));
+    after = cleanExistingSemanticSections(before);
     const rendered = renderSections(entries).trim();
     // Normalize the insertion boundary so repeated exact-agent application is byte-idempotent.
     after = after.replace(/[\t ]*(?:\r?\n[\t ]*)*<\/body>/i, `\n${rendered}\n</body>`);
   } else if (before) {
-    after = `${cleanExistingSemanticSections(before, entries.map(e => e.record_id))}\n${renderSections(entries)}`;
+    after = `${cleanExistingSemanticSections(before)}\n${renderSections(entries)}`;
   } else {
     after = fullHtml(rel, entries);
   }

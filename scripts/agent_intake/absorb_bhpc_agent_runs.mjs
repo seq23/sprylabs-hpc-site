@@ -59,7 +59,7 @@ for (const entry of ready) {
   const key = runKey(entry.runDate, scope);
   const socialKey = sourceKey(entry.runDate, scope);
   const normalized = {
-    schema_version: '1.2',
+    schema_version: '1.3',
     source: entry.manifest.source || 'twin_agent',
     run_date: entry.runDate,
     scope,
@@ -75,6 +75,8 @@ for (const entry of ready) {
     json_scoreboard: digest.json_scoreboard,
     record_count: digest.rows.length,
     page_spec_count: digest.page_specs.length,
+    seo_execution_count: digest.json_seo_execution_count || 0,
+    site_health: digest.site_health,
     records: digest.rows,
     page_specs: digest.page_specs,
   };

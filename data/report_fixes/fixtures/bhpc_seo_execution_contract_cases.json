@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "cases": [
+    {
+      "name": "valid_comparison_with_string_arrays",
+      "input": {
+        "page_decision": "repair_existing",
+        "recommended_page_type": "evaluation_framework",
+        "target_url": "https://billionairehighperformancecoach.com/ai-executive-coach-for-founders.html",
+        "target_filepath": "ai-executive-coach-for-founders.html",
+        "on_page_failures_json": "[\"Missing comparison table\"]",
+        "schema_action": "Add Product & Offer Schema",
+        "acceptance_checks_json": "[\"Comparison table renders below H1\"]"
+      },
+      "expected_status": "VALID",
+      "expected_canonical_page_type": "comparison",
+      "expected_schema_action": "add_supported_type"
+    },
+    {
+      "name": "legacy_absent_contract",
+      "input": null,
+      "expected_status": "NOT_PROVIDED"
+    },
+    {
+      "name": "unsupported_page_type",
+      "input": {
+        "page_decision": "build_new",
+        "recommended_page_type": "celebrity_endorsement"
+      },
+      "expected_status": "INVALID"
+    }
+  ]
+}

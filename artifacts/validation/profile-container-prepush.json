@@ -1,6 +1,6 @@
 {
   "profile": "container-prepush",
-  "started_at": "2026-07-26T13:46:48.514Z",
+  "started_at": "2026-07-28T19:13:05.723Z",
   "steps": [
     {
       "id": "VAL-ORCHESTRATION-CONTRACT",
@@ -337,8 +337,20 @@
       "command": "npm run validate:extraction-surface-guard:check",
       "exit_code": 0,
       "status": "PASS"
+    },
+    {
+      "id": "VAL-BHPC-SEO-EXECUTION",
+      "command": "npm run validate:bhpc-seo-execution",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-BHPC-PAGE-SEO",
+      "command": "npm run validate:page-seo",
+      "exit_code": 0,
+      "status": "PASS"
     }
   ],
   "status": "PASS",
-  "finished_at": "2026-07-26T13:49:37.585Z"
+  "finished_at": "2026-07-28T19:15:58.109Z"
 }

@@ -49,6 +49,7 @@ function recordFromAcceptance(entry = {}) {
   return {
     source: 'agent_acceptance_manifest',
     record_id: String(entry.record_id || entry.id || ''),
+    acceptance_id: String(entry.id || entry.record_id || ''),
     scope: safeScope(entry.scope || 'bhpc'),
     operation: String(entry.operation || ''),
     page_family: String(entry.page_family || ''),
@@ -67,6 +68,7 @@ function recordFromPlan(spec = {}) {
   return {
     source: 'agent_exact_implementation_plan',
     record_id: String(spec.record_id || ''),
+    acceptance_ids: (spec.acceptance_ids || []).map(String),
     scope: safeScope(spec.scope || 'bhpc'),
     operation: String(spec.operation || ''),
     page_family: String(spec.page_family || ''),

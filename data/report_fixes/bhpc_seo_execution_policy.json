@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "repo": "sprylabs-hpc-site",
+  "scope": "bhpc",
+  "allowed_page_decisions": ["repair_existing", "build_new", "consolidate", "no_action"],
+  "allowed_page_types": [
+    "product_explanation",
+    "pricing_or_inclusions",
+    "comparison",
+    "alternatives",
+    "use_case",
+    "framework_guide",
+    "prompt_template",
+    "faq",
+    "privacy_or_trust",
+    "installation_guide",
+    "methodology",
+    "evaluation_framework",
+    "guide"
+  ],
+  "page_type_aliases": {
+    "evaluation_framework": "comparison",
+    "guide": "framework_guide"
+  },
+  "allowed_schema_actions": ["none", "validate_existing", "repair_existing", "add_supported_type"],
+  "legacy_records_without_seo_execution": "NOT_PROVIDED",
+  "commercial_claim_rules": {
+    "invented_pricing": "forbidden",
+    "unsupported_competitor_claims": "forbidden",
+    "pricing_source_required": true,
+    "visible_content_schema_parity_required": true
+  }
+}

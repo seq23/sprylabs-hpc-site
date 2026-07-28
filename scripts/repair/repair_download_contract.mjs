@@ -36,6 +36,15 @@ html = html.replace(
   ''
 );
 
+html = html.replace(
+  /<p\b([^>]*class=["'][^"']*citation-definition[^"']*["'][^>]*)><strong>([\s\S]*?)<\/strong><\/p>\s*(<div\b[^>]*data-generated-extraction-structure=["']true["'][\s\S]*?<\/ul><\/div>)/i,
+  (_match, attrs, definition, structure) => {
+    const sectionAttrs = attrs.replace(/\sclass=["'][^"']*citation-definition[^"']*["']/, ' class="citation-definition"');
+    return `<section${sectionAttrs}><p class="citation-definition"><strong>${definition}</strong></p>${structure}</section>`;
+  }
+);
+
+
 const helpfulSection = `<section class="card preserved-download-paths" data-download-preserved-paths="true">
 <h2>Helpful paths before you decide.</h2>
 <p>Use these pages if you want more context before downloading the system.</p>

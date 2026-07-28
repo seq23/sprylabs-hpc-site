@@ -8,9 +8,9 @@ const warnings = [];
 
 if (!records.length) errors.push('no_bhpc_route_authority_records');
 
-const exactPlanPaths = new Set(admitted
-  .filter(record => record.source === 'agent_exact_implementation_plan' && record.implementation_path)
-  .map(record => record.implementation_path));
+const exactPlanRecords = admitted.filter(record => record.source === 'agent_exact_implementation_plan' && record.implementation_path);
+const exactPlanPaths = new Set(exactPlanRecords.map(record => record.implementation_path));
+const activeAcceptanceIds = new Set(exactPlanRecords.flatMap(record => record.acceptance_ids || []).map(String));
 const seenPaths = new Map();
 for (const record of records) {
   for (const error of validateBhpcRouteAuthorityRecord(record)) errors.push(error);
@@ -19,8 +19,15 @@ for (const record of records) {
     const key = record.implementation_path;
     if (key) {
       const previous = seenPaths.get(key);
-      if (previous && previous.record_id !== record.record_id && !exactPlanPaths.has(key)) {
-        errors.push(`duplicate_admitted_route:${key}:${previous.record_id}:${record.record_id}`);
+      if (previous && previous.record_id !== record.record_id) {
+        const currentAcceptance = record.source === 'agent_acceptance_manifest';
+        const previousAcceptance = previous.source === 'agent_acceptance_manifest';
+        const currentActive = currentAcceptance && activeAcceptanceIds.has(String(record.acceptance_id || record.record_id));
+        const previousActive = previousAcceptance && activeAcceptanceIds.has(String(previous.acceptance_id || previous.record_id));
+        const historicalAcceptanceOnly = currentAcceptance && previousAcceptance && !currentActive && !previousActive;
+        if (!exactPlanPaths.has(key) && !historicalAcceptanceOnly) {
+          errors.push(`duplicate_admitted_route:${key}:${previous.record_id}:${record.record_id}`);
+        }
       } else if (!previous) {
         seenPaths.set(key, record);
       }

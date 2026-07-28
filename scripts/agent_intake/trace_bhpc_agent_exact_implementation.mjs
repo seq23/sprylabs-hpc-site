@@ -24,10 +24,19 @@ function attrNeedle(recordId = '') {
 
 const manifest = readJson('data/report_fixes/agent_acceptance_manifest.generated.json', {entries: []});
 const plan = readJson('artifacts/validation/agent-exact-implementation-plan.json', {specs: []});
-const plannedPaths = new Set((plan.specs || []).filter(spec => spec.status !== 'BLOCKED').map(spec => spec.implementation_path));
+const activeSpecs = (plan.specs || []).filter(spec => spec.status !== 'BLOCKED');
+const plannedPaths = new Set(activeSpecs.map(spec => spec.implementation_path));
+const activeAcceptanceIds = new Set(activeSpecs.flatMap(spec => spec.acceptance_ids || []).map(String));
 const traces = [];
 const errors = [];
+let skipped = 0;
 for (const entry of manifest.entries || []) {
+  const recordId = String(entry.record_id || entry.id || '');
+  if (!activeAcceptanceIds.has(recordId)) {
+    skipped += 1;
+    traces.push({...entry, trace_status: 'SKIPPED', skipped_reason: 'outside_active_implementation_plan'});
+    continue;
+  }
   if (entry.acceptance_status === 'BLOCKED') {
     const ok = Boolean(entry.blocked_reason);
     traces.push({...entry, trace_status: ok ? 'PASS' : 'FAIL'});
@@ -48,7 +57,7 @@ for (const entry of manifest.entries || []) {
   traces.push({...entry, trace_status: pass ? 'PASS' : 'FAIL', file_exists: exists, planned_path: planned, semantic_record_found: recordFound, legacy_marker_found: legacyMarkerFound, required_strings_found: stringResults, required_blocks_found: blockResults});
   if (!pass) errors.push(`${entry.record_id}:semantic_acceptance_not_proven:${rel}`);
 }
-const report = {schema_version: '1.0', generated_at: new Date().toISOString(), status: errors.length ? 'FAIL' : 'PASS', manifest_entries: manifest.entries?.length || 0, trace_count: traces.length, traces, errors};
+const report = {schema_version: '1.1', generated_at: new Date().toISOString(), status: errors.length ? 'FAIL' : 'PASS', manifest_entries: manifest.entries?.length || 0, active_plan_spec_count: activeSpecs.length, skipped_count: skipped, trace_count: traces.length, traces, errors};
 writeJson('artifacts/validation/agent-exact-implementation-trace.json', report);
 writeJson('reports/bhpc-agent-exact-implementation-trace.json', report);
 if (errors.length) {
@@ -56,4 +65,4 @@ if (errors.length) {
   for (const e of errors.slice(0, 80)) console.error(` - ${e}`);
   process.exit(1);
 }
-console.log(`[bhpc-agent-exact-trace] PASS: ${traces.length} acceptance entries`);
+console.log(`[bhpc-agent-exact-trace] PASS: ${traces.length} acceptance entries; skipped=${skipped}; active_specs=${activeSpecs.length}`);

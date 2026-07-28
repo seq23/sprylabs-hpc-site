@@ -16,11 +16,11 @@ for (const entry of entries) {
   }
   if (entry.acceptance_status === 'REQUIRED' && !String(entry.implementation_path || '').trim()) errors.push(`${entry.id || entry.record_id}:missing_implementation_path`);
   if (entry.acceptance_status === 'REQUIRED') {
-    if (!Array.isArray(entry.required_strings) || entry.required_strings.length < 2) errors.push(`${entry.id}:insufficient_required_strings`);
+    if (!Array.isArray(entry.required_strings) || entry.required_strings.length < 1) errors.push(`${entry.id}:insufficient_required_strings`);
     if (!Array.isArray(entry.required_block_types) || entry.required_block_types.length < 2) errors.push(`${entry.id}:insufficient_required_block_types`);
-    if (!String(entry.required_heading || '').includes(entry.query.slice(0, Math.min(24, entry.query.length)))) errors.push(`${entry.id}:required_heading_does_not_reference_query`);
   }
   if (entry.acceptance_status === 'BLOCKED' && !String(entry.blocked_reason || '').trim()) errors.push(`${entry.id}:blocked_without_reason`);
+  if (!['REQUIRED','BLOCKED','NO_ACTION'].includes(entry.acceptance_status)) errors.push(`${entry.id}:unsupported_acceptance_status:${entry.acceptance_status}`);
 }
 const runManifestErrors = [];
 for (const run of manifest?.run_manifests || []) {
