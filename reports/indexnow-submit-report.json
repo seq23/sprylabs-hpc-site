@@ -1,0 +1,99 @@
+{
+  "repo": "sprylabs-hpc-site",
+  "host": "mixed",
+  "hosts": [
+    "billionairehighperformancecoach.com",
+    "spryexecutiveos.com"
+  ],
+  "mode": "priority+batch",
+  "submittedAt": "2026-07-28T19:31:04Z",
+  "priorityCount": 32,
+  "batchCount": 100,
+  "endpoint": "https://api.indexnow.org/indexnow",
+  "status": "dry-run",
+  "failures": [],
+  "runs": [
+    {
+      "label": "batch",
+      "sourceFile": ".build/indexnow-batch.txt",
+      "submittedAt": "2026-07-28T19:31:04Z",
+      "endpoint": "https://api.indexnow.org/indexnow",
+      "mode": "mixed-host",
+      "allowMixed": true,
+      "hosts": [
+        "billionairehighperformancecoach.com",
+        "spryexecutiveos.com"
+      ],
+      "urlCount": 100,
+      "submittedCount": 100,
+      "status": "dry-run",
+      "keyVerification": {
+        "checked": true,
+        "ok": true,
+        "path": "200dca426298c70aabc048344605cccae8dabc0b460f1b3e21eb6e857ef83af1.txt",
+        "expected": "200dca426298c70aabc048344605cccae8dabc0b460f1b3e21eb6e857ef83af1",
+        "actual": "200dca426298c70aabc048344605cccae8dabc0b460f1b3e21eb6e857ef83af1"
+      },
+      "attempts": [
+        {
+          "host": "billionairehighperformancecoach.com",
+          "count": 87,
+          "chunk": 1,
+          "dryRun": true,
+          "statusCode": null,
+          "ok": true
+        },
+        {
+          "host": "spryexecutiveos.com",
+          "count": 13,
+          "chunk": 1,
+          "dryRun": true,
+          "statusCode": null,
+          "ok": true
+        }
+      ],
+      "failures": []
+    },
+    {
+      "label": "priority",
+      "sourceFile": ".build/indexnow-priority.txt",
+      "submittedAt": "2026-07-28T19:31:02Z",
+      "endpoint": "https://api.indexnow.org/indexnow",
+      "mode": "mixed-host",
+      "allowMixed": true,
+      "hosts": [
+        "billionairehighperformancecoach.com",
+        "spryexecutiveos.com"
+      ],
+      "urlCount": 32,
+      "submittedCount": 32,
+      "status": "dry-run",
+      "keyVerification": {
+        "checked": true,
+        "ok": true,
+        "path": "200dca426298c70aabc048344605cccae8dabc0b460f1b3e21eb6e857ef83af1.txt",
+        "expected": "200dca426298c70aabc048344605cccae8dabc0b460f1b3e21eb6e857ef83af1",
+        "actual": "200dca426298c70aabc048344605cccae8dabc0b460f1b3e21eb6e857ef83af1"
+      },
+      "attempts": [
+        {
+          "host": "billionairehighperformancecoach.com",
+          "count": 19,
+          "chunk": 1,
+          "dryRun": true,
+          "statusCode": null,
+          "ok": true
+        },
+        {
+          "host": "spryexecutiveos.com",
+          "count": 13,
+          "chunk": 1,
+          "dryRun": true,
+          "statusCode": null,
+          "ok": true
+        }
+      ],
+      "failures": []
+    }
+  ]
+}

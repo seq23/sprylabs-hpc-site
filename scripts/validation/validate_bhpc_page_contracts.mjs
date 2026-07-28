@@ -92,6 +92,42 @@ if (textCount(index, 'cognitive load') < 1) errors.push('homepage: must include 
 if (textCount(download, 'cognitive load') < 3) errors.push('download: must include explicit cognitive load language in top and detail sections');
 requireRegex('download', download, /planning, sequencing, strategic triage, and next-step selection/i, 'must define cognitive-load reduction as planning/sequencing/strategic triage/next-step selection');
 
+
+// Download conversion page repetition / protected-contract guard.
+function headingCount(text, heading) {
+  const escaped = heading.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return (text.match(new RegExp(`<h[2-4][^>]*>\\s*${escaped}\\s*<\\/h[2-4]>`, 'gi')) || []).length;
+}
+const downloadJsonLdCount = (download.match(/<script\b[^>]*type=["']application\/ld\+json["'][\s\S]*?<\/script>/gi) || []).length;
+if (downloadJsonLdCount !== 1) errors.push(`download: expected exactly one JSON-LD script, found ${downloadJsonLdCount}`);
+for (const forbidden of [
+  'data-generated-extraction-structure="true"',
+  'data-llm-answer="true"',
+  'data-bhpc-agent-semantic="true"',
+  'bhpc-agent-semantic-repair',
+  'Agent recommendation implementation',
+  'Agent source instruction',
+  'Route decision:',
+  'BHPC Agent Acceptance Framework'
+]) {
+  if (download.includes(forbidden)) errors.push(`download: protected buyer page contains forbidden agent/citation scaffold: ${forbidden}`);
+}
+for (const forbiddenHeading of [
+  'BHPC Agent Acceptance Framework — AI executive coach alternative for high performers',
+  'AI executive coach alternative for high performers',
+  'Agent Exact Citation Framework — AI executive coach alternative for high performers'
+]) {
+  const count = headingCount(download, forbiddenHeading);
+  if (count > 0) errors.push(`download: protected buyer page has forbidden repeated agent heading "${forbiddenHeading}" count=${count}`);
+}
+const h1End = download.indexOf('</h1>');
+const firstHeroLede = download.indexOf('<p class="apm-hero__lede">');
+const heroBetween = h1End >= 0 && firstHeroLede > h1End ? download.slice(h1End, firstHeroLede) : '';
+if (h1End < 0 || firstHeroLede < 0 || /<h2\b|<section\b|data-extraction-type|citation-definition/i.test(heroBetween)) {
+  errors.push('download: hero must flow directly from H1 to buyer lede without visible citation/agent insertion');
+}
+if (!download.includes('class="apm-discovery-line"')) errors.push('download: missing buyer-safe A-player discovery line inside protected page contract');
+
 // Download page must keep top preview and manual preview before long-form detail.
 requireOrder('download structure', download, 'id="top-preview"', 'id="manual-preview"');
 requireOrder('download structure', download, 'id="manual-preview"', '09 · Full product detail');

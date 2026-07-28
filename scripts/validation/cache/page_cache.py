@@ -1,17 +1,22 @@
 from __future__ import annotations
 import hashlib,json,os,tempfile
 from pathlib import Path
-ROOT=Path.cwd(); CACHE=ROOT/'.validation-cache'/'v1'; OBJ=CACHE/'objects'; INDEX=CACHE/'page-index.json'; EPOCH='page-audit-v1'
+ROOT=Path.cwd(); CACHE=ROOT/'.validation-cache'/'v1'; OBJ=CACHE/'objects'; INDEX=CACHE/'page-index.json'; EPOCH='page-audit-v1'; _GLOBAL_HASH_MEMO={}
 
 def canon(v): return json.dumps(v,sort_keys=True,separators=(',',':'),ensure_ascii=False)
 def sha_bytes(b): return hashlib.sha256(b).hexdigest()
 def sha_file(p):
  p=Path(p); return sha_bytes(p.read_bytes()) if p.exists() else 'MISSING'
 def global_contract_hash(extra=None):
- files=['scripts/citation/extraction_contract.py','scripts/validation/validate_extraction_contract_final_state.py','scripts/validation/validate_rendered_schema_parity.py','data/citation/citable_pages.json','data/citation/query_registry.json','data/content/page_admission_registry.json','package-lock.json','requirements-validation.txt','.validation-runtime/runtime-identity.json']
+ key=canon(extra or '')
+ if key in _GLOBAL_HASH_MEMO:
+  return _GLOBAL_HASH_MEMO[key]
+ files=['scripts/citation/extraction_contract.py','scripts/validation/validate_extraction_contract_final_state.py','scripts/validation/validate_rendered_schema_parity.py','data/citation/citable_pages.json','data/citation/query_registry.json','data/content/page_admission_registry.json','package-lock.json','requirements-validation.txt']
  payload={'epoch':EPOCH,'python':os.sys.version,'files':{f:sha_file(ROOT/f) for f in files}}
  if extra: payload['extra']=extra
- return sha_bytes(canon(payload).encode())
+ value=sha_bytes(canon(payload).encode())
+ _GLOBAL_HASH_MEMO[key]=value
+ return value
 def fingerprint(path,record,validator):
  p=ROOT/path
  payload={'repo':'sprylabs-hpc-site','epoch':EPOCH,'validator':validator,'page':path,'page_hash':sha_file(p),'record':record,'global':global_contract_hash(validator)}

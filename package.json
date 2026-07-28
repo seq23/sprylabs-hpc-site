@@ -15,7 +15,7 @@
     "fanout:apply": "node scripts/apply_fanout.js",
     "distribution:prepare": "node scripts/prepare_distribution_artifacts.js",
     "distribution:bootstrap": "bash scripts/distribution/bootstrap_distribution.sh",
-    "distribution:indexnow": "bash scripts/distribution/indexnow_submit.sh",
+    "distribution:indexnow": "bash scripts/distribution/indexnow_submit.sh --file .build/indexnow-priority.txt --allow-mixed --label priority",
     "distribution:deploy": "bash scripts/distribution/deploy_distribution.sh",
     "social:collect": "node scripts/social/collect_social.js",
     "social:daily": "node scripts/social/collect_social.js && npm run reddit:daily",
@@ -227,7 +227,7 @@
     "growth-health:build": "node scripts/admin/build_admin_status.mjs",
     "admin:status": "node scripts/admin/build_admin_status.mjs",
     "validate:workflow-write-scopes": "node scripts/validators/validate_workflow_write_scopes.mjs",
-    "release:zero-dollar-autonomous": "npm run authority:yield:build && npm run ownership:build && npm run strategy:gate && npm run firehose:collect && npm run firehose:normalize && npm run firehose:health && npm run signals:cluster && npm run signals:score && npm run signals:candidates && npm run release:plan && npm run authority:scale:prepare-scope && npm run authority:scale:restore && npm run release:content:intelligence && npm run citation:self-heal && npm run release:daily-proof && npm run admin:build && npm run authority:scale:freeze && npm run authority:scale:clear-scope && npm run validate:authority-scale",
+    "release:zero-dollar-autonomous": "npm run authority:scale:fanout && npm run authority:yield:build && npm run ownership:build && npm run strategy:gate && npm run firehose:collect && npm run firehose:normalize && npm run firehose:health && npm run signals:cluster && npm run signals:score && npm run signals:candidates && npm run release:plan && npm run authority:scale:prepare-scope && npm run authority:scale:restore && npm run repair:citation-contract-surfaces && npm run release:content:intelligence && npm run citation:self-heal && npm run release:daily-proof && npm run admin:build && npm run authority:scale:prepare-drift-scope && npm run authority:scale:freeze && npm run authority:scale:clear-scope && npm run validate:authority-scale",
     "workflow:zero-dollar-autonomous": "npm run release:zero-dollar-autonomous",
     "validate:full-safe-autonomy": "npm run validate:ownership && npm run safe-harbor:validate && npm run validate:workflow-write-scopes && npm run validate:coverage-route",
     "validate:admin-github-bridge": "node scripts/validators/validate_admin_github_bridge.mjs",
@@ -254,7 +254,7 @@
     "validate:extraction-surface-guard:snapshot": "node scripts/validation/python_runtime.mjs run scripts/validation/extraction_surface_guard.py snapshot",
     "validate:extraction-surface-guard:check": "node scripts/validation/python_runtime.mjs run scripts/validation/extraction_surface_guard.py check",
     "trace:extraction-pipeline": "node scripts/validation/python_runtime.mjs run scripts/validation/trace_extraction_pipeline.py",
-    "repair:extraction-final-state": "npm run repair:download-contract && npm run repair:extraction-contracts && node scripts/validation/python_runtime.mjs run scripts/citation/repair_schema_parity.py && npm run repair:programmatic-registry-owners && npm run validate:query-owner-uniqueness && npm run repair:dual-domain-metadata",
+    "repair:extraction-final-state": "npm run repair:download-contract && npm run repair:extraction-contracts && node scripts/validation/python_runtime.mjs run scripts/citation/repair_schema_parity.py && npm run repair:download-contract && npm run repair:programmatic-registry-owners && npm run validate:query-owner-uniqueness && npm run repair:dual-domain-metadata",
     "validate:incremental-page-audit": "node scripts/validation/run_incremental_page_audit.mjs",
     "validate:full-page-audit": "node scripts/validation/run_incremental_page_audit.mjs --full",
     "validation:cache:self-test": "node scripts/validation/self_test_validation_cache.mjs",
@@ -285,7 +285,8 @@
     "validate:bhpc-seo-execution": "node scripts/validators/validate_bhpc_seo_execution_contract.mjs",
     "agent:bhpc:self-test-seo-execution": "node scripts/agent_intake/self_test_bhpc_seo_execution.mjs",
     "validate:page-seo": "node scripts/validation/validate_page_seo_contract.mjs",
-    "validate:page-seo:full": "node scripts/validation/validate_page_seo_contract.mjs --full"
+    "validate:page-seo:full": "node scripts/validation/validate_page_seo_contract.mjs --full",
+    "authority:scale:prepare-drift-scope": "node scripts/authority_scale/frozen_outputs.mjs prepare-drift-scope"
   },
   "engines": {
     "node": ">=24.0.0"

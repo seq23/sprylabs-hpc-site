@@ -31,6 +31,16 @@ Status: active / release-enforced by `scripts/validation/validate_bhpc_page_cont
 
 `npm run validate:content` calls the BHPC page contract validator. Failure means the release must not ship.
 
+## Protected buyer-page freeze guard — Download
+
+- `/download.html` is a protected buyer/conversion page, not an agent-output canvas.
+- Visible citation extraction scaffolds, generated extraction structures, BHPC agent semantic repair sections, agent proof markers, and repeated agent framework headings are forbidden on `/download.html`.
+- The hero must flow from the H1 directly into the buyer-facing lede.
+- The page may keep quiet machine-readable schema, but the buyer page must not show LLM/citation/agent repair scaffolding.
+- `/download.html` must remain admitted in `data/release/frozen_output_registry.json`, and its frozen accepted-output blob must be refreshed whenever the protected page contract changes.
+- `npm run validate:content` must fail if the download page repeats agent headings, carries visible extraction attributes, has more than one JSON-LD script, or loses the protected buyer-page structure.
+
+
 
 ## Visual Layout Guardrails — Download
 

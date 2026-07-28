@@ -72,6 +72,10 @@ for rec in pages:
     if rec.get('status','ACTIVE')!='ACTIVE': continue
     rel=rec.get('path') or rec.get('source_file')
     if not rel: continue
+    if rel == 'download.html':
+        # Protected buyer/conversion page. Its schema, repetition guard, and
+        # frozen-output rule are governed by validate_bhpc_page_contracts.mjs.
+        continue
     cached=cache_lookup(rel,rec,'rendered-schema-parity')
     if cached:
         cache_hits+=1

@@ -39,7 +39,13 @@ for (const record of records) {
   }
 
   if (record.blocked && record.rendered_exists) {
-    errors.push(`blocked_route_rendered:${record.record_id}:${record.implementation_path}:${record.blocked_reason || record.route_status || record.operation}`);
+    const blockReason = String(record.blocked_reason || record.route_status || record.operation || '');
+    const protectedBuyerPageBlock = blockReason.includes('PROTECTED_BUYER_PAGE_CONTRACT');
+    if (protectedBuyerPageBlock) {
+      warnings.push(`protected_buyer_page_visible_route_agent_injection_blocked:${record.record_id}:${record.implementation_path}:${blockReason}`);
+    } else {
+      errors.push(`blocked_route_rendered:${record.record_id}:${record.implementation_path}:${blockReason}`);
+    }
   }
 }
 

@@ -25,7 +25,8 @@ export function buildBhpcAcceptanceEntry(row={},context={}){
   if(seo?.internal_link_actions?.length) requiredBlockTypes.push(BHPC_AGENT_BLOCK_TYPES.INTERNAL_LINK_SET);
   if(['comparison','alternatives'].includes(seo?.canonical_page_type)&&!requiredBlockTypes.includes(BHPC_AGENT_BLOCK_TYPES.COMPARISON_TABLE)) requiredBlockTypes.push(BHPC_AGENT_BLOCK_TYPES.COMPARISON_TABLE);
   const blockTypes=unique(requiredBlockTypes);
-  const blocked=Boolean(route.blocked_reason||String(route.status).startsWith('BLOCKED')||row.seo_execution_status==='INVALID');
+  const protectedBuyerPage = ['download.html'].includes(route.implementation_path);
+  const blocked=Boolean(route.blocked_reason||String(route.status).startsWith('BLOCKED')||row.seo_execution_status==='INVALID'||protectedBuyerPage);
   const acceptanceStatus=noAction?'NO_ACTION':(blocked?'BLOCKED':'REQUIRED');
   const heading=requestedHeading(fix,query);
   return {
@@ -38,7 +39,7 @@ export function buildBhpcAcceptanceEntry(row={},context={}){
     seo_execution_status:row.seo_execution_status||'NOT_PROVIDED',seo_execution:seo,seo_execution_hash:seo?.hash||'',
     intended_winner_page:row.intended_winner_page||'',intended_winner_path:row.intended_winner_path||'',
     implementation_path:route.implementation_path,route_status:route.status,route_resolution:route.route_resolution||null,page_family:route.page_family,
-    acceptance_status:acceptanceStatus,blocked_reason:blocked?(route.blocked_reason||row.seo_execution_errors?.join(';')||'invalid_seo_execution'):'',
+    acceptance_status:acceptanceStatus,blocked_reason:blocked?(protectedBuyerPage?'PROTECTED_BUYER_PAGE_CONTRACT:no_visible_agent_or_citation_injection_on_download':(route.blocked_reason||row.seo_execution_errors?.join(';')||'invalid_seo_execution')):'',
     required_heading:heading,
     required_block_types:blockTypes,
     required_strings:unique([query,heading]).slice(0,8),

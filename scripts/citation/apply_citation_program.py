@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from __future__ import annotations
-import json, re, hashlib, html, sys
+import json, re, hashlib, html, sys, os
 sys.dont_write_bytecode = True
 from pathlib import Path
 
@@ -1268,6 +1268,38 @@ def write_citation_repair_report():
         fp.parent.mkdir(parents=True,exist_ok=True)
         fp.write_text(json.dumps(report,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
 
+def iter_public_html_paths():
+    """Yield candidate public HTML files without walking runtime/vendor trees.
+
+    The old postbuild traversal used ROOT.rglob("*.html"), which still descended
+    into excluded trees before patch_legacy could reject them.  On updater and CI
+    machines that contain restored caches or vendor directories, that can turn a
+    deterministic citation pass into a long-running/noisy traversal.  This walker
+    prunes those directories before recursion while preserving the same public
+    HTML candidate set.
+    """
+    skip_dir_names = {
+        ".git", ".github", "node_modules", "artifacts", "fixtures",
+        ".validation-runtime", ".cache", ".npm", "__pycache__",
+    }
+    skip_rel_prefixes = tuple(prefix.rstrip("/") for prefix in EXCLUDED_PREFIXES)
+    for dirpath, dirnames, filenames in os.walk(ROOT):
+        base = Path(dirpath)
+        rel_dir = base.relative_to(ROOT).as_posix() if base != ROOT else ""
+        dirnames[:] = [
+            name for name in dirnames
+            if name not in skip_dir_names
+            and not any(((f"{rel_dir}/{name}" if rel_dir else name).startswith(prefix)) for prefix in skip_rel_prefixes)
+        ]
+        for filename in filenames:
+            if not filename.endswith(".html"):
+                continue
+            path = base / filename
+            rel = path.relative_to(ROOT).as_posix()
+            if rel in EXCLUDED or rel.startswith(EXCLUDED_PREFIXES):
+                continue
+            yield path
+
 def postbuild():
     # Re-assert approved priority pages after any generator runs.
     materialize_agent_new_pages()
@@ -1284,7 +1316,7 @@ def postbuild():
         })
     apply_agent_targeted_patches()
     records=[]
-    for fp in sorted(ROOT.rglob("*.html")):
+    for fp in sorted(iter_public_html_paths()):
         rel=fp.relative_to(ROOT).as_posix()
         rec=patch_legacy(rel)
         if rec: records.append(rec)

@@ -6,6 +6,7 @@ run('npm',['run','authority:scale:fanout']);
 run('npm',['run','authority:scale:prepare-scope']);
 run('npm',['run','authority:scale:restore']);
 run('node',['scripts/workflow/run_topology_lane.mjs','--lane','spry-content-release',...args]);
+run('node',['scripts/authority_scale/frozen_outputs.mjs','prepare-drift-scope']);
 run('npm',['run','authority:scale:freeze']);
 run('npm',['run','authority:scale:clear-scope']);
 run('npm',['run','validate:authority-scale']);

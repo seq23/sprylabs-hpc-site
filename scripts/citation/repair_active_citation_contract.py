@@ -43,6 +43,12 @@ for r in active:
         r['definition']=f"{framework}: {definition or ('explains ' + r.get('query','this topic'))}"
         metadata_changed=True
     path=ROOT/r.get('path','')
+    # index.html and download.html are protected landing/conversion pages.
+    # They are validated by page contracts and schema, not by visible citation
+    # extraction scaffolds. Do not inject agent/citation blocks into them.
+    if r.get('path') in {'index.html','download.html'}:
+        skipped += 1
+        continue
     if not path.exists():
         continue
     raw=path.read_text(encoding='utf-8', errors='ignore')

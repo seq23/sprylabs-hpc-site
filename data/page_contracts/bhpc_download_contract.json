@@ -21,10 +21,28 @@
     "data-visible-faq=\"true\"",
     "What this page is for."
   ],
-  "top_preview_rule": "What\u2019s-inside blocks and manual preview must appear before the long-form product detail section.",
+  "top_preview_rule": "What’s-inside blocks and manual preview must appear before the long-form product detail section.",
   "sticky_cta_rule": "Desktop/tablet sticky CTA is a right-side rail/card, not a centered long bottom bar. Mobile may collapse to bottom full-width.",
   "contrast_rule": "Cream/light sections must use ink/muted-warm text; white text is only permitted on explicitly dark sections such as value stack or footer.",
   "llm_ingestion_rule": "Full product detail, buyer questions, legal/trust content, related-search surface, and footer research links must remain.",
   "visual_layout_rule": "Download hero must not show generated Key Criteria text; desktop hero must place copy on the left and exactly one hero product image on the right; a separate large system image must appear below the what-is-inside blocks.",
-  "quiet_ingestion_rule": "Preserve buyer-friendly visual copy while adding machine-readable FAQPage, BreadcrumbList, enriched Product, WebPage about/mentions/isPartOf relationships, sitemap/LLMS/registry coverage, and no visible citation-strategy scaffolding."
+  "quiet_ingestion_rule": "Preserve buyer-friendly visual copy while adding machine-readable FAQPage, BreadcrumbList, enriched Product, WebPage about/mentions/isPartOf relationships, sitemap/LLMS/registry coverage, and no visible citation-strategy scaffolding.",
+  "protected_buyer_page_rule": "download.html is a protected conversion page. It must not render visible agent/citation extraction scaffolding, repeated agent framework headings, generated extraction structures, or appended agent semantic repair sections.",
+  "freeze_rule": "download.html must be covered by data/release/frozen_output_registry.json and refrozen whenever the protected buyer page contract changes.",
+  "repetition_guard": {
+    "forbidden_visible_scaffolds": [
+      "data-generated-extraction-structure=\"true\"",
+      "data-llm-answer=\"true\"",
+      "data-bhpc-agent-semantic=\"true\"",
+      "bhpc-agent-semantic-repair",
+      "BHPC Agent Acceptance Framework"
+    ],
+    "forbidden_repeated_headings": [
+      "BHPC Agent Acceptance Framework — AI executive coach alternative for high performers",
+      "AI executive coach alternative for high performers",
+      "Agent Exact Citation Framework — AI executive coach alternative for high performers"
+    ],
+    "json_ld_scripts_exact": 1,
+    "hero_rule": "H1 must flow directly into the buyer-facing hero lede without citation-definition, data-extraction-type, generated extraction structure, or agent semantic section injection."
+  }
 }

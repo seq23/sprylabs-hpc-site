@@ -46,20 +46,24 @@ export function ensureRuntime(){
  }
  let identity=probe(SELECTED_PY); let dependencyMode=marker?.dependency_mode||'pinned-venv';
  if(!identity||marker?.requirements_sha256!==wanted){
-  fs.rmSync(VENV,{recursive:true,force:true});fs.mkdirSync(RUNTIME,{recursive:true});
-  SELECTED_PY=VENV_PY;
-  // CI installs the pinned set. If an offline package mirror cannot satisfy the
-  // pins, use the already-provisioned base interpreter only when its parser
-  // stack meets or exceeds the declared minimums. The receipt records the mode.
-  let code=run(basePython(),['-m','venv',VENV]);if(code!==0)throw new Error('unable to create validation virtual environment');
-  code=run(PIP,['install','-r',REQ]);
-  if(code===0){dependencyMode='pinned-venv';identity=probe(VENV_PY)}
-  else{
-    const systemPython=resolvedBasePython();
-    const systemIdentity=probe(systemPython);
-    if(!compatibleSystemIdentity(systemIdentity))throw new Error('unable to install pinned validation dependencies and compatible system packages are unavailable');
+  const systemPython=resolvedBasePython();
+  const systemIdentity=probe(systemPython);
+  if(process.env.VALIDATION_PYTHON_PINNED_ONLY!=='1'&&compatibleSystemIdentity(systemIdentity)){
     SELECTED_PY=systemPython;identity=systemIdentity;dependencyMode='system-python-fallback';
-    console.warn(`[validation:python-runtime] WARN: pinned install unavailable; using compatible base Python ${systemPython} with bs4=${identity.bs4}, lxml=${identity.lxml}, yaml=${identity.yaml}`);
+    console.warn(`[validation:python-runtime] WARN: using compatible base Python ${systemPython} with bs4=${identity.bs4}, lxml=${identity.lxml}, yaml=${identity.yaml}`);
+  } else {
+    fs.rmSync(VENV,{recursive:true,force:true});fs.mkdirSync(RUNTIME,{recursive:true});
+    SELECTED_PY=VENV_PY;
+    // CI may force the pinned venv. Offline/local environments use the
+    // compatible base interpreter above to avoid slow package-mirror failures.
+    let code=run(basePython(),['-m','venv',VENV]);if(code!==0)throw new Error('unable to create validation virtual environment');
+    code=run(PIP,['install','-r',REQ]);
+    if(code===0){dependencyMode='pinned-venv';identity=probe(VENV_PY)}
+    else{
+      if(!compatibleSystemIdentity(systemIdentity))throw new Error('unable to install pinned validation dependencies and compatible system packages are unavailable');
+      SELECTED_PY=systemPython;identity=systemIdentity;dependencyMode='system-python-fallback';
+      console.warn(`[validation:python-runtime] WARN: pinned install unavailable; using compatible base Python ${systemPython} with bs4=${identity.bs4}, lxml=${identity.lxml}, yaml=${identity.yaml}`);
+    }
   }
   if(!identity)throw new Error('managed validation runtime failed parser probe');
  }

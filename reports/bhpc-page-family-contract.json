@@ -3,15 +3,15 @@
   "validator": "bhpc-page-family-contract",
   "authority_model": "artifact_admitted_route_authority",
   "status": "PASS",
-  "generated_at": "2026-07-28T19:14:10.206Z",
+  "generated_at": "2026-07-28T23:08:08.374Z",
   "record_count": 669,
-  "admitted_count": 665,
-  "blocked_count": 4,
+  "admitted_count": 663,
+  "blocked_count": 6,
   "page_family_counts": {
-    "intended_winner_repair": 665
+    "intended_winner_repair": 663
   },
   "route_shape_counts": {
-    "root_html": 282,
+    "root_html": 280,
     "root_directory": 68,
     "insight_page": 272,
     "comparison_page": 4,
@@ -288,17 +288,20 @@
       "admission_basis": "row_level_agent_acceptance"
     },
     {
-      "record_id": "2026-06-27-bhpc-025",
+      "record_id": "2026-06-27-bhpc-026",
       "source": "agent_acceptance_manifest",
       "scope": "bhpc",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "EXACT_OWNER_REPAIR",
-      "implementation_path": "download.html",
+      "route_status": "EXACT_EXISTING_REPAIR",
+      "implementation_path": "arbitration-engine.html",
       "route_shape": "root_html",
       "admission_basis": "row_level_agent_acceptance"
     }
   ],
   "errors": [],
-  "warnings": []
+  "warnings": [
+    "protected_buyer_page_visible_route_agent_injection_blocked:2026-06-27-bhpc-025:download.html:PROTECTED_BUYER_PAGE_CONTRACT:no_visible_agent_or_citation_injection_on_download",
+    "protected_buyer_page_visible_route_agent_injection_blocked:2026-07-04-bhpc-056:download.html:PROTECTED_BUYER_PAGE_CONTRACT:no_visible_agent_or_citation_injection_on_download"
+  ]
 }

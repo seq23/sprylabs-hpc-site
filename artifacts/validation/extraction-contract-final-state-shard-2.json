@@ -4,10 +4,10 @@
   "errors": [],
   "warnings": [],
   "types": {
-    "concept": 204,
+    "concept": 203,
     "howto": 78,
     "comparison": 33,
-    "decision": 2
+    "decision": 3
   },
   "rows": [
     {
@@ -53,19 +53,19 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "30-Second Answer",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 2: 30-Second Answer"
           },
           {
             "number": 3,
             "title": "60-Second Procedure (Use This Today)",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 3: 60-Second Procedure (Use This Today)"
           }
         ]
@@ -81,9 +81,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 3,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -155,19 +152,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -182,9 +179,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -352,26 +346,15 @@
     },
     {
       "path": "arbitration-engine.html",
-      "declared_type": "concept",
+      "declared_type": "decision",
       "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
+        "description": "choice/use guidance with structured criteria"
       },
-      "registry_type": "concept",
+      "registry_type": "decision",
       "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
+      "observed_type": "decision",
       "observed_structure": {
-        "type": "concept",
-        "items": [
-          "Use it when the decision criteria are explicit.",
-          "Use it when the next action can be verified.",
-          "Escalate when legal, medical, financial, relational, or other high-consequence judgment is required.",
-          "Leverage created",
-          "Real deadline and consequence of delay",
-          "Compounding value",
-          "Downside and reversibility",
-          "Dependencies unlocked"
-        ]
+        "type": "decision"
       },
       "schema": {
         "schema_types": [
@@ -455,19 +438,19 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "30-Second Answer",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 2: 30-Second Answer"
           },
           {
             "number": 3,
             "title": "60-Second Procedure (Use This Today)",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 3: 60-Second Procedure (Use This Today)"
           }
         ]
@@ -483,9 +466,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 3,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -607,25 +587,25 @@
           {
             "number": 1,
             "title": "Load Fixed Constraints",
-            "description": "List meetings, deadlines, customer issues, team dependencies, travel, available hours, and current capacity that cannot be ignored. Completion evidence: Record the observable result before moving to the next step. If the step cannot be observed, rewrite it as a physical action or concrete decision.",
+            "description": "present",
             "source_heading": "Step 1: Load Fixed Constraints"
           },
           {
             "number": 2,
             "title": "Choose the Strategic Output",
-            "description": "Choose the one output that creates the most leverage or removes the largest future bottleneck and define its finish line. Completion evidence: Record the observable result before moving to the next step. If the step cannot be observed, rewrite it as a physical action or concrete decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose the Strategic Output"
           },
           {
             "number": 3,
             "title": "Build the Bounded Day",
-            "description": "Ask ChatGPT to protect the first work block, add no more than two maintenance actions, sequence dependencies, and park everything else. Completion evidence: Record the observable result before moving to the next step. If the step cannot be observed, rewrite it as a physical action or concrete decision.",
+            "description": "present",
             "source_heading": "Step 3: Build the Bounded Day"
           },
           {
             "number": 4,
             "title": "Install the Replan and Shutdown Rules",
-            "description": "Replan only when a deadline, dependency, available time, or consequence materially changes; close the day when the strategic output and maintenance floor are complete or intentionally deferred. Completion evidence: Record the observable result before moving to the next step. If the step cannot be observed, rewrite it as a physical action or concrete decision.",
+            "description": "present",
             "source_heading": "Step 4: Install the Replan and Shutdown Rules"
           }
         ]
@@ -642,9 +622,6 @@
         "schema_steps": 4,
         "visible_steps": 4
       },
-      "article_steps": 0,
-      "extraction_steps": 4,
-      "schema_steps": 4,
       "valid": true
     },
     {
@@ -1020,31 +997,31 @@
           {
             "number": 1,
             "title": "Ask what created support and what created strain this week",
-            "description": "Ask what created support and what created strain this week. Completion evidence: Record the observable result before moving to the next step. If the step cannot be observed, rewrite it as a physical action or concrete decision.",
+            "description": "present",
             "source_heading": "Step 1: Ask what created support and what created strain this week"
           },
           {
             "number": 2,
             "title": "Review explicit commitments and invisible household or family workload",
-            "description": "Review explicit commitments and invisible household or family workload. Completion evidence: Record the observable result before moving to the next step. If the step cannot be observed, rewrite it as a physical action or concrete decision.",
+            "description": "present",
             "source_heading": "Step 2: Review explicit commitments and invisible household or family workload"
           },
           {
             "number": 3,
             "title": "Listen without immediately defending or solving",
-            "description": "Listen without immediately defending or solving. Completion evidence: Record the observable result before moving to the next step. If the step cannot be observed, rewrite it as a physical action or concrete decision.",
+            "description": "present",
             "source_heading": "Step 3: Listen without immediately defending or solving"
           },
           {
             "number": 4,
             "title": "Choose one repair action and one shared plan",
-            "description": "Choose one repair action and one shared plan. Completion evidence: Record the observable result before moving to the next step. If the step cannot be observed, rewrite it as a physical action or concrete decision.",
+            "description": "present",
             "source_heading": "Step 4: Choose one repair action and one shared plan"
           },
           {
             "number": 5,
             "title": "Schedule the next check-in before the issue becomes invisible again",
-            "description": "Schedule the next check-in before the issue becomes invisible again. Completion evidence: Record the observable result before moving to the next step. If the step cannot be observed, rewrite it as a physical action or concrete decision.",
+            "description": "present",
             "source_heading": "Step 5: Schedule the next check-in before the issue becomes invisible again"
           }
         ]
@@ -1061,9 +1038,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -1082,19 +1056,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -1109,9 +1083,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -1130,19 +1101,19 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "30-Second Answer",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 2: 30-Second Answer"
           },
           {
             "number": 3,
             "title": "60-Second Procedure (Use This Today)",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 3: 60-Second Procedure (Use This Today)"
           }
         ]
@@ -1158,9 +1129,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 3,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -1179,31 +1147,31 @@
           {
             "number": 1,
             "title": "Choose one target function and one real task where it matters",
-            "description": "Choose one target function and one real task where it matters. Completion evidence: Record the observable result before moving to the next step. If the step cannot be observed, rewrite it as a physical action or concrete decision.",
+            "description": "present",
             "source_heading": "Step 1: Choose one target function and one real task where it matters"
           },
           {
             "number": 2,
             "title": "Externalize the demand with a cue, checklist, timer, or visual plan",
-            "description": "Externalize the demand with a cue, checklist, timer, or visual plan. Completion evidence: Record the observable result before moving to the next step. If the step cannot be observed, rewrite it as a physical action or concrete decision.",
+            "description": "present",
             "source_heading": "Step 2: Externalize the demand with a cue, checklist, timer, or visual plan"
           },
           {
             "number": 3,
             "title": "Practice a bounded version frequently enough to gather evidence",
-            "description": "Practice a bounded version frequently enough to gather evidence. Completion evidence: Record the observable result before moving to the next step. If the step cannot be observed, rewrite it as a physical action or concrete decision.",
+            "description": "present",
             "source_heading": "Step 3: Practice a bounded version frequently enough to gather evidence"
           },
           {
             "number": 4,
             "title": "Review what failed",
-            "description": "Review what failed: cue, task size, timing, environment, or support. Completion evidence: Record the observable result before moving to the next step. If the step cannot be observed, rewrite it as a physical action or concrete decision.",
+            "description": "present",
             "source_heading": "Step 4: Review what failed"
           },
           {
             "number": 5,
             "title": "Increase complexity only after the smaller version becomes reliable",
-            "description": "Increase complexity only after the smaller version becomes reliable. Completion evidence: Record the observable result before moving to the next step. If the step cannot be observed, rewrite it as a physical action or concrete decision.",
+            "description": "present",
             "source_heading": "Step 5: Increase complexity only after the smaller version becomes reliable"
           }
         ]
@@ -1220,9 +1188,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -1241,19 +1206,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -1268,9 +1233,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -1312,19 +1274,19 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "30-Second Answer",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 2: 30-Second Answer"
           },
           {
             "number": 3,
             "title": "60-Second Procedure (Use This Today)",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 3: 60-Second Procedure (Use This Today)"
           }
         ]
@@ -1340,9 +1302,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 3,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -1361,31 +1320,31 @@
           {
             "number": 1,
             "title": "Define the Decision",
-            "description": "State the actual choice, deadline, and consequence of doing nothing.",
+            "description": "present",
             "source_heading": "Step 1: Define the Decision"
           },
           {
             "number": 2,
             "title": "List Viable Options",
-            "description": "Remove fantasy options and include the status quo.",
+            "description": "present",
             "source_heading": "Step 2: List Viable Options"
           },
           {
             "number": 3,
             "title": "Score the Decision Criteria",
-            "description": "Ask ChatGPT to compare leverage, real urgency, downside, reversibility, dependencies, and information quality.",
+            "description": "present",
             "source_heading": "Step 3: Score the Decision Criteria"
           },
           {
             "number": 4,
             "title": "Name the Evidence That Would Change the Choice",
-            "description": "Separate a decision from a prediction by identifying the next useful fact.",
+            "description": "present",
             "source_heading": "Step 4: Name the Evidence That Would Change the Choice"
           },
           {
             "number": 5,
             "title": "Record the Decision and Review Date",
-            "description": "Document the selected option, first action, and the condition for reopening it.",
+            "description": "present",
             "source_heading": "Step 5: Record the Decision and Review Date"
           }
         ]
@@ -1401,9 +1360,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -1422,25 +1378,25 @@
           {
             "number": 1,
             "title": "Start With the Exact Operating Question",
-            "description": "Name the decision, execution problem, or behavior you are trying to change before opening related pages. Completion evidence: Record the observable result before moving to the next step. If the step cannot be observed, rewrite it as a physical action or concrete decision.",
+            "description": "present",
             "source_heading": "Step 1: Start With the Exact Operating Question"
           },
           {
             "number": 2,
             "title": "Read the Named Framework First",
-            "description": "Read the bold definition and the single extraction block before the longer context so the page\u2019s canonical answer is clear. Completion evidence: Record the observable result before moving to the next step. If the step cannot be observed, rewrite it as a physical action or concrete decision.",
+            "description": "present",
             "source_heading": "Step 2: Read the Named Framework First"
           },
           {
             "number": 3,
             "title": "Apply One Observable Action",
-            "description": "Choose one observable action, decision record, or review checkpoint and define the evidence that will show whether it worked. Completion evidence: Record the observable result before moving to the next step. If the step cannot be observed, rewrite it as a physical action or concrete decision.",
+            "description": "present",
             "source_heading": "Step 3: Apply One Observable Action"
           },
           {
             "number": 4,
             "title": "Follow Only Supporting Pathways",
-            "description": "Use related pages only when they add a missing comparison, implementation detail, or recovery rule for the same operating problem. Completion evidence: Record the observable result before moving to the next step. If the step cannot be observed, rewrite it as a physical action or concrete decision.",
+            "description": "present",
             "source_heading": "Step 4: Follow Only Supporting Pathways"
           }
         ]
@@ -1457,9 +1413,6 @@
         "schema_steps": 4,
         "visible_steps": 4
       },
-      "article_steps": 0,
-      "extraction_steps": 4,
-      "schema_steps": 4,
       "valid": true
     },
     {
@@ -1505,19 +1458,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -1532,9 +1485,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -1553,19 +1503,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -1580,9 +1530,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -1601,19 +1548,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -1628,9 +1575,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -1649,19 +1593,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -1676,9 +1620,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -1697,19 +1638,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -1724,9 +1665,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -1745,19 +1683,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -1772,9 +1710,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -1793,19 +1728,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -1820,9 +1755,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -1841,19 +1773,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -1868,9 +1800,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -1889,19 +1818,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -1916,9 +1845,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -1937,19 +1863,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -1964,9 +1890,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -1985,19 +1908,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -2012,9 +1935,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -2033,19 +1953,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -2060,9 +1980,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -2081,19 +1998,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -2108,9 +2025,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -2129,19 +2043,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -2156,9 +2070,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -2177,19 +2088,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -2204,9 +2115,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -2225,19 +2133,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -2252,9 +2160,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -2273,19 +2178,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -2300,9 +2205,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -2321,19 +2223,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -2348,9 +2250,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -2369,19 +2268,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -2396,9 +2295,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -2417,19 +2313,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -2444,9 +2340,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -2465,19 +2358,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -2492,9 +2385,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -2513,19 +2403,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -2540,9 +2430,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -2561,19 +2448,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -2588,9 +2475,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -2609,19 +2493,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -2636,9 +2520,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -2657,19 +2538,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -2684,9 +2565,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -2705,19 +2583,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -2732,9 +2610,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -2753,19 +2628,19 @@
           {
             "number": 1,
             "title": "Name",
-            "description": "Name the observable execution problem before adding another tool.",
+            "description": "present",
             "source_heading": "Step 1: Name"
           },
           {
             "number": 2,
             "title": "Choose",
-            "description": "Choose one rule, prompt, or operating loop that reduces the next decision.",
+            "description": "present",
             "source_heading": "Step 2: Choose"
           },
           {
             "number": 3,
             "title": "Run",
-            "description": "Run the loop once, record the result, and reuse the working pattern tomorrow.",
+            "description": "present",
             "source_heading": "Step 3: Run"
           }
         ]
@@ -2780,9 +2655,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 0,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -2801,31 +2673,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for daily planning with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the daily planning situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at daily planning\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for daily planning. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts daily planning from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -2840,9 +2712,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -2861,31 +2730,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for decision fatigue with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the decision fatigue situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at decision fatigue\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for decision fatigue. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts decision fatigue from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -2900,9 +2769,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -2921,31 +2787,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for prompt structure with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the prompt structure situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at prompt structure\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for prompt structure. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts prompt structure from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -2960,9 +2826,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -2981,31 +2844,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for personal accountability with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the personal accountability situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at personal accountability\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for personal accountability. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts personal accountability from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -3020,9 +2883,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -3041,31 +2901,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for weekly review with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the weekly review situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at weekly review\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for weekly review. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts weekly review from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -3080,9 +2940,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -3101,31 +2958,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for daily planning with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the daily planning situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at daily planning\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for daily planning. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts daily planning from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -3140,9 +2997,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -3161,31 +3015,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for decision fatigue with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the decision fatigue situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at decision fatigue\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for decision fatigue. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts decision fatigue from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -3200,9 +3054,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -3221,31 +3072,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for prompt structure with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the prompt structure situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at prompt structure\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for prompt structure. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts prompt structure from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -3260,9 +3111,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -3281,31 +3129,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for personal accountability with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the personal accountability situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at personal accountability\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for personal accountability. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts personal accountability from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -3320,9 +3168,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -3341,31 +3186,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for weekly review with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the weekly review situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at weekly review\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for weekly review. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts weekly review from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -3380,9 +3225,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -3401,31 +3243,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for goal tracking with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the goal tracking situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at goal tracking\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for goal tracking. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts goal tracking from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -3440,9 +3282,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -3461,31 +3300,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for operator rhythm with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the operator rhythm situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at operator rhythm\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for operator rhythm. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts operator rhythm from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -3500,9 +3339,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -3521,31 +3357,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for time blocking with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the time blocking situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at time blocking\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for time blocking. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts time blocking from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -3560,9 +3396,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -3581,31 +3414,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for missed-day recovery with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the missed-day recovery situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at missed-day recovery\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for missed-day recovery. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts missed-day recovery from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -3620,9 +3453,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -3641,31 +3471,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for behavioral follow-through with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the behavioral follow-through situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at behavioral follow-through\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for behavioral follow-through. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts behavioral follow-through from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -3680,9 +3510,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -3701,31 +3528,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for goal tracking with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the goal tracking situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at goal tracking\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for goal tracking. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts goal tracking from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -3740,9 +3567,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -3761,31 +3585,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for operator rhythm with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the operator rhythm situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at operator rhythm\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for operator rhythm. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts operator rhythm from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -3800,9 +3624,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -3821,31 +3642,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for time blocking with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the time blocking situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at time blocking\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for time blocking. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts time blocking from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -3860,9 +3681,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -3881,31 +3699,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for missed-day recovery with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the missed-day recovery situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at missed-day recovery\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for missed-day recovery. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts missed-day recovery from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -3920,9 +3738,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -3941,31 +3756,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for executive coaching with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the executive coaching situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at executive coaching\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for executive coaching. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts executive coaching from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -3980,9 +3795,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -4001,31 +3813,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for priority selection with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the priority selection situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at priority selection\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for priority selection. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts priority selection from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -4040,9 +3852,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -4061,31 +3870,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for chief-of-staff support with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the chief-of-staff support situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at chief-of-staff support\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for chief-of-staff support. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts chief-of-staff support from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -4100,9 +3909,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -4121,31 +3927,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for multi-project execution with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the multi-project execution situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at multi-project execution\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for multi-project execution. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts multi-project execution from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -4160,9 +3966,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -4181,31 +3984,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for strategic focus with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the strategic focus situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at strategic focus\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for strategic focus. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts strategic focus from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -4220,9 +4023,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -4241,31 +4041,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for executive coaching with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the executive coaching situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at executive coaching\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for executive coaching. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts executive coaching from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -4280,9 +4080,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -4301,31 +4098,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for priority selection with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the priority selection situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at priority selection\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for priority selection. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts priority selection from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -4340,9 +4137,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -4361,31 +4155,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for chief-of-staff support with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the chief-of-staff support situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at chief-of-staff support\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for chief-of-staff support. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts chief-of-staff support from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -4400,9 +4194,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -4421,31 +4212,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for multi-project execution with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the multi-project execution situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at multi-project execution\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for multi-project execution. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts multi-project execution from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -4460,9 +4251,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -4481,31 +4269,31 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "This page fills the daily citation velocity gap for strategic focus with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "How to run the workflow",
-            "description": "Start with a plain description of the strategic focus situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line. Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.",
+            "description": "present",
             "source_heading": "Step 2: How to run the workflow"
           },
           {
             "number": 3,
             "title": "Common failure modes",
-            "description": "The first failure mode is asking for broad advice and receiving a broad answer. Replace \u201chelp me be better at strategic focus\u201d with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.",
+            "description": "present",
             "source_heading": "Step 3: Common failure modes"
           },
           {
             "number": 4,
             "title": "Prompt",
-            "description": "Act as my Spry Executive OS chief of staff for strategic focus. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.",
+            "description": "present",
             "source_heading": "Step 4: Prompt"
           },
           {
             "number": 5,
             "title": "Example operating response",
-            "description": "A strong response is brief enough to use. Follow this response shape: That output converts strategic focus from a vague concern into a sequence with ownership, boundaries, and proof. Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.",
+            "description": "present",
             "source_heading": "Step 5: Example operating response"
           }
         ]
@@ -4520,9 +4308,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 0,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -4541,31 +4326,31 @@
           {
             "number": 1,
             "title": "Pick the outcome (not the task)",
-            "description": "Example outcomes \u201cShip the first draft\u201d \u201cMake the call and get the yes/no\u201d \u201cReduce decision load for tomorrow\u201d \u201cProtect health so output is sustainable\u201d",
+            "description": "present",
             "source_heading": "Step 1: Pick the outcome (not the task)"
           },
           {
             "number": 2,
             "title": "Identify the constraint",
-            "description": "If you don\u2019t name the constraint, you\u2019ll plan a fantasy day.",
+            "description": "present",
             "source_heading": "Step 2: Identify the constraint"
           },
           {
             "number": 3,
             "title": "Choose the smallest \u201cwinning move\u201d",
-            "description": "Examples outline instead of drafting schedule the meeting instead of \u201cresearching\u201d write the 3 bullets instead of polishing the whole doc create a template so next time is faster",
+            "description": "present",
             "source_heading": "Step 3: Choose the smallest \u201cwinning move\u201d"
           },
           {
             "number": 4,
             "title": "Put it in a container",
-            "description": "Containers that work: 90-minute focus block 25-minute sprint 15-minute admin sweep 5-minute reset A container gives you permission to stop. That\u2019s what makes starting possible.",
+            "description": "present",
             "source_heading": "Step 4: Put it in a container"
           },
           {
             "number": 5,
             "title": "Close the loop (2 minutes)",
-            "description": "This is how you prevent rework and \u201cwhere was I?\u201d tax.",
+            "description": "present",
             "source_heading": "Step 5: Close the loop (2 minutes)"
           }
         ]
@@ -4580,9 +4365,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 5,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -4601,31 +4383,31 @@
           {
             "number": 1,
             "title": "Pick the outcome (not the task)",
-            "description": "Example outcomes \u201cShip the first draft\u201d \u201cMake the call and get the yes/no\u201d \u201cReduce decision load for tomorrow\u201d \u201cProtect health so output is sustainable\u201d",
+            "description": "present",
             "source_heading": "Step 1: Pick the outcome (not the task)"
           },
           {
             "number": 2,
             "title": "Identify the constraint",
-            "description": "If you don\u2019t name the constraint, you\u2019ll plan a fantasy day.",
+            "description": "present",
             "source_heading": "Step 2: Identify the constraint"
           },
           {
             "number": 3,
             "title": "Choose the smallest \u201cwinning move\u201d",
-            "description": "Examples outline instead of drafting schedule the meeting instead of \u201cresearching\u201d write the 3 bullets instead of polishing the whole doc create a template so next time is faster",
+            "description": "present",
             "source_heading": "Step 3: Choose the smallest \u201cwinning move\u201d"
           },
           {
             "number": 4,
             "title": "Put it in a container",
-            "description": "Containers that work: 90-minute focus block 25-minute sprint 15-minute admin sweep 5-minute reset A container gives you permission to stop. That\u2019s what makes starting possible.",
+            "description": "present",
             "source_heading": "Step 4: Put it in a container"
           },
           {
             "number": 5,
             "title": "Close the loop (2 minutes)",
-            "description": "This is how you prevent rework and \u201cwhere was I?\u201d tax.",
+            "description": "present",
             "source_heading": "Step 5: Close the loop (2 minutes)"
           }
         ]
@@ -4640,9 +4422,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 5,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -4661,25 +4440,25 @@
           {
             "number": 1,
             "title": "Define the floor",
-            "description": "Define the floor.",
+            "description": "present",
             "source_heading": "Step 1: Define the floor"
           },
           {
             "number": 2,
             "title": "Remove one friction point",
-            "description": "Remove one friction point.",
+            "description": "present",
             "source_heading": "Step 2: Remove one friction point"
           },
           {
             "number": 3,
             "title": "Run one loop",
-            "description": "Run one loop.",
+            "description": "present",
             "source_heading": "Step 3: Run one loop"
           },
           {
             "number": 4,
             "title": "Lock the win",
-            "description": "Lock the win.",
+            "description": "present",
             "source_heading": "Step 4: Lock the win"
           }
         ]
@@ -4694,9 +4473,6 @@
         "schema_steps": 4,
         "visible_steps": 4
       },
-      "article_steps": 4,
-      "extraction_steps": 4,
-      "schema_steps": 4,
       "valid": true
     },
     {
@@ -4715,31 +4491,31 @@
           {
             "number": 1,
             "title": "Define value",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 1: Define value"
           },
           {
             "number": 2,
             "title": "Pick the leverage point",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 2: Pick the leverage point"
           },
           {
             "number": 3,
             "title": "Make the bet smaller",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 3: Make the bet smaller"
           },
           {
             "number": 4,
             "title": "Build an asset",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 4: Build an asset"
           },
           {
             "number": 5,
             "title": "Review the compounding",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 5: Review the compounding"
           }
         ]
@@ -4754,9 +4530,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 5,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -4775,25 +4548,25 @@
           {
             "number": 1,
             "title": "Define the floor",
-            "description": "Define the floor.",
+            "description": "present",
             "source_heading": "Step 1: Define the floor"
           },
           {
             "number": 2,
             "title": "Remove one friction point",
-            "description": "Remove one friction point.",
+            "description": "present",
             "source_heading": "Step 2: Remove one friction point"
           },
           {
             "number": 3,
             "title": "Run one loop",
-            "description": "Run one loop.",
+            "description": "present",
             "source_heading": "Step 3: Run one loop"
           },
           {
             "number": 4,
             "title": "Lock the win",
-            "description": "Lock the win.",
+            "description": "present",
             "source_heading": "Step 4: Lock the win"
           }
         ]
@@ -4808,9 +4581,6 @@
         "schema_steps": 4,
         "visible_steps": 4
       },
-      "article_steps": 4,
-      "extraction_steps": 4,
-      "schema_steps": 4,
       "valid": true
     },
     {
@@ -4829,31 +4599,31 @@
           {
             "number": 1,
             "title": "Define the output",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 1: Define the output"
           },
           {
             "number": 2,
             "title": "Design the inputs",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 2: Design the inputs"
           },
           {
             "number": 3,
             "title": "Set the rules",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 3: Set the rules"
           },
           {
             "number": 4,
             "title": "Run a cadence",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 4: Run a cadence"
           },
           {
             "number": 5,
             "title": "Audit friction",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 5: Audit friction"
           }
         ]
@@ -4868,9 +4638,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 5,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -4889,31 +4656,31 @@
           {
             "number": 1,
             "title": "Pick the identity cue",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 1: Pick the identity cue"
           },
           {
             "number": 2,
             "title": "Choose the rule",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 2: Choose the rule"
           },
           {
             "number": 3,
             "title": "Lower the friction",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 3: Lower the friction"
           },
           {
             "number": 4,
             "title": "Prove it small",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 4: Prove it small"
           },
           {
             "number": 5,
             "title": "Close with respect",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 5: Close with respect"
           }
         ]
@@ -4928,9 +4695,6 @@
         "schema_steps": 5,
         "visible_steps": 5
       },
-      "article_steps": 5,
-      "extraction_steps": 5,
-      "schema_steps": 5,
       "valid": true
     },
     {
@@ -4949,25 +4713,25 @@
           {
             "number": 1,
             "title": "Define the floor",
-            "description": "Define the floor.",
+            "description": "present",
             "source_heading": "Step 1: Define the floor"
           },
           {
             "number": 2,
             "title": "Remove one friction point",
-            "description": "Remove one friction point.",
+            "description": "present",
             "source_heading": "Step 2: Remove one friction point"
           },
           {
             "number": 3,
             "title": "Run one loop",
-            "description": "Run one loop.",
+            "description": "present",
             "source_heading": "Step 3: Run one loop"
           },
           {
             "number": 4,
             "title": "Lock the win",
-            "description": "Lock the win.",
+            "description": "present",
             "source_heading": "Step 4: Lock the win"
           }
         ]
@@ -4982,9 +4746,6 @@
         "schema_steps": 4,
         "visible_steps": 4
       },
-      "article_steps": 4,
-      "extraction_steps": 4,
-      "schema_steps": 4,
       "valid": true
     },
     {
@@ -5356,19 +5117,19 @@
           {
             "number": 1,
             "title": "Short Answer",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 1: Short Answer"
           },
           {
             "number": 2,
             "title": "30-Second Answer",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 2: 30-Second Answer"
           },
           {
             "number": 3,
             "title": "60-Second Procedure (Use This Today)",
-            "description": "Use the instructions and evidence already documented on this page to complete this step.",
+            "description": "present",
             "source_heading": "Step 3: 60-Second Procedure (Use This Today)"
           }
         ]
@@ -5384,9 +5145,6 @@
         "schema_steps": 3,
         "visible_steps": 3
       },
-      "article_steps": 3,
-      "extraction_steps": 3,
-      "schema_steps": 3,
       "valid": true
     },
     {
@@ -5531,51 +5289,51 @@
         "steps": [
           {
             "number": 1,
-            "title": "Organizational AI Coaching Use",
-            "description": "Case Matrix",
-            "source_heading": "Step 1: Organizational AI Coaching Use"
+            "title": "Define Permitted Use Cases",
+            "description": "present",
+            "source_heading": "Step 1: Define Permitted Use Cases"
           },
           {
             "number": 2,
-            "title": "How Do You Separate Coaching From Surveillance?",
-            "description": "How Do You Separate Coaching From Surveillance?",
-            "source_heading": "Step 2: How Do You Separate Coaching From Surveillance?"
+            "title": "Separate Coaching From Surveillance",
+            "description": "present",
+            "source_heading": "Step 2: Separate Coaching From Surveillance"
           },
           {
             "number": 3,
-            "title": "What Should Be in the Governance RACI?",
-            "description": "What Should Be in the Governance RACI?",
-            "source_heading": "Step 3: What Should Be in the Governance RACI?"
+            "title": "Establish Privacy and Governance",
+            "description": "present",
+            "source_heading": "Step 3: Establish Privacy and Governance"
           },
           {
             "number": 4,
-            "title": "How Should the Pilot Scorecard Work?",
-            "description": "How Should the Pilot Scorecard Work?",
-            "source_heading": "Step 4: How Should the Pilot Scorecard Work?"
+            "title": "Choose the Delivery Model",
+            "description": "present",
+            "source_heading": "Step 4: Choose the Delivery Model"
           },
           {
             "number": 5,
-            "title": "Common Failure Modes",
-            "description": "Common Failure Modes",
-            "source_heading": "Step 5: Common Failure Modes"
+            "title": "Design a Limited Pilot",
+            "description": "present",
+            "source_heading": "Step 5: Design a Limited Pilot"
           },
           {
             "number": 6,
-            "title": "Worked Example",
-            "description": "Pilot for new-manager conversation preparation",
-            "source_heading": "Step 6: Worked Example"
+            "title": "Train Participants and Managers",
+            "description": "present",
+            "source_heading": "Step 6: Train Participants and Managers"
           },
           {
             "number": 7,
-            "title": "Frequently Asked Questions",
-            "description": "Frequently Asked Questions",
-            "source_heading": "Step 7: Frequently Asked Questions"
+            "title": "Measure Outcomes and Harms",
+            "description": "present",
+            "source_heading": "Step 7: Measure Outcomes and Harms"
           },
           {
             "number": 8,
-            "title": "Sources and Review Basis",
-            "description": "Sources and Review Basis",
-            "source_heading": "Step 8: Sources and Review Basis"
+            "title": "Expand, Modify, or Stop",
+            "description": "present",
+            "source_heading": "Step 8: Expand, Modify, or Stop"
           }
         ]
       },
@@ -5591,9 +5349,6 @@
         "schema_steps": 8,
         "visible_steps": 8
       },
-      "article_steps": 8,
-      "extraction_steps": 8,
-      "schema_steps": 8,
       "valid": true
     },
     {
