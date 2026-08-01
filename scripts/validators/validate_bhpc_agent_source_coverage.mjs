@@ -16,6 +16,15 @@ function shouldCheck(entry) {
   return !entry.runDate || entry.runDate >= since;
 }
 
+function acceptanceIds(entry = {}) {
+  return [
+    entry.record_id,
+    entry.id,
+    ...(entry.source_record_ids || []),
+    ...(entry.source_entry_ids || [])
+  ].map(value => String(value || '').toLowerCase()).filter(Boolean);
+}
+
 const errors = [];
 const warnings = [];
 const runs = [];
@@ -49,23 +58,7 @@ for (const entry of findAgentManifests().filter(shouldCheck)) {
 
   if (!normalized) {
     errors.push(`${entry.runDate}/${scope}: normalized prerequisite missing after repair phase: ${normalizedRel}`);
-    runs.push({
-      run_date: entry.runDate,
-      scope,
-      manifest: entry.manifestRel,
-      normalized_path: normalizedRel,
-      source_record_count: expectedRows.length,
-      new_page_source_record_count: expectedPages.length,
-      canonical_new_page_count: new Set(expectedPages.map(item => item.implementation_path).filter(Boolean)).size,
-      normalized_record_count: 0,
-      missing_from_normalized_count: null,
-      unaddressed_count: null,
-      content_proof_missing_count: null,
-      built_new_page_count: null,
-      queued_new_page_count: null,
-      missing_built_new_page_count: null,
-      root_cause: 'NORMALIZED_PREREQUISITE_MISSING',
-    });
+    runs.push({run_date: entry.runDate, scope, manifest: entry.manifestRel, normalized_path: normalizedRel, source_record_count: expectedRows.length, new_page_source_record_count: expectedPages.length, canonical_new_page_count: new Set(expectedPages.map(item => item.implementation_path).filter(Boolean)).size, normalized_record_count: 0, missing_from_normalized_count: null, unaddressed_count: null, content_proof_missing_count: null, built_new_page_count: null, queued_new_page_count: null, missing_built_new_page_count: null, root_cause: 'NORMALIZED_PREREQUISITE_MISSING'});
     continue;
   }
 
@@ -76,35 +69,30 @@ for (const entry of findAgentManifests().filter(shouldCheck)) {
   const normalizedKeys = new Set(normalizedRecords.map(record => record.key));
 
   const acceptance = readJson(`data/report_fixes/agent_acceptance_manifests/${key}.json`, {entries: []});
-  const acceptanceRecordIds = new Set((acceptance.entries || []).map(entry => String(entry.record_id || entry.id || '').toLowerCase()).filter(Boolean));
-  const acceptanceByRecordId = new Map((acceptance.entries || []).map(entry => [String(entry.record_id || entry.id || '').toLowerCase(), entry]));
+  const acceptanceRecordIds = new Set((acceptance.entries || []).flatMap(acceptanceIds));
+  const acceptanceByRecordId = new Map();
+  for (const acceptanceEntry of acceptance.entries || []) {
+    for (const id of acceptanceIds(acceptanceEntry)) acceptanceByRecordId.set(id, acceptanceEntry);
+  }
 
   const plan = readJson('artifacts/validation/agent-exact-implementation-plan.json', {specs: []});
   const apply = readJson('artifacts/validation/agent-exact-implementation-apply.json', {applied: [], skipped: []});
   const activePlanSpecs = (plan.specs || []).filter(spec => spec.status !== 'BLOCKED');
-  const planRecordIds = new Set(activePlanSpecs.flatMap(spec => spec.record_ids || [spec.record_id]).map(id => String(id || '').toLowerCase()).filter(Boolean));
-  const activeAcceptanceIds = new Set(activePlanSpecs.flatMap(spec => spec.acceptance_ids || []).map(id => String(id || '').toLowerCase()).filter(Boolean));
+  const planRecordIds = new Set(activePlanSpecs.flatMap(spec => [...(spec.record_ids || [spec.record_id]), ...(spec.source_record_ids || []), ...(spec.acceptance_ids || [])]).map(id => String(id || '').toLowerCase()).filter(Boolean));
+  const activeAcceptanceIds = new Set(activePlanSpecs.flatMap(spec => [...(spec.acceptance_ids || []), ...(spec.source_record_ids || [])]).map(id => String(id || '').toLowerCase()).filter(Boolean));
   const planPaths = new Set(activePlanSpecs.map(spec => String(spec.implementation_path || '').toLowerCase()).filter(Boolean));
-  const appliedRecordIds = new Set((apply.applied || []).flatMap(item => item.acceptance_ids || [item.record_id]).map(id => String(id || '').toLowerCase()).filter(Boolean));
-  const skippedIds = new Set((apply.skipped || []).map(item => String(item.record_id || '').toLowerCase()).filter(Boolean));
+  const appliedRecordIds = new Set((apply.applied || []).flatMap(item => [...(item.acceptance_ids || [item.record_id]), ...(item.source_record_ids || [])]).map(id => String(id || '').toLowerCase()).filter(Boolean));
+  const skippedIds = new Set((apply.skipped || []).flatMap(item => [item.record_id, ...(item.source_record_ids || [])]).map(id => String(id || '').toLowerCase()).filter(Boolean));
 
   const missingFromNormalized = expected.filter(item => !normalizedKeys.has(item.key));
   const unaddressed = expected.filter(item => {
     const id = String(item.id || '').toLowerCase();
-    const accepted = id && acceptanceRecordIds.has(id);
-    const planned = id && planRecordIds.has(id);
-    const applied = id && appliedRecordIds.has(id);
-    const skipped = id && skippedIds.has(id);
-    return !(accepted || planned || applied || skipped);
+    return !(id && (acceptanceRecordIds.has(id) || planRecordIds.has(id) || appliedRecordIds.has(id) || skippedIds.has(id)));
   });
 
-  for (const item of missingFromNormalized.slice(0, 40)) {
-    errors.push(`${entry.runDate}/${scope}: source item missing from normalized output: ${item.kind}:${item.query}`);
-  }
+  for (const item of missingFromNormalized.slice(0, 40)) errors.push(`${entry.runDate}/${scope}: source item missing from normalized output: ${item.kind}:${item.query}`);
   if (missingFromNormalized.length > 40) errors.push(`${entry.runDate}/${scope}: ${missingFromNormalized.length - 40} additional normalized coverage misses omitted`);
-  for (const item of unaddressed.slice(0, 40)) {
-    errors.push(`${entry.runDate}/${scope}: source item not accepted/planned/applied/skipped: ${item.kind}:${item.query}`);
-  }
+  for (const item of unaddressed.slice(0, 40)) errors.push(`${entry.runDate}/${scope}: source item not accepted/planned/applied/skipped: ${item.kind}:${item.query}`);
   if (unaddressed.length > 40) errors.push(`${entry.runDate}/${scope}: ${unaddressed.length - 40} additional addressability misses omitted`);
 
   const buildableExpectedPages = expectedPages.filter(item => {
@@ -115,9 +103,7 @@ for (const entry of findAgentManifests().filter(shouldCheck)) {
   const builtPageTargets = [...canonicalPageTargets].filter(rel => fs.existsSync(path.join(ROOT, rel)));
   const missingBuiltPageTargets = [...canonicalPageTargets].filter(rel => !fs.existsSync(path.join(ROOT, rel)));
   const queuedPageTargets = [...canonicalPageTargets].filter(rel => planPaths.has(rel.toLowerCase()));
-  for (const rel of missingBuiltPageTargets) {
-    errors.push(`${entry.runDate}/${scope}: canonical new page not built: ${rel}`);
-  }
+  for (const rel of missingBuiltPageTargets) errors.push(`${entry.runDate}/${scope}: canonical new page not built: ${rel}`);
 
   const contentProofMissing = expected.filter(item => {
     const id = String(item.id || '').toLowerCase();
@@ -131,53 +117,14 @@ for (const entry of findAgentManifests().filter(shouldCheck)) {
     const html = fs.readFileSync(abs, 'utf8');
     return !html.includes(`data-bhpc-agent-record="${item.id}"`);
   });
-  for (const item of contentProofMissing.slice(0, 40)) {
-    errors.push(`${entry.runDate}/${scope}: source item lacks page-level proof marker: ${item.kind}:${item.id}:${item.implementation_path}`);
-  }
+  for (const item of contentProofMissing.slice(0, 40)) errors.push(`${entry.runDate}/${scope}: source item lacks page-level proof marker: ${item.kind}:${item.id}:${item.implementation_path}`);
   if (contentProofMissing.length > 40) errors.push(`${entry.runDate}/${scope}: ${contentProofMissing.length - 40} additional content proof misses omitted`);
 
-  const duplicateCanonicalGroups = [...canonicalPageTargets].map(rel => ({
-    implementation_path: rel,
-    source_record_count: expectedPages.filter(item => item.implementation_path === rel).length,
-  })).filter(group => group.source_record_count > 1);
-  runs.push({
-    run_date: entry.runDate,
-    scope,
-    manifest: entry.manifestRel,
-    normalized_path: normalizedRel,
-    source_record_count: expectedRows.length,
-    new_page_source_record_count: expectedPages.length,
-    canonical_new_page_count: canonicalPageTargets.size,
-    normalized_record_count: normalizedRecords.length,
-    missing_from_normalized_count: missingFromNormalized.length,
-    unaddressed_count: unaddressed.length,
-    content_proof_missing_count: contentProofMissing.length,
-    built_new_page_count: builtPageTargets.length,
-    queued_new_page_count: queuedPageTargets.length,
-    missing_built_new_page_count: missingBuiltPageTargets.length,
-    built_new_pages: builtPageTargets,
-    queued_new_pages: queuedPageTargets,
-    duplicate_canonical_new_page_groups: duplicateCanonicalGroups,
-  });
+  const duplicateCanonicalGroups = [...canonicalPageTargets].map(rel => ({implementation_path: rel, source_record_count: expectedPages.filter(item => item.implementation_path === rel).length})).filter(group => group.source_record_count > 1);
+  runs.push({run_date: entry.runDate, scope, manifest: entry.manifestRel, normalized_path: normalizedRel, source_record_count: expectedRows.length, new_page_source_record_count: expectedPages.length, canonical_new_page_count: canonicalPageTargets.size, normalized_record_count: normalizedRecords.length, missing_from_normalized_count: missingFromNormalized.length, unaddressed_count: unaddressed.length, content_proof_missing_count: contentProofMissing.length, built_new_page_count: builtPageTargets.length, queued_new_page_count: queuedPageTargets.length, missing_built_new_page_count: missingBuiltPageTargets.length, built_new_pages: builtPageTargets, queued_new_pages: queuedPageTargets, duplicate_canonical_new_page_groups: duplicateCanonicalGroups});
 }
 
-const report = {
-  schema_version: '2.0',
-  validator: 'bhpc-agent-source-coverage',
-  generated_at: new Date().toISOString(),
-  status: errors.length ? 'FAIL' : 'PASS',
-  policy: {
-    checked_statuses: ['READY_FOR_ABSORPTION', 'ABSORBED'],
-    coverage_from: process.env.BHPC_AGENT_SOURCE_COVERAGE_FROM || '2026-07-04',
-    rule: 'The repair phase must normalize every eligible agent run before coverage validation. Page-level proof markers and canonical new-page build checks are enforced for the active exact implementation plan; historical absorbed runs remain represented in normalized/acceptance ledgers without forcing broad page rewrites.'
-  },
-  active_plan_source_record_count: 0,
-  historical_page_marker_enforcement: 'SKIPPED_OUTSIDE_ACTIVE_EXACT_PLAN',
-  run_count: runs.length,
-  runs,
-  warnings,
-  errors,
-};
+const report = {schema_version: '2.1', validator: 'bhpc-agent-source-coverage', generated_at: new Date().toISOString(), status: errors.length ? 'FAIL' : 'PASS', policy: {checked_statuses: ['READY_FOR_ABSORPTION', 'ABSORBED'], coverage_from: process.env.BHPC_AGENT_SOURCE_COVERAGE_FROM || '2026-07-04', rule: 'The repair phase must normalize every eligible agent run before coverage validation. Deduplicated acceptance entries must preserve every source record ID through addressability and page-level proof.'}, active_plan_source_record_count: 0, historical_page_marker_enforcement: 'SKIPPED_OUTSIDE_ACTIVE_EXACT_PLAN', run_count: runs.length, runs, warnings, errors};
 writeJson('artifacts/validation/bhpc-agent-source-coverage.json', report);
 writeJson('reports/bhpc-agent-source-coverage.json', report);
 if (errors.length) {
