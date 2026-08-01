@@ -43,6 +43,14 @@ function unique(values = []) {
   return output;
 }
 
+function sourceIds(entry = {}) {
+  return unique([
+    entry.record_id || entry.id,
+    ...(entry.source_record_ids || []),
+    ...(entry.source_entry_ids || [])
+  ]);
+}
+
 export function semanticEvidenceKey(entry = {}) {
   return [
     entry.run_date,
@@ -65,7 +73,7 @@ export function groupSemanticEvidence(entries = []) {
   }
   return [...groups.values()].map(group => ({
     primary: group[0],
-    record_ids: unique(group.map(entry => entry.record_id || entry.id)),
+    record_ids: unique(group.flatMap(sourceIds)),
     required_strings: unique(group.flatMap(entry => entry.required_strings || [])),
     required_block_types: unique(group.flatMap(entry => entry.required_block_types || []))
   }));
