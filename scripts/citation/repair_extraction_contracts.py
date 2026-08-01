@@ -53,7 +53,7 @@ for row in payload.get('pages',[]):
   plausible=False
   if etype=='concept': plausible=('<ul' in lower or '<ol' in lower or '<table' in lower)
   elif etype=='comparison': plausible='<table' in lower
-  elif etype=='howto': plausible=('<h3' in lower and ('step ' in lower or 'prompt:' in lower or 'data-generated-extraction-structure' in lower))
+  elif etype=='howto': plausible=False  # How-to blocks must be parsed and validated; generic generated markers or unrelated H3s are not proof of ordered steps.
   elif etype=='decision': plausible=('<ul' in lower or '<ol' in lower)
   elif etype=='transactional': plausible=('<strong' in lower or 'href=' in lower or '<a ' in lower)
   if plausible:

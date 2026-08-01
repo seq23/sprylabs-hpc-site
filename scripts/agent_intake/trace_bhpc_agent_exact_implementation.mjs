@@ -55,7 +55,18 @@ for (const entry of manifest.entries || []) {
   const planned = plannedPaths.has(rel);
   const pass = exists && recordFound && planned && !legacyMarkerFound && stringResults.every(result => result.found) && blockResults.every(result => result.found);
   traces.push({...entry, trace_status: pass ? 'PASS' : 'FAIL', file_exists: exists, planned_path: planned, semantic_record_found: recordFound, legacy_marker_found: legacyMarkerFound, required_strings_found: stringResults, required_blocks_found: blockResults});
-  if (!pass) errors.push(`${entry.record_id}:semantic_acceptance_not_proven:${rel}`);
+  if (!pass) {
+    const reasons = [];
+    if (!exists) reasons.push('file_missing');
+    if (!planned) reasons.push('path_not_planned');
+    if (!recordFound) reasons.push('record_marker_missing');
+    if (legacyMarkerFound) reasons.push('legacy_marker_present');
+    const missingStrings = stringResults.filter(result => !result.found).map(result => result.required);
+    const missingBlocks = blockResults.filter(result => !result.found).map(result => result.type);
+    if (missingStrings.length) reasons.push(`missing_strings=${JSON.stringify(missingStrings)}`);
+    if (missingBlocks.length) reasons.push(`missing_blocks=${JSON.stringify(missingBlocks)}`);
+    errors.push(`${entry.record_id}:semantic_acceptance_not_proven:${rel}:${reasons.join(';')}`);
+  }
 }
 const report = {schema_version: '1.1', generated_at: new Date().toISOString(), status: errors.length ? 'FAIL' : 'PASS', manifest_entries: manifest.entries?.length || 0, active_plan_spec_count: activeSpecs.length, skipped_count: skipped, trace_count: traces.length, traces, errors};
 writeJson('artifacts/validation/agent-exact-implementation-trace.json', report);

@@ -1,0 +1,47 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-01T15:57:42.709671+00:00",
+  "repo_identity": "seq23/sprylabs-hpc-site",
+  "source_zip": "sprylabs-hpc-site-main(1).zip",
+  "source_zip_sha256": "36e3034f0ff76120582b9524d9a62c4b69994eaee9f08542a68763aff94c2d41",
+  "root": "sprylabs-hpc-site-main",
+  "failure_chain_repaired": [
+    "agent:bhpc:trace-exact semantic_acceptance_not_proven for grouped records",
+    "validate:bhpc-rich-new-page-contract missing comparison_table for comparison_page record 2026-08-01-bhpc-037",
+    "validate:citation-contract howto extraction blocks accepted on generic generated markers instead of ordered steps"
+  ],
+  "source_files_changed": [
+    "scripts/lib/bhpc_agent_block_schema.mjs",
+    "scripts/lib/bhpc_agent_semantic_contract.mjs",
+    "scripts/lib/bhpc_agent_acceptance_parser.mjs",
+    "scripts/agent_intake/apply_bhpc_agent_exact_implementation.mjs",
+    "scripts/agent_intake/trace_bhpc_agent_exact_implementation.mjs",
+    "scripts/agent_intake/self_test_bhpc_route_resolution.mjs",
+    "scripts/validators/validate_bhpc_rich_new_page_contract.mjs",
+    "scripts/citation/repair_extraction_contracts.py"
+  ],
+  "implemented": [
+    "single page-family semantic block contract shared by acceptance parsing and rich-page validation",
+    "visible per-record semantic evidence for every grouped acceptance record without dropping source IDs",
+    "strict trace diagnostics for marker, string, block, path, and legacy failures",
+    "comparison-page mandatory comparison_table generation and validation",
+    "how-to extraction repair that parses and validates ordered steps instead of trusting generic markers"
+  ],
+  "validation": {
+    "original_zip_integrity": "PASS",
+    "source_syntax_checks": "PASS",
+    "agent_run": "PASS: 752 acceptance entries; source coverage and recommendation-driven output pass",
+    "batch_f_continuity": "PASS: rich-new-page contract checked 12 pages",
+    "batch_g_continuity": "PASS",
+    "content_release": "PASS: 2540 pages graph/distribution aligned; browser structural pass",
+    "citation_contract": "PASS: 2540 pages, 2540 queries, 2536 frameworks",
+    "incremental_page_audit": "PASS: 2538 extraction pages; 2539 schema pages",
+    "extraction_surface_guard": "PASS: 2546 governed surfaces",
+    "release_attestation": "PASS_WITH_STRONG_WARNING: 0 errors, 1 warning, actionable warnings 0",
+    "clean_rebuild_parity": "INCOMPLETE: first isolated build completed; second build exceeded the execution ceiling before comparison",
+    "runtime": "Node 22.16.0 in artifact container; repository and GitHub workflow declare Node 24",
+    "dependency_install": "NOT EXECUTED: configured package mirror returned 404 for playwright-core; repository build/validators used vendored/self-contained paths",
+    "github_actions_on_this_artifact": "NOT EXECUTED"
+  },
+  "status": "STRUCTURALLY_CHECKED_LOCAL_NODE24_VALIDATION_REQUIRED"
+}

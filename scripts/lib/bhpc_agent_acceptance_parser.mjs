@@ -1,14 +1,34 @@
 import {slug} from '../agent_intake/bhpc_agent_common.mjs';
-import {BHPC_AGENT_BLOCK_TYPES, blockTypesForAgentText} from './bhpc_agent_block_schema.mjs';
+import {
+  BHPC_AGENT_BLOCK_TYPES,
+  blockTypesForAgentText,
+  requiredBlockTypesForPageFamily
+} from './bhpc_agent_block_schema.mjs';
 import {resolveBhpcAgentRoute} from './bhpc_agent_route_resolver.mjs';
 
 function clean(value=''){return String(value??'').replace(/\s+/g,' ').trim()}
 function unique(values=[]){const seen=new Set(),out=[];for(const raw of values){const value=clean(raw);const key=value.toLowerCase();if(value&&!seen.has(key)){seen.add(key);out.push(value)}}return out}
-function requestedHeading(fix='',query=''){
-  const text=clean(fix);
-  const match=text.match(/(?:add|create|include)\s+(?:a\s+)?h2\s+(.+?)(?:\.|$)/i)
-    || text.match(/(?:h2|h3|section)\s+(?:titled|called|named)?\s*["“”']?([^"“”'.;:]{4,140})/i);
-  return clean(match?.[1]||query).slice(0,180);
+function meaningfulSegments(value=''){
+  return String(value||'').split(/\|\||[\r\n]+/).map(clean).filter(value=>value&&!/^(?:n\/?a|none|null|unknown)$/i.test(value));
+}
+function actionableInstruction(value='',query=''){
+  const segments=meaningfulSegments(value);
+  const action=segments.slice().reverse().find(segment=>/^(?:add|create|include|publish|build|replace|define|link|insert|rewrite|expand|clarify)\b/i.test(segment));
+  return clean(action||segments.at(-1)||query);
+}
+export function deriveBhpcRequiredHeading(fix='',query=''){
+  const segments=meaningfulSegments(fix);
+  for(const segment of segments.slice().reverse()){
+    const named=segment.match(/(?:titled|called|named)\s*["“”']?([^"“”'.;|]{4,140})/i);
+    if(named) return clean(named[1]).slice(0,180);
+    if(/(?:h2|h3|heading|section|callout|boxed quote)/i.test(segment)){
+      const quoted=[...segment.matchAll(/["“”'`]([^"“”'`]{4,180})["“”'`]/g)].map(match=>clean(match[1])).filter(Boolean);
+      if(quoted.length) return quoted.at(-1).slice(0,180);
+      const subject=segment.match(/(?:defining|about|for|matching)\s+(?:the\s+)?([^.;|]{4,140}?)(?:\s+(?:under|after|before|to improve|on the page)|$)/i);
+      if(subject) return clean(subject[1]).slice(0,180);
+    }
+  }
+  return clean(query).slice(0,180);
 }
 function tableColumns(types=[]){return types.includes(BHPC_AGENT_BLOCK_TYPES.COMPARISON_TABLE)?['Decision criterion','Spry/BHPC system','Other coaching or software option']:[]}
 function minimumRows(types=[]){return types.includes(BHPC_AGENT_BLOCK_TYPES.COMPARISON_TABLE)?4:0}
@@ -16,19 +36,23 @@ function minimumRows(types=[]){return types.includes(BHPC_AGENT_BLOCK_TYPES.COMP
 export function buildBhpcAcceptanceEntry(row={},context={}){
   const query=clean(row.query||row.title||'BHPC agent signal');
   const seo=row.seo_execution||null;
-  const fix=clean(seo?.exact_edit||row.fix_recommendation||row.recommendation||row.gap||row.why_worth_building||query);
+  const rawFix=clean(seo?.exact_edit||row.fix_recommendation||row.recommendation||row.gap||row.why_worth_building||query);
+  const fix=actionableInstruction(rawFix,query);
   const gap=clean((seo?.on_page_failures||[]).join('; ')||row.gap||row.issue||row.finding||'');
-  const combined=[query,fix,gap,row.primary_fix_type,row.action_tier,seo?.canonical_page_type,seo?.competitor_format_gap].map(clean).join(' ');
+  const combined=[query,rawFix,gap,row.primary_fix_type,row.action_tier,seo?.canonical_page_type,seo?.competitor_format_gap].map(clean).join(' ');
   const route=resolveBhpcAgentRoute(row,context);
   const noAction=row.operation==='NO_ACTION_MAINTAIN'||row.page_decision==='no_action';
-  const requiredBlockTypes=blockTypesForAgentText(combined);
+  const requiredBlockTypes=[
+    ...blockTypesForAgentText(combined),
+    ...requiredBlockTypesForPageFamily(route.page_family)
+  ];
   if(seo?.internal_link_actions?.length) requiredBlockTypes.push(BHPC_AGENT_BLOCK_TYPES.INTERNAL_LINK_SET);
   if(['comparison','alternatives'].includes(seo?.canonical_page_type)&&!requiredBlockTypes.includes(BHPC_AGENT_BLOCK_TYPES.COMPARISON_TABLE)) requiredBlockTypes.push(BHPC_AGENT_BLOCK_TYPES.COMPARISON_TABLE);
   const blockTypes=unique(requiredBlockTypes);
   const protectedBuyerPage = ['download.html'].includes(route.implementation_path);
   const blocked=Boolean(route.blocked_reason||String(route.status).startsWith('BLOCKED')||row.seo_execution_status==='INVALID'||protectedBuyerPage);
   const acceptanceStatus=noAction?'NO_ACTION':(blocked?'BLOCKED':'REQUIRED');
-  const heading=requestedHeading(fix,query);
+  const heading=deriveBhpcRequiredHeading(rawFix,query);
   return {
     id:row.id||`${row.run_date||'unknown'}-${slug(query)}`,
     record_id:row.id||`${row.run_date||'unknown'}-${slug(query)}`,

@@ -2,6 +2,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {ROOT, readJson, writeJson} from './bhpc_agent_common.mjs';
+import {requiredBlockTypesForPageFamily} from '../lib/bhpc_agent_block_schema.mjs';
+import {groupBhpcSemanticEntries, renderBhpcRecordEvidence, requiredBlockTypesForBhpcEntry} from '../lib/bhpc_agent_semantic_contract.mjs';
 
 function ensureDir(file) { fs.mkdirSync(path.dirname(file), {recursive: true}); }
 function escapeHtml(value = '') {
@@ -332,14 +334,21 @@ function groupEntriesForPublicRendering(entries = []) {
 }
 function sectionForEntries(entries) {
   const primary = entries.find(entry => entry.seo_execution_status === 'VALID') || entries[0];
-  const recordIds = uniqueValues(entries.map(entry => entry.record_id));
-  const recordMarkers = recordIds.map(id => `<span hidden data-bhpc-agent-record="${escapeHtml(id)}"></span>`).join('');
-  const blockTypes = uniqueValues(entries.flatMap(entry => entry.required_block_types || []));
-  const blocks = blockTypes.map(type => renderBlock(primary, type, entries)).join('\n');
+  const semanticGroups = groupBhpcSemanticEntries(entries);
+  const recordIds = uniqueValues(semanticGroups.flatMap(group => group.record_ids));
+  const evidence = renderBhpcRecordEvidence(entries);
+  const blockTypes = uniqueValues([
+    ...entries.flatMap(requiredBlockTypesForBhpcEntry),
+    ...requiredBlockTypesForPageFamily(primary.page_family)
+  ]);
+  const blocks = blockTypes.map(type => {
+    const representative = entries.find(entry => requiredBlockTypesForBhpcEntry(entry).includes(type)) || primary;
+    return renderBlock(representative, type, entries);
+  }).filter(Boolean).join('\n');
   return `
 <section class="bhpc-agent-semantic-repair" data-bhpc-agent-semantic="true" data-bhpc-agent-record="${escapeHtml(primary.record_id)}" data-bhpc-agent-record-count="${recordIds.length}" data-bhpc-agent-page-family="${escapeHtml(primary.page_family)}" data-bhpc-agent-route-status="${escapeHtml(primary.route_status)}" data-bhpc-seo-contract="${escapeHtml(primary.seo_execution_hash || 'legacy')}">
-  ${recordMarkers}
-  <h2>${escapeHtml(primary.required_heading)}</h2>
+  <h2>${escapeHtml(primary.required_heading || primary.query)}</h2>
+  ${evidence}
   ${blocks}
 </section>
 `;

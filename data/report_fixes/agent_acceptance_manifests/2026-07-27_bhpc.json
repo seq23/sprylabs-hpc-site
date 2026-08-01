@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-07-31T16:13:31.246Z",
+  "generated_at": "2026-08-01T16:02:51.514Z",
   "source": "compile_bhpc_agent_acceptance_manifest",
   "run_key": "2026-07-27_bhpc",
   "entry_count": 9,
@@ -31,7 +31,7 @@
       "page_family": "intended_winner_repair",
       "acceptance_status": "REQUIRED",
       "blocked_reason": "",
-      "required_heading": "| gap",
+      "required_heading": "framework",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
@@ -40,7 +40,7 @@
       ],
       "required_strings": [
         "a realistic morning routine for people with chaotic days",
-        "| gap"
+        "framework"
       ],
       "required_internal_links": [],
       "schema_action": "none",
@@ -178,7 +178,7 @@
       "page_family": "intended_winner_repair",
       "acceptance_status": "REQUIRED",
       "blocked_reason": "",
-      "required_heading": "Feature & Pricing Comparison Table",
+      "required_heading": "AI executive coach for founders",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
@@ -187,8 +187,7 @@
         "cta_callout"
       ],
       "required_strings": [
-        "AI executive coach for founders",
-        "Feature & Pricing Comparison Table"
+        "AI executive coach for founders"
       ],
       "required_internal_links": [],
       "schema_action": "none",
@@ -210,7 +209,7 @@
       "scope": "bhpc",
       "query": "a realistic morning routine for people with chaotic days",
       "source_gap": "Citation misallocation to sister site",
-      "source_fix_instruction": "sprylabs-hpc-site/insights/a-realistic-morning-routine-for-people-with-chaotic-days.html||Page has flexible sequencing||Lacks distinct named framework||Add Anchor-Buffer-Reset H2",
+      "source_fix_instruction": "Add Anchor-Buffer-Reset H2",
       "action_tier": "page fix",
       "primary_fix_type": "content consolidation",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
@@ -227,7 +226,7 @@
       "page_family": "intended_winner_repair",
       "acceptance_status": "REQUIRED",
       "blocked_reason": "",
-      "required_heading": "a realistic morning routine for people with chaotic days",
+      "required_heading": "framework",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
@@ -236,7 +235,8 @@
         "source_block"
       ],
       "required_strings": [
-        "a realistic morning routine for people with chaotic days"
+        "a realistic morning routine for people with chaotic days",
+        "framework"
       ],
       "required_internal_links": [],
       "schema_action": "none",
@@ -254,7 +254,7 @@
       "scope": "bhpc",
       "query": "AI executive coach for founders",
       "source_gap": "Lacks explicit pricing and defined AI executive roles comparison",
-      "source_fix_instruction": "sprylabs-hpc-site/ai-executive-coach-for-founders.html||Page explains AI coaching benefits||Lacks transparent tier comparison table and $499 pricing benchmark||Add H2 Feature & Pricing Comparison Table",
+      "source_fix_instruction": "Add H2 Feature & Pricing Comparison Table",
       "action_tier": "outperform",
       "primary_fix_type": "structure",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
@@ -271,7 +271,7 @@
       "page_family": "intended_winner_repair",
       "acceptance_status": "REQUIRED",
       "blocked_reason": "",
-      "required_heading": "Feature & Pricing Comparison Table",
+      "required_heading": "AI executive coach for founders",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
@@ -280,8 +280,7 @@
         "cta_callout"
       ],
       "required_strings": [
-        "AI executive coach for founders",
-        "Feature & Pricing Comparison Table"
+        "AI executive coach for founders"
       ],
       "required_internal_links": [],
       "schema_action": "none",
@@ -303,7 +302,7 @@
       "scope": "bhpc",
       "query": "how to build an accountability system with AI",
       "source_gap": "Direct citation win",
-      "source_fix_instruction": "n/a||Page cited directly||No gap||Maintain page",
+      "source_fix_instruction": "Maintain page",
       "action_tier": "free win",
       "primary_fix_type": "no incumbent",
       "operation": "NO_ACTION_MAINTAIN",
@@ -406,7 +405,8 @@
       "required_heading": "How Ali Abdaal uses AI as a life coach",
       "required_block_types": [
         "direct_answer",
-        "recommendation_summary"
+        "recommendation_summary",
+        "comparison_table"
       ],
       "required_strings": [
         "How Ali Abdaal uses AI as a life coach"
@@ -414,8 +414,12 @@
       "required_internal_links": [],
       "schema_action": "none",
       "acceptance_checks": [],
-      "table_columns_exact": [],
-      "min_table_rows": 0,
+      "table_columns_exact": [
+        "Decision criterion",
+        "Spry/BHPC system",
+        "Other coaching or software option"
+      ],
+      "min_table_rows": 4,
       "placement": "page_body",
       "proof_selector": "[data-bhpc-agent-record=\"2026-07-27-bhpc-json_new_page_opportunities-002\"]",
       "raw_hash_basis": "{\"query\":\"How Ali Abdaal uses AI as a life coach\",\"discovery_source\":\"competitor\",\"why_worth_building\":\"Strong creator brand association query with zero existing owned coverage.\"}"

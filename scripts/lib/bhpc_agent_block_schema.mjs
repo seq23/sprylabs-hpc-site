@@ -36,3 +36,48 @@ export function assertKnownBlockTypes(types = []) {
   const unknown = types.filter(type => !BLOCK_TYPE_SET.has(type));
   if (unknown.length) throw new Error(`Unknown BHPC agent block type(s): ${unknown.join(', ')}`);
 }
+
+export const BHPC_PAGE_FAMILY_REQUIRED_BLOCKS = Object.freeze({
+  comparison_page: Object.freeze([
+    BHPC_AGENT_BLOCK_TYPES.COMPARISON_TABLE,
+    BHPC_AGENT_BLOCK_TYPES.DIRECT_ANSWER
+  ]),
+  authority_insight: Object.freeze([
+    BHPC_AGENT_BLOCK_TYPES.SOURCE_BLOCK,
+    BHPC_AGENT_BLOCK_TYPES.DIRECT_ANSWER
+  ]),
+  answer_page: Object.freeze([
+    BHPC_AGENT_BLOCK_TYPES.DIRECT_ANSWER,
+    BHPC_AGENT_BLOCK_TYPES.RECOMMENDATION_SUMMARY
+  ]),
+  cluster_page: Object.freeze([
+    BHPC_AGENT_BLOCK_TYPES.SOURCE_BLOCK,
+    BHPC_AGENT_BLOCK_TYPES.CTA_CALLOUT
+  ]),
+  framework_page: Object.freeze([
+    BHPC_AGENT_BLOCK_TYPES.PROTOCOL,
+    BHPC_AGENT_BLOCK_TYPES.CHECKLIST
+  ]),
+  protocol_page: Object.freeze([
+    BHPC_AGENT_BLOCK_TYPES.PROTOCOL,
+    BHPC_AGENT_BLOCK_TYPES.CHECKLIST
+  ]),
+  intended_winner_repair: Object.freeze([
+    BHPC_AGENT_BLOCK_TYPES.DIRECT_ANSWER,
+    BHPC_AGENT_BLOCK_TYPES.RECOMMENDATION_SUMMARY
+  ]),
+  fallback_gap_fill: Object.freeze([
+    BHPC_AGENT_BLOCK_TYPES.DIRECT_ANSWER,
+    BHPC_AGENT_BLOCK_TYPES.RECOMMENDATION_SUMMARY
+  ])
+});
+
+const DEFAULT_PAGE_FAMILY_BLOCKS = Object.freeze([
+  BHPC_AGENT_BLOCK_TYPES.DIRECT_ANSWER,
+  BHPC_AGENT_BLOCK_TYPES.RECOMMENDATION_SUMMARY
+]);
+
+export function requiredBlockTypesForPageFamily(pageFamily = '') {
+  if (pageFamily === 'no_action' || String(pageFamily).startsWith('blocked_')) return [];
+  return [...(BHPC_PAGE_FAMILY_REQUIRED_BLOCKS[pageFamily] || DEFAULT_PAGE_FAMILY_BLOCKS)];
+}

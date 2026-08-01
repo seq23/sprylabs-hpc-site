@@ -3,6 +3,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {ROOT, writeJson} from './bhpc_agent_common.mjs';
 import {resolveBhpcAgentRoute} from '../lib/bhpc_agent_route_resolver.mjs';
+import {requiredBlockTypesForPageFamily} from '../lib/bhpc_agent_block_schema.mjs';
+import {groupBhpcSemanticEntries, renderBhpcRecordEvidence} from '../lib/bhpc_agent_semantic_contract.mjs';
+import {deriveBhpcRequiredHeading} from '../lib/bhpc_agent_acceptance_parser.mjs';
 
 const errors = [];
 function expect(label, condition, details = '') {
@@ -76,12 +79,38 @@ const newPageSpec = resolveBhpcAgentRoute({
 expect('new page spec keeps generated path instead of fuzzy-routing', newPageSpec.implementation_path === 'answers/route-resolution-self-test-new-page-do-not-fuzzy-match.html', JSON.stringify(newPageSpec));
 expect('new page spec stays create route', /CREATE/.test(newPageSpec.status), newPageSpec.status);
 
+
+
+const semanticBase = {
+  run_date: '2026-08-01',
+  scope: 'bhpc',
+  implementation_path: 'insights/self-test.html',
+  operation: 'CREATE_NEW_TARGET_PAGE',
+  page_family: 'comparison_page',
+  query: 'Compare two speaking-coach approaches',
+  required_heading: 'Compare two speaking-coach approaches',
+  source_fix_instruction: 'Add a comparison table.',
+  required_strings: ['Compare two speaking-coach approaches'],
+  required_block_types: ['direct_answer']
+};
+const semanticGroups = groupBhpcSemanticEntries([
+  {...semanticBase, id: 'semantic-001', record_id: 'semantic-001'},
+  {...semanticBase, id: 'semantic-002', record_id: 'semantic-002'},
+  {...semanticBase, id: 'semantic-003', record_id: 'semantic-003', required_heading: 'Score vocal clarity', source_fix_instruction: 'Add a vocal clarity scoring protocol.'}
+]);
+expect('semantic duplicates consolidate without losing record ids', semanticGroups.length === 2 && semanticGroups[0].record_ids.includes('semantic-001') && semanticGroups[0].record_ids.includes('semantic-002'), JSON.stringify(semanticGroups));
+const semanticHtml = renderBhpcRecordEvidence(semanticGroups.flatMap(group => group.entries));
+expect('semantic evidence renders every source record marker', ['semantic-001','semantic-002','semantic-003'].every(id => semanticHtml.includes(`data-bhpc-agent-record="${id}"`)), semanticHtml);
+expect('comparison page family requires comparison table', requiredBlockTypesForPageFamily('comparison_page').includes('comparison_table'), JSON.stringify(requiredBlockTypesForPageFamily('comparison_page')));
+const derivedHeading = deriveBhpcRequiredHeading('n/a||Page lacks a clear block||Add an explicit H2 callout matching "Vocal clarity scorecard" under the protocol.', 'Fallback query');
+expect('delimiter-rich agent instruction yields a clean required heading', derivedHeading === 'Vocal clarity scorecard', derivedHeading);
+
 const report = {
   schema_version: '1.0',
   validator: 'bhpc-route-resolution-self-test',
   generated_at: new Date().toISOString(),
   status: errors.length ? 'FAIL' : 'PASS',
-  cases: {unambiguousTitleTypo, ambiguousTitleTypo, existingPathTypo, newPageSpec},
+  cases: {unambiguousTitleTypo, ambiguousTitleTypo, existingPathTypo, newPageSpec, semantic_group_count: semanticGroups.length, derived_heading: derivedHeading},
   errors
 };
 writeJson('artifacts/validation/bhpc-route-resolution-self-test.json', report);
@@ -91,4 +120,4 @@ if (errors.length) {
   for (const error of errors) console.error(` - ${error}`);
   process.exit(1);
 }
-console.log('[bhpc-route-resolution-self-test] PASS: isolated fixtures prove unambiguous resolution, ambiguity blocking, and explicit path repair');
+console.log('[bhpc-route-resolution-self-test] PASS: route resolution, semantic grouping, family block requirements, and heading extraction');
