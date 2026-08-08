@@ -1,6 +1,9 @@
 # BHPC 5K AEO/GEO Programmatic Automation Plan
 
-Status: Active
+Status: Legacy compatibility lane — subordinate to `data/authority_scale/velocity_governor.json` and `data/authority_scale/surfacing_strategy_contract.json`
+
+Authority note: the 5K milestone and 75-unit batch remain compatibility mechanics for the explicit citation-expansion lane. They are not page quotas, not the default daily publishing target, and not the governing authority objective.
+
 Source baseline: `sprylabs-hpc-site-main_BASELINE_06-21-26_9b6df023.zip`
 
 ## Operating target

@@ -17,6 +17,7 @@ for (const file of [
 ]) exists(file);
 
 const plan = readJson('data/citation_velocity/velocity_5k_plan.json');
+const governor = readJson('data/authority_scale/velocity_governor.json');
 const axes = readJson('data/citation_velocity/atom_axes.json');
 const pkg = readJson('package.json');
 const lanes = readJson('data/content/programmatic_lane_contracts.json').lanes || {};
@@ -28,9 +29,13 @@ const admissions = readJson('data/content/page_admission_registry.json').records
 
 const mix = plan.default_daily_mix || {};
 const mixSum = Object.values(mix).reduce((sum, value) => sum + Number(value || 0), 0);
-if (Number(plan.default_daily_batch_size) !== 75) errors.push('default_daily_batch_size must be 75');
-if (mixSum !== 75) errors.push(`default_daily_mix must sum to 75; actual ${mixSum}`);
-if (Number(plan.target_admitted_pages) !== 5000) errors.push('target_admitted_pages must be 5000');
+const expansionCeiling = Number(governor.citation_expansion_mode_batch_ceiling || 0);
+if (!expansionCeiling) errors.push('authority-scale citation expansion ceiling is missing');
+if (Number(plan.default_daily_batch_size) > expansionCeiling) errors.push(`legacy compatibility batch ${plan.default_daily_batch_size} exceeds governed citation-expansion ceiling ${expansionCeiling}`);
+if (mixSum > expansionCeiling) errors.push(`default_daily_mix ${mixSum} exceeds governed citation-expansion ceiling ${expansionCeiling}`);
+if (plan.targets_are_quotas !== false) errors.push('legacy 5K plan must explicitly state targets_are_quotas=false');
+if (plan.authority !== 'SUBORDINATE_TO_AUTHORITY_SCALE_GOVERNOR') errors.push('legacy 5K plan must be subordinate to Authority Scale governor');
+if (governor.targets_are_quotas !== false) errors.push('authority-scale velocity governor must state targets_are_quotas=false');
 if (!plan.automation_model || plan.automation_model.operator_required !== 'none after merge unless GitHub Actions fails or external platform limits block execution') errors.push('automation model must document no routine operator work');
 if (!lanes.citation_velocity_batch) errors.push('programmatic lane citation_velocity_batch missing');
 for (const lane of Object.keys(mix)) if (!lanes[lane]) errors.push(`daily mix references unknown lane: ${lane}`);
@@ -86,7 +91,7 @@ for (const required of ['.github/workflows/spry-content-release.yml','scripts/pr
 
 const currentCount = admissions.length;
 const needed = Math.max(0, Number(plan.target_admitted_pages || 5000) - currentCount);
-const runsAt75 = Math.ceil(needed / 75);
+const runsAtExpansionCeiling = expansionCeiling > 0 ? Math.ceil(needed / expansionCeiling) : null;
 writeSummary('validate-citation-velocity-automation', {
   status: errors.length ? 'FAIL' : 'PASS',
   public_workflow: '.github/workflows/spry-content-release.yml',
@@ -94,10 +99,12 @@ writeSummary('validate-citation-velocity-automation', {
   current_admitted_count: currentCount,
   target: Number(plan.target_admitted_pages || 5000),
   needed,
-  runs_at_75: runsAt75,
+  legacy_milestone_batches_at_current_expansion_ceiling: runsAtExpansionCeiling,
+  citation_expansion_ceiling: expansionCeiling,
+  default_daily_ceiling: Number(governor.current_default_new_page_ceiling_per_day || 0),
   theoretical_atom_count: totalTheoretical,
   theoretical_by_lane: theoretical,
   errors,
 });
 if (errors.length) fail(`[validate:citation-velocity-automation] FAIL: ${errors.length} issue(s)`, errors);
-pass(`[validate:citation-velocity-automation] OK: ${currentCount} admitted, ${needed} to 5K, ${runsAt75} governed batches at 75/run, routed through consolidated Spry Content Release, ${totalTheoretical} atoms available`);
+pass(`[validate:citation-velocity-automation] OK: ${currentCount} admitted, ${needed} to 5K, ${runsAtExpansionCeiling} governed batches at ${expansionCeiling}/run citation-expansion ceiling, routed through consolidated Spry Content Release, ${totalTheoretical} atoms available`);

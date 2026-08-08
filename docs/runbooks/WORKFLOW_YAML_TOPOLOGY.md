@@ -30,8 +30,8 @@ Forbidden runtime mutations:
 - `docs/**`
 - `_repo*.json`
 - `_validation_registry.json`
-- `_citation_intelligence_contract.json`
-- `_content_release_contract.json`
+- `config/authority/citation_intelligence_contract.json`
+- `config/release/content_release_contract.json`
 - workflow contracts
 - strategy contracts
 
@@ -44,8 +44,8 @@ Allowed generated-state mutations:
 - `sitemap*.xml`
 - `llms*.txt`
 - `feed.*`
-- `_public_route_manifest.json`
-- `_critical_browser_route_manifest.json`
+- `data/routes/public_route_manifest.json`
+- `data/routes/critical_browser_route_manifest.json`
 
 ## Overhaul inventory summary
 

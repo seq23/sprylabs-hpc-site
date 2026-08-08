@@ -13,7 +13,7 @@ Read the skill, references, runner interface, and verify the archive before invo
 
 ## Required evidence
 
-Use `_public_route_manifest.json`. Cover desktop and mobile, definitions, extraction blocks, tables, numbered steps, long-content pages, navigation, product anchors, overflow, focus states, and error surfaces. Store temporary evidence under `artifacts/diagnostics/` and durable evidence under `~/repo-validation-evidence/sprylabs-hpc-site/<run-id>/`.
+Use `data/routes/public_route_manifest.json`. Cover desktop and mobile, definitions, extraction blocks, tables, numbered steps, long-content pages, navigation, product anchors, overflow, focus states, and error surfaces. Store temporary evidence under `artifacts/diagnostics/` and durable evidence under `~/repo-validation-evidence/sprylabs-hpc-site/<run-id>/`.
 
 ## Release gate
 

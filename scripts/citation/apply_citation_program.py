@@ -1209,8 +1209,8 @@ def update_discovery(pages,queries,frameworks):
         url="/"+page["path"]
         if url.endswith("/index.html"): url=url[:-10]
         routes.append({"route_id":f"ROUTE-{len(routes)+1:04d}","path":url,"source_file":page["path"],"canonical_url":page["canonical_url"],"canonical_domain":page["canonical_domain"],"h1":page["query"],"framework":page["framework"],"safe_controls":["internal-links"],"priority":bool(page.get("priority"))})
-    (ROOT/"_public_route_manifest.json").write_text(json.dumps({"schema_version":"1.0","generated_at":TODAY,"route_count":len(routes),"routes":routes},indent=2,ensure_ascii=False)+"\n")
-    critical_path=ROOT/"_critical_browser_route_manifest.json"
+    (ROOT/"data/routes/public_route_manifest.json").write_text(json.dumps({"schema_version":"1.0","generated_at":TODAY,"route_count":len(routes),"routes":routes},indent=2,ensure_ascii=False)+"\n")
+    critical_path=ROOT/"data/routes/critical_browser_route_manifest.json"
     if critical_path.exists():
         current=json.loads(critical_path.read_text(encoding="utf-8"))
         selected=[item.get("source_file") for item in current.get("routes",[])]
@@ -1247,7 +1247,7 @@ def update_discovery(pages,queries,frameworks):
             urls.update(p["canonical_url"] for p in active if p["canonical_domain"].lower()==domain)
         xml='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+"\n".join(f'  <url><loc>{u}</loc><lastmod>{TODAY}</lastmod></url>' for u in sorted(urls))+"\n</urlset>\n"
         fp.write_text(xml,encoding="utf-8")
-    browser_contract=ROOT/"_browser_suite_contract.json"
+    browser_contract=ROOT/"config/validation/browser_suite_contract.json"
     if browser_contract.exists():
         contract=json.loads(browser_contract.read_text(encoding="utf-8"))
         suite=contract.get("browser_suite",{})

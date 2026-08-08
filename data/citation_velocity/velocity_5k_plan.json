@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "status": "ACTIVE",
+  "status": "LEGACY_COMPATIBILITY_LANE",
   "source_baseline": "sprylabs-hpc-site-main_BASELINE_06-21-26_9b6df023.zip",
   "goal": "Grow admitted AEO/GEO reference surfaces from ~2K to 5K with no manual production work.",
   "current_admitted_floor": 2000,
@@ -45,5 +45,10 @@
     "workflow hostile review fails"
   ],
   "workflow_file": ".github/workflows/spry-content-release.yml",
-  "workflow_mode": "citation-expansion"
+  "workflow_mode": "citation-expansion",
+  "authority": "SUBORDINATE_TO_AUTHORITY_SCALE_GOVERNOR",
+  "superseded_objective_by": "data/authority_scale/surfacing_strategy_contract.json",
+  "batch_ceiling_source": "data/authority_scale/velocity_governor.json#citation_expansion_mode_batch_ceiling",
+  "targets_are_quotas": false,
+  "note": "The 5K plan remains an executable citation-expansion compatibility lane. Its 75-unit batch is a governed ceiling for that explicit lane, not the default daily publish target and not the system authority objective."
 }

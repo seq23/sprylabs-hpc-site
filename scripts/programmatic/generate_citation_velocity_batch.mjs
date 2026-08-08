@@ -19,7 +19,7 @@ function arg(name, fallback=null) {
 }
 const dryRun = argv.includes('--dry-run');
 const explain = argv.includes('--explain');
-const batchSize = Number(arg('--batch-size', process.env.CITATION_VELOCITY_BATCH_SIZE || DEFAULT_BATCH_SIZE));
+const requestedBatchSize = Number(arg('--batch-size', process.env.CITATION_VELOCITY_BATCH_SIZE || DEFAULT_BATCH_SIZE));
 const maxTarget = Number(arg('--target', process.env.CITATION_VELOCITY_TARGET || MAX_TARGET));
 const runId = process.env.WORKFLOW_TRACE_RUN_ID || process.env.PROGRAMMATIC_RUN_ID || `citation-velocity-${NOW.replace(/[-:.TZ]/g, '').slice(0, 14)}`;
 
@@ -64,6 +64,11 @@ function htmlFiles(dir=ROOT, out=[]) {
 }
 
 const plan = readJson('data/citation_velocity/velocity_5k_plan.json', {});
+const governor = readJson('data/authority_scale/velocity_governor.json', {});
+const citationExpansionCeiling = Number(governor.citation_expansion_mode_batch_ceiling || DEFAULT_BATCH_SIZE);
+if (!Number.isFinite(requestedBatchSize) || requestedBatchSize < 0) throw new Error(`invalid citation velocity batch size: ${requestedBatchSize}`);
+if (requestedBatchSize > citationExpansionCeiling) throw new Error(`citation velocity batch size ${requestedBatchSize} exceeds governed citation-expansion ceiling ${citationExpansionCeiling}`);
+const batchSize = requestedBatchSize;
 const axes = readJson('data/citation_velocity/atom_axes.json', {});
 const ledger = readJson('data/citation_velocity/generated_ledger.json', {schema_version:'1.0', updated_at:NOW, generated_atoms:[]});
 const dailyRuns = readJson('data/citation_velocity/daily_runs.json', {schema_version:'1.0', runs:[]});

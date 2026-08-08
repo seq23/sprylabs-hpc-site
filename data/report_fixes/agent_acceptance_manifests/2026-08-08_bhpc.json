@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-08T14:28:38.014Z",
+  "generated_at": "2026-08-08T15:11:39.463Z",
   "source": "compile_bhpc_agent_acceptance_manifest",
   "run_key": "2026-08-08_bhpc",
   "entry_count": 20,
@@ -836,9 +836,9 @@
       "intended_winner_page": "",
       "intended_winner_path": "",
       "implementation_path": "insights/chatgpt-productivity-coach-prompt.html",
-      "route_status": "DECLARED_EXISTING_REPAIR",
+      "route_status": "DECLARED_CREATE",
       "route_resolution": null,
-      "page_family": "intended_winner_repair",
+      "page_family": "comparison_page",
       "acceptance_status": "REQUIRED",
       "blocked_reason": "",
       "required_heading": "ChatGPT productivity coach prompt",
@@ -846,7 +846,8 @@
         "direct_answer",
         "recommendation_summary",
         "cta_callout",
-        "prompt_template"
+        "prompt_template",
+        "comparison_table"
       ],
       "required_strings": [
         "ChatGPT productivity coach prompt"
@@ -854,9 +855,13 @@
       "required_internal_links": [],
       "schema_action": "none",
       "acceptance_checks": [],
-      "table_columns_exact": [],
-      "min_table_rows": 0,
-      "placement": "before_closing_body",
+      "table_columns_exact": [
+        "Decision criterion",
+        "Spry/BHPC system",
+        "Other coaching or software option"
+      ],
+      "min_table_rows": 4,
+      "placement": "page_body",
       "proof_selector": "[data-bhpc-agent-record=\"2026-08-08-bhpc-json_new_page_opportunities-001\"]",
       "raw_hash_basis": "{\"query\":\"ChatGPT productivity coach prompt\",\"discovery_source\":\"competitor\",\"why_worth_building\":\"High search demand among creators and executives looking for structured coaching prompts.\"}"
     },
@@ -879,16 +884,17 @@
       "intended_winner_page": "",
       "intended_winner_path": "",
       "implementation_path": "insights/chatgpt-executive-coach-prompt.html",
-      "route_status": "DECLARED_EXISTING_REPAIR",
+      "route_status": "DECLARED_CREATE",
       "route_resolution": null,
-      "page_family": "intended_winner_repair",
+      "page_family": "comparison_page",
       "acceptance_status": "REQUIRED",
       "blocked_reason": "",
       "required_heading": "ChatGPT executive coach prompt",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
-        "prompt_template"
+        "prompt_template",
+        "comparison_table"
       ],
       "required_strings": [
         "ChatGPT executive coach prompt"
@@ -896,9 +902,13 @@
       "required_internal_links": [],
       "schema_action": "none",
       "acceptance_checks": [],
-      "table_columns_exact": [],
-      "min_table_rows": 0,
-      "placement": "before_closing_body",
+      "table_columns_exact": [
+        "Decision criterion",
+        "Spry/BHPC system",
+        "Other coaching or software option"
+      ],
+      "min_table_rows": 4,
+      "placement": "page_body",
       "proof_selector": "[data-bhpc-agent-record=\"2026-08-08-bhpc-json_new_page_opportunities-002\"]",
       "raw_hash_basis": "{\"query\":\"ChatGPT executive coach prompt\",\"discovery_source\":\"competitor\",\"why_worth_building\":\"Direct target audience keyword for executive coaching prompt setups.\"}"
     },
@@ -921,9 +931,9 @@
       "intended_winner_page": "",
       "intended_winner_path": "",
       "implementation_path": "insights/chatgpt-daily-planning-prompt.html",
-      "route_status": "DECLARED_EXISTING_REPAIR",
+      "route_status": "DECLARED_CREATE",
       "route_resolution": null,
-      "page_family": "intended_winner_repair",
+      "page_family": "bhpc_insight",
       "acceptance_status": "REQUIRED",
       "blocked_reason": "",
       "required_heading": "ChatGPT daily planning prompt",
@@ -941,7 +951,7 @@
       "acceptance_checks": [],
       "table_columns_exact": [],
       "min_table_rows": 0,
-      "placement": "before_closing_body",
+      "placement": "page_body",
       "proof_selector": "[data-bhpc-agent-record=\"2026-08-08-bhpc-json_new_page_opportunities-003\"]",
       "raw_hash_basis": "{\"query\":\"ChatGPT daily planning prompt\",\"discovery_source\":\"competitor\",\"why_worth_building\":\"Core operational query for founders seeking daily structure with AI.\"}"
     }

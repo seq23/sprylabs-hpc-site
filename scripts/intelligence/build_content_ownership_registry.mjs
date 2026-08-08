@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import fs from 'node:fs'; import path from 'node:path';
 import {readJson,writeJson,now} from '../lib/safe_harbor_utils.mjs';
-const manifest=readJson('_public_route_manifest.json',{routes:[]});
+const manifest=readJson('data/routes/public_route_manifest.json',{routes:[]});
 const acceptance=readJson('data/report_fixes/agent_acceptance_manifest.generated.json',{entries:[]});
 const paid=new Map();
 for(const e of acceptance.entries||[]){const f=String(e.implementation_path||e.intended_winner_path||'').replace(/^\//,''); if(f) paid.set(f,{run_date:e.run_date,record_id:e.record_id,query:e.query});}

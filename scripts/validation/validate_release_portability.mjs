@@ -7,7 +7,7 @@ const errors = [];
 const packageJson = readJson('package.json');
 const packageLock = readJson('package-lock.json');
 const updateContract = readJson('_repo_update_contract.json');
-const browserContract = readJson('_browser_suite_contract.json').browser_suite;
+const browserContract = readJson('config/validation/browser_suite_contract.json').browser_suite;
 const gitignoreText = fs.readFileSync('.gitignore', 'utf8');
 const requiredIgnorePatterns = [
   'node_modules/',
@@ -80,7 +80,7 @@ if (!fs.existsSync('favicon.ico') || fs.statSync('favicon.ico').size === 0) erro
 const staticServerText = fs.readFileSync('scripts/browser/static_server.mjs', 'utf8');
 if (!staticServerText.includes("'.ico':'image/x-icon'")) errors.push('static server must serve .ico as image/x-icon');
 
-const criticalRoutes = readJson('_critical_browser_route_manifest.json').routes || [];
+const criticalRoutes = readJson('data/routes/critical_browser_route_manifest.json').routes || [];
 const missingLocalResources = [];
 for (const route of criticalRoutes) {
   const source = route.source_file;
@@ -135,7 +135,7 @@ walk('.');
 if (forbiddenSource.length) errors.push(`Python cache artifacts present: ${forbiddenSource.slice(0, 10).join(', ')}`);
 
 for (const required of [
-  '_critical_browser_route_manifest.json',
+  'data/routes/critical_browser_route_manifest.json',
   'data/citation/priority_page_acceptance.json',
   'scripts/validation/validate_priority_citation_pages.py',
   'scripts/validation/validate_release_portability.mjs',

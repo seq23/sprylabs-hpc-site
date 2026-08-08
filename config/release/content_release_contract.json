@@ -1,0 +1,92 @@
+{
+  "schema_version": "2.0",
+  "repo": "seq23/sprylabs-hpc-site",
+  "default_public_mutation": "full_safe_autonomy_gap_fill",
+  "release_unit_types": [
+    "create",
+    "repair",
+    "atom_update",
+    "answer_block_update",
+    "entity_context_update",
+    "internal_link_update",
+    "schema_update",
+    "source_update",
+    "distribution_update",
+    "block",
+    "quarantine"
+  ],
+  "allowed_generated_mutations": [
+    "data/signals/**",
+    "artifacts/validation/**",
+    "reports/**",
+    "data/content/**",
+    "data/citation_velocity/**",
+    "sitemap*.xml",
+    "sitemaps/**",
+    "llms*.txt",
+    "feed.*",
+    "*.html"
+  ],
+  "forbidden_runtime_mutations": [
+    ".github/**",
+    "package.json",
+    "package-lock.json",
+    "scripts/**",
+    "docs/**",
+    "_repo*.json",
+    "_validation_registry.json",
+    "config/authority/citation_intelligence_contract.json",
+    "config/release/content_release_contract.json",
+    "data/workflows/**",
+    "data/strategy/**",
+    "config/agent/**",
+    "config/authority/**",
+    "config/release/**",
+    "config/validation/**",
+    "data/routes/**"
+  ],
+  "apply_policy": {
+    "shadow_mode_writes_only_reports": false,
+    "public_route_creation_requires_existing_page_admission_contract": true,
+    "no_op_reason_required": true,
+    "ownership_check_required": true,
+    "safe_harbor_required": true,
+    "continue_after_isolated_skip": true
+  },
+  "proof_required": true,
+  "batch_d_controlled_release": {
+    "status": "enabled_structural_shadow",
+    "cadence_class": "CADENCE_DAILY_STANDARD_CONTROLLED_LOW",
+    "manual_command": "npm run release:controlled-citation-intelligence",
+    "scheduled_workflow": ".github/workflows/daily-citation-intelligence.yml",
+    "public_content_mutation_enabled": false,
+    "max_release_units_per_day": 25,
+    "target_release_units_per_day": 15,
+    "proof_required": [
+      "fixture trace",
+      "release planner",
+      "shadow apply ledger",
+      "daily proof packet",
+      "browserless mock backup",
+      "workflow validators"
+    ],
+    "local_validation_required_before_complete": true
+  },
+  "routine_human_approval": false,
+  "exception_behavior": "skip_record_continue",
+  "zero_dollar_autonomous_release": {
+    "status": "enabled",
+    "scheduled_workflow": ".github/workflows/daily-citation-intelligence.yml",
+    "public_content_mutation_enabled": true,
+    "paid_agent_routes_excluded": true,
+    "targets_are_non_blocking": true,
+    "proof_required": true
+  },
+  "authority_scale_standard": "MAXIMUM_FANOUT_PLUS_100K_SURFACING_ACCELERATION",
+  "max_fanout_contract": "data/authority_scale/surfacing_strategy_contract.json",
+  "fanout_runway": "data/authority_scale/fanout_100k/index.json",
+  "accepted_output_freeze": "data/release/frozen_output_registry.json",
+  "velocity_governor": "data/authority_scale/velocity_governor.json",
+  "fanout_is_page_quota": false,
+  "accepted_output_mutation_policy": "exact_route_thaw_validate_refreeze"
+}

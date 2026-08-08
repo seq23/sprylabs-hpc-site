@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "browser_suite": {
+    "command": "npm run release:local-visual-proof",
+    "deployed_command": "npm run postdeploy:public-click-audit",
+    "projects": [
+      "chromium-desktop",
+      "chromium-mobile"
+    ],
+    "expected_collected_policy": "critical_route_count_x_2",
+    "required_failed": 0,
+    "expected_skipped": 0,
+    "registered_skips": [],
+    "timeout_budget_ms_per_route": 20000,
+    "required_route_manifest": "data/routes/critical_browser_route_manifest.json",
+    "required_viewports": [
+      {
+        "name": "desktop",
+        "width": 1280,
+        "height": 800
+      },
+      {
+        "name": "mobile",
+        "width": 375,
+        "height": 667
+      }
+    ],
+    "role_coverage": [
+      "public visitor"
+    ],
+    "required_before_push": true,
+    "evidence_outputs": [
+      "screenshots-on-failure",
+      "traces-on-failure",
+      "console-errors",
+      "page-errors",
+      "failed-requests",
+      "geometry-summary"
+    ],
+    "full_structural_route_manifest": "data/routes/public_route_manifest.json",
+    "full_structural_route_count": 2615,
+    "critical_route_count": 12,
+    "scope_note": "Real-browser proof is intentionally limited to 12 representative critical routes. All 2615 active pages remain covered by read-only structural citation, graph, distribution, and parity validators."
+  }
+}

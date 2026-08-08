@@ -33,8 +33,8 @@ for i,rec in enumerate(sorted(pages,key=lambda x:x['path']),1):
         'safe_controls':['internal-links'],
         'priority':bool(rec.get('priority'))
     })
-save('_public_route_manifest.json',{'routes':public})
-crit=load('_critical_browser_route_manifest.json')
+save('data/routes/public_route_manifest.json',{'routes':public})
+crit=load('data/routes/critical_browser_route_manifest.json')
 for route in crit.get('routes',[]):
     rec=by_path.get(route.get('source_file'))
     if not rec: continue
@@ -45,5 +45,5 @@ for route in crit.get('routes',[]):
     route['framework']=rec.get('framework','')
     route['definition']=rec.get('definition','')
     route['extraction_type']=rec.get('extraction_type','')
-save('_critical_browser_route_manifest.json',crit)
+save('data/routes/critical_browser_route_manifest.json',crit)
 print(f'repair_ui_test_parity: public={len(public)} critical={len(crit.get("routes",[]))}')

@@ -17,6 +17,8 @@ The repository root is the deployed static-site root. Public HTML routes therefo
 | Historical root utilities | `scripts/legacy/root-tools/` |
 | Canonical content banks | `content/bank/` |
 | Agent, citation, release, and workflow data | `data/` |
+| Internal domain contracts | `config/agent/`, `config/authority/`, `config/release/`, `config/validation/` |
+| Public/critical route manifests | `data/routes/` |
 | Operational instructions | `docs/operations/` and `docs/runbooks/` |
 | Current and historical receipts | `docs/receipts/` |
 | Audit output and historical audit evidence | `reports/audits/` |
@@ -31,9 +33,9 @@ The root may contain:
 - required package and repository identity files;
 - Cloudflare static control files;
 - public discovery files such as sitemaps, feeds, `robots.txt`, and LLM files;
-- root-level machine contracts beginning with `_` where the updater and validation control plane require fixed paths.
+- only the explicit root-level updater, packaging, lifecycle, and validation-bootstrap contracts whose fixed paths form the repository interface. Arbitrary underscore-prefixed JSON files are not automatically admitted.
 
-The root may not receive new ad-hoc reports, migration scripts, temporary shell scripts, phase ledgers, audit notes, or one-off support folders.
+The root may not receive new ad-hoc reports, migration scripts, temporary shell scripts, phase ledgers, audit notes, one-off support folders, or domain-specific internal contracts. Ordinary cleanup drift is reported as a warning rather than a release failure; secret-like or credential material remains a hard failure.
 
 ## Deployment boundary
 

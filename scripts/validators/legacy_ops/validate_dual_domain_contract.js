@@ -41,7 +41,7 @@ function hasNoindex(html) {
 }
 const htmlFiles = walk(root);
 
-const routeManifestPath = path.join(root, '_public_route_manifest.json');
+const routeManifestPath = path.join(root, 'data/routes/public_route_manifest.json');
 const routeManifest = fs.existsSync(routeManifestPath) ? JSON.parse(fs.readFileSync(routeManifestPath, 'utf8')) : { routes: [] };
 const privateNoindexFiles = new Set((routeManifest.routes || routeManifest.items || [])
   .filter((item) => item && item.visibility === 'private_noindex' && item.source_file)

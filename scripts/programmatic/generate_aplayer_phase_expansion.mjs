@@ -446,12 +446,12 @@ function updatePublicRouteManifest() {
         priority: Boolean(page.priority)
       };
     });
-  writeJson('_public_route_manifest.json', {schema_version:'1.0', generated_at:TODAY, route_count:routes.length, routes});
-  const browserContract = readJson('_browser_suite_contract.json', null);
+  writeJson('data/routes/public_route_manifest.json', {schema_version:'1.0', generated_at:TODAY, route_count:routes.length, routes});
+  const browserContract = readJson('config/validation/browser_suite_contract.json', null);
   if (browserContract && browserContract.browser_suite) {
     browserContract.browser_suite.full_structural_route_count = routes.length;
     browserContract.browser_suite.scope_note = `Real-browser proof is intentionally limited to 12 representative critical routes. All ${routes.length} active pages remain covered by read-only structural citation, graph, distribution, and parity validators.`;
-    writeJson('_browser_suite_contract.json', browserContract);
+    writeJson('config/validation/browser_suite_contract.json', browserContract);
   }
 }
 function updateSitemapsAndLlms() {

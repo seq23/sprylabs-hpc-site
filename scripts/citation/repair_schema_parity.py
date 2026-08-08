@@ -30,10 +30,18 @@ def route_from_path(value):
     return normalize_route('/'+v)
 
 def active_mutation_routes():
-    # Final-state deep validation audits the full public citation registry.
-    # Schema repair therefore covers every active citable page, not only the
-    # latest mutation scope.
-    return None
+    mode=str(os.environ.get('SCHEMA_REPAIR_SCOPE','auto')).strip().lower()
+    if mode in {'all','global','maintenance'}:
+        return None
+    if not ACTIVE_SCOPE.exists():
+        if mode in {'required','exact','scoped'}:
+            raise RuntimeError(f'mutation scope required but missing: {ACTIVE_SCOPE}')
+        return None
+    payload=json.loads(ACTIVE_SCOPE.read_text(encoding='utf-8'))
+    routes={normalize_route(route) for route in payload.get('routes',[]) if normalize_route(route)}
+    if not routes and mode in {'required','exact','scoped'}:
+        raise RuntimeError(f'mutation scope is empty: {ACTIVE_SCOPE}')
+    return routes
 
 def norm(v): return ' '.join((v or '').split())
 def schema_types(graph):

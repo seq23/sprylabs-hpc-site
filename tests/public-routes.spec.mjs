@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 
-const manifest = JSON.parse(fs.readFileSync('_critical_browser_route_manifest.json', 'utf8'));
+const manifest = JSON.parse(fs.readFileSync('data/routes/critical_browser_route_manifest.json', 'utf8'));
 const acceptance = JSON.parse(fs.readFileSync('data/citation/priority_page_acceptance.json', 'utf8'));
 const manualAcceptance = JSON.parse(fs.readFileSync('data/citation/manual_expansion_acceptance.json', 'utf8'));
 const acceptanceByPath = new Map(acceptance.pages.map(page => [page.path, {kind: 'priority', ...page}]));

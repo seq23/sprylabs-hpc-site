@@ -1,8 +1,8 @@
 import fs from 'node:fs';
 import { readJson, fail, pass, writeSummary } from './common.mjs';
 
-const allRoutes = readJson('_public_route_manifest.json').routes;
-const criticalRoutes = readJson('_critical_browser_route_manifest.json').routes;
+const allRoutes = readJson('data/routes/public_route_manifest.json').routes;
+const criticalRoutes = readJson('data/routes/critical_browser_route_manifest.json').routes;
 const pages = readJson('data/citation/citable_pages.json').pages.filter(page => page.status === 'ACTIVE');
 const priority = readJson('data/citation/priority_page_acceptance.json').pages;
 const manual = readJson('data/citation/manual_expansion_acceptance.json').pages;
@@ -41,7 +41,7 @@ for (const source of criticalSources) if (!exactPaths.has(source)) errors.push(`
 
 const test = fs.readFileSync('tests/public-routes.spec.mjs', 'utf8');
 for (const token of [
-  '_critical_browser_route_manifest.json',
+  'data/routes/critical_browser_route_manifest.json',
   'priority_page_acceptance.json',
   'manual_expansion_acceptance.json',
   'citation-definition',

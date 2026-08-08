@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {ROOT,readJson,exists,fail,pass,writeSummary} from './common.mjs';
-const required=['REPO_IDENTITY.md','package.json','package-lock.json','.nvmrc','_repo_update_contract.json','_repo_validation_matrix.json','_validation_registry.json','_repo_lifecycle_profile.json','_browser_suite_contract.json','_public_route_manifest.json','_baseline_packaging_contract.json'];
+const required=['REPO_IDENTITY.md','package.json','package-lock.json','.nvmrc','_repo_update_contract.json','_repo_validation_matrix.json','_validation_registry.json','_repo_lifecycle_profile.json','config/validation/browser_suite_contract.json','data/routes/public_route_manifest.json','_baseline_packaging_contract.json'];
 const errors=[];
 for(const f of required) if(!exists(f)) errors.push(`missing required file: ${f}`);
 for(const f of required.filter(x=>x.endsWith('.json'))) {try{readJson(f);}catch(e){errors.push(`invalid JSON ${f}: ${e.message}`)}}

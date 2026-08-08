@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {ROOT, readJson, writeJson} from '../agent_intake/bhpc_agent_common.mjs';
 const pkg = readJson('package.json', {scripts:{}});
-const contract = readJson('_bhpc_agent_artifact_priority_contract.json', null);
+const contract = readJson('config/agent/bhpc_agent_artifact_priority_contract.json', null);
 const errors = [];
 if (!contract) errors.push('bhpc_priority_contract_missing');
 for (const cmd of ['release:agent-intake','agent:bhpc:apply-exact','release:daily-citation-intelligence']) if (!pkg.scripts[cmd]) errors.push(`package_script_missing:${cmd}`);

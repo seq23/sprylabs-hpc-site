@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import { readJson, fail, pass, writeSummary } from './common.mjs';
 
-const contract = readJson('_browser_suite_contract.json').browser_suite;
+const contract = readJson('config/validation/browser_suite_contract.json').browser_suite;
 const critical = readJson(contract.required_route_manifest).routes;
 const structural = readJson(contract.full_structural_route_manifest).routes;
 const errors = [];
