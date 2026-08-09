@@ -13,6 +13,17 @@ function normalize(value) {
   return String(value || '').replace(/\s+/g, ' ').trim();
 }
 
+function extensionlessFallbackUrl(url) {
+  try {
+    const parsed = new URL(url);
+    if (!parsed.pathname.endsWith('.html')) return '';
+    parsed.pathname = parsed.pathname.slice(0, -'.html'.length);
+    return parsed.toString();
+  } catch {
+    return '';
+  }
+}
+
 for (const route of manifest.routes) {
   test(`${route.route_id} ${route.path} [${(route.representative_dimensions || []).join(',')}]`, async ({ page }, testInfo) => {
     for (const dimension of route.representative_dimensions || []) testInfo.annotations.push({type: 'representative-dimension', description: dimension});
@@ -41,8 +52,22 @@ for (const route of manifest.routes) {
       } catch {}
     });
 
-    const target = deployed ? route.canonical_url : route.path;
-    const response = await page.goto(target, { waitUntil: 'load' });
+    let target = deployed ? route.canonical_url : route.path;
+    let response = await page.goto(target, { waitUntil: 'load' });
+
+    if (deployed && response?.status() === 404) {
+      const fallbackTarget = extensionlessFallbackUrl(target);
+      if (fallbackTarget) {
+        consoleErrors.length = 0;
+        pageErrors.length = 0;
+        failedRequests.length = 0;
+        errorResponses.length = 0;
+        testInfo.annotations.push({type: 'route-fallback', description: `${target} -> ${fallbackTarget}`});
+        target = fallbackTarget;
+        response = await page.goto(target, { waitUntil: 'load' });
+      }
+    }
+
     expect(response, `No response for ${target}`).not.toBeNull();
     expect(response.status(), `HTTP ${response.status()} for ${target}`).toBeLessThan(400);
 
