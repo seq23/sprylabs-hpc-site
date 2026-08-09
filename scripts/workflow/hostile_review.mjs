@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {workflowContract, matches, readJson, writeJson} from './lib.mjs';
+import {resolveRuntimePath} from '../site_layout/lib.mjs';
 import {
   FINDING_CLASSES,
   findingStatus,
@@ -19,6 +20,12 @@ const selfTest = argv.includes('--self-test');
 
 const AGGREGATABLE_KINDS = new Set(['undeclared_generated_output']);
 const AGGREGATE_SAMPLE_LIMIT = 8;
+
+
+function isForbiddenChange(file, contract) {
+  const explicitlyAllowed = matches(file, contract.allowed_change_patterns || []);
+  return matches(file, contract.forbidden_change_patterns || []) && !explicitlyAllowed;
+}
 
 function aggregateFindings(findings = []) {
   const passthrough = [];
@@ -74,19 +81,54 @@ function runAggregationSelfTest() {
   return {fixtures: 3, failures};
 }
 
+function runLayoutResolutionSelfTest() {
+  const stagedEnv = {BHPC_LAYOUT_STAGE_ACTIVE: '1', BHPC_PUBLIC_ROOT: '.', BHPC_DEPLOY_ROOT: '.'};
+  const publicPath = resolveRuntimePath('site/public/agency/index.html', stagedEnv);
+  const deployPath = resolveRuntimePath('dist/agency/index.html', stagedEnv);
+  const expected = path.resolve('agency/index.html');
+  const failures = [];
+  if (publicPath !== expected) failures.push(`staged public path mismatch: ${publicPath}`);
+  if (deployPath !== expected) failures.push(`staged deploy path mismatch: ${deployPath}`);
+  if (resolveRuntimePath('site/public/agency/index.html', {}) !== path.resolve('site/public/agency/index.html')) failures.push('normal public path resolution drifted');
+  return {fixtures: 3, failures};
+}
+
+
+function runChangePatternPrecedenceSelfTest() {
+  const contract = {
+    allowed_change_patterns: ['config/validation/browser_suite_contract.json', 'docs/operations/daily-insights/**'],
+    forbidden_change_patterns: ['config/**', 'docs/**', 'scripts/**'],
+  };
+  const fixtures = [
+    {file: 'config/validation/browser_suite_contract.json', forbidden: false},
+    {file: 'docs/operations/daily-insights/touched-files-2026-08-09.txt', forbidden: false},
+    {file: 'config/private/runtime.json', forbidden: true},
+    {file: 'scripts/release/private.mjs', forbidden: true},
+  ];
+  const failures = fixtures
+    .filter(fixture => isForbiddenChange(fixture.file, contract) !== fixture.forbidden)
+    .map(fixture => `${fixture.file}: expected forbidden=${fixture.forbidden}`);
+  return {fixtures: fixtures.length, failures};
+}
+
 function requireGovernanceFixtures() {
   const classifier = runGovernanceFindingSelfTest();
   const aggregation = runAggregationSelfTest();
+  const layoutResolution = runLayoutResolutionSelfTest();
+  const changePatternPrecedence = runChangePatternPrecedenceSelfTest();
   const failures = [
     ...classifier.failures.map(failure => `${failure.name}: expected=${failure.expected}`),
     ...aggregation.failures,
+    ...layoutResolution.failures,
+    ...changePatternPrecedence.failures,
   ];
+  const fixtureCount = classifier.fixtures + aggregation.fixtures + layoutResolution.fixtures + changePatternPrecedence.fixtures;
   if (failures.length) {
-    const error = new Error(`governance fixtures failed ${failures.length}/${classifier.fixtures + aggregation.fixtures}`);
+    const error = new Error(`governance fixtures failed ${failures.length}/${fixtureCount}`);
     error.details = failures;
     throw error;
   }
-  return {fixtures: classifier.fixtures + aggregation.fixtures};
+  return {fixtures: fixtureCount};
 }
 
 function reviewOne(id, traceFile) {
@@ -109,11 +151,11 @@ function reviewOne(id, traceFile) {
     ...(contract.required_outputs_by_mode?.[trace.mode] || []),
   ];
   for (const required of requiredOutputs) {
-    if (!fs.existsSync(required)) add({kind: 'required_output_missing', file: required, message: `required output missing for mode ${trace.mode || '(unknown)'}: ${required}`});
+    if (!fs.existsSync(resolveRuntimePath(required))) add({kind: 'required_output_missing', file: required, message: `required output missing for mode ${trace.mode || '(unknown)'}: ${required}`});
   }
 
   for (const item of changed) {
-    if (matches(item.file, contract.forbidden_change_patterns || [])) {
+    if (isForbiddenChange(item.file, contract)) {
       add({kind: 'protected_lane_mutation', file: item.file, message: `workflow changed forbidden source/governance file: ${item.file}`});
     }
     if (!matches(item.file, contract.allowed_change_patterns || []) && !matches(item.file, contract.lineage_outputs || [])) {

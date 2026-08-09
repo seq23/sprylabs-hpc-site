@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import crypto from 'node:crypto';
+import {resolveRuntimePath} from '../site_layout/lib.mjs';
 
 const own = JSON.parse(fs.readFileSync('data/content_ownership_registry.json', 'utf8'));
 const pre = JSON.parse(fs.readFileSync('artifacts/validation/pre-implementation-protected-hashes.json', 'utf8'));
@@ -15,11 +16,12 @@ for (const route of own.routes || []) {
 }
 
 for (const [file, expectedHash] of Object.entries(pre.files || {})) {
-  if (!fs.existsSync(file)) {
+  const resolvedFile = resolveRuntimePath(file);
+  if (!fs.existsSync(resolvedFile)) {
     errors.push(`protected file missing: ${file}`);
     continue;
   }
-  const actualHash = crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+  const actualHash = crypto.createHash('sha256').update(fs.readFileSync(resolvedFile)).digest('hex');
   if (actualHash !== expectedHash) {
     strong_warnings.push({
       code: 'PROTECTED_BASELINE_DRIFT',

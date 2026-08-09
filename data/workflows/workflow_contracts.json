@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0",
-  "generated_at": "2026-07-04T12:39:10.556371Z",
+  "generated_at": "2026-08-09T16:46:00Z",
   "public_workflow_topology": "velocity_aligned_six_workflows",
   "governed_workflows": [
     {
@@ -34,6 +34,8 @@
         "scripts/whitepapers/**"
       ],
       "lineage_outputs": [
+        "site/public/**",
+        "dist/**",
         "data/**",
         "answers/**",
         "clusters/**",
@@ -51,6 +53,8 @@
         "data/programmatic/latest_run_summary.json"
       ],
       "allowed_change_patterns": [
+        "site/public/**",
+        "dist/**",
         "*.html",
         "docs/operations/daily-insights/**",
         "answers/**",
@@ -125,6 +129,8 @@
         "data/routes/critical_browser_route_manifest.json"
       ],
       "lineage_outputs": [
+        "site/public/**",
+        "dist/**",
         "*.html",
         "answers/**",
         "clusters/**",
@@ -144,6 +150,8 @@
         "data/routes/public_route_manifest.json"
       ],
       "allowed_change_patterns": [
+        "site/public/**",
+        "dist/**",
         "*.html",
         "docs/operations/daily-insights/**",
         "answers/**",
