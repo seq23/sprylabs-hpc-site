@@ -32,6 +32,8 @@ concurrency:
 jobs:
   search-intelligence:
     runs-on: ubuntu-latest
+    env:
+      GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
     timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
@@ -50,7 +52,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install GSC client only when provider credentials exist
-        if: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON != '' }}
+        if: ${{ env.GSC_SERVICE_ACCOUNT_JSON != '' }}
         run: python -m pip install --disable-pip-version-check google-api-python-client google-auth google-auth-httplib2 >/dev/null
 
       - name: Run governed search-intelligence closed loop
