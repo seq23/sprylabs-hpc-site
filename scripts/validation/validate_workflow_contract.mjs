@@ -38,11 +38,27 @@ const allowedActions = new Set([
 ]);
 const pkg = readJson('package.json');
 const packageScripts = pkg.scripts || {};
+const spryReleaseWrapper = String(packageScripts['workflow:spry-content-release'] || '');
+if (!spryReleaseWrapper.includes('run_with_public_root.mjs -- node scripts/authority_scale/run_guarded_release.mjs')) {
+  errors.push('package.json: workflow:spry-content-release must pass appended --mode arguments directly to run_guarded_release.mjs through run_with_public_root.mjs');
+}
+if (spryReleaseWrapper.includes('bash -lc')) {
+  errors.push('package.json: workflow:spry-content-release must not use bash -lc because appended release-mode arguments are swallowed by shell positional parameters');
+}
 const registry = readJson('_validation_registry.json').records || [];
 const matrix = readJson('_repo_validation_matrix.json').entries || [];
 const packaging = readJson('_baseline_packaging_contract.json');
 const contracts = readJson('data/workflows/workflow_contracts.json').governed_workflows || [];
 const governedByFile = new Map(contracts.map(item => [path.basename(item.workflow_file), item]));
+for (const contract of contracts) {
+  const modeOutputs = contract.required_outputs_by_mode || {};
+  if (modeOutputs && typeof modeOutputs !== 'object') errors.push(`${contract.id}: required_outputs_by_mode must be an object`);
+  const topology = readJson('data/workflows/workflow_topology.json').canonical_lanes?.[contract.canonical_lane || contract.lane];
+  for (const [mode, outputs] of Object.entries(modeOutputs)) {
+    if (!Array.isArray(outputs)) errors.push(`${contract.id}: required_outputs_by_mode.${mode} must be an array`);
+    if (!topology?.modes?.includes(mode)) errors.push(`${contract.id}: required_outputs_by_mode references undeclared mode ${mode}`);
+  }
+}
 const requiredFiles = new Set(packaging.required_files || []);
 const actualWorkflows = fs.readdirSync(workflowDir).filter(name => /\.ya?ml$/.test(name)).sort();
 
@@ -65,6 +81,12 @@ for (const name of actualWorkflows) {
   const text = fs.readFileSync(rel, 'utf8');
   const lines = text.split(/\r?\n/);
   if (text.includes('\t')) errors.push(`${name}: tabs are forbidden in workflow YAML`);
+  for (const [index, line] of lines.entries()) {
+    const trimmed = line.trim();
+    if (/^if\s*:\s*.*\bsecrets\./.test(trimmed)) {
+      errors.push(`${name}: line ${index + 1} must not reference secrets.* directly in an if expression; map the secret through env and test env.* instead`);
+    }
+  }
   if (!/^name:\s*\S/m.test(text)) errors.push(`${name}: missing workflow name`);
   if (!/^on:\s*$/m.test(text)) errors.push(`${name}: missing on trigger mapping`);
   if (!/^jobs:\s*$/m.test(text)) errors.push(`${name}: missing jobs mapping`);

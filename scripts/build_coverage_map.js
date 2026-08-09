@@ -217,7 +217,6 @@ function renderRows(report) {
 
 function publicCoverageReport(report) {
   return {
-    generatedAtUtc: report.generatedAtUtc,
     totals: {
       live: report.totals.live,
       publishedClusters: report.clusters.filter((c) => c.live > 0).length,
@@ -396,7 +395,7 @@ ${renderRows(report)}
 </tbody>
 </table>
 </div>
-<p class="small">Generated ${escapeHtml(report.generatedAtUtc)}. Totals: ${report.totals.live} published pages across ${report.clusters.filter((c) => c.live > 0).length} published clusters.</p>
+<p class="small">Totals: ${report.totals.live} published pages across ${report.clusters.filter((c) => c.live > 0).length} published clusters.</p>
 </div>
 </section>
 <section>

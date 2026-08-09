@@ -48,9 +48,7 @@
       ],
       "required_outputs": [
         "data/content/page_admission_registry.json",
-        "data/programmatic/latest_run_summary.json",
-        "artifacts/validation/generated-content-finalization-contract.json",
-        "artifacts/validation/strategy-gap-fill-contract.json"
+        "data/programmatic/latest_run_summary.json"
       ],
       "allowed_change_patterns": [
         "*.html",
@@ -93,7 +91,13 @@
       "canonical_lane": "spry-content-release",
       "canonical_mode": "full-content-cycle",
       "topology_status": "canonical",
-      "topology_command": "npm run workflow:spry-content-release -- --mode=full-content-cycle"
+      "topology_command": "npm run workflow:spry-content-release -- --mode=full-content-cycle",
+      "required_outputs_by_mode": {
+        "full-content-cycle": [
+          "artifacts/validation/generated-content-finalization-contract.json",
+          "artifacts/validation/strategy-gap-fill-contract.json"
+        ]
+      }
     },
     {
       "id": "spry-full-rebuild",

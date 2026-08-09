@@ -104,8 +104,12 @@ function reviewOne(id, traceFile) {
   if (!Array.isArray(trace.lineage?.inputs_before) || trace.lineage.inputs_before.length === 0) add({kind: 'provenance_loss', message: 'input lineage is empty'});
   if (!Array.isArray(trace.lineage?.outputs_after) || trace.lineage.outputs_after.length === 0) add({kind: 'provenance_loss', message: 'output lineage is empty'});
 
-  for (const required of contract.required_outputs || []) {
-    if (!fs.existsSync(required)) add({kind: 'required_output_missing', file: required, message: `required output missing: ${required}`});
+  const requiredOutputs = [
+    ...(contract.required_outputs || []),
+    ...(contract.required_outputs_by_mode?.[trace.mode] || []),
+  ];
+  for (const required of requiredOutputs) {
+    if (!fs.existsSync(required)) add({kind: 'required_output_missing', file: required, message: `required output missing for mode ${trace.mode || '(unknown)'}: ${required}`});
   }
 
   for (const item of changed) {

@@ -45,34 +45,14 @@ async function fetchLivePage(url, fetchImpl) {
     redirect: 'follow',
     headers: {'cache-control': 'no-cache', 'user-agent': 'Spry-Live-Agent-Proof/1.0'}
   };
-
   const primary = await fetchImpl(url, options);
-
-  if (primary.status !== 404) {
-    return {
-      response: primary,
-      effectiveUrl: url,
-      fallbackUsed: false
-    };
-  }
+  if (primary.status !== 404) return {response: primary, effectiveUrl: url, fallbackUsed: false};
 
   const fallbackUrl = extensionlessFallbackUrl(url);
-
-  if (!fallbackUrl) {
-    return {
-      response: primary,
-      effectiveUrl: url,
-      fallbackUsed: false
-    };
-  }
+  if (!fallbackUrl) return {response: primary, effectiveUrl: url, fallbackUsed: false};
 
   const fallback = await fetchImpl(fallbackUrl, options);
-
-  return {
-    response: fallback,
-    effectiveUrl: fallbackUrl,
-    fallbackUsed: true
-  };
+  return {response: fallback, effectiveUrl: fallbackUrl, fallbackUsed: true};
 }
 
 export async function validateAgentLive({runDate = '', fetchImpl = fetch, quiet = false} = {}) {
@@ -84,63 +64,31 @@ export async function validateAgentLive({runDate = '', fetchImpl = fetch, quiet 
 
   for (const entry of entries) {
     const url = resolveAgentLiveUrl(entry);
-
     if (!url) {
-      failures.push({
-        id: entry.id,
-        error: 'Unable to resolve public URL',
-        implementation_path: entry.implementation_path || ''
-      });
+      failures.push({id: entry.id, error: 'Unable to resolve public URL', implementation_path: entry.implementation_path || ''});
       continue;
     }
-
     resolved.push({id: entry.id, url});
-
     if (!pages.has(url)) pages.set(url, []);
     pages.get(url).push(entry);
   }
 
   let passed = 0;
-
   for (const [url, pageEntries] of pages) {
     try {
-      const {
-        response,
-        effectiveUrl,
-        fallbackUsed
-      } = await fetchLivePage(url, fetchImpl);
-
+      const {response, effectiveUrl, fallbackUsed} = await fetchLivePage(url, fetchImpl);
       const html = await response.text();
-
       for (const entry of pageEntries) {
         const marker = `data-bhpc-agent-record="${entry.id}"`;
-
         if (!response.ok || !html.includes(marker)) {
-          failures.push({
-            id: entry.id,
-            url: effectiveUrl,
-            status: response.status,
-            marker_found: html.includes(marker),
-            fallback_used: fallbackUsed
-          });
+          failures.push({id: entry.id, url: effectiveUrl, status: response.status, marker_found: html.includes(marker), fallback_used: fallbackUsed});
         } else {
           passed += 1;
-
-          if (!quiet) {
-            console.log(
-              `[validate:agent-live] PASS ${entry.id} ${effectiveUrl}${fallbackUsed ? ' (extensionless fallback)' : ''}`
-            );
-          }
+          if (!quiet) console.log(`[validate:agent-live] PASS ${entry.id} ${effectiveUrl}${fallbackUsed ? ' (extensionless fallback)' : ''}`);
         }
       }
     } catch (error) {
-      for (const entry of pageEntries) {
-        failures.push({
-          id: entry.id,
-          url,
-          error: error instanceof Error ? error.message : String(error)
-        });
-      }
+      for (const entry of pageEntries) failures.push({id: entry.id, url, error: error instanceof Error ? error.message : String(error)});
     }
   }
 
@@ -156,12 +104,7 @@ export async function validateAgentLive({runDate = '', fetchImpl = fetch, quiet 
     resolved,
     failures
   };
-
-  const out = path.join(
-    ROOT,
-    'artifacts/validation/agent-live-attestation.json'
-  );
-
+  const out = path.join(ROOT, 'artifacts/validation/agent-live-attestation.json');
   fs.mkdirSync(path.dirname(out), {recursive: true});
   fs.writeFileSync(out, `${JSON.stringify(report, null, 2)}\n`);
 
@@ -175,27 +118,14 @@ export async function validateAgentLive({runDate = '', fetchImpl = fetch, quiet 
   if (failures.length) {
     console.error('\nFAILURES');
     console.error(JSON.stringify(failures, null, 2));
-
-    const error = new Error(
-      `Agent live validation failed for ${failures.length} record(s).`
-    );
-
+    const error = new Error(`Agent live validation failed for ${failures.length} record(s).`);
     error.report = report;
     throw error;
   }
-
-  console.log(
-    `PASS: all ${date} required agent records are present in deployed HTML.`
-  );
-
+  console.log(`PASS: all ${date} required agent records are present in deployed HTML.`);
   return report;
 }
 
-if (
-  process.argv[1] &&
-  path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
-) {
-  validateAgentLive({
-    runDate: arg('--run-date')
-  }).catch(() => process.exit(1));
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  validateAgentLive({runDate: arg('--run-date')}).catch(() => process.exit(1));
 }
