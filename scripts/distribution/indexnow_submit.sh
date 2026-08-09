@@ -119,24 +119,24 @@ if cfg_path.exists():
         config_key_file = None
 
 verification = {"checked": False, "ok": False, "path": None, "expected": None, "actual": None}
-if config_key_file:
-    key_path = root / config_key_file
-    verification.update({"checked": True, "path": config_key_file, "expected": key})
-    if key_path.exists():
-        actual = key_path.read_text(encoding="utf-8").strip()
-        verification["actual"] = actual
-        verification["ok"] = actual == key
-    else:
-        verification["actual"] = "missing"
+key_file_name = config_key_file or f"{key}.txt"
+key_candidates = [
+    root / "site" / "public" / key_file_name,
+    root / "dist" / key_file_name,
+    root / key_file_name,
+]
+key_path = next((candidate for candidate in key_candidates if candidate.exists()), None)
+verification.update({
+    "checked": True,
+    "path": str((key_path or key_candidates[0]).relative_to(root)),
+    "expected": key,
+})
+if key_path is not None:
+    actual = key_path.read_text(encoding="utf-8").strip()
+    verification["actual"] = actual
+    verification["ok"] = actual == key
 else:
-    candidate = root / f"{key}.txt"
-    verification.update({"checked": True, "path": candidate.name, "expected": key})
-    if candidate.exists():
-        actual = candidate.read_text(encoding="utf-8").strip()
-        verification["actual"] = actual
-        verification["ok"] = actual == key
-    else:
-        verification["actual"] = "missing"
+    verification["actual"] = "missing"
 
 if not verification["ok"] and not dry_run:
     raise SystemExit(f"ERROR: IndexNow key verification file mismatch/missing: {verification['path']}")

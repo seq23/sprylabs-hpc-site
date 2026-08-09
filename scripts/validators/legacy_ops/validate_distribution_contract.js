@@ -42,10 +42,15 @@ for (const url of priority) if (!batch.includes(url)) fail(`priority URL missing
 const key = (config.indexnow.key || '').trim();
 const keyFile = (config.indexnow.key_file || '').trim();
 if (!key || !keyFile) fail('indexnow key and key_file must be committed and non-empty');
-const keyPath = path.join(root, keyFile);
-if (!fs.existsSync(keyPath)) fail(`configured key file missing: ${keyFile}`);
+const keyCandidates = [
+  path.join(root, 'site', 'public', keyFile),
+  path.join(root, 'dist', keyFile),
+  path.join(root, keyFile)
+];
+const keyPath = keyCandidates.find(candidate => fs.existsSync(candidate));
+if (!keyPath) fail(`configured key file missing from site/public, dist, and legacy repo root: ${keyFile}`);
 const content = fs.readFileSync(keyPath, 'utf8').trim();
-if (content !== key) fail(`configured key file mismatch: ${keyFile}`);
+if (content !== key) fail(`configured key file mismatch: ${path.relative(root, keyPath)}`);
 const bootstrapSource = fs.readFileSync(path.join(root, 'scripts/distribution', 'bootstrap_distribution.sh'), 'utf8');
 if (!bootstrapSource.includes('BOOTSTRAP_NOOP')) fail('bootstrap script must preserve committed IndexNow keys by default');
 console.log(`DISTRIBUTION CONTRACT PASS: priority=${priority.length} batch=${batch.length} chunk_size=${chunkSize} key_file=${keyFile}`);
