@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-08T15:11:36.748Z",
+  "generated_at": "2026-08-09T01:02:53.851Z",
   "status": "PASS",
-  "workflow_count": 2,
-  "traced_workflow_count": 2,
+  "workflow_count": 3,
+  "traced_workflow_count": 3,
   "traces": [
     {
       "workflow_id": "spry-content-release",
@@ -20,6 +20,14 @@
       "mode": "full",
       "stage_count": 5,
       "trace_path": "artifacts/validation/workflow-topology-fixtures/spry-full-rebuild/fixture-spry-full-rebuild/trace.json"
+    },
+    {
+      "workflow_id": "search-intelligence",
+      "topology_status": "canonical",
+      "lane": "search-intelligence",
+      "mode": "closed-loop",
+      "stage_count": 1,
+      "trace_path": "artifacts/validation/workflow-topology-fixtures/search-intelligence/fixture-search-intelligence/trace.json"
     }
   ],
   "errors": []

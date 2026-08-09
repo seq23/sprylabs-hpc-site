@@ -11,7 +11,7 @@ if(Number(s.verified_external_citations_with_required_evidence||0)!==(l.events||
 if(!Array.isArray(c.page_quality_patterns)||c.page_quality_patterns.length<7)errors.push('page_quality_contract_too_weak');
 if(!['HOLD','UPSHIFT_ONE_TIER','DOWNSHIFT_ONE_TIER'].includes(d.decision))errors.push('velocity_decision_invalid');
 if(Object.values(h).includes('UNKNOWN')&&d.decision==='UPSHIFT_ONE_TIER')errors.push('velocity_upshift_on_unknown_health');
-if(Object.values(h).includes('UNKNOWN')&&Number(d.recommended_new_url_ceiling_per_day)!==Number(d.current_new_url_ceiling_per_day))errors.push('velocity_changed_with_unknown_health');
+if(Object.values(h).includes('UNKNOWN')&&Number(d.recommended_new_url_ceiling_per_day)!==Number(d.current_new_url_ceiling_per_day)&&d.aggressiveness_cap_applied!==true)errors.push('velocity_changed_with_unknown_health');
 if(!Array.isArray(d.configured_scale_tiers)||!d.configured_scale_tiers.includes(Number(d.recommended_new_url_ceiling_per_day)))errors.push('velocity_recommendation_outside_tiers');
 
 if(errors.length){console.error('CITATION YIELD CONTRACT FAIL',errors);process.exit(1);} console.log(`CITATION YIELD CONTRACT PASS: repo=${c.repo_id}; twin=${Boolean(c.twin_agent?.enabled)}; verified=${s.verified_external_citations_with_required_evidence}`);

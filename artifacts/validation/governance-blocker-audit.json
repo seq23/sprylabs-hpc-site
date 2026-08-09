@@ -1,23 +1,23 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-08-08T15:11:37.097Z",
+  "generated_at": "2026-08-09T01:02:54.228Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 162,
+  "admitted_hard_fail_count": 168,
   "reviewed_count": 8,
-  "unreviewed_count": 154,
+  "unreviewed_count": 160,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 125,
-    "EXISTING_REPAIR_AVAILABLE": 5,
-    "TRUE_BLOCKER": 24,
+    "REVIEW_REQUIRED": 128,
+    "EXISTING_REPAIR_AVAILABLE": 6,
+    "TRUE_BLOCKER": 26,
     "REVIEW_WARNING_BOUNDARY": 8
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 125,
-    "EXISTING_REPAIR_AVAILABLE": 5,
-    "TRUE_BLOCKER": 24
+    "REVIEW_REQUIRED": 128,
+    "EXISTING_REPAIR_AVAILABLE": 6,
+    "TRUE_BLOCKER": 26
   },
   "migration_status_counts": {
-    "UNREVIEWED": 154,
+    "UNREVIEWED": 160,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -2417,21 +2417,6 @@
       "evidence": []
     },
     {
-      "validation_id": "VAL-ROOT-TREE",
-      "name": "validate:root-tree",
-      "command": "npm run validate:root-tree",
-      "owning_lane": "repository-structure",
-      "risk_prevented": "Prevents new loose operational files, temporary outputs, and unapproved top-level directories from drifting back into the repository root.",
-      "current_severity": "HARD_FAIL",
-      "matrix_ids": [
-        "MX-153"
-      ],
-      "suggested_review": "REVIEW_REQUIRED",
-      "migration_status": "UNREVIEWED",
-      "decision": null,
-      "evidence": []
-    },
-    {
       "validation_id": "VAL-BHPC-SEO-EXECUTION",
       "name": "validate:bhpc-seo-execution",
       "command": "npm run validate:bhpc-seo-execution",
@@ -2470,6 +2455,111 @@
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-171"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-SYNTHESIS-DIFFERENTIATION",
+      "name": "validate:synthesis-differentiation",
+      "command": "npm run validate:synthesis-differentiation",
+      "owning_lane": "rendered-content",
+      "risk_prevented": "Prevents near-duplicate rendered synthesis pages from re-entering the public cohort.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-SYNTHESIS-DIFFERENTIATION"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-SITE-LAYOUT-PARITY",
+      "name": "validate:site-layout",
+      "command": "npm run validate:site-layout",
+      "owning_lane": "artifact",
+      "risk_prevented": "Prevents route loss or source/deploy divergence after the approved root reorganization.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-SITE-LAYOUT-PARITY"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-VISIBLE-CONTENT-ARTIFACTS",
+      "name": "validate:visible-content-artifacts",
+      "command": "npm run validate:visible-content-artifacts",
+      "owning_lane": "rendered-content",
+      "risk_prevented": "Prevents known torn-sentence and visible n/a repair artifacts from reappearing.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-VISIBLE-CONTENT-ARTIFACTS"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-SEARCH-INTELLIGENCE",
+      "name": "validate:search-intelligence",
+      "command": "npm run validate:search-intelligence",
+      "owning_lane": "search-intelligence",
+      "risk_prevented": "Prevents query self-healing from mutating paid-agent-owned pages or representing unavailable providers as healthy.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-SEARCH-INTELLIGENCE"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-WF-SEARCH-INTELLIGENCE",
+      "name": "search-intelligence.yml",
+      "command": ".github/workflows/search-intelligence.yml",
+      "owning_lane": "search-intelligence",
+      "risk_prevented": "Prevents the independent SEO/AEO/GEO self-heal lane from bypassing governed mutation, provider truth, or protected AI-agent boundaries.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-WF-SEARCH-INTELLIGENCE"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-REPAIR-VISIBLE-CONTENT-ARTIFACTS",
+      "name": "repair:visible-content-artifacts",
+      "command": "npm run repair:visible-content-artifacts",
+      "owning_lane": "content-quality",
+      "risk_prevented": "Repairs known visible torn-pipeline prose before the final visible-content release guard.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-172"
+      ],
+      "suggested_review": "EXISTING_REPAIR_AVAILABLE",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-SEARCH-AGENT-BOUNDARY-PREPUSH-PROOF",
+      "name": "search:agent-boundary:prepush-proof",
+      "command": "npm run search:agent-boundary:prepush-proof",
+      "owning_lane": "search-intelligence",
+      "risk_prevented": "Produces deterministic prepush evidence that the protected AI-agent files exist as an isolated immutable boundary before workflow-lineage validation.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-173"
       ],
       "suggested_review": "TRUE_BLOCKER",
       "migration_status": "UNREVIEWED",

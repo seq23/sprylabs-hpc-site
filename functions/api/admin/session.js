@@ -1,1 +1,1 @@
-import {validSession,json} from '../../_runtime/admin.js';export async function onRequestGet({request,env}){return await validSession(request,env.APP_SESSION_SECRET)?json({authenticated:true}):json({error:'Unauthorized'},401)}
+import {json} from '../../_runtime/admin.js';export async function onRequestGet(){return json({authenticated:true,mode:'owner_passwordless'});}

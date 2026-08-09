@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0",
+  "contract": "sprylabs-search-intelligence-closed-loop-v1",
+  "repo_id": "sprylabs-hpc-site",
+  "public_domains": [
+    "billionairehighperformancecoach.com",
+    "spryexecutiveos.com"
+  ],
+  "own_site_google_performance_authority": "google_search_console",
+  "grounded_search_truth_kind": "grounded_search_observation_not_literal_serp_rank",
+  "repair_mode": "bounded_existing-page_self-heal",
+  "protected_agent_paths": [
+    "scripts/agent_intake/",
+    "data/report_fixes/agent_runs/",
+    "data/report_fixes/normalized_agent_runs/",
+    "data/report_fixes/agent_acceptance_manifests/"
+  ],
+  "protected_owner": "paid_agent",
+  "hard_rules": {
+    "provider_unavailable_is_not_green": true,
+    "gsc_is_google_truth": true,
+    "no_rank_conflation": true,
+    "no_publishing_cadence_change": true,
+    "agent_lane_is_never_writable": true,
+    "existing_intent_matched_page_before_new_url": true
+  },
+  "purpose": "Independent SEO/AEO/GEO closed loop: target queries -> grounded observation -> competitor/reference comparison -> GSC truth -> diagnosis -> bounded non-agent existing-page repair -> validation -> same-query retest -> before/after evidence. It is separate from AI-agent intake and never changes publishing cadence.",
+  "providers": {
+    "grounded_search": {
+      "provider_id": "google_genai_grounded_search",
+      "credential_env": "GEMINI_API_KEY",
+      "model_env": "SEARCH_INTELLIGENCE_GROUNDING_MODEL",
+      "default_model": "gemini-2.5-flash",
+      "endpoint": "https://generativelanguage.googleapis.com/v1beta/models",
+      "default_daily_call_budget": 24,
+      "budget_env": "SEARCH_INTELLIGENCE_DAILY_CALL_BUDGET",
+      "produces_literal_serp_rank": false
+    },
+    "search_console": {
+      "provider_id": "google_search_console",
+      "credential_env": "GSC_SERVICE_ACCOUNT_JSON",
+      "site_url_env_spry": "GSC_SITE_URL_SPRY",
+      "site_url_env_bhpc": "GSC_SITE_URL_BHPC",
+      "authoritative_for": [
+        "impressions",
+        "clicks",
+        "ctr",
+        "average_position",
+        "indexation_evidence"
+      ]
+    }
+  },
+  "repair_policy": {
+    "max_repairs_per_run": 5,
+    "writes_existing_non_agent_pages_only": true,
+    "requires_provider_evidence": true,
+    "requires_validation_after_apply": true,
+    "new_urls_forbidden": true,
+    "publishing_cadence_mutation_forbidden": true
+  },
+  "truth_boundaries": [
+    "Grounded search observation is not literal Google SERP rank.",
+    "Google Search Console is the authority for own-site Google impressions, clicks, CTR, and average position.",
+    "Provider unavailable or degraded is never green.",
+    "A repair is not successful until later same-query provider evidence proves improvement.",
+    "AI-agent intake/acceptance/absorb/apply is a separate protected subsystem and is never called by this lane."
+  ]
+}

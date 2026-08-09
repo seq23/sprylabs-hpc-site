@@ -1,0 +1,87 @@
+name: Search Intelligence Cycle
+
+# Independent SEO/AEO/GEO evidence and bounded self-heal lane.
+# It never invokes scripts/agent_intake and never changes the publishing cadence.
+on:
+  schedule:
+    - cron: "23 13 * * *"
+  workflow_dispatch:
+    inputs:
+      commit_evidence:
+        description: "Commit evidence and bounded non-agent repairs"
+        required: true
+        type: boolean
+        default: true
+      max_grounded_queries:
+        description: "Maximum grounded-search observations this run"
+        required: true
+        default: "24"
+        type: string
+
+env:
+  NODE_OPTIONS: --max-old-space-size=3072
+  PUSH_RETRY_ATTEMPTS: 5
+
+permissions:
+  contents: write
+
+concurrency:
+  group: main-automation
+  cancel-in-progress: false
+
+jobs:
+  search-intelligence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync latest main before install
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install GSC client only when provider credentials exist
+        if: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON != '' }}
+        run: python -m pip install --disable-pip-version-check google-api-python-client google-auth google-auth-httplib2 >/dev/null
+
+      - name: Run governed search-intelligence closed loop
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
+          GSC_SITE_URL_SPRY: ${{ secrets.GSC_SITE_URL_SPRY }}
+          GSC_SITE_URL_BHPC: ${{ secrets.GSC_SITE_URL_BHPC }}
+          SEARCH_INTELLIGENCE_DAILY_CALL_BUDGET: ${{ github.event_name == 'workflow_dispatch' && inputs.max_grounded_queries || '24' }}
+          SEARCH_SELF_HEAL_MAX_REPAIRS: "5"
+        run: npm run workflow:run -- --workflow search-intelligence -- npm run workflow:search-intelligence
+
+      - name: Commit evidence and bounded non-agent repairs safely
+        if: ${{ github.event_name == 'schedule' || inputs.commit_evidence }}
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
+          GSC_SITE_URL_SPRY: ${{ secrets.GSC_SITE_URL_SPRY }}
+          GSC_SITE_URL_BHPC: ${{ secrets.GSC_SITE_URL_BHPC }}
+          SEARCH_INTELLIGENCE_DAILY_CALL_BUDGET: ${{ github.event_name == 'workflow_dispatch' && inputs.max_grounded_queries || '24' }}
+          SEARCH_SELF_HEAL_MAX_REPAIRS: "5"
+          WORKFLOW_ARGV: npm run workflow:run -- --workflow search-intelligence -- npm run workflow:search-intelligence
+        run: ./.github/scripts/commit_and_push_if_changed.sh "search intelligence closed-loop evidence" search-intelligence
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: spry-search-intelligence-${{ github.run_id }}
+          if-no-files-found: warn
+          path: |
+            data/search_intelligence/**
+            reports/workflows/search-intelligence/**
+            artifacts/validation/search-intelligence.json
+            reports/implementation/protected_agent_runtime_proof.json

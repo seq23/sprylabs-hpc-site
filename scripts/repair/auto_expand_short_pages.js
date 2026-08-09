@@ -72,6 +72,15 @@ const holds = [];
 for (const file of listTargetFiles()) {
   const original = fs.readFileSync(file, 'utf8');
   let html = removeExistingRepairSections(original);
+  // Synthesis pages are owned by the differentiated synthesis renderer. Generic
+  // word-count filler would homogenize those pages and undo their query-specific value.
+  if (/^synthesis-.*\.html$/i.test(path.basename(file))) {
+    if (html !== original) {
+      fs.writeFileSync(file, html);
+      normalized.push({ file: path.relative(ROOT, file), removed_duplicate_repair_sections: true, words: countWords(html), synthesis_owned: true });
+    }
+    continue;
+  }
   const before = countWords(html);
   const status = classifyWordCount(before);
 

@@ -37,8 +37,10 @@ function main() {
     if (!item.slug) continue;
     const rel = `${item.slug}.html`;
     const file = path.join(ROOT, rel);
-    if (!admittedPaths.has(rel) && !allowCandidateRender) {
-      if (fs.existsSync(file)) fs.rmSync(file, { force: true });
+    const existingSourceTruth = fs.existsSync(file);
+    if (!admittedPaths.has(rel) && !allowCandidateRender && !existingSourceTruth) {
+      // Admission gates govern NEW candidate publication. Existing source-truth
+      // synthesis URLs are deterministically rerendered from differentiation profiles.
       held += 1;
       continue;
     }

@@ -4,6 +4,11 @@ import { execFileSync } from 'node:child_process';
 import { readJson, fail, pass, writeSummary } from './common.mjs';
 
 const errors = [];
+const PUBLIC_ROOT = path.resolve(process.env.BHPC_PUBLIC_ROOT || path.join('site','public'));
+function releasePath(rel) {
+  if (process.env.BHPC_LAYOUT_STAGE_ACTIVE === '1' && rel.startsWith('site/public/')) return path.join(PUBLIC_ROOT, rel.slice('site/public/'.length));
+  return rel;
+}
 const packageJson = readJson('package.json');
 const packageLock = readJson('package-lock.json');
 const updateContract = readJson('_repo_update_contract.json');
@@ -76,7 +81,8 @@ if (browserContract.expected_collected_policy !== 'critical_route_count_x_2') er
 if ((browserContract.evidence_outputs || []).includes('videos')) errors.push('browser evidence contract must not require videos');
 
 
-if (!fs.existsSync('favicon.ico') || fs.statSync('favicon.ico').size === 0) errors.push('root favicon.ico is missing or empty; Chromium requests it automatically and a 404 fails the browser suite');
+const publicFavicon = path.join(PUBLIC_ROOT,'favicon.ico');
+if (!fs.existsSync(publicFavicon) || fs.statSync(publicFavicon).size === 0) errors.push('site/public/favicon.ico is missing or empty; Chromium requests it automatically and a 404 fails the browser suite');
 const staticServerText = fs.readFileSync('scripts/browser/static_server.mjs', 'utf8');
 if (!staticServerText.includes("'.ico':'image/x-icon'")) errors.push('static server must serve .ico as image/x-icon');
 
@@ -84,17 +90,18 @@ const criticalRoutes = readJson('data/routes/critical_browser_route_manifest.jso
 const missingLocalResources = [];
 for (const route of criticalRoutes) {
   const source = route.source_file;
-  if (!fs.existsSync(source)) {
-    missingLocalResources.push(`${source}: source file missing`);
+  const publicSource = path.join(PUBLIC_ROOT, source);
+  if (!fs.existsSync(publicSource)) {
+    missingLocalResources.push(`${source}: source file missing under site/public`);
     continue;
   }
-  const html = fs.readFileSync(source, 'utf8');
+  const html = fs.readFileSync(publicSource, 'utf8');
   for (const match of html.matchAll(/(?:href|src)=["']([^"']+)["']/gi)) {
     const value = match[1].split(/[?#]/)[0];
     if (!value || /^(?:https?:|data:|mailto:|tel:|javascript:|#)/i.test(value)) continue;
     const candidate = value.startsWith('/')
-      ? path.join('.', value.replace(/^\/+/, ''))
-      : path.join(path.dirname(source), value);
+      ? path.join(PUBLIC_ROOT, value.replace(/^\/+/, ''))
+      : path.join(path.dirname(publicSource), value);
     if (!fs.existsSync(candidate)) missingLocalResources.push(`${source}: ${value}`);
   }
 }
@@ -142,7 +149,7 @@ for (const required of [
   'data/citation/agent_page_specs.json',
   'data/citation/agent_recommendation_acceptance.json',
   'scripts/validation/validate_agent_recommendations.py',
-  'favicon.ico',
+  'site/public/favicon.ico',
   'data/content/manual_expansion_pages.json',
   'data/content/manual_redirects.json',
   'data/search/semrush_manual_expansion.json',
@@ -152,7 +159,7 @@ for (const required of [
   'scripts/content/build_manual_expansion_pages.mjs',
   'scripts/validation/validate_manual_expansion.py',
   '_redirects',
-]) if (!fs.existsSync(required)) errors.push(`release-critical file missing: ${required}`);
+]) if (!fs.existsSync(releasePath(required))) errors.push(`release-critical file missing: ${required}`);
 
 writeSummary('validate-release-portability', {
   status: errors.length ? 'FAIL' : 'PASS',
@@ -161,4 +168,4 @@ writeSummary('validate-release-portability', {
   errors,
 });
 if (errors.length) fail(`[validate:release-portability] FAIL: ${errors.length} issue(s)`, errors);
-pass(`[validate:release-portability] OK: public lockfile, self-contained Python, packaged favicon, resolvable browser assets, 24-test browser budget, no FFmpeg dependency`);
+pass(`[validate:release-portability] OK: public lockfile, self-contained Python, site/public browser source, packaged favicon, resolvable browser assets, 24-test browser budget, no FFmpeg dependency`);

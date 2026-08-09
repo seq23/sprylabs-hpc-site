@@ -13,6 +13,7 @@ const expectedWorkflows = [
   'validate-repo.yml',
   'admin-command.yml',
   'admin-operations.yml',
+  'search-intelligence.yml',
 ].sort();
 const retiredWorkflows = [
   'citation-velocity-5k.yml',
@@ -27,12 +28,13 @@ const retiredWorkflows = [
   'whitepaper-release.yml',
   'workflow-monitor.yml',
 ];
-const mutationWorkflows = new Set(['spry-content-release.yml', 'spry-full-rebuild.yml']);
+const mutationWorkflows = new Set(['spry-content-release.yml', 'spry-full-rebuild.yml', 'search-intelligence.yml']);
 const allowedActions = new Set([
   'actions/checkout@v4',
   'actions/setup-node@v4',
   'actions/upload-artifact@v4',
   'actions/download-artifact@v4',
+  'actions/setup-python@v5',
 ]);
 const pkg = readJson('package.json');
 const packageScripts = pkg.scripts || {};
@@ -160,6 +162,11 @@ for (const name of actualWorkflows) {
     has(text, 'npm run postdeploy:public-click-audit', name);
     has(text, 'npx playwright install --with-deps chromium', name, 'Playwright browser install');
     if (!/permissions:\s*\n\s{2}contents:\s*read/m.test(text)) errors.push(`${name}: postdeploy audit workflow must be read-only`);
+  }
+  if (name === 'search-intelligence.yml') {
+    if (!text.includes('npm run workflow:search-intelligence') && !text.includes('bash .github/scripts/run_search_intelligence_cycle.sh')) errors.push(`${name}: missing separate search-intelligence runner`);
+    if (text.includes('node scripts/agent_intake/') || text.includes('npm run agent:')) errors.push(`${name}: search-intelligence workflow must not invoke AI-agent intake`);
+    has(text, 'reports/workflows/search-intelligence/', name, 'search-intelligence trace artifact path');
   }
   if (text.includes('SPRY_ADMIN_PASSWORD')) errors.push(`${name}: static workflow must not inject SPRY_ADMIN_PASSWORD into generated HTML`);
 }

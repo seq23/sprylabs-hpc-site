@@ -181,6 +181,73 @@
       "canonical_mode": "full",
       "topology_status": "canonical",
       "topology_command": "npm run workflow:spry-full-rebuild"
+    },
+    {
+      "id": "search-intelligence",
+      "name": "Search Intelligence Cycle",
+      "workflow_file": ".github/workflows/search-intelligence.yml",
+      "lane": "search-intelligence",
+      "workflow_command": "npm run workflow:search-intelligence",
+      "workflow_argv": [
+        "npm",
+        "run",
+        "workflow:search-intelligence"
+      ],
+      "commit_message": "search intelligence closed-loop evidence",
+      "schedule_cron": "23 13 * * *",
+      "manual_dispatch": true,
+      "monitor_max_age_hours": 36,
+      "remote_advance_strategy": "reset-regenerate-validate-recommit",
+      "lineage_inputs": [
+        "data/intake/query_universe.json",
+        "data/content_ownership_registry.json",
+        "data/search_intelligence/**",
+        "site/public/**"
+      ],
+      "lineage_outputs": [
+        "data/search_intelligence/**",
+        "site/public/**",
+        "dist/**",
+        "reports/workflows/search-intelligence/**",
+        "artifacts/validation/search-intelligence.json",
+        "reports/implementation/protected_agent_runtime_proof.json"
+      ],
+      "required_outputs": [
+        "data/search_intelligence/status.json",
+        "data/search_intelligence/target_query_set.json",
+        "site/public/agency/index.html",
+        "dist/agency/index.html",
+        "artifacts/validation/search-intelligence.json",
+        "reports/implementation/protected_agent_runtime_proof.json"
+      ],
+      "allowed_change_patterns": [
+        "data/search_intelligence/**",
+        "site/public/**",
+        "dist/**",
+        "reports/workflows/search-intelligence/**",
+        "reports/implementation/protected_agent_runtime_proof.json",
+        "artifacts/validation/search-intelligence.json"
+      ],
+      "forbidden_change_patterns": [
+        "scripts/agent_intake/**",
+        "data/report_fixes/agent_runs/**",
+        "data/report_fixes/normalized_agent_runs/**",
+        "data/report_fixes/agent_acceptance_manifests/**",
+        ".github/workflows/**",
+        ".github/scripts/**",
+        "config/**",
+        "scripts/**",
+        "tests/**",
+        "package.json",
+        "package-lock.json",
+        "_repo_*.json",
+        "_validation_registry.json",
+        "_repo_validation_matrix.json"
+      ],
+      "canonical_lane": "search-intelligence",
+      "canonical_mode": "closed-loop",
+      "topology_status": "canonical",
+      "topology_command": "npm run workflow:search-intelligence"
     }
   ]
 }

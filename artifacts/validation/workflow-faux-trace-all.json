@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-08T15:11:36.945968+00:00",
+  "generated_at": "2026-08-09T01:02:54.075957+00:00",
   "status": "PASS",
-  "workflow_count": 8,
+  "workflow_count": 9,
   "scenario_count": 33,
   "workflows": [
     "admin-command.yml",
@@ -10,6 +10,7 @@
     "daily-citation-intelligence.yml",
     "deploy-distribution.yml",
     "postdeploy-public-audit.yml",
+    "search-intelligence.yml",
     "spry-content-release.yml",
     "spry-full-rebuild.yml",
     "validate-repo.yml"
@@ -415,6 +416,7 @@
         "actions/setup-node@v4",
         "audit:step-3",
         "Install Playwright runtime",
+        "Resolve public base URL",
         "Run deployed public route audit",
         "actions/upload-artifact@v4"
       ],

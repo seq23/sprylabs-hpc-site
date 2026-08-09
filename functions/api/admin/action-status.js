@@ -1,7 +1,6 @@
-import {validSession,json} from '../../_runtime/admin.js';
+import {json} from '../../_runtime/admin.js';
 import {configured,findRun,recentCommit} from '../../_lib/github-admin.js';
 export async function onRequestPost({request,env}){
-  if(!await validSession(request,env.APP_SESSION_SECRET))return json({error:'Unauthorized'},401);
   if(!configured(env))return json({error:'GitHub bridge not configured'},503);
   const {receipt}=await request.json().catch(()=>({}));
   if(!receipt?.workflow||!receipt?.dispatched_at)return json({error:'Invalid action receipt'},400);

@@ -1679,16 +1679,6 @@
       "status": "ADMITTED"
     },
     {
-      "matrix_id": "MX-153",
-      "validation_id": "VAL-ROOT-TREE",
-      "lane": "repository-structure",
-      "command": "npm run validate:root-tree",
-      "order": 153,
-      "severity": "HARD_FAIL",
-      "release_effect": true,
-      "status": "ADMITTED"
-    },
-    {
       "matrix_id": "MX-154",
       "validation_id": "VAL-BHPC-SEO-EXECUTION",
       "lane": "agent-intake",
@@ -1717,9 +1707,79 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-SYNTHESIS-DIFFERENTIATION",
+      "validation_id": "VAL-SYNTHESIS-DIFFERENTIATION",
+      "lane": "rendered-content",
+      "command": "npm run validate:synthesis-differentiation",
+      "order": 172,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-SITE-LAYOUT-PARITY",
+      "validation_id": "VAL-SITE-LAYOUT-PARITY",
+      "lane": "artifact",
+      "command": "npm run validate:site-layout",
+      "order": 173,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-VISIBLE-CONTENT-ARTIFACTS",
+      "validation_id": "VAL-VISIBLE-CONTENT-ARTIFACTS",
+      "lane": "rendered-content",
+      "command": "npm run validate:visible-content-artifacts",
+      "order": 174,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-SEARCH-INTELLIGENCE",
+      "validation_id": "VAL-SEARCH-INTELLIGENCE",
+      "lane": "search-intelligence",
+      "command": "npm run validate:search-intelligence",
+      "order": 175,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-WF-SEARCH-INTELLIGENCE",
+      "validation_id": "VAL-WF-SEARCH-INTELLIGENCE",
+      "lane": "search-intelligence",
+      "command": ".github/workflows/search-intelligence.yml",
+      "order": 176,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-172",
+      "validation_id": "VAL-REPAIR-VISIBLE-CONTENT-ARTIFACTS",
+      "lane": "validation-control-plane",
+      "command": "npm run repair:visible-content-artifacts",
+      "order": 172,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-173",
+      "validation_id": "VAL-SEARCH-AGENT-BOUNDARY-PREPUSH-PROOF",
+      "lane": "validation-control-plane",
+      "command": "npm run search:agent-boundary:prepush-proof",
+      "order": 173,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 171,
+  "entry_count": 177,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -1789,6 +1849,10 @@
         {
           "id": "validate:workflow-contract",
           "command": "npm run validate:workflow-contract"
+        },
+        {
+          "id": "VAL-SEARCH-AGENT-BOUNDARY-PREPUSH-PROOF",
+          "command": "npm run search:agent-boundary:prepush-proof"
         },
         {
           "id": "validate:workflow-lineage",
@@ -1957,6 +2021,26 @@
         {
           "id": "VAL-BHPC-PAGE-SEO",
           "command": "npm run validate:page-seo"
+        },
+        {
+          "id": "VAL-SYNTHESIS-DIFFERENTIATION",
+          "command": "npm run validate:synthesis-differentiation"
+        },
+        {
+          "id": "VAL-SITE-LAYOUT-PARITY",
+          "command": "npm run validate:site-layout"
+        },
+        {
+          "id": "REPAIR-VISIBLE-CONTENT-ARTIFACTS",
+          "command": "npm run repair:visible-content-artifacts"
+        },
+        {
+          "id": "VAL-VISIBLE-CONTENT-ARTIFACTS",
+          "command": "npm run validate:visible-content-artifacts"
+        },
+        {
+          "id": "VAL-SEARCH-INTELLIGENCE",
+          "command": "npm run validate:search-intelligence"
         }
       ]
     },
@@ -2019,6 +2103,22 @@
         {
           "id": "VAL-BHPC-PAGE-SEO",
           "command": "npm run validate:page-seo"
+        },
+        {
+          "id": "VAL-SYNTHESIS-DIFFERENTIATION",
+          "command": "npm run validate:synthesis-differentiation"
+        },
+        {
+          "id": "VAL-SITE-LAYOUT-PARITY",
+          "command": "npm run validate:site-layout"
+        },
+        {
+          "id": "VAL-VISIBLE-CONTENT-ARTIFACTS",
+          "command": "npm run validate:visible-content-artifacts"
+        },
+        {
+          "id": "VAL-SEARCH-INTELLIGENCE",
+          "command": "npm run validate:search-intelligence"
         }
       ]
     },

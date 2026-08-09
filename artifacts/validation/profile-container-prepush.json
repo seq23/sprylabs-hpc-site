@@ -1,6 +1,6 @@
 {
   "profile": "container-prepush",
-  "started_at": "2026-08-08T15:10:39.985Z",
+  "started_at": "2026-08-09T01:01:52.589Z",
   "steps": [
     {
       "id": "VAL-ORCHESTRATION-CONTRACT",
@@ -95,6 +95,12 @@
     {
       "id": "validate:workflow-contract",
       "command": "npm run validate:workflow-contract",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-SEARCH-AGENT-BOUNDARY-PREPUSH-PROOF",
+      "command": "npm run search:agent-boundary:prepush-proof",
       "exit_code": 0,
       "status": "PASS"
     },
@@ -349,8 +355,38 @@
       "command": "npm run validate:page-seo",
       "exit_code": 0,
       "status": "PASS"
+    },
+    {
+      "id": "VAL-SYNTHESIS-DIFFERENTIATION",
+      "command": "npm run validate:synthesis-differentiation",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-SITE-LAYOUT-PARITY",
+      "command": "npm run validate:site-layout",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "REPAIR-VISIBLE-CONTENT-ARTIFACTS",
+      "command": "npm run repair:visible-content-artifacts",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-VISIBLE-CONTENT-ARTIFACTS",
+      "command": "npm run validate:visible-content-artifacts",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-SEARCH-INTELLIGENCE",
+      "command": "npm run validate:search-intelligence",
+      "exit_code": 0,
+      "status": "PASS"
     }
   ],
   "status": "PASS",
-  "finished_at": "2026-08-08T15:13:07.849Z"
+  "finished_at": "2026-08-09T01:04:29.651Z"
 }

@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.1",
+  "topology_schema_version": "1.2",
+  "workflow_id": "search-intelligence",
+  "workflow_name": "Search Intelligence Cycle",
+  "lane": "search-intelligence",
+  "mode": "closed-loop",
+  "contract_id": "search-intelligence",
+  "run_id": "fixture-search-intelligence",
+  "trace_only": true,
+  "fixture_input": {
+    "type": "workflow-topology-fixture",
+    "contract_id": "search-intelligence",
+    "lane": "search-intelligence",
+    "mode": "closed-loop",
+    "component_count": 1
+  },
+  "started_at": "2026-08-09T01:02:53.847Z",
+  "command": "npm run workflow:search-intelligence -- --mode closed-loop",
+  "command_exit_code": 0,
+  "contract_file": "data/workflows/workflow_contracts.json",
+  "workflow_file": ".github/workflows/search-intelligence.yml",
+  "validation": {
+    "status": "TRACE_ONLY_PASSED"
+  },
+  "lineage": {
+    "input_patterns": [
+      "data/intake/query_universe.json",
+      "data/content_ownership_registry.json",
+      "data/search_intelligence/**",
+      "site/public/**"
+    ],
+    "output_patterns": [
+      "data/search_intelligence/**",
+      "site/public/**",
+      "dist/**",
+      "reports/workflows/search-intelligence/**",
+      "artifacts/validation/search-intelligence.json",
+      "reports/implementation/protected_agent_runtime_proof.json"
+    ],
+    "inputs_before": [],
+    "outputs_after": [],
+    "changed_files": []
+  },
+  "status": "TRACE_ONLY_PASS",
+  "stages": [
+    {
+      "label": "search-intelligence-cycle",
+      "command": "npm run search:intelligence-cycle",
+      "started_at": "2026-08-09T01:02:53.848Z",
+      "completed_at": "2026-08-09T01:02:53.848Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "search-intelligence:closed-loop:search-intelligence-cycle",
+        "expected_command": "npm run search:intelligence-cycle"
+      }
+    }
+  ],
+  "completed_at": "2026-08-09T01:02:53.848Z"
+}

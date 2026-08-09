@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+import fs from 'node:fs';
+import {readJson,writeJson,stamp,ownerMap,safePublicFile,id,stripHtml} from './lib/core.mjs';
+const d=readJson('data/search_intelligence/search_diagnosis.json',{diagnoses:[]});const owners=ownerMap();const candidates=[];const max=Number(process.env.SEARCH_SELF_HEAL_MAX_REPAIRS||5);
+for(const x of (d.diagnoses||[]).filter(x=>x.actionable).sort((a,b)=>b.priority-a.priority).slice(0,max)){
+  const f=safePublicFile(x.owned_route);const own=owners.get(f.rel);if(own?.owner==='paid_agent'||own?.protected===true)continue;if(!fs.existsSync(f.path))continue;const html=fs.readFileSync(f.path,'utf8');const title=stripHtml((html.match(/<title[^>]*>([\s\S]*?)<\/title>/i)||[,''])[1]);const desc=(html.match(/<meta\b[^>]*\bname=["']description["'][^>]*\bcontent=["']([^"']*)["']/i)||[,''])[1];
+  const codes=(x.findings||[]).map(v=>v.code);let repair_type='answer_first_query_alignment';if(codes.includes('GSC_IMPRESSIONS_WITHOUT_CLICKS'))repair_type='snippet_alignment';else if(codes.includes('GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN'))repair_type='answer_and_comparison_clarity';
+  candidates.push({repair_id:`repair_${id(x.target_id+'|'+repair_type)}`,target_id:x.target_id,query:x.query,owned_route:x.owned_route,owned_file:f.rel,content_owner:own?.owner||'unknown',repair_type,basis:x.findings,evidence_used:x.evidence_used,baseline_gsc_metrics:x.gsc_query_metrics||null,baseline_grounded_own_domain_referenced:x.grounded_own_domain_referenced,baseline_competitor_domains:x.competitor_domains||[],priority:x.priority,current_title:title,current_description:desc,competitor_domains:x.competitor_domains||[],state:'PREPARED_NOT_APPLIED',new_url:false,publishes:false,mutates_publishing_cadence:false,agent_lane_excluded:true});
+}
+writeJson('data/search_intelligence/repair_candidates.json',{schema_version:'1.1',generated_at:stamp(),mode:'PREPARE_ONLY',publishes:false,mutates_publishing_cadence:false,new_urls:false,candidate_count:candidates.length,candidates});console.log(`[search:repair:prepare] ${candidates.length}`);

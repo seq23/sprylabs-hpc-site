@@ -1,24 +1,24 @@
 {
   "schema_version": "1.3",
-  "generated_at": "2026-08-08T15:11:37.099Z",
+  "generated_at": "2026-08-09T01:02:54.230Z",
   "status": "PASS",
-  "workflow_count": 2,
+  "workflow_count": 3,
   "reviewed_count": 0,
-  "skipped_count": 2,
+  "skipped_count": 3,
   "pass_count": 0,
   "fail_count": 0,
   "warning_count": 0,
   "safe_noise_count": 0,
   "raw_finding_count": 0,
   "aggregated_finding_count": 0,
-  "info_count": 2,
+  "info_count": 3,
   "governance_fixture_count": 11,
   "governance_blocker_audit": {
-    "admitted_hard_fail_count": 162,
+    "admitted_hard_fail_count": 168,
     "suggested_review_counts": {
-      "REVIEW_REQUIRED": 125,
-      "EXISTING_REPAIR_AVAILABLE": 5,
-      "TRUE_BLOCKER": 24,
+      "REVIEW_REQUIRED": 128,
+      "EXISTING_REPAIR_AVAILABLE": 6,
+      "TRUE_BLOCKER": 26,
       "REVIEW_WARNING_BOUNDARY": 8
     }
   },
@@ -36,6 +36,16 @@
     },
     {
       "workflow_id": "spry-full-rebuild",
+      "status": "SKIP",
+      "errors": [],
+      "warnings": [],
+      "safe_noise": [],
+      "info": [
+        "latest trace missing; no historical run available to hostile-review"
+      ]
+    },
+    {
+      "workflow_id": "search-intelligence",
       "status": "SKIP",
       "errors": [],
       "warnings": [],

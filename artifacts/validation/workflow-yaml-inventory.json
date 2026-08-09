@@ -2,7 +2,7 @@
   "schema_version": "2.0",
   "repo": "seq23/sprylabs-hpc-site",
   "generated_at": "2026-07-10T18:30:00Z",
-  "workflow_count": 8,
+  "workflow_count": 9,
   "topology": "full_safe_autonomy_eight_workflow_surface",
   "workflows": [
     {
@@ -177,12 +177,13 @@
       "path": ".github/workflows/postdeploy-public-audit.yml",
       "name": "Postdeploy Public Audit",
       "trigger": [
-        "workflow_dispatch"
+        "workflow_dispatch",
+        "workflow_run"
       ],
       "primary_command": "npm run postdeploy:public-click-audit",
       "repo_lane": "public-audit",
       "current_status": "keep_simplified",
-      "reason": "Velocity-aligned simplified public workflow surface; internal capabilities remain behind package scripts and consolidated governed release lanes.",
+      "reason": "Automatically runs after successful Deploy Distribution and remains manually dispatchable.",
       "allowed_runtime_mutations": [
         "data/**",
         "artifacts/validation/**",
@@ -216,6 +217,47 @@
         "reports/**"
       ],
       "validation_owner": "simplified workflow topology validators"
+    },
+    {
+      "path": ".github/workflows/search-intelligence.yml",
+      "name": "Search Intelligence Cycle",
+      "trigger": [
+        "workflow_dispatch",
+        "schedule"
+      ],
+      "primary_command": "npm run workflow:run -- --workflow search-intelligence",
+      "repo_lane": "search-intelligence",
+      "current_status": "keep_admitted",
+      "reason": "User-approved independent SEO/AEO/GEO closed loop with bounded existing-page repair, provider-truth boundaries, and a hard separation from AI-agent intake.",
+      "allowed_runtime_mutations": [
+        "data/search_intelligence/**",
+        "site/public/**",
+        "dist/**",
+        "reports/workflows/search-intelligence/**",
+        "reports/implementation/protected_agent_runtime_proof.json",
+        "artifacts/validation/search-intelligence.json"
+      ],
+      "forbidden_runtime_mutations": [
+        ".github/**",
+        "package.json",
+        "package-lock.json",
+        "scripts/**",
+        "docs/**",
+        "_repo*.json",
+        "_validation_registry.json",
+        "_repo_validation_matrix.json",
+        "data/workflows/**",
+        "data/report_fixes/agent_runs/**",
+        "data/report_fixes/normalized_agent_runs/**",
+        "data/report_fixes/agent_acceptance_manifests/**"
+      ],
+      "required_artifacts": [
+        "data/search_intelligence/**",
+        "artifacts/validation/search-intelligence.json",
+        "reports/workflows/search-intelligence/**",
+        "reports/implementation/protected_agent_runtime_proof.json"
+      ],
+      "validation_owner": "workflow contract, search-intelligence validator, agent-separation proof, runtime-mutation validator"
     },
     {
       "path": ".github/workflows/spry-content-release.yml",

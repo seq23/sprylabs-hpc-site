@@ -25,7 +25,17 @@ for (const contract of contracts) {
   const matchedOutputs = files.filter(file => matches(file, contract.lineage_outputs || []));
   if (matchedInputs.length === 0) errors.push(`${contract.id}: no current files match lineage inputs`);
   if (matchedOutputs.length === 0) errors.push(`${contract.id}: no current files match lineage outputs`);
-  for (const output of contract.required_outputs || []) if (!fs.existsSync(output)) errors.push(`${contract.id}: required output missing ${output}`);
+  for (const output of contract.required_outputs || []) {
+    let resolved = output;
+    if (process.env.BHPC_LAYOUT_STAGE_ACTIVE === '1') {
+      if (output.startsWith('site/public/') && process.env.BHPC_PUBLIC_ROOT) {
+        resolved = `${process.env.BHPC_PUBLIC_ROOT.replace(/\/$/, '')}/${output.slice('site/public/'.length)}`;
+      } else if (output.startsWith('dist/') && process.env.BHPC_DEPLOY_ROOT) {
+        resolved = `${process.env.BHPC_DEPLOY_ROOT.replace(/\/$/, '')}/${output.slice('dist/'.length)}`;
+      }
+    }
+    if (!fs.existsSync(resolved)) errors.push(`${contract.id}: required output missing ${output}`);
+  }
   report.push({
     workflow_id: contract.id,
     workflow_file: contract.workflow_file,

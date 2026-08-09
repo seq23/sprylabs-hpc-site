@@ -5334,38 +5334,6 @@
       "not_applicable_reason": null
     },
     {
-      "validation_id": "VAL-ROOT-TREE",
-      "status": "ADMITTED",
-      "name": "validate:root-tree",
-      "check_type": "validator",
-      "owning_lane": "repository-structure",
-      "risk_prevented": "Prevents new loose operational files, temporary outputs, and unapproved top-level directories from drifting back into the repository root.",
-      "existing_coverage_gap": "The root-tree guard was executable and called by repo validation but had not been admitted to the control plane.",
-      "scope": [
-        "repository"
-      ],
-      "proposed_severity": "HARD_FAIL",
-      "command": "npm run validate:root-tree",
-      "implementation_path": "scripts/validation/validate_root_tree.mjs",
-      "environment": "container",
-      "proof_tier": 1,
-      "positive_fixture": "fixtures/validation/repo/pass.json",
-      "negative_fixture": "fixtures/validation/repo/fail.json",
-      "evidence_output": "artifacts/diagnostics/<run-id>/validate-root-tree/summary.json",
-      "runtime_budget_seconds": 120,
-      "maintenance_owner": "repo",
-      "overlap_analysis": [
-        "validate:repo"
-      ],
-      "retirement_offset": null,
-      "decision": "Admitted during 2026-07-25 deep validation because the command is an active release or repository protection.",
-      "decision_date": "2026-07-25",
-      "matrix_ids": [
-        "MX-153"
-      ],
-      "not_applicable_reason": null
-    },
-    {
       "validation_id": "VAL-BHPC-SEO-EXECUTION",
       "status": "ADMITTED",
       "name": "validate:bhpc-seo-execution",
@@ -5465,8 +5433,237 @@
         "MX-171"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-SYNTHESIS-DIFFERENTIATION",
+      "status": "ADMITTED",
+      "name": "validate:synthesis-differentiation",
+      "check_type": "validator",
+      "owning_lane": "rendered-content",
+      "risk_prevented": "Prevents near-duplicate rendered synthesis pages from re-entering the public cohort.",
+      "existing_coverage_gap": "Prior keyword-swap check did not inspect rendered synthesis HTML.",
+      "scope": [
+        "site/public/synthesis-*.html"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:synthesis-differentiation",
+      "implementation_path": "scripts/validation/validate_synthesis_differentiation.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/synthesis-differentiation.json",
+      "runtime_budget_seconds": 60,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:no-keyword-swap-pages"
+      ],
+      "retirement_offset": null,
+      "decision": "Owner explicitly chose differentiation for the full source-truth synthesis cohort.",
+      "decision_date": "2026-08-08",
+      "matrix_ids": [
+        "MX-SYNTHESIS-DIFFERENTIATION"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-SITE-LAYOUT-PARITY",
+      "status": "ADMITTED",
+      "name": "validate:site-layout",
+      "check_type": "validator",
+      "owning_lane": "artifact",
+      "risk_prevented": "Prevents route loss or source/deploy divergence after the approved root reorganization.",
+      "existing_coverage_gap": "Public source moved from repository root to site/public; route parity must be proven without validating root aesthetics.",
+      "scope": [
+        "site/public",
+        "dist"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:site-layout",
+      "implementation_path": "scripts/site_layout/validate_route_parity.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "reports/implementation/site_layout_validation.json",
+      "runtime_budget_seconds": 60,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "build:all"
+      ],
+      "retirement_offset": "Replaces retired root-tree aesthetics validator.",
+      "decision": "Owner approved source-to-dist organization; validate route parity, not root aesthetics.",
+      "decision_date": "2026-08-08",
+      "matrix_ids": [
+        "MX-SITE-LAYOUT-PARITY"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-VISIBLE-CONTENT-ARTIFACTS",
+      "status": "ADMITTED",
+      "name": "validate:visible-content-artifacts",
+      "check_type": "validator",
+      "owning_lane": "rendered-content",
+      "risk_prevented": "Prevents known torn-sentence and visible n/a repair artifacts from reappearing.",
+      "existing_coverage_gap": "Existing page validators did not catch the exact visible repair artifacts identified by the Claude audit.",
+      "scope": [
+        "four known affected public surfaces"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:visible-content-artifacts",
+      "implementation_path": "scripts/validation/validate_visible_content_artifacts.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/visible-content-artifacts.json",
+      "runtime_budget_seconds": 30,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:page-seo"
+      ],
+      "retirement_offset": null,
+      "decision": "Bounded non-agent post-render guard for known visible artifact classes.",
+      "decision_date": "2026-08-08",
+      "matrix_ids": [
+        "MX-VISIBLE-CONTENT-ARTIFACTS"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-SEARCH-INTELLIGENCE",
+      "status": "ADMITTED",
+      "name": "validate:search-intelligence",
+      "check_type": "validator",
+      "owning_lane": "search-intelligence",
+      "risk_prevented": "Prevents query self-healing from mutating paid-agent-owned pages or representing unavailable providers as healthy.",
+      "existing_coverage_gap": "SEO/AEO/GEO closed-loop did not previously exist as an independent evidence lane.",
+      "scope": [
+        "data/search_intelligence",
+        "scripts/search_intelligence",
+        "site/public/agency"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:search-intelligence",
+      "implementation_path": "scripts/search_intelligence/validate.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/search-intelligence.json",
+      "runtime_budget_seconds": 60,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Independent search-intelligence lane approved; AI-agent intake remains protected.",
+      "decision_date": "2026-08-08",
+      "matrix_ids": [
+        "MX-SEARCH-INTELLIGENCE"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-WF-SEARCH-INTELLIGENCE",
+      "status": "ADMITTED",
+      "name": "search-intelligence.yml",
+      "check_type": "workflow",
+      "owning_lane": "search-intelligence",
+      "risk_prevented": "Prevents the independent SEO/AEO/GEO self-heal lane from bypassing governed mutation, provider truth, or protected AI-agent boundaries.",
+      "existing_coverage_gap": "The new closed-loop search-intelligence workflow is a distinct mutation surface and requires explicit admission.",
+      "scope": [
+        "github-actions",
+        "search-intelligence",
+        "seo-aeo-geo"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/search-intelligence.yml",
+      "implementation_path": ".github/workflows/search-intelligence.yml",
+      "environment": "ci",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "GitHub Actions trace plus data/search_intelligence evidence",
+      "runtime_budget_seconds": 5400,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted as a separate bounded search-intelligence closed-loop lane; AI-agent intake remains protected and uninvolved.",
+      "decision_date": "2026-08-08",
+      "matrix_ids": [
+        "MX-WF-SEARCH-INTELLIGENCE"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-REPAIR-VISIBLE-CONTENT-ARTIFACTS",
+      "status": "ADMITTED",
+      "name": "repair:visible-content-artifacts",
+      "check_type": "repair",
+      "owning_lane": "content-quality",
+      "risk_prevented": "Repairs known visible torn-pipeline prose before the final visible-content release guard.",
+      "existing_coverage_gap": "The bounded repair command was invoked by the canonical container-prepush profile but lacked active orchestration registry admission.",
+      "scope": [
+        "repository",
+        "public-html"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run repair:visible-content-artifacts",
+      "implementation_path": "scripts/repair/repair_visible_pipeline_artifacts.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/visible-content-artifact-repair.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:visible-content-artifacts"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted because it is a direct canonical container-prepush self-heal step and must be governed rather than bypass orchestration admission.",
+      "decision_date": "2026-08-08",
+      "matrix_ids": [
+        "MX-172"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-SEARCH-AGENT-BOUNDARY-PREPUSH-PROOF",
+      "status": "ADMITTED",
+      "name": "search:agent-boundary:prepush-proof",
+      "check_type": "evidence",
+      "owning_lane": "search-intelligence",
+      "risk_prevented": "Produces deterministic prepush evidence that the protected AI-agent files exist as an isolated immutable boundary before workflow-lineage validation.",
+      "existing_coverage_gap": "Workflow lineage required the protected-agent proof artifact before the runtime search-intelligence cycle had an opportunity to create its stronger before/after receipt.",
+      "scope": [
+        "repository",
+        "search-intelligence",
+        "agent-boundary"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run search:agent-boundary:prepush-proof",
+      "implementation_path": "scripts/search_intelligence/prove_agent_separation.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "reports/implementation/protected_agent_runtime_proof.json",
+      "runtime_budget_seconds": 30,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "validate:search-intelligence",
+        "search:intelligence-cycle"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted as a truthful prepush static-boundary receipt. The live search-intelligence cycle still overwrites this artifact with a before/after runtime proof after bounded repairs.",
+      "decision_date": "2026-08-08",
+      "matrix_ids": [
+        "MX-173"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 172,
-  "generated_at": "2026-07-27T17:50:00.000Z"
+  "record_count": 178,
+  "generated_at": "2026-08-08T23:30:00Z"
 }

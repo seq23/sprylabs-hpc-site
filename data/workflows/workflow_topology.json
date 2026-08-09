@@ -877,6 +877,27 @@
           }
         ]
       }
+    },
+    "search-intelligence": {
+      "command": "npm run workflow:search-intelligence",
+      "default_mode": "closed-loop",
+      "modes": [
+        "closed-loop"
+      ],
+      "replaces": [],
+      "lane_owner": "search-intelligence",
+      "stages_by_mode": {
+        "closed-loop": [
+          {
+            "label": "search-intelligence-cycle",
+            "command": [
+              "npm",
+              "run",
+              "search:intelligence-cycle"
+            ]
+          }
+        ]
+      }
     }
   },
   "deprecated_public_entrypoints": {

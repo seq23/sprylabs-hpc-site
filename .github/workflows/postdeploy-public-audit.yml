@@ -8,6 +8,10 @@ on:
         required: true
         default: "https://sprylabs-hpc-site.pages.dev"
         type: string
+  workflow_run:
+    workflows: ["Deploy Distribution"]
+    types: [completed]
+    branches: [main]
 
 env:
   NODE_OPTIONS: --max-old-space-size=3072
@@ -16,11 +20,12 @@ permissions:
   contents: read
 
 concurrency:
-  group: postdeploy-public-audit-${{ inputs.base_url }}
+  group: postdeploy-public-audit-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
   audit:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -34,11 +39,20 @@ jobs:
         run: |
           npm install --no-save playwright@1.61.1
           npx playwright install --with-deps chromium
+      - name: Resolve public base URL
+        id: target
+        env:
+          MANUAL_URL: ${{ inputs.base_url }}
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${MANUAL_URL:-}" ]; then
+            echo "base_url=$MANUAL_URL" >> "$GITHUB_OUTPUT"
+          else
+            echo "base_url=https://sprylabs-hpc-site.pages.dev" >> "$GITHUB_OUTPUT"
+          fi
       - name: Run deployed public route audit
         env:
-          PLAYWRIGHT_BASE_URL: ${{ inputs.base_url }}
-        run: |
-          npm run postdeploy:public-click-audit
+          PLAYWRIGHT_BASE_URL: ${{ steps.target.outputs.base_url }}
+        run: npm run postdeploy:public-click-audit
       - uses: actions/upload-artifact@v4
         if: always()
         with:
