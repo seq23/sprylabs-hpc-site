@@ -28,17 +28,21 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: npm
+
       - run: npm ci --ignore-scripts
-      - name: Install Playwright runtime
+
+      - name: Install Playwright browser runtime
         run: |
-          npm install --no-save playwright@1.61.1
           npx playwright install --with-deps chromium
+
       - name: Resolve public base URL
         id: target
         env:
@@ -49,10 +53,12 @@ jobs:
           else
             echo "base_url=https://sprylabs-hpc-site.pages.dev" >> "$GITHUB_OUTPUT"
           fi
+
       - name: Run deployed public route audit
         env:
           PLAYWRIGHT_BASE_URL: ${{ steps.target.outputs.base_url }}
         run: npm run postdeploy:public-click-audit
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:
