@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-09T17:03:29.570Z",
-  "files_scanned": 427,
-  "source_count": 211,
-  "hard_gate_source_count": 195,
+  "generated_at": "2026-08-11T16:06:35.956Z",
+  "files_scanned": 434,
+  "source_count": 216,
+  "hard_gate_source_count": 200,
   "warning_source_count": 33,
   "records": [
     {
@@ -493,6 +493,18 @@
       "classification": "mixed"
     },
     {
+      "file": "scripts/validation/page_audit_runner.mjs",
+      "hard_gate_signals": 5,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validation/page_scope.mjs",
+      "hard_gate_signals": 1,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/validation/python_runtime.mjs",
       "hard_gate_signals": 7,
       "warning_signals": 4,
@@ -505,14 +517,32 @@
       "classification": "mixed"
     },
     {
+      "file": "scripts/validation/run_profile_with_public_root.mjs",
+      "hard_gate_signals": 2,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/validation/run_rendered_schema_parity_sharded.mjs",
       "hard_gate_signals": 3,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/validation/self_test_changed_page_scope.mjs",
+      "hard_gate_signals": 5,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/validation/self_test_orchestration_contract.mjs",
       "hard_gate_signals": 6,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validation/self_test_page_audit_profile_routing.mjs",
+      "hard_gate_signals": 3,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },

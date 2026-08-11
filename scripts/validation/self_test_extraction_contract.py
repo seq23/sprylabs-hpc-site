@@ -26,9 +26,17 @@ for name,html,etype,expected in cases:
 html='<html><body><section data-llm-answer="true" data-extraction-type="howto"><h3>Step 1: A</h3><p>a</p><h3>Step 2: B</h3><p>b</p><h3>Step 3: C</h3><p>c</p></section><script id="CITATION_PAGE_SCHEMA" type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"HowTo","step":[{"@type":"HowToStep"}]}]}</script></body></html>'
 s=BeautifulSoup(html,'html.parser');ok,_,d=validate_extraction('schema-mismatch',s.select_one('section'),'howto');schema_ok,_,_=schema_parity(s,'howto',d,'HowTo')
 if not ok or schema_ok:errors.append('schema-mismatch: expected extraction pass and schema parity fail')
+# missing HowTo schema must fail even when the visible HowTo extraction is valid
+html='<html><body><section data-llm-answer="true" data-extraction-type="howto"><h3>Step 1: A</h3><p>a</p><h3>Step 2: B</h3><p>b</p><h3>Step 3: C</h3><p>c</p></section><script id="CITATION_PAGE_SCHEMA" type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage"}]}</script></body></html>'
+s=BeautifulSoup(html,'html.parser');ok,_,d=validate_extraction('missing-howto-schema',s.select_one('section'),'howto');schema_ok,_,_=schema_parity(s,'howto',d,'HowTo')
+if not ok or schema_ok:errors.append('missing-howto-schema: expected extraction pass and missing HowTo schema parity fail')
+# comparison extraction remains independently valid but must fail schema parity when its declared schema type is absent
+html='<html><body><section data-llm-answer="true" data-extraction-type="comparison"><table><tr><th>A</th><th>B</th></tr><tr><td>1</td><td>2</td></tr></table></section><script id="CITATION_PAGE_SCHEMA" type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage"}]}</script></body></html>'
+s=BeautifulSoup(html,'html.parser');ok,_,d=validate_extraction('missing-comparison-schema',s.select_one('section'),'comparison');schema_ok,_,_=schema_parity(s,'comparison',d,'DefinedTerm')
+if not ok or schema_ok:errors.append('missing-comparison-schema: expected extraction pass and missing DefinedTerm schema parity fail')
 # synchronized criteria reclassification fixture validates as criteria
 b=BeautifulSoup('<section data-named-framework="X"><h2>Decision Criteria</h2><ul><li>one useful item</li><li>two useful item</li><li>three useful item</li></ul></section>','html.parser').section
 if not validate_extraction('reclass',b,'criteria')[0]:errors.append('reclassification fixture should pass as criteria')
 if errors:
  print('[validate:extraction-contract:self-test] FAIL');[print(' -',e) for e in errors];raise SystemExit(1)
-print(f'[validate:extraction-contract:self-test] PASS: {len(cases)+2} fixtures')
+print(f'[validate:extraction-contract:self-test] PASS: {len(cases)+4} fixtures')

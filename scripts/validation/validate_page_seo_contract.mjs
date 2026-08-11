@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
+import {readCapturedScope} from './page_scope.mjs';
 
 const ROOT = process.cwd();
 const mode = process.argv.includes('--full') || process.env.VALIDATION_CACHE_MODE === 'full' ? 'full' : 'incremental';
@@ -83,9 +84,12 @@ function acceptanceByPath() {
 
 const active = activePaths();
 const acceptance = acceptanceByPath();
-const files = mode === 'full'
-  ? citablePagePaths().map(rel => path.join(ROOT, rel)).filter(fs.existsSync)
-  : [...active].map(rel => path.join(ROOT, rel)).filter(fs.existsSync);
+const scopedPaths = mode === 'full'
+  ? citablePagePaths()
+  : process.env.VALIDATION_PAGE_SCOPE_FILE
+    ? readCapturedScope(process.env.VALIDATION_PAGE_SCOPE_FILE).paths
+    : [...active];
+const files = scopedPaths.map(rel => path.join(ROOT, rel)).filter(fs.existsSync);
 const failures = [];
 const warnings = [];
 const checked = [];

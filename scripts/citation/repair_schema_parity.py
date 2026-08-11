@@ -12,6 +12,9 @@ from bs4 import BeautifulSoup
 CITATION_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(CITATION_DIR))
 from extraction_contract import extract_scope_steps
+VALIDATION_DIR = Path(__file__).resolve().parents[1] / 'validation'
+sys.path.insert(0, str(VALIDATION_DIR))
+from page_scope import repair_paths as validation_repair_paths
 ROOT=Path.cwd()
 ACTIVE_SCOPE=ROOT/'data/release/active_mutation_scope.json'
 
@@ -227,7 +230,9 @@ def repair_one(rel: str) -> int:
 
 def main():
     pages=json.loads((ROOT/'data/citation/citable_pages.json').read_text(encoding='utf-8'))['pages']
-    allowed=active_mutation_routes()
+    validation_scope=os.environ.get('VALIDATION_PAGE_SCOPE_FILE','').strip()
+    allowed_paths=validation_repair_paths(ROOT) if validation_scope else None
+    allowed_routes=None if validation_scope else active_mutation_routes()
     work=[]; skipped_frozen_scope=0
     for rec in pages:
         if rec.get('status','ACTIVE')!='ACTIVE':
@@ -235,7 +240,10 @@ def main():
         rel=rec.get('path')
         if not rel:
             continue
-        if allowed is not None and route_from_path(rel) not in allowed:
+        if allowed_paths is not None and rel not in allowed_paths:
+            skipped_frozen_scope += 1
+            continue
+        if allowed_paths is None and allowed_routes is not None and route_from_path(rel) not in allowed_routes:
             skipped_frozen_scope += 1
             continue
         work.append(rel)
@@ -246,7 +254,7 @@ def main():
         chunksize=max(1, len(work)//(workers*8))
         with ProcessPoolExecutor(max_workers=workers) as pool:
             changed=sum(pool.map(repair_one, work, chunksize=chunksize))
-    print(f'repair_schema_parity: changed={changed}; scoped={allowed is not None}; skipped_outside_scope={skipped_frozen_scope}; workers={workers}; pages={len(work)}')
+    print(f'repair_schema_parity: changed={changed}; scoped={allowed_paths is not None or allowed_routes is not None}; validation_scope={allowed_paths is not None}; skipped_outside_scope={skipped_frozen_scope}; workers={workers}; pages={len(work)}')
 
 if __name__ == '__main__':
     main()

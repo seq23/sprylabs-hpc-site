@@ -6,9 +6,13 @@ sys.dont_write_bytecode=True
 CITATION_DIR=Path(__file__).resolve().parents[1]/'citation';sys.path.insert(0,str(CITATION_DIR))
 from extraction_contract import normalize_type, CONTRACTS, SCHEMA_BY_TYPE
 from cache.page_cache import lookup as cache_lookup, store as cache_store
+from page_scope import validation_paths
 ROOT=Path.cwd();errors=[];warnings=[];rows=[]
 pages_payload=json.loads((ROOT/'data/citation/citable_pages.json').read_text())
 all_pages=[row for row in pages_payload.get('pages',[]) if row.get('status','ACTIVE')=='ACTIVE']
+scope_paths=validation_paths(ROOT)
+if scope_paths is not None:
+ all_pages=[row for row in all_pages if str(row.get('path') or '').lstrip('./') in scope_paths]
 shard_count=max(1,int(os.environ.get('EXTRACTION_FINAL_SHARD_COUNT','1')))
 shard_index=int(os.environ.get('EXTRACTION_FINAL_SHARD_INDEX','0'))
 pages=[row for idx,row in enumerate(all_pages) if idx % shard_count == shard_index]

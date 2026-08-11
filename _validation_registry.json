@@ -4624,8 +4624,8 @@
       "name": "validate:incremental-page-audit",
       "check_type": "validator",
       "owning_lane": "validation-control-plane",
-      "risk_prevented": "Prevents stale or mismatched page-validation proof from producing a false release pass.",
-      "existing_coverage_gap": "Adds dependency-aware content-addressed reuse of exact prior page proof with safe full-validation fallback.",
+      "risk_prevented": "Prevents changed workflows from being blocked by unrelated corpus debt while preserving exact proof for changed citable pages.",
+      "existing_coverage_gap": "Requires an exact captured changed-page scope and validates only that scope; missing scope is an internal error.",
       "scope": [
         "repository",
         "citation-pages"
@@ -4645,7 +4645,7 @@
         "validate:rendered-schema-parity"
       ],
       "retirement_offset": null,
-      "decision": "Admitted for incremental page validation and cache-safe release orchestration.",
+      "decision": "Admitted as the scope-required page audit for the changed validation profile.",
       "decision_date": "2026-07-11",
       "matrix_ids": [
         "MX-131"
@@ -4658,20 +4658,20 @@
       "name": "validate:full-page-audit",
       "check_type": "validator",
       "owning_lane": "validation-control-plane",
-      "risk_prevented": "Prevents stale or mismatched page-validation proof from producing a false release pass.",
-      "existing_coverage_gap": "Adds dependency-aware content-addressed reuse of exact prior page proof with safe full-validation fallback.",
+      "risk_prevented": "Prevents corpus-wide extraction, schema, or page-SEO drift from passing pre-push or full release validation.",
+      "existing_coverage_gap": "Provides scope-independent corpus proof for container-prepush and full-audit profiles.",
       "scope": [
         "repository",
         "citation-pages"
       ],
       "proposed_severity": "HARD_FAIL",
       "command": "npm run validate:full-page-audit",
-      "implementation_path": "scripts/validation/run_incremental_page_audit.mjs",
+      "implementation_path": "scripts/validation/run_full_page_audit.mjs",
       "environment": "container",
       "proof_tier": 1,
       "positive_fixture": "artifacts/validation/validation-cache-self-test.json",
       "negative_fixture": "artifacts/validation/validation-cache-self-test.json",
-      "evidence_output": "artifacts/validation/incremental-page-audit.json",
+      "evidence_output": "artifacts/validation/full-page-audit.json",
       "runtime_budget_seconds": 600,
       "maintenance_owner": "repo",
       "overlap_analysis": [
@@ -4679,7 +4679,7 @@
         "validate:rendered-schema-parity"
       ],
       "retirement_offset": null,
-      "decision": "Admitted for incremental page validation and cache-safe release orchestration.",
+      "decision": "Admitted as the scope-independent corpus page audit for container-prepush and full-audit profiles.",
       "decision_date": "2026-07-11",
       "matrix_ids": [
         "MX-132"

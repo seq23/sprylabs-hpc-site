@@ -12,6 +12,7 @@ CITATION_DIR=Path(__file__).resolve().parents[1]/"citation"
 sys.path.insert(0,str(CITATION_DIR))
 from extraction_contract import extract_scope_steps
 from cache.page_cache import lookup as cache_lookup, store as cache_store
+from page_scope import validation_paths
 
 ROOT=Path(__file__).resolve().parents[2]
 REG=json.loads((ROOT/'data/citation/citable_pages.json').read_text(encoding='utf-8'))
@@ -65,6 +66,9 @@ def visible_breadcrumbs(soup, canonical):
     return items
 
 all_pages=REG.get('pages',REG if isinstance(REG,list) else [])
+scope_paths=validation_paths(ROOT)
+if scope_paths is not None:
+    all_pages=[rec for rec in all_pages if str(rec.get('path') or rec.get('source_file') or '').lstrip('./') in scope_paths]
 shard_count=max(1,int(os.environ.get('SCHEMA_PARITY_SHARD_COUNT','1')))
 shard_index=int(os.environ.get('SCHEMA_PARITY_SHARD_INDEX','0'))
 pages=[rec for idx,rec in enumerate(all_pages) if idx % shard_count == shard_index]

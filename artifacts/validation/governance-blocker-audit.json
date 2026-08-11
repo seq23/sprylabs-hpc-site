@@ -1,6 +1,6 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-08-11T14:39:52.659Z",
+  "generated_at": "2026-08-11T16:05:09.591Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
   "admitted_hard_fail_count": 168,
   "reviewed_count": 8,
@@ -2106,7 +2106,7 @@
       "name": "validate:incremental-page-audit",
       "command": "npm run validate:incremental-page-audit",
       "owning_lane": "validation-control-plane",
-      "risk_prevented": "Prevents stale or mismatched page-validation proof from producing a false release pass.",
+      "risk_prevented": "Prevents changed workflows from being blocked by unrelated corpus debt while preserving exact proof for changed citable pages.",
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-131"
@@ -2121,7 +2121,7 @@
       "name": "validate:full-page-audit",
       "command": "npm run validate:full-page-audit",
       "owning_lane": "validation-control-plane",
-      "risk_prevented": "Prevents stale or mismatched page-validation proof from producing a false release pass.",
+      "risk_prevented": "Prevents corpus-wide extraction, schema, or page-SEO drift from passing pre-push or full release validation.",
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-132"
