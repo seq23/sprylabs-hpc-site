@@ -15,10 +15,11 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: admin-operation-${{ inputs.operation }}
+  group: main-automation
   cancel-in-progress: false
 env:
   NODE_OPTIONS: --max-old-space-size=3072
+  PUSH_RETRY_ATTEMPTS: 5
 jobs:
   operate:
     runs-on: ubuntu-latest
@@ -26,6 +27,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with: {fetch-depth: 0}
+      - name: Sync latest main before install
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
       - uses: actions/setup-node@v4
         with: {node-version: 24, cache: npm}
       - run: npm ci --ignore-scripts
@@ -44,18 +49,28 @@ jobs:
       - name: Rerun distribution
         if: inputs.operation == 'rerun_distribution'
         run: npm run distribution:prepare && npm run distribution:deploy
+      - name: Resolve replay command for repository-mutating admin operation
+        if: inputs.operation != 'submit_updated_pages' && inputs.operation != 'rerun_distribution'
+        run: |
+          case "${{ inputs.operation }}" in
+            refresh_surfaces)
+              echo 'WORKFLOW_ARGV=npm run distribution:prepare && npm run ownership:build && npm run admin:build' >> "$GITHUB_ENV"
+              ;;
+            run_self_healing)
+              echo 'WORKFLOW_ARGV=npm run self-heal:generated-content && npm run citation:self-heal && npm run validate:full-safe-autonomy && npm run admin:build' >> "$GITHUB_ENV"
+              ;;
+            fix_failed_pages)
+              echo 'WORKFLOW_ARGV=npm run self-heal:generated-content && npm run citation:self-heal && npm run validate:ownership && npm run safe-harbor:validate && npm run release:content-finalize && npm run admin:build' >> "$GITHUB_ENV"
+              ;;
+            *)
+              echo "Unsupported repository-mutating admin operation: ${{ inputs.operation }}" >&2
+              exit 2
+              ;;
+          esac
       - name: Commit validated repository changes
         if: inputs.operation != 'submit_updated_pages' && inputs.operation != 'rerun_distribution'
         run: |
-          if [[ -n "$(git status --porcelain)" ]]; then
-            git config user.name "spry-admin-bot"
-            git config user.email "actions@users.noreply.github.com"
-            git add -A
-            git commit -m "admin operation: ${{ inputs.operation }}"
-            git push
-          else
-            echo "No repository changes produced."
-          fi
+          ./.github/scripts/commit_and_push_if_changed.sh "admin operation: ${{ inputs.operation }}" admin-operations
       - uses: actions/upload-artifact@v4
         if: always()
         with:
