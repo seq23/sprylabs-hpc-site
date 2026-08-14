@@ -107,9 +107,43 @@ run_case() {
   fi
 }
 
+run_missing_replay_case() {
+  local case_dir="$tmp/missing_replay"
+  mkdir -p "$case_dir"
+  : > "$case_dir/git-calls.log"
+  printf '0' > "$case_dir/push-count"
+
+  set +e
+  PATH="$tmp/bin:$PATH" \
+  GIT_CALL_LOG="$case_dir/git-calls.log" \
+  PUSH_COUNT_FILE="$case_dir/push-count" \
+  PUSH_MODE=remote_advance \
+  WORKFLOW_ARGV= \
+  PUSH_RETRY_ATTEMPTS=3 \
+  PUSH_RETRY_DELAY_SECONDS=0 \
+  "$helper" "test commit" "test-workflow" >"$case_dir/stdout.log" 2>"$case_dir/stderr.log"
+  status=$?
+  set -e
+
+  if [ "$status" -ne 2 ]; then
+    echo "missing_replay: expected status 2, got $status" >&2
+    cat "$case_dir/stderr.log" >&2
+    exit 1
+  fi
+  if [ "$(cat "$case_dir/push-count")" -ne 1 ]; then
+    echo "missing_replay: unsafe second push occurred" >&2
+    exit 1
+  fi
+  if ! grep -q 'WORKFLOW_ARGV is required for safe replay' "$case_dir/stderr.log"; then
+    echo "missing_replay: safe-failure message missing" >&2
+    exit 1
+  fi
+}
+
 run_case remote_advance remote_advance 0 1 2
 run_case non_retryable non_retryable 128 0 1
 run_case transient transient 0 0 2
+run_missing_replay_case
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 writer_workflows=(
