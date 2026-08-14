@@ -5,10 +5,11 @@ on:
     - cron: "37 13 * * *"
 env:
   NODE_OPTIONS: --max-old-space-size=3072
+  PUSH_RETRY_ATTEMPTS: 5
 permissions:
   contents: write
 concurrency:
-  group: daily-citation-intelligence-main
+  group: main-automation
   cancel-in-progress: false
 jobs:
   daily-citation-intelligence:
@@ -17,6 +18,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with: {fetch-depth: 0}
+      - name: Sync latest main before install
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
       - uses: actions/setup-node@v4
         with: {node-version: 24, cache: npm}
       - run: npm ci --ignore-scripts
@@ -40,16 +45,13 @@ jobs:
         run: npm run validate:ownership && npm run safe-harbor:validate
       - name: Commit validated changes
         if: steps.runtime.outputs.run == 'true'
+        env:
+          WORKFLOW_ARGV: >-
+            npm run workflow:zero-dollar-autonomous &&
+            npm run validate:ownership &&
+            npm run safe-harbor:validate
         run: |
-          if [[ -n "$(git status --porcelain)" ]]; then
-            git config user.name "spry-zero-dollar-bot"
-            git config user.email "actions@users.noreply.github.com"
-            git add -A
-            git commit -m "zero-dollar citation intelligence: autonomous gap fill"
-            git push
-          else
-            echo "No eligible changes."
-          fi
+          ./.github/scripts/commit_and_push_if_changed.sh "zero-dollar citation intelligence: autonomous gap fill" daily-citation-intelligence
       - uses: actions/upload-artifact@v4
         if: always()
         with:
