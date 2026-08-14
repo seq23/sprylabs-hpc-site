@@ -27,7 +27,7 @@ run_governed_workflow_again() {
 }
 
 regenerate_after_remote_advance() {
-  echo "Remote main advanced; regenerating ${workflow_id} from origin/main"
+  echo "Regenerating governed workflow ${workflow_id} after remote main advance"
   git reset --hard origin/main
   git clean -fd
   run_governed_workflow_again
