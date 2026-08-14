@@ -19,31 +19,11 @@ fetch_remote_main() {
 }
 
 run_governed_workflow_again() {
-  if [ -n "$workflow_argv" ]; then
-    bash -lc "$workflow_argv"
-    return
+  if [ -z "$workflow_argv" ]; then
+    echo "WORKFLOW_ARGV is required for safe replay of ${workflow_id}; refusing to guess a recovery command" >&2
+    return 2
   fi
-
-  mapfile -d '' -t rerun_argv < <(node - "$workflow_id" <<'NODE'
-const fs = require('fs');
-const workflowId = process.argv[2];
-const contracts = JSON.parse(fs.readFileSync('data/workflows/workflow_contracts.json', 'utf8')).governed_workflows || [];
-const contract = contracts.find((item) => item.id === workflowId);
-if (!contract) {
-  console.error(`No governed workflow contract found for ${workflowId}`);
-  process.exit(1);
-}
-const args = [
-  'npm', 'run', 'workflow:run', '--',
-  '--workflow', contract.id, '--',
-  'npm', 'run', 'programmatic:run-lane', '--',
-  '--lane', contract.lane, '--',
-  ...contract.workflow_argv,
-];
-process.stdout.write(args.join('\0') + '\0');
-NODE
-  )
-  "${rerun_argv[@]}"
+  bash -lc "$workflow_argv"
 }
 
 regenerate_after_remote_advance() {
