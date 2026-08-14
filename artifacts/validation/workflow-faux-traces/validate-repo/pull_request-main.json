@@ -6,8 +6,9 @@
   "execution": "none_trace_only",
   "included_steps": [
     "actions/checkout@v4",
+    "Validate main-writer coordination and push recovery",
     "actions/setup-node@v4",
-    "validate:step-3",
+    "validate:step-4",
     "Build and validate exact distribution artifact",
     "actions/upload-artifact@v4",
     "actions/upload-artifact@v4"

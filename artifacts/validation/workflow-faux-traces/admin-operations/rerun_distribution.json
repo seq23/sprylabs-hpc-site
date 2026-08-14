@@ -6,9 +6,11 @@
   "execution": "none_trace_only",
   "included_steps": [
     "actions/checkout@v4",
+    "Sync latest main before install",
     "actions/setup-node@v4",
-    "operate:step-3",
+    "operate:step-4",
     "Rerun distribution",
+    "Resolve replay command for repository-mutating admin operation",
     "actions/upload-artifact@v4"
   ],
   "skipped_steps": [

@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-11T16:05:09.435615+00:00",
+  "generated_at": "2026-08-14T22:39:47.626659+00:00",
   "status": "PASS",
   "workflow_count": 9,
   "scenario_count": 33,
@@ -26,10 +26,11 @@
       "execution": "none_trace_only",
       "included_steps": [
         "actions/checkout@v4",
+        "Sync latest main before install",
         "actions/setup-node@v4",
-        "command:step-3",
+        "command:step-4",
         "Execute registered command",
-        "command:step-5",
+        "command:step-6",
         "Commit control state"
       ],
       "skipped_steps": [],
@@ -48,10 +49,11 @@
       "execution": "none_trace_only",
       "included_steps": [
         "actions/checkout@v4",
+        "Sync latest main before install",
         "actions/setup-node@v4",
-        "command:step-3",
+        "command:step-4",
         "Execute registered command",
-        "command:step-5",
+        "command:step-6",
         "Commit control state"
       ],
       "skipped_steps": [],
@@ -70,10 +72,11 @@
       "execution": "none_trace_only",
       "included_steps": [
         "actions/checkout@v4",
+        "Sync latest main before install",
         "actions/setup-node@v4",
-        "command:step-3",
+        "command:step-4",
         "Execute registered command",
-        "command:step-5",
+        "command:step-6",
         "Commit control state"
       ],
       "skipped_steps": [],
@@ -92,10 +95,11 @@
       "execution": "none_trace_only",
       "included_steps": [
         "actions/checkout@v4",
+        "Sync latest main before install",
         "actions/setup-node@v4",
-        "command:step-3",
+        "command:step-4",
         "Execute registered command",
-        "command:step-5",
+        "command:step-6",
         "Commit control state"
       ],
       "skipped_steps": [],
@@ -114,10 +118,11 @@
       "execution": "none_trace_only",
       "included_steps": [
         "actions/checkout@v4",
+        "Sync latest main before install",
         "actions/setup-node@v4",
-        "command:step-3",
+        "command:step-4",
         "Execute registered command",
-        "command:step-5",
+        "command:step-6",
         "Commit control state"
       ],
       "skipped_steps": [],
@@ -136,9 +141,11 @@
       "execution": "none_trace_only",
       "included_steps": [
         "actions/checkout@v4",
+        "Sync latest main before install",
         "actions/setup-node@v4",
-        "operate:step-3",
+        "operate:step-4",
         "Refresh authority surfaces",
+        "Resolve replay command for repository-mutating admin operation",
         "Commit validated repository changes",
         "actions/upload-artifact@v4"
       ],
@@ -163,9 +170,11 @@
       "execution": "none_trace_only",
       "included_steps": [
         "actions/checkout@v4",
+        "Sync latest main before install",
         "actions/setup-node@v4",
-        "operate:step-3",
+        "operate:step-4",
         "Submit updated pages",
+        "Resolve replay command for repository-mutating admin operation",
         "actions/upload-artifact@v4"
       ],
       "skipped_steps": [
@@ -190,9 +199,11 @@
       "execution": "none_trace_only",
       "included_steps": [
         "actions/checkout@v4",
+        "Sync latest main before install",
         "actions/setup-node@v4",
-        "operate:step-3",
+        "operate:step-4",
         "Run self-healing",
+        "Resolve replay command for repository-mutating admin operation",
         "Commit validated repository changes",
         "actions/upload-artifact@v4"
       ],
@@ -217,9 +228,11 @@
       "execution": "none_trace_only",
       "included_steps": [
         "actions/checkout@v4",
+        "Sync latest main before install",
         "actions/setup-node@v4",
-        "operate:step-3",
+        "operate:step-4",
         "Fix eligible failed pages",
+        "Resolve replay command for repository-mutating admin operation",
         "Commit validated repository changes",
         "actions/upload-artifact@v4"
       ],
@@ -244,9 +257,11 @@
       "execution": "none_trace_only",
       "included_steps": [
         "actions/checkout@v4",
+        "Sync latest main before install",
         "actions/setup-node@v4",
-        "operate:step-3",
+        "operate:step-4",
         "Rerun distribution",
+        "Resolve replay command for repository-mutating admin operation",
         "actions/upload-artifact@v4"
       ],
       "skipped_steps": [
@@ -271,8 +286,9 @@
       "execution": "none_trace_only",
       "included_steps": [
         "actions/checkout@v4",
+        "Sync latest main before install",
         "actions/setup-node@v4",
-        "daily-citation-intelligence:step-3",
+        "daily-citation-intelligence:step-4",
         "Check autonomous runtime state",
         "Run autonomous zero-dollar gap-filling lane",
         "Validate ownership and Safe Harbor",
@@ -294,8 +310,9 @@
       "execution": "none_trace_only",
       "included_steps": [
         "actions/checkout@v4",
+        "Sync latest main before install",
         "actions/setup-node@v4",
-        "daily-citation-intelligence:step-3",
+        "daily-citation-intelligence:step-4",
         "Check autonomous runtime state",
         "Run autonomous zero-dollar gap-filling lane",
         "Validate ownership and Safe Harbor",
@@ -317,8 +334,9 @@
       "execution": "none_trace_only",
       "included_steps": [
         "actions/checkout@v4",
+        "Sync latest main before install",
         "actions/setup-node@v4",
-        "daily-citation-intelligence:step-3",
+        "daily-citation-intelligence:step-4",
         "Check autonomous runtime state",
         "actions/upload-artifact@v4"
       ],
@@ -767,8 +785,9 @@
       "execution": "none_trace_only",
       "included_steps": [
         "actions/checkout@v4",
+        "Validate main-writer coordination and push recovery",
         "actions/setup-node@v4",
-        "validate:step-3",
+        "validate:step-4",
         "Build and validate exact distribution artifact",
         "actions/upload-artifact@v4",
         "actions/upload-artifact@v4"
@@ -788,8 +807,9 @@
       "execution": "none_trace_only",
       "included_steps": [
         "actions/checkout@v4",
+        "Validate main-writer coordination and push recovery",
         "actions/setup-node@v4",
-        "validate:step-3",
+        "validate:step-4",
         "Build and validate exact distribution artifact",
         "actions/upload-artifact@v4",
         "actions/upload-artifact@v4"
@@ -809,8 +829,9 @@
       "execution": "none_trace_only",
       "included_steps": [
         "actions/checkout@v4",
+        "Validate main-writer coordination and push recovery",
         "actions/setup-node@v4",
-        "validate:step-3",
+        "validate:step-4",
         "Build and validate exact distribution artifact",
         "actions/upload-artifact@v4",
         "actions/upload-artifact@v4"

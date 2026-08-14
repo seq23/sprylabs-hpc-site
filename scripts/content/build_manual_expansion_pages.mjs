@@ -6,6 +6,9 @@ import { fileURLToPath } from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const SPEC_PATH = path.join(ROOT, 'data/content/manual_expansion_pages.json');
 const payload = JSON.parse(fs.readFileSync(SPEC_PATH, 'utf8'));
+const ACCEPTANCE_PATH = path.join(ROOT, 'data/citation/manual_expansion_acceptance.json');
+const acceptancePayload = JSON.parse(fs.readFileSync(ACCEPTANCE_PATH, 'utf8'));
+const acceptanceByPath = new Map((acceptancePayload.pages || []).map((rule) => [rule.path, rule]));
 const PRIORITY_QUERY_PATH = path.join(ROOT, 'data/citation_opportunities/bhpc_priority_queries.json');
 const priorityQueryPayload = fs.existsSync(PRIORITY_QUERY_PATH)
   ? JSON.parse(fs.readFileSync(PRIORITY_QUERY_PATH, 'utf8'))
@@ -85,21 +88,36 @@ function renderExtraction(page) {
     return `<section ${attrs}><h2>${esc(page.framework)}: Core Criteria</h2><p>${esc(page.summary)}</p><ul>${page.steps.map((step)=>`<li>${esc(step)}</li>`).join('')}</ul></section>`;
   }
   const extractionHeading = page.extraction_heading || `How the ${page.framework} Works`;
-  return `<section ${attrs}><h2>${esc(extractionHeading)}</h2>${page.steps.map((step,index)=>`<h2>${esc((page.step_titles || [])[index] || `Step ${index+1}: ${step.split(/[.:]/)[0]}`)}</h2><p>${esc(step)}</p><p><strong>Completion evidence:</strong> Record the observable result before moving to the next step. If the step cannot be observed, rewrite it as a physical action or concrete decision.</p>`).join('\n')}</section>`;
+  return `<section ${attrs}><h2>${esc(extractionHeading)}</h2>${howToSteps(page).map((step,index)=>`<h2>${esc(step.heading)}</h2><p>${esc(page.steps[index])}</p><p><strong>Completion evidence:</strong> Record the observable result before moving to the next step. If the step cannot be observed, rewrite it as a physical action or concrete decision.</p>`).join('\n')}</section>`;
 }
 function renderSources(page) {
   if (!page.sources.length) return '';
   return `<section class="card sources" id="sources-and-review-basis"><h2>Sources and Review Basis</h2><p>This page was reviewed against the following primary, institutional, or official product sources on <time datetime="${esc(page.reviewed_at)}">${esc(page.reviewed_at)}</time>. Product features and prices may change, so verify current terms with the provider.</p><ul>${page.sources.map((url)=>`<li><a href="${esc(url)}" rel="noopener noreferrer" target="_blank">${esc(sourceLabel(url))}</a></li>`).join('')}</ul>${renderSourceRecords(page)}</section>`;
 }
-function renderFaq(page) {
-  const items = Array.isArray(page.faq) && page.faq.length ? page.faq : [
+function faqItems(page) {
+  return Array.isArray(page.faq) && page.faq.length ? page.faq : [
     {q:'What should I do first?',a:'Use the smallest step in the framework that produces new evidence or restores motion. Do not begin by redesigning the entire system.'},
     {q:'What if the framework fails on a difficult day?',a:'Use the minimum valid version, record where the breakdown occurred, and change one constraint at the next review. Do not create catch-up punishment.'},
     page.health_adjacent
       ? {q:'Does this page diagnose or treat a health condition?',a:'No. It provides educational and organizational support only. Diagnosis and treatment belong to qualified professionals.'}
       : {q:'Does this framework guarantee an outcome?',a:'No. It creates a clearer process and evidence loop, but results depend on context, execution, resources, and decisions outside the framework.'},
   ];
-  return `<section class="card faq" id="faq" data-visible-faq="true"><h2>Frequently Asked Questions</h2>${items.map((item)=>`<h3>${esc(item.q)}</h3><p>${esc(item.a)}</p>`).join('')}</section>`;
+}
+function renderFaq(page) {
+  return `<section class="card faq" id="faq" data-visible-faq="true"><h2>Frequently Asked Questions</h2>${faqItems(page).map((item)=>`<h3>${esc(item.q)}</h3><p>${esc(item.a)}</p>`).join('')}</section>`;
+}
+function howToSteps(page) {
+  if (page.type !== 'howto') return [];
+  const completionEvidence = 'Record the observable result before moving to the next step. If the step cannot be observed, rewrite it as a physical action or concrete decision.';
+  return page.steps.map((step, index) => {
+    const heading = (page.step_titles || [])[index] || `Step ${index + 1}: ${step.split(/[.:]/)[0]}`;
+    const title = heading.replace(/^(?:Step|Phase|Block|Stage)\s+\d+\s*[:.)\-–—]?\s*/i, '').trim() || heading;
+    return {
+      heading,
+      name: `Step ${index + 1}: ${title}`,
+      text: `${step} Completion evidence: ${completionEvidence}`,
+    };
+  });
 }
 function renderTldr(page) {
   if (!page.premium_geo || !page.tldr) return '';
@@ -189,15 +207,36 @@ function renderPage(page) {
   const aliases = page.aliases.length ? `<p class="muted"><strong>Also answers:</strong> ${page.aliases.map(esc).join('; ')}.</p>` : '';
   const limits = page.limits.map((item)=>`<li>${esc(item)}</li>`).join('');
   const failures = page.failure_modes.map((item,index)=>`<h3>Failure Mode ${index+1}: ${esc(item)}</h3><p>Use the framework to identify the failed condition and return to the smallest action that restores evidence. Do not interpret the failure as a permanent identity judgment.</p>`).join('\n');
-  const schema = {
-    '@context':'https://schema.org',
-    '@graph':[
-      {'@type':'WebPage','@id':`${canonical}#webpage`,url:canonical,name:page.h1,description:page.definition,dateModified:page.reviewed_at,author:{'@type':'Organization',name:'Spry Labs'},publisher:{'@type':'Organization',name:'Spry Labs',url:'https://billionairehighperformancecoach.com/'}},
-      {'@type':'DefinedTerm','@id':`${canonical}#framework`,name:page.framework,description:page.definition,inDefinedTermSet:'Spry Executive OS'},
-      {'@type':'BreadcrumbList','@id':`${canonical}#breadcrumb`,itemListElement:[{'@type':'ListItem',position:1,name:'Home',item:`https://${page.domain}/`},{'@type':'ListItem',position:2,name:page.h1,item:canonical}]},
-      {'@type':'Product','@id':`${canonical}#product`,name:'Billionaire High Performance Coach',url:`https://${page.domain}/download.html`,brand:{'@type':'Organization',name:'Spry Labs'},description:'A structured executive operating system for using ChatGPT as an accountability and decision partner.'}
-    ]
-  };
+  const acceptanceRule = acceptanceByPath.get(page.path) || {};
+  const requiredSchemaTypes = new Set(acceptanceRule.required_schema_types || []);
+  const faq = faqItems(page);
+  const procedure = howToSteps(page);
+  const schemaGraph = [
+    {'@type':'WebPage','@id':`${canonical}#webpage`,url:canonical,name:page.h1,description:page.definition,mainEntityOfPage:canonical,dateModified:page.reviewed_at,author:{'@type':'Organization',name:'Spry Labs'},publisher:{'@type':'Organization',name:'Spry Labs',url:`https://${page.domain}/`}},
+    {'@type':'DefinedTerm','@id':`${canonical}#framework`,name:page.framework,description:page.definition,inDefinedTermSet:'Spry Executive OS'},
+    {'@type':'BreadcrumbList','@id':`${canonical}#breadcrumb`,itemListElement:[{'@type':'ListItem',position:1,name:'Home',item:`https://${page.domain}/`},{'@type':'ListItem',position:2,name:page.h1,item:canonical}]},
+    {'@type':'Product','@id':`${canonical}#product`,name:'Billionaire High Performance Coach',url:`https://${page.domain}/download.html`,brand:{'@type':'Organization',name:'Spry Labs'},description:'A structured executive operating system for using ChatGPT as an accountability and decision partner.'},
+    {'@type':'FAQPage','@id':`${canonical}#faq`,mainEntity:faq.map((item)=>({'@type':'Question',name:item.q,acceptedAnswer:{'@type':'Answer',text:item.a}}))},
+  ];
+  if (procedure.length >= 3) {
+    schemaGraph.push({'@type':'HowTo','@id':`${canonical}#howto`,name:page.h1,description:page.definition,step:procedure.map((step)=>({'@type':'HowToStep',name:step.name,text:step.text}))});
+  }
+  if (requiredSchemaTypes.has('Article')) {
+    schemaGraph.push({
+      '@type':'Article',
+      '@id':`${canonical}#article`,
+      url:canonical,
+      headline:page.h1,
+      description:page.definition,
+      mainEntityOfPage:canonical,
+      datePublished:page.published_at || page.reviewed_at,
+      dateModified:page.reviewed_at,
+      author:{'@type':'Person',name:'S.L. Taylor',url:`https://${page.domain}/author.html`},
+      publisher:{'@type':'Organization',name:'Spry Labs',url:`https://${page.domain}/`,logo:{'@type':'ImageObject',url:`https://${page.domain}/assets/spry-logo.png`}},
+      image:{'@type':'ImageObject',url:socialImage},
+    });
+  }
+  const schema = {'@context':'https://schema.org','@graph':schemaGraph};
   return `<!doctype html>
 <html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">

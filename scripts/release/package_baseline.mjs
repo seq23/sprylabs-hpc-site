@@ -9,11 +9,22 @@ const contractPath = path.join(root, '_baseline_packaging_contract.json');
 const manifestPath = path.join(root, '_artifact_validation_manifest.json');
 const contract = JSON.parse(fs.readFileSync(contractPath, 'utf8'));
 const requiredFiles = Array.isArray(contract.required_files) ? contract.required_files : [];
+const requiredExecutableFiles = Array.isArray(contract.required_executable_files) ? contract.required_executable_files : [];
 
 const missing = requiredFiles.filter((relativePath) => !fs.existsSync(path.join(root, relativePath)));
 if (missing.length) {
   console.error('Baseline packaging blocked: required files are missing:');
   for (const relativePath of missing) console.error(` - ${relativePath}`);
+  process.exit(1);
+}
+
+const nonExecutable = requiredExecutableFiles.filter((relativePath) => {
+  const absolutePath = path.join(root, relativePath);
+  return !fs.existsSync(absolutePath) || (fs.statSync(absolutePath).mode & 0o111) === 0;
+});
+if (nonExecutable.length) {
+  console.error('Baseline packaging blocked: required executable files are not executable:');
+  for (const relativePath of nonExecutable) console.error(` - ${relativePath}`);
   process.exit(1);
 }
 
@@ -24,9 +35,13 @@ for (const relativePath of requiredFiles) {
     .update(fs.readFileSync(path.join(root, relativePath)))
     .digest('hex');
 }
+const modes = {};
+for (const relativePath of requiredFiles) {
+  modes[relativePath] = (fs.statSync(path.join(root, relativePath)).mode & 0o777).toString(8).padStart(3, '0');
+}
 const sourceFingerprint = crypto
   .createHash('sha256')
-  .update(JSON.stringify(hashes))
+  .update(JSON.stringify({ hashes, modes }))
   .digest('hex');
 
 let prior = {};
@@ -40,6 +55,7 @@ const manifest = {
   profile: prior.profile || 'packaging-only',
   source_tree_fingerprint: sourceFingerprint,
   critical_file_hashes: hashes,
+  critical_file_modes: modes,
   artifact_zip_sha256: 'SEE_SIDECAR_SHA256',
   local_browser_validation: prior.local_browser_validation || 'NOT_EXECUTED',
   required_local_command: prior.required_local_command || 'npm run release:prepush:local',
@@ -85,5 +101,6 @@ console.log(JSON.stringify({
   sha256: zipHash,
   source_fingerprint: sourceFingerprint,
   required_files_checked: requiredFiles.length,
+  required_executable_files_checked: requiredExecutableFiles.length,
   zip_integrity: 'PASS'
 }, null, 2));

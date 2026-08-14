@@ -307,5 +307,8 @@
     "coverage/coverage.json",
     "coverage/index.html"
   ],
-  "required_files_policy": "Required files are source-state or stable interface artifacts that must exist in a baseline snapshot. Rebuildable generated outputs are not mandatory source-package inputs."
+  "required_files_policy": "Required files are source-state or stable interface artifacts that must exist in a baseline snapshot. Rebuildable generated outputs are not mandatory source-package inputs.",
+  "required_executable_files": [
+    ".github/scripts/commit_and_push_if_changed.sh"
+  ]
 }
