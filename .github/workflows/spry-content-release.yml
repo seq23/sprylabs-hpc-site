@@ -86,6 +86,11 @@ jobs:
         run: npm run ownership:build && npm run admin:build
       - name: Commit validated Spry content release
         if: steps.runtime.outputs.run == 'true'
+        env:
+          WORKFLOW_ARGV: >-
+            npm run workflow:run -- --workflow spry-content-release -- npm run workflow:spry-content-release -- --mode "$RELEASE_MODE" &&
+            npm run ownership:build &&
+            npm run admin:build
         run: |
           ./.github/scripts/commit_and_push_if_changed.sh "spry content release" spry-content-release
       - uses: actions/upload-artifact@v4
