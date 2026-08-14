@@ -27,6 +27,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Validate main-writer coordination and push recovery
+        run: bash .github/scripts/test_commit_and_push_if_changed.sh
       - uses: actions/setup-node@v4
         with:
           node-version: 24

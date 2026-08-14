@@ -11,7 +11,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: spry-full-rebuild-main
+  group: main-automation
   cancel-in-progress: false
 
 jobs:
@@ -35,6 +35,8 @@ jobs:
         run: |
           npm run workflow:run -- --workflow spry-full-rebuild -- npm run workflow:spry-full-rebuild
       - name: Commit validated Spry full rebuild
+        env:
+          WORKFLOW_ARGV: npm run workflow:run -- --workflow spry-full-rebuild -- npm run workflow:spry-full-rebuild
         run: |
           ./.github/scripts/commit_and_push_if_changed.sh "spry full rebuild" spry-full-rebuild
       - uses: actions/upload-artifact@v4

@@ -7,13 +7,22 @@ on:
       reason: {description: "Optional reason", required: false, type: string}
 env:
   NODE_OPTIONS: --max-old-space-size=3072
+  PUSH_RETRY_ATTEMPTS: 5
 permissions:
   contents: write
+concurrency:
+  group: main-automation
+  cancel-in-progress: false
 jobs:
   command:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - name: Sync latest main before install
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
       - uses: actions/setup-node@v4
         with: {node-version: 24, cache: npm}
       - run: npm ci --ignore-scripts
@@ -25,9 +34,10 @@ jobs:
         run: node scripts/admin/run_admin_command.mjs
       - run: npm run admin:build && npm run validate:full-safe-autonomy
       - name: Commit control state
+        env:
+          ADMIN_ACTION: ${{ inputs.action }}
+          ADMIN_TARGET: ${{ inputs.target_id }}
+          ADMIN_REASON: ${{ inputs.reason }}
+          WORKFLOW_ARGV: node scripts/admin/run_admin_command.mjs && npm run admin:build && npm run validate:full-safe-autonomy
         run: |
-          if [[ -n "$(git status --porcelain)" ]]; then
-            git config user.name "spry-admin-bot"
-            git config user.email "actions@users.noreply.github.com"
-            git add -A && git commit -m "admin command: ${{ inputs.action }}" && git push
-          fi
+          ./.github/scripts/commit_and_push_if_changed.sh "admin command: ${ADMIN_ACTION}" admin-command
