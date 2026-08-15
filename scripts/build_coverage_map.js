@@ -440,6 +440,24 @@ function main() {
     redditPages: loadPublishedRedditPages(),
   });
 
+  // Required baseline artifacts must be byte-stable when their semantic inputs are unchanged.
+  // Preserve the previous generation timestamp instead of manufacturing drift on every validation run.
+  if (fs.existsSync(ADMIN_COVERAGE_JSON)) {
+    try {
+      const previous = JSON.parse(readText(ADMIN_COVERAGE_JSON));
+      const stripGeneratedAt = (value) => {
+        const copy = JSON.parse(JSON.stringify(value));
+        delete copy.generatedAtUtc;
+        return copy;
+      };
+      if (JSON.stringify(stripGeneratedAt(previous)) === JSON.stringify(stripGeneratedAt(report)) && previous.generatedAtUtc) {
+        report.generatedAtUtc = previous.generatedAtUtc;
+      }
+    } catch {
+      // A malformed prior artifact should be replaced by the newly generated valid payload.
+    }
+  }
+
   ensureDir(path.dirname(ADMIN_COVERAGE_JSON));
   fs.writeFileSync(ADMIN_COVERAGE_JSON, JSON.stringify(report, null, 2) + "\n", "utf8");
   fs.writeFileSync(OUT_JSON, JSON.stringify(publicCoverageReport(report), null, 2) + "\n", "utf8");

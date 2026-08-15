@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
+import {findBhpcAcceptanceRouteConflicts} from '../lib/bhpc_acceptance_invariants.mjs';
+import {normalizeBhpcInternalLinkHref, normalizeBhpcExternalCtaHref} from '../lib/bhpc_internal_links.mjs';
 const ROOT = process.cwd();
 function readJson(rel, fallback = null) { try { return JSON.parse(fs.readFileSync(path.join(ROOT, rel), 'utf8')); } catch { return fallback; } }
 function writeJson(rel, payload) { const file = path.join(ROOT, rel); fs.mkdirSync(path.dirname(file), {recursive: true}); fs.writeFileSync(file, `${JSON.stringify(payload, null, 2)}\n`); }
@@ -19,9 +21,16 @@ for (const entry of entries) {
     if (!Array.isArray(entry.required_strings) || entry.required_strings.length < 1) errors.push(`${entry.id}:insufficient_required_strings`);
     if (!Array.isArray(entry.required_block_types) || entry.required_block_types.length < 2) errors.push(`${entry.id}:insufficient_required_block_types`);
   }
+  for (const link of entry.required_internal_links || []) {
+    if (!normalizeBhpcInternalLinkHref(link?.to_url || '')) errors.push(`${entry.id}:non_internal_required_link:${link?.to_url || 'missing'}`);
+  }
+  for (const link of entry.required_external_cta_links || []) {
+    if (!normalizeBhpcExternalCtaHref(link?.to_url || '')) errors.push(`${entry.id}:unapproved_external_cta_link:${link?.to_url || 'missing'}`);
+  }
   if (entry.acceptance_status === 'BLOCKED' && !String(entry.blocked_reason || '').trim()) errors.push(`${entry.id}:blocked_without_reason`);
   if (!['REQUIRED','BLOCKED','NO_ACTION'].includes(entry.acceptance_status)) errors.push(`${entry.id}:unsupported_acceptance_status:${entry.acceptance_status}`);
 }
+for (const conflict of findBhpcAcceptanceRouteConflicts(entries)) errors.push(`contradictory_required_blocked_route:${conflict.key}:${conflict.acceptance_ids.join(',')}`);
 const runManifestErrors = [];
 for (const run of manifest?.run_manifests || []) {
   const payload = readJson(run.path, null);

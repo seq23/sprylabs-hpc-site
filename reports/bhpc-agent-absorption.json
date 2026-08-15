@@ -1,9 +1,22 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-08-14T22:39:25.708Z",
+  "generated_at": "2026-08-15T22:18:32.641Z",
   "status": "PASS",
   "ready_count": 0,
-  "skipped_by_policy": [],
+  "skipped_by_policy": [
+    {
+      "manifest": "data/report_fixes/agent_runs/2026-06-23/bhpc/agent_run_manifest.json",
+      "run_date": "2026-06-23",
+      "scope": "bhpc",
+      "reason": "before_exact_implementation_cutover"
+    },
+    {
+      "manifest": "data/report_fixes/agent_runs/2026-06-24/bhpc/agent_run_manifest.json",
+      "run_date": "2026-06-24",
+      "scope": "bhpc",
+      "reason": "before_exact_implementation_cutover"
+    }
+  ],
   "absorbed_count": 0,
   "absorbed": []
 }

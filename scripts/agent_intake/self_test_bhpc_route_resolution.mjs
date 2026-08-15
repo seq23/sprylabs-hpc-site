@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
-import {ROOT, writeJson} from './bhpc_agent_common.mjs';
+import {ROOT, writeJson, parseVelocityJson} from './bhpc_agent_common.mjs';
 import {resolveBhpcAgentRoute} from '../lib/bhpc_agent_route_resolver.mjs';
 import {requiredBlockTypesForPageFamily} from '../lib/bhpc_agent_block_schema.mjs';
 import {groupBhpcSemanticEntries, renderBhpcRecordEvidence} from '../lib/bhpc_agent_semantic_contract.mjs';
 import {deriveBhpcRequiredHeading} from '../lib/bhpc_agent_acceptance_parser.mjs';
+import {reconcileBhpcAcceptanceRouteConflicts} from './compile_bhpc_agent_acceptance_manifest.mjs';
+import {findBhpcAcceptanceRouteConflicts} from '../lib/bhpc_acceptance_invariants.mjs';
 
 const errors = [];
 function expect(label, condition, details = '') {
@@ -81,6 +83,66 @@ expect('new page spec stays create route', /CREATE/.test(newPageSpec.status), ne
 
 
 
+const aliQuery = "How can ChatGPT help me plan my day like Ali Abdaal's daily highlight method?";
+const evidenceBackedPayload = parseVelocityJson({
+  results: [{
+    query: aliQuery,
+    surfaces: {perplexity: {cited_sources: ['https://aliabdaal.com/newsletter/how-i-plan-my-day/']}}
+  }],
+  new_page_opportunities: [{query: aliQuery, recommended_cluster: 'competitor', why_worth_building: 'Build the evidence-backed comparison framework.'}]
+}, 'bhpc', '2099-01-01');
+const evidenceBackedSpec = evidenceBackedPayload.page_specs[0];
+expect('page opportunity inherits source evidence from matching result row', evidenceBackedSpec?.evidence_inherited === true && evidenceBackedSpec?.evidence_urls?.includes('https://aliabdaal.com/newsletter/how-i-plan-my-day/'), JSON.stringify(evidenceBackedSpec));
+expect('evidence-backed creator page remains admissible', evidenceBackedSpec?.operation === 'CREATE_NEW_TARGET_PAGE' && !evidenceBackedSpec?.blocked_reason, JSON.stringify(evidenceBackedSpec));
+
+const bareDomainPayload = parseVelocityJson({
+  results: [{query: aliQuery, surfaces: {perplexity: {cited_sources: ['aliabdaal.com/newsletter/how-i-plan-my-day/']}}}],
+  new_page_opportunities: [{query: aliQuery, recommended_cluster: 'competitor', why_worth_building: 'Bare first-party domains are valid evidence locators.'}]
+}, 'bhpc', '2099-01-01');
+const bareDomainSpec = bareDomainPayload.page_specs[0];
+expect('bare-domain first-party evidence is normalized and admitted', bareDomainSpec?.operation === 'CREATE_NEW_TARGET_PAGE' && bareDomainSpec?.evidence_urls?.some(url => /^https:\/\/aliabdaal\.com\//.test(url)), JSON.stringify(bareDomainSpec));
+
+const unrelatedEvidencePayload = parseVelocityJson({
+  results: [{query: aliQuery, surfaces: {perplexity: {cited_sources: ['https://example.com/unrelated-productivity-post']}}}],
+  new_page_opportunities: [{query: aliQuery, recommended_cluster: 'competitor', why_worth_building: 'Creator attribution requires creator-domain evidence.'}]
+}, 'bhpc', '2099-01-01');
+const unrelatedEvidenceSpec = unrelatedEvidencePayload.page_specs[0];
+expect('unrelated URL cannot satisfy creator-specific evidence requirement', unrelatedEvidenceSpec?.operation === 'BLOCKED_UNSUPPORTED_PERSON_ATTRIBUTION' && unrelatedEvidenceSpec?.evidence_required_domains?.includes('aliabdaal.com'), JSON.stringify(unrelatedEvidenceSpec));
+
+const existingCreateFixtureRel = 'fixtures/agent_artifacts/cross_vertical_shape/existing-create-intent-self-test.html';
+const existingCreateFixtureAbs = path.join(ROOT, existingCreateFixtureRel);
+fs.writeFileSync(existingCreateFixtureAbs, '<!doctype html><title>existing create-intent fixture</title>');
+const existingCreateRoute = resolveBhpcAgentRoute({
+  query: 'Existing create intent must stay create',
+  implementation_path: existingCreateFixtureRel,
+  source_section: 'json_new_page_opportunities',
+  source_intent_operation: 'CREATE_NEW_TARGET_PAGE',
+  operation: 'CREATE_NEW_TARGET_PAGE'
+});
+fs.unlinkSync(existingCreateFixtureAbs);
+expect('existing route preserves declared create intent on rerun', existingCreateRoute.status === 'DECLARED_CREATE_EXISTING' && existingCreateRoute.page_family !== 'intended_winner_repair', JSON.stringify(existingCreateRoute));
+
+const unsupportedPayload = parseVelocityJson({
+  results: [{query: aliQuery, surfaces: {perplexity: {cited_sources: []}}}],
+  new_page_opportunities: [{query: aliQuery, recommended_cluster: 'competitor', why_worth_building: 'Build only when source evidence exists.'}]
+}, 'bhpc', '2099-01-02');
+const unsupportedSpec = unsupportedPayload.page_specs[0];
+expect('unsupported creator page remains blocked', unsupportedSpec?.operation === 'BLOCKED_UNSUPPORTED_PERSON_ATTRIBUTION' && /source evidence/i.test(unsupportedSpec?.blocked_reason || ''), JSON.stringify(unsupportedSpec));
+
+const conflictPath = 'answers/creator-evidence-conflict-self-test.html';
+const reconciledConflict = reconcileBhpcAcceptanceRouteConflicts([
+  {id:'conflict-required',record_id:'conflict-required',run_date:'2099-01-03',scope:'bhpc',implementation_path:conflictPath,acceptance_status:'REQUIRED',operation:'CREATE_NEW_TARGET_PAGE',route_status:'DECLARED_CREATE',blocked_reason:''},
+  {id:'conflict-blocked',record_id:'conflict-blocked',run_date:'2099-01-03',scope:'bhpc',implementation_path:conflictPath,acceptance_status:'BLOCKED',operation:'BLOCKED_UNSUPPORTED_PERSON_ATTRIBUTION',route_status:'BLOCKED_SOURCE_ROW',blocked_reason:'creator-specific behavior claim lacks source evidence'}
+]);
+expect('conflicting acceptance rows use most-restrictive route state', reconciledConflict.every(entry => entry.acceptance_status === 'BLOCKED'), JSON.stringify(reconciledConflict));
+expect('required duplicate inherits blocked reason instead of rendering', /source evidence/i.test(reconciledConflict.find(entry => entry.id === 'conflict-required')?.blocked_reason || ''), JSON.stringify(reconciledConflict));
+const rawAcceptanceConflicts = findBhpcAcceptanceRouteConflicts([
+  {id:'validator-required',run_date:'2099-01-03',scope:'bhpc',implementation_path:conflictPath,acceptance_status:'REQUIRED'},
+  {id:'validator-blocked',run_date:'2099-01-03',scope:'bhpc',implementation_path:conflictPath,acceptance_status:'BLOCKED'}
+]);
+expect('standalone acceptance invariant detects REQUIRED/BLOCKED contradiction', rawAcceptanceConflicts.length === 1 && rawAcceptanceConflicts[0].required_ids.includes('validator-required') && rawAcceptanceConflicts[0].blocked_ids.includes('validator-blocked'), JSON.stringify(rawAcceptanceConflicts));
+expect('reconciled acceptance entries contain no standalone contradiction', findBhpcAcceptanceRouteConflicts(reconciledConflict).length === 0, JSON.stringify(reconciledConflict));
+
 const semanticBase = {
   run_date: '2026-08-01',
   scope: 'bhpc',
@@ -110,7 +172,7 @@ const report = {
   validator: 'bhpc-route-resolution-self-test',
   generated_at: new Date().toISOString(),
   status: errors.length ? 'FAIL' : 'PASS',
-  cases: {unambiguousTitleTypo, ambiguousTitleTypo, existingPathTypo, newPageSpec, semantic_group_count: semanticGroups.length, derived_heading: derivedHeading},
+  cases: {unambiguousTitleTypo, ambiguousTitleTypo, existingPathTypo, newPageSpec, evidenceBackedSpec, bareDomainSpec, unrelatedEvidenceSpec, existingCreateRoute, unsupportedSpec, reconciledConflict, rawAcceptanceConflicts, semantic_group_count: semanticGroups.length, derived_heading: derivedHeading},
   errors
 };
 writeJson('artifacts/validation/bhpc-route-resolution-self-test.json', report);
@@ -120,4 +182,4 @@ if (errors.length) {
   for (const error of errors) console.error(` - ${error}`);
   process.exit(1);
 }
-console.log('[bhpc-route-resolution-self-test] PASS: route resolution, semantic grouping, family block requirements, and heading extraction');
+console.log('[bhpc-route-resolution-self-test] PASS: route resolution, strict evidence provenance, create-intent reruns, conflict blocking, semantic grouping, family block requirements, and heading extraction');

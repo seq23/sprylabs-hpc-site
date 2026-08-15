@@ -178,6 +178,80 @@ function compact(value = '') {
   return String(value || '').replace(/\s+/g, ' ').trim();
 }
 
+function normalizeEvidenceQuery(value = '') {
+  return compact(value).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+function normalizeEvidenceUrl(value = '') {
+  let raw = String(value || '').trim().replace(/^[<\[(]+|[>\]),.;:]+$/g, '');
+  if (!raw) return '';
+  if (/^www\./i.test(raw)) raw = `https://${raw}`;
+  else if (!/^https?:\/\//i.test(raw) && /^[a-z0-9.-]+\.[a-z]{2,}(?:[\/:?#].*)?$/i.test(raw)) raw = `https://${raw}`;
+  try {
+    const parsed = new URL(raw);
+    if (!['http:', 'https:'].includes(parsed.protocol)) return '';
+    parsed.hash = '';
+    return parsed.toString();
+  } catch { return ''; }
+}
+
+function collectUrlsFromValue(value, out = []) {
+  if (value === null || value === undefined) return out;
+  if (Array.isArray(value)) {
+    for (const item of value) collectUrlsFromValue(item, out);
+    return out;
+  }
+  if (typeof value === 'object') {
+    for (const inner of Object.values(value)) collectUrlsFromValue(inner, out);
+    return out;
+  }
+  const scalar = String(value).trim();
+  const direct = normalizeEvidenceUrl(scalar);
+  if (direct) out.push(direct);
+  for (const match of scalar.match(/https?:\/\/[^\s\"'<>\])}]+/g) || []) {
+    const normalized = normalizeEvidenceUrl(match);
+    if (normalized) out.push(normalized);
+  }
+  return out;
+}
+
+export function requiredEvidenceDomainsForQuery(query = '') {
+  const text = String(query || '').toLowerCase();
+  if (/\bali abdaal\b/.test(text)) return ['aliabdaal.com'];
+  return [];
+}
+
+function evidenceUrlMatchesDomain(url = '', domain = '') {
+  try {
+    const host = new URL(url).hostname.toLowerCase().replace(/^www\./, '');
+    const wanted = String(domain || '').toLowerCase().replace(/^www\./, '');
+    return host === wanted || host.endsWith(`.${wanted}`);
+  } catch { return false; }
+}
+
+export function collectAgentEvidenceUrls(row = {}) {
+  const urls = [];
+  const evidenceKeys = [
+    'source_url', 'source_urls', 'evidence_url', 'evidence_urls', 'competitor_url',
+    'cited_source', 'cited_sources', 'citation', 'citations', 'inherited_evidence_urls'
+  ];
+  for (const key of evidenceKeys) collectUrlsFromValue(row?.[key], urls);
+  const surfaces = row?.surfaces;
+  if (surfaces && typeof surfaces === 'object') {
+    for (const surface of Object.values(surfaces)) {
+      if (!surface || typeof surface !== 'object') continue;
+      for (const key of evidenceKeys) collectUrlsFromValue(surface?.[key], urls);
+    }
+  }
+  const seen = new Set();
+  return urls.filter(url => {
+    const key = String(url).toLowerCase();
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 function isBlankish(value) {
   const text = compact(value);
   return !text || /^n\/?a$/i.test(text) || /^none$/i.test(text);
@@ -319,12 +393,14 @@ function canonicalPagePathForOpportunity(item, scope) {
   return `${family}/${slug(query)}.html`;
 }
 
-function pageSpecFromJsonItem(item, index, scope, runDate, sourceSection = 'json_pages_to_build') {
+export function pageSpecFromJsonItem(item, index, scope, runDate, sourceSection = 'json_pages_to_build') {
   const query = stringifyField(pick(item, ['query','title','topic','question'])) || `${scope} page spec ${index + 1}`;
   const cluster = stringifyField(pick(item, ['recommended_cluster','cluster','category'])) || 'agent-pages-to-build';
   const why = stringifyField(pick(item, ['why_worth_building','reason','recommendation','notes','gap']));
   const explicitPath = pathFromRepoFilePath(pick(item, ['implementation_path','repo_file_path','intended_winner_path']));
-  const unsupportedPersonAttribution = /\bali abdaal\b/i.test(String(query)) && !pick(item, ['source_url','source_urls','evidence_url','evidence_urls','competitor_url']);
+  const evidenceUrls = collectAgentEvidenceUrls(item);
+  const evidenceRequiredDomains = requiredEvidenceDomainsForQuery(query);
+  const missingRequiredEvidence = evidenceRequiredDomains.length > 0 && !evidenceRequiredDomains.every(domain => evidenceUrls.some(url => evidenceUrlMatchesDomain(url, domain)));
   return {
     id: `${runDate}-${scope}-${sourceSection}-${String(index + 1).padStart(3, '0')}`,
     scope,
@@ -332,8 +408,11 @@ function pageSpecFromJsonItem(item, index, scope, runDate, sourceSection = 'json
     recommended_cluster: String(cluster).trim(),
     why_worth_building: why.trim(),
     implementation_path: explicitPath || canonicalPagePathForOpportunity(item, scope),
-    operation: unsupportedPersonAttribution ? 'BLOCKED_UNSUPPORTED_PERSON_ATTRIBUTION' : 'CREATE_NEW_TARGET_PAGE',
-    blocked_reason: unsupportedPersonAttribution ? 'creator-specific behavior claim lacks source evidence' : '',
+    operation: missingRequiredEvidence ? 'BLOCKED_UNSUPPORTED_PERSON_ATTRIBUTION' : 'CREATE_NEW_TARGET_PAGE',
+    blocked_reason: missingRequiredEvidence ? `creator-specific behavior claim lacks required first-party source evidence (${evidenceRequiredDomains.join(', ')})` : '',
+    evidence_urls: evidenceUrls,
+    evidence_required_domains: evidenceRequiredDomains,
+    evidence_inherited: Array.isArray(item?.inherited_evidence_urls) && item.inherited_evidence_urls.length > 0,
     source: sourceSection,
     source_section: sourceSection,
     source_signature: sourceSignature({...item, source_section: sourceSection}, {source_section: sourceSection}),
@@ -341,7 +420,7 @@ function pageSpecFromJsonItem(item, index, scope, runDate, sourceSection = 'json
   };
 }
 
-function parseVelocityJson(payload, scope, runDate) {
+export function parseVelocityJson(payload, scope, runDate) {
   if (!payload || typeof payload !== 'object' || Array.isArray(payload)) return {rows: [], page_specs: [], scoreboard: null, json_vertical: ''};
   const categories = [
     ['results', 'result'],
@@ -361,6 +440,15 @@ function parseVelocityJson(payload, scope, runDate) {
       if (item && typeof item === 'object') rows.push({...item, category, source_section: key, vertical: payload.vertical || payload.scope || scope});
     }
   }
+  const evidenceByQuery = new Map();
+  for (const row of rows) {
+    const key = normalizeEvidenceQuery(pick(row, ['query','title','topic','question']));
+    if (!key) continue;
+    const urls = collectAgentEvidenceUrls(row);
+    if (!urls.length) continue;
+    const merged = [...(evidenceByQuery.get(key) || []), ...urls];
+    evidenceByQuery.set(key, [...new Set(merged)]);
+  }
   const pageSpecSources = [
     ['pages_to_build', 'json_pages_to_build'],
     ['new_page_opportunities', 'json_new_page_opportunities']
@@ -369,7 +457,11 @@ function parseVelocityJson(payload, scope, runDate) {
   for (const [key, sourceSection] of pageSpecSources) {
     const items = Array.isArray(payload[key]) ? payload[key] : [];
     for (const item of items) {
-      if (item && typeof item === 'object') page_specs.push(pageSpecFromJsonItem(item, page_specs.length, scope, runDate, sourceSection));
+      if (!item || typeof item !== 'object') continue;
+      const queryKey = normalizeEvidenceQuery(pick(item, ['query','title','topic','question']));
+      const inheritedEvidenceUrls = evidenceByQuery.get(queryKey) || [];
+      const enrichedItem = inheritedEvidenceUrls.length ? {...item, inherited_evidence_urls: inheritedEvidenceUrls} : item;
+      page_specs.push(pageSpecFromJsonItem(enrichedItem, page_specs.length, scope, runDate, sourceSection));
     }
   }
   return {rows, page_specs, scoreboard: payload.scoreboard || null, json_vertical: payload.vertical || payload.scope || '', site_health: payload.site_health ?? null};

@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "validator": "bhpc-route-resolution-self-test",
-  "generated_at": "2026-08-14T22:39:49.321Z",
+  "generated_at": "2026-08-15T22:19:00.925Z",
   "status": "PASS",
   "cases": {
     "unambiguousTitleTypo": {
@@ -95,6 +95,159 @@
       "implementation_path": "answers/route-resolution-self-test-new-page-do-not-fuzzy-match.html",
       "blocked_reason": ""
     },
+    "evidenceBackedSpec": {
+      "id": "2099-01-01-bhpc-json_new_page_opportunities-001",
+      "scope": "bhpc",
+      "query": "How can ChatGPT help me plan my day like Ali Abdaal's daily highlight method?",
+      "recommended_cluster": "competitor",
+      "why_worth_building": "Build the evidence-backed comparison framework.",
+      "implementation_path": "answers/how-can-chatgpt-help-me-plan-my-day-like-ali-abdaal-s-daily-highlight-method.html",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "blocked_reason": "",
+      "evidence_urls": [
+        "https://aliabdaal.com/newsletter/how-i-plan-my-day/"
+      ],
+      "evidence_required_domains": [
+        "aliabdaal.com"
+      ],
+      "evidence_inherited": true,
+      "source": "json_new_page_opportunities",
+      "source_section": "json_new_page_opportunities",
+      "source_signature": "239bb656db023c1f",
+      "raw": {
+        "query": "How can ChatGPT help me plan my day like Ali Abdaal's daily highlight method?",
+        "recommended_cluster": "competitor",
+        "why_worth_building": "Build the evidence-backed comparison framework.",
+        "inherited_evidence_urls": [
+          "https://aliabdaal.com/newsletter/how-i-plan-my-day/"
+        ]
+      }
+    },
+    "bareDomainSpec": {
+      "id": "2099-01-01-bhpc-json_new_page_opportunities-001",
+      "scope": "bhpc",
+      "query": "How can ChatGPT help me plan my day like Ali Abdaal's daily highlight method?",
+      "recommended_cluster": "competitor",
+      "why_worth_building": "Bare first-party domains are valid evidence locators.",
+      "implementation_path": "answers/how-can-chatgpt-help-me-plan-my-day-like-ali-abdaal-s-daily-highlight-method.html",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "blocked_reason": "",
+      "evidence_urls": [
+        "https://aliabdaal.com/newsletter/how-i-plan-my-day/"
+      ],
+      "evidence_required_domains": [
+        "aliabdaal.com"
+      ],
+      "evidence_inherited": true,
+      "source": "json_new_page_opportunities",
+      "source_section": "json_new_page_opportunities",
+      "source_signature": "925b9f84b6e4f658",
+      "raw": {
+        "query": "How can ChatGPT help me plan my day like Ali Abdaal's daily highlight method?",
+        "recommended_cluster": "competitor",
+        "why_worth_building": "Bare first-party domains are valid evidence locators.",
+        "inherited_evidence_urls": [
+          "https://aliabdaal.com/newsletter/how-i-plan-my-day/"
+        ]
+      }
+    },
+    "unrelatedEvidenceSpec": {
+      "id": "2099-01-01-bhpc-json_new_page_opportunities-001",
+      "scope": "bhpc",
+      "query": "How can ChatGPT help me plan my day like Ali Abdaal's daily highlight method?",
+      "recommended_cluster": "competitor",
+      "why_worth_building": "Creator attribution requires creator-domain evidence.",
+      "implementation_path": "answers/how-can-chatgpt-help-me-plan-my-day-like-ali-abdaal-s-daily-highlight-method.html",
+      "operation": "BLOCKED_UNSUPPORTED_PERSON_ATTRIBUTION",
+      "blocked_reason": "creator-specific behavior claim lacks required first-party source evidence (aliabdaal.com)",
+      "evidence_urls": [
+        "https://example.com/unrelated-productivity-post"
+      ],
+      "evidence_required_domains": [
+        "aliabdaal.com"
+      ],
+      "evidence_inherited": true,
+      "source": "json_new_page_opportunities",
+      "source_section": "json_new_page_opportunities",
+      "source_signature": "f726b3349069bad0",
+      "raw": {
+        "query": "How can ChatGPT help me plan my day like Ali Abdaal's daily highlight method?",
+        "recommended_cluster": "competitor",
+        "why_worth_building": "Creator attribution requires creator-domain evidence.",
+        "inherited_evidence_urls": [
+          "https://example.com/unrelated-productivity-post"
+        ]
+      }
+    },
+    "existingCreateRoute": {
+      "status": "DECLARED_CREATE_EXISTING",
+      "page_family": "bhpc_insight",
+      "implementation_path": "fixtures/agent_artifacts/cross_vertical_shape/existing-create-intent-self-test.html",
+      "blocked_reason": ""
+    },
+    "unsupportedSpec": {
+      "id": "2099-01-02-bhpc-json_new_page_opportunities-001",
+      "scope": "bhpc",
+      "query": "How can ChatGPT help me plan my day like Ali Abdaal's daily highlight method?",
+      "recommended_cluster": "competitor",
+      "why_worth_building": "Build only when source evidence exists.",
+      "implementation_path": "answers/how-can-chatgpt-help-me-plan-my-day-like-ali-abdaal-s-daily-highlight-method.html",
+      "operation": "BLOCKED_UNSUPPORTED_PERSON_ATTRIBUTION",
+      "blocked_reason": "creator-specific behavior claim lacks required first-party source evidence (aliabdaal.com)",
+      "evidence_urls": [],
+      "evidence_required_domains": [
+        "aliabdaal.com"
+      ],
+      "evidence_inherited": false,
+      "source": "json_new_page_opportunities",
+      "source_section": "json_new_page_opportunities",
+      "source_signature": "cab569c02f86e56e",
+      "raw": {
+        "query": "How can ChatGPT help me plan my day like Ali Abdaal's daily highlight method?",
+        "recommended_cluster": "competitor",
+        "why_worth_building": "Build only when source evidence exists."
+      }
+    },
+    "reconciledConflict": [
+      {
+        "id": "conflict-required",
+        "record_id": "conflict-required",
+        "run_date": "2099-01-03",
+        "scope": "bhpc",
+        "implementation_path": "answers/creator-evidence-conflict-self-test.html",
+        "acceptance_status": "BLOCKED",
+        "operation": "BLOCKED_UNSUPPORTED_PERSON_ATTRIBUTION",
+        "route_status": "BLOCKED_SOURCE_ROW",
+        "blocked_reason": "creator-specific behavior claim lacks source evidence",
+        "conflict_blocked_by_acceptance_id": "conflict-blocked"
+      },
+      {
+        "id": "conflict-blocked",
+        "record_id": "conflict-blocked",
+        "run_date": "2099-01-03",
+        "scope": "bhpc",
+        "implementation_path": "answers/creator-evidence-conflict-self-test.html",
+        "acceptance_status": "BLOCKED",
+        "operation": "BLOCKED_UNSUPPORTED_PERSON_ATTRIBUTION",
+        "route_status": "BLOCKED_SOURCE_ROW",
+        "blocked_reason": "creator-specific behavior claim lacks source evidence"
+      }
+    ],
+    "rawAcceptanceConflicts": [
+      {
+        "key": "2099-01-03|bhpc|answers/creator-evidence-conflict-self-test.html",
+        "acceptance_ids": [
+          "validator-required",
+          "validator-blocked"
+        ],
+        "required_ids": [
+          "validator-required"
+        ],
+        "blocked_ids": [
+          "validator-blocked"
+        ]
+      }
+    ],
     "semantic_group_count": 2,
     "derived_heading": "Vocal clarity scorecard"
   },

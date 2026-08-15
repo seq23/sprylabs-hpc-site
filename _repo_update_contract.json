@@ -8,7 +8,7 @@
   "update_mode": "baseline",
   "prepush_command": "npm run release:prepush",
   "container_prepush_command": "npm run release:prepush:container",
-  "local_prepush_command": "npm run release:prepush:local",
+  "local_prepush_command": "env -u NODE_V8_COVERAGE node scripts/release/local_prepush.mjs",
   "postpush_command": "npm run release:postpush",
   "baseline_naming": "sprylabs-hpc-site-main_BASELINE_MM-DD-YY_<sha>.zip",
   "zip_root_policy": "single repository wrapper containing package.json",
@@ -21,7 +21,7 @@
   "completion_status_before_local_browser": "STRUCTURALLY CHECKED \u2014 LOCAL VALIDATION REQUIRED",
   "commands": {
     "prepush": "npm run release:prepush",
-    "prepush_local": "npm run release:prepush:local",
+    "prepush_local": "env -u NODE_V8_COVERAGE node scripts/release/local_prepush.mjs",
     "postpush": "npm run release:postpush",
     "live_proof": "NOT_APPLICABLE",
     "cleanup": "NOT_APPLICABLE"

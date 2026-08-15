@@ -43,15 +43,16 @@ export function requiredBlockTypesForBhpcEntry(entry = {}) {
 }
 
 export function bhpcSemanticEntryKey(entry = {}) {
+  // Public rendering is keyed by the reader-facing semantic target, not by
+  // which source representation (JSON/CSV/page-spec) carried the instruction.
+  // This keeps duplicate intake records from leaking into repeated visible copy
+  // while preserving every source record id in provenance metadata.
   return [
     clean(entry.run_date),
     clean(entry.scope),
     clean(entry.implementation_path).toLowerCase(),
-    clean(entry.operation),
-    clean(entry.page_family),
     normalizeBhpcSemanticText(entry.query),
-    normalizeBhpcSemanticText(entry.required_heading),
-    normalizeBhpcSemanticText(entry.source_fix_instruction)
+    normalizeBhpcSemanticText(entry.required_heading)
   ].join('::');
 }
 
@@ -76,19 +77,37 @@ export function groupBhpcSemanticEntries(entries = []) {
 
 export function renderBhpcRecordEvidence(entries = []) {
   return groupBhpcSemanticEntries(entries).map(group => {
-    const entry = group.primary;
     const recordIds = group.record_ids;
+    const evidenceUrls = uniqueBhpcSemanticValues(group.entries.flatMap(entry => entry.evidence_urls || []));
     const markers = recordIds
       .map(id => `<span hidden data-bhpc-agent-record="${escapeHtml(id)}"></span>`)
       .join('');
-    const visibleCopy = uniqueBhpcSemanticValues([
-      entry.query,
-      entry.required_heading,
-      ...(group.required_strings || [])
-    ]);
-    const paragraphs = visibleCopy
-      .map(value => `<p class="bhpc-agent-evidence-copy">${escapeHtml(value)}</p>`)
-      .join('');
-    return `<article class="bhpc-agent-record-evidence" data-bhpc-agent-evidence="true" data-bhpc-agent-record="${escapeHtml(recordIds[0] || '')}">${markers}<h3>${escapeHtml(entry.required_heading || entry.query || 'Practical implementation')}</h3>${paragraphs}</article>`;
+    const provenance = JSON.stringify({record_ids: recordIds, evidence_urls: evidenceUrls}).replace(/</g, '\u003c');
+    return `<span class="bhpc-agent-record-evidence" hidden data-bhpc-agent-evidence="true" data-bhpc-agent-record="${escapeHtml(recordIds[0] || '')}">${markers}</span><script type="application/json" data-bhpc-agent-provenance>${provenance}</script>`;
   }).join('\n');
+}
+
+export function renderBhpcVisibleSourceEvidence(entries = []) {
+  const requiredDomains = uniqueBhpcSemanticValues(entries.flatMap(entry => entry.evidence_required_domains || []));
+  if (!requiredDomains.length) return '';
+  const urls = uniqueBhpcSemanticValues(entries.flatMap(entry => entry.evidence_urls || []));
+  const matches = urls.filter(url => {
+    try {
+      const host = new URL(url).hostname.toLowerCase().replace(/^www\./, '');
+      return requiredDomains.some(domain => {
+        const wanted = String(domain).toLowerCase().replace(/^www\./, '');
+        return host === wanted || host.endsWith(`.${wanted}`);
+      });
+    } catch { return false; }
+  }).slice(0, 6);
+  if (!matches.length) return '';
+  const links = matches.map(url => {
+    let label = url;
+    try {
+      const parsed = new URL(url);
+      label = `${parsed.hostname.replace(/^www\./, '')}${parsed.pathname === '/' ? '' : parsed.pathname}`;
+    } catch {}
+    return `<li><a href="${escapeHtml(url)}" rel="nofollow noopener">${escapeHtml(label)}</a></li>`;
+  }).join('');
+  return `<aside class="bhpc-agent-source-evidence" data-bhpc-agent-source-evidence="true"><h3>First-party source evidence</h3><p>This page uses the following first-party sources to support the named-method attribution. The ChatGPT workflow below is an adaptation, not a claim that the creator prescribed this AI workflow.</p><ul>${links}</ul></aside>`;
 }

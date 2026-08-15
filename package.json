@@ -155,7 +155,7 @@
     "validate:bhpc-page-family-contract": "node scripts/validators/validate_bhpc_page_family_contract.mjs",
     "validate:bhpc-fallback-gap-separation": "node scripts/validators/validate_bhpc_fallback_gap_separation.mjs",
     "validate:browser-structural": "node scripts/validators/validate_bhpc_browser_structural.mjs",
-    "validate:agent-run": "npm run validate:query-owner-uniqueness && npm run agent:bhpc:self-test-route-resolution && npm run agent:bhpc:compile-acceptance && npm run validate:bhpc-agent-acceptance && npm run agent:bhpc:plan-exact && npm run agent:bhpc:apply-exact && npm run agent:bhpc:trace-exact && npm run validate:bhpc-no-marker-only-agent-pass && npm run validate:bhpc-page-family-contract && npm run validate:bhpc-fallback-gap-separation && npm run agent:bhpc:validate-exact && npm run validate:bhpc-agent-source-coverage && npm run validate:bhpc-agent-recommendation-driven-output",
+    "validate:agent-run": "npm run validate:query-owner-uniqueness && npm run agent:bhpc:self-test-route-resolution && npm run agent:bhpc:self-test-internal-links && npm run agent:bhpc:compile-acceptance && npm run validate:bhpc-agent-acceptance && npm run agent:bhpc:plan-exact && npm run agent:bhpc:apply-exact && npm run validate:bhpc-rich-new-page-contract && npm run agent:bhpc:trace-exact && npm run validate:bhpc-no-marker-only-agent-pass && npm run validate:bhpc-page-family-contract && npm run validate:bhpc-fallback-gap-separation && npm run agent:bhpc:validate-exact && npm run validate:bhpc-agent-source-coverage && npm run validate:bhpc-agent-recommendation-driven-output",
     "release:agent-intake": "npm run release:agent-intake:raw && npm run release:content-finalize && npm run authority:scale:prepare-drift-scope && npm run authority:scale:freeze && npm run authority:scale:clear-scope && npm run validate:authority-scale",
     "validate:content-release": "npm run validate:repo && npm run validate:content && npm run validate:graph && npm run validate:distribution && npm run validate:browser-structural",
     "validate:full-audit": "npm run validate:profile -- full-audit",
@@ -199,7 +199,7 @@
     "release:complete-traffic-qualified-spine": "npm run release:controlled-citation-intelligence && npm run validate:batch-de-completion",
     "validate:bhpc-agent-artifact-continuity": "node scripts/validators/validate_bhpc_agent_artifact_continuity.mjs",
     "validate:bhpc-dynamic-page-contract": "node scripts/validators/validate_bhpc_dynamic_page_contract.mjs",
-    "validate:bhpc-rich-new-page-contract": "node scripts/validators/validate_bhpc_rich_new_page_contract.mjs",
+    "validate:bhpc-rich-new-page-contract": "node scripts/site_layout/run_with_public_root.mjs -- bash -lc \"node scripts/validators/validate_bhpc_rich_new_page_contract.mjs\"",
     "validate:bhpc-agent-artifact-priority": "node scripts/validators/validate_bhpc_agent_artifact_priority.mjs",
     "validate:bhpc-agent-improvement-capability": "node scripts/validators/validate_bhpc_agent_improvement_capability.mjs",
     "validate:batch-f-continuity": "npm run validate:bhpc-agent-artifact-continuity && npm run validate:bhpc-dynamic-page-contract && npm run validate:bhpc-rich-new-page-contract && npm run validate:bhpc-agent-artifact-priority && npm run validate:bhpc-agent-improvement-capability",
@@ -218,7 +218,7 @@
     "workflow:spry-full-rebuild": "node scripts/site_layout/run_with_public_root.mjs -- bash -lc \"npm run strategy:gap-fill:backlog && npm run strategy:gap-fill:release-gap && npm run build:all && npm run release:content-finalize && npm run validate:full-audit\"",
     "validate:bhpc-agent-source-coverage": "node scripts/validators/validate_bhpc_agent_source_coverage.mjs",
     "agent:bhpc:self-test-route-resolution": "node scripts/site_layout/run_with_public_root.mjs -- bash -lc \"node scripts/agent_intake/self_test_bhpc_route_resolution.mjs\"",
-    "validate:bhpc-agent-recommendation-driven-output": "node scripts/validators/validate_bhpc_agent_recommendation_driven_output.mjs",
+    "validate:bhpc-agent-recommendation-driven-output": "node scripts/site_layout/run_with_public_root.mjs -- bash -lc \"node scripts/validators/validate_bhpc_agent_recommendation_driven_output.mjs\"",
     "ownership:build": "node scripts/site_layout/run_with_public_root.mjs -- bash -lc \"node scripts/intelligence/build_content_ownership_registry.mjs\"",
     "validate:ownership": "node scripts/validators/validate_content_ownership_boundaries.mjs",
     "safe-harbor:validate": "node scripts/site_layout/run_with_public_root.mjs -- bash -lc \"node scripts/validators/validate_safe_harbor_autopublish.mjs\"",
@@ -308,7 +308,8 @@
     "validate:visible-content-artifacts": "node scripts/site_layout/run_with_public_root.mjs -- bash -lc \"node scripts/validation/validate_visible_content_artifacts.mjs\"",
     "workflow:search-intelligence": "node scripts/workflow/run_topology_lane.mjs --lane search-intelligence",
     "search:intelligence-cycle": "bash .github/scripts/run_search_intelligence_cycle.sh",
-    "search:agent-boundary:prepush-proof": "node scripts/search_intelligence/prove_agent_separation.mjs --prepush-proof"
+    "search:agent-boundary:prepush-proof": "node scripts/search_intelligence/prove_agent_separation.mjs --prepush-proof",
+    "agent:bhpc:self-test-internal-links": "node scripts/agent_intake/self_test_bhpc_internal_links.mjs"
   },
   "engines": {
     "node": ">=24.0.0"

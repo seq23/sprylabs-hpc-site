@@ -3,6 +3,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {ROOT, NORMALIZED_ROOT, SOCIAL_RUNS_ROOT, findAgentManifests, writeJson, digestManifest, readJson, manifestAllowedByExactPolicy, loadExactPolicy, runKey, sourceKey, safeScope} from './bhpc_agent_common.mjs';
 
+const NORMALIZATION_CONTRACT_VERSION = '1.4-evidence-provenance-v2';
+
 function socialRecord(row, runDate, digestText, scope) {
   const query = row.query || `${scope} agent signal`;
   const title = query;
@@ -39,7 +41,8 @@ const allReady = findAgentManifests().filter(entry => {
   const scope = safeScope(entry.scope || entry.manifest?.scope || 'bhpc');
   const key = runKey(entry.runDate, scope);
   const normalizedRel = entry.manifest?.normalized_path || `${NORMALIZED_ROOT}/${key}.json`;
-  return !fs.existsSync(path.join(ROOT, normalizedRel));
+  const normalized = readJson(normalizedRel, null);
+  return !normalized || normalized.normalization_contract_version !== NORMALIZATION_CONTRACT_VERSION;
 });
 function isIncompleteAbsorbedRun(entry) {
   if (entry.manifest?.status !== 'ABSORBED') return false;
@@ -48,7 +51,8 @@ function isIncompleteAbsorbedRun(entry) {
   const key = runKey(entry.runDate, scope);
   const normalizedRel = entry.manifest?.normalized_path || `${NORMALIZED_ROOT}/${key}.json`;
   const socialRel = entry.manifest?.social_run_path || `${SOCIAL_RUNS_ROOT}/${sourceKey(entry.runDate, scope)}.json`;
-  return !fs.existsSync(path.join(ROOT, normalizedRel)) || !fs.existsSync(path.join(ROOT, socialRel));
+  const normalized = readJson(normalizedRel, null);
+  return !normalized || normalized.normalization_contract_version !== NORMALIZATION_CONTRACT_VERSION || !fs.existsSync(path.join(ROOT, socialRel));
 }
 const ready = allReady.filter(entry => manifestAllowedByExactPolicy(entry, policy) || isIncompleteAbsorbedRun(entry));
 const skipped = allReady.filter(entry => !manifestAllowedByExactPolicy(entry, policy) && !isIncompleteAbsorbedRun(entry)).map(entry => ({manifest:entry.manifestRel, run_date:entry.runDate, scope: entry.scope, reason:'before_exact_implementation_cutover'}));
@@ -59,7 +63,8 @@ for (const entry of ready) {
   const key = runKey(entry.runDate, scope);
   const socialKey = sourceKey(entry.runDate, scope);
   const normalized = {
-    schema_version: '1.3',
+    schema_version: '1.4',
+    normalization_contract_version: NORMALIZATION_CONTRACT_VERSION,
     source: entry.manifest.source || 'twin_agent',
     run_date: entry.runDate,
     scope,
@@ -111,7 +116,7 @@ for (const entry of ready) {
   }));
   const opportunities = [
     ...digest.rows.map(row => ({query: row.query, path: row.intended_winner_path || row.implementation_path || 'data/social/runs', operation: row.operation})),
-    ...digest.page_specs.map(spec => ({query: spec.query, path: spec.implementation_path, operation: 'CREATE_NEW_TARGET_PAGE', source: 'json_pages_to_build'}))
+    ...digest.page_specs.map(spec => ({query: spec.query, path: spec.implementation_path, operation: spec.operation || 'CREATE_NEW_TARGET_PAGE', blocked_reason: spec.blocked_reason || '', source: spec.source || 'json_pages_to_build'}))
   ];
   writeJson(citationRunRel, {
     schema_version: '1.2',

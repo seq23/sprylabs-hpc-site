@@ -197,6 +197,11 @@ export function resolveBhpcAgentRoute(row = {}, {owner = null, policy = null, re
 
   if (declaredPath) {
     const exists = fs.existsSync(path.join(ROOT, declaredPath));
+    const declaredCreateIntent = String(row.source_intent_operation || row.operation || '') === 'CREATE_NEW_TARGET_PAGE' && !row.intended_winner_page && !row.intended_winner_path;
+    if (exists && declaredCreateIntent) {
+      const declaredFamily = classifyBhpcPageFamily({...row, operation: 'CREATE_NEW_TARGET_PAGE', intended_winner_path: ''});
+      return {status: 'DECLARED_CREATE_EXISTING', page_family: declaredFamily, implementation_path: declaredPath, blocked_reason: ''};
+    }
     if (exists) {
       return {status: 'DECLARED_EXISTING_REPAIR', page_family: 'intended_winner_repair', implementation_path: declaredPath, blocked_reason: ''};
     }

@@ -1099,7 +1099,7 @@
       "name": "validate:release-portability",
       "check_type": "validator",
       "owning_lane": "release",
-      "risk_prevented": "Prevents internal registry URLs, undeclared Python dependencies, browser-video dependencies, Node-version drift, and missing release-critical files from reaching the local updater.",
+      "risk_prevented": "Prevents internal registry URLs, undeclared Python dependencies, browser-video dependencies, Node-version drift, and missing release-critical files on a fresh operator machine.",
       "existing_coverage_gap": "Prior gates validated repository behavior but did not prove that a fresh operator machine could install and execute the packaged artifact without hidden container dependencies.",
       "scope": [
         "packaged release portability"

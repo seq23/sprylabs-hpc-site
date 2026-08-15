@@ -4,6 +4,7 @@ import { execFileSync } from 'node:child_process';
 import { readJson, fail, pass, writeSummary } from './common.mjs';
 
 const errors = [];
+
 const PUBLIC_ROOT = path.resolve(process.env.BHPC_PUBLIC_ROOT || path.join('site','public'));
 function releasePath(rel) {
   if (process.env.BHPC_LAYOUT_STAGE_ACTIVE === '1' && rel.startsWith('site/public/')) return path.join(PUBLIC_ROOT, rel.slice('site/public/'.length));
@@ -48,7 +49,7 @@ if (String(updateContract.node_version) !== '24') errors.push('_repo_update_cont
 
 const expectedCommands = {
   prepush: 'npm run release:prepush',
-  prepush_local: 'npm run release:prepush:local',
+  prepush_local: 'env -u NODE_V8_COVERAGE node scripts/release/local_prepush.mjs',
   postpush: 'npm run release:postpush',
   live_proof: 'NOT_APPLICABLE',
   cleanup: 'NOT_APPLICABLE',

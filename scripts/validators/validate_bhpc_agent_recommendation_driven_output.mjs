@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import fs from 'node:fs';import path from 'node:path';
 import {ROOT,readJson,writeJson} from '../agent_intake/bhpc_agent_common.mjs';
+import {normalizeBhpcInternalLinkHref, normalizeBhpcExternalCtaHref} from '../lib/bhpc_internal_links.mjs';
 function decode(v=''){return String(v).replace(/&nbsp;|&#160;/g,' ').replace(/&amp;/g,'&').replace(/&quot;/g,'"').replace(/&#39;|&apos;/g,"'").replace(/&lt;/g,'<').replace(/&gt;/g,'>')}
 function textOnly(h=''){return decode(h).replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim()}
 function normalize(v=''){return textOnly(v).toLowerCase().replace(/[^a-z0-9]+/g,' ').replace(/\s+/g,' ').trim()}
@@ -12,6 +13,16 @@ const errors=[],checked=[],skipped=[];
 const activeSpecs=(plan.specs||[]).filter(s=>s.status!=='BLOCKED');
 const activeAcceptanceIds=new Set(activeSpecs.flatMap(s=>s.acceptance_ids||[]).map(String));
 const appliedIds=new Set((apply.applied||[]).flatMap(x=>x.acceptance_ids||[]).map(String));
+for(const spec of activeSpecs){
+  const rel=spec.implementation_path||'',abs=path.join(ROOT,rel);
+  if(!rel||!fs.existsSync(abs)) continue;
+  const html=fs.readFileSync(abs,'utf8');
+  for(const link of spec.required_external_cta_links||[]){
+    const href=normalizeBhpcExternalCtaHref(link.to_url);
+    if(!href){errors.push(`${spec.record_id}:plan_unapproved_external_cta:${link.to_url||'missing'}:${rel}`);continue}
+    if(!html.includes(`href="${href}"`)&&!html.includes(`href='${href}'`))errors.push(`${spec.record_id}:plan_missing_external_cta:${href}:${rel}`);
+  }
+}
 for(const entry of manifest.entries||[]){
   if(!activeAcceptanceIds.has(String(entry.id))){skipped.push({acceptance_id:entry.id,reason:'outside_active_implementation_plan'});continue}
   if(entry.acceptance_status!=='REQUIRED')continue;
@@ -20,7 +31,8 @@ for(const entry of manifest.entries||[]){
   if(!html.includes(`data-bhpc-agent-record="${entry.record_id}"`))errors.push(`${entry.record_id}:missing_record_marker:${rel}`);
   if(!tokenCovered(entry.required_heading,text))errors.push(`${entry.record_id}:heading_not_visible:${rel}`);
   for(const type of entry.required_block_types||[]){if(type==='internal_link_set'&&!(entry.required_internal_links||[]).length)continue;if(!html.includes(`data-bhpc-agent-block="${type}"`))errors.push(`${entry.record_id}:missing_block:${type}:${rel}`)}
-  for(const link of entry.required_internal_links||[]){let pathname='';try{pathname=new URL(link.to_url,'https://billionairehighperformancecoach.com').pathname}catch{}if(pathname&&!html.includes(`href="${pathname}"`)&&!html.includes(`href='${pathname}'`))errors.push(`${entry.record_id}:missing_internal_link:${pathname}:${rel}`)}
+  for(const link of entry.required_internal_links||[]){const href=normalizeBhpcInternalLinkHref(link.to_url);if(!href){errors.push(`${entry.record_id}:non_internal_link_in_required_internal_links:${link.to_url||'missing'}:${rel}`);continue}if(!html.includes(`href="${href}"`)&&!html.includes(`href='${href}'`))errors.push(`${entry.record_id}:missing_internal_link:${href}:${rel}`)}
+  for(const link of entry.required_external_cta_links||[]){const href=normalizeBhpcExternalCtaHref(link.to_url);if(!href){errors.push(`${entry.record_id}:unapproved_external_cta:${link.to_url||'missing'}:${rel}`);continue}if(!html.includes(`href="${href}"`)&&!html.includes(`href='${href}'`))errors.push(`${entry.record_id}:missing_external_cta:${href}:${rel}`)}
   if(/Agent recommendation implementation|Agent-directed implementation|Agent source instruction|Route decision:/i.test(text))errors.push(`${entry.record_id}:public_operational_scaffolding:${rel}`);
   if(!appliedIds.has(String(entry.id)))errors.push(`${entry.record_id}:acceptance_not_applied:${entry.id}`);
   checked.push({record_id:entry.record_id,acceptance_id:entry.id,implementation_path:rel,blocks:entry.required_block_types||[]});

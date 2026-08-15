@@ -5,6 +5,7 @@ import {
   requiredBlockTypesForPageFamily
 } from './bhpc_agent_block_schema.mjs';
 import {resolveBhpcAgentRoute} from './bhpc_agent_route_resolver.mjs';
+import {partitionBhpcInternalLinkActions} from './bhpc_internal_links.mjs';
 
 function clean(value=''){return String(value??'').replace(/\s+/g,' ').trim()}
 function unique(values=[]){const seen=new Set(),out=[];for(const raw of values){const value=clean(raw);const key=value.toLowerCase();if(value&&!seen.has(key)){seen.add(key);out.push(value)}}return out}
@@ -42,11 +43,14 @@ export function buildBhpcAcceptanceEntry(row={},context={}){
   const combined=[query,rawFix,gap,row.primary_fix_type,row.action_tier,seo?.canonical_page_type,seo?.competitor_format_gap].map(clean).join(' ');
   const route=resolveBhpcAgentRoute(row,context);
   const noAction=row.operation==='NO_ACTION_MAINTAIN'||row.page_decision==='no_action';
+  const {internal: internalLinkActions, external_ctas: externalCtaActions, rejected: rejectedInternalLinkActions} = partitionBhpcInternalLinkActions(seo?.internal_link_actions || []);
   const requiredBlockTypes=[
     ...blockTypesForAgentText(combined),
     ...requiredBlockTypesForPageFamily(route.page_family)
   ];
-  if(seo?.internal_link_actions?.length) requiredBlockTypes.push(BHPC_AGENT_BLOCK_TYPES.INTERNAL_LINK_SET);
+  if(internalLinkActions.length) requiredBlockTypes.push(BHPC_AGENT_BLOCK_TYPES.INTERNAL_LINK_SET);
+  if(externalCtaActions.length) requiredBlockTypes.push(BHPC_AGENT_BLOCK_TYPES.CTA_CALLOUT);
+  if (String(row.source_intent_operation || row.operation || '') === 'CREATE_NEW_TARGET_PAGE' && /chatgpt|\bprompt\b|convert these|design an end-of-day/i.test(query)) requiredBlockTypes.push(BHPC_AGENT_BLOCK_TYPES.PROMPT_TEMPLATE);
   if(['comparison','alternatives'].includes(seo?.canonical_page_type)&&!requiredBlockTypes.includes(BHPC_AGENT_BLOCK_TYPES.COMPARISON_TABLE)) requiredBlockTypes.push(BHPC_AGENT_BLOCK_TYPES.COMPARISON_TABLE);
   const blockTypes=unique(requiredBlockTypes);
   const protectedBuyerPage = ['download.html'].includes(route.implementation_path);
@@ -59,6 +63,7 @@ export function buildBhpcAcceptanceEntry(row={},context={}){
     run_date:row.run_date||context.run_date||'',scope:row.scope||context.scope||'bhpc',query,
     source_gap:gap,source_fix_instruction:fix,action_tier:clean(row.action_tier),primary_fix_type:clean(row.primary_fix_type),
     operation:row.operation||(route.page_family==='intended_winner_repair'?'REPAIR_INTENDED_WINNER_PAGE':'CREATE_NEW_TARGET_PAGE'),
+    source_intent_operation:row.source_intent_operation||row.operation||(route.page_family==='intended_winner_repair'?'REPAIR_INTENDED_WINNER_PAGE':'CREATE_NEW_TARGET_PAGE'),
     page_decision:row.page_decision||seo?.page_decision||'',recommended_page_type:row.recommended_page_type||seo?.recommended_page_type||'',
     seo_execution_status:row.seo_execution_status||'NOT_PROVIDED',seo_execution:seo,seo_execution_hash:seo?.hash||'',
     intended_winner_page:row.intended_winner_page||'',intended_winner_path:row.intended_winner_path||'',
@@ -67,12 +72,16 @@ export function buildBhpcAcceptanceEntry(row={},context={}){
     required_heading:heading,
     required_block_types:blockTypes,
     required_strings:unique([query,heading]).slice(0,8),
-    required_internal_links:seo?.internal_link_actions||[],
+    required_internal_links:internalLinkActions,
+    required_external_cta_links:externalCtaActions,
+    rejected_internal_link_actions:rejectedInternalLinkActions,
     schema_action:seo?.schema_action||'none',
     acceptance_checks:seo?.acceptance_checks||[],
     table_columns_exact:tableColumns(blockTypes),min_table_rows:minimumRows(blockTypes),
     placement:route.page_family==='intended_winner_repair'?'before_closing_body':'page_body',
     proof_selector:`[data-bhpc-agent-record="${row.id||slug(query)}"]`,
+    evidence_urls:unique(row.evidence_urls||[]),
+    evidence_required_domains:unique(row.evidence_required_domains||[]),
     raw_hash_basis:clean(JSON.stringify(row.raw||row)).slice(0,1000)
   };
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-08-15T13:35:52.724Z",
+  "generated_at": "2026-08-15T22:18:59.333Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
   "admitted_hard_fail_count": 168,
   "reviewed_count": 8,
@@ -461,7 +461,7 @@
       "name": "validate:release-portability",
       "command": "npm run validate:release-portability",
       "owning_lane": "release",
-      "risk_prevented": "Prevents internal registry URLs, undeclared Python dependencies, browser-video dependencies, Node-version drift, and missing release-critical files from reaching the local updater.",
+      "risk_prevented": "Prevents internal registry URLs, undeclared Python dependencies, browser-video dependencies, Node-version drift, and missing release-critical files on a fresh operator machine.",
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-046"

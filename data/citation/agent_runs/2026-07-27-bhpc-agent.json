@@ -1,7 +1,7 @@
 {
   "schema_version": "1.2",
   "run_id": "2026-07-27-bhpc-agent",
-  "generated_at": "2026-07-27T17:00:41.552Z",
+  "generated_at": "2026-08-15T14:38:22.192Z",
   "scope": "bhpc",
   "artifact_contract": "CSV + optional JSON + HTML + manifest",
   "exact_implementation_policy": "data/report_fixes/agent_exact_implementation_policy.json",
@@ -110,13 +110,15 @@
       "query": "How to use ChatGPT as an executive coach",
       "path": "how-to-use-chatgpt-as-an-executive-coach.html",
       "operation": "CREATE_NEW_TARGET_PAGE",
-      "source": "json_pages_to_build"
+      "blocked_reason": "",
+      "source": "json_new_page_opportunities"
     },
     {
       "query": "How Ali Abdaal uses AI as a life coach",
       "path": "insights/how-ali-abdaal-uses-ai-as-a-life-coach.html",
-      "operation": "CREATE_NEW_TARGET_PAGE",
-      "source": "json_pages_to_build"
+      "operation": "BLOCKED_UNSUPPORTED_PERSON_ATTRIBUTION",
+      "blocked_reason": "creator-specific behavior claim lacks required first-party source evidence (aliabdaal.com)",
+      "source": "json_new_page_opportunities"
     }
   ],
   "interpretation": {

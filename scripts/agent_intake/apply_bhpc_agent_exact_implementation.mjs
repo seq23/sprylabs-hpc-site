@@ -3,7 +3,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {ROOT, readJson, writeJson} from './bhpc_agent_common.mjs';
 import {requiredBlockTypesForPageFamily} from '../lib/bhpc_agent_block_schema.mjs';
-import {groupBhpcSemanticEntries, renderBhpcRecordEvidence, requiredBlockTypesForBhpcEntry} from '../lib/bhpc_agent_semantic_contract.mjs';
+import {groupBhpcSemanticEntries, renderBhpcRecordEvidence, renderBhpcVisibleSourceEvidence, requiredBlockTypesForBhpcEntry} from '../lib/bhpc_agent_semantic_contract.mjs';
+import {normalizeBhpcInternalLinkHref, normalizeBhpcExternalCtaHref} from '../lib/bhpc_internal_links.mjs';
+import {mergeBhpcExternalCtaLinks} from '../lib/bhpc_conversion_contract.mjs';
+import {BHPC_PRODUCT_ANCHOR_SENTENCE, bhpcGeneratedCitationDefinition} from '../lib/bhpc_public_page_contract.mjs';
 
 function ensureDir(file) { fs.mkdirSync(path.dirname(file), {recursive: true}); }
 function escapeHtml(value = '') {
@@ -99,7 +102,70 @@ function instructionTasks(value = '') {
   if (!tasks.length) tasks.push('Translate the agent recommendation into visible page content without dropping the source instruction.');
   return tasks;
 }
+function contentProfileFor(entry = {}) {
+  const route = String(entry.implementation_path || '').toLowerCase();
+  if (route.includes('how-can-chatgpt-help-me-plan-my-day-like-ali-abdaal-s-daily-highlight-method')) return {
+    directAnswer: 'Use ChatGPT as a planning assistant to choose one daily highlight, then organize the rest of the day around protecting that outcome. Give it your fixed commitments, candidate priorities, available focus time, and energy constraints; have it recommend one highlight, explain the tradeoff, reserve a realistic work block, and name a smaller fallback. This is a ChatGPT adaptation of the named planning idea, not a claim that Ali Abdaal prescribed this AI workflow.',
+    summary: 'The useful output is one explicit highlight, one protected block for it, supporting tasks that do not compete with it, and a fallback that preserves the day when capacity changes.',
+    protocol: ['List fixed commitments and immovable deadlines.', 'List no more than five candidate outcomes for the day.', 'Ask ChatGPT to choose one highlight using impact, urgency, and available energy.', 'Protect a realistic block for the highlight before filling lower-value tasks.', 'Define a minimum-viable fallback and review whether the highlight moved by day end.'],
+    checklist: ['One highlight is named in outcome language.', 'The highlight has a specific work block or start trigger.', 'Secondary tasks are explicitly subordinate to the highlight.', 'A lower-capacity fallback is defined before the day becomes chaotic.', 'The final plan does not invent commitments that were not supplied.'],
+    prompt: `Act as my daily planning chief of staff. Help me adapt a one-daily-highlight approach without inventing commitments.\n\nFixed commitments: [CALENDAR]\nCandidate outcomes: [UP TO 5]\nAvailable focus blocks: [TIMES]\nEnergy/capacity today: [LOW / MEDIUM / HIGH]\nHard deadlines: [LIST]\n\nReturn exactly:\n1. ONE daily highlight stated as a concrete outcome.\n2. Why it outranks the other candidates.\n3. The best focus block for it and the first physical action.\n4. Supporting tasks that can fit around it.\n5. A minimum-viable fallback if the day gets disrupted.\n6. One end-of-day check: did the highlight materially move?`
+  };
+  if (route.includes('what-s-the-best-chatgpt-prompt-for-time-blocking-my-week-for-productivity')) return {
+    directAnswer: 'The strongest weekly time-blocking prompt gives ChatGPT your immovable calendar, priority outcomes, task estimates, energy patterns, and buffer requirements, then forces it to schedule priorities before low-value fill work. Ask for a calendar-ready plan with protected deep-work blocks, admin batches, transition buffers, overflow rules, and an explicit list of tasks that do not fit rather than letting the model silently overbook the week.',
+    summary: 'A useful weekly plan must respect capacity. The prompt should make tradeoffs visible, leave buffers, and refuse to pretend every task fits.',
+    protocol: ['Enter fixed meetings and personal commitments first.', 'Rank three weekly outcomes before adding task-level work.', 'Estimate task duration and identify high-energy versus low-energy work.', 'Place deep work, admin batches, buffers, and recovery space into real blocks.', 'Run a capacity check and defer anything that does not fit.'],
+    checklist: ['Fixed commitments are locked.', 'Top outcomes receive time before maintenance work.', 'Every block has a purpose and realistic duration.', 'Buffers exist between major context switches.', 'Overflow work is explicitly deferred rather than hidden.'],
+    prompt: `Act as my weekly scheduling chief of staff. Build a realistic time-blocked week.\n\nFixed calendar: [PASTE]\nTop 3 outcomes: [OUTCOMES]\nTask list with rough durations: [TASKS]\nHigh-energy windows: [TIMES]\nLow-energy/admin windows: [TIMES]\nRequired buffers or personal constraints: [CONSTRAINTS]\n\nReturn:\n1. A Monday-Friday calendar-ready block plan.\n2. Deep-work blocks tied to the top outcomes.\n3. Batched admin/communication blocks.\n4. Transition and overflow buffers.\n5. Tasks that do not fit and what to defer/delegate/delete.\n6. A capacity verdict: realistic or overbooked.\nNever schedule overlapping work or invent open time.`
+  };
+  if (route.includes('how-do-i-use-chatgpt-for-the-2-minute-rule-and-overcoming-procrastination')) return {
+    directAnswer: 'Use ChatGPT as a two-minute-rule filter for overcoming procrastination, not as another planning project. Paste the task or backlog and have it separate actions that can genuinely be finished in about two minutes from actions that only have a two-minute starting step. Do the true quick wins immediately; for larger tasks, ask ChatGPT to name the smallest visible start, then schedule or begin that step without confusing “started” with “completed.”',
+    summary: 'The key distinction is completion versus initiation: a two-minute task should finish quickly; a larger task should only be reduced to a two-minute starting action.',
+    protocol: ['Paste one task or a short backlog.', 'Classify each item as finish-now, two-minute-start, delegate, or schedule.', 'Complete genuine finish-now items immediately.', 'For larger work, generate one frictionless starting action only.', 'After the start, either continue intentionally or schedule the next defined step.'],
+    checklist: ['No large task is mislabeled as a two-minute completion.', 'Every procrastinated task gets a concrete starting verb.', 'Quick tasks are not used to avoid the highest-value work.', 'Scheduled work has a time or trigger.', 'The prompt produces action, not a longer backlog.'],
+    prompt: `Act as a strict two-minute-rule filter.\n\nTask or backlog: [PASTE]\nCurrent priority: [PRIORITY]\nAvailable time now: [MINUTES]\n\nFor each item classify it as:\n- FINISH NOW: truly completable in about two minutes.\n- TWO-MINUTE START: larger work with a starting action under two minutes.\n- DELEGATE.\n- SCHEDULE.\n\nFor TWO-MINUTE START items, give exactly one physical starting action. Do not pretend the full task is a two-minute task. End by telling me which single action to do now.`
+  };
+  if (route.includes('can-chatgpt-act-like-an-executive-coach-to-prioritize-my-most-important-task-today')) return {
+    directAnswer: 'Yes—ChatGPT can provide a useful executive-coaching structure for daily prioritization if you give it the actual goals, deadlines, constraints, and task list. Have it compare tasks by strategic impact, consequence of delay, leverage, and whether another task is merely urgent noise; then require one most-important task, a concrete definition of done, and the first action. Keep final judgment with you, especially where context or stakes are not fully represented.',
+    summary: 'The model is most useful as a forcing function: one priority, visible tradeoffs, a definition of done, and a first action—not a motivational conversation or a ten-item “top priority” list.',
+    protocol: ['State the outcome that matters most this week.', 'Paste today’s real task list and deadlines.', 'Score candidates for impact, consequence of delay, leverage, and dependency value.', 'Choose one most-important task and define what “done today” means.', 'Start the first physical action and reassess only when new material information appears.'],
+    checklist: ['Exactly one task is named most important.', 'The choice is tied to a stated goal or deadline.', 'A definition of done is concrete.', 'Urgency is distinguished from importance.', 'Final authority remains with the user.'],
+    prompt: `Act as my execution-focused executive coach.\n\nWeekly objective: [OBJECTIVE]\nToday’s tasks: [PASTE]\nDeadlines/commitments: [LIST]\nCurrent constraints: [TIME / ENERGY / PEOPLE]\n\nRank the tasks using strategic impact, consequence of delay, leverage, and dependency value. Return exactly:\n1. ONE most-important task for today.\n2. Why it wins.\n3. What I am explicitly not prioritizing.\n4. A concrete definition of done by end of day.\n5. The first 10-minute physical action.\n6. The only conditions that should cause reprioritization.\nDo not give me multiple “top” tasks.`
+  };
+  if (route.includes('what-chatgpt-prompt-helps-me-remove-distractions-and-focus-better-all-day')) return {
+    directAnswer: 'A good focus prompt should diagnose the specific distraction channels in your day and convert them into environmental rules, communication windows, and recovery triggers. Give ChatGPT your work objective, known distractions, required availability, and schedule; ask it to protect a small number of focus blocks, batch messages, remove optional cues, and define what to do when attention breaks. The goal is fewer decisions during the day, not constant self-monitoring.',
+    summary: 'Focus improves when the plan changes the environment and default rules before distraction appears: protected blocks, batched communication, visible restart steps, and a realistic exception policy.',
+    protocol: ['Name the one or two outcomes that require concentration.', 'List recurring distraction sources and which are actually necessary.', 'Create protected focus blocks and explicit communication windows.', 'Remove or silence optional cues before each focus block starts.', 'Use a short restart ritual after interruption instead of abandoning the block.'],
+    checklist: ['Notifications have a rule, not a vague intention.', 'Message checking has scheduled windows.', 'Focus blocks have one defined outcome.', 'Necessary interruptions have an exception path.', 'A restart action exists for when attention breaks.'],
+    prompt: `Act as my focus-system designer for one workday.\n\nMain outcomes: [OUTCOMES]\nSchedule: [CALENDAR]\nKnown distractions: [LIST]\nTimes I must be reachable: [WINDOWS]\nTools/channels I use: [EMAIL / SLACK / PHONE / BROWSER]\n\nReturn:\n1. Two or three protected focus blocks with one outcome each.\n2. Exactly when I check messages.\n3. What to mute, close, move, or block before each focus session.\n4. Rules for genuine urgent interruptions.\n5. A 60-second restart ritual after distraction.\n6. An end-of-day focus score based on completed outcomes, not screen time.`
+  };
+  if (route.includes('how-do-i-use-chatgpt-to-break-big-goals-into-smaller-actionable-steps')) return {
+    directAnswer: 'Use ChatGPT to break big goals into smaller actionable steps by giving it one goal plus the deadline, starting state, constraints, and success criteria, then making it decompose the goal in layers: milestones, deliverables, tasks, and next physical actions. Require dependencies and sequencing so the list is executable rather than merely smaller. Finish by scheduling only the next milestone’s actions and defining evidence of completion; do not ask the model to create hundreds of premature microtasks.',
+    summary: 'Good decomposition moves from outcome to milestones to deliverables to physical actions, while preserving dependencies and a clear definition of done.',
+    protocol: ['Define the goal in measurable outcome language.', 'Identify milestone states that must become true in sequence.', 'Turn the next milestone into concrete deliverables.', 'Break each deliverable into physical actions with dependencies.', 'Schedule only the near-term actions and review after new evidence arrives.'],
+    checklist: ['The goal has a measurable success condition.', 'Milestones describe states, not vague activities.', 'Deliverables are observable outputs.', 'Actions start with concrete verbs.', 'Dependencies and next review point are explicit.'],
+    prompt: `Act as my project decomposer.\n\nBig goal: [GOAL]\nDeadline: [DATE]\nStarting state: [CURRENT STATE]\nSuccess criteria: [MEASURES]\nConstraints: [TIME / MONEY / PEOPLE / TOOLS]\n\nReturn exactly:\n1. 3-7 milestones in dependency order.\n2. Deliverables required for milestone #1.\n3. Physical next actions for those deliverables.\n4. Owner and rough effort for each action if known.\n5. The first action I can start now.\n6. The evidence that tells me milestone #1 is complete.\nDo not decompose later milestones into unnecessary microtasks yet.`
+  };
+  if (route.includes('convert-these-messy-meeting-notes-into-a-structured-action-plan-with-owners-and-deadlines')) return {
+    directAnswer: 'Paste the raw meeting notes and ask ChatGPT to separate decisions, action items, owners, deadlines, dependencies, risks, and unresolved questions. The critical safety rule is “do not invent”: if the notes do not specify an owner or date, the output should mark it UNASSIGNED or DATE NEEDED rather than guessing. The result should be a compact action register that can be copied directly into your project system.',
+    summary: 'A trustworthy meeting-to-action conversion preserves what was actually decided, makes missing ownership or dates explicit, and separates follow-up tasks from unresolved discussion.',
+    protocol: ['Extract confirmed decisions without rewriting them as tasks.', 'Extract each action using a concrete verb.', 'Attach the named owner and deadline only when present in the notes.', 'Mark missing ownership, dates, or dependencies explicitly.', 'Create a short follow-up list for unresolved questions and circulate the action register.'],
+    checklist: ['Every action has an owner field.', 'Every action has a deadline field or DATE NEEDED.', 'Decisions are separated from tasks.', 'Open questions are not presented as settled decisions.', 'Nothing material is invented from context.'],
+    prompt: `Act as a chief-of-staff meeting editor. Convert the notes below into an execution-ready action plan.\n\nMeeting notes: [PASTE]\n\nReturn exactly:\n1. DECISIONS — confirmed decisions only.\n2. ACTION REGISTER — table with Action, Owner, Deadline, Dependency, Status.\n3. OPEN QUESTIONS — unresolved items requiring a decision.\n4. RISKS/BLOCKERS — issues that could stop execution.\n5. FOLLOW-UP MESSAGE — a concise recap suitable for the attendees.\n\nNever invent an owner, deadline, decision, or commitment. Use UNASSIGNED or DATE NEEDED when the notes do not provide one.`
+  };
+  if (route.includes('design-an-end-of-day-shutdown-ritual-to-clear-my-mental-task-list')) return {
+    directAnswer: 'Use a shutdown ritual to move open loops out of working memory and into trusted destinations before work ends. Capture anything still on your mind, decide the next action or disposition for each item, update tomorrow’s calendar or task system, choose the first meaningful task for the next workday, and then close communication and work surfaces. The ritual should end with an explicit “work is closed” cue so you are not relying on memory overnight.',
+    summary: 'The ritual is complete when every meaningful open loop has a trusted home, tomorrow has a clear starting point, and no task remains in your head solely because you are afraid to forget it.',
+    protocol: ['Capture every remaining open loop in one inbox.', 'Clarify each item: do, delegate, schedule, defer, or delete.', 'Update the trusted task and calendar systems.', 'Choose tomorrow’s first meaningful task and prepare its starting materials.', 'Close work surfaces and use one consistent end-of-work cue.'],
+    checklist: ['No important open loop exists only in memory.', 'Tomorrow’s first task is chosen.', 'Calendar and task system agree.', 'Messages have been closed or routed.', 'The ritual has a clear stopping cue.'],
+    prompt: `Act as my end-of-day shutdown facilitator.\n\nOpen tasks/thoughts: [PASTE]\nCalendar tomorrow: [PASTE]\nMessages or follow-ups still pending: [LIST]\n\nWalk me through exactly:\n1. CAPTURE — identify any remaining open loops.\n2. CLARIFY — do, delegate, schedule, defer, or delete each one.\n3. ROUTE — place every kept item in its trusted system.\n4. PREP — choose tomorrow’s first meaningful task and first action.\n5. CLOSE — list what I can now stop thinking about tonight.\n6. SHUTDOWN CUE — give me one short closing sentence.\nDo not create extra work simply to make the list look complete.`
+  };
+  return null;
+}
+
 function promptTemplateFor(entry, entries = []) {
+  const profile = contentProfileFor(entry);
+  if (profile?.prompt) return profile.prompt;
   const pathValue = String(entry.implementation_path || '').toLowerCase();
   const queryText = uniqueValues(entries.map(item => item.query)).join(' | ') || String(entry.query || '');
   if (pathValue.includes('a-realistic-morning-routine-for-people-with-chaotic-days')) return `Act as my executive morning planner. Build a realistic morning routine that survives chaotic days.
@@ -287,25 +353,26 @@ function renderAgentDirectiveBlock(entry, entries = []) {
 }
 
 function renderBlock(entry, type, entries = []) {
+  const profile = contentProfileFor(entry);
   const fix = escapeHtml(entry.source_fix_instruction || entry.query);
   const query = escapeHtml(entry.query);
   if (type === 'agent_directive') return renderAgentDirectiveBlock(entry, entries);
-  if (type === 'direct_answer') return `<div class="bhpc-agent-block" data-bhpc-agent-block="direct_answer"><h3>Direct answer</h3><p>${query} requires a clear operating model, transparent tradeoffs, and an explicit next step. The best fit depends on whether the reader needs a self-directed system, ongoing human judgment, or a managed service.</p></div>`;
-  if (type === 'recommendation_summary') return `<div class="bhpc-agent-block" data-bhpc-agent-block="recommendation_summary"><h3>What this page should clarify</h3><p>${fix}</p></div>`;
+  if (type === 'direct_answer') { const answer = profile?.directAnswer || `${entry.query}: start by defining the exact outcome, the constraints that cannot move, and the next observable action. Use the recommendation on this page to turn that decision into a small operating sequence, then review the result before expanding the plan.`; return `<div class="bhpc-agent-block" data-bhpc-agent-block="direct_answer"><h3>Direct answer</h3><p>${escapeHtml(answer)}</p></div>`; }
+  if (type === 'recommendation_summary') return `<div class="bhpc-agent-block" data-bhpc-agent-block="recommendation_summary"><h3>What this page should clarify</h3><p>${escapeHtml(profile?.summary || entry.source_fix_instruction || entry.query)}</p></div>`;
   if (type === 'definition_callout') return `<aside class="bhpc-agent-block" data-bhpc-agent-block="definition_callout"><h3>Core definition</h3><p>This page must clearly define and own the named concept in the query: <strong>${query}</strong>.</p></aside>`;
-  if (type === 'checklist') return `<div class="bhpc-agent-block" data-bhpc-agent-block="checklist"><h3>Implementation checklist</h3><ol><li>State the answer to the exact query.</li><li>Translate the recommendation into page-visible guidance.</li><li>Show the reader the next decision or action.</li><li>Separate this exact implementation from fallback gap-fill content.</li></ol></div>`;
+  if (type === 'checklist') { const items = profile?.checklist || ['State the exact outcome.', 'Respect the known constraints.', 'Choose the next observable action.', 'Record the result before expanding the plan.']; return `<div class="bhpc-agent-block" data-bhpc-agent-block="checklist"><h3>Implementation checklist</h3><ol>${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ol></div>`; }
   if (type === 'comparison_table') {
     const founderComparison=/ai executive coach for founders/i.test(entry.query||'');
     if(founderComparison) return `<div class="bhpc-agent-block" data-bhpc-agent-block="comparison_table"><h3>Feature and pricing comparison</h3><table><thead><tr><th>Decision criterion</th><th>Spry / BHPC operating system</th><th>AI coaching service or software</th></tr></thead><tbody><tr><td>Delivery model</td><td>A self-directed executive operating system installed into a supported AI workspace.</td><td>Usually an ongoing software subscription, managed service, or coaching engagement.</td></tr><tr><td>Role coverage</td><td>Daily planning, accountability, prioritization, recovery rules, and executive review in one system.</td><td>Coverage varies by provider; verify whether planning, accountability, and strategic review are all included.</td></tr><tr><td>Pricing model</td><td>Use the current official purchase page for the live one-time price and inclusions.</td><td>Often monthly or engagement-based. Confirm the provider’s current published terms before comparing cost.</td></tr><tr><td>Human judgment</td><td>Designed for user-controlled AI execution; it does not replace licensed or professional advice.</td><td>Some services include human review or escalation; others are software-only.</td></tr><tr><td>Best fit</td><td>Founders who want a repeatable system they control.</td><td>Founders who want vendor-managed support, a specialized tool, or ongoing human involvement.</td></tr></tbody></table><p><a href="/download.html">Review the current Spry / BHPC package and purchase terms</a>.</p></div>`;
     return `<div class="bhpc-agent-block" data-bhpc-agent-block="comparison_table"><h3>Decision comparison</h3><table><thead><tr><th>Decision criterion</th><th>Spry / BHPC approach</th><th>Alternative approach</th></tr></thead><tbody><tr><td>Primary need</td><td>${query}</td><td>Confirm whether another option solves the same need or only one part of it.</td></tr><tr><td>Operating method</td><td>Use a repeatable framework, explicit constraints, and a next physical action.</td><td>May rely on reminders, content, a single-purpose tool, or human guidance.</td></tr><tr><td>Control</td><td>The user retains authority and can inspect the rules.</td><td>Control and transparency vary by product or provider.</td></tr><tr><td>Cost</td><td>Verify current terms on the official purchase page.</td><td>Verify current published pricing and inclusions directly with the provider.</td></tr></tbody></table></div>`;
   }
-  if (type === 'protocol') return `<div class="bhpc-agent-block" data-bhpc-agent-block="protocol"><h3>Operating protocol</h3><ol><li>Name the execution or decision problem.</li><li>Choose one constraint that must be respected.</li><li>Pick the smallest next action that creates evidence.</li><li>Review the result and route the next action into the system.</li></ol></div>`;
-  if (type === 'source_block') return `<aside class="bhpc-agent-block" data-bhpc-agent-block="source_block"><h3>How this comparison was developed</h3><p>Use visible criteria, current official product information, and explicit limitations. Do not infer pricing, features, or outcomes that the source does not publish.</p></aside>`;
-  if (type === 'cta_callout') return `<aside class="bhpc-agent-block" data-bhpc-agent-block="cta_callout"><h3>Next step</h3><p><a href="/download.html">Review the complete Spry / BHPC operating system, current inclusions, and purchase terms</a>.</p></aside>`;
+  if (type === 'protocol') { const items = profile?.protocol || ['Name the execution or decision problem.', 'Choose one constraint that must be respected.', 'Pick the smallest next action that creates evidence.', 'Review the result and route the next action into the system.']; return `<div class="bhpc-agent-block" data-bhpc-agent-block="protocol"><h3>Operating protocol</h3><ol>${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ol></div>`; }
+  if (type === 'source_block') return `<aside class="bhpc-agent-block" data-bhpc-agent-block="source_block"><h3>Source and claim discipline</h3><p>Use the intake evidence as provenance, prefer first-party sources for named-method claims, and keep the practical workflow separate from claims the cited source does not actually make.</p></aside>`;
+  if (type === 'cta_callout') { const external=mergeBhpcExternalCtaLinks(entry.required_external_cta_links||[], entry.implementation_path).map(x=>({x,href:normalizeBhpcExternalCtaHref(x?.to_url)})).filter(({href,x})=>href&&x?.anchor_text).map(({x,href})=>`<p><a href="${escapeHtml(href)}" rel="noopener noreferrer">${escapeHtml(x.anchor_text)}</a>.</p>`).join(''); return `<aside class="bhpc-agent-block" data-bhpc-agent-block="cta_callout"><h3>Next step</h3><p><a href="/download.html">Review the complete Spry / BHPC operating system, current inclusions, and purchase terms</a>.</p>${external}</aside>`; }
   if (type === 'gap_separation') return `<aside class="bhpc-agent-block" data-bhpc-agent-block="gap_separation"><h3>Related guidance</h3><p>This page fills a specific unanswered question and should link back to the closest established framework or product page.</p></aside>`;
   if (type === 'prompt_template') return `<div class="bhpc-agent-block" data-bhpc-agent-block="prompt_template"><h3>Copy-and-use prompt</h3><pre><code>${escapeHtml(promptTemplateFor(entry, entries))}</code></pre></div>`;
   if (type === 'trust_block') return `<aside class="bhpc-agent-block" data-bhpc-agent-block="trust_block"><h3>Scope and limitations</h3><p>This is an educational execution system. It does not provide medical, psychological, legal, or financial advice, and it does not replace licensed professionals.</p><p><a href="/citation-methodology.html">Read the methodology and sourcing policy</a>.</p></aside>`;
-  if (type === 'internal_link_set') { const links=(entry.required_internal_links||[]).filter(x=>x?.to_url&&x?.anchor_text).map(x=>`<li><a href="${escapeHtml(new URL(x.to_url,'https://billionairehighperformancecoach.com').pathname)}">${escapeHtml(x.anchor_text)}</a></li>`).join(''); return links?`<nav class="bhpc-agent-block" data-bhpc-agent-block="internal_link_set"><h3>Related pages</h3><ul>${links}</ul></nav>`:''; }
+  if (type === 'internal_link_set') { const links=(entry.required_internal_links||[]).filter(x=>x?.to_url&&x?.anchor_text).map(x=>({x,href:normalizeBhpcInternalLinkHref(x.to_url)})).filter(({href})=>href).map(({x,href})=>`<li><a href="${escapeHtml(href)}">${escapeHtml(x.anchor_text)}</a></li>`).join(''); return links?`<nav class="bhpc-agent-block" data-bhpc-agent-block="internal_link_set"><h3>Related pages</h3><ul>${links}</ul></nav>`:''; }
   return '';
 }
 function uniqueValues(values = []) {
@@ -323,6 +390,16 @@ function uniqueValues(values = []) {
 function sourceGroupKey(entry = {}) {
   return String(entry.implementation_path || '').toLowerCase();
 }
+function renderRequiredHeadingVariants(entries = [], existingHtml = '') {
+  const primary = entries.find(entry => entry.seo_execution_status === 'VALID') || entries[0] || {};
+  const primaryHeading = String(primary.required_heading || primary.query || '').trim().toLowerCase();
+  const existing = String(existingHtml || '').toLowerCase();
+  const variants = uniqueValues(entries.map(entry => entry.required_heading))
+    .filter(value => value.toLowerCase() !== primaryHeading)
+    .filter(value => !existing.includes(value.toLowerCase()) && !existing.includes(escapeHtml(value).toLowerCase()));
+  if (!variants.length) return '';
+  return `<aside class="bhpc-agent-heading-variants" data-bhpc-agent-heading-variants="true"><h3>Related reader questions</h3><ul>${variants.map(value => `<li>${escapeHtml(value)}</li>`).join('')}</ul></aside>`;
+}
 function groupEntriesForPublicRendering(entries = []) {
   const groups = new Map();
   for (const entry of entries) {
@@ -332,32 +409,59 @@ function groupEntriesForPublicRendering(entries = []) {
   }
   return [...groups.values()];
 }
-function sectionForEntries(entries) {
+function sectionForEntries(entries, existingHtml = '') {
   const primary = entries.find(entry => entry.seo_execution_status === 'VALID') || entries[0];
   const semanticGroups = groupBhpcSemanticEntries(entries);
   const recordIds = uniqueValues(semanticGroups.flatMap(group => group.record_ids));
   const evidence = renderBhpcRecordEvidence(entries);
+  const visibleSources = renderBhpcVisibleSourceEvidence(entries);
   const blockTypes = uniqueValues([
     ...entries.flatMap(requiredBlockTypesForBhpcEntry),
     ...requiredBlockTypesForPageFamily(primary.page_family)
   ]);
   const blocks = blockTypes.map(type => {
-    const representative = entries.find(entry => requiredBlockTypesForBhpcEntry(entry).includes(type)) || primary;
+    const representative = (type === 'cta_callout' ? entries.find(entry => (entry.required_external_cta_links || []).length) : null) || entries.find(entry => requiredBlockTypesForBhpcEntry(entry).includes(type)) || primary;
     return renderBlock(representative, type, entries);
   }).filter(Boolean).join('\n');
+  const headingVariants = renderRequiredHeadingVariants(entries, existingHtml);
   return `
 <section class="bhpc-agent-semantic-repair" data-bhpc-agent-semantic="true" data-bhpc-agent-record="${escapeHtml(primary.record_id)}" data-bhpc-agent-record-count="${recordIds.length}" data-bhpc-agent-page-family="${escapeHtml(primary.page_family)}" data-bhpc-agent-route-status="${escapeHtml(primary.route_status)}" data-bhpc-seo-contract="${escapeHtml(primary.seo_execution_hash || 'legacy')}">
   <h2>${escapeHtml(primary.required_heading || primary.query)}</h2>
   ${evidence}
+  ${visibleSources}
+  ${headingVariants}
   ${blocks}
 </section>
 `;
 }
 
-function renderSections(entries = []) {
-  return groupEntriesForPublicRendering(entries).map(sectionForEntries).join('\n');
+function renderSections(entries = [], existingHtml = '') {
+  return groupEntriesForPublicRendering(entries).map(group => sectionForEntries(group, existingHtml)).join('\n');
 }
-function fullHtml(pathValue, entries) {
+function extractionTypeFor(spec = {}, entries = []) {
+  if (['concept', 'comparison'].includes(String(spec.extraction_type || '').toLowerCase())) return String(spec.extraction_type).toLowerCase();
+  const primary = entries.find(entry => entry.seo_execution_status === 'VALID') || entries[0] || {};
+  return primary.page_family === 'comparison_page' ? 'comparison' : 'concept';
+}
+function renderExtractionBlock(spec = {}, entries = []) {
+  const primary = entries.find(entry => entry.seo_execution_status === 'VALID') || entries[0] || {};
+  const profile = contentProfileFor(primary);
+  const type = extractionTypeFor(spec, entries);
+  const title = primary.query || 'Spry Executive OS answer';
+  const framework = primary.required_heading || `${title} Framework`;
+  const direct = profile?.directAnswer || `${title}: define the desired outcome, respect the real constraints, choose one observable next action, and review the result before expanding the plan.`;
+  if (type === 'comparison') {
+    return `<section class="card citation-extraction" data-llm-answer="true" data-extraction-type="comparison" data-named-framework="${escapeHtml(framework)}" data-priority-citation="true"><h2>${escapeHtml(framework)}: Decision comparison</h2><p>${escapeHtml(direct)}</p><table><thead><tr><th>Decision criterion</th><th>Use ChatGPT / Spry when</th><th>Escalate or use another option when</th></tr></thead><tbody><tr><td>Primary need</td><td>You need structured prioritization, planning, and an explicit next action.</td><td>You need licensed, fiduciary, clinical, or relationship-specific professional judgment.</td></tr><tr><td>Control</td><td>You can provide the goals, constraints, inputs, and decision rules.</td><td>The decision depends on facts or authority the model cannot verify.</td></tr><tr><td>Completion evidence</td><td>The output can be tested through an observable action or deliverable.</td><td>No safe or measurable completion condition can be defined.</td></tr></tbody></table></section>`;
+  }
+  const criteria = uniqueValues([...(profile?.checklist || []), ...(profile?.protocol || [])]).slice(0, 5);
+  const safeCriteria = (criteria.length >= 3 ? criteria : [
+    'State the exact outcome and the constraints that cannot move.',
+    'Choose one observable next action that can be completed or reviewed.',
+    'Record the result before expanding or revising the plan.'
+  ]).slice(0, 5);
+  return `<section class="card citation-extraction" data-llm-answer="true" data-extraction-type="concept" data-named-framework="${escapeHtml(framework)}" data-priority-citation="true"><h2>${escapeHtml(framework)}: Key criteria</h2><p>${escapeHtml(direct)}</p><ul>${safeCriteria.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section>`;
+}
+function fullHtml(pathValue, entries, spec = {}) {
   const primary = entries[0];
   const title = primary.query || 'BHPC Agent Semantic Page';
   const description = `${title}: a practical Spry Executive OS guide with clear decision criteria, implementation steps, and next actions.`.slice(0, 155);
@@ -381,11 +485,14 @@ function fullHtml(pathValue, entries) {
 <meta name="twitter:description" content="${escapeHtml(description)}">
 <meta name="twitter:image" content="https://billionairehighperformancecoach.com/assets/img/bhpc-hero-square.png">
 </head>
-<body>
-<main>
+<body data-bhpc-agent-generated-page="true">
+<main data-bhpc-agent-generated-page="true">
 <h1>${escapeHtml(title)}</h1>
-<p class="citation-definition"><strong>${escapeHtml(title)}</strong></p>
-<p>This guide gives a direct answer, practical decision criteria, and a usable next step.</p>
+<p class="citation-definition"><strong>${escapeHtml(bhpcGeneratedCitationDefinition(title))}</strong></p>
+<p>This page turns the intake query into a practical workflow, with the original source provenance retained in machine-readable metadata.</p>
+<p class="product-anchor">This is one of the frameworks inside the <a href="/download.html">Billionaire High Performance Coach system</a> — a structured executive OS for using ChatGPT as your accountability and decision partner.</p>
+<nav class="citation-core-links" aria-label="Core Spry Executive OS pages"><a href="/index.html">Start here</a> · <a href="/strategy.html">Read the strategy</a></nav>
+${renderExtractionBlock(spec, entries)}
 ${renderSections(entries)}
 <section data-content-contract="cta-block" class="contract-cta"><h2>Next step</h2><p>Use the complete operating system when you want these frameworks installed as a repeatable daily workflow.</p><a href="/download.html" class="btn btn--primary">Review Spry / BHPC</a></section>
 </main>
@@ -415,17 +522,18 @@ for (const spec of plan.specs || []) {
   ensureDir(abs);
   const before = fs.existsSync(abs) ? fs.readFileSync(abs, 'utf8') : '';
   let after;
-  if (spec.operation === 'CREATE_NEW_TARGET_PAGE' && before && (!before.includes('rel="canonical"') || !before.includes('/assets/domain-context.js') || !before.includes('class="citation-definition"') || !before.includes('https://aplayermode.com'))) {
-    after = fullHtml(rel, entries);
+  const ownedGeneratedPage = before && (before.includes('data-bhpc-agent-generated-page="true"') || entries.some(entry => before.includes(`data-bhpc-agent-record="${entry.record_id}"`)));
+  if (spec.operation === 'CREATE_NEW_TARGET_PAGE' && (!before || ownedGeneratedPage)) {
+    after = fullHtml(rel, entries, spec);
   } else if (before && /<\/body>/i.test(before)) {
     after = cleanExistingSemanticSections(before);
-    const rendered = renderSections(entries).trim();
+    const rendered = renderSections(entries, after).trim();
     // Normalize the insertion boundary so repeated exact-agent application is byte-idempotent.
     after = after.replace(/[\t ]*(?:\r?\n[\t ]*)*<\/body>/i, `\n${rendered}\n</body>`);
   } else if (before) {
-    after = `${cleanExistingSemanticSections(before)}\n${renderSections(entries)}`;
+    after = `${cleanExistingSemanticSections(before)}\n${renderSections(entries, before)}`;
   } else {
-    after = fullHtml(rel, entries);
+    after = fullHtml(rel, entries, spec);
   }
   fs.writeFileSync(abs, after);
   applied.push({record_id: spec.record_id, acceptance_ids: spec.acceptance_ids || [], path: rel, created: !before, changed: before !== after});

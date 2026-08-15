@@ -10,6 +10,8 @@ const answersPath = 'answers.json';
 const llmsPath = 'llms.txt';
 const llmsFullPath = 'llms-full.txt';
 const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
+const registryGeneratedAtBeforeRepair = registry.generated_at || null;
+const registrySemanticBeforeRepair = JSON.stringify({...registry, generated_at: undefined});
 const queryRegistry = JSON.parse(fs.readFileSync(queryPath, 'utf8'));
 const citableRegistry = JSON.parse(fs.readFileSync(citablePath, 'utf8'));
 const normalize = value => String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
@@ -378,7 +380,17 @@ for (const q of activeQueries) {
 }
 registry.records.sort((a, b) => a.path.localeCompare(b.path));
 registry.record_count = registry.records.length;
-registry.generated_at = new Date().toISOString();
+const registrySemanticAfterRepair = JSON.stringify({...registry, generated_at: undefined});
+const stableContentDate = registry.records
+  .flatMap((record) => [record.admitted_at, record.last_reviewed, record.reviewed_at, record.verified_at])
+  .filter((value) => /^\d{4}-\d{2}-\d{2}$/.test(String(value || '')))
+  .sort()
+  .at(-1);
+registry.generated_at = stableContentDate
+  ? `${stableContentDate}T00:00:00.000Z`
+  : (registrySemanticAfterRepair === registrySemanticBeforeRepair && registryGeneratedAtBeforeRepair
+      ? registryGeneratedAtBeforeRepair
+      : '2026-06-21T00:00:00.000Z');
 fs.writeFileSync(registryPath, `${JSON.stringify(registry, null, 2)}\n`, 'utf8');
 fs.mkdirSync('reports', {recursive: true});
 fs.writeFileSync('reports/programmatic-registry-owner-repair.json', `${JSON.stringify({

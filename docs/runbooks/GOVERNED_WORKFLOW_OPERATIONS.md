@@ -122,3 +122,16 @@ Generated ledgers and rendered outputs are not line-merged. When `main` advances
 5. recommits the regenerated result and retries the push.
 
 This prevents rebase conflicts in shared generated files while preserving the newest admitted repository state.
+
+## Agent intake invariants — 2026-08-15 hostile review
+
+These are hard control-plane invariants for the BHPC/Spry agent-intake lane:
+
+1. **Cross-section evidence is one intake truth.** A page opportunity must inherit evidence from matching result records in the same intake artifact; JSON sections are not isolated authorities.
+2. **Named-creator attribution fails closed.** When a query requires creator-specific evidence, an unrelated URL cannot satisfy the gate. First-party evidence domains required by the query must be present.
+3. **CREATE intent is stable across reruns.** A route created from `pages_to_build` / `new_page_opportunities` remains a source-intent CREATE on later runs even after the file exists. File existence alone must not reclassify source intent as a repair.
+4. **BLOCKED and REQUIRED cannot coexist on one run/scope/route.** The acceptance compiler uses most-restrictive-wins and the standalone acceptance validator independently rejects any unresolved REQUIRED/BLOCKED contradiction before rendering.
+5. **Generated pages must be substantive, query-specific output.** The rich-page validator rejects thin or duplicated direct-answer boilerplate and requires first-party evidence to be visibly rendered when the acceptance spec requires it.
+6. **Source multiplicity is provenance, not repeated public copy.** Duplicate JSON/CSV/page-spec records for one semantic query are consolidated in visible rendering while all record IDs and evidence URLs remain in machine-readable provenance metadata.
+7. **Public-root validators must execute against the staged canonical root.** Standalone validators that read rendered pages use `scripts/site_layout/run_with_public_root.mjs`; never treat the repository shell as the public page tree.
+8. **Normalization contract changes reabsorb governed ABSORBED runs.** Parser/evidence contract upgrades must bump the normalization contract version so stale normalized artifacts cannot silently bypass new intake law.

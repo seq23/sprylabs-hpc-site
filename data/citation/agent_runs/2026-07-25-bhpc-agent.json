@@ -1,7 +1,7 @@
 {
   "schema_version": "1.2",
   "run_id": "2026-07-25-bhpc-agent",
-  "generated_at": "2026-07-25T18:00:34.732Z",
+  "generated_at": "2026-08-15T14:38:22.190Z",
   "scope": "bhpc",
   "artifact_contract": "CSV + optional JSON + HTML + manifest",
   "exact_implementation_policy": "data/report_fixes/agent_exact_implementation_policy.json",
@@ -305,16 +305,16 @@
       "path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
       "domain": "spryexecutiveos.com",
       "issue": "what is A realistic morning routine for people with chaotic days — Spry Executive OS",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "implementation_required": true,
+      "operation": "NO_ACTION_MAINTAIN",
+      "implementation_required": false,
       "blocked_reason": ""
     },
     {
       "path": "insights/a-simple-knowledge-system-capture-distill-use.html",
       "domain": "spryexecutiveos.com",
       "issue": "A simple knowledge system: capture → distill → use — Spry Executive OS",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "implementation_required": true,
+      "operation": "NO_ACTION_MAINTAIN",
+      "implementation_required": false,
       "blocked_reason": ""
     },
     {
@@ -790,12 +790,12 @@
     {
       "query": "what is A realistic morning routine for people with chaotic days — Spry Executive OS",
       "path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+      "operation": "NO_ACTION_MAINTAIN"
     },
     {
       "query": "A simple knowledge system: capture → distill → use — Spry Executive OS",
       "path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+      "operation": "NO_ACTION_MAINTAIN"
     },
     {
       "query": "what is A realistic morning routine for people with chaotic days — Spry Executive OS",
@@ -981,19 +981,22 @@
       "query": "ChatGPT weekly review prompt for productivity",
       "path": "insights/chatgpt-weekly-review-prompt-for-productivity.html",
       "operation": "CREATE_NEW_TARGET_PAGE",
-      "source": "json_pages_to_build"
+      "blocked_reason": "",
+      "source": "json_new_page_opportunities"
     },
     {
       "query": "ChatGPT accountability partner prompt for goals",
       "path": "insights/chatgpt-accountability-partner-prompt-for-goals.html",
       "operation": "CREATE_NEW_TARGET_PAGE",
-      "source": "json_pages_to_build"
+      "blocked_reason": "",
+      "source": "json_new_page_opportunities"
     },
     {
       "query": "Best ChatGPT prompts for executive functioning and planning",
       "path": "insights/best-chatgpt-prompts-for-executive-functioning-and-planning.html",
       "operation": "CREATE_NEW_TARGET_PAGE",
-      "source": "json_pages_to_build"
+      "blocked_reason": "",
+      "source": "json_new_page_opportunities"
     }
   ],
   "interpretation": {
