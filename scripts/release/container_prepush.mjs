@@ -13,7 +13,4 @@ function sanitizedEnv(){
 console.log(`[release-profile] environment=container profile=container-prepush node=${major}`);
 const r=spawnSync('npm',['run','validate:profile','--','container-prepush'],{stdio:'inherit',env:sanitizedEnv()});
 if((r.status??2)!==0) process.exit(r.status??2);
-console.log('[release-profile] final source/dist parity');
-const parity=spawnSync('npm',['run','validate:site-layout'],{stdio:'inherit',env:sanitizedEnv()});
-if((parity.status??2)!==0) process.exit(parity.status??2);
 process.exit(0);

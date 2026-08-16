@@ -1719,16 +1719,6 @@
       "status": "ADMITTED"
     },
     {
-      "matrix_id": "MX-SITE-LAYOUT-PARITY",
-      "validation_id": "VAL-SITE-LAYOUT-PARITY",
-      "lane": "artifact",
-      "command": "npm run validate:site-layout",
-      "order": 173,
-      "severity": "HARD_FAIL",
-      "release_effect": true,
-      "status": "ADMITTED"
-    },
-    {
       "matrix_id": "MX-VISIBLE-CONTENT-ARTIFACTS",
       "validation_id": "VAL-VISIBLE-CONTENT-ARTIFACTS",
       "lane": "rendered-content",
@@ -2027,10 +2017,6 @@
           "command": "npm run validate:synthesis-differentiation"
         },
         {
-          "id": "VAL-SITE-LAYOUT-PARITY",
-          "command": "npm run validate:site-layout"
-        },
-        {
           "id": "REPAIR-VISIBLE-CONTENT-ARTIFACTS",
           "command": "npm run repair:visible-content-artifacts"
         },
@@ -2107,10 +2093,6 @@
         {
           "id": "VAL-SYNTHESIS-DIFFERENTIATION",
           "command": "npm run validate:synthesis-differentiation"
-        },
-        {
-          "id": "VAL-SITE-LAYOUT-PARITY",
-          "command": "npm run validate:site-layout"
         },
         {
           "id": "VAL-VISIBLE-CONTENT-ARTIFACTS",

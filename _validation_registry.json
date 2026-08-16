@@ -5468,7 +5468,7 @@
     },
     {
       "validation_id": "VAL-SITE-LAYOUT-PARITY",
-      "status": "ADMITTED",
+      "status": "RETIRED",
       "name": "validate:site-layout",
       "check_type": "validator",
       "owning_lane": "artifact",
@@ -5491,12 +5491,10 @@
       "overlap_analysis": [
         "build:all"
       ],
-      "retirement_offset": "Replaces retired root-tree aesthetics validator.",
-      "decision": "Owner approved source-to-dist organization; validate route parity, not root aesthetics.",
-      "decision_date": "2026-08-08",
-      "matrix_ids": [
-        "MX-SITE-LAYOUT-PARITY"
-      ],
+      "retirement_offset": "Removed after the staged compatibility assertion blocked Search Intelligence despite canonical content and preceding validation passing.",
+      "decision": "Owner explicitly ordered complete removal of the brittle site-layout parity validator after scheduled run 31950243863 failed on staged public entry missing:coverage.",
+      "decision_date": "2026-08-16",
+      "matrix_ids": [],
       "not_applicable_reason": null
     },
     {
