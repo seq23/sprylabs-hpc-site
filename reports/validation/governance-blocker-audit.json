@@ -1,23 +1,23 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-08-16T14:27:35.785Z",
+  "generated_at": "2026-08-17T13:38:03.426Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 168,
+  "admitted_hard_fail_count": 167,
   "reviewed_count": 8,
-  "unreviewed_count": 160,
+  "unreviewed_count": 159,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 128,
+    "REVIEW_REQUIRED": 127,
     "EXISTING_REPAIR_AVAILABLE": 6,
     "TRUE_BLOCKER": 26,
     "REVIEW_WARNING_BOUNDARY": 8
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 128,
+    "REVIEW_REQUIRED": 127,
     "EXISTING_REPAIR_AVAILABLE": 6,
     "TRUE_BLOCKER": 26
   },
   "migration_status_counts": {
-    "UNREVIEWED": 160,
+    "UNREVIEWED": 159,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -2470,21 +2470,6 @@
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-SYNTHESIS-DIFFERENTIATION"
-      ],
-      "suggested_review": "REVIEW_REQUIRED",
-      "migration_status": "UNREVIEWED",
-      "decision": null,
-      "evidence": []
-    },
-    {
-      "validation_id": "VAL-SITE-LAYOUT-PARITY",
-      "name": "validate:site-layout",
-      "command": "npm run validate:site-layout",
-      "owning_lane": "artifact",
-      "risk_prevented": "Prevents route loss or source/deploy divergence after the approved root reorganization.",
-      "current_severity": "HARD_FAIL",
-      "matrix_ids": [
-        "MX-SITE-LAYOUT-PARITY"
       ],
       "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",
