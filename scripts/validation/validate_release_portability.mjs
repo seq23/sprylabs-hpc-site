@@ -108,6 +108,21 @@ for (const route of criticalRoutes) {
 }
 if (missingLocalResources.length) errors.push(`critical browser routes reference missing local resources: ${missingLocalResources.slice(0, 20).join(', ')}`);
 
+const cleanHtmlRule = '/*.html /:splat 301';
+const rootCompatibilityRule = '/* /site/public/:splat 200';
+const redirectPaths = ['site/public/_redirects', '_redirects'];
+if (fs.existsSync('dist/_redirects')) redirectPaths.splice(1, 0, 'dist/_redirects');
+for (const redirectPath of redirectPaths) {
+  const redirectText = fs.readFileSync(redirectPath, 'utf8');
+  const cleanHtmlIndex = redirectText.indexOf(cleanHtmlRule);
+  if (cleanHtmlIndex === -1) errors.push(`${redirectPath} missing clean HTML redirect: ${cleanHtmlRule}`);
+  if (redirectPath === '_redirects') {
+    const compatibilityIndex = redirectText.indexOf(rootCompatibilityRule);
+    if (compatibilityIndex === -1) errors.push(`_redirects missing repository-root compatibility rule: ${rootCompatibilityRule}`);
+    else if (cleanHtmlIndex > compatibilityIndex) errors.push('_redirects clean HTML redirect must precede the repository-root compatibility rule');
+  }
+}
+
 
 const cloudflareMaxAssetBytes = 25 * 1024 * 1024;
 const deployLargeFiles = [];
