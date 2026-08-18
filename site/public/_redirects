@@ -3,3 +3,7 @@
 /insights/discipline-vs-motivation-the-calm-version-that-works.html /discipline-vs-motivation/ 301
 
 /admin.html /admin/ 301
+
+# Canonicalize legacy HTML URLs before the repository-root compatibility proxy.
+# Without this rule, Pages can expose /site/public during its automatic clean-URL redirect.
+/*.html /:splat 301
