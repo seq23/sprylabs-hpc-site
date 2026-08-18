@@ -4,6 +4,9 @@
 
 /admin.html /admin/ 301
 
+# Recover stale or previously leaked internal source URLs.
+/site/public/* /:splat 301
+
 # Canonicalize legacy HTML URLs before the repository-root compatibility proxy.
 # Without this rule, Pages can expose /site/public during its automatic clean-URL redirect.
 /*.html /:splat 301
