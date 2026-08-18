@@ -110,7 +110,9 @@ if (missingLocalResources.length) errors.push(`critical browser routes reference
 
 const cleanHtmlRule = '/*.html /:splat 301';
 const rootCompatibilityRule = '/* /site/public/:splat 200';
-for (const redirectPath of ['site/public/_redirects', 'dist/_redirects', '_redirects']) {
+const redirectPaths = ['site/public/_redirects', '_redirects'];
+if (fs.existsSync('dist/_redirects')) redirectPaths.splice(1, 0, 'dist/_redirects');
+for (const redirectPath of redirectPaths) {
   const redirectText = fs.readFileSync(redirectPath, 'utf8');
   const cleanHtmlIndex = redirectText.indexOf(cleanHtmlRule);
   if (cleanHtmlIndex === -1) errors.push(`${redirectPath} missing clean HTML redirect: ${cleanHtmlRule}`);
