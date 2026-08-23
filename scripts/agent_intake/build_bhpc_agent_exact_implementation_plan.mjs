@@ -3,6 +3,7 @@ import {writeJson, hashFile} from './bhpc_agent_common.mjs';
 import {compileAndWriteBhpcAcceptanceManifest} from './compile_bhpc_agent_acceptance_manifest.mjs';
 import {mergeBhpcExternalCtaLinks} from '../lib/bhpc_conversion_contract.mjs';
 import {bhpcGeneratedCitationDefinition} from '../lib/bhpc_public_page_contract.mjs';
+import {compileBhpcInternalLinkMutations} from '../lib/bhpc_link_mutations.mjs';
 
 const manifest=compileAndWriteBhpcAcceptanceManifest();
 function stableGeneratedAt(entries=[]){
@@ -14,6 +15,7 @@ function unique(values=[]){return [...new Set(values.filter(Boolean).map(String)
 const allEntries=manifest.entries||[];
 const activeRunDate=allEntries.map(e=>String(e.run_date||'')).filter(Boolean).sort().at(-1)||'';
 const activeEntries=allEntries.filter(e=>String(e.run_date||'')===activeRunDate);
+const compiledLinks=compileBhpcInternalLinkMutations(activeEntries.filter(e=>e.acceptance_status==='REQUIRED'));
 const deterministicGeneratedAt=stableGeneratedAt(activeEntries);
 const blockedRouteReasons=new Map(activeEntries
   .filter(e=>e.acceptance_status==='BLOCKED'&&e.implementation_path)
@@ -66,6 +68,8 @@ for(const [pathValue,entries] of groups){
 for(const entry of blocked){specs.push({record_id:entry.record_id,acceptance_ids:[entry.id].filter(Boolean),query:entry.query,run_date:entry.run_date,operation:entry.operation,page_family:entry.page_family,route_status:entry.route_status,intended_winner_page:entry.intended_winner_page||'',intended_winner_path:entry.intended_winner_path||'',implementation_path:entry.implementation_path||'',before_hash:null,status:'BLOCKED',blocked_reason:entry.blocked_reason||'blocked_by_acceptance_compiler'})}
 writeJson('data/citation/agent_page_specs.generated.json',{schema_version:'1.1',generated_at:deterministicGeneratedAt,source:'bhpc_agent_acceptance_manifest',active_run_date:activeRunDate,new_pages});
 writeJson('data/citation/agent_repair_specs.generated.json',{schema_version:'1.1',generated_at:deterministicGeneratedAt,source:'bhpc_agent_acceptance_manifest',active_run_date:activeRunDate,priority_pages});
-const report={schema_version:'1.1',status:'PASS',generated_at:new Date().toISOString(),active_run_date:activeRunDate,acceptance_manifest_path:'data/report_fixes/agent_acceptance_manifest.generated.json',policy_path:'data/report_fixes/agent_exact_implementation_policy.json',repair_count:Object.keys(priority_pages).length,new_page_count:Object.keys(new_pages).length,blocked_count:blocked.length,no_action_count:noAction.length,acceptance_entry_count:manifest.entry_count,active_acceptance_entry_count:activeEntries.length,required_acceptance_entry_count:activeEntries.filter(e=>e.acceptance_status==='REQUIRED').length,historical_entry_count:allEntries.length-activeEntries.length,specs,no_action:noAction.map(e=>({record_id:e.record_id,query:e.query,reason:'maintain_or_no_action'}))};
+const mutationPaths=unique([...specs.filter(s=>s.status==='PLANNED').map(s=>s.implementation_path),...compiledLinks.mutations.map(m=>m.from_path)]).sort();
+const report={schema_version:'1.2',status:compiledLinks.rejected.length?'FAIL':'PASS',generated_at:new Date().toISOString(),active_run_date:activeRunDate,acceptance_manifest_path:'data/report_fixes/agent_acceptance_manifest.generated.json',policy_path:'data/report_fixes/agent_exact_implementation_policy.json',repair_count:Object.keys(priority_pages).length,new_page_count:Object.keys(new_pages).length,blocked_count:blocked.length,no_action_count:noAction.length,acceptance_entry_count:manifest.entry_count,active_acceptance_entry_count:activeEntries.length,required_acceptance_entry_count:activeEntries.filter(e=>e.acceptance_status==='REQUIRED').length,historical_entry_count:allEntries.length-activeEntries.length,link_mutation_count:compiledLinks.mutations.length,link_mutations:compiledLinks.mutations,link_mutation_rejections:compiledLinks.rejected,mutation_paths:mutationPaths,specs,no_action:noAction.map(e=>({record_id:e.record_id,query:e.query,reason:'maintain_or_no_action'}))};
 writeJson('artifacts/validation/agent-exact-implementation-plan.json',report);writeJson('reports/bhpc-agent-exact-implementation-plan.json',report);
-console.log(`[bhpc-agent-exact-plan] PASS: active_run=${activeRunDate}; repairs=${report.repair_count}; new_pages=${report.new_page_count}; blocked=${report.blocked_count}; no_action=${report.no_action_count}; historical_skipped=${report.historical_entry_count}`);
+if(report.status==='FAIL'){console.error(`[bhpc-agent-exact-plan] FAIL: rejected_links=${compiledLinks.rejected.length}`);process.exit(1)}
+console.log(`[bhpc-agent-exact-plan] PASS: active_run=${activeRunDate}; repairs=${report.repair_count}; new_pages=${report.new_page_count}; links=${report.link_mutation_count}; blocked=${report.blocked_count}; no_action=${report.no_action_count}; historical_skipped=${report.historical_entry_count}`);

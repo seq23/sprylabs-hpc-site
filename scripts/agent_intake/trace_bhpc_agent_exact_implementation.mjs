@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {ROOT, readJson, writeJson} from './bhpc_agent_common.mjs';
+import {resolveBhpcInternalLinkAction, hasBhpcInternalLinkMutation} from '../lib/bhpc_link_mutations.mjs';
 
 function decodeHtml(value = '') {
   return String(value || '')
@@ -49,12 +50,18 @@ for (const entry of manifest.entries || []) {
   const html = exists ? fs.readFileSync(abs, 'utf8') : '';
   const normalizedHtml = normalize(html);
   const stringResults = (entry.required_strings || []).map(required => ({required, found: normalize(required).split(' ').filter(Boolean).every(token => normalizedHtml.includes(token))}));
-  const blockResults = (entry.required_block_types || []).map(type => ({type, found: html.includes(`data-bhpc-agent-block="${type}"`)}));
+  const linkResults = (entry.required_internal_links || []).map(action => {
+    const mutation=resolveBhpcInternalLinkAction(action);
+    if(mutation.status!=='RESOLVED')return {action,found:false,reason:mutation.reason};
+    const source=path.join(ROOT,mutation.from_path);
+    return {action,mutation,found:fs.existsSync(source)&&hasBhpcInternalLinkMutation(fs.readFileSync(source,'utf8'),mutation),reason:fs.existsSync(source)?'':'source_missing'};
+  });
+  const blockResults = (entry.required_block_types || []).map(type => ({type, found:type==='internal_link_set'?linkResults.every(result=>result.found):html.includes(`data-bhpc-agent-block="${type}"`)}));
   const recordFound = html.includes(attrNeedle(entry.record_id));
   const legacyMarkerFound = /Agent Exact Citation Repair|exact intended-winner pipeline/i.test(html);
   const planned = plannedPaths.has(rel);
-  const pass = exists && recordFound && planned && !legacyMarkerFound && stringResults.every(result => result.found) && blockResults.every(result => result.found);
-  traces.push({...entry, trace_status: pass ? 'PASS' : 'FAIL', file_exists: exists, planned_path: planned, semantic_record_found: recordFound, legacy_marker_found: legacyMarkerFound, required_strings_found: stringResults, required_blocks_found: blockResults});
+  const pass = exists && recordFound && planned && !legacyMarkerFound && stringResults.every(result => result.found) && blockResults.every(result => result.found) && linkResults.every(result=>result.found);
+  traces.push({...entry, trace_status: pass ? 'PASS' : 'FAIL', file_exists: exists, planned_path: planned, semantic_record_found: recordFound, legacy_marker_found: legacyMarkerFound, required_strings_found: stringResults, required_blocks_found: blockResults,required_internal_links_found:linkResults});
   if (!pass) {
     const reasons = [];
     if (!exists) reasons.push('file_missing');
@@ -63,8 +70,10 @@ for (const entry of manifest.entries || []) {
     if (legacyMarkerFound) reasons.push('legacy_marker_present');
     const missingStrings = stringResults.filter(result => !result.found).map(result => result.required);
     const missingBlocks = blockResults.filter(result => !result.found).map(result => result.type);
+    const missingLinks = linkResults.filter(result=>!result.found).map(result=>result.mutation?.key||result.reason);
     if (missingStrings.length) reasons.push(`missing_strings=${JSON.stringify(missingStrings)}`);
     if (missingBlocks.length) reasons.push(`missing_blocks=${JSON.stringify(missingBlocks)}`);
+    if (missingLinks.length) reasons.push(`missing_links=${JSON.stringify(missingLinks)}`);
     errors.push(`${entry.record_id}:semantic_acceptance_not_proven:${rel}:${reasons.join(';')}`);
   }
 }

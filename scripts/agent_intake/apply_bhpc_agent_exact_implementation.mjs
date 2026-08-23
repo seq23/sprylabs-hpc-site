@@ -28,7 +28,8 @@ function renderInstructionList(value = '') {
 function walkHtml(dir, out = []) {
   if (!fs.existsSync(dir)) return out;
   for (const entry of fs.readdirSync(dir, {withFileTypes: true})) {
-    if (['.git','node_modules'].includes(entry.name)) continue;
+    if (['.git','node_modules','.build','dist'].includes(entry.name)) continue;
+    if (dir === ROOT && entry.name === 'site' && process.env.BHPC_LAYOUT_STAGE_ACTIVE === '1') continue;
     const abs = path.join(dir, entry.name);
     if (entry.isDirectory()) walkHtml(abs, out);
     else if (entry.isFile() && entry.name.endsWith('.html')) out.push(abs);
@@ -372,7 +373,7 @@ function renderBlock(entry, type, entries = []) {
   if (type === 'gap_separation') return `<aside class="bhpc-agent-block" data-bhpc-agent-block="gap_separation"><h3>Related guidance</h3><p>This page fills a specific unanswered question and should link back to the closest established framework or product page.</p></aside>`;
   if (type === 'prompt_template') return `<div class="bhpc-agent-block" data-bhpc-agent-block="prompt_template"><h3>Copy-and-use prompt</h3><pre><code>${escapeHtml(promptTemplateFor(entry, entries))}</code></pre></div>`;
   if (type === 'trust_block') return `<aside class="bhpc-agent-block" data-bhpc-agent-block="trust_block"><h3>Scope and limitations</h3><p>This is an educational execution system. It does not provide medical, psychological, legal, or financial advice, and it does not replace licensed professionals.</p><p><a href="/citation-methodology.html">Read the methodology and sourcing policy</a>.</p></aside>`;
-  if (type === 'internal_link_set') { const links=(entry.required_internal_links||[]).filter(x=>x?.to_url&&x?.anchor_text).map(x=>({x,href:normalizeBhpcInternalLinkHref(x.to_url)})).filter(({href})=>href).map(({x,href})=>`<li><a href="${escapeHtml(href)}">${escapeHtml(x.anchor_text)}</a></li>`).join(''); return links?`<nav class="bhpc-agent-block" data-bhpc-agent-block="internal_link_set"><h3>Related pages</h3><ul>${links}</ul></nav>`:''; }
+  if (type === 'internal_link_set') return '';
   return '';
 }
 function uniqueValues(values = []) {
@@ -418,7 +419,7 @@ function sectionForEntries(entries, existingHtml = '') {
   const blockTypes = uniqueValues([
     ...entries.flatMap(requiredBlockTypesForBhpcEntry),
     ...requiredBlockTypesForPageFamily(primary.page_family)
-  ]);
+  ]).filter(type => type !== 'internal_link_set');
   const blocks = blockTypes.map(type => {
     const representative = (type === 'cta_callout' ? entries.find(entry => (entry.required_external_cta_links || []).length) : null) || entries.find(entry => requiredBlockTypesForBhpcEntry(entry).includes(type)) || primary;
     return renderBlock(representative, type, entries);

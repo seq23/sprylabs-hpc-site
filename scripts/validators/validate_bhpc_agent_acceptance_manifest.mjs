@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {findBhpcAcceptanceRouteConflicts} from '../lib/bhpc_acceptance_invariants.mjs';
 import {normalizeBhpcInternalLinkHref, normalizeBhpcExternalCtaHref} from '../lib/bhpc_internal_links.mjs';
+import {resolveBhpcInternalLinkAction} from '../lib/bhpc_link_mutations.mjs';
 const ROOT = process.cwd();
 function readJson(rel, fallback = null) { try { return JSON.parse(fs.readFileSync(path.join(ROOT, rel), 'utf8')); } catch { return fallback; } }
 function writeJson(rel, payload) { const file = path.join(ROOT, rel); fs.mkdirSync(path.dirname(file), {recursive: true}); fs.writeFileSync(file, `${JSON.stringify(payload, null, 2)}\n`); }
@@ -22,7 +23,8 @@ for (const entry of entries) {
     if (!Array.isArray(entry.required_block_types) || entry.required_block_types.length < 2) errors.push(`${entry.id}:insufficient_required_block_types`);
   }
   for (const link of entry.required_internal_links || []) {
-    if (!normalizeBhpcInternalLinkHref(link?.to_url || '')) errors.push(`${entry.id}:non_internal_required_link:${link?.to_url || 'missing'}`);
+    const mutation=resolveBhpcInternalLinkAction(link);
+    if (mutation.status !== 'RESOLVED') errors.push(`${entry.id}:invalid_internal_link_action:${mutation.reason}`);
   }
   for (const link of entry.required_external_cta_links || []) {
     if (!normalizeBhpcExternalCtaHref(link?.to_url || '')) errors.push(`${entry.id}:unapproved_external_cta_link:${link?.to_url || 'missing'}`);

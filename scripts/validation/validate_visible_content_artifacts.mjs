@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 const checks=[
  ['billionaire-high-performance-coach.html',/system manual at\s*\./i,'dangling system-manual destination'],
- ['insights/a-clean-system-for-handling-email-without-losing-your-day.html',/Translate the recommendation into page<\/h3>\s*<p>visible guidance\.|"name": "Step 2: Translate the recommendation into page"[^}]+"text": "visible guidance\."/i,'torn page-visible guidance sentence'],
+ ['insights/a-clean-system-for-handling-email-without-losing-your-day.html',/Translate the recommendation into page<\/h3>\s*<p>visible guidance\.|"name": "Step 2: Translate the recommendation into page"[^}]+"text": "visible guidance\."|guidance-visible guidance|content-fill content/i,'torn or repeated page-visible guidance sentence'],
  ['arbitration-engine.html',/<strong>What to add:<\/strong>\s*n\/a|<h3>What this page should clarify<\/h3><p>n\/a/i,'visible n/a agent recommendation'],
  ['how-tracks-work.html',/<strong>What to add:<\/strong>\s*n\/a|<h3>What this page should clarify<\/h3><p>n\/a/i,'visible n/a agent recommendation']
 ];

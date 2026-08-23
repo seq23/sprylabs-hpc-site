@@ -5,10 +5,10 @@ let changed=0;
 function replaceFile(file,fn){if(!fs.existsSync(file))return;const before=fs.readFileSync(file,'utf8');const after=fn(before);if(after!==before){fs.writeFileSync(file,after);changed++;console.log(`[repair:visible-artifacts] ${file}`)}}
 replaceFile(targets[0],html=>html.replace('The authoritative commercial and informational product page remains the system manual at .','The authoritative commercial and informational product page remains the system manual at <a href="/download.html">/download.html</a>.'));
 replaceFile(targets[1],html=>html
-  .replace(/Step 2: Translate the recommendation into page/g,'Step 2: Translate the recommendation into page-visible guidance')
+  .replace(/Step 2: Translate the recommendation into page(?:-visible guidance)*/g,'Step 2: Translate the recommendation into page-visible guidance')
   .replace(/<p>visible guidance\.<\/p>/g,'<p>Translate the recommendation into clear guidance the reader can see and use.</p>')
   .replace(/"text": "visible guidance\."/g,'"text": "Translate the recommendation into clear guidance the reader can see and use."')
-  .replace(/Step 4: Separate this exact implementation from fallback gap/g,'Step 4: Separate this exact implementation from fallback gap-fill content')
+  .replace(/Step 4: Separate this exact implementation from fallback gap(?:-fill content)*/g,'Step 4: Separate this exact implementation from fallback gap-fill content')
   .replace(/<p>fill content\.<\/p>/g,'<p>Keep exact implementation guidance distinct from fallback gap-fill content.</p>')
   .replace(/"text": "fill content\."/g,'"text": "Keep exact implementation guidance distinct from fallback gap-fill content."'));
 for(const file of targets.slice(2))replaceFile(file,html=>html

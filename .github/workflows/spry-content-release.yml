@@ -21,7 +21,7 @@ on:
     - cron: "17 14 * * *"
   push:
     branches:
-      - main
+      - "intake/**"
     paths:
       - "data/report_fixes/agent_runs/**/agent_run_manifest.json"
 
@@ -50,7 +50,11 @@ jobs:
       - name: Sync latest main before install
         run: |
           git fetch origin main
-          git reset --hard origin/main
+          if [ "${GITHUB_EVENT_NAME}" = "push" ]; then
+            git rebase origin/main
+          else
+            git reset --hard origin/main
+          fi
       - name: Check autonomous runtime state
         id: runtime
         run: |
@@ -87,6 +91,7 @@ jobs:
       - name: Commit validated Spry content release
         if: steps.runtime.outputs.run == 'true'
         env:
+          PRE_PUSH_VALIDATION_ARGV: npm run release:agent-intake:push-gate
           WORKFLOW_ARGV: >-
             npm run workflow:run -- --workflow spry-content-release -- npm run workflow:spry-content-release -- --mode "$RELEASE_MODE" &&
             npm run ownership:build &&

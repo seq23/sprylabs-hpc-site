@@ -4,11 +4,13 @@ set -Eeuo pipefail
 message="${1:-Run governed workflow}"
 workflow_id="${2:-unknown}"
 workflow_argv="${WORKFLOW_ARGV:-}"
+pre_push_validation_argv="${PRE_PUSH_VALIDATION_ARGV:-}"
 max_push_attempts="${PUSH_RETRY_ATTEMPTS:-3}"
 push_retry_delay_seconds="${PUSH_RETRY_DELAY_SECONDS:-2}"
 
 echo "workflow_id=${workflow_id}"
 echo "workflow_argv=${workflow_argv}"
+echo "pre_push_validation_argv=${pre_push_validation_argv}"
 echo "push_retry_attempts=${max_push_attempts}"
 
 git config user.name "github-actions[bot]"
@@ -28,8 +30,15 @@ run_governed_workflow_again() {
 
 regenerate_after_remote_advance() {
   echo "Regenerating governed workflow ${workflow_id} after remote main advance"
+  local replay_patch
+  replay_patch="$(mktemp)"
+  git diff --binary origin/main...HEAD -- data/report_fixes/agent_runs > "$replay_patch"
   git reset --hard origin/main
   git clean -fd
+  if [ -s "$replay_patch" ]; then
+    git apply "$replay_patch"
+  fi
+  rm -f "$replay_patch"
   run_governed_workflow_again
 }
 
@@ -41,6 +50,34 @@ commit_generated_changes() {
   fi
   git commit -m "$message"
   return 0
+}
+
+validate_committed_candidate() {
+  if [ -z "$pre_push_validation_argv" ]; then
+    echo "No workflow-specific pre-push gate configured for ${workflow_id}"
+    return 0
+  fi
+  local candidate_sha gate_status cycle=1
+  while [ "$cycle" -le 3 ]; do
+    candidate_sha="$(git rev-parse HEAD)"
+    echo "Validating exact candidate ${candidate_sha} before push (cycle ${cycle}/3)"
+    gate_status=0
+    VALIDATED_COMMIT_SHA="$candidate_sha" bash -lc "$pre_push_validation_argv" || gate_status=$?
+    if [ "$(git rev-parse HEAD)" != "$candidate_sha" ]; then
+      echo "Candidate HEAD changed during validation; refusing push" >&2
+      return 3
+    fi
+    if [ "$gate_status" -eq 0 ]; then return 0; fi
+    if git diff --quiet && git diff --cached --quiet; then
+      echo "Pre-push gate failed without a repairable worktree change" >&2
+      return "$gate_status"
+    fi
+    git add -A
+    git commit --amend --no-edit
+    cycle=$((cycle + 1))
+  done
+  echo "Pre-push gate did not converge after 3 exact-candidate cycles" >&2
+  return 4
 }
 
 classify_push_failure() {
@@ -59,7 +96,10 @@ classify_push_failure() {
 push_main_once() {
   local log_file="$1"
   : > "$log_file"
-  git push origin HEAD:main 2> >(tee "$log_file" >&2)
+  local status=0
+  git push origin HEAD:main 2> "$log_file" || status=$?
+  cat "$log_file" >&2
+  return "$status"
 }
 
 fetch_remote_main
@@ -70,6 +110,7 @@ fi
 if ! commit_generated_changes; then
   exit 0
 fi
+validate_committed_candidate
 
 attempt=1
 while [ "$attempt" -le "$max_push_attempts" ]; do
@@ -105,6 +146,7 @@ while [ "$attempt" -le "$max_push_attempts" ]; do
       echo "Remote already contains equivalent generated state for ${workflow_id}"
       exit 0
     fi
+    validate_committed_candidate
   else
     echo "Transient push failure; retrying without destructive replay for ${workflow_id}" >&2
     sleep "$push_retry_delay_seconds"

@@ -5660,8 +5660,79 @@
         "MX-173"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-AGENT-INTAKE-TRANSACTION",
+      "status": "ADMITTED",
+      "name": "release:agent-intake:transaction",
+      "check_type": "release-stage",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Prevents the self-healing wrapper from bypassing the canonical intake, finalization, authority-scale freeze, and validation transaction.",
+      "existing_coverage_gap": "The transaction was split from the public self-healing entry point and requires independent control-plane admission.",
+      "scope": [
+        "repository",
+        "content",
+        "agent-artifacts"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run release:agent-intake:transaction",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 2,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/agent-intake-self-healing.json",
+      "runtime_budget_seconds": 900,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "release:agent-intake",
+        "release:agent-intake:raw"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted as the exact deterministic transaction executed and retried by the bounded agent-intake self-healing controller.",
+      "decision_date": "2026-08-23",
+      "matrix_ids": [
+        "MX-174"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-AGENT-INTAKE-PUSH-GATE",
+      "status": "ADMITTED",
+      "name": "release:agent-intake:push-gate",
+      "check_type": "release-gate",
+      "owning_lane": "agent-intake",
+      "risk_prevented": "Prevents an unvalidated or non-idempotent agent-intake candidate commit from being pushed after generation or conflict replay.",
+      "existing_coverage_gap": "The workflow previously validated before commit but had no exact-SHA, post-commit convergence proof immediately before push.",
+      "scope": [
+        "repository",
+        "github-actions",
+        "agent-artifacts"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run release:agent-intake:push-gate",
+      "implementation_path": "scripts/release/agent_intake_push_gate.mjs",
+      "environment": "ci",
+      "proof_tier": 2,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/agent-intake-push-gate.json",
+      "runtime_budget_seconds": 900,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "release:agent-intake",
+        "validate:page-seo",
+        "validate:agent-run"
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted as the exact-candidate pre-push hard gate for autonomous agent-intake releases.",
+      "decision_date": "2026-08-23",
+      "matrix_ids": [
+        "MX-175"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 178,
+  "record_count": 180,
   "generated_at": "2026-08-08T23:30:00Z"
 }

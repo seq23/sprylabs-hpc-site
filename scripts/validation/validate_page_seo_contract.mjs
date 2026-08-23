@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {readCapturedScope} from './page_scope.mjs';
+import {resolveBhpcInternalLinkAction, hasBhpcInternalLinkMutation} from '../lib/bhpc_link_mutations.mjs';
 
 const ROOT = process.cwd();
 const mode = process.argv.includes('--full') || process.env.VALIDATION_CACHE_MODE === 'full' ? 'full' : 'incremental';
@@ -120,11 +121,11 @@ for (const abs of files) {
     const heading = stripTags(entry.required_heading || '');
     if (heading && !stripTags(html).toLowerCase().includes(heading.toLowerCase())) failures.push({path: rel, code: 'MISSING_REQUIRED_HEADING', detail: heading});
     for (const link of entry.required_internal_links || []) {
-      if (!link?.to_url) continue;
-      let pathname = '';
-      try { pathname = new URL(link.to_url, 'https://billionairehighperformancecoach.com').pathname; } catch { pathname = String(link.to_url); }
-      if (!html.includes(`href="${pathname}"`) && !html.includes(`href='${pathname}'`)) failures.push({path: rel, code: 'MISSING_REQUIRED_LINK', detail: pathname});
-      if (link.anchor_text && !stripTags(html).toLowerCase().includes(String(link.anchor_text).toLowerCase())) failures.push({path: rel, code: 'MISSING_REQUIRED_ANCHOR', detail: link.anchor_text});
+      const mutation = resolveBhpcInternalLinkAction(link);
+      if (mutation.status !== 'RESOLVED') { failures.push({path: rel, code: 'INVALID_INTERNAL_LINK_ACTION', detail: mutation.reason}); continue; }
+      const sourceAbs = path.join(ROOT, mutation.from_path);
+      if (!fs.existsSync(sourceAbs)) { failures.push({path: mutation.from_path, code: 'MISSING_INTERNAL_LINK_SOURCE', detail: entry.record_id}); continue; }
+      if (!hasBhpcInternalLinkMutation(fs.readFileSync(sourceAbs, 'utf8'), mutation)) failures.push({path: mutation.from_path, code: 'MISSING_REQUIRED_LINK_PAIR', detail: `${mutation.anchor_text} -> ${mutation.href}`});
     }
   }
 
