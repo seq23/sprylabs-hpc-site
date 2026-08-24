@@ -36,14 +36,14 @@ jobs:
       GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
     timeout-minutes: 90
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Sync latest main before install
         run: |
           git fetch origin main
           git reset --hard origin/main
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: npm
@@ -77,7 +77,7 @@ jobs:
           WORKFLOW_ARGV: npm run workflow:run -- --workflow search-intelligence -- npm run workflow:search-intelligence
         run: ./.github/scripts/commit_and_push_if_changed.sh "search intelligence closed-loop evidence" search-intelligence
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: spry-search-intelligence-${{ github.run_id }}
