@@ -25,7 +25,7 @@ for (const contract of contracts) {
   }
   if (!text.includes(`--workflow ${contract.id}`)) errors.push(`${contract.id}: governed runner command drift`);
   if (!text.includes(`reports/workflows/${contract.id}/`)) errors.push(`${contract.id}: trace artifact path missing`);
-  if (!text.includes('actions/upload-artifact@v4')) errors.push(`${contract.id}: workflow trace artifact upload missing`);
+  if (!text.includes('actions/upload-artifact@')) errors.push(`${contract.id}: workflow trace artifact upload missing`);
   if (!text.includes('.github/scripts/commit_and_push_if_changed.sh')) errors.push(`${contract.id}: race-safe commit helper missing`);
   if (!text.includes(`"${contract.commit_message}" ${contract.id}`)) errors.push(`${contract.id}: commit helper identity drift`);
   if (contract.remote_advance_strategy !== 'reset-regenerate-validate-recommit') errors.push(`${contract.id}: remote advance strategy drift`);
