@@ -51,7 +51,15 @@ for row in payload.get('pages',[]):
  if raw.count('data-llm-answer="true"')==1 and f'data-extraction-type="{etype}"' in raw:
   lower=raw.lower()
   plausible=False
-  if etype=='concept': plausible=('<ul' in lower or '<ol' in lower or '<table' in lower)
+  # Scope the check to the extraction block and count items the way the validator
+  # does. Looking for '<ul' anywhere in the document matched navigation and footer
+  # lists, so a rebuilt page with an empty block was fast-pathed as valid and then
+  # hard-failed by validate:citation-contract, which no repair pass could clear.
+  if etype in ('concept','list'):
+   import re as _re
+   _m=_re.search(r'data-llm-answer="true"[\s\S]*?</section>', raw)
+   _items=[_re.sub(r'<[^>]+>','',x).strip() for x in _re.findall(r'<li[^>]*>([\s\S]*?)</li>', _m.group(0))] if _m else []
+   plausible=len([x for x in _items if len(x.split())>=2])>=3
   elif etype=='comparison': plausible='<table' in lower
   elif etype=='howto': plausible=False  # How-to blocks must be parsed and validated; generic generated markers or unrelated H3s are not proof of ordered steps.
   elif etype=='decision': plausible=('<ul' in lower or '<ol' in lower)
