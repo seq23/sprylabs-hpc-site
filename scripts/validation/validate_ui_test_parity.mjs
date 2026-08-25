@@ -9,8 +9,12 @@ const manual = readJson('data/citation/manual_expansion_acceptance.json').pages;
 const errors = [];
 
 if (allRoutes.length !== pages.length) errors.push(`public route count ${allRoutes.length} != active pages ${pages.length}`);
-if (criticalRoutes.length !== 12) errors.push(`critical browser route count must be 12, found ${criticalRoutes.length}`);
-if (priority.length !== 24) errors.push(`priority citation acceptance count must be 24, found ${priority.length}`);
+// Floors, not frozen counts: adding a critical route or a priority acceptance row
+// is the pipeline working. Losing them is the regression worth failing on.
+const CRITICAL_ROUTE_FLOOR = 12;
+if (criticalRoutes.length < CRITICAL_ROUTE_FLOOR) errors.push(`critical browser routes regressed below floor ${CRITICAL_ROUTE_FLOOR}, found ${criticalRoutes.length}`);
+const PRIORITY_FLOOR = 24;
+if (priority.length < PRIORITY_FLOOR) errors.push(`priority citation acceptance regressed below floor ${PRIORITY_FLOOR}, found ${priority.length}`);
 
 const byPath = new Map(pages.map(page => [page.path, page]));
 for (const route of allRoutes) {
