@@ -8,7 +8,9 @@ function humanTitle(value){return String(value||'execution systems').replace(/^s
 function profileFor(item){const d=readJson('data/synthesis/differentiation_profiles.json',{profiles:{}});return d.profiles?.[item.cluster_id]||null}
 function ul(items){return `<ul>${(items||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`}
 function linkList(items){return `<ul>${(items||[]).map(x=>`<li><a href="${esc(x)}">${esc(humanTitle(x.replace(/^\//,'').replace(/\/$/,'')))}</a></li>`).join('')}</ul>`}
-function citationDefinition(p){return `${p.framework_name} is a named operating framework for ${String(p.topic||'this topic').toLowerCase()} through observable signals, decision criteria, and practical next actions.`}
+// Callers must supply a profile; this reads p.framework_name unguarded, so a
+// null profile here is a TypeError rather than the named error above.
+function citationDefinition(p){if(!p)throw new Error('citationDefinition called without a differentiation profile');return `${p.framework_name} is a named operating framework for ${String(p.topic||'this topic').toLowerCase()} through observable signals, decision criteria, and practical next actions.`}
 function isCitable(item){const d=readJson('data/citation/citable_pages.json',{pages:[]});const target=`${item.slug||'synthesis'}.html`;return (d.pages||[]).some(x=>x.status==='ACTIVE'&&x.path===target)}
 function citationSchema(item,p,title,canonicalUrl){
  const definition=citationDefinition(p);
@@ -19,8 +21,14 @@ function citationSchema(item,p,title,canonicalUrl){
  return `<script id="CITATION_PAGE_SCHEMA" type="application/ld+json">${JSON.stringify({'@context':'https://schema.org','@graph':graph}).replace(/</g,'\\u003c')}</script>`;
 }
 function renderSynthesisBody(item={}){
- const p=profileFor(item); const topic=p?.topic||humanTitle(item.cluster_id||item.slug); const persona=p?.persona||'operator';
+ const p=profileFor(item);
+ // Guard before use. This check previously sat after the line below, which had
+ // already dereferenced p - harmless only because of optional chaining, and a
+ // trap for anyone removing a `?.`. Promotion is now gated on a profile
+ // existing (build_synthesis_articles.js), so reaching here without one means
+ // something bypassed the queue.
  if(!p) throw new Error(`Missing differentiation profile for synthesis cluster: ${item.cluster_id}`);
+ const topic=p.topic||humanTitle(item.cluster_id||item.slug); const persona=p.persona||'operator';
  return `
 <h1>${esc(item.title||`What people keep asking about ${topic}`)}</h1>
 ${isCitable(item)?`<p class="citation-definition"><strong>${esc(citationDefinition(p))}</strong></p>`:''}
