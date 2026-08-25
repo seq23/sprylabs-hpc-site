@@ -576,7 +576,8 @@ function writeDocs() {
   fs.writeFileSync('docs/runbooks/CITATION_PHASE_INTEGRATION_PLAN.md', `# Citation Phase Integration Plan\n\nGenerated: ${TODAY}\n\n## Rule\n\nOne content automation release system. One admission registry. One release atom contract. One validation spine.\n\n## Phase state after this baseline\n\n- Phase 1: implemented in repo.\n- Phase 2: implemented at 2,000+ active reference surfaces if validation count remains above threshold.\n- Phase 3: repo implementation complete with external proof queues pending.\n- Phase 4: runway active toward 5K+, not falsely complete.\n\n## Anti-slop gate\n\nEvery new generated page has a release atom, safe claim classification, internal links, citation registry entry, query registry entry, sitemap inclusion, and llms-full inclusion.\n`, 'utf8');
 }
 
-if (atoms.length !== 1400) {
+// Floor: atoms accumulate by design.
+if (atoms.length < 1400) {
   console.error(`[aplayer-phase-expansion] expected 1400 atoms, got ${atoms.length}`);
   process.exit(1);
 }

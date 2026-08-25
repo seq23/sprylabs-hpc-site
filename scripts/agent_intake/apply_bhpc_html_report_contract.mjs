@@ -164,7 +164,10 @@ function verify(fixes, specs){
     ['clusters/life-coach-alternatives.html','https://spryexecutiveos.com/answers/ai-executive-coach-alternative.html']
   ];
   for (const [rel,phrase] of checks) if (!read(path.join(ROOT,rel)).includes(phrase)) errors.push(`${rel}: missing expected phrase ${phrase}`);
-  if (!specs.new_pages || Object.keys(specs.new_pages).length !== 75) errors.push(`expected 75 report content specs, found ${Object.keys(specs.new_pages || {}).length}`);
+  // Floor: report content specs grow as the agent produces more. Requiring exactly
+// 75 meant any new spec failed the contract it was meant to satisfy.
+const REPORT_SPEC_FLOOR = 75;
+if (!specs.new_pages || Object.keys(specs.new_pages).length < REPORT_SPEC_FLOOR) errors.push(`report content specs regressed below floor ${REPORT_SPEC_FLOOR}, found ${Object.keys(specs.new_pages || {}).length}`);
   return errors;
 }
 function materializeSpecs(specs){
