@@ -1,5 +1,7 @@
 #!/usr/bin/env node
-import {writeJson, hashFile} from './bhpc_agent_common.mjs';
+import fs from 'node:fs';
+import path from 'node:path';
+import {ROOT, writeJson, hashFile} from './bhpc_agent_common.mjs';
 import {compileAndWriteBhpcAcceptanceManifest} from './compile_bhpc_agent_acceptance_manifest.mjs';
 import {mergeBhpcExternalCtaLinks} from '../lib/bhpc_conversion_contract.mjs';
 import {bhpcGeneratedCitationDefinition} from '../lib/bhpc_public_page_contract.mjs';
@@ -13,7 +15,49 @@ function stableGeneratedAt(entries=[]){
 function unique(values=[]){return [...new Set(values.filter(Boolean).map(String))]}
 const allEntries=manifest.entries||[];
 const activeRunDate=allEntries.map(e=>String(e.run_date||'')).filter(Boolean).sort().at(-1)||'';
-const activeEntries=allEntries.filter(e=>String(e.run_date||'')===activeRunDate);
+
+// The plan used to contain only the newest run date. Everything older was
+// reported as historical and traced as SKIPPED:outside_active_implementation_plan
+// - 843 of 913 entries across 10 run dates. Because a new run lands weekly, last
+// week's unapplied recommendations were orphaned the moment the next one
+// arrived, permanently. That is why the review agent kept re-reporting the same
+// defects: the work was never carried forward, so it had to be re-found.
+//
+// Outstanding work from earlier runs is now carried into the plan. An entry is
+// outstanding when it is still REQUIRED and its acceptance is not already
+// satisfied on the rendered page - the marker is missing, or the required
+// strings it declares are not present. Anything already satisfied stays out, so
+// the backlog drains rather than being reprocessed.
+//
+// BACKLOG_CARRY_LIMIT bounds a single run; the remainder stays queued for the
+// next one instead of being discarded. Set it to 0 to restore the old
+// newest-run-only behaviour.
+const BACKLOG_CARRY_LIMIT=Number(process.env.BHPC_BACKLOG_CARRY_LIMIT||120);
+
+function acceptanceSatisfied(entry){
+  const rel=String(entry.implementation_path||'').replace(/^\/+/,'');
+  if(!rel) return false;
+  for(const base of ['site/public','']){
+    const abs=path.join(ROOT,base,rel);
+    if(!fs.existsSync(abs)) continue;
+    const html=fs.readFileSync(abs,'utf8');
+    const marker=String(entry.record_id||entry.id||'');
+    if(marker && !html.includes(marker)) return false;
+    const required=Array.isArray(entry.required_strings)?entry.required_strings:[];
+    return required.every(needle=>html.includes(String(needle)));
+  }
+  return false; // no rendered target means the work is certainly not done
+}
+
+const newestEntries=allEntries.filter(e=>String(e.run_date||'')===activeRunDate);
+const carriedBacklog=allEntries
+  .filter(e=>String(e.run_date||'')!==activeRunDate)
+  .filter(e=>e.acceptance_status==='REQUIRED')
+  .filter(e=>!acceptanceSatisfied(e))
+  .sort((a,b)=>String(a.run_date||'').localeCompare(String(b.run_date||'')))
+  .slice(0,BACKLOG_CARRY_LIMIT);
+const activeEntries=[...newestEntries,...carriedBacklog];
+console.log(`[bhpc-agent-exact-plan] newest_run=${newestEntries.length} carried_backlog=${carriedBacklog.length} (limit ${BACKLOG_CARRY_LIMIT})`);
 const deterministicGeneratedAt=stableGeneratedAt(activeEntries);
 const blockedRouteReasons=new Map(activeEntries
   .filter(e=>e.acceptance_status==='BLOCKED'&&e.implementation_path)
