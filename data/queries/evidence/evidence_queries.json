@@ -1,0 +1,66 @@
+{
+  "schema_version": "1.0",
+  "note": "Evidence-backed queries only. evidence_tier is required. T4 (synthetic fanout) is never stored here - it is a hypothesis reserve and is not publishable.",
+  "tiers": {
+    "T1": "GSC-measured",
+    "T2a": "Bing/Keyword Planner measured",
+    "T2b": "Semrush modeled",
+    "T3": "real phrasing, no volume"
+  },
+  "source": "portfolio-search-packet.zip / query_universe_T2b.json",
+  "owned_domains": [
+    "billionairehighperformancecoach.com",
+    "aplayermode.com",
+    "spryexecutiveos.com"
+  ],
+  "queries": [
+    {
+      "query": "ai accountability partner",
+      "evidence_tier": "T2b",
+      "source_type": "semrush_keyword_magic",
+      "volume": 70,
+      "keyword_difficulty": 10,
+      "weak_incumbent_score": 0.9,
+      "intent": "informational",
+      "intent_method": "derived_from_modifier_syntax_and_cpc",
+      "serp_features": [],
+      "vertical": "performance",
+      "target_domain": "aplayermode.com",
+      "cpc_usd": 3.21,
+      "paid_competition": 0.52,
+      "competitor_ranking_url": "NO_DATA"
+    },
+    {
+      "query": "adhd productivity",
+      "evidence_tier": "T2b",
+      "source_type": "semrush_keyword_magic",
+      "volume": 170,
+      "keyword_difficulty": 22,
+      "weak_incumbent_score": 0.78,
+      "intent": "informational",
+      "intent_method": "derived_from_modifier_syntax_and_cpc",
+      "serp_features": [],
+      "vertical": "performance",
+      "target_domain": "aplayermode.com",
+      "cpc_usd": 1.79,
+      "paid_competition": 0.16,
+      "competitor_ranking_url": "NO_DATA"
+    },
+    {
+      "query": "ai business coach",
+      "evidence_tier": "T2b",
+      "source_type": "semrush_keyword_magic",
+      "volume": 110,
+      "keyword_difficulty": 28,
+      "weak_incumbent_score": 0.72,
+      "intent": "informational",
+      "intent_method": "derived_from_modifier_syntax_and_cpc",
+      "serp_features": [],
+      "vertical": "performance",
+      "target_domain": "billionairehighperformancecoach.com",
+      "cpc_usd": 8.37,
+      "paid_competition": 0.55,
+      "competitor_ranking_url": "NO_DATA"
+    }
+  ]
+}

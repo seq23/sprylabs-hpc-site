@@ -308,7 +308,9 @@
     "workflow:search-intelligence": "node scripts/workflow/run_topology_lane.mjs --lane search-intelligence",
     "search:intelligence-cycle": "bash .github/scripts/run_search_intelligence_cycle.sh",
     "search:agent-boundary:prepush-proof": "node scripts/search_intelligence/prove_agent_separation.mjs --prepush-proof",
-    "agent:bhpc:self-test-internal-links": "node scripts/agent_intake/self_test_bhpc_internal_links.mjs"
+    "agent:bhpc:self-test-internal-links": "node scripts/agent_intake/self_test_bhpc_internal_links.mjs",
+    "atlas:build": "node scripts/atlas/build_query_atlas.mjs",
+    "validate:query-atlas": "node scripts/atlas/validate_query_atlas.mjs"
   },
   "engines": {
     "node": ">=24.0.0"
