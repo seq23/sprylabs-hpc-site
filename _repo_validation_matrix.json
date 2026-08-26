@@ -1787,9 +1787,29 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-176",
+      "validation_id": "VAL-114",
+      "lane": "repo-governance",
+      "command": "npm run validate:operator-doc-currency",
+      "order": 176,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-177",
+      "validation_id": "VAL-115",
+      "lane": "citation-intelligence",
+      "command": "npm run citation:probe",
+      "order": 177,
+      "severity": "INFO",
+      "release_effect": false,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 178,
+  "entry_count": 180,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2099,6 +2119,10 @@
         {
           "id": "validate:ownership",
           "command": "npm run validate:ownership"
+        },
+        {
+          "id": "VAL-114",
+          "command": "npm run validate:operator-doc-currency"
         }
       ]
     },
@@ -2285,7 +2309,8 @@
     "MX-VAL-FSA-ALL": "NEEDS TRIAGE: aggregate of the FSA checks; its members run individually",
     "MX-VAL-FSA-RELEASE": "release-time or generator command, not a per-push check",
     "MX-VAL-FSA-SCORE": "release-time or generator command, not a per-push check",
-    "MX-VAL-FSA-SELFHEAL": "release-time or generator command, not a per-push check"
+    "MX-VAL-FSA-SELFHEAL": "release-time or generator command, not a per-push check",
+    "MX-177": "network measurement that writes an observation file; runs on the daily-citation-intelligence schedule, not per push"
   },
   "profile_exclusions_policy": "Admitted entries that are deliberately not profile steps, each with the reason. validate_validation_registry warns only about entries missing from this map, so an unreviewed orphan is visible while a reasoned exclusion is not noise. Entries marked NEEDS TRIAGE are real failures or real environment gaps that should be fixed and then armed - they are not permanent exclusions."
 }

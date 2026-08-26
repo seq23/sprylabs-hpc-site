@@ -5716,8 +5716,69 @@
       "matrix_ids": [
         "MX-175"
       ]
+    },
+    {
+      "validation_id": "VAL-114",
+      "status": "ADMITTED",
+      "name": "validate:operator-doc-currency",
+      "check_type": "documentation",
+      "owning_lane": "repo-governance",
+      "risk_prevented": "Prevents operator runbooks from pointing at repo paths and routes that no longer exist. The guide kept routing readers to /coverage/ after it was renamed to /knowledge-map/, and to an audit directory that had been deleted, because nothing checked.",
+      "existing_coverage_gap": "No validator read the operator docs at all. Every other check reads code, data or published HTML, so documentation drift was invisible until an operator followed a stale instruction.",
+      "scope": [
+        "docs/runbooks",
+        "docs/operations"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:operator-doc-currency",
+      "implementation_path": "scripts/validation/validate_operator_doc_currency.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "stdout: OPERATOR DOC CURRENCY PASS/FAIL with the count of path references checked",
+      "runtime_budget_seconds": 20,
+      "maintenance_owner": "repo",
+      "overlap_analysis": "Does not duplicate validate:retired-route-references, which scans published HTML for links to retired routes. This reads Markdown operator documentation and resolves the repo paths it names.",
+      "retirement_offset": null,
+      "decision": "ADMITTED as HARD_FAIL: the check passes on the current tree (92 references, all present), is read-only, and costs seconds, so blocking cannot regress a clean surface.",
+      "decision_date": "2026-08-26",
+      "matrix_ids": [
+        "MX-176"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-115",
+      "status": "ADMITTED",
+      "name": "citation:probe",
+      "check_type": "evidence",
+      "owning_lane": "citation-intelligence",
+      "risk_prevented": "Records whether an answer engine actually cited our domains for a priority query, so AEO progress is read from observations rather than inferred from proxies.",
+      "existing_coverage_gap": "query:test:zero-cost makes no network calls - it prints a worksheet for a human to fill in - so no automated run had ever observed a citation.",
+      "scope": [
+        "data/signals"
+      ],
+      "proposed_severity": "INFO",
+      "command": "npm run citation:probe",
+      "implementation_path": "scripts/llm_citation_probe.mjs",
+      "environment": "network",
+      "proof_tier": 3,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "data/signals/llm_citation_observations.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "content",
+      "overlap_analysis": "Does not duplicate validate:citation-contract or validate:citation-strategy, which check what the repo publishes. This records what an external engine did with it.",
+      "retirement_offset": null,
+      "decision": "ADMITTED as INFO: it is a measurement, not a gate. It needs a live API key and writes an observation file, so it runs on the daily-citation-intelligence schedule rather than per push, and exits 0 when it cannot measure.",
+      "decision_date": "2026-08-26",
+      "matrix_ids": [
+        "MX-177"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 180,
+  "record_count": 182,
   "generated_at": "2026-08-08T23:30:00Z"
 }
