@@ -313,7 +313,8 @@
     "knowledge-map:build": "node scripts/build_knowledge_map.js",
     "validate:knowledge-map-route": "node scripts/validators/validate_knowledge_map_route_contract.mjs",
     "queries:ingest": "python3 scripts/queries/ingest_gsc_evidence.py",
-    "clarity:install": "node scripts/install_clarity.js"
+    "clarity:install": "node scripts/install_clarity.js",
+    "cadence:headroom": "node scripts/cadence/publish_headroom.mjs"
   },
   "engines": {
     "node": ">=24.0.0"

@@ -69,6 +69,15 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
+      # Reports whether adding volume is still being absorbed. Advisory: it refuses
+      # to hold publishing on pre-2026-08-26 data, because that window measures a
+      # site whose sitemaps were never submitted and whose unknown URLs returned 200.
+      - name: Cadence headroom
+        continue-on-error: true
+        env:
+          GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
+          GSC_SITES: ${{ secrets.GSC_SITE_URL_SPRY }},${{ secrets.GSC_SITE_URL_BHPC }}
+        run: npm run cadence:headroom
         if: steps.runtime.outputs.run == 'true'
       - name: Resolve release mode
         if: steps.runtime.outputs.run == 'true'
