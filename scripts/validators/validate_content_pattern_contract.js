@@ -124,10 +124,63 @@ const CHECKS = [
   { id: 'definition_callout', blocking: false,
     test: (h) => /class="[^"]*citation-definition|data-bhpc-agent-block="definition_callout"|<(?:p|div)[^>]*>\s*<strong>[^<]{40,}<\/strong>/i.test(h),
     why: 'no definition callout (agent requested 196 times) - this is what an answer engine lifts for "what is X"' },
+  // The four blocks below were named in the spec from the start and never
+  // checked, so the coverage report silently omitted them. Requested counts are
+  // from the agent corpus the spec was derived from.
+  { id: 'source_block', blocking: false,
+    test: (h) => /data-bhpc-agent-block="source_block"|class="[^"]*(?:source-block|sources|citation-methodology)|<h[23][^>]*>\s*(?:Sources?|References?|Source and claim)/i.test(h) || EXTERNAL_SOURCE.test(h),
+    why: 'no sources block (agent requested 384 times) - a claim with no visible provenance is the first thing an engine discounts' },
+  { id: 'protocol', blocking: false,
+    test: (h) => /data-bhpc-agent-block="protocol"|class="[^"]*protocol|<h[23][^>]*>[^<]*(?:Protocol|Step-by-step|How to)\b/i.test(h) || /<ol[\s>]/i.test(h),
+    why: 'no ordered protocol (agent requested 305 times) - ordered steps are what gets lifted for "how do I"' },
+  { id: 'cta_callout', blocking: false,
+    test: (h) => /data-bhpc-agent-block="cta_callout"|class="[^"]*(?:cta|next-step)|<h[23][^>]*>\s*Next step/i.test(h),
+    why: 'no next-step callout (agent requested 272 times) - the conversion link exists but nothing frames it as the next action' },
+  { id: 'prompt_template', blocking: false,
+    test: (h) => /data-bhpc-agent-block="prompt_template"|class="[^"]*(?:copy-paste-prompt|prompt-template)|<pre[^>]*>[\s\S]*?<code/i.test(h),
+    why: 'no copy-ready prompt (agent requested 255 times) - this is the artifact this audience actually reuses' },
   { id: 'trust_block', blocking: false,
     test: (h) => /data-bhpc-agent-block="trust_block"|class="[^"]*(?:trust|author|byline)|rel="author"|itemprop="author"/i.test(h),
     why: 'no trust or authorship block (agent requested 215 times) - entity clarity is a citation factor' },
 ];
+
+// The spec file was being named in this validator's output as its provenance
+// while nothing read it, so editing the spec changed nothing anywhere. It is now
+// loaded and enforced as the contract it claims to be: every block the spec asks
+// for must have a test here, and every pattern it forbids must have one too.
+// Adding a block to the spec and forgetting to implement it now fails loudly
+// instead of passing silently.
+const SPEC_PATH = '.clarity/content-pattern-spec.json';
+const spec = JSON.parse(fs.readFileSync(path.join(ROOT, SPEC_PATH), 'utf8'));
+const specBlockIds = (spec.blocks || []).map((b) => b.id);
+const implemented = new Set(CHECKS.map((c) => c.id));
+const unimplemented = specBlockIds.filter((id) => !implemented.has(id));
+
+// Forbidden patterns. These were listed in the spec from the start and never
+// enforced - which is how 65 pages came to publish "What to add: n/a" and 50
+// carried a block whose entire body was "n/a".
+const FORBIDDEN = {
+  empty_table_cells: {
+    test: (h) => /<t[dh][^>]*>\s*<\/t[dh]>/i.test(h),
+    why: 'empty table cell - an extracted table with a hole in it reads as broken' },
+  internal_instruction_leak: {
+    test: (h) => /FILEPATH:|<strong>What to add:|Direct answer target|Agent recommendation|Source FIX instruction|bhpc-agent-instruction|What this page should clarify|>\s*n\/a\s*</i.test(h),
+    why: 'build instruction or placeholder rendered for readers - an answer engine will quote it' },
+  fabricated_statistics: {
+    // A statistic with no source beside it is the shape of a fabricated one. This
+    // reports rather than blocks, because a genuine figure can be sourced off-page.
+    test: (h) => {
+      const body = text(h);
+      const stat = /\b\d{1,3}(?:\.\d+)?%|\br\s*=\s*0?\.\d+|\b\d+x\s+(?:more|less|higher|lower)/i;
+      if (!stat.test(body)) return false;
+      return !EXTERNAL_SOURCE.test(h) && !/\b(?:source|according to|per the|study|survey|report)\b/i.test(body);
+    },
+    why: 'statistic presented with no source on the page or beside it' },
+};
+const specForbidden = spec.forbidden || [];
+const unenforcedForbidden = specForbidden
+  .map((f) => (typeof f === 'string' ? f : f.id))
+  .filter((id) => id && !FORBIDDEN[id]);
 
 const pages = [];
 (function walk(dir) {
@@ -168,6 +221,17 @@ const summary = CHECKS.map((check) => {
     why: check.why,
   };
 });
+
+// The spec is the contract. If it asks for something this validator cannot
+// check, the contract is not being enforced, and reporting PASS would be false.
+for (const id of unimplemented) {
+  blockingFailures.push({ path: SPEC_PATH, check: 'spec_block_unimplemented',
+    why: `the spec requires "${id}" but no check implements it, so the spec is not enforced` });
+}
+for (const id of unenforcedForbidden) {
+  blockingFailures.push({ path: SPEC_PATH, check: 'spec_forbidden_unimplemented',
+    why: `the spec forbids "${id}" but nothing detects it` });
+}
 
 fs.mkdirSync(path.dirname(EVIDENCE), { recursive: true });
 fs.writeFileSync(EVIDENCE, `${JSON.stringify({
