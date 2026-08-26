@@ -311,7 +311,8 @@
     "selfheal:dry": "node scripts/selfheal/heal_until_clean.mjs --dry-run",
     "build:pages-output": "node scripts/assemble_pages_output.js",
     "knowledge-map:build": "node scripts/build_knowledge_map.js",
-    "validate:knowledge-map-route": "node scripts/validators/validate_knowledge_map_route_contract.mjs"
+    "validate:knowledge-map-route": "node scripts/validators/validate_knowledge_map_route_contract.mjs",
+    "queries:ingest": "python3 scripts/queries/ingest_gsc_evidence.py"
   },
   "engines": {
     "node": ">=24.0.0"

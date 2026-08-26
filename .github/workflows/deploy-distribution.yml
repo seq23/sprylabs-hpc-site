@@ -93,6 +93,11 @@ jobs:
           GSC_SITE_URL_BHPC: ${{ secrets.GSC_SITE_URL_BHPC }}
         run: |
           if [ ! -f "$RUNNER_TEMP/.gsc-service-account.json" ]; then echo "GSC skipped: service account not configured"; exit 0; fi
+          # Ingest what people actually searched before submitting. Without this the
+          # query atlas is gated on modelled demand while measured demand sits unread
+          # in Search Console. Evidence-only: it does not admit, publish, or change
+          # cadence.
+          GSC_SERVICE_ACCOUNT_JSON="$RUNNER_TEMP/.gsc-service-account.json" GSC_SITE_URL="$GSC_SITE_URL_SPRY" npm run queries:ingest || true
           if [ -n "${GSC_SITE_URL_SPRY:-}" ]; then
             grep '^https://spryexecutiveos.com/' .build/indexnow-priority.txt > .build/gsc-priority-spry.txt || true
             python3 scripts/distribution/gsc_submit_sitemaps.py "$RUNNER_TEMP/.gsc-service-account.json" "$GSC_SITE_URL_SPRY" https://spryexecutiveos.com/sitemap-spry.xml
