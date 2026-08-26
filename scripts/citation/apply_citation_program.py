@@ -13,7 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "lib"))
 from route_policy import route_for  # noqa: E402
 
 from bs4 import BeautifulSoup, Comment, NavigableString, Tag
-from extraction_contract import extract_article_steps, extract_scope_procedure_candidates, validate_extraction
+from extraction_contract import extract_article_steps, extract_scope_procedure_candidates, extract_scope_steps, validate_extraction
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -401,24 +401,35 @@ def _visible_faq_pairs(soup: BeautifulSoup) -> list[tuple[str,str]]:
     return dedup
 
 def _visible_howto_steps(soup: BeautifulSoup) -> list[dict]:
+    # A page describes exactly one procedure, so the HowTo node must describe
+    # exactly the sequence the extraction contract recognises: the first
+    # contiguous 1..N run of numbered headings inside the extraction block.
+    #
+    # This used to collect *every* heading matching /^(Step|Phase|Block|Stage) \d+/,
+    # which is not a sequence rule. Pages that carry a second, restarted numbered
+    # block inside the same extraction section (an authored Step 1..3 followed by
+    # a generated Step 1..3) produced a six-step HowTo describing a procedure that
+    # does not exist on the page, while extraction still saw three. It also missed
+    # bare-numbered headings ("1) Define the output"), which the contract accepts,
+    # so those pages lost their HowTo node entirely.
+    #
+    # extract_scope_steps is the same helper repair_schema_parity.py and
+    # validate_rendered_schema_parity.py use, so schema, repair and proof now all
+    # read the visible page through one definition of "a step".
     block=soup.select_one('[data-llm-answer="true"][data-extraction-type="howto"]')
     if not block: return []
     steps=[]
-    for h in block.find_all(['h2','h3']):
-        name=clean_text(h.get_text(' ',strip=True))
-        if not re.match(r'^(Step|Phase|Block|Stage)\s+\d+',name,re.I):
-            continue
-        texts=[]
-        node=h.find_next_sibling()
-        while node and getattr(node,'name',None) not in ['h2','h3']:
-            if getattr(node,'name',None) in ['p','li']:
-                value=clean_text(node.get_text(' ',strip=True))
-                if value: texts.append(value)
-            node=node.find_next_sibling()
-        text=' '.join(texts) or name
+    for step in extract_scope_steps(block):
+        source=step.get('source_heading') or f"Step {step['number']}: {step['title']}"
+        h=None
+        for cand in block.find_all(['h2','h3','h4']):
+            if clean_text(cand.get_text(' ',strip=True))==source:
+                h=cand; break
+        if h is None: continue
+        name=f"Step {step['number']}: {step['title']}"
         ident=h.get('id') or slug(name)
         h['id']=ident
-        steps.append({'@type':'HowToStep','name':name,'text':text,'url':'#'+ident})
+        steps.append({'@type':'HowToStep','name':name,'text':clean_text(step.get('description') or ''),'url':'#'+ident})
     return steps
 
 def _visible_breadcrumbs(soup: BeautifulSoup, canonical: str) -> list[dict]:
