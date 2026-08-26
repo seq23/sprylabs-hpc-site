@@ -116,7 +116,7 @@
     "release:ci-validate": "node scripts/release/ci_validate.mjs",
     "release:create-attestation": "node scripts/release/create_validation_attestation.mjs",
     "release:verify-attestation": "node scripts/release/verify_validation_attestation.mjs",
-    "build:postprocess": "npm run redirects:apply && node scripts/build_coverage_map.js && node scripts/authority/compute_authority_scores.js && node scripts/internal/build_link_graph.js && node scripts/validation/python_runtime.mjs run scripts/citation/apply_citation_program.py --postbuild && node scripts/citation/sync_citation_phase_metadata.mjs && npm run redirects:apply && node scripts/prepare_distribution_artifacts.js && npm run validate:indexnow-batch-budget && npm run citation:build && npm run search:prepare-submission && node scripts/build_404.js",
+    "build:postprocess": "npm run redirects:apply && node scripts/build_knowledge_map.js && node scripts/authority/compute_authority_scores.js && node scripts/internal/build_link_graph.js && node scripts/validation/python_runtime.mjs run scripts/citation/apply_citation_program.py --postbuild && node scripts/citation/sync_citation_phase_metadata.mjs && npm run redirects:apply && node scripts/prepare_distribution_artifacts.js && npm run validate:indexnow-batch-budget && npm run citation:build && npm run search:prepare-submission && node scripts/build_404.js",
     "workflow:run": "node scripts/workflow/run_governed_workflow.mjs",
     "workflow:hostile-review": "node scripts/workflow/hostile_review.mjs",
     "workflow:monitor": "node scripts/workflow/monitor_workflows.mjs",
@@ -229,11 +229,9 @@
     "validate:workflow-write-scopes": "node scripts/validators/validate_workflow_write_scopes.mjs",
     "release:zero-dollar-autonomous": "npm run authority:scale:fanout && npm run authority:yield:build && npm run ownership:build && npm run strategy:gate && npm run firehose:collect && npm run firehose:normalize && npm run firehose:health && npm run signals:cluster && npm run signals:score && npm run signals:candidates && npm run release:plan && npm run authority:scale:prepare-scope && npm run authority:scale:restore && npm run repair:citation-contract-surfaces && npm run release:content:intelligence && npm run citation:self-heal && npm run release:daily-proof && npm run admin:build && npm run authority:scale:prepare-drift-scope && npm run authority:scale:freeze && npm run authority:scale:clear-scope && npm run validate:authority-scale",
     "workflow:zero-dollar-autonomous": "npm run release:zero-dollar-autonomous",
-    "validate:full-safe-autonomy": "npm run validate:ownership && npm run safe-harbor:validate && npm run validate:workflow-write-scopes && npm run validate:coverage-route",
+    "validate:full-safe-autonomy": "npm run validate:ownership && npm run safe-harbor:validate && npm run validate:workflow-write-scopes && npm run validate:knowledge-map-route",
     "validate:admin-github-bridge": "node scripts/validators/validate_admin_github_bridge.mjs",
     "schema:repair-parity": "node scripts/validation/python_runtime.mjs run scripts/citation/repair_schema_parity.py",
-    "coverage:build": "node scripts/build_coverage_map.js",
-    "validate:coverage-route": "node scripts/validators/validate_coverage_route_contract.mjs",
     "validate:artifact-consistency-e2e": "node scripts/validators/validate_artifact_consistency_e2e.mjs",
     "validate:artifact-packaging-parity": "node scripts/validation/validate_artifact_packaging_parity.mjs",
     "validate:artifact-hardening-suite": "npm run validate:artifact-consistency-e2e && npm run validate:release-plan-integrity && npm run validate:daily-proof-packet",
@@ -311,7 +309,9 @@
     "validate:content-pattern": "node scripts/validators/validate_content_pattern_contract.js",
     "selfheal": "node scripts/selfheal/heal_until_clean.mjs",
     "selfheal:dry": "node scripts/selfheal/heal_until_clean.mjs --dry-run",
-    "build:pages-output": "node scripts/assemble_pages_output.js"
+    "build:pages-output": "node scripts/assemble_pages_output.js",
+    "knowledge-map:build": "node scripts/build_knowledge_map.js",
+    "validate:knowledge-map-route": "node scripts/validators/validate_knowledge_map_route_contract.mjs"
   },
   "engines": {
     "node": ">=24.0.0"

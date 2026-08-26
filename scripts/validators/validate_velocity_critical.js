@@ -19,7 +19,7 @@ for (const item of (manifest.items || [])) {
 const canonicals = new Map();
 function walk(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    if (['node_modules','.git','scripts','data','.github','_ops','docs','templates'].includes(entry.name)) continue;
+    if (['.pages-output', 'node_modules','.git','scripts','data','.github','_ops','docs','templates'].includes(entry.name)) continue;
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) walk(full);
     else if (entry.isFile() && entry.name.endsWith('.html')) {

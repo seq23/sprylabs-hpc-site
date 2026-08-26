@@ -37,7 +37,7 @@ for (const command of governedCommands) {
 }
 
 const legacy=[];
-function walk(dir){for(const ent of fs.readdirSync(dir,{withFileTypes:true})){if(['.git','node_modules','.validation-runtime','.validation-cache'].includes(ent.name)) continue; const p=`${dir}/${ent.name}`; if(ent.isDirectory()) walk(p); else if(/\.(?:mjs|cjs|js|py|sh)$/.test(ent.name)){const t=fs.readFileSync(p,'utf8'); if(/validate:all[^\n]{0,160}(?:must include|\.includes\()|(?:must include|\.includes\()[^\n]{0,160}validate:all/.test(t) && !p.endsWith('validate_orchestration_contract.mjs') && !p.endsWith('self_test_orchestration_contract.mjs')) legacy.push(p)}}}
+function walk(dir){for(const ent of fs.readdirSync(dir,{withFileTypes:true})){if(['.git','.pages-output', 'node_modules','.validation-runtime','.validation-cache'].includes(ent.name)) continue; const p=`${dir}/${ent.name}`; if(ent.isDirectory()) walk(p); else if(/\.(?:mjs|cjs|js|py|sh)$/.test(ent.name)){const t=fs.readFileSync(p,'utf8'); if(/validate:all[^\n]{0,160}(?:must include|\.includes\()|(?:must include|\.includes\()[^\n]{0,160}validate:all/.test(t) && !p.endsWith('validate_orchestration_contract.mjs') && !p.endsWith('self_test_orchestration_contract.mjs')) legacy.push(p)}}}
 walk('scripts');
 if (legacy.length) errors.push(`legacy literal validate:all assertions remain: ${legacy.join(', ')}`);
 

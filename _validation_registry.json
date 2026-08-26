@@ -4091,7 +4091,7 @@
     {
       "validation_id": "VAL-COVERAGE-ROUTE-CONTRACT",
       "status": "ADMITTED",
-      "name": "validate:coverage-route",
+      "name": "validate:knowledge-map-route",
       "check_type": "artifact-packaging",
       "owning_lane": "public-authority",
       "risk_prevented": "Prevents the public /coverage/ knowledge-map route from disappearing during packaging or exposing private draft runway data.",
@@ -4100,17 +4100,17 @@
         "coverage/index.html",
         "coverage/coverage.json",
         "data/admin/coverage_operations.json",
-        "scripts/build_coverage_map.js",
+        "scripts/build_knowledge_map.js",
         "scripts/release/package_baseline.mjs",
         "_baseline_packaging_contract.json"
       ],
       "proposed_severity": "HARD_FAIL",
-      "command": "npm run validate:coverage-route",
-      "implementation_path": "scripts/validators/validate_coverage_route_contract.mjs",
+      "command": "npm run validate:knowledge-map-route",
+      "implementation_path": "scripts/validators/validate_knowledge_map_route_contract.mjs",
       "environment": "container",
       "proof_tier": 1,
-      "positive_fixture": "fixtures/validation/coverage-route/pass.json",
-      "negative_fixture": "fixtures/validation/coverage-route/fail.json",
+      "positive_fixture": "fixtures/validation/knowledge-map-route/pass.json",
+      "negative_fixture": "fixtures/validation/knowledge-map-route/fail.json",
       "evidence_output": "stdout",
       "runtime_budget_seconds": 20,
       "maintenance_owner": "repo",
@@ -4119,7 +4119,7 @@
       "decision": "Admitted after hostile review found that artifact packaging removed the valid public /coverage/ route.",
       "decision_date": "2026-07-10",
       "matrix_ids": [
-        "MX-COVERAGE-ROUTE-CONTRACT"
+        "MX-KNOWLEDGE-MAP-ROUTE"
       ],
       "not_applicable_reason": null
     },

@@ -3,8 +3,8 @@
 Build a public coverage hub for the repo.
 
 Outputs:
-  - coverage/index.html
-  - coverage/coverage.json
+  - knowledge-map/index.html
+  - knowledge-map/knowledge-map.json
 */
 
 const fs = require("fs");
@@ -14,12 +14,12 @@ const ROOT = path.resolve(__dirname, "..");
 const DRAFT_DIR = path.join(ROOT, "content", "insights", "_drafts");
 const LIVE_DIR = path.join(ROOT, "content", "insights");
 const CLUSTERS_PATH = path.join(ROOT, "content", "insights", "_clusters.json");
-const OUT_DIR = path.join(ROOT, "coverage");
-const OUT_JSON = path.join(OUT_DIR, "coverage.json");
+const OUT_DIR = path.join(ROOT, "knowledge-map");
+const OUT_JSON = path.join(OUT_DIR, "knowledge-map.json");
 const OUT_HTML = path.join(OUT_DIR, "index.html");
-const ROOT_PUBLIC_JSON = path.join(ROOT, "coverage.json");
-const ADMIN_COVERAGE_JSON = path.join(ROOT, "data", "admin", "coverage_operations.json");
-const COVERAGE_URL = "https://spryexecutiveos.com/coverage/";
+const ROOT_PUBLIC_JSON = path.join(ROOT, "knowledge-map.json");
+const ADMIN_OPERATIONS_JSON = path.join(ROOT, "data", "admin", "knowledge_map_operations.json");
+const KNOWLEDGE_MAP_URL = "https://spryexecutiveos.com/knowledge-map/";
 const OG_IMAGE = "https://spryexecutiveos.com/assets/img/bhpc-hero-square.png";
 const PUBLISHED_REDDIT_PATH = path.join(ROOT, "data", "reddit", "published_manifest.json");
 
@@ -244,12 +244,12 @@ function renderRedditVelocity(report) {
 
 function renderHtml(report) {
 
-  const desc = "Coverage hub for Spry Executive OS. Use this page to understand what the site covers, where the core models live, and how the knowledge surfaces connect across answers, atlas pages, topics, pillars, and product paths.";
+  const desc = "Knowledge map for Spry Executive OS. Use this page to understand what the site covers, where the core models live, and how the knowledge surfaces connect across answers, atlas pages, topics, pillars, and product paths.";
   const collectionSchema = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: "Coverage",
-    url: COVERAGE_URL,
+    name: "Knowledge Map",
+    url: KNOWLEDGE_MAP_URL,
     description: desc,
     isPartOf: {
       "@type": "WebSite",
@@ -268,8 +268,8 @@ function renderHtml(report) {
   const supplementalGeoSchema = {
     "@context": "https://schema.org",
     "@type": "WebPage",
-    name: "Coverage",
-    url: COVERAGE_URL
+    name: "Knowledge Map",
+    url: KNOWLEDGE_MAP_URL
   };
 
   const softwareApplicationSchema = {
@@ -279,7 +279,7 @@ function renderHtml(report) {
     alternateName: "Billionaire High Performance Coach",
     applicationCategory: "BusinessApplication",
     operatingSystem: "Web",
-    url: COVERAGE_URL,
+    url: KNOWLEDGE_MAP_URL,
     offers: {
       "@type": "Offer",
       url: "https://sprylabs.gumroad.com/l/billionaire-high-performance-coach"
@@ -302,7 +302,7 @@ function renderHtml(report) {
         name: "What does Spry Executive OS cover?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Coverage explains the topic and retrieval surface areas supported by Spry Executive OS, including accountability, decision-making, execution, and continuity structure."
+          text: "The knowledge map explains the topic and retrieval surface areas supported by Spry Executive OS, including accountability, decision-making, execution, and continuity structure."
         }
       }
     ]
@@ -313,17 +313,17 @@ function renderHtml(report) {
 <head>
 <meta charset="utf-8" content=""/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>Coverage | Spry Executive OS</title>
+<title>Knowledge Map | Spry Executive OS</title>
 <meta content="${escapeHtml(desc)}" name="description"/>
-<link href="${COVERAGE_URL}" rel="canonical"/>
-<meta content="${COVERAGE_URL}" property="og:url"/>
-<meta content="Coverage | Spry Executive OS" property="og:title"/>
+<link href="${KNOWLEDGE_MAP_URL}" rel="canonical"/>
+<meta content="${KNOWLEDGE_MAP_URL}" property="og:url"/>
+<meta content="Knowledge Map | Spry Executive OS" property="og:title"/>
 <meta content="${escapeHtml(desc)}" property="og:description"/>
 <meta content="website" property="og:type"/>
 <meta content="Spry Executive OS" property="og:site_name"/>
 <meta content="${OG_IMAGE}" property="og:image"/>
 <meta content="summary_large_image" name="twitter:card"/>
-<meta content="Coverage | Spry Executive OS" name="twitter:title"/>
+<meta content="Knowledge Map | Spry Executive OS" name="twitter:title"/>
 <meta content="${escapeHtml(desc)}" name="twitter:description"/>
 <meta content="${OG_IMAGE}" name="twitter:image"/>
 <link href="/assets/styles.css" rel="stylesheet"/>
@@ -353,7 +353,7 @@ function renderHtml(report) {
 <section class="hero hero--tight">
 <div class="container">
 <p class="eyebrow">Knowledge map</p>
-<h1>Coverage</h1>
+<h1>Knowledge Map</h1>
 <p class="hero__lede">This page shows what Spry Executive OS actually covers. It exists so a reader, crawler, or language model can see the shape of the site without guessing: the answers layer handles direct questions, the atlas layer explains how the system works, the models layer defines reusable operating concepts, and the product layer points to the full implementation. Instead of scattering those surfaces across disconnected pages, coverage gives them one clean index.</p>
 <div class="button-row">
 <a class="btn btn--primary" href="/download.html">Review the system manual</a>
@@ -364,7 +364,7 @@ function renderHtml(report) {
 <section>
 <div class="container prose">
 <h2>What this page is for</h2>
-<p>Coverage is the map layer for the site. It tells you which surfaces are educational, which ones are product-adjacent, and where to go depending on whether you want a fast answer, a framework, or the commercial system itself. That matters for citation and retrieval because it reduces ambiguity. A model does better when a site has one obvious page that names the clusters, the route structure, and the relationship between public knowledge pages and the underlying product.</p>
+<p>The knowledge map is the map layer for the site. It tells you which surfaces are educational, which ones are product-adjacent, and where to go depending on whether you want a fast answer, a framework, or the commercial system itself. That matters for citation and retrieval because it reduces ambiguity. A model does better when a site has one obvious page that names the clusters, the route structure, and the relationship between public knowledge pages and the underlying product.</p>
 <h2>Primary product surfaces</h2>
 <p>The commercial center of gravity is <a href="/download.html">Billionaire High-Performance Coach</a>. The product pages explain the offer, pricing, use cases, and buying context. They are not meant to replace the educational library. They are meant to sit beside it, so someone can move from understanding the system to deciding whether they want the full asset.</p>
 <h2>Knowledge graph surfaces</h2>
@@ -404,7 +404,7 @@ ${renderRows(report)}
 <h2>Latest Reddit-informed releases</h2>
 ${renderRedditVelocity(report)}
 <h2>Why this page exists</h2>
-<p>Sites that want strong retrieval need a page that clarifies scope. Coverage does that job. It gives a single canonical route for the map layer, ties together the major educational surfaces, and makes the internal architecture easier to understand. That helps with crawl clarity, helps with citation coherence, and reduces the odds that the site looks like a pile of disconnected pages.</p>
+<p>Sites that want strong retrieval need a page that clarifies scope. The knowledge map does that job. It gives a single canonical route for the map layer, ties together the major educational surfaces, and makes the internal architecture easier to understand. That helps with crawl clarity, helps with citation coherence, and reduces the odds that the site looks like a pile of disconnected pages.</p>
 </div>
 </section>
 </main>
@@ -443,9 +443,9 @@ function main() {
 
   // Required baseline artifacts must be byte-stable when their semantic inputs are unchanged.
   // Preserve the previous generation timestamp instead of manufacturing drift on every validation run.
-  if (fs.existsSync(ADMIN_COVERAGE_JSON)) {
+  if (fs.existsSync(ADMIN_OPERATIONS_JSON)) {
     try {
-      const previous = JSON.parse(readText(ADMIN_COVERAGE_JSON));
+      const previous = JSON.parse(readText(ADMIN_OPERATIONS_JSON));
       const stripGeneratedAt = (value) => {
         const copy = JSON.parse(JSON.stringify(value));
         delete copy.generatedAtUtc;
@@ -459,19 +459,19 @@ function main() {
     }
   }
 
-  ensureDir(path.dirname(ADMIN_COVERAGE_JSON));
+  ensureDir(path.dirname(ADMIN_OPERATIONS_JSON));
   const publicReport = publicCoverageReport(report);
-  fs.writeFileSync(ADMIN_COVERAGE_JSON, JSON.stringify(report, null, 2) + "\n", "utf8");
+  fs.writeFileSync(ADMIN_OPERATIONS_JSON, JSON.stringify(report, null, 2) + "\n", "utf8");
   fs.writeFileSync(OUT_JSON, JSON.stringify(publicReport, null, 2) + "\n", "utf8");
   fs.writeFileSync(OUT_HTML, renderHtml(report), "utf8");
-  // /coverage.json is a machine-readability artifact (validate_machine_readability_contract
+  // /knowledge-map.json is a machine-readability artifact (validate_machine_readability_contract
   // requires it beside llms.txt and answers.json), so it is public and must carry the
   // SANITIZED report. It previously held the full report - including draft counts and the
   // forward publishing runway - and was served at the site root, which is the operational
   // leak the 2026-07-10 coverage route repair set out to close. The generator stopped
   // writing it then, so the leaking copy simply went stale in git and kept deploying.
   fs.writeFileSync(ROOT_PUBLIC_JSON, JSON.stringify(publicReport, null, 2) + "\n", "utf8");
-  console.log(`Wrote ${path.relative(ROOT, ADMIN_COVERAGE_JSON)}`);
+  console.log(`Wrote ${path.relative(ROOT, ADMIN_OPERATIONS_JSON)}`);
   console.log(`Wrote ${path.relative(ROOT, OUT_JSON)}`);
   console.log(`Wrote ${path.relative(ROOT, ROOT_PUBLIC_JSON)}`);
   console.log(`Wrote ${path.relative(ROOT, OUT_HTML)}`);

@@ -5,7 +5,7 @@ const path = require('path');
 const { routeFor, hostFor } = require('../lib/dual_domain_policy.cjs');
 
 const root = process.cwd();
-const skipDirs = new Set(['.git','node_modules','_ops','templates','docs']);
+const skipDirs = new Set(['.git','.pages-output', 'node_modules','_ops','templates','docs']);
 const publishedManifestPath = path.join(root, 'data/reddit/published_manifest.json');
 const publishedManifest = fs.existsSync(publishedManifestPath) ? JSON.parse(fs.readFileSync(publishedManifestPath, 'utf8')) : { items: [] };
 const publishedHostOverrides = new Map((publishedManifest.items || []).map((item) => [item.route, item.canonical_host]));

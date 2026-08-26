@@ -3,7 +3,7 @@ const path = require('path');
 const { classifyPageFamily, buildFanoutData, renderFanoutBlock } = require('./fanout/shared');
 
 const ROOT = process.cwd();
-const EXCLUDE_DIRS = new Set(['node_modules', '.git', '_ops', 'scripts', 'data', '.github', 'audit', '.build', 'releases', 'docs', 'templates']);
+const EXCLUDE_DIRS = new Set(['.pages-output', 'node_modules', '.git', '_ops', 'scripts', 'data', '.github', 'audit', '.build', 'releases', 'docs', 'templates']);
 const manifests = [];
 const missing = [];
 const duplicates = [];

@@ -55,7 +55,7 @@ function canonicalFor(rel) { return `https://${DOMAIN}${routeFor(rel)}`; }
 function hash(value) { return crypto.createHash('sha256').update(value).digest('hex').slice(0, 16); }
 function htmlFiles(dir=ROOT, out=[]) {
   for (const entry of fs.readdirSync(dir, {withFileTypes: true})) {
-    if (['.git', 'node_modules', '.build', 'artifacts', 'coverage', 'reports', 'test-results', 'playwright-report'].includes(entry.name)) continue;
+    if (['.git', '.pages-output', 'node_modules', '.build', 'artifacts', 'coverage', 'reports', 'test-results', 'playwright-report'].includes(entry.name)) continue;
     const fp = path.join(dir, entry.name);
     if (entry.isDirectory()) htmlFiles(fp, out);
     else if (entry.isFile() && entry.name.endsWith('.html')) out.push(path.relative(ROOT, fp).split(path.sep).join('/'));

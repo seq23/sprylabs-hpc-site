@@ -8,10 +8,10 @@ const EXCLUDE_DIRS = new Set([
 ]);
 const CHECK_EXTS = new Set(['.html', '.js', '.xml']);
 const FORBIDDEN_COVERAGE_LITERALS = [
-  '/coverage/index.html',
-  'https://billionairehighperformancecoach.com/coverage/index.html',
-  'https://spryexecutiveos.com/coverage/index.html',
-  'https://billionairehighperformancecoach.com/coverage/'
+  '/knowledge-map/index.html',
+  'https://billionairehighperformancecoach.com/knowledge-map/index.html',
+  'https://spryexecutiveos.com/knowledge-map/index.html',
+  'https://billionairehighperformancecoach.com/knowledge-map/'
 ];
 
 function walk(dir, out = []) {

@@ -13,7 +13,7 @@ const excluded = new Set([
   'docs/REDIRECT_MIGRATION_HISTORY.md',
 ]);
 const textExtensions = new Set(['.html', '.xml', '.txt', '.json', '.md', '.js', '.mjs', '.cjs']);
-const skipDirs = new Set(['.git', 'node_modules', 'artifacts', 'coverage', 'reports', '.build', 'test-results', 'playwright-report']);
+const skipDirs = new Set(['.git', '.pages-output', 'node_modules', 'artifacts', 'coverage', 'reports', '.build', 'test-results', 'playwright-report']);
 
 function routeFromSource(sourcePath) {
   const normalized = '/' + sourcePath.replace(/^\/+/, '');

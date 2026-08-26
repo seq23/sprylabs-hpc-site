@@ -18,7 +18,7 @@ const contracts=JSON.parse(fs.readFileSync('data/content/programmatic_lane_contr
 const initialRegistry=JSON.parse(fs.readFileSync('data/content/page_admission_registry.json','utf8'));
 const initialRegistryByPath=new Map((initialRegistry.records||[]).map(record=>[record.path,record]));
 if(!contracts[lane]){console.error(`Unknown programmatic lane: ${lane}`);process.exit(2);}
-const skipDirs=new Set(['.git','node_modules','artifacts','coverage','reports','.build','test-results','playwright-report']);
+const skipDirs=new Set(['.git','.pages-output', 'node_modules','artifacts','coverage','reports','.build','test-results','playwright-report']);
 
 const REJECTION_BACKLOG_PATH='data/programmatic/rejection_backlog.json';
 const MAX_REJECTION_BACKLOG_RECORDS=2500;

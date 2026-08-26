@@ -3,7 +3,7 @@
 const fs=require('fs'); const path=require('path');
 const root=process.cwd(); let bad=[];
 const forbidden=/aplayermode\.com\/download/i;
-function walk(dir){ for(const ent of fs.readdirSync(dir,{withFileTypes:true})){ if(['.git','node_modules','tmp','coverage'].includes(ent.name)) continue; const p=path.join(dir,ent.name); if(ent.isDirectory()) walk(p); else if(/\.(html|js|json|xml|txt|md)$/.test(ent.name)) check(p); }}
+function walk(dir){ for(const ent of fs.readdirSync(dir,{withFileTypes:true})){ if(['.git','.pages-output', 'node_modules','tmp','coverage'].includes(ent.name)) continue; const p=path.join(dir,ent.name); if(ent.isDirectory()) walk(p); else if(/\.(html|js|json|xml|txt|md)$/.test(ent.name)) check(p); }}
 function check(p){ const rel=path.relative(root,p); const s=fs.readFileSync(p,'utf8'); if(forbidden.test(s)) bad.push(`${rel}: forbidden A Player Mode redirect-plus-path`); }
 walk(root);
 if(!fs.existsSync(path.join(root,'download.html'))) bad.push('download.html missing');

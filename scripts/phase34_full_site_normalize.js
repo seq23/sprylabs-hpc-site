@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
-const SKIP_DIRS = new Set(['.git', 'node_modules', 'assets', '.github']);
+const SKIP_DIRS = new Set(['.git', '.pages-output', 'node_modules', 'assets', '.github']);
 const TARGET_EXT = new Set(['.html', '.md', '.txt', '.js']);
 
 const changes = [];

@@ -38,8 +38,8 @@ const ENFORCEMENT = 'block'; // 'block' | 'report'
 // admin and agency dashboards are internal tools that answer no search query.
 // The walk starts at the repository root, so every non-published top-level
 // directory has to be excluded or test fixtures get judged as published pages.
-// coverage/ is deliberately NOT here - build_coverage_map.js publishes
-// coverage/index.html.
+// knowledge-map/ is deliberately NOT here - build_knowledge_map.js publishes
+// knowledge-map/index.html.
 const SKIP_DIRS = new Set([
   'templates', 'fixtures', 'tests', 'test', 'docs', 'scripts', 'data',
   'reports', 'artifacts', 'node_modules', '.git', '.github', 'site', 'dist',

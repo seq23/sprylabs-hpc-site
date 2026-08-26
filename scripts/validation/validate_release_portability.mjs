@@ -133,7 +133,7 @@ function walkDeployAssets(dir) {
     // Cloudflare Pages validates the configured output directory exactly as cloned.
     // This project deploys from repository root with no build command, so reports,
     // fixtures, artifacts, and other repo-owned files are deployable assets too.
-    if (['.git', 'node_modules', '.validation-runtime', '.validation-cache'].includes(entry.name)) continue;
+    if (['.git', '.pages-output', 'node_modules', '.validation-runtime', '.validation-cache'].includes(entry.name)) continue;
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) walkDeployAssets(full);
     else if (entry.isFile()) {
@@ -148,7 +148,7 @@ if (deployLargeFiles.length) errors.push(`Cloudflare Pages asset limit exceeded 
 const forbiddenSource = [];
 function walk(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    if (['.git', 'node_modules', '.validation-runtime', '.validation-cache', 'artifacts', 'test-results', 'playwright-report'].includes(entry.name)) continue;
+    if (['.git', '.pages-output', 'node_modules', '.validation-runtime', '.validation-cache', 'artifacts', 'test-results', 'playwright-report'].includes(entry.name)) continue;
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       if (entry.name === '__pycache__') forbiddenSource.push(full);

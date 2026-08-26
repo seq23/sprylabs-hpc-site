@@ -115,7 +115,7 @@ const objections = ['legit','real','a scam','therapy','a course','worth it','saf
 const existingPaths = new Set();
 function collectExistingPaths(dir='.') {
   for (const item of fs.readdirSync(path.join(ROOT,dir), {withFileTypes:true})) {
-    if (['.git','node_modules','.build','artifacts'].includes(item.name)) continue;
+    if (['.git','.pages-output', 'node_modules','.build','artifacts'].includes(item.name)) continue;
     const rel = path.join(dir,item.name).replace(/^\.\//,'');
     if (item.isDirectory()) collectExistingPaths(rel);
     else if (item.name.endsWith('.html')) existingPaths.add(rel);
@@ -459,9 +459,9 @@ function updateSitemapsAndLlms() {
   const bhpc = citable.filter(p=>p.canonical_domain === DOMAIN).map(p=>p.canonical_url).sort();
   const spry = citable.filter(p=>p.canonical_domain !== DOMAIN).map(p=>p.canonical_url).sort();
   const xml = urls => `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(u=>`  <url><loc>${u}</loc><lastmod>${TODAY}</lastmod></url>`).join('\n')}\n</urlset>\n`;
-  const spryWithCoverage = Array.from(new Set([...spry, 'https://spryexecutiveos.com/coverage/'])).sort();
+  const spryWithKnowledgeMap = Array.from(new Set([...spry, 'https://spryexecutiveos.com/knowledge-map/'])).sort();
   fs.writeFileSync('sitemap-bhpc.xml', xml(bhpc));
-  fs.writeFileSync('sitemap-spry.xml', xml(spryWithCoverage));
+  fs.writeFileSync('sitemap-spry.xml', xml(spryWithKnowledgeMap));
   const indexPriority = readJson('data/index_priority.json', {classes:{}});
   const priorityCoverageComments = Array.from(new Set([
     ...Object.values(indexPriority.classes || {}).flat(),
@@ -470,7 +470,7 @@ function updateSitemapsAndLlms() {
     .filter(Boolean)
     .map(u => `  <!-- priority-coverage ${u} -->`)
     .join('\n');
-  fs.writeFileSync('sitemap.xml', xml(spryWithCoverage).replace('</urlset>', `${priorityCoverageComments}\n  <!-- https://billionairehighperformancecoach.com/sitemap-bhpc.xml -->\n  <!-- https://spryexecutiveos.com/sitemap-spry.xml -->\n</urlset>`));
+  fs.writeFileSync('sitemap.xml', xml(spryWithKnowledgeMap).replace('</urlset>', `${priorityCoverageComments}\n  <!-- https://billionairehighperformancecoach.com/sitemap-bhpc.xml -->\n  <!-- https://spryexecutiveos.com/sitemap-spry.xml -->\n</urlset>`));
   const queries = readJson('data/citation/query_registry.json',{queries:[]}).queries.filter(q=>q.release_status === 'ACTIVE');
   const pagesByPath = new Map(citable.map(p=>[p.path,p]));
   const llms = ['# Billionaire High Performance Coach / Spry Executive OS', '', '## Citation-ready questions and pages'];

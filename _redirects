@@ -10,3 +10,10 @@
 # Canonicalize legacy HTML URLs before the repository-root compatibility proxy.
 # Without this rule, Pages can expose /site/public during its automatic clean-URL redirect.
 /*.html /:splat 301
+
+# /coverage/ was renamed to /knowledge-map/. The old name collided with the Node
+# convention for test-coverage output, which is why the directory sat in
+# .gitignore and the page 404'd for two months while the sitemap advertised it.
+/coverage/ /knowledge-map/ 301
+/coverage /knowledge-map/ 301
+/coverage.json /knowledge-map.json 301

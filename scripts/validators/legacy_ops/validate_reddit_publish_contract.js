@@ -5,7 +5,7 @@ const ROOT = process.cwd();
 const publishedPath = path.join(ROOT, 'data/reddit/published_manifest.json');
 const sitemapPath = path.join(ROOT, 'sitemap-spry.xml');
 const llmsPath = path.join(ROOT, 'llms.txt');
-const coveragePath = path.join(ROOT, 'coverage/coverage.json');
+const coveragePath = path.join(ROOT, 'knowledge-map/knowledge-map.json');
 
 if (!fs.existsSync(publishedPath)) {
   console.log('validate_reddit_publish_contract: no published manifest');
@@ -103,7 +103,7 @@ for (const item of items) {
   }
 
   if (coverageRoutes.size && !coverageRoutes.has(item.route)) {
-    errors.push(`${item.target_file}: missing from coverage/coverage.json reddit velocity block`);
+    errors.push(`${item.target_file}: missing from knowledge-map/knowledge-map.json reddit velocity block`);
   }
 }
 

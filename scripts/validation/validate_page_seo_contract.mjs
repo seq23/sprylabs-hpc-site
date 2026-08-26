@@ -23,7 +23,7 @@ function readJson(rel, fallback) {
 function walkHtml(dir, out = []) {
   if (!fs.existsSync(dir)) return out;
   for (const entry of fs.readdirSync(dir, {withFileTypes: true})) {
-    if (['.git', 'node_modules', '.validation-runtime'].includes(entry.name)) continue;
+    if (['.git', '.pages-output', 'node_modules', '.validation-runtime'].includes(entry.name)) continue;
     const abs = path.join(dir, entry.name);
     if (entry.isDirectory()) walkHtml(abs, out);
     else if (entry.isFile() && entry.name.endsWith('.html')) out.push(abs);

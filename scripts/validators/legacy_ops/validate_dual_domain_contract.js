@@ -10,7 +10,7 @@ for (const file of required) {
 }
 function walk(dir, out = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    if (['.git', 'node_modules', 'templates', 'docs', 'reports', 'scripts', 'config', 'data', 'content', 'fixtures', 'tests', 'artifacts'].includes(entry.name)) continue;
+    if (['.git', '.pages-output', 'node_modules', 'templates', 'docs', 'reports', 'scripts', 'config', 'data', 'content', 'fixtures', 'tests', 'artifacts'].includes(entry.name)) continue;
     const full = path.join(dir, entry.name);
     const rel = path.relative(root, full).replace(/\\/g, '/');
     if (rel.startsWith('data/report_fixes/agent_runs/')) continue;
@@ -79,7 +79,7 @@ const minWordChecks = new Map([
   ['pillars/spirit.html', 240],
   ['pillars/mind.html', 240],
   ['product.html', 280],
-  ['coverage/index.html', 420],
+  ['knowledge-map/index.html', 420],
 ]);
 
 
@@ -133,7 +133,7 @@ const requiredHeadings = new Map([
   ['pillars/spirit.html', ['What spirit means on this site']],
   ['pillars/mind.html', ['Why mind affects the system']],
   ['product.html', ['What this page is for']],
-  ['coverage/index.html', ['What this page is for']],
+  ['knowledge-map/index.html', ['What this page is for']],
 ]);
 
 function stripText(html) {
@@ -225,8 +225,8 @@ if (spryMap.includes('https://billionairehighperformancecoach.com')) errors.push
 const bhpcMap = fs.readFileSync(path.join(root, 'sitemap-bhpc.xml'), 'utf8');
 if (bhpcMap.includes('https://spryexecutiveos.com')) errors.push('sitemap-bhpc.xml: wrong host present');
 
-if (!spryMap.includes('https://spryexecutiveos.com/coverage/')) errors.push('sitemap-spry.xml: missing coverage route');
-if (bhpcMap.includes('https://billionairehighperformancecoach.com/coverage/')) errors.push('sitemap-bhpc.xml: coverage route must not be on bhpc sitemap');
+if (!spryMap.includes('https://spryexecutiveos.com/knowledge-map/')) errors.push('sitemap-spry.xml: missing knowledge-map route');
+if (bhpcMap.includes('https://billionairehighperformancecoach.com/knowledge-map/')) errors.push('sitemap-bhpc.xml: knowledge-map route must not be on bhpc sitemap');
 if (warnings.length) {
   console.warn('validate_dual_domain_contract warnings:');
   for (const warning of warnings) console.warn(' - ' + warning);

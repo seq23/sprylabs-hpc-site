@@ -7,8 +7,8 @@ import {spawnSync} from 'node:child_process';
 import {fail,pass,writeSummary} from './common.mjs';
 
 const ROOT=process.cwd();
-const excludedTop=new Set(['.git','node_modules','artifacts','coverage','reports','.build','test-results','playwright-report','logs','releases']);
-const snapshotSkip=new Set(['.git','node_modules','artifacts','coverage','reports','.build','test-results','playwright-report','logs','releases','data/answer_surface','data/answer_surface_monitoring','data/backlog','data/intake/source_ingestion','data/authority']);
+const excludedTop=new Set(['.git','.pages-output', 'node_modules','artifacts','coverage','reports','.build','test-results','playwright-report','logs','releases']);
+const snapshotSkip=new Set(['.git','.pages-output', 'node_modules','artifacts','coverage','reports','.build','test-results','playwright-report','logs','releases','data/answer_surface','data/answer_surface_monitoring','data/backlog','data/intake/source_ingestion','data/authority']);
 const includeNames=new Set(['sitemap.xml','sitemap-spry.xml','sitemap-bhpc.xml','llms.txt','_redirects']);
 
 function publicFiles(base,dir=base,out=[]){
