@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-08-26T21:49:16.470Z",
+  "generated_at": "2026-08-26T23:05:15.806Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 169,
+  "admitted_hard_fail_count": 170,
   "reviewed_count": 8,
-  "unreviewed_count": 161,
+  "unreviewed_count": 162,
   "suggested_review_counts": {
     "REVIEW_REQUIRED": 128,
     "EXISTING_REPAIR_AVAILABLE": 6,
     "TRUE_BLOCKER": 26,
-    "REVIEW_WARNING_BOUNDARY": 9
+    "REVIEW_WARNING_BOUNDARY": 10
   },
   "unresolved_review_counts": {
     "REVIEW_REQUIRED": 128,
     "EXISTING_REPAIR_AVAILABLE": 6,
     "TRUE_BLOCKER": 26,
-    "REVIEW_WARNING_BOUNDARY": 1
+    "REVIEW_WARNING_BOUNDARY": 2
   },
   "migration_status_counts": {
-    "UNREVIEWED": 161,
+    "UNREVIEWED": 162,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -2576,6 +2576,21 @@
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-175"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-114",
+      "name": "validate:operator-doc-currency",
+      "command": "npm run validate:operator-doc-currency",
+      "owning_lane": "repo-governance",
+      "risk_prevented": "Prevents operator runbooks from pointing at repo paths and routes that no longer exist. The guide kept routing readers to /coverage/ after it was renamed to /knowledge-map/, and to an audit directory that had been deleted, because nothing checked.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-176"
       ],
       "suggested_review": "REVIEW_WARNING_BOUNDARY",
       "migration_status": "UNREVIEWED",
