@@ -39,7 +39,14 @@ const ENFORCEMENT = 'block'; // 'block' | 'report'
 
 // Templates are the source for generated pages, not published surfaces; the
 // admin and agency dashboards are internal tools that answer no search query.
-const SKIP_DIRS = new Set(['templates', 'node_modules', '.git', 'scripts', 'data', 'reports', 'artifacts']);
+// When the build stages site/public at the repo root, the walk starts from the
+// repository, so every non-published top-level directory has to be excluded or
+// test fixtures get judged as published pages. coverage/ is deliberately NOT
+// here - build_coverage_map.js publishes coverage/index.html.
+const SKIP_DIRS = new Set([
+  'templates', 'fixtures', 'tests', 'test', 'docs', 'scripts', 'data',
+  'reports', 'artifacts', 'node_modules', '.git', '.github', 'site',
+]);
 const SKIP_FILES = new Set(['admin.html', 'admin/index.html', 'agency/index.html', '404.html']);
 
 // Navigational hub pages: their h1 is the section name ("FAQ", "Pillars"), which
