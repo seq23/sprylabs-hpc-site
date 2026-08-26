@@ -164,8 +164,10 @@ function verify(fixes, specs){
     ['insights/how-to-act-confident-before-you-feel-confident.html','Acting confident before you feel confident means anchoring behavior'],
     ['insights/system-for-confidence.html','confidence system is a repeatable sequence of small, completable actions'],
     ['insights/the-difference-between-confidence-and-certainty-and-why-it-matters.html','Confidence is the willingness to act despite incomplete information'],
-    ['how-tracks-work.html','https://billionairehighperformancecoach.com/ai-executive-coach.html'],
-    ['clusters/life-coach-alternatives.html','https://spryexecutiveos.com/answers/ai-executive-coach-alternative.html']
+    // Canonical (200-serving) forms. These assert that the agent-run output
+    // still names the right page, not that it names a legacy .html string.
+    ['how-tracks-work.html','https://billionairehighperformancecoach.com/ai-executive-coach'],
+    ['clusters/life-coach-alternatives.html','https://spryexecutiveos.com/answers/ai-executive-coach-alternative']
   ];
   for (const [rel,phrase] of checks) if (!read(path.join(ROOT,rel)).includes(phrase)) errors.push(`${rel}: missing expected phrase ${phrase}`);
   // Floor: report content specs grow as the agent produces more. Requiring exactly
