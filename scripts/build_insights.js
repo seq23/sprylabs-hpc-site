@@ -475,7 +475,7 @@ function buildPillars(posts, clusters) {
   const pillarCards = clusters.map((c) => {
     const count = posts.filter((p) => p.cluster === c.id).length;
     return `<li class="list-item">
-      <div class="list-title"><a href="${htmlEscape(c.id)}/index.html">${htmlEscape(c.name)}</a></div>
+      <div class="list-title"><a href="${htmlEscape(c.id)}/">${htmlEscape(c.name)}</a></div>
       <div class="list-excerpt">${htmlEscape(c.description || "")}</div>
       <div class="list-meta">${count} post${count === 1 ? "" : "s"}</div>
     </li>`;
@@ -527,7 +527,7 @@ function buildPillars(posts, clusters) {
 
     const list = ps.map((p) => {
       return `<li class="list-item">
-        <div class="list-title"><a href="../../insights/${htmlEscape(p.slug)}.html">${htmlEscape(p.title)}</a></div>
+        <div class="list-title"><a href="../../insights/${htmlEscape(p.slug)}">${htmlEscape(p.title)}</a></div>
         ${p.description ? `<div class="list-excerpt">${htmlEscape(p.description)}</div>` : ""}
         <div class="list-meta">${p.date ? htmlEscape(p.date) : ""}</div>
       </li>`;
@@ -563,7 +563,7 @@ function buildPillars(posts, clusters) {
       title: `${c.name} — Spry Executive OS`,
       description: c.description || `Structured guidance for ${c.name}.`,
       canonical,
-      activePath: `/pillars/${c.id}/index.html`,
+      activePath: `/pillars/${c.id}/`,
       contentHtml: body,
       atlasNavHtml: "",
       jsonLd: jsonLdCollection({ title: c.name, description: c.description || "", url: canonical }),
@@ -576,8 +576,8 @@ function buildPillars(posts, clusters) {
 // --- insights pages ---
 function buildPostPages(posts, clustersMap) {
   for (const post of posts) {
-    const canonical = `${SITE_BASE}/insights/${post.slug}.html`;
-    const activePath = `/insights/${post.slug}.html`;
+    const canonical = `${SITE_BASE}/insights/${post.slug}`;
+    const activePath = `/insights/${post.slug}`;
 
     const normalizedBodyMd = String(post.bodyMd || "").replace(/^#\s+/gm, "## ");
     const rendered = mdToHtmlWithHeadings(normalizedBodyMd);
@@ -585,7 +585,7 @@ function buildPostPages(posts, clustersMap) {
     const htmlBody = rendered.html;
 
     const clusterObj = clustersMap.get(post.cluster);
-    const pillarHref = clusterObj ? `../pillars/${clusterObj.id}/index.html` : "../pillars/index.html";
+    const pillarHref = clusterObj ? `../pillars/${clusterObj.id}/` : "../pillars/";
 
     const meta = `<div class="meta">
       ${post.date ? `<div><strong>Date:</strong> ${htmlEscape(post.date)}</div>` : ""}
@@ -610,7 +610,7 @@ function buildPostPages(posts, clustersMap) {
     const relatedHtml = related.length
       ? `<section class="card" style="margin-top:20px">
           <h2>Related</h2>
-          <ul>${related.map((r) => `<li><a href="${htmlEscape(r.slug)}.html">${htmlEscape(r.title)}</a></li>`).join("")}</ul>
+          <ul>${related.map((r) => `<li><a href="${htmlEscape(r.slug)}">${htmlEscape(r.title)}</a></li>`).join("")}</ul>
         </section>`
       : "";
 
@@ -676,7 +676,7 @@ function buildInsightsIndex(posts, clustersMap) {
       const clusterName = c ? String(c.name || "").trim() : "";
       return `
         <article class="card">
-          <h2><a href="${htmlEscape(p.slug)}.html">${htmlEscape(p.title)}</a></h2>
+          <h2><a href="${htmlEscape(p.slug)}">${htmlEscape(p.title)}</a></h2>
           ${p.description ? `<p class="micro-cta">${htmlEscape(p.description)}</p>` : ""}
           <p class="micro-cta">${p.date ? htmlEscape(p.date) : ""}${clusterName ? ` • ${htmlEscape(clusterName)}` : ""}</p>
         </article>
@@ -786,7 +786,7 @@ function buildAtlasPage(clusters, posts) {
 
     const list = top.length
       ? `<ul class="list">${top
-          .map((p) => `<li><a href="/insights/${htmlEscape(p.slug)}.html">${htmlEscape(p.title)}</a> <span class="meta">${htmlEscape(p.date || "")}</span></li>`)
+          .map((p) => `<li><a href="/insights/${htmlEscape(p.slug)}">${htmlEscape(p.title)}</a> <span class="meta">${htmlEscape(p.date || "")}</span></li>`)
           .join("")}</ul>`
       : `<p class="muted">No published posts in this pillar yet. Drafts will roll out automatically daily.</p>`;
 
@@ -801,7 +801,7 @@ function buildAtlasPage(clusters, posts) {
         <h3>Best starting points</h3>
         ${list}
         <div class="ctaRow">
-          <a class="btn" href="/pillars/${htmlEscape(c.id)}/index.html">Open pillar hub</a>
+          <a class="btn" href="/pillars/${htmlEscape(c.id)}/">Open pillar hub</a>
           <a class="btn btn--primary" href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach" rel="noopener">Get Instant Access</a>
         </div>
       </section>`;
@@ -818,7 +818,7 @@ function buildAtlasPage(clusters, posts) {
   </section>
   ${sections}`;
 
-  const canonical = `${SITE_BASE}/atlas.html`;
+  const canonical = `${SITE_BASE}/atlas`;
   const page = renderPage({
     title: "Atlas — Spry Executive OS",
     description: "An opinionated map of Spry: the pillars, what they cover, and where to start.",
@@ -875,7 +875,7 @@ function buildFeeds(posts) {
 
     // RSS 2.0
     const rssItemsXml = feedItems.map((p) => {
-      const url = `${siteUrl}/insights/${p.slug}.html`;
+      const url = `${siteUrl}/insights/${p.slug}`;
       const pubDate = p.date ? new Date(p.date + "T00:00:00Z").toUTCString() : new Date().toUTCString();
       const desc = htmlEscape(p.description || "");
       const title = htmlEscape(p.title || p.slug);
@@ -913,8 +913,8 @@ function buildFeeds(posts) {
       home_page_url: `${siteUrl}/`,
       feed_url: `${siteUrl}/feed.json`,
       items: feedItems.map((p) => ({
-        id: `${siteUrl}/insights/${p.slug}.html`,
-        url: `${siteUrl}/insights/${p.slug}.html`,
+        id: `${siteUrl}/insights/${p.slug}`,
+        url: `${siteUrl}/insights/${p.slug}`,
         title: p.title || p.slug,
         summary: p.description || "",
         date_published: p.date ? `${p.date}T00:00:00Z` : undefined,
@@ -1010,17 +1010,17 @@ const DOMINANCE_PAGES = [
 
 
   const gen = [
-    `${SITE_BASE}/insights/index.html`,
-    ...posts.map((p) => `${SITE_BASE}/insights/${p.slug}.html`),
-    `${SITE_BASE}/pillars/index.html`,
-    ...clusters.map((c) => `${SITE_BASE}/pillars/${c.id}/index.html`),
-    `${SITE_BASE}/atlas.html`,
+    `${SITE_BASE}/insights/`,
+    ...posts.map((p) => `${SITE_BASE}/insights/${p.slug}`),
+    `${SITE_BASE}/pillars/`,
+    ...clusters.map((c) => `${SITE_BASE}/pillars/${c.id}/`),
+    `${SITE_BASE}/atlas`,
     `${SITE_BASE}/ai-execution-atlas/`,
     `${SITE_BASE}/continuity-collapse-pattern/`,
     `${SITE_BASE}/how-to-stay-consistent/`,
     // Topics index/pages may exist in repo; keep in sitemap for coverage even if built elsewhere
-    `${SITE_BASE}/topics/index.html`,
-    ...topics.map((t) => `${SITE_BASE}/topics/${t}/index.html`),
+    `${SITE_BASE}/topics/`,
+    ...topics.map((t) => `${SITE_BASE}/topics/${t}/`),
   ];
   const merged = Array.from(new Set([...existing, ...gen])).sort();
   updateSitemap(merged);
@@ -1030,18 +1030,18 @@ const DOMINANCE_PAGES = [
     `${SITE_BASE}/download.html`,
     `${SITE_BASE}/continuity-collapse-pattern/`,
     `${SITE_BASE}/how-to-stay-consistent/`,
-    `${SITE_BASE}/topics/index.html`,
-    ...topics.map((t) => `${SITE_BASE}/topics/${t}/index.html`),
-    `${SITE_BASE}/pillars/index.html`,
-    `${SITE_BASE}/insights/index.html`,
-    `${SITE_BASE}/atlas.html`,
+    `${SITE_BASE}/topics/`,
+    ...topics.map((t) => `${SITE_BASE}/topics/${t}/`),
+    `${SITE_BASE}/pillars/`,
+    `${SITE_BASE}/insights/`,
+    `${SITE_BASE}/atlas`,
     `${SITE_BASE}/ai-execution-atlas/`,
-    `${SITE_BASE}/clusters/ai-executive-coaching.html`,
-    `${SITE_BASE}/clusters/accountability-systems.html`,
-    `${SITE_BASE}/clusters/life-coach-alternatives.html`,
-    `${SITE_BASE}/clusters/productivity-systems.html`,
-    ...clusters.map((c) => `${SITE_BASE}/pillars/${c.id}/index.html`),
-    ...posts.slice().sort((a, b) => (b.date || "").localeCompare(a.date || "")).slice(0, 12).map((p) => `${SITE_BASE}/insights/${p.slug}.html`),
+    `${SITE_BASE}/clusters/ai-executive-coaching`,
+    `${SITE_BASE}/clusters/accountability-systems`,
+    `${SITE_BASE}/clusters/life-coach-alternatives`,
+    `${SITE_BASE}/clusters/productivity-systems`,
+    ...clusters.map((c) => `${SITE_BASE}/pillars/${c.id}/`),
+    ...posts.slice().sort((a, b) => (b.date || "").localeCompare(a.date || "")).slice(0, 12).map((p) => `${SITE_BASE}/insights/${p.slug}`),
   ];
   updateLlmsTxt(top);
 

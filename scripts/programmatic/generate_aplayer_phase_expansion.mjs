@@ -177,7 +177,7 @@ function commonAtomFields(type, query, path, concept, unique, intent, cta='downl
     answer_promise: `A direct, bounded answer that explains ${concept.key}, when to use it, and how it connects to A-player mode.`,
     methodology_anchor: concept.key,
     related_terms: [concept.key, concept.framework, 'A-player mode', 'Billionaire High Performance Coach'],
-    internal_links: ['/download.html','/citation-methodology.html','/answers/','/methods/'+concept.anchor+'/'],
+    internal_links: ['/download.html','/citation-methodology','/answers/','/methods/'+concept.anchor+'/'],
     cta_profile: cta,
     claim_safety_level: 'organizational_only',
     review_status: 'reviewed_in_repo',
@@ -351,7 +351,7 @@ function renderSchema(atom) {
       '@type':'DefinedTerm',
       name: atom.framework,
       description: atom.definition,
-      inDefinedTermSet: 'https://billionairehighperformancecoach.com/citation-methodology.html'
+      inDefinedTermSet: 'https://billionairehighperformancecoach.com/citation-methodology'
     }
   ];
   return JSON.stringify({'@context':'https://schema.org','@graph':graph}, null, 2);
@@ -367,7 +367,12 @@ function renderTable(atom) {
   return `<section class="card page-artifact"><h2>${esc(atom.framework)} field guide</h2><table class="table"><thead><tr><th scope="col">Layer</th><th scope="col">What it clarifies</th><th scope="col">Safe implementation</th></tr></thead><tbody><tr><th scope="row">Reader state</th><td>${esc(atom.reader_problem)}</td><td>Name the current condition without turning it into an identity label.</td></tr><tr><th scope="row">Method anchor</th><td>${esc(atom.concept.framework)}</td><td>Use the protocol as structure, not as a guarantee.</td></tr><tr><th scope="row">Action</th><td>${esc(atom.answer_promise)}</td><td>Pick one next physical step and record completion evidence.</td></tr></tbody></table></section>`;
 }
 function renderPage(atom) {
-  const related = atom.internal_links.map(link => `<li><a href="${esc(link)}">${esc(link === '/download.html' ? 'Install the Billionaire High Performance Coach system' : link.replace(/^\//,'').replace(/\/$/,'').replace(/[-/]/g,' '))}</a></li>`).join('');
+  // Anchor text is derived from the route. Strip any legacy extension first:
+  // it used to render as literal text ("citation methodology.html").
+  const linkLabel = (link) => link === '/download.html'
+    ? 'Install the Billionaire High Performance Coach system'
+    : link.replace(/^\//,'').replace(/\/$/,'').replace(/\.html$/,'').replace(/[-/]/g,' ');
+  const related = atom.internal_links.map(link => `<li><a href="${esc(link)}">${esc(linkLabel(link))}</a></li>`).join('');
   const sourceBlock = atom.page_type === 'comparison' ? `<section class="card sources"><h2>Source and verification note</h2><p class="comparison-disclosure">${esc(atom.conflict_disclosure)}</p><ul><li><a href="/download.html">Billionaire High Performance Coach product page</a></li><li><a href="/citation-methodology">BHPC citation methodology</a></li></ul></section>` : '';
   return `<!doctype html>
 <html lang="en">
@@ -587,7 +592,7 @@ function updateSubstrateAndAuthorityFiles() {
   writeJson('data/citation/product_claims_registry.json', claims);
   writeJson('data/citation/framework_taxonomy.json', {schema_version:'1.0',generated_at:TODAY,source:'BHPC manual and repo methodology taxonomy',framework_count:concepts.length,frameworks:concepts.map(c=>({key:c.key,name:c.framework,anchor:c.anchor,definition:c.value,claim_safety_level:'organizational_only'}))});
   writeJson('data/citation/llm_platform_support.json', {schema_version:'1.0',generated_at:TODAY,platforms:platforms.map(p=>({name:p, status:'supported_as_user-chosen_llm', endorsement_claim:false, unstable_ui_claims_allowed:false}))});
-  writeJson('data/research/ai_coaching_source_registry.json', {schema_version:'1.0',generated_at:TODAY,source_policy:'Use product documentation, public official sources, and internal methodology. Do not fabricate academic or third-party proof.',sources:[{type:'internal_methodology',name:'Billionaire High Performance Coach Manual',status:'available_in_repo'},{type:'product_page',name:'BHPC Download Page',url:'https://billionairehighperformancecoach.com/download.html',status:'active'},{type:'methodology_page',name:'Citation Methodology',url:'https://billionairehighperformancecoach.com/citation-methodology.html',status:'active'}]});
+  writeJson('data/research/ai_coaching_source_registry.json', {schema_version:'1.0',generated_at:TODAY,source_policy:'Use product documentation, public official sources, and internal methodology. Do not fabricate academic or third-party proof.',sources:[{type:'internal_methodology',name:'Billionaire High Performance Coach Manual',status:'available_in_repo'},{type:'product_page',name:'BHPC Download Page',url:'https://billionairehighperformancecoach.com/download.html',status:'active'},{type:'methodology_page',name:'Citation Methodology',url:'https://billionairehighperformancecoach.com/citation-methodology',status:'active'}]});
   writeJson('data/authority/founder_profile.json', readJson('data/entities/author_profile.json', {}));
   writeJson('data/authority/same_as_registry.json', {schema_version:'1.0',generated_at:TODAY,entries:[{entity:'S.L. Taylor',url:'https://www.sequoiataylor.com',status:'published'}],truth_boundary:'Only real known URLs are published.'});
   for (const file of ['press_mentions','podcast_appearances','academic_citations']) writeJson(`data/authority/${file}.json`, {schema_version:'1.0',generated_at:TODAY,status:'queue_only_no_public_claims',entries:[]});

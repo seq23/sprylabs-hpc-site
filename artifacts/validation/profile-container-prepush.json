@@ -1,6 +1,6 @@
 {
   "profile": "container-prepush",
-  "started_at": "2026-08-26T21:24:04.796Z",
+  "started_at": "2026-08-26T21:33:46.744Z",
   "steps": [
     {
       "id": "VAL-ORCHESTRATION-CONTRACT",
@@ -155,8 +155,8 @@
     {
       "id": "validate:agent-run",
       "command": "npm run validate:agent-run",
-      "exit_code": 0,
-      "status": "PASS"
+      "exit_code": 1,
+      "status": "FAIL"
     },
     {
       "id": "VAL-EXTRACTION-FINAL-NORMALIZATION",
@@ -167,8 +167,8 @@
     {
       "id": "validate:content-release",
       "command": "npm run validate:content-release",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "validate:citation-velocity-automation",
@@ -203,8 +203,8 @@
     {
       "id": "validate:citation-strategy",
       "command": "npm run validate:citation-strategy",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "VAL-FULL-PAGE-AUDIT",
@@ -353,8 +353,8 @@
     {
       "id": "VAL-BHPC-PAGE-SEO",
       "command": "npm run validate:page-seo",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "VAL-SYNTHESIS-DIFFERENTIATION",
@@ -460,13 +460,11 @@
     }
   ],
   "status": "FAIL",
-  "failure_count": 4,
+  "failure_count": 2,
   "failures": [
-    "validate:content-release",
-    "validate:citation-strategy",
-    "VAL-FULL-PAGE-AUDIT",
-    "VAL-BHPC-PAGE-SEO"
+    "validate:agent-run",
+    "VAL-FULL-PAGE-AUDIT"
   ],
   "stopped_early_at": null,
-  "finished_at": "2026-08-26T21:27:20.745Z"
+  "finished_at": "2026-08-26T21:36:59.952Z"
 }
