@@ -1,14 +1,40 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
+  "last_reviewed": "2026-08-26",
   "verified_sales": [
-    {"date":"2026-03-25","product":"BHPC OS","price_usd":99.00,
-     "referrer":"https://www.billionairehighperformancecoach.com/",
-     "full_price":true,"buyer_relationship":"stranger"},
-    {"date":"2026-06-18","product":"BHPC OS","price_usd":44.85,
-     "referrer":"https://spryexecutiveos.com/",
-     "full_price":true,"buyer_relationship":"stranger"}
+    {
+      "date": "2026-03-25",
+      "product": "BHPC OS",
+      "price_usd": 99.00,
+      "referrer": "https://www.billionairehighperformancecoach.com/",
+      "full_price": null,
+      "full_price_status": "unverified",
+      "buyer_relationship": "stranger"
+    },
+    {
+      "date": "2026-06-18",
+      "product": "BHPC OS",
+      "price_usd": 44.85,
+      "referrer": "https://spryexecutiveos.com/",
+      "full_price": null,
+      "full_price_status": "unverified_and_internally_contradicted",
+      "buyer_relationship": "stranger"
+    }
   ],
   "excluded_test_transactions": 2,
-  "note": "Both verified sales full price from cold visitors. spryexecutiveos.com converted with 0 ranking keywords and authority score 2. Conversion rate unknown - no analytics denominator until WO-11.",
-  "not_a_reference_funnel": "Two data points across two domains support a documented fact, not a reproducible pattern. Do not cite this as a conversion rate or a funnel model."
+  "note": "Two verified sales to cold visitors. spryexecutiveos.com converted with 0 ranking keywords and authority score 2. Conversion rate unknown - no analytics denominator until WO-11.",
+  "full_price_discrepancy": {
+    "status": "OPEN - human must resolve from the Gumroad transaction record",
+    "detail": "Both records were originally entered as full_price: true, but the two amounts differ for the same product and neither matches the current list price. Nothing in this repo records what BHPC OS listed for on either sale date, so full_price cannot be asserted either way and has been set to null rather than carried forward as true.",
+    "observed_list_price": {
+      "value_usd": 49.00,
+      "source": "https://sprylabs.gumroad.com/l/billionaire-high-performance-coach",
+      "method": "JSON-LD offer price on the live listing",
+      "observed_on": "2026-08-26",
+      "caveat": "Today's list price does not establish the price on 2026-03-25 or 2026-06-18. The $99 figure that appears in the listing body is marketing copy ('$99 Value'), not an offer price."
+    },
+    "resolution": "Pull the two transactions from Gumroad, record the list price and any discount code in force on each date, then set full_price per record."
+  },
+  "not_a_reference_funnel": "Two data points across two domains support a documented fact, not a reproducible pattern. Do not cite this as a conversion rate, a funnel model, or a reference funnel.",
+  "scope": "This file is the portfolio's only conversion evidence record. Other repos point at it; none of them holds a copy."
 }
