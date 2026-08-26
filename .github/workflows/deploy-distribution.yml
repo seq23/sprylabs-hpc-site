@@ -93,6 +93,12 @@ jobs:
           GSC_SITE_URL_BHPC: ${{ secrets.GSC_SITE_URL_BHPC }}
         run: |
           if [ ! -f "$RUNNER_TEMP/.gsc-service-account.json" ]; then echo "GSC skipped: service account not configured"; exit 0; fi
+          # The Search Console client is not in the base image. The submit and inspect
+          # scripts below and the ingestion both import it, so without this the whole
+          # step would fail on 'No module named google' the moment credentials were
+          # finally configured - which is exactly what happened on first test.
+          python3 -m pip install --quiet --upgrade pip
+          python3 -m pip install --quiet google-api-python-client google-auth
           # Ingest what people actually searched before submitting. Without this the
           # query atlas is gated on modelled demand while measured demand sits unread
           # in Search Console. Evidence-only: it does not admit, publish, or change
