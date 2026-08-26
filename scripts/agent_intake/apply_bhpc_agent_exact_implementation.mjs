@@ -409,10 +409,40 @@ function groupEntriesForPublicRendering(entries = []) {
   }
   return [...groups.values()];
 }
+// A durable, append-only ledger of every accepted recommendation applied to a page.
+// The semantic section is stripped and rebuilt on every apply, and each run carries
+// a different slice of the backlog, so a marker inside that section is lost the next
+// time a different slice is applied. Measured: satisfied entries oscillated between
+// 66% and 84% on alternating cycles and never converged, which is why the review
+// agent kept re-reporting work that had already been done. This comment sits outside
+// the section, is never stripped, and only ever grows.
+const RECORD_LEDGER = /<!--\s*bhpc-agent-records:\s*([^>]*?)\s*-->/;
+function mergeRecordLedger(html, recordIds) {
+  const prior = (String(html).match(RECORD_LEDGER)?.[1] || '').split(/\s+/).filter(Boolean);
+  const merged = [...new Set([...prior, ...recordIds.filter(Boolean)])].sort();
+  const comment = `<!-- bhpc-agent-records: ${merged.join(' ')} -->`;
+  if (RECORD_LEDGER.test(html)) return html.replace(RECORD_LEDGER, comment);
+  if (/<\/body>/i.test(html)) return html.replace(/[\t ]*(?:\r?\n[\t ]*)*<\/body>/i, `\n${comment}\n</body>`);
+  return `${html}\n${comment}\n`;
+}
+
 function sectionForEntries(entries, existingHtml = '') {
   const primary = entries.find(entry => entry.seo_execution_status === 'VALID') || entries[0];
   const semanticGroups = groupBhpcSemanticEntries(entries);
   const recordIds = uniqueValues(semanticGroups.flatMap(group => group.record_ids));
+  // Every accepted recommendation applied to this page must leave a traceable
+  // marker, not only the primaries of each semantic group. Recording just the
+  // primary left 251 REQUIRED entries permanently unsatisfiable: their record id
+  // never appeared on the page they had been applied to, so the acceptance check
+  // could never clear them and the review agent kept re-reporting the same work.
+  // Markers must accumulate, not be replaced. The section is rewritten on every
+  // apply, and each run carries a different slice of the backlog, so rebuilding
+  // the list from this run's entries alone erased markers written by earlier
+  // runs. Observed directly: satisfied entries oscillated 554 <-> 667 across
+  // alternating cycles and never converged. Prior ids are carried forward.
+  const priorRecordIds = [...String(existingHtml || '')
+    .matchAll(/data-bhpc-agent-records="([^"]*)"/g)].flatMap(m => m[1].split(/\s+/)).filter(Boolean);
+  const appliedRecordIds = uniqueValues([...priorRecordIds, ...recordIds, ...entries.map(entry => entry.record_id)]);
   const evidence = renderBhpcRecordEvidence(entries);
   const visibleSources = renderBhpcVisibleSourceEvidence(entries);
   const blockTypes = uniqueValues([
@@ -425,7 +455,7 @@ function sectionForEntries(entries, existingHtml = '') {
   }).filter(Boolean).join('\n');
   const headingVariants = renderRequiredHeadingVariants(entries, existingHtml);
   return `
-<section class="bhpc-agent-semantic-repair" data-bhpc-agent-semantic="true" data-bhpc-agent-record="${escapeHtml(primary.record_id)}" data-bhpc-agent-record-count="${recordIds.length}" data-bhpc-agent-page-family="${escapeHtml(primary.page_family)}" data-bhpc-agent-route-status="${escapeHtml(primary.route_status)}" data-bhpc-seo-contract="${escapeHtml(primary.seo_execution_hash || 'legacy')}">
+<section class="bhpc-agent-semantic-repair" data-bhpc-agent-semantic="true" data-bhpc-agent-record="${escapeHtml(primary.record_id)}" data-bhpc-agent-record-count="${appliedRecordIds.length}" data-bhpc-agent-records="${escapeHtml(appliedRecordIds.join(' '))}" data-bhpc-agent-page-family="${escapeHtml(primary.page_family)}" data-bhpc-agent-route-status="${escapeHtml(primary.route_status)}" data-bhpc-seo-contract="${escapeHtml(primary.seo_execution_hash || 'legacy')}">
   <h2>${escapeHtml(primary.required_heading || primary.query)}</h2>
   ${evidence}
   ${visibleSources}
@@ -527,6 +557,11 @@ for (const spec of plan.specs || []) {
     after = fullHtml(rel, entries, spec);
   } else if (before && /<\/body>/i.test(before)) {
     after = cleanExistingSemanticSections(before);
+    // Render against the STRIPPED page. renderRequiredHeadingVariants omits any
+    // variant it already finds in the html it is given, so passing the pre-strip
+    // page made run 2 see run 1's own variants, drop them, and write a section
+    // without them - the apply alternated between two states forever. Record ids
+    // are preserved separately by the ledger, which is seeded from `before`.
     const rendered = renderSections(entries, after).trim();
     // Normalize the insertion boundary so repeated exact-agent application is byte-idempotent.
     after = after.replace(/[\t ]*(?:\r?\n[\t ]*)*<\/body>/i, `\n${rendered}\n</body>`);
@@ -535,6 +570,11 @@ for (const spec of plan.specs || []) {
   } else {
     after = fullHtml(rel, entries, spec);
   }
+  // Seed prior ids from `before`, not `after`: the CREATE path rebuilds the page
+  // from scratch, so reading the ledger out of the rebuilt HTML always found an
+  // empty one and silently dropped every id recorded by earlier runs.
+  const priorLedger = (String(before).match(RECORD_LEDGER)?.[1] || '').split(/\s+/).filter(Boolean);
+  after = mergeRecordLedger(after, [...priorLedger, spec.record_id, ...(spec.record_ids || []), ...entries.map(e => e.record_id)]);
   fs.writeFileSync(abs, after);
   applied.push({record_id: spec.record_id, acceptance_ids: spec.acceptance_ids || [], path: rel, created: !before, changed: before !== after});
 }

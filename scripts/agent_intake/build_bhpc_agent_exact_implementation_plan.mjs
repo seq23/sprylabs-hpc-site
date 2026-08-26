@@ -56,7 +56,46 @@ const carriedBacklog=allEntries
   .filter(e=>!acceptanceSatisfied(e))
   .sort((a,b)=>String(a.run_date||'').localeCompare(String(b.run_date||'')))
   .slice(0,BACKLOG_CARRY_LIMIT);
-const activeEntries=[...newestEntries,...carriedBacklog];
+// A page's fixes must be applied atomically. The apply strips and rebuilds the
+// semantic section from whatever slice this run carries, so any required string
+// contributed by an entry NOT in the current slice disappears. With a global
+// entry limit, consecutive runs carried different slices of the same page and
+// undid each other: satisfied entries oscillated between 66% and 84% forever,
+// which is why the review agent kept re-reporting work that had been done.
+//
+// So the limit now bounds PAGES, not entries: once a page is selected, every
+// outstanding entry for it comes along. A page is either fully repaired or not
+// touched, and it can never regress.
+const backlogByPath=new Map();
+for(const e of carriedBacklog){
+  const key=String(e.implementation_path||'');
+  if(!backlogByPath.has(key)) backlogByPath.set(key,[]);
+  backlogByPath.get(key).push(e);
+}
+const outstandingByPath=new Map();
+for(const e of allEntries){
+  if(String(e.run_date||'')===activeRunDate) continue;
+  if(e.acceptance_status!=='REQUIRED') continue;
+  if(acceptanceSatisfied(e)) continue;
+  const key=String(e.implementation_path||'');
+  if(!backlogByPath.has(key)) continue;
+  if(!outstandingByPath.has(key)) outstandingByPath.set(key,[]);
+  outstandingByPath.get(key).push(e);
+}
+// Any page touched this run - whether by the newest run or by the carried
+// backlog - takes ALL of its outstanding entries. Slicing by entry meant the
+// newest run could touch a page and rebuild its section without the older
+// entries' required strings, undoing them.
+const touchedPaths=new Set([
+  ...newestEntries.map(e=>String(e.implementation_path||'')),
+  ...outstandingByPath.keys(),
+]);
+const wholePageEntries=allEntries.filter(e=>
+  e.acceptance_status==='REQUIRED'
+  && touchedPaths.has(String(e.implementation_path||''))
+  && String(e.run_date||'')!==activeRunDate);
+const activeEntries=[...newestEntries,...wholePageEntries]
+  .filter((e,i,arr)=>arr.findIndex(x=>x.id===e.id)===i);
 console.log(`[bhpc-agent-exact-plan] newest_run=${newestEntries.length} carried_backlog=${carriedBacklog.length} (limit ${BACKLOG_CARRY_LIMIT})`);
 const deterministicGeneratedAt=stableGeneratedAt(activeEntries);
 const blockedRouteReasons=new Map(activeEntries
