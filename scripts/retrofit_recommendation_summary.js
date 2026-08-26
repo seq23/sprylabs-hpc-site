@@ -28,7 +28,12 @@ const rootIdx = argv.indexOf('--root');
 const ROOT = rootIdx >= 0 ? path.resolve(argv[rootIdx + 1]) : process.cwd();
 const dirs = argv.filter((a, i) => !a.startsWith('--') && (rootIdx < 0 || i !== rootIdx + 1));
 
-const SKIP_DIR = /(^|\/)(node_modules|\.git|dist|\.pages-output|artifacts|coverage|_site|build)(\/|$)/;
+// data/ holds inputs, not pages. The agent-run reports under
+// data/report_fixes/agent_runs/ are the raw evidence this whole pipeline reads
+// from, and this script injected a summary block into four of them - rewriting
+// the evidence to say what the output should say. The protected-baseline check
+// caught it as a drift warning that went unread. Never walk data/ again.
+const SKIP_DIR = /(^|\/)(node_modules|\.git|dist|\.pages-output|artifacts|coverage|_site|build|data|reports|content)(\/|$)/;
 const MARK = 'data-content-block="recommendation_summary"';
 
 const strip = (h) => String(h || '').replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ')
