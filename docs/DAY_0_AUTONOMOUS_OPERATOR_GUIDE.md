@@ -1,7 +1,7 @@
 # Day 0 Autonomous Operator Guide
 
 1. Configure `APP_SESSION_SECRET`, `GITHUB_ADMIN_TOKEN`, and `GITHUB_REPOSITORY` in Cloudflare.
-2. The built-in admin gate password is `blackgirlmagic`. `ADMIN_GATE_PASSWORD` remains optional and may be set later only to override that default.
+2. The admin gate password is supplied by the `ADMIN_PASSWORD` environment variable in Cloudflare. It is never stored in this repository. A previously documented built-in password was removed: this repository is public, so anything written here is published. Rotate any credential that was ever recorded in a repo and never reuse it.
 2. Confirm GitHub Actions are enabled.
 3. Confirm the daily citation workflow and weekly paid-agent process remain scheduled.
 4. Use `/admin/` for visibility and emergency controls only.

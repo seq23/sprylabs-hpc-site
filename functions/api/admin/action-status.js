@@ -1,6 +1,11 @@
-import {json} from '../../_runtime/admin.js';
+import {json,validSession} from '../../_runtime/admin.js';
 import {configured,findRun,recentCommit} from '../../_lib/github-admin.js';
 export async function onRequestPost({request,env}){
+  // Authentication first. This endpoint dispatches GitHub workflows; it previously
+  // checked configuration and the action allowlist but never who was asking.
+  const sessionSecret=env.APP_SESSION_SECRET;
+  if(!sessionSecret||!await validSession(request,sessionSecret)) return json({error:'Unauthorized'},401);
+
   if(!configured(env))return json({error:'GitHub bridge not configured'},503);
   const {receipt}=await request.json().catch(()=>({}));
   if(!receipt?.workflow||!receipt?.dispatched_at)return json({error:'Invalid action receipt'},400);

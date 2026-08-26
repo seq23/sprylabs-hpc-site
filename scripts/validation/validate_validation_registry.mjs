@@ -67,7 +67,16 @@ const unreachable=matrix
     return !reachable.has(name) && !reachable.has(m.command);
   })
   .map(m=>m.matrix_id);
-if(unreachable.length) strongWarnings.push(`${unreachable.length} admitted matrix entr${unreachable.length===1?'y is':'ies are'} in no profile and never run: ${unreachable.slice(0,12).join(', ')}${unreachable.length>12?', ...':''}`);
+// Entries with a recorded reason in profile_exclusions are deliberate. Warning
+// about all of them made the signal unusable, which is how the coverage-route
+// guard stayed unnoticed inside a list of 69. Warn only about the unreviewed,
+// and separately surface the ones marked NEEDS TRIAGE so a real failure parked
+// as an exclusion cannot quietly become permanent.
+const exclusions=matrixDoc.profile_exclusions||{};
+const unclassified=unreachable.filter(id=>!exclusions[id]);
+const needsTriage=Object.entries(exclusions).filter(([,reason])=>String(reason).startsWith('NEEDS TRIAGE')).map(([id])=>id);
+if(unclassified.length) strongWarnings.push(`${unclassified.length} admitted matrix entr${unclassified.length===1?'y is':'ies are'} in no profile with no recorded reason: ${unclassified.slice(0,12).join(', ')}${unclassified.length>12?', ...':''}`);
+if(needsTriage.length) warnings.push(`${needsTriage.length} admitted validator(s) excluded pending triage: ${needsTriage.join(', ')}`);
 
 const matrixIds=new Set(); const matrixByValidation=new Map();
 for(const m of matrix){

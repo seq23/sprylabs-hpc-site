@@ -2059,6 +2059,46 @@
         {
           "id": "validate:knowledge-map-route",
           "command": "npm run validate:knowledge-map-route"
+        },
+        {
+          "id": "validate:workflow-yaml-inventory",
+          "command": "npm run validate:workflow-yaml-inventory"
+        },
+        {
+          "id": "validate:workflow-runtime-mutations",
+          "command": "npm run validate:workflow-runtime-mutations"
+        },
+        {
+          "id": "validate:workflow-artifacts",
+          "command": "npm run validate:workflow-artifacts"
+        },
+        {
+          "id": "validate:strategy-gate",
+          "command": "npm run validate:strategy-gate"
+        },
+        {
+          "id": "safe-harbor:validate",
+          "command": "npm run safe-harbor:validate"
+        },
+        {
+          "id": "validate:workflow-write-scopes",
+          "command": "npm run validate:workflow-write-scopes"
+        },
+        {
+          "id": "validate:artifact-hardening-suite",
+          "command": "npm run validate:artifact-hardening-suite"
+        },
+        {
+          "id": "validate:kpi-truth",
+          "command": "npm run validate:kpi-truth"
+        },
+        {
+          "id": "validate:admin-github-bridge",
+          "command": "npm run validate:admin-github-bridge"
+        },
+        {
+          "id": "validate:ownership",
+          "command": "npm run validate:ownership"
         }
       ]
     },
@@ -2180,5 +2220,72 @@
         }
       ]
     }
-  }
+  },
+  "profile_exclusions": {
+    "MX-003": "release-time or generator command, not a per-push check",
+    "MX-005": "release-time or generator command, not a per-push check",
+    "MX-006": "release-time or generator command, not a per-push check",
+    "MX-007": "release-time or generator command, not a per-push check",
+    "MX-008": "release-time or generator command, not a per-push check",
+    "MX-009": "needs a live deployment; runs after deploy, not before",
+    "MX-010": "needs a live deployment; runs after deploy, not before",
+    "MX-011": "needs a live deployment; runs after deploy, not before",
+    "MX-012": "needs a live deployment; runs after deploy, not before",
+    "MX-013": "release-time or generator command, not a per-push check",
+    "MX-014": "release-time or generator command, not a per-push check",
+    "MX-015": "needs a live deployment; runs after deploy, not before",
+    "MX-016": "release-time or generator command, not a per-push check",
+    "MX-017": "release-time or generator command, not a per-push check",
+    "MX-018": "runs a profile itself; adding it to one would recurse",
+    "MX-019": "runs a profile itself; adding it to one would recurse",
+    "MX-020": "runs a profile itself; adding it to one would recurse",
+    "MX-021": "runs a profile itself; adding it to one would recurse",
+    "MX-022": "release-time or generator command, not a per-push check",
+    "MX-023": "runs a profile itself; adding it to one would recurse",
+    "MX-024": "NEEDS TRIAGE: requires CANDIDATE_ZIP; only meaningful against a packaged release artifact",
+    "MX-030": "NEEDS TRIAGE: fails on the current tree - real finding, not yet triaged",
+    "MX-049": "NEEDS TRIAGE: requires VALIDATION_PAGE_SCOPE_FILE; incremental-only by design",
+    "MX-052": "release-time or generator command, not a per-push check",
+    "MX-053": "release-time or generator command, not a per-push check",
+    "MX-057": "not a per-push check",
+    "MX-058": "runs a profile itself; adding it to one would recurse",
+    "MX-059": "release-time or generator command, not a per-push check",
+    "MX-060": "release-time or generator command, not a per-push check",
+    "MX-069": "release-time or generator command, not a per-push check",
+    "MX-070": "release-time or generator command, not a per-push check",
+    "MX-073": "invoked inside another admitted chain rather than as a profile step",
+    "MX-074": "invoked inside another admitted chain rather than as a profile step",
+    "MX-075": "invoked inside another admitted chain rather than as a profile step",
+    "MX-077": "writes to the tree; a validator profile must stay read-only",
+    "MX-078": "writes to the tree; a validator profile must stay read-only",
+    "MX-086": "runs a profile itself; adding it to one would recurse",
+    "MX-087": "release-time or generator command, not a per-push check",
+    "MX-102": "release-time or generator command, not a per-push check",
+    "MX-103": "release-time or generator command, not a per-push check",
+    "MX-104": "release-time or generator command, not a per-push check",
+    "MX-105": "release-time or generator command, not a per-push check",
+    "MX-107": "writes to the tree; a validator profile must stay read-only",
+    "MX-108": "NEEDS TRIAGE: gates a controlled release; not a per-push check",
+    "MX-109": "writes to the tree; a validator profile must stay read-only",
+    "MX-110": "release-time or generator command, not a per-push check",
+    "MX-111": "release-time or generator command, not a per-push check",
+    "MX-118": "release-time or generator command, not a per-push check",
+    "MX-120": "release-time or generator command, not a per-push check",
+    "MX-121": "release-time or generator command, not a per-push check",
+    "MX-124": "runs a profile itself; adding it to one would recurse",
+    "MX-125": "not a per-push check",
+    "MX-135": "release-time or generator command, not a per-push check",
+    "MX-136": "runs a profile itself; adding it to one would recurse",
+    "MX-137": "runs a profile itself; adding it to one would recurse",
+    "MX-138": "runs a profile itself; adding it to one would recurse",
+    "MX-142": "writes to the tree; a validator profile must stay read-only",
+    "MX-151": "NEEDS TRIAGE: fails on the current tree - real finding, not yet triaged",
+    "MX-AGENT-LIVE": "needs a live deployment; runs after deploy, not before",
+    "MX-ARTIFACT-PACKAGING-PARITY": "writes to the tree; a validator profile must stay read-only",
+    "MX-VAL-FSA-ALL": "NEEDS TRIAGE: aggregate of the FSA checks; its members run individually",
+    "MX-VAL-FSA-RELEASE": "release-time or generator command, not a per-push check",
+    "MX-VAL-FSA-SCORE": "release-time or generator command, not a per-push check",
+    "MX-VAL-FSA-SELFHEAL": "release-time or generator command, not a per-push check"
+  },
+  "profile_exclusions_policy": "Admitted entries that are deliberately not profile steps, each with the reason. validate_validation_registry warns only about entries missing from this map, so an unreviewed orphan is visible while a reasoned exclusion is not noise. Entries marked NEEDS TRIAGE are real failures or real environment gaps that should be fixed and then armed - they are not permanent exclusions."
 }

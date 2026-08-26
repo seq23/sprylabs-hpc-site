@@ -4,8 +4,12 @@ import { onRequestPost as action } from '../../functions/api/admin/action.js';
 import { onRequestPost as status } from '../../functions/api/admin/action-status.js';
 import { ACTIONS } from '../../functions/_lib/github-admin.js';
 
+// Test-only values. ADMIN_PASSWORD is supplied here so the wrong-password and
+// valid-password paths can both be exercised; the real one lives in Cloudflare
+// and is never in this repository.
 const env = {
   APP_SESSION_SECRET: 'hostile-review-test-secret-1234567890',
+  ADMIN_PASSWORD: 'hostile-review-test-password',
   GITHUB_ADMIN_TOKEN: 'test-token',
   GITHUB_REPOSITORY: 'seq23/sprylabs-hpc-site'
 };
@@ -26,7 +30,7 @@ const badLogin = await login({
 assert(badLogin.status === 401, `wrong password expected 401, received ${badLogin.status}`);
 
 const goodLogin = await login({
-  request: new Request('https://example.test/api/admin/login', { method: 'POST', headers: {'content-type':'application/json'}, body: JSON.stringify({password:'blackgirlmagic'}) }),
+  request: new Request('https://example.test/api/admin/login', { method: 'POST', headers: {'content-type':'application/json'}, body: JSON.stringify({password:env.ADMIN_PASSWORD}) }),
   env
 });
 assert(goodLogin.status === 200, `valid password expected 200, received ${goodLogin.status}`);
