@@ -78,6 +78,24 @@ if (missing.length) {
   process.exit(1);
 }
 
+// Nothing credential-shaped may ever reach a deploy directory, no matter how it
+// got into the tree. CI recreates service-account keys from secrets, and a key
+// written into the workspace instead of $RUNNER_TEMP would otherwise be copied
+// here and published. Fail loudly rather than deploy and hope.
+const CREDENTIAL_SHAPED = /(service[-_]?account|credentials?|secret|\.pem$|\.key$|\.p12$|id_rsa)/i;
+const credentials = [];
+(function scan(dir) {
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) { scan(full); continue; }
+    if (CREDENTIAL_SHAPED.test(entry.name)) credentials.push(path.relative(out, full));
+  }
+})(out);
+if (credentials.length) {
+  console.error('assemble: refusing to publish credential-shaped file(s): ' + credentials.join(', '));
+  process.exit(1);
+}
+
 const leaked = ['package.json', 'AGENTS.md', 'README.md', 'package-lock.json', 'scripts']
   .filter((f) => fs.existsSync(path.join(out, f)));
 if (leaked.length) {
