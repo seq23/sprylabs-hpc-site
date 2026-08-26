@@ -1,6 +1,6 @@
 {
   "profile": "container-prepush",
-  "started_at": "2026-08-26T21:33:46.744Z",
+  "started_at": "2026-08-26T21:41:14.401Z",
   "steps": [
     {
       "id": "VAL-ORCHESTRATION-CONTRACT",
@@ -167,8 +167,8 @@
     {
       "id": "validate:content-release",
       "command": "npm run validate:content-release",
-      "exit_code": 0,
-      "status": "PASS"
+      "exit_code": 1,
+      "status": "FAIL"
     },
     {
       "id": "validate:citation-velocity-automation",
@@ -460,11 +460,12 @@
     }
   ],
   "status": "FAIL",
-  "failure_count": 2,
+  "failure_count": 3,
   "failures": [
     "validate:agent-run",
+    "validate:content-release",
     "VAL-FULL-PAGE-AUDIT"
   ],
   "stopped_early_at": null,
-  "finished_at": "2026-08-26T21:36:59.952Z"
+  "finished_at": "2026-08-26T21:44:19.908Z"
 }

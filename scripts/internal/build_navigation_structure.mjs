@@ -336,6 +336,27 @@ for (const hub of hubs) {
 const BREADCRUMB_RE_G = /<nav\b[^>]*(?:aria-label="Breadcrumbs?"|class="[^"]*\bbreadcrumbs?\b[^"]*")[^>]*>[\s\S]*?<\/nav>/gi;
 const RELATED_RE_G = RELATED_BLOCK_RE;
 
+// The citation schema is written from the page's canonical tag early in
+// build:all, and later steps can still rewrite that tag. When they do, the
+// schema keeps the URL it was built with and rendered-schema-parity fails until
+// some later repair happens to run. This is the last step of build:all, so it
+// settles the two against each other: every occurrence of the stale canonical
+// inside the schema block (url, mainEntityOfPage, and the #webpage / #framework
+// / #breadcrumb @ids built from it) moves to the current one.
+function reconcileSchemaCanonical(html, canonical) {
+  const scriptRe = /(<script id="CITATION_PAGE_SCHEMA"[^>]*>)([\s\S]*?)(<\/script>)/i;
+  const m = html.match(scriptRe);
+  if (!m) return html;
+  let data;
+  try { data = JSON.parse(m[2]); } catch { return html; }
+  const graph = Array.isArray(data['@graph']) ? data['@graph'] : [];
+  const primary = graph.find((n) => ['Article', 'BlogPosting', 'WebPage', 'CollectionPage'].includes(n['@type']));
+  const stale = primary && typeof primary.url === 'string' ? primary.url : null;
+  if (!stale || stale === canonical) return html;
+  const body = m[2].split(stale).join(canonical);
+  return html.slice(0, m.index) + m[1] + body + m[3] + html.slice(m.index + m[0].length);
+}
+
 function replaceBreadcrumbJsonLd(html, node) {
   const scriptRe = /(<script id="CITATION_PAGE_SCHEMA"[^>]*>)([\s\S]*?)(<\/script>)/i;
   const m = html.match(scriptRe);
@@ -375,6 +396,7 @@ for (const pg of pages) {
   // --- breadcrumb (visible first: the schema is derived from it) ---
   // Any href that lived only inside a removed trail is carried into the
   // related block, so replacing a trail never drops a link off the page.
+  html = reconcileSchemaCanonical(html, pg.canonical);
   const crumbHtml = breadcrumbHtml(pg.host, info.crumbs, pg.h1);
   const removed = html.match(BREADCRUMB_RE_G) || [];
   const carried = [];

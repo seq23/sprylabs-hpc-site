@@ -25,6 +25,12 @@ function variantsFor(sourcePath) {
   const route = routeFromSource(sourcePath);
   const variants = new Set([route, '/' + sourcePath.replace(/^\/+/, ''), sourcePath.replace(/^\/+/, ''), route.replace(/^\//, '')]);
   if (route.endsWith('/')) variants.add(route.slice(0, -1));
+  // A retired page can also be referenced by its canonical (extensionless)
+  // route. Without this the redirect map stopped matching the day the route
+  // contract dropped .html, and generators quietly relinked to a dead URL.
+  for (const value of [...variants]) {
+    if (value.endsWith('.html')) variants.add(value.slice(0, -'.html'.length));
+  }
   for (const domain of domains) {
     for (const value of [...variants]) {
       variants.add(`https://${domain}${value}`);
@@ -58,7 +64,10 @@ function replaceUrlValue(value, rel) {
   const bare = suffix ? result.slice(0, -suffix.length) : result;
   if (!/^[a-z][a-z0-9+.-]*:/i.test(bare) && !bare.startsWith('/') && !bare.startsWith('#')) {
     const resolved = path.posix.normalize(path.posix.join(path.posix.dirname(rel), bare));
-    const relativeMatch = mappings.find((mapping) => mapping.source_path === resolved);
+    // A relative link can name the clean route as well as the file, so resolve
+    // both shapes back to the retired source path.
+    const candidates = [resolved, `${resolved}.html`, path.posix.join(resolved.replace(/\/$/, ''), 'index.html')];
+    const relativeMatch = mappings.find((mapping) => candidates.includes(mapping.source_path));
     if (relativeMatch) return relativeMatch.target + suffix;
   }
   for (const mapping of mappings) {

@@ -24,12 +24,23 @@ function parseHttpUrl(value = '', base = 'https://spryexecutiveos.com') {
   }
 }
 
+// /download.html is the one route that keeps its extension: it is the frozen
+// revenue surface and its canonical still names the .html form. Every other
+// internal link normalizes to the route that answers 200 without a redirect.
+const FROZEN_HTML_PATHS = new Set(['/download.html']);
+
 export function normalizeBhpcInternalLinkHref(value = '') {
   const url = parseHttpUrl(value);
   if (!url) return '';
   const host = normalizedHost(url.hostname);
   if (!INTERNAL_HOSTS.has(host)) return '';
-  return `${url.pathname || '/'}${url.search || ''}${url.hash || ''}`;
+  let pathname = url.pathname || '/';
+  if (!FROZEN_HTML_PATHS.has(pathname)) {
+    if (pathname === '/index.html') pathname = '/';
+    else if (pathname.endsWith('/index.html')) pathname = pathname.slice(0, -'index.html'.length);
+    else if (pathname.endsWith('.html')) pathname = pathname.slice(0, -'.html'.length);
+  }
+  return `${pathname}${url.search || ''}${url.hash || ''}`;
 }
 
 export function normalizeBhpcExternalCtaHref(value = '') {
