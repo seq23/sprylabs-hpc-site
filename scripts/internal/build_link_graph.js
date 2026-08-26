@@ -13,12 +13,24 @@ function hrefs(html){
   while ((m = re.exec(html))) found.add(m[1]);
   return [...found];
 }
+// Node paths are canonical routes, which are extensionless since the canonical
+// contract moved off the redirecting .html form. Resolve one back to the file
+// that answers it.
+function fileFor(route){
+  const rel = String(route).replace(/^\//, '');
+  for (const candidate of [rel, `${rel}.html`, `${rel.replace(/\/$/, '')}/index.html`, 'index.html']) {
+    if (!candidate) continue;
+    const full = path.join(ROOT, candidate);
+    if (fs.existsSync(full) && fs.statSync(full).isFile()) return full;
+  }
+  return null;
+}
 function main(){
   const graph = readJSON(GRAPH);
   const report = { generated_at: new Date().toISOString(), checked: [], missing: [] };
   for (const node of graph.nodes || []) {
-    const file = path.join(ROOT, node.path.replace(/^\//, ''));
-    if (!fs.existsSync(file)) {
+    const file = fileFor(node.path);
+    if (!file) {
       report.missing.push({ path: node.path, reason: 'source page missing' });
       continue;
     }
