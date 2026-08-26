@@ -46,7 +46,11 @@ jobs:
       - name: Resolve public base URL
         id: target
         env:
-          MANUAL_URL: ${{ inputs.base_url }}
+          # github.event.inputs, not inputs. This workflow also runs on workflow_run,
+          # where the inputs context does not exist - referencing it there is not an
+          # empty value, it is a startup failure that creates no jobs and leaves no
+          # log, which is exactly how this ran red with nothing to read.
+          MANUAL_URL: ${{ github.event.inputs.base_url }}
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${MANUAL_URL:-}" ]; then
             echo "base_url=$MANUAL_URL" >> "$GITHUB_OUTPUT"
