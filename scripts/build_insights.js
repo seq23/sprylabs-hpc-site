@@ -29,6 +29,95 @@ function writeUtf8(p, s) {
 }
 function exists(p) { try { fs.accessSync(p); return true; } catch { return false; } }
 
+// --- append-only tail preservation -------------------------------------------------
+// This builder rebuilds every page it owns from the markdown source, so anything a
+// later stage appended to the rendered file used to be destroyed on the next run.
+// Other stages deliberately write their durable output AFTER the footer, outside the
+// region this builder rebuilds: `apply_bhpc_agent_exact_implementation.mjs` puts the
+// `<section class="bhpc-agent-semantic-repair">` blocks and its append-only
+// `<!-- bhpc-agent-records: ... -->` ledger there (see the RECORD_LEDGER comments in
+// that file: markers placed inside a rebuilt region were provably lost), and
+// `apply_citation_layer.js` puts `<script id="CITATION_PAGE_SCHEMA">` there.
+// Measured before this fix: a bare `node scripts/build_insights.js` took all 25
+// markdown-backed insights pages that carried agent blocks from 4-11 blocks to 0,
+// and dropped the links inside them (/citation-methodology.html,
+// /ai-executive-coach.html, /chatgpt-accountability-partner.html).
+// The rule below is "carry forward everything after </footer> that this builder did
+// not write itself": strip the closing document scaffold and the JSON-LD scripts this
+// builder emits, and re-emit whatever remains. That keeps the operation idempotent -
+// re-extracting from a page this builder just wrote yields the same tail again.
+const OWN_TAIL_SCRIPTS = [
+  // {{json_ld}} — emitted by jsonLdArticle()/jsonLdCollection(), attribute-free.
+  /<script type="application\/ld\+json">[\s\S]*?<\/script>/gi,
+  // The layout's own graph block.
+  /<script\b[^>]*\bdata-geo-semantic\b[^>]*>[\s\S]*?<\/script>/gi,
+];
+
+function extractCarriedTail(html) {
+  const source = String(html || "");
+  const marker = source.toLowerCase().lastIndexOf("</footer>");
+  if (marker === -1) return "";
+  let tail = source.slice(marker + "</footer>".length);
+  // Drop the closing document scaffold; the freshly rendered page supplies its own.
+  const stop = tail.search(/<\/body\s*>|<\/html\s*>/i);
+  if (stop !== -1) tail = tail.slice(0, stop);
+  for (const re of OWN_TAIL_SCRIPTS) tail = tail.replace(re, "");
+  return tail.trim();
+}
+
+function mergeCarriedTail(rendered, carried) {
+  if (!carried) return rendered;
+  if (rendered.includes(carried)) return rendered;
+  if (/<\/body\s*>/i.test(rendered)) {
+    return rendered.replace(/[\t ]*(?:\r?\n[\t ]*)*<\/body\s*>/i, `\n${carried}\n</body>`);
+  }
+  if (/<\/html\s*>/i.test(rendered)) {
+    return rendered.replace(/[\t ]*(?:\r?\n[\t ]*)*<\/html\s*>/i, `\n${carried}\n</html>`);
+  }
+  return `${rendered}\n${carried}\n`;
+}
+
+// Use for every rendered HTML page this builder owns.
+function writePageUtf8(p, s) {
+  const carried = exists(p) ? extractCarriedTail(readUtf8(p)) : "";
+  writeUtf8(p, mergeCarriedTail(s, carried));
+}
+
+// The citation program (`scripts/citation/apply_citation_program.py`) writes its
+// "Related Spry citation pathways" card INSIDE the article, so the tail rule above
+// cannot save it. It only re-asserts that card for paths currently present in the
+// PRIORITY/NEW_PAGES specs, and those specs are regenerated from a rotating backlog:
+// once a page drops out of the current slice the card is never re-emitted, and this
+// builder's article rebuild deletes it permanently along with its four outbound links
+// (/chatgpt-accountability-partner.html, /ai-executive-coach.html,
+// /how-to-stay-consistent/, /continuity-collapse-pattern/). Carry it forward instead.
+// patch_priority() is guarded by `if not soup.select_one('[data-citation-opportunity=
+// "bhpc-priority"]')`, so a carried card is never duplicated when the page is back in
+// the slice.
+function extractBalancedSection(html, openTagRe) {
+  const source = String(html || "");
+  const open = source.match(openTagRe);
+  if (!open) return "";
+  let index = open.index + open[0].length;
+  let depth = 1;
+  const scanner = /<section\b[^>]*>|<\/section\s*>/gi;
+  scanner.lastIndex = index;
+  let match;
+  while ((match = scanner.exec(source))) {
+    depth += match[0][1] === "/" ? -1 : 1;
+    if (depth === 0) return source.slice(open.index, match.index + match[0].length);
+  }
+  return "";
+}
+
+function extractCarriedPathways(p) {
+  if (!exists(p)) return "";
+  return extractBalancedSection(
+    readUtf8(p),
+    /<section\b[^>]*\bdata-citation-opportunity="bhpc-priority"[^>]*>/i
+  );
+}
+
 function htmlEscape(s) {
   return String(s ?? "")
     .replaceAll("&", "&amp;")
@@ -398,7 +487,7 @@ function buildPillars(posts, clusters) {
   </section>`;
 
   const pillarsIndexCanonical = `${SITE_BASE}/pillars/`;
-  writeUtf8(path.join(PILLARS_DIR, "index.html"), renderPage({
+  writePageUtf8(path.join(PILLARS_DIR, "index.html"), renderPage({
     title: "Pillars — Spry Executive OS",
     description: "Topic pillars for planning, consistency, recovery, decision-making, coaching, and practical AI support.",
     canonical: pillarsIndexCanonical,
@@ -468,7 +557,7 @@ function buildPillars(posts, clusters) {
     </section>`;
 
     const canonical = `${SITE_BASE}/pillars/${c.id}/`;
-    writeUtf8(path.join(PILLARS_DIR, c.id, "index.html"), renderPage({
+    writePageUtf8(path.join(PILLARS_DIR, c.id, "index.html"), renderPage({
       title: `${c.name} — Spry Executive OS`,
       description: c.description || `Structured guidance for ${c.name}.`,
       canonical,
@@ -528,6 +617,7 @@ function buildPostPages(posts, clustersMap) {
     const citationWrapOpen = post.citationName ? `<section class="citation-extraction" id="${slugify(post.citationName)}" data-llm-answer="true" data-extraction-type="${htmlEscape(post.citationType)}" data-named-framework="${htmlEscape(post.citationName)}">` : "";
     const citationWrapClose = post.citationName ? `</section>` : "";
     const productAnchor = `<p class="product-anchor">This is one of the frameworks inside the <a href="/download.html">Billionaire High Performance Coach system</a> — a structured executive OS for using ChatGPT as your accountability and decision partner.</p>`;
+    const carriedPathways = extractCarriedPathways(path.join(OUT_DIR, `${post.slug}.html`));
     const readmeReviewDate = post.slug === "README" ? "2026-06-20" : "";
     const readmeAuthorityBlocks = readmeReviewDate ? `
         <p class="byline">By <a href="/author.html" rel="author">S.L. Taylor</a> · Spry Labs · Reviewed <time datetime="${readmeReviewDate}">${readmeReviewDate}</time></p>
@@ -546,6 +636,7 @@ function buildPostPages(posts, clustersMap) {
         ${tocHtml}
         ${citationWrapOpen}${htmlBody}${citationWrapClose}
         ${productAnchor}
+        ${carriedPathways}
         ${insightDepthBlock()}
       </div>
       ${aiTherapistSafety}
@@ -570,7 +661,7 @@ function buildPostPages(posts, clustersMap) {
       }),
     });
 
-    writeUtf8(path.join(OUT_DIR, `${post.slug}.html`), page);
+    writePageUtf8(path.join(OUT_DIR, `${post.slug}.html`), page);
   }
 }
 
@@ -623,7 +714,7 @@ function buildInsightsIndex(posts, clustersMap) {
     jsonLd: jsonLdCollection({ title: "Insights", description: "Spry insights index", url: canonical }),
   });
 
-  writeUtf8(path.join(OUT_DIR, "index.html"), page);
+  writePageUtf8(path.join(OUT_DIR, "index.html"), page);
 }
 
 // --- drafts (for Atlas KPI line) ---
@@ -736,7 +827,7 @@ function buildAtlasPage(clusters, posts) {
     jsonLd: jsonLdCollection({ title: "Atlas", description: "Spry Atlas page", url: canonical }),
   });
 
-  writeUtf8(path.join(ROOT, "atlas.html"), page);
+  writePageUtf8(path.join(ROOT, "atlas.html"), page);
 }
 
 // --- sitemap + llms.txt ---
