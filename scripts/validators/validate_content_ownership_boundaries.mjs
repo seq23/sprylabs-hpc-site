@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import crypto from 'node:crypto';
-import {resolveRuntimePath} from '../site_layout/lib.mjs';
+import {resolveRuntimePath} from '../lib/runtime_path.mjs';
 
 const own = JSON.parse(fs.readFileSync('data/content_ownership_registry.json', 'utf8'));
 const pre = JSON.parse(fs.readFileSync('artifacts/validation/pre-implementation-protected-hashes.json', 'utf8'));

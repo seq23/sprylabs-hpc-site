@@ -1,7 +1,7 @@
 import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
-const root=path.resolve(process.cwd(),process.env.BHPC_PUBLIC_ROOT||'site/public'); const port=Number(process.env.PORT||4173);
+const root=path.resolve(process.cwd(),process.env.BHPC_PUBLIC_ROOT||'.'); const port=Number(process.env.PORT||4173);
 const types={'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.mjs':'text/javascript; charset=utf-8','.json':'application/json; charset=utf-8','.xml':'application/xml; charset=utf-8','.txt':'text/plain; charset=utf-8','.png':'image/png','.jpg':'image/jpeg','.jpeg':'image/jpeg','.svg':'image/svg+xml','.webp':'image/webp','.pdf':'application/pdf','.ico':'image/x-icon'};
 const server=http.createServer((req,res)=>{
   const raw=decodeURIComponent((req.url||'/').split('?')[0]);

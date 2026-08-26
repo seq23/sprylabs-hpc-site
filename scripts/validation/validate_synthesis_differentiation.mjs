@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import fs from 'node:fs';import path from 'node:path';
-const ROOT=process.cwd(); const pub=path.resolve(ROOT,process.env.BHPC_PUBLIC_ROOT||'site/public');
+const ROOT=process.cwd(); const pub=path.resolve(ROOT,process.env.BHPC_PUBLIC_ROOT||'.');
 function strip(html){return html.replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').toLowerCase().match(/[a-z0-9]{3,}/g)||[]}
 function grams(a){const s=new Set();for(let i=0;i<a.length-2;i++)s.add(`${a[i]} ${a[i+1]} ${a[i+2]}`);return s}
 function jac(a,b){let n=0;for(const x of a)if(b.has(x))n++;return n/Math.max(1,a.size+b.size-n)}

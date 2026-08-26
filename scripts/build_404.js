@@ -15,11 +15,8 @@ const fs = require('fs');
 const path = require('path');
 
 const repoRoot = path.resolve(__dirname, '..');
-// The build stages site/public at the repo root (run_with_public_root.mjs), so
-// resolve whichever layout is current rather than assuming one.
-const candidates = process.env.PAGES_OUT_DIR
-  ? [process.env.PAGES_OUT_DIR]
-  : ['site/public', '.'];
+// The public site is the repository root.
+const candidates = process.env.PAGES_OUT_DIR ? [process.env.PAGES_OUT_DIR] : ['.'];
 
 const outDir = candidates
   .map((d) => path.resolve(repoRoot, d))

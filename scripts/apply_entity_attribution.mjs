@@ -11,7 +11,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const ROOT = process.cwd();
-const PUBLIC_ROOT = path.join(ROOT, 'site/public');
+// The public site is the repository root.
+const PUBLIC_ROOT = ROOT;
 const args = process.argv.slice(2);
 const DRY = args.includes('--dry-run');
 const li = args.indexOf('--limit');

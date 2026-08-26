@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {workflowContract, matches, readJson, writeJson} from './lib.mjs';
-import {resolveRuntimePath} from '../site_layout/lib.mjs';
+import {resolveRuntimePath} from '../lib/runtime_path.mjs';
 import {
   FINDING_CLASSES,
   findingStatus,
@@ -81,17 +81,6 @@ function runAggregationSelfTest() {
   return {fixtures: 3, failures};
 }
 
-function runLayoutResolutionSelfTest() {
-  const stagedEnv = {BHPC_LAYOUT_STAGE_ACTIVE: '1', BHPC_PUBLIC_ROOT: '.', BHPC_DEPLOY_ROOT: '.'};
-  const publicPath = resolveRuntimePath('site/public/agency/index.html', stagedEnv);
-  const deployPath = resolveRuntimePath('dist/agency/index.html', stagedEnv);
-  const expected = path.resolve('agency/index.html');
-  const failures = [];
-  if (publicPath !== expected) failures.push(`staged public path mismatch: ${publicPath}`);
-  if (deployPath !== expected) failures.push(`staged deploy path mismatch: ${deployPath}`);
-  if (resolveRuntimePath('site/public/agency/index.html', {}) !== path.resolve('site/public/agency/index.html')) failures.push('normal public path resolution drifted');
-  return {fixtures: 3, failures};
-}
 
 
 function runChangePatternPrecedenceSelfTest() {
@@ -114,15 +103,13 @@ function runChangePatternPrecedenceSelfTest() {
 function requireGovernanceFixtures() {
   const classifier = runGovernanceFindingSelfTest();
   const aggregation = runAggregationSelfTest();
-  const layoutResolution = runLayoutResolutionSelfTest();
   const changePatternPrecedence = runChangePatternPrecedenceSelfTest();
   const failures = [
     ...classifier.failures.map(failure => `${failure.name}: expected=${failure.expected}`),
     ...aggregation.failures,
-    ...layoutResolution.failures,
     ...changePatternPrecedence.failures,
   ];
-  const fixtureCount = classifier.fixtures + aggregation.fixtures + layoutResolution.fixtures + changePatternPrecedence.fixtures;
+  const fixtureCount = classifier.fixtures + aggregation.fixtures + changePatternPrecedence.fixtures;
   if (failures.length) {
     const error = new Error(`governance fixtures failed ${failures.length}/${fixtureCount}`);
     error.details = failures;

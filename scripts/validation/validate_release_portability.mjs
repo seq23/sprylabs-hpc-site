@@ -5,11 +5,9 @@ import { readJson, fail, pass, writeSummary } from './common.mjs';
 
 const errors = [];
 
-const PUBLIC_ROOT = path.resolve(process.env.BHPC_PUBLIC_ROOT || path.join('site','public'));
-function releasePath(rel) {
-  if (process.env.BHPC_LAYOUT_STAGE_ACTIVE === '1' && rel.startsWith('site/public/')) return path.join(PUBLIC_ROOT, rel.slice('site/public/'.length));
-  return rel;
-}
+// The public site is the repository root; there is no staged layout to translate.
+const PUBLIC_ROOT = path.resolve(process.env.BHPC_PUBLIC_ROOT || '.');
+function releasePath(rel) { return rel; }
 const packageJson = readJson('package.json');
 const packageLock = readJson('package-lock.json');
 const updateContract = readJson('_repo_update_contract.json');
@@ -83,7 +81,7 @@ if ((browserContract.evidence_outputs || []).includes('videos')) errors.push('br
 
 
 const publicFavicon = path.join(PUBLIC_ROOT,'favicon.ico');
-if (!fs.existsSync(publicFavicon) || fs.statSync(publicFavicon).size === 0) errors.push('site/public/favicon.ico is missing or empty; Chromium requests it automatically and a 404 fails the browser suite');
+if (!fs.existsSync(publicFavicon) || fs.statSync(publicFavicon).size === 0) errors.push('favicon.ico is missing or empty; Chromium requests it automatically and a 404 fails the browser suite');
 const staticServerText = fs.readFileSync('scripts/browser/static_server.mjs', 'utf8');
 if (!staticServerText.includes("'.ico':'image/x-icon'")) errors.push('static server must serve .ico as image/x-icon');
 
@@ -93,7 +91,7 @@ for (const route of criticalRoutes) {
   const source = route.source_file;
   const publicSource = path.join(PUBLIC_ROOT, source);
   if (!fs.existsSync(publicSource)) {
-    missingLocalResources.push(`${source}: source file missing under site/public`);
+    missingLocalResources.push(`${source}: source file missing from the repository root`);
     continue;
   }
   const html = fs.readFileSync(publicSource, 'utf8');
@@ -109,21 +107,21 @@ for (const route of criticalRoutes) {
 if (missingLocalResources.length) errors.push(`critical browser routes reference missing local resources: ${missingLocalResources.slice(0, 20).join(', ')}`);
 
 const cleanHtmlRule = '/*.html /:splat 301';
+// Kept: old leaked /site/public/... URLs still need to resolve somewhere.
 const leakedSourceRecoveryRule = '/site/public/* /:splat 301';
-const rootCompatibilityRule = '/* /site/public/:splat 200';
-const redirectPaths = ['site/public/_redirects', '_redirects'];
-if (fs.existsSync('dist/_redirects')) redirectPaths.splice(1, 0, 'dist/_redirects');
+// Banned: this catch-all rewrote every request into site/public and returned
+// 200 for paths that do not exist, which is exactly how a site manufactures
+// soft 404s. It existed only to bridge the old staged layout.
+const bannedRootCompatibilityRule = '/* /site/public/:splat 200';
+const redirectPaths = ['_redirects'];
 for (const redirectPath of redirectPaths) {
   const redirectText = fs.readFileSync(redirectPath, 'utf8');
   const cleanHtmlIndex = redirectText.indexOf(cleanHtmlRule);
   const leakedSourceRecoveryIndex = redirectText.indexOf(leakedSourceRecoveryRule);
   if (cleanHtmlIndex === -1) errors.push(`${redirectPath} missing clean HTML redirect: ${cleanHtmlRule}`);
   if (leakedSourceRecoveryIndex === -1) errors.push(`${redirectPath} missing leaked source-path recovery redirect: ${leakedSourceRecoveryRule}`);
-  if (redirectPath === '_redirects') {
-    const compatibilityIndex = redirectText.indexOf(rootCompatibilityRule);
-    if (compatibilityIndex === -1) errors.push(`_redirects missing repository-root compatibility rule: ${rootCompatibilityRule}`);
-    else if (cleanHtmlIndex > compatibilityIndex) errors.push('_redirects clean HTML redirect must precede the repository-root compatibility rule');
-    else if (leakedSourceRecoveryIndex > compatibilityIndex) errors.push('_redirects leaked source-path recovery redirect must precede the repository-root compatibility rule');
+  if (redirectText.includes(bannedRootCompatibilityRule)) {
+    errors.push(`${redirectPath} still carries the staged-layout catch-all: ${bannedRootCompatibilityRule}. It returns 200 for paths that do not exist.`);
   }
 }
 
@@ -169,7 +167,7 @@ for (const required of [
   'data/citation/agent_page_specs.json',
   'data/citation/agent_recommendation_acceptance.json',
   'scripts/validation/validate_agent_recommendations.py',
-  'site/public/favicon.ico',
+  'favicon.ico',
   'data/content/manual_expansion_pages.json',
   'data/content/manual_redirects.json',
   'data/search/semrush_manual_expansion.json',

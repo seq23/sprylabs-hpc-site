@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import {workflowContracts, listFiles, matches, writeJson} from '../workflow/lib.mjs';
 import {fail, pass, writeSummary} from './common.mjs';
-import {resolveRuntimePath} from '../site_layout/lib.mjs';
+import {resolveRuntimePath} from '../lib/runtime_path.mjs';
 
 const errors = [];
 const files = listFiles();

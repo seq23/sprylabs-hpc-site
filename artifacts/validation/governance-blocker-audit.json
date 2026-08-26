@@ -1,23 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-08-24T22:52:08.511Z",
+  "generated_at": "2026-08-26T01:29:15.061Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 167,
+  "admitted_hard_fail_count": 169,
   "reviewed_count": 8,
-  "unreviewed_count": 159,
+  "unreviewed_count": 161,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 127,
+    "REVIEW_REQUIRED": 128,
     "EXISTING_REPAIR_AVAILABLE": 6,
     "TRUE_BLOCKER": 26,
-    "REVIEW_WARNING_BOUNDARY": 8
+    "REVIEW_WARNING_BOUNDARY": 9
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 127,
+    "REVIEW_REQUIRED": 128,
     "EXISTING_REPAIR_AVAILABLE": 6,
-    "TRUE_BLOCKER": 26
+    "TRUE_BLOCKER": 26,
+    "REVIEW_WARNING_BOUNDARY": 1
   },
   "migration_status_counts": {
-    "UNREVIEWED": 159,
+    "UNREVIEWED": 161,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -2547,6 +2548,36 @@
         "MX-173"
       ],
       "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-112",
+      "name": "validate:content-pattern",
+      "command": "npm run validate:content-pattern",
+      "owning_lane": "citation-contract",
+      "risk_prevented": "Prevents publishing a page that an answer engine cannot quote or that gives a citation nowhere to go: no direct-answer block, an h1 too short to carry the searcher phrasing, a table with empty cells, or no route to purchase.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-174"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-113",
+      "name": "validate:query-atlas",
+      "command": "npm run validate:query-atlas",
+      "owning_lane": "citation-intelligence",
+      "risk_prevented": "Prevents the query atlas from claiming coverage it cannot support - clusters without evidence-backed queries, or synthetic permutations counted as demand.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-175"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
       "migration_status": "UNREVIEWED",
       "decision": null,
       "evidence": []

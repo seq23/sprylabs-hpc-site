@@ -37,7 +37,7 @@ const BACKLOG_CARRY_LIMIT=Number(process.env.BHPC_BACKLOG_CARRY_LIMIT||120);
 function acceptanceSatisfied(entry){
   const rel=String(entry.implementation_path||'').replace(/^\/+/,'');
   if(!rel) return false;
-  for(const base of ['site/public','']){
+  for(const base of ['']){
     const abs=path.join(ROOT,base,rel);
     if(!fs.existsSync(abs)) continue;
     const html=fs.readFileSync(abs,'utf8');

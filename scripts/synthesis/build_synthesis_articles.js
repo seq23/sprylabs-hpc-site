@@ -17,29 +17,8 @@ function title(id) { return String(id || '').split('-').map(w => w.charAt(0).toU
 function esc(s) { return String(s || '').replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c])); }
 function slug(id) { return `synthesis-${id}`; }
 function render(item) { return renderSynthesis(item); }
-function assertPublicRootStaged() {
-  // This script writes rendered pages to ROOT, which is only the public root
-  // while scripts/site_layout/run_with_public_root.mjs has staged it.
-  // workflow:spry-content-release wraps the pipeline, so CI is fine - but the
-  // npm script is exposed directly, and running it unwrapped drops rendered
-  // pages into the repository root as untracked files. The next staged command
-  // then compares those against site/public, finds them different, and aborts
-  // with `public staging collision at root`. Observed: one direct invocation
-  // left 104 stray root files and 4,554 apparent deletions.
-  const stateFile = path.join(ROOT, '.build/site-layout-stage.json');
-  let active = false;
-  try { active = Boolean(JSON.parse(fs.readFileSync(stateFile, 'utf8')).active); } catch { active = false; }
-  if (active) return;
-  console.error('[build:synthesis] refusing to run: the public root is not staged.');
-  console.error('  This writes pages to the repository root, which is only correct inside the');
-  console.error('  site-layout wrapper. Run one of:');
-  console.error('    npm run workflow:spry-content-release        (full guarded release)');
-  console.error('    node scripts/site_layout/run_with_public_root.mjs -- node scripts/synthesis/build_synthesis_articles.js');
-  process.exit(2);
-}
 
 function main() {
-  assertPublicRootStaged();
   const memory = read(MEMORY, { clusters: [] });
   const manifest = read(MANIFEST, { items: [] });
   const admission = read(path.join(ROOT, 'data/content/page_admission_registry.json'), { records: [] });

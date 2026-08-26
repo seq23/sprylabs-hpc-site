@@ -39,8 +39,8 @@ const allowedActions = new Set([
 const pkg = readJson('package.json');
 const packageScripts = pkg.scripts || {};
 const spryReleaseWrapper = String(packageScripts['workflow:spry-content-release'] || '');
-if (!spryReleaseWrapper.includes('run_with_public_root.mjs -- node scripts/authority_scale/run_guarded_release.mjs')) {
-  errors.push('package.json: workflow:spry-content-release must pass appended --mode arguments directly to run_guarded_release.mjs through run_with_public_root.mjs');
+if (!spryReleaseWrapper.includes('node scripts/authority_scale/run_guarded_release.mjs')) {
+  errors.push('package.json: workflow:spry-content-release must pass appended --mode arguments directly to run_guarded_release.mjs');
 }
 if (spryReleaseWrapper.includes('bash -lc')) {
   errors.push('package.json: workflow:spry-content-release must not use bash -lc because appended release-mode arguments are swallowed by shell positional parameters');

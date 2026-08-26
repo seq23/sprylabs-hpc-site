@@ -11,9 +11,10 @@
 # control next to the code rather than in a UI field that can be changed without
 # a commit.
 #
-# site/public is the source of truth for the public site; dist is a byte-
-# identical generated mirror of it. Pages functions are still discovered from
-# functions/ at the repository root.
+# The public site is the repository root, so the deployed directory is assembled
+# by scripts/assemble_pages_output.js rather than published as-is - the root also
+# holds scripts/, data/ and the repo contracts. Pages functions are still
+# discovered from functions/ at the repository root.
 name = "sprylabs-hpc-site"
 compatibility_date = "2026-08-26"
-pages_build_output_dir = "./site/public"
+pages_build_output_dir = "./.pages-output"

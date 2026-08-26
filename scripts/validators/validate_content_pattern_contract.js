@@ -29,23 +29,20 @@ const fs = require('fs');
 const path = require('path');
 
 const REPO = path.resolve(__dirname, '../..');
-// The build stages site/public at the repo root (run_with_public_root.mjs), so
-// resolve whichever layout is current rather than assuming one.
-const ROOT = fs.existsSync(path.join(REPO, 'site/public/index.html'))
-  ? path.join(REPO, 'site/public')
-  : REPO;
+// The public site is the repository root.
+const ROOT = REPO;
 const EVIDENCE = path.join(REPO, 'reports/validation/content-pattern-contract.json');
 const ENFORCEMENT = 'block'; // 'block' | 'report'
 
 // Templates are the source for generated pages, not published surfaces; the
 // admin and agency dashboards are internal tools that answer no search query.
-// When the build stages site/public at the repo root, the walk starts from the
-// repository, so every non-published top-level directory has to be excluded or
-// test fixtures get judged as published pages. coverage/ is deliberately NOT
-// here - build_coverage_map.js publishes coverage/index.html.
+// The walk starts at the repository root, so every non-published top-level
+// directory has to be excluded or test fixtures get judged as published pages.
+// coverage/ is deliberately NOT here - build_coverage_map.js publishes
+// coverage/index.html.
 const SKIP_DIRS = new Set([
   'templates', 'fixtures', 'tests', 'test', 'docs', 'scripts', 'data',
-  'reports', 'artifacts', 'node_modules', '.git', '.github', 'site',
+  'reports', 'artifacts', 'node_modules', '.git', '.github', 'site', 'dist',
 ]);
 const SKIP_FILES = new Set(['admin.html', 'admin/index.html', 'agency/index.html', '404.html']);
 

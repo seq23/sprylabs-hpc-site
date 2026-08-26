@@ -3,7 +3,8 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 
 export const ROOT = process.cwd();
-export const PUBLIC = path.resolve(ROOT, process.env.BHPC_PUBLIC_ROOT || 'site/public');
+// The public site is the repository root.
+export const PUBLIC = path.resolve(ROOT, process.env.BHPC_PUBLIC_ROOT || '.');
 export const OK = 'OK';
 export const DEGRADED = 'DEGRADED';
 export const UNAVAILABLE = 'UNAVAILABLE';

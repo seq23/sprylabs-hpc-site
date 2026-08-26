@@ -1,37 +1,61 @@
 {
   "schema_version": "1.3",
-  "generated_at": "2026-08-15T22:18:59.335Z",
+  "generated_at": "2026-08-26T01:29:15.354Z",
   "status": "PASS",
   "workflow_count": 3,
-  "reviewed_count": 0,
-  "skipped_count": 3,
-  "pass_count": 0,
+  "reviewed_count": 2,
+  "skipped_count": 1,
+  "pass_count": 2,
   "fail_count": 0,
   "warning_count": 0,
   "safe_noise_count": 0,
   "raw_finding_count": 0,
   "aggregated_finding_count": 0,
   "info_count": 3,
-  "governance_fixture_count": 18,
+  "governance_fixture_count": 15,
   "governance_blocker_audit": {
-    "admitted_hard_fail_count": 168,
+    "admitted_hard_fail_count": 169,
     "suggested_review_counts": {
       "REVIEW_REQUIRED": 128,
       "EXISTING_REPAIR_AVAILABLE": 6,
       "TRUE_BLOCKER": 26,
-      "REVIEW_WARNING_BOUNDARY": 8
+      "REVIEW_WARNING_BOUNDARY": 9
     }
   },
   "errors": [],
   "results": [
     {
+      "schema_version": "1.4",
       "workflow_id": "spry-content-release",
-      "status": "SKIP",
+      "run_id": "20260824225035-2403",
+      "generated_at": "2026-08-26T01:29:15.297Z",
+      "status": "PASS",
+      "changed_file_count": 5920,
+      "raw_finding_count": 0,
+      "aggregated_finding_count": 0,
+      "input_count": 723,
+      "output_count": 9847,
+      "finding_summary": {
+        "counts": {
+          "SAFE_NOISE": 0,
+          "WARNING": 0,
+          "SELF_HEALABLE": 0,
+          "ITEM_SKIP": 0,
+          "TRUE_BLOCKER": 0,
+          "INTERNAL_ERROR": 0
+        },
+        "blocking_count": 0,
+        "warning_count": 0,
+        "safe_noise_count": 0,
+        "self_healable_count": 0,
+        "item_skip_count": 0
+      },
+      "findings": [],
       "errors": [],
       "warnings": [],
       "safe_noise": [],
       "info": [
-        "latest trace missing; no historical run available to hostile-review"
+        "programmatic candidate manifest retains 1400 admitted release atom(s) for downstream validation"
       ]
     },
     {
@@ -45,13 +69,37 @@
       ]
     },
     {
+      "schema_version": "1.4",
       "workflow_id": "search-intelligence",
-      "status": "SKIP",
+      "run_id": "20260824225147-2407",
+      "generated_at": "2026-08-26T01:29:15.354Z",
+      "status": "PASS",
+      "changed_file_count": 12,
+      "raw_finding_count": 0,
+      "aggregated_finding_count": 0,
+      "input_count": 2903,
+      "output_count": 5790,
+      "finding_summary": {
+        "counts": {
+          "SAFE_NOISE": 0,
+          "WARNING": 0,
+          "SELF_HEALABLE": 0,
+          "ITEM_SKIP": 0,
+          "TRUE_BLOCKER": 0,
+          "INTERNAL_ERROR": 0
+        },
+        "blocking_count": 0,
+        "warning_count": 0,
+        "safe_noise_count": 0,
+        "self_healable_count": 0,
+        "item_skip_count": 0
+      },
+      "findings": [],
       "errors": [],
       "warnings": [],
       "safe_noise": [],
       "info": [
-        "latest trace missing; no historical run available to hostile-review"
+        "programmatic candidate manifest retains 1400 admitted release atom(s) for downstream validation"
       ]
     }
   ]
