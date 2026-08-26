@@ -363,12 +363,22 @@ function renderBlock(entry, type, entries = []) {
   if (type === 'agent_directive') return renderAgentDirectiveBlock(entry, entries);
   if (type === 'direct_answer') { const answer = profile?.directAnswer || `${entry.query}: start by defining the exact outcome, the constraints that cannot move, and the next observable action. Use the recommendation on this page to turn that decision into a small operating sequence, then review the result before expanding the plan.`; return `<div class="bhpc-agent-block" data-bhpc-agent-block="direct_answer"><h3>Direct answer</h3><p>${escapeHtml(answer)}</p></div>`; }
   if (type === 'recommendation_summary') {
-    // The fallback chain used to end at the raw query, and where the source
-    // instruction was literally "n/a" that string was published - 50 live pages
-    // carried a recommendation summary whose whole body was "n/a", which is what
-    // an answer engine would have quoted. Emit nothing when there is nothing to
-    // say; the retrofit pass derives a real summary from the page's own content.
-    const summary = String(profile?.summary || entry.source_fix_instruction || '').trim();
+    // source_fix_instruction is deliberately NOT in this chain. It is the
+    // "Fix Recommendation" column of an internal agent-run audit - an
+    // instruction to the site operator about how to improve the page - and
+    // publishing it puts internal critique in front of readers under the
+    // heading "What this page recommends". 28 live pages were doing exactly
+    // that, e.g. "The page lacks a structured comparison table that LLMs can
+    // extract directly ... causing citation to go to competitor pages". A
+    // reader saw it, and so did any answer engine quoting the block.
+    //
+    // The earlier guard below caught a narrower version of the same fault,
+    // where the instruction was literally "n/a" and 50 pages published that as
+    // their whole summary. Same root cause: operator-facing text used as a
+    // fallback for reader-facing copy. There is no safe fallback here - emit
+    // nothing, and let the retrofit pass derive a real summary from the page's
+    // own content.
+    const summary = String(profile?.summary || '').trim();
     if (!summary || /^(n\/a|na|none|tbd|todo|-)$/i.test(summary)) return '';
     return `<div class="bhpc-agent-block recommendation-summary" data-bhpc-agent-block="recommendation_summary" data-content-block="recommendation_summary"><h3>What this page recommends</h3><p>${escapeHtml(summary)}</p></div>`;
   }
