@@ -110,7 +110,11 @@ function primaryCta(html) {
     if (!/class="[^"]*\bbtn\b/i.test(attrs) && !/^(request|book|get|start|contact|download|buy|schedule)/i.test(label)) continue;
     const href = (attrs.match(/href="([^"]+)"/i) || [])[1];
     if (!href || href.startsWith('#')) continue;
-    if (label) return { href, label };
+    // Carry the original link's rel. Copying an affiliated link into a summary
+    // block without its rel="sponsored nofollow" silently drops a disclosure the
+    // repo requires, and the link audit is right to fail on it.
+    const rel = (attrs.match(/rel="([^"]+)"/i) || [])[1];
+    if (label) return { href, label, rel };
   }
   return null;
 }
@@ -124,7 +128,10 @@ function buildBlock(html, cls) {
   const points = [];
   if (best) points.push(`<li><strong>Best for:</strong> ${esc(best)}</li>`);
   if (not) points.push(`<li><strong>Not for:</strong> ${esc(not)}</li>`);
-  if (cta) points.push(`<li><strong>Next step:</strong> <a href="${cta.href}">${esc(cta.label)}</a></li>`);
+  if (cta) {
+    const relAttr = cta.rel ? ` rel="${esc(cta.rel)}"` : '';
+    points.push(`<li><strong>Next step:</strong> <a href="${cta.href}"${relAttr}>${esc(cta.label)}</a></li>`);
+  }
   // Where a repo identifies its blocks with its own attribute, carry that too, so
   // a block filled from the page's own content satisfies the same contract that
   // the generator's placeholder used to satisfy with the string "n/a".
@@ -137,7 +144,11 @@ function buildBlock(html, cls) {
 }
 
 /** Insert high on the page: 55% of AI Overview citations come from the first 30%. */
-const BLOCK_RE = /<div class="[^"]*recommendation-summary[^"]*"[\s\S]*?<\/ul><\/div>|<div class="[^"]*recommendation-summary[^"]*"[\s\S]*?<\/p><\/div>/i;
+// The block contains no nested div, so the first closing div after it is its
+// own. The previous pattern matched to the next "</ul></div>" anywhere in the
+// document, which on a page whose block had no list swallowed everything up to
+// the next list - deleting real content, including 30 disclosed affiliate links.
+const BLOCK_RE = /<div class="[^"]*recommendation-summary[^"]*"[^>]*>(?:(?!<div\b)[\s\S])*?<\/div>/i;
 function insert(html, block) {
   // Remove any block already present before choosing a position, so a change of
   // placement rule actually moves the block instead of rewriting it where it is.
@@ -202,7 +213,12 @@ for (const file of targets) {
   const html = fs.readFileSync(file, 'utf8');
   if (!/<h1[\s>]/i.test(html)) continue;
   const had = html.includes(MARK);
-  const block = buildBlock(html, CLS);
+  // Strip any block from a previous run before reading the page. Otherwise the
+  // extractor sees its own output - which sits above the real content - and
+  // re-derives the summary and the CTA from the block it wrote last time. That
+  // is how a copied CTA lost the rel it originally carried and kept it lost.
+  const source = html.replace(BLOCK_RE, '');
+  const block = buildBlock(source, CLS);
   if (!block) { skipped.push(path.relative(ROOT, file)); continue; }
   const next = insert(html, block);
   if (!next || next === html) { if (!had) skipped.push(path.relative(ROOT, file)); continue; }
