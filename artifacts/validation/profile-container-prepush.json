@@ -1,6 +1,6 @@
 {
   "profile": "container-prepush",
-  "started_at": "2026-08-26T21:41:14.401Z",
+  "started_at": "2026-08-26T21:48:01.943Z",
   "steps": [
     {
       "id": "VAL-ORCHESTRATION-CONTRACT",
@@ -155,8 +155,8 @@
     {
       "id": "validate:agent-run",
       "command": "npm run validate:agent-run",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "VAL-EXTRACTION-FINAL-NORMALIZATION",
@@ -167,8 +167,8 @@
     {
       "id": "validate:content-release",
       "command": "npm run validate:content-release",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "validate:citation-velocity-automation",
@@ -460,12 +460,10 @@
     }
   ],
   "status": "FAIL",
-  "failure_count": 3,
+  "failure_count": 1,
   "failures": [
-    "validate:agent-run",
-    "validate:content-release",
     "VAL-FULL-PAGE-AUDIT"
   ],
   "stopped_early_at": null,
-  "finished_at": "2026-08-26T21:44:19.908Z"
+  "finished_at": "2026-08-26T21:51:22.664Z"
 }

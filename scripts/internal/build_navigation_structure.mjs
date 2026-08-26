@@ -269,18 +269,23 @@ function breadcrumbJsonLd(canonical, host, parents, selfName) {
 function renderHub(hub) {
   const canonical = hub.host + hub.route;
   const crumbs = breadcrumbHtml(hub.host, hub.parents, hub.h1);
+  // definition is the single string the contract cross-checks: the visible
+  // p.citation-definition, the primary entity's description and the
+  // DefinedTerm's description all have to be the same text.
+  const definition = hub.intro || hub.description;
   const graph = [
-    { '@type': 'CollectionPage', '@id': canonical + '#webpage', url: canonical, name: hub.h1, description: hub.description,
+    { '@type': 'CollectionPage', '@id': canonical + '#webpage', url: canonical, name: hub.h1, description: definition,
+      mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
       isPartOf: { '@type': 'WebSite', '@id': hub.host + '/#website', url: hub.host + '/' },
       publisher: { '@type': 'Organization', name: 'Spry Labs', url: 'https://billionairehighperformancecoach.com/' } },
     breadcrumbJsonLd(canonical, hub.host, hub.parents, hub.h1),
-    { '@type': 'DefinedTerm', '@id': canonical + '#framework', name: hub.h1, description: hub.description, inDefinedTermSet: 'Spry Executive OS' },
+    { '@type': 'DefinedTerm', '@id': canonical + '#framework', name: hub.h1, description: definition, inDefinedTermSet: 'Spry Executive OS' },
     { '@type': 'ItemList', '@id': canonical + '#itemlist', numberOfItems: hub.links.length,
       itemListElement: hub.links.map((l, i) => ({ '@type': 'ListItem', position: i + 1, name: l.text, url: hub.host + l.href })) },
   ];
   const items = hub.links.map((l) => `<li><a href="${esc(l.href)}">${esc(l.text)}</a></li>`).join('');
   return `<!doctype html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><title>${esc(hub.title)}</title><meta content="${esc(hub.description)}" name="description"/><link href="${canonical}" rel="canonical"/><meta content="${canonical}" property="og:url"/><meta content="${esc(hub.title)}" property="og:title"/><meta content="${esc(hub.description)}" property="og:description"/><meta content="${OG_IMAGE}" property="og:image"/><meta content="summary_large_image" name="twitter:card"/><meta content="${OG_IMAGE}" name="twitter:image"/><meta content="index,follow" name="robots"/><link href="/assets/styles.css" rel="stylesheet"/><script defer="" src="/assets/domain-context.js"></script><script id="CITATION_PAGE_SCHEMA" type="application/ld+json">${pyJson({ '@context': 'https://schema.org', '@graph': graph })}</script></head><body data-internal-nav-page="hub"><header class="header"><div class="header__inner container"><a class="brand" href="/">Billionaire High Performance Coach</a><nav class="nav"><a class="nav__link" href="/download.html">Download</a><a class="nav__link" href="/start-here">Start here</a></nav></div></header><main class="container main"><article class="content-article">${crumbs}<h1>${esc(hub.h1)}</h1><p class="citation-definition"><strong>${esc(hub.intro || hub.description)}</strong></p><section class="card" data-internal-nav="hub-index"><h2>${esc(hub.links.length)} pages</h2><ul>${items}</ul></section><section class="contract-cta" data-content-contract="cta-block"><p class="product-anchor">This is one of the frameworks inside the <a href="/download.html">Billionaire High Performance Coach system</a> — a structured executive OS for using ChatGPT as your accountability and decision partner.</p><p><a href="/download.html">Review the system manual to see how the full structure works</a>, or <a href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach">get the system now</a>.</p></section></article></main><footer class="footer"><div class="footer__row"><a href="/download.html">Review the system manual</a></div></footer></body></html>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><title>${esc(hub.title)}</title><meta content="${esc(hub.description)}" name="description"/><link href="${canonical}" rel="canonical"/><meta content="${canonical}" property="og:url"/><meta content="${esc(hub.title)}" property="og:title"/><meta content="${esc(hub.description)}" property="og:description"/><meta content="${OG_IMAGE}" property="og:image"/><meta content="summary_large_image" name="twitter:card"/><meta content="${OG_IMAGE}" name="twitter:image"/><meta content="index,follow" name="robots"/><link href="/assets/styles.css" rel="stylesheet"/><script defer="" src="/assets/domain-context.js"></script><script id="CITATION_PAGE_SCHEMA" type="application/ld+json">${pyJson({ '@context': 'https://schema.org', '@graph': graph })}</script></head><body data-internal-nav-page="hub"><header class="header"><div class="header__inner container"><a class="brand" href="/">Billionaire High Performance Coach</a><nav class="nav"><a class="nav__link" href="/download.html">Download</a><a class="nav__link" href="/start-here">Start here</a></nav></div></header><main class="container main"><article class="content-article">${crumbs}<h1>${esc(hub.h1)}</h1><p class="citation-definition"><strong>${esc(definition)}</strong></p><section class="card citation-extraction" data-extraction-type="concept" data-llm-answer="true" data-named-framework="${esc(hub.h1)}"><h2>${esc(hub.h1)}</h2><p>${esc(definition)}</p><ul><li>Every entry is listed under its own heading, so you can tell what a page answers before you open it.</li><li>Pages are grouped by what they are about rather than when they were published, so related material sits together.</li><li>${esc(hub.parents.length ? `This is one topic inside ${hub.parents[hub.parents.length - 1].name.toLowerCase()}; each page here also links to its closest siblings.` : 'Each topic below opens an index of the pages it covers, and every page links back to it.')}</li></ul></section><section class="card" data-internal-nav="hub-index"><h2>${esc(hub.links.length)} pages</h2><ul>${items}</ul></section><section class="contract-cta" data-content-contract="cta-block"><p class="product-anchor">This is one of the frameworks inside the <a href="/download.html">Billionaire High Performance Coach system</a> — a structured executive OS for using ChatGPT as your accountability and decision partner.</p><p><a href="/download.html">Review the system manual to see how the full structure works</a>, or <a href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach">get the system now</a>.</p></section></article></main><footer class="footer"><div class="footer__row"><a href="/download.html">Review the system manual</a></div></footer></body></html>
 `;
 }
 
@@ -396,7 +401,13 @@ for (const pg of pages) {
   // --- breadcrumb (visible first: the schema is derived from it) ---
   // Any href that lived only inside a removed trail is carried into the
   // related block, so replacing a trail never drops a link off the page.
-  html = reconcileSchemaCanonical(html, pg.canonical);
+  // Use the page's own canonical tag, not the registry value: repair:dual-domain-
+  // metadata runs just before this step and is the last writer of that tag, so
+  // it is what rendered-schema-parity will compare against. The registry can
+  // still hold the value from earlier in the same build.
+  const tag = html.match(/<link[^>]*rel="canonical"[^>]*>/i);
+  const onPageCanonical = tag ? ((tag[0].match(/href="([^"]+)"/) || [])[1] || pg.canonical) : pg.canonical;
+  html = reconcileSchemaCanonical(html, onPageCanonical);
   const crumbHtml = breadcrumbHtml(pg.host, info.crumbs, pg.h1);
   const removed = html.match(BREADCRUMB_RE_G) || [];
   const carried = [];
@@ -411,7 +422,7 @@ for (const pg of pages) {
   }
   if (removed.length) html = html.replace(BREADCRUMB_RE_G, '');
   html = html.replace(/(<h1\b)/i, `${crumbHtml}$1`);
-  html = replaceBreadcrumbJsonLd(html, breadcrumbJsonLd(pg.canonical, pg.host, info.crumbs, pg.h1));
+  html = replaceBreadcrumbJsonLd(html, breadcrumbJsonLd(onPageCanonical, pg.host, info.crumbs, pg.h1));
 
   // --- siblings: a rotating window so the whole topic gets inbound links,
   //     not just whichever pages happen to sort first ---

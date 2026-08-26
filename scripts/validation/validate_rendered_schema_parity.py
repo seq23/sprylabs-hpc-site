@@ -92,7 +92,7 @@ for rec in pages:
     definition=soup.select_one('p.citation-definition > strong')
     deftext=norm(definition.get_text(' ',strip=True)) if definition else ''
     can=soup.select_one('link[rel="canonical"]'); canonical=can.get('href','') if can else ''
-    primary=next((x for x in graph if x.get('@type') in ('Article','BlogPosting','WebPage')),None)
+    primary=next((x for x in graph if x.get('@type') in ('Article','BlogPosting','WebPage','CollectionPage')),None)
     if not primary: fail(rel,'primary Article/BlogPosting/WebPage entity missing')
     else:
         if norm(primary.get('headline') or primary.get('name'))!=h1text: fail(rel,'schema headline/name does not match visible H1')
