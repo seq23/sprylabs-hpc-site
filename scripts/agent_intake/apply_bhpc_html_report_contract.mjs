@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
+import { createRequire } from 'node:module';
+const requireCjs = createRequire(import.meta.url);
+const { routeFor: sharedRouteFor } = requireCjs('../lib/dual_domain_policy.cjs');
 
 const ROOT = process.cwd();
 const REPORT_ROOT = path.join(ROOT, 'data/report_fixes/agent_runs');
@@ -44,9 +47,10 @@ function extractLisAfter(html, marker, endMarker){
     return {title: stripTags(b ? b[1] : m[1]), text: stripTags(m[1])};
   });
 }
+// Route form is the shared dual-domain contract: the URL that answers 200
+// without a redirect hop. See scripts/lib/dual_domain_policy.cjs.
 function canonicalFor(rel, domain){
-  const route = '/' + rel.replace(/index\.html$/,'').replace(/\.html$/,'.html');
-  return `https://${domain}${route}`;
+  return `https://${domain}${sharedRouteFor(rel)}`;
 }
 function specFor(title, cluster, source){
   const slug = slugify(title);

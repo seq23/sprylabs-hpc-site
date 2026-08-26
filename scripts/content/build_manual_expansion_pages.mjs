@@ -2,6 +2,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
+const requireCjs = createRequire(import.meta.url);
+const { routeFor: sharedRouteFor } = requireCjs('../lib/dual_domain_policy.cjs');
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const SPEC_PATH = path.join(ROOT, 'data/content/manual_expansion_pages.json');
@@ -23,8 +26,10 @@ for (const item of priorityQueryPayload.items || []) {
 function esc(value='') {
   return String(value).replace(/[&<>"']/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 }
+// Route form is the shared dual-domain contract: the URL that answers 200
+// without a redirect hop. See scripts/lib/dual_domain_policy.cjs.
 function routeFor(filePath) {
-  return '/' + filePath.replace(/index\.html$/, '').replace(/\.html$/, '.html');
+  return sharedRouteFor(filePath);
 }
 function canonicalFor(page) {
   return `https://${page.domain}${routeFor(page.path)}`;

@@ -5,6 +5,8 @@ import json, re, sys
 from pathlib import Path
 from urllib.parse import urlparse
 sys.dont_write_bytecode=True
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'lib'))
+from route_policy import route_for  # noqa: E402
 VENDOR=Path(__file__).resolve().parents[1]/'_vendor'
 if VENDOR.is_dir(): sys.path.insert(0,str(VENDOR))
 from bs4 import BeautifulSoup
@@ -33,8 +35,7 @@ def main_unique_text(soup):
     return ' '.join(chunks)
 
 def expected_canonical(page):
-    route='/' + re.sub(r'index\.html$','',page['path'])
-    return f"https://{page['domain']}{route}"
+    return f"https://{page['domain']}{route_for(page['path'])}"
 
 def fail(path,msg): errors.append(f'{path}: {msg}')
 

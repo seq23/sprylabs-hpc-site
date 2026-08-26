@@ -9,18 +9,21 @@ function parseLocs(xml) { return [...xml.matchAll(/<loc>(.*?)<\/loc>/g)].map(m =
 const spryUrls = parseLocs(read('sitemap-spry.xml'));
 const bhpcUrls = parseLocs(read('sitemap-bhpc.xml'));
 const allUrls = Array.from(new Set([...spryUrls, ...bhpcUrls]));
+// Canonical (200-serving) forms. /download.html is the one route that keeps
+// its extension: download.html is the frozen revenue surface, so its on-page
+// canonical - and therefore its sitemap entry - still names the .html form.
 const highValueOrder = [
   'https://spryexecutiveos.com/',
-  'https://spryexecutiveos.com/atlas.html',
-  'https://spryexecutiveos.com/start-here.html',
-  'https://spryexecutiveos.com/faq.html',
-  'https://spryexecutiveos.com/work-with-spry.html',
+  'https://spryexecutiveos.com/atlas',
+  'https://spryexecutiveos.com/start-here',
+  'https://spryexecutiveos.com/faq',
+  'https://spryexecutiveos.com/work-with-spry',
   'https://billionairehighperformancecoach.com/',
   'https://billionairehighperformancecoach.com/download.html',
-  'https://billionairehighperformancecoach.com/product.html',
-  'https://billionairehighperformancecoach.com/faq.html',
-  'https://billionairehighperformancecoach.com/what-is-this-system.html',
-  'https://billionairehighperformancecoach.com/what-is-an-ai-executive-coach.html'
+  'https://billionairehighperformancecoach.com/product',
+  'https://billionairehighperformancecoach.com/faq',
+  'https://billionairehighperformancecoach.com/what-is-this-system',
+  'https://billionairehighperformancecoach.com/what-is-an-ai-executive-coach'
 ];
 function pickByIncludes(urls, includes, limit) {
   const out = [];

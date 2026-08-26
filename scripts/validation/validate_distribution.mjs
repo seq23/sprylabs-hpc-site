@@ -3,7 +3,9 @@ import {readJson,fail,pass,writeSummary} from './common.mjs';
 const pages=readJson('data/citation/citable_pages.json').pages.filter(x=>x.status==='ACTIVE');
 const queries=readJson('data/citation/query_registry.json').queries;
 const llms=fs.readFileSync('llms.txt','utf8'); const answers=JSON.parse(fs.readFileSync('answers.json','utf8'));
-const maps={spry:fs.readFileSync('sitemap.xml','utf8'),bhpc:fs.existsSync('sitemap-bhpc.xml')?fs.readFileSync('sitemap-bhpc.xml','utf8'):''};
+// Each host is checked against its own sitemap. sitemap.xml is the
+// host-neutral index and holds no page URLs of its own.
+const maps={spry:fs.readFileSync('sitemap-spry.xml','utf8'),bhpc:fs.existsSync('sitemap-bhpc.xml')?fs.readFileSync('sitemap-bhpc.xml','utf8'):''};
 const errors=[];
 for(const p of pages){
  if(!llms.includes(p.canonical_url)) errors.push(`llms.txt missing ${p.canonical_url}`);

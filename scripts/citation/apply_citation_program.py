@@ -9,6 +9,9 @@ VENDOR_DIR = Path(__file__).resolve().parents[1] / "_vendor"
 if VENDOR_DIR.is_dir():
     sys.path.insert(0, str(VENDOR_DIR))
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "lib"))
+from route_policy import route_for  # noqa: E402
+
 from bs4 import BeautifulSoup, Comment, NavigableString, Tag
 from extraction_contract import extract_article_steps, extract_scope_procedure_candidates, validate_extraction
 
@@ -313,9 +316,7 @@ MANUAL_REDIRECTS = load_manual_redirects()
 
 def canonical_for(path: str) -> str:
     if path in MANUAL_PAGES:
-        host = f"https://{MANUAL_PAGES[path]['domain']}/"
-        route=path[:-len("index.html")] if path.endswith("/index.html") else path
-        return host + route
+        return f"https://{MANUAL_PAGES[path]['domain']}" + route_for(path)
     spry_prefixes=("insights/","continuity-collapse-pattern/","how-to-stay-consistent/","atlas.html","pillars/","topics/","models/","answers/","clusters/","whitepapers/","coverage/","reports/","ai-execution-atlas/")
     if path.startswith("comparisons/bhpc-vs-"):
         host="https://billionairehighperformancecoach.com/"
@@ -323,8 +324,7 @@ def canonical_for(path: str) -> str:
         host="https://spryexecutiveos.com/"
     else:
         host="https://billionairehighperformancecoach.com/"
-    route=path[:-len("index.html")] if path.endswith("/index.html") else path
-    return host + route
+    return host.rstrip("/") + route_for(path)
 
 def ensure_meta(soup: BeautifulSoup, h1: str, definition: str, canonical: str):
     head=soup.head or soup
@@ -1251,21 +1251,33 @@ def update_discovery(pages,queries,frameworks):
         if current.get("required_representative_dimensions"):
             payload["required_representative_dimensions"]=current["required_representative_dimensions"]
         critical_path.write_text(json.dumps(payload,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
-    # sitemaps: preserve existing URLs, remove retired routes, and add active canonicals
-    for name,domain in [("sitemap.xml",None),("sitemap-spry.xml","spryexecutiveos.com"),("sitemap-bhpc.xml","billionairehighperformancecoach.com")]:
+    # Sitemaps are rebuilt from the active canonical set rather than unioned with
+    # whatever the file already held. The union kept every superseded URL alive
+    # forever, which is how the .html forms stayed in the sitemap after they
+    # started 301-ing; a sitemap that advertises redirects is what Bing files
+    # under "URLs redirecting" and drops.
+    for name,domain in [("sitemap-spry.xml","spryexecutiveos.com"),("sitemap-bhpc.xml","billionairehighperformancecoach.com")]:
         fp=ROOT/name
         if not fp.exists(): continue
-        text=fp.read_text(encoding="utf-8")
-        urls=set(re.findall(r"<loc>(.*?)</loc>",text))
-        retired={f"https://{item['domain']}/" + (path[:-len('index.html')] if path.endswith('/index.html') else path) for path,item in MANUAL_REDIRECTS.items()}
-        urls.difference_update(retired)
-        if name == "sitemap.xml":
-            urls.update(["https://billionairehighperformancecoach.com/sitemap-bhpc.xml", "https://spryexecutiveos.com/sitemap-spry.xml"])
-            urls.update(p["canonical_url"] for p in active)
-        else:
-            urls.update(p["canonical_url"] for p in active if p["canonical_domain"].lower()==domain)
+        urls={p["canonical_url"] for p in active if p["canonical_domain"].lower()==domain}
+        if domain=="spryexecutiveos.com":
+            urls.add("https://spryexecutiveos.com/knowledge-map/")
         xml='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+"\n".join(f'  <url><loc>{u}</loc><lastmod>{TODAY}</lastmod></url>' for u in sorted(urls))+"\n</urlset>\n"
         fp.write_text(xml,encoding="utf-8")
+    # One Pages deployment answers both hosts, so /sitemap.xml is served on both.
+    # It has to be a host-neutral sitemap index: a urlset here would hand one
+    # host a file full of the other host's URLs, which is rejected wholesale.
+    root_map=ROOT/"sitemap.xml"
+    if root_map.exists():
+        existing=root_map.read_text(encoding="utf-8")
+        comments="\n".join(line for line in existing.splitlines() if "priority-coverage" in line)
+        lines=['<?xml version="1.0" encoding="UTF-8"?>',
+               '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+               f'  <sitemap><loc>https://billionairehighperformancecoach.com/sitemap-bhpc.xml</loc><lastmod>{TODAY}</lastmod></sitemap>',
+               f'  <sitemap><loc>https://spryexecutiveos.com/sitemap-spry.xml</loc><lastmod>{TODAY}</lastmod></sitemap>']
+        if comments: lines.append(comments)
+        lines.append('</sitemapindex>')
+        root_map.write_text("\n".join(lines)+"\n",encoding="utf-8")
     browser_contract=ROOT/"config/validation/browser_suite_contract.json"
     if browser_contract.exists():
         contract=json.loads(browser_contract.read_text(encoding="utf-8"))

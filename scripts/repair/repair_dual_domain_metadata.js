@@ -6,6 +6,13 @@ const { routeFor, hostFor } = require('../lib/dual_domain_policy.cjs');
 
 const root = process.cwd();
 const skipDirs = new Set(['.git','.pages-output', 'node_modules','_ops','templates','docs']);
+// download.html is the revenue surface and its bytes are frozen at a known hash
+// (data/release/frozen_output_registry.json). This walker used to be harmless
+// here only by accident: routeFor kept the .html form, so the canonical it
+// computed already matched the file. Now that the route contract is
+// extensionless, an unguarded pass would rewrite the frozen page. Skip it
+// explicitly rather than relying on the computed value happening to match.
+const protectedFiles = new Set(['download.html']);
 const publishedManifestPath = path.join(root, 'data/reddit/published_manifest.json');
 const publishedManifest = fs.existsSync(publishedManifestPath) ? JSON.parse(fs.readFileSync(publishedManifestPath, 'utf8')) : { items: [] };
 const publishedHostOverrides = new Map((publishedManifest.items || []).map((item) => [item.route, item.canonical_host]));
@@ -16,6 +23,7 @@ function walk(dir, out=[]) {
     const full=path.join(dir,entry.name);
     const rel=path.relative(root,full).replace(/\\/g,'/');
     if (rel.startsWith('data/report_fixes/agent_runs/')) continue;
+    if (protectedFiles.has(rel)) continue;
     if (entry.isDirectory()) walk(full,out);
     else if (entry.name.endsWith('.html')) out.push(full);
   }

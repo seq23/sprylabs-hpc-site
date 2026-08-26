@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
+import { createRequire } from 'node:module';
+const requireCjs = createRequire(import.meta.url);
+const { routeFor: sharedRouteFor } = requireCjs('../lib/dual_domain_policy.cjs');
 
 const ROOT = process.cwd();
 const GENERATED_SOURCE = 'aplayer_phase_expansion_2000_baseline';
@@ -31,8 +34,10 @@ function titleCase(value='') {
     return w.charAt(0).toUpperCase() + w.slice(1);
   }).join(' ').replace(/\bChatgpt\b/g,'ChatGPT').replace(/\bA-player\b/g,'A-player');
 }
+// Route form is the shared dual-domain contract: the URL that answers 200
+// without a redirect hop. See scripts/lib/dual_domain_policy.cjs.
 function routeFor(rel) {
-  return '/' + rel.replace(/index\.html$/,'').replace(/\.html$/,'.html');
+  return sharedRouteFor(rel);
 }
 function canonicalFor(rel) {
   return `https://${DOMAIN}${routeFor(rel)}`;
@@ -474,6 +479,12 @@ function updateSitemapsAndLlms() {
   const spryWithKnowledgeMap = Array.from(new Set([...spry, 'https://spryexecutiveos.com/knowledge-map/'])).sort();
   fs.writeFileSync('sitemap-bhpc.xml', xml(bhpc));
   fs.writeFileSync('sitemap-spry.xml', xml(spryWithKnowledgeMap));
+  // One Pages deployment answers both hosts, so /sitemap.xml is served on both.
+  // It used to be a copy of the spry urlset, which meant anything that
+  // auto-discovered /sitemap.xml on billionairehighperformancecoach.com was
+  // handed 1,211 URLs for a different host and had to reject the whole file.
+  // A sitemap index is host-neutral: each crawler follows the child sitemap
+  // that belongs to the host it is on and ignores the other one.
   const indexPriority = readJson('data/index_priority.json', {classes:{}});
   const priorityCoverageComments = Array.from(new Set([
     ...Object.values(indexPriority.classes || {}).flat(),
@@ -482,7 +493,16 @@ function updateSitemapsAndLlms() {
     .filter(Boolean)
     .map(u => `  <!-- priority-coverage ${u} -->`)
     .join('\n');
-  fs.writeFileSync('sitemap.xml', xml(spryWithKnowledgeMap).replace('</urlset>', `${priorityCoverageComments}\n  <!-- https://billionairehighperformancecoach.com/sitemap-bhpc.xml -->\n  <!-- https://spryexecutiveos.com/sitemap-spry.xml -->\n</urlset>`));
+  const sitemapIndex = [
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+    `  <sitemap><loc>https://billionairehighperformancecoach.com/sitemap-bhpc.xml</loc><lastmod>${TODAY}</lastmod></sitemap>`,
+    `  <sitemap><loc>https://spryexecutiveos.com/sitemap-spry.xml</loc><lastmod>${TODAY}</lastmod></sitemap>`,
+    priorityCoverageComments,
+    '</sitemapindex>',
+    ''
+  ].join('\n');
+  fs.writeFileSync('sitemap.xml', sitemapIndex);
   const queries = readJson('data/citation/query_registry.json',{queries:[]}).queries.filter(q=>q.release_status === 'ACTIVE');
   const pagesByPath = new Map(citable.map(p=>[p.path,p]));
   const llms = ['# Billionaire High Performance Coach / Spry Executive OS', '', '## Citation-ready questions and pages'];

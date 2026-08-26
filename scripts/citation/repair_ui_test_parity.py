@@ -6,10 +6,8 @@ from pathlib import Path
 sys.dont_write_bytecode=True
 ROOT=Path.cwd()
 
-def route_for(path):
-    if path=='index.html': return '/'
-    if path.endswith('/index.html'): return '/' + path[:-len('/index.html')] + '/'
-    return '/' + path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'lib'))
+from route_policy import route_for  # noqa: E402
 
 def canonical_for(rec):
     if rec.get('canonical_url'): return rec['canonical_url']

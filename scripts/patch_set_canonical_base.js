@@ -4,6 +4,8 @@
 const fs = require('fs');
 const path = require('path');
 
+const { routeFor: sharedRouteFor } = require('./lib/dual_domain_policy.cjs');
+
 const ROOT = path.resolve(__dirname, '..');
 const BASE = 'https://spryexecutiveos.com';
 
@@ -31,10 +33,10 @@ function listHtml(dir) {
   return out;
 }
 
+// Route form is the shared dual-domain contract: the URL that answers 200
+// without a redirect hop. See scripts/lib/dual_domain_policy.cjs.
 function routeFor(filePath) {
-  const rel = path.relative(ROOT, filePath).split(path.sep).join('/');
-  if (rel === 'index.html') return '/';
-  return '/' + rel;
+  return sharedRouteFor(path.relative(ROOT, filePath).split(path.sep).join('/'));
 }
 
 function patchFile(fp) {

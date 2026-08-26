@@ -2,6 +2,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { createRequire } from 'node:module';
+const requireCjs = createRequire(import.meta.url);
+const { routeFor: sharedRouteFor } = requireCjs('../lib/dual_domain_policy.cjs');
 
 const ROOT = process.cwd();
 const TODAY = new Date().toISOString().slice(0, 10);
@@ -50,7 +53,9 @@ function titleCase(value='') {
   }).join(' ').replace(/\bChatgpt\b/g, 'ChatGPT').replace(/\bA-player\b/gi, 'A-player');
 }
 function words(s='') { return String(s).match(/\b[\w’'-]+\b/g) || []; }
-function routeFor(rel) { return '/' + rel.replace(/index\.html$/, '').replace(/\.html$/, '.html'); }
+// Route form is the shared dual-domain contract: the URL that answers 200
+// without a redirect hop. See scripts/lib/dual_domain_policy.cjs.
+function routeFor(rel) { return sharedRouteFor(rel); }
 function canonicalFor(rel) { return `https://${DOMAIN}${routeFor(rel)}`; }
 function hash(value) { return crypto.createHash('sha256').update(value).digest('hex').slice(0, 16); }
 function htmlFiles(dir=ROOT, out=[]) {
