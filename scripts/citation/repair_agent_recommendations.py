@@ -128,6 +128,12 @@ def repair_item(item):
     if item.get('required_bold_heading'): ensure_bold_heading(soup,main,item['required_bold_heading'])
     if item.get('query'): ensure_product_anchor(soup,main)
     new=str(soup)
+    # download.html is the revenue surface and sits at the revenue_surface tier
+    # of the protected baseline. Reserializing it through BeautifulSoup changes
+    # its hash without changing a word, which trips validate:ownership on a page
+    # nobody intended to edit.
+    if str(fp.resolve().name)=='download.html' and fp.resolve().parent==ROOT.resolve():
+        return False
     if new!=raw:
         fp.write_text(new,encoding='utf-8')
         return True
