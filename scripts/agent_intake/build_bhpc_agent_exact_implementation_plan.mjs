@@ -72,14 +72,36 @@ for(const entry of activeEntries){
   if(!groups.has(key)) groups.set(key,[]);
   groups.get(key).push(entry);
 }
-function pageSpecFor(entries){
+const VALID_EXTRACTION_TYPES=new Set(['concept','howto','comparison','decision']);
+function existingExtractionType(rel){
+  if(!rel) return '';
+  try{
+    const m=fs.readFileSync(path.join(ROOT,rel),'utf8').match(/data-extraction-type="([^"]+)"/i);
+    const found=((m&&m[1])||'').toLowerCase();
+    return VALID_EXTRACTION_TYPES.has(found)?found:'';
+  }catch{return ''}
+}
+// A page that already exists and carries no agent ownership marker was not created
+// by this pipeline, so planning it as CREATE_NEW_TARGET_PAGE is a contradiction:
+// the create-only contract then demands an ownership marker the page cannot
+// honestly carry, and fails the release for it on every run.
+function preexistingForeignPage(rel){
+  try{
+    return !fs.readFileSync(path.join(ROOT,rel),'utf8').includes('data-bhpc-agent-generated-page="true"');
+  }catch{return false}
+}
+
+function pageSpecFor(entries,primaryPath=''){
   const primary=entries.find(e=>e.seo_execution_status==='VALID')||entries[0];
   const blockTypes=unique(entries.flatMap(e=>e.required_block_types||[]));
   const heading=primary.required_heading||primary.query;
   return {
     h1:primary.query,
     framework:heading,
-    type:blockTypes.includes('comparison_table')?'comparison':'concept',
+    // The site publishes four extraction types (concept, howto, comparison,
+    // decision). Choosing only between comparison and concept made the plan
+    // demand that an existing how-to page be reshaped into a concept page.
+    type:existingExtractionType(primaryPath)||(blockTypes.includes('comparison_table')?'comparison':'concept'),
     definition:bhpcGeneratedCitationDefinition(primary.query),
     body:`<section data-bhpc-agent-record="${primary.record_id}" data-bhpc-agent-semantic="true"><h2>${heading}</h2></section>`,
     agent_acceptance:{
@@ -93,8 +115,14 @@ for(const [pathValue,entries] of groups){
   const primary=entries.find(e=>e.seo_execution_status==='VALID')||entries[0];
   const createIntent=entries.some(e=>e.source_intent_operation==='CREATE_NEW_TARGET_PAGE'&&!e.intended_winner_page&&!e.intended_winner_path);
   const repairIntent=entries.some(e=>e.source_intent_operation==='REPAIR_INTENDED_WINNER_PAGE'||e.operation==='REPAIR_INTENDED_WINNER_PAGE');
-  const operation=createIntent&&!repairIntent?'CREATE_NEW_TARGET_PAGE':(primary.page_family==='intended_winner_repair'||repairIntent?'REPAIR_INTENDED_WINNER_PAGE':'CREATE_NEW_TARGET_PAGE');
-  const spec=pageSpecFor(entries);
+  const wantsCreate=createIntent&&!repairIntent;
+  // Repairing an intended winner that already exists is a repair, even when the
+  // source intent said create. Planning it as a create makes the create-only
+  // contract demand an agent ownership marker the page cannot honestly carry.
+  const isRepair=(!wantsCreate&&(primary.page_family==='intended_winner_repair'||repairIntent))
+    ||(primary.page_family==='intended_winner_repair'&&preexistingForeignPage(pathValue));
+  const operation=isRepair?'REPAIR_INTENDED_WINNER_PAGE':'CREATE_NEW_TARGET_PAGE';
+  const spec=pageSpecFor(entries,pathValue);
   if(operation==='REPAIR_INTENDED_WINNER_PAGE') priority_pages[pathValue]=spec; else new_pages[pathValue]=spec;
   specs.push({
     record_id:primary.record_id,record_ids:unique(entries.map(e=>e.record_id)),acceptance_ids:unique(entries.map(e=>e.id)),query:primary.query,run_date:primary.run_date,

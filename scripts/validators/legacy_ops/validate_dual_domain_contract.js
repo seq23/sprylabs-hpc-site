@@ -156,6 +156,15 @@ for (const file of htmlFiles) {
     continue;
   }
   if (!html.includes('/assets/domain-context.js')) errors.push(`${rel}: missing domain-context.js include`);
+  // The 404 surface is public but deliberately noindex, and it is not a route:
+  // it answers for every address that does not exist. Canonical, og:url and a
+  // social image describe a page being shared, which this one never is. It still
+  // owes noindex and the domain-context include above, because this tree serves
+  // two domains and a 404 branded as the wrong site is still the wrong site.
+  if (rel === '404.html') {
+    if (!hasNoindex(html)) errors.push(`${rel}: error surface must declare noindex`);
+    continue;
+  }
   if (/Sequoia Taylor/.test(html)) errors.push(`${rel}: founder naming regression uses Sequoia Taylor`);
   if (founderPages.has(rel) && !html.includes('>personal website<')) errors.push(`${rel}: missing exact personal website anchor`);
   if (minWordChecks.has(rel)) {

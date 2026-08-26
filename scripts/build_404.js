@@ -80,6 +80,10 @@ ${styles}
     <p><a class="nf-home" href="/">Return to ${esc(siteName)}</a></p>
   </main>
 ${footer}
+  <!-- This tree is served on two domains; domain-context.js swaps branding to
+       match the host, and validate_dual_domain_contract requires it on every
+       page. A 404 that brands as the wrong site is still the wrong site. -->
+  <script defer src="/assets/domain-context.js"></script>
   <script type="application/ld+json">${JSON.stringify({
     "@context": "https://schema.org",
     "@type": "WebPage",

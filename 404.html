@@ -71,6 +71,10 @@
 <p>© 2026 Spry Labs. All rights reserved.</p>
 </div>
 </footer>
+  <!-- This tree is served on two domains; domain-context.js swaps branding to
+       match the host, and validate_dual_domain_contract requires it on every
+       page. A 404 that brands as the wrong site is still the wrong site. -->
+  <script defer src="/assets/domain-context.js"></script>
   <script type="application/ld+json">{
   "@context": "https://schema.org",
   "@type": "WebPage",
