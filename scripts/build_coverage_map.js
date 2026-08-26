@@ -17,6 +17,7 @@ const CLUSTERS_PATH = path.join(ROOT, "content", "insights", "_clusters.json");
 const OUT_DIR = path.join(ROOT, "coverage");
 const OUT_JSON = path.join(OUT_DIR, "coverage.json");
 const OUT_HTML = path.join(OUT_DIR, "index.html");
+const ROOT_PUBLIC_JSON = path.join(ROOT, "coverage.json");
 const ADMIN_COVERAGE_JSON = path.join(ROOT, "data", "admin", "coverage_operations.json");
 const COVERAGE_URL = "https://spryexecutiveos.com/coverage/";
 const OG_IMAGE = "https://spryexecutiveos.com/assets/img/bhpc-hero-square.png";
@@ -459,11 +460,20 @@ function main() {
   }
 
   ensureDir(path.dirname(ADMIN_COVERAGE_JSON));
+  const publicReport = publicCoverageReport(report);
   fs.writeFileSync(ADMIN_COVERAGE_JSON, JSON.stringify(report, null, 2) + "\n", "utf8");
-  fs.writeFileSync(OUT_JSON, JSON.stringify(publicCoverageReport(report), null, 2) + "\n", "utf8");
+  fs.writeFileSync(OUT_JSON, JSON.stringify(publicReport, null, 2) + "\n", "utf8");
   fs.writeFileSync(OUT_HTML, renderHtml(report), "utf8");
+  // /coverage.json is a machine-readability artifact (validate_machine_readability_contract
+  // requires it beside llms.txt and answers.json), so it is public and must carry the
+  // SANITIZED report. It previously held the full report - including draft counts and the
+  // forward publishing runway - and was served at the site root, which is the operational
+  // leak the 2026-07-10 coverage route repair set out to close. The generator stopped
+  // writing it then, so the leaking copy simply went stale in git and kept deploying.
+  fs.writeFileSync(ROOT_PUBLIC_JSON, JSON.stringify(publicReport, null, 2) + "\n", "utf8");
   console.log(`Wrote ${path.relative(ROOT, ADMIN_COVERAGE_JSON)}`);
   console.log(`Wrote ${path.relative(ROOT, OUT_JSON)}`);
+  console.log(`Wrote ${path.relative(ROOT, ROOT_PUBLIC_JSON)}`);
   console.log(`Wrote ${path.relative(ROOT, OUT_HTML)}`);
 }
 
