@@ -1,0 +1,19 @@
+# Cloudflare Pages build configuration.
+#
+# This project had no build command and no build output directory set, so Pages
+# auto-detected the output. Setting the dashboard "build output directory" to
+# site/public did the opposite of what it looks like it does: with no build
+# command, Pages fell back to publishing the repository root, and
+# spryexecutiveos.com began serving package.json, AGENTS.md and scripts/.
+#
+# pages_build_output_dir is read from the repository and takes precedence over
+# the dashboard setting, so the deployed directory is now declared in version
+# control next to the code rather than in a UI field that can be changed without
+# a commit.
+#
+# site/public is the source of truth for the public site; dist is a byte-
+# identical generated mirror of it. Pages functions are still discovered from
+# functions/ at the repository root.
+name = "sprylabs-hpc-site"
+compatibility_date = "2026-08-26"
+pages_build_output_dir = "./site/public"
