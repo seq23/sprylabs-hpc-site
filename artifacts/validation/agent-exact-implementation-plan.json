@@ -1,19 +1,141 @@
 {
   "schema_version": "1.1",
   "status": "PASS",
-  "generated_at": "2026-08-25T21:51:54.745Z",
+  "generated_at": "2026-08-26T00:49:50.215Z",
   "active_run_date": "2026-08-22",
   "acceptance_manifest_path": "data/report_fixes/agent_acceptance_manifest.generated.json",
   "policy_path": "data/report_fixes/agent_exact_implementation_policy.json",
-  "repair_count": 15,
+  "repair_count": 17,
   "new_page_count": 2,
-  "blocked_count": 36,
+  "blocked_count": 0,
   "no_action_count": 4,
   "acceptance_entry_count": 913,
   "active_acceptance_entry_count": 194,
-  "required_acceptance_entry_count": 154,
+  "required_acceptance_entry_count": 190,
   "historical_entry_count": 719,
   "specs": [
+    {
+      "record_id": "2026-08-22-bhpc-038",
+      "record_ids": [
+        "2026-08-22-bhpc-001",
+        "2026-08-22-bhpc-002",
+        "2026-08-22-bhpc-003",
+        "2026-08-22-bhpc-004",
+        "2026-08-22-bhpc-005",
+        "2026-08-22-bhpc-006",
+        "2026-08-22-bhpc-007",
+        "2026-08-22-bhpc-008",
+        "2026-08-22-bhpc-023",
+        "2026-08-22-bhpc-024",
+        "2026-08-22-bhpc-037",
+        "2026-08-22-bhpc-038",
+        "2026-08-22-bhpc-041",
+        "2026-08-22-bhpc-043",
+        "2026-08-22-bhpc-044",
+        "2026-08-22-bhpc-045",
+        "2026-08-22-bhpc-046",
+        "2026-08-22-bhpc-047",
+        "2026-08-22-bhpc-048",
+        "2026-08-22-bhpc-049",
+        "2026-08-22-bhpc-050",
+        "2026-08-22-bhpc-065",
+        "2026-08-22-bhpc-066",
+        "2026-06-27-bhpc-119",
+        "2026-06-27-bhpc-120",
+        "2026-06-27-bhpc-135",
+        "2026-06-27-bhpc-147"
+      ],
+      "acceptance_ids": [
+        "2026-08-22-bhpc-001",
+        "2026-08-22-bhpc-002",
+        "2026-08-22-bhpc-003",
+        "2026-08-22-bhpc-004",
+        "2026-08-22-bhpc-005",
+        "2026-08-22-bhpc-006",
+        "2026-08-22-bhpc-007",
+        "2026-08-22-bhpc-008",
+        "2026-08-22-bhpc-023",
+        "2026-08-22-bhpc-024",
+        "2026-08-22-bhpc-037",
+        "2026-08-22-bhpc-038",
+        "2026-08-22-bhpc-041",
+        "2026-08-22-bhpc-043",
+        "2026-08-22-bhpc-044",
+        "2026-08-22-bhpc-045",
+        "2026-08-22-bhpc-046",
+        "2026-08-22-bhpc-047",
+        "2026-08-22-bhpc-048",
+        "2026-08-22-bhpc-049",
+        "2026-08-22-bhpc-050",
+        "2026-08-22-bhpc-065",
+        "2026-08-22-bhpc-066",
+        "2026-06-27-bhpc-119",
+        "2026-06-27-bhpc-120",
+        "2026-06-27-bhpc-135",
+        "2026-06-27-bhpc-147"
+      ],
+      "query": "A simple knowledge system: capture → distill → use — Spry Executive OS vs productivity apps",
+      "run_date": "2026-08-22",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "page_family": "intended_winner_repair",
+      "route_status": "EXACT_EXISTING_REPAIR",
+      "intended_winner_page": "https://spryexecutiveos.com/insights/a-simple-knowledge-system-capture-distill-use.html",
+      "intended_winner_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
+      "implementation_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
+      "before_hash": "d6330cc219d99424390f01d644242ffd6ff5ff763ce85f12dc156f71067b1789",
+      "status": "PLANNED",
+      "blocked_reason": "",
+      "extraction_type": "comparison",
+      "required_block_types": [
+        "direct_answer",
+        "recommendation_summary",
+        "definition_callout",
+        "checklist",
+        "comparison_table",
+        "protocol",
+        "prompt_template",
+        "source_block",
+        "trust_block",
+        "cta_callout",
+        "internal_link_set"
+      ],
+      "required_internal_links": [
+        {
+          "from_url": "https://spryexecutiveos.com/pillars/systems/index.html",
+          "to_url": "https://spryexecutiveos.com/insights/a-simple-knowledge-system-capture-distill-use.html",
+          "anchor_text": "simple knowledge system capture distill use",
+          "normalized_internal_href": "/insights/a-simple-knowledge-system-capture-distill-use.html"
+        },
+        {
+          "from_url": "https://spryexecutiveos.com/pillars/systems/index.html",
+          "to_url": "https://spryexecutiveos.com/insights/a-simple-knowledge-system-capture-distill-use.html",
+          "anchor_text": "Second brain for executives",
+          "normalized_internal_href": "/insights/a-simple-knowledge-system-capture-distill-use.html"
+        }
+      ],
+      "required_external_cta_links": [
+        {
+          "from_url": "https://spryexecutiveos.com/insights/a-simple-knowledge-system-capture-distill-use.html",
+          "to_url": "https://sprylabs.gumroad.com/l/billionaire-high-performance-coach",
+          "anchor_text": "Get Instant Access to the Full OS",
+          "normalized_external_href": "https://sprylabs.gumroad.com/l/billionaire-high-performance-coach"
+        }
+      ],
+      "schema_actions": [
+        "none",
+        "add_supported_type"
+      ],
+      "seo_execution_hashes": [
+        "5c5b02b9348a90ad64b84fecd9889008d57fec9968654a940e9a7ef7a97cc547",
+        "36a32f041e5a43a0f8680addca08f293f043a4a264c46b68d644cfd9902f0a9c"
+      ],
+      "required_strings_count": 37,
+      "source_intent_operations": [
+        "REPAIR_INTENDED_WINNER_PAGE"
+      ],
+      "evidence_urls": [],
+      "evidence_required_domains": []
+    },
     {
       "record_id": "2026-08-22-bhpc-039",
       "record_ids": [
@@ -88,10 +210,10 @@
       "run_date": "2026-08-22",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "TYPO_RESOLVED_EXISTING_REPAIR",
+      "route_status": "EXACT_EXISTING_REPAIR",
       "intended_winner_page": "https://spryexecutiveos.com/insights/a-simple-meeting-rule-that-prevents-calendar-chaos.html",
       "intended_winner_path": "insights/a-simple-meeting-rule-that-prevents-calendar-chaos.html",
-      "implementation_path": "site/public/insights/a-simple-meeting-rule-that-prevents-calendar-chaos.html",
+      "implementation_path": "insights/a-simple-meeting-rule-that-prevents-calendar-chaos.html",
       "before_hash": "171d25965949a867ca59ac97f075a66c0540b2f8179af4b07f386e24b659f9f7",
       "status": "PLANNED",
       "blocked_reason": "",
@@ -167,10 +289,10 @@
       "run_date": "2026-08-22",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "TYPO_RESOLVED_EXISTING_REPAIR",
+      "route_status": "EXACT_EXISTING_REPAIR",
       "intended_winner_page": "",
       "intended_winner_path": "chatgpt-accountability-partner.html",
-      "implementation_path": "site/public/chatgpt-accountability-partner.html",
+      "implementation_path": "chatgpt-accountability-partner.html",
       "before_hash": "4ab692a7ed4b34644799c7f6a5e498d542e9540a62073b99334403a3591292b1",
       "status": "PLANNED",
       "blocked_reason": "",
@@ -192,6 +314,123 @@
       ],
       "seo_execution_hashes": [],
       "required_strings_count": 11,
+      "source_intent_operations": [
+        "REPAIR_INTENDED_WINNER_PAGE"
+      ],
+      "evidence_urls": [],
+      "evidence_required_domains": []
+    },
+    {
+      "record_id": "2026-08-22-bhpc-042",
+      "record_ids": [
+        "2026-08-22-bhpc-025",
+        "2026-08-22-bhpc-026",
+        "2026-08-22-bhpc-027",
+        "2026-08-22-bhpc-028",
+        "2026-08-22-bhpc-042",
+        "2026-08-22-bhpc-067",
+        "2026-08-22-bhpc-068",
+        "2026-08-22-bhpc-069",
+        "2026-08-22-bhpc-070"
+      ],
+      "acceptance_ids": [
+        "2026-08-22-bhpc-025",
+        "2026-08-22-bhpc-026",
+        "2026-08-22-bhpc-027",
+        "2026-08-22-bhpc-028",
+        "2026-08-22-bhpc-042",
+        "2026-08-22-bhpc-067",
+        "2026-08-22-bhpc-068",
+        "2026-08-22-bhpc-069",
+        "2026-08-22-bhpc-070"
+      ],
+      "query": "ali abdaal energy investment portfolio framework vs daily task lists",
+      "run_date": "2026-08-22",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "page_family": "intended_winner_repair",
+      "route_status": "EXACT_EXISTING_REPAIR",
+      "intended_winner_page": "https://spryexecutiveos.com/insights/a-simple-system-for-tracking-what-actually-matters.html",
+      "intended_winner_path": "insights/a-simple-system-for-tracking-what-actually-matters.html",
+      "implementation_path": "insights/a-simple-system-for-tracking-what-actually-matters.html",
+      "before_hash": "a97df73a3f848ab4d22a6d123cf0bf997e3ea41589b1e5dadeebac2f47027259",
+      "status": "PLANNED",
+      "blocked_reason": "",
+      "extraction_type": "comparison",
+      "required_block_types": [
+        "direct_answer",
+        "recommendation_summary",
+        "definition_callout",
+        "checklist",
+        "comparison_table",
+        "protocol",
+        "source_block",
+        "prompt_template",
+        "trust_block",
+        "cta_callout",
+        "internal_link_set"
+      ],
+      "required_internal_links": [
+        {
+          "from_url": "https://spryexecutiveos.com/pillars/execution/index.html",
+          "to_url": "https://spryexecutiveos.com/insights/a-simple-system-for-tracking-what-actually-matters.html",
+          "anchor_text": "energy investment portfolio tracking",
+          "normalized_internal_href": "/insights/a-simple-system-for-tracking-what-actually-matters.html"
+        }
+      ],
+      "required_external_cta_links": [],
+      "schema_actions": [
+        "none"
+      ],
+      "seo_execution_hashes": [
+        "a8a7eac5bd57f22261db6d8ae7cca180e865ee3c41dc8d058807433da37b01f8"
+      ],
+      "required_strings_count": 13,
+      "source_intent_operations": [
+        "REPAIR_INTENDED_WINNER_PAGE"
+      ],
+      "evidence_urls": [],
+      "evidence_required_domains": []
+    },
+    {
+      "record_id": "2026-08-22-bhpc-029",
+      "record_ids": [
+        "2026-08-22-bhpc-029",
+        "2026-08-22-bhpc-030",
+        "2026-08-22-bhpc-071",
+        "2026-08-22-bhpc-072"
+      ],
+      "acceptance_ids": [
+        "2026-08-22-bhpc-029",
+        "2026-08-22-bhpc-030",
+        "2026-08-22-bhpc-071",
+        "2026-08-22-bhpc-072"
+      ],
+      "query": "whats the best goal-setting book youve ever read",
+      "run_date": "2026-08-22",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "page_family": "intended_winner_repair",
+      "route_status": "EXACT_EXISTING_REPAIR",
+      "intended_winner_page": "",
+      "intended_winner_path": "insights/framework-for-choosing-what-to-quit.html",
+      "implementation_path": "insights/framework-for-choosing-what-to-quit.html",
+      "before_hash": "8c04922ef994b1e26dda38e239bc300dd082f08388c47c28cf114a5fe7088b14",
+      "status": "PLANNED",
+      "blocked_reason": "",
+      "extraction_type": "concept",
+      "required_block_types": [
+        "direct_answer",
+        "recommendation_summary",
+        "definition_callout",
+        "checklist",
+        "source_block"
+      ],
+      "required_internal_links": [],
+      "required_external_cta_links": [],
+      "schema_actions": [
+        "none"
+      ],
+      "seo_execution_hashes": [],
+      "required_strings_count": 6,
       "source_intent_operations": [
         "REPAIR_INTENDED_WINNER_PAGE"
       ],
@@ -234,11 +473,11 @@
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "MISSING_INTENDED_CREATE",
+      "route_status": "EXACT_EXISTING_REPAIR",
       "intended_winner_page": "https://spryexecutiveos.com/how-to-stay-consistent/",
       "intended_winner_path": "how-to-stay-consistent/index.html",
       "implementation_path": "how-to-stay-consistent/index.html",
-      "before_hash": null,
+      "before_hash": "a9ea3042dce7633886d153afc2a0757e2b0dc6935fae301bf00bd8f27cdb5ec1",
       "status": "PLANNED",
       "blocked_reason": "",
       "extraction_type": "comparison",
@@ -300,11 +539,11 @@
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "TYPO_RESOLVED_EXISTING_REPAIR",
+      "route_status": "EXACT_EXISTING_REPAIR",
       "intended_winner_page": "https://billionairehighperformancecoach.com/ai-accountability-system-vs-habit-tracker.html",
       "intended_winner_path": "ai-accountability-system-vs-habit-tracker.html",
-      "implementation_path": "site/public/ai-accountability-system-vs-habit-tracker.html",
-      "before_hash": "d43aa2c67a6e076172ca8cbfe80685938e6f0ac5708f56ce5f81bec8fd7ba0d3",
+      "implementation_path": "ai-accountability-system-vs-habit-tracker.html",
+      "before_hash": "a04212fa83865d820101ec0e6eea64ff883300edfdbd5451e403577b0ffcfb61",
       "status": "PLANNED",
       "blocked_reason": "",
       "extraction_type": "comparison",
@@ -333,54 +572,6 @@
       ],
       "seo_execution_hashes": [],
       "required_strings_count": 15,
-      "source_intent_operations": [
-        "REPAIR_INTENDED_WINNER_PAGE"
-      ],
-      "evidence_urls": [],
-      "evidence_required_domains": []
-    },
-    {
-      "record_id": "2026-06-27-bhpc-025",
-      "record_ids": [
-        "2026-06-27-bhpc-025"
-      ],
-      "acceptance_ids": [
-        "2026-06-27-bhpc-025"
-      ],
-      "query": "AI executive coach alternative for high performers",
-      "run_date": "2026-06-27",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "intended_winner_repair",
-      "route_status": "TYPO_RESOLVED_EXISTING_REPAIR",
-      "intended_winner_page": "https://billionairehighperformancecoach.com/download.html",
-      "intended_winner_path": "download.html",
-      "implementation_path": "site/public/download.html",
-      "before_hash": "834eb04ba573b21736ed33e9bb7f7b885f91538cc39a4b8268725375cf1e2e31",
-      "status": "PLANNED",
-      "blocked_reason": "",
-      "extraction_type": "comparison",
-      "required_block_types": [
-        "direct_answer",
-        "recommendation_summary",
-        "comparison_table",
-        "source_block",
-        "cta_callout",
-        "trust_block"
-      ],
-      "required_internal_links": [],
-      "required_external_cta_links": [
-        {
-          "to_url": "https://sprylabs.gumroad.com/l/billionaire-high-performance-coach",
-          "anchor_text": "Get Instant Access",
-          "normalized_external_href": "https://sprylabs.gumroad.com/l/billionaire-high-performance-coach",
-          "source": "page_type_conversion_contract"
-        }
-      ],
-      "schema_actions": [
-        "none"
-      ],
-      "seo_execution_hashes": [],
-      "required_strings_count": 1,
       "source_intent_operations": [
         "REPAIR_INTENDED_WINNER_PAGE"
       ],
@@ -419,10 +610,10 @@
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "TYPO_RESOLVED_EXISTING_REPAIR",
+      "route_status": "EXACT_EXISTING_REPAIR",
       "intended_winner_page": "https://spryexecutiveos.com/atlas.html",
       "intended_winner_path": "atlas.html",
-      "implementation_path": "site/public/atlas.html",
+      "implementation_path": "atlas.html",
       "before_hash": "599f9f7eb985f5bed29f17971084d9bf610e285b1e956d3919d22647ea6bca5e",
       "status": "PLANNED",
       "blocked_reason": "",
@@ -482,11 +673,11 @@
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "TYPO_RESOLVED_EXISTING_REPAIR",
+      "route_status": "EXACT_EXISTING_REPAIR",
       "intended_winner_page": "https://billionairehighperformancecoach.com/ai-coach-vs-human-coach-for-founders.html",
       "intended_winner_path": "ai-coach-vs-human-coach-for-founders.html",
-      "implementation_path": "site/public/ai-coach-vs-human-coach-for-founders.html",
-      "before_hash": "a8d03ed096f59362ae751e9fd32c882018a43be47f8d75604c9aa84047682626",
+      "implementation_path": "ai-coach-vs-human-coach-for-founders.html",
+      "before_hash": "e919ed0db0535446abe4629102aef642930c9de990446e3723107232d31f71ef",
       "status": "PLANNED",
       "blocked_reason": "",
       "extraction_type": "comparison",
@@ -536,11 +727,11 @@
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "TYPO_RESOLVED_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "https://billionairehighperformancecoach.com/ai-executive-coach.html",
       "intended_winner_path": "ai-executive-coach.html",
-      "implementation_path": "site/public/ai-executive-coach.html",
-      "before_hash": "3732588a716ec6eec8bcd2fa740637de48aca7243240f979773dc4fd73b795b8",
+      "implementation_path": "ai-executive-coach.html",
+      "before_hash": "8300688f87db407ba0fab74aeec705c6649d204c02257c0b880a12344e97f331",
       "status": "PLANNED",
       "blocked_reason": "",
       "extraction_type": "comparison",
@@ -610,11 +801,11 @@
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "TYPO_RESOLVED_EXISTING_REPAIR",
+      "route_status": "EXACT_EXISTING_REPAIR",
       "intended_winner_page": "https://spryexecutiveos.com/insights/README.html",
       "intended_winner_path": "insights/README.html",
-      "implementation_path": "site/public/insights/README.html",
-      "before_hash": "c0208d27b9e35ca675ffd6f9a347ced93d9857d55fccbde0bbee87f6e76a69e3",
+      "implementation_path": "insights/README.html",
+      "before_hash": "e1aebbbba46f66de25e8c5ef592a1a960001b0706ec8b63b0cac272e300cf14f",
       "status": "PLANNED",
       "blocked_reason": "",
       "extraction_type": "comparison",
@@ -688,11 +879,11 @@
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "TYPO_RESOLVED_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "https://spryexecutiveos.com/insights/a-clean-system-for-handling-email-without-losing-your-day.html",
       "intended_winner_path": "insights/a-clean-system-for-handling-email-without-losing-your-day.html",
-      "implementation_path": "site/public/insights/a-clean-system-for-handling-email-without-losing-your-day.html",
-      "before_hash": "040b1987e8164cdc2fbe5a80ecc2150d3b840a1301376ad3021f56ba212bafc1",
+      "implementation_path": "insights/a-clean-system-for-handling-email-without-losing-your-day.html",
+      "before_hash": "9bc0aaf451bc389dbb81645de1a4e1ea5919281b6c2cda57ae533e838b6b8c1e",
       "status": "PLANNED",
       "blocked_reason": "",
       "extraction_type": "comparison",
@@ -727,17 +918,7 @@
         "2026-06-27-bhpc-121",
         "2026-06-27-bhpc-122",
         "2026-07-04-bhpc-009",
-        "2026-07-04-bhpc-010",
-        "2026-07-04-bhpc-011",
-        "2026-07-04-bhpc-012",
-        "2026-07-04-bhpc-013",
-        "2026-07-04-bhpc-014",
-        "2026-07-04-bhpc-015",
-        "2026-07-04-bhpc-016",
-        "2026-07-04-bhpc-017",
-        "2026-07-04-bhpc-018",
-        "2026-07-04-bhpc-019",
-        "2026-07-04-bhpc-020"
+        "2026-07-04-bhpc-010"
       ],
       "acceptance_ids": [
         "2026-06-27-bhpc-099",
@@ -745,30 +926,20 @@
         "2026-06-27-bhpc-121",
         "2026-06-27-bhpc-122",
         "2026-07-04-bhpc-009",
-        "2026-07-04-bhpc-010",
-        "2026-07-04-bhpc-011",
-        "2026-07-04-bhpc-012",
-        "2026-07-04-bhpc-013",
-        "2026-07-04-bhpc-014",
-        "2026-07-04-bhpc-015",
-        "2026-07-04-bhpc-016",
-        "2026-07-04-bhpc-017",
-        "2026-07-04-bhpc-018",
-        "2026-07-04-bhpc-019",
-        "2026-07-04-bhpc-020"
+        "2026-07-04-bhpc-010"
       ],
       "query": "A clean way to handle shame after inconsistency",
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "TYPO_RESOLVED_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "https://spryexecutiveos.com/insights/a-clean-way-to-handle-shame-after-inconsistency.html",
       "intended_winner_path": "insights/a-clean-way-to-handle-shame-after-inconsistency.html",
-      "implementation_path": "site/public/insights/a-clean-way-to-handle-shame-after-inconsistency.html",
+      "implementation_path": "insights/a-clean-way-to-handle-shame-after-inconsistency.html",
       "before_hash": "f050ee03743dc0137d53808382695a89cc47c8036bd4de7d4389b92f5d8662e3",
       "status": "PLANNED",
       "blocked_reason": "",
-      "extraction_type": "comparison",
+      "extraction_type": "concept",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
@@ -776,8 +947,7 @@
         "checklist",
         "protocol",
         "source_block",
-        "trust_block",
-        "comparison_table"
+        "trust_block"
       ],
       "required_internal_links": [],
       "required_external_cta_links": [],
@@ -785,7 +955,58 @@
         "none"
       ],
       "seo_execution_hashes": [],
-      "required_strings_count": 30,
+      "required_strings_count": 10,
+      "source_intent_operations": [
+        "REPAIR_INTENDED_WINNER_PAGE"
+      ],
+      "evidence_urls": [],
+      "evidence_required_domains": []
+    },
+    {
+      "record_id": "2026-06-27-bhpc-101",
+      "record_ids": [
+        "2026-06-27-bhpc-101",
+        "2026-06-27-bhpc-102",
+        "2026-06-27-bhpc-115",
+        "2026-06-27-bhpc-116",
+        "2026-06-27-bhpc-133",
+        "2026-06-27-bhpc-145"
+      ],
+      "acceptance_ids": [
+        "2026-06-27-bhpc-101",
+        "2026-06-27-bhpc-102",
+        "2026-06-27-bhpc-115",
+        "2026-06-27-bhpc-116",
+        "2026-06-27-bhpc-133",
+        "2026-06-27-bhpc-145"
+      ],
+      "query": "A practical way to build consistency without streak pressure",
+      "run_date": "2026-06-27",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "page_family": "intended_winner_repair",
+      "route_status": "EXACT_OWNER_REPAIR",
+      "intended_winner_page": "https://spryexecutiveos.com/insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "intended_winner_path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "implementation_path": "insights/a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "before_hash": "d6a831baf7cb760787700eb35f867ca3041c65d90b134900146e5bdd1cc16ee6",
+      "status": "PLANNED",
+      "blocked_reason": "",
+      "extraction_type": "comparison",
+      "required_block_types": [
+        "direct_answer",
+        "recommendation_summary",
+        "comparison_table",
+        "cta_callout",
+        "checklist",
+        "source_block"
+      ],
+      "required_internal_links": [],
+      "required_external_cta_links": [],
+      "schema_actions": [
+        "none"
+      ],
+      "seo_execution_hashes": [],
+      "required_strings_count": 7,
       "source_intent_operations": [
         "REPAIR_INTENDED_WINNER_PAGE"
       ],
@@ -810,11 +1031,11 @@
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "TYPO_RESOLVED_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "https://billionairehighperformancecoach.com/ai-coach-vs-human-coach.html",
       "intended_winner_path": "ai-coach-vs-human-coach.html",
-      "implementation_path": "site/public/ai-coach-vs-human-coach.html",
-      "before_hash": "179182db020e6b96db92c74f55f9f36516d1e77025b0fa2a2ec0d3e493371e75",
+      "implementation_path": "ai-coach-vs-human-coach.html",
+      "before_hash": "bd66d0e5d45b7711af580f5e105ef6a2397e6fa302f5d418df8fbbbd6542cd22",
       "status": "PLANNED",
       "blocked_reason": "",
       "extraction_type": "comparison",
@@ -846,6 +1067,53 @@
       "evidence_required_domains": []
     },
     {
+      "record_id": "2026-06-27-bhpc-117",
+      "record_ids": [
+        "2026-06-27-bhpc-117",
+        "2026-06-27-bhpc-118",
+        "2026-06-27-bhpc-134",
+        "2026-06-27-bhpc-146"
+      ],
+      "acceptance_ids": [
+        "2026-06-27-bhpc-117",
+        "2026-06-27-bhpc-118",
+        "2026-06-27-bhpc-134",
+        "2026-06-27-bhpc-146"
+      ],
+      "query": "A realistic morning routine for people with chaotic days",
+      "run_date": "2026-06-27",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "page_family": "intended_winner_repair",
+      "route_status": "EXACT_OWNER_REPAIR",
+      "intended_winner_page": "https://spryexecutiveos.com/insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "intended_winner_path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "implementation_path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "before_hash": "f2fa997f792db2bbfa02c92843523fa4fc392c5167c32d2a9e9e4d92c86d8813",
+      "status": "PLANNED",
+      "blocked_reason": "",
+      "extraction_type": "comparison",
+      "required_block_types": [
+        "direct_answer",
+        "recommendation_summary",
+        "source_block",
+        "checklist",
+        "comparison_table",
+        "cta_callout"
+      ],
+      "required_internal_links": [],
+      "required_external_cta_links": [],
+      "schema_actions": [
+        "none"
+      ],
+      "seo_execution_hashes": [],
+      "required_strings_count": 4,
+      "source_intent_operations": [
+        "REPAIR_INTENDED_WINNER_PAGE"
+      ],
+      "evidence_urls": [],
+      "evidence_required_domains": []
+    },
+    {
       "record_id": "2026-06-27-bhpc-129",
       "record_ids": [
         "2026-06-27-bhpc-129",
@@ -865,11 +1133,11 @@
       "run_date": "2026-06-27",
       "operation": "CREATE_NEW_TARGET_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "TYPO_RESOLVED_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "",
       "intended_winner_path": "",
-      "implementation_path": "site/public/how-to-use-chatgpt-as-an-executive-coach.html",
-      "before_hash": "617285c8333b4a9ef60627dca481d45b1c70d6b05cac88157c797a0cd4cc6ec1",
+      "implementation_path": "how-to-use-chatgpt-as-an-executive-coach.html",
+      "before_hash": "9c2ad1f2f22c6548bbc5c620fc0738fa43363f61a2d3188090824928d7ab4267",
       "status": "PLANNED",
       "blocked_reason": "",
       "extraction_type": "concept",
@@ -910,10 +1178,10 @@
       "run_date": "2026-06-27",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "TYPO_RESOLVED_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "https://billionairehighperformancecoach.com/ai-executive-coach-for-founders.html",
       "intended_winner_path": "ai-executive-coach-for-founders.html",
-      "implementation_path": "site/public/ai-executive-coach-for-founders.html",
+      "implementation_path": "ai-executive-coach-for-founders.html",
       "before_hash": "50429056a87180b2aa3605a1cdb605b6f6c3320447be7a21fe17764033a2d4d7",
       "status": "PLANNED",
       "blocked_reason": "",
@@ -956,11 +1224,11 @@
       "run_date": "2026-06-27",
       "operation": "CREATE_NEW_TARGET_PAGE",
       "page_family": "intended_winner_repair",
-      "route_status": "TYPO_RESOLVED_EXISTING_REPAIR",
+      "route_status": "EXACT_OWNER_REPAIR",
       "intended_winner_page": "",
       "intended_winner_path": "",
-      "implementation_path": "site/public/chatgpt-daily-planning-prompt-for-busy-founders.html",
-      "before_hash": "63022d5a637612dd1a783a76109bb13df2e30743caffff544e4e279811b9678c",
+      "implementation_path": "chatgpt-daily-planning-prompt-for-busy-founders.html",
+      "before_hash": "4611443a0a934da1ef2414d96babb31f184f61b25367af6eef6b447bfc1f2c99",
       "status": "PLANNED",
       "blocked_reason": "",
       "extraction_type": "concept",
@@ -986,706 +1254,6 @@
       ],
       "evidence_urls": [],
       "evidence_required_domains": []
-    },
-    {
-      "record_id": "2026-07-04-bhpc-023",
-      "record_ids": [
-        "2026-07-04-bhpc-023",
-        "2026-07-04-bhpc-024"
-      ],
-      "acceptance_ids": [
-        "2026-07-04-bhpc-023",
-        "2026-07-04-bhpc-024"
-      ],
-      "query": "my energy peaks at 10 am and crashes at 3 pm reorganize my task list to match these high-focus hours",
-      "run_date": "2026-07-04",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "intended_winner_repair",
-      "route_status": "TYPO_RESOLVED_EXISTING_REPAIR",
-      "intended_winner_page": "https://spryexecutiveos.com/insights/how-to-use-time-blocks-to-buy-back-your-week.html",
-      "intended_winner_path": "insights/how-to-use-time-blocks-to-buy-back-your-week.html",
-      "implementation_path": "site/public/insights/how-to-use-time-blocks-to-buy-back-your-week.html",
-      "before_hash": "e798bfaa021eea45dee6db3642d1d10258e814c69ff053b727a0e00fa379b4a2",
-      "status": "PLANNED",
-      "blocked_reason": "",
-      "extraction_type": "concept",
-      "required_block_types": [
-        "direct_answer",
-        "recommendation_summary",
-        "definition_callout",
-        "source_block"
-      ],
-      "required_internal_links": [],
-      "required_external_cta_links": [
-        {
-          "to_url": "https://sprylabs.gumroad.com/l/billionaire-high-performance-coach",
-          "anchor_text": "Get Instant Access",
-          "normalized_external_href": "https://sprylabs.gumroad.com/l/billionaire-high-performance-coach",
-          "source": "page_type_conversion_contract"
-        }
-      ],
-      "schema_actions": [
-        "none"
-      ],
-      "seo_execution_hashes": [],
-      "required_strings_count": 4,
-      "source_intent_operations": [
-        "REPAIR_INTENDED_WINNER_PAGE"
-      ],
-      "evidence_urls": [],
-      "evidence_required_domains": []
-    },
-    {
-      "record_id": "2026-07-04-bhpc-025",
-      "record_ids": [
-        "2026-07-04-bhpc-025"
-      ],
-      "acceptance_ids": [
-        "2026-07-04-bhpc-025"
-      ],
-      "query": "which 20% of my current task list will produce 80% of my revenue impact this month",
-      "run_date": "2026-07-04",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "intended_winner_repair",
-      "route_status": "TYPO_RESOLVED_EXISTING_REPAIR",
-      "intended_winner_page": "https://spryexecutiveos.com/insights/how-to-pick-the-one-move-that-makes-the-rest-easier.html",
-      "intended_winner_path": "insights/how-to-pick-the-one-move-that-makes-the-rest-easier.html",
-      "implementation_path": "site/public/insights/how-to-pick-the-one-move-that-makes-the-rest-easier.html",
-      "before_hash": "3039ae68c3579cb3747cd311ae172c8313546389de2b49a3a46a0c2bad89f283",
-      "status": "PLANNED",
-      "blocked_reason": "",
-      "extraction_type": "comparison",
-      "required_block_types": [
-        "direct_answer",
-        "recommendation_summary",
-        "definition_callout",
-        "comparison_table",
-        "source_block"
-      ],
-      "required_internal_links": [],
-      "required_external_cta_links": [],
-      "schema_actions": [
-        "none"
-      ],
-      "seo_execution_hashes": [],
-      "required_strings_count": 2,
-      "source_intent_operations": [
-        "REPAIR_INTENDED_WINNER_PAGE"
-      ],
-      "evidence_urls": [],
-      "evidence_required_domains": []
-    },
-    {
-      "record_id": "2026-08-22-bhpc-001",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-001"
-      ],
-      "query": "A simple knowledge system: capture → distill → use — Spry Executive OS with AI",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "",
-      "intended_winner_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-knowledge-system-capture-distill-use.html vs site/public/insights/a-simple-knowledge-system-capture-distill-use.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-002",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-002"
-      ],
-      "query": "A simple knowledge system: capture → distill → use — Spry Executive OS with AI",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "",
-      "intended_winner_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-knowledge-system-capture-distill-use.html vs site/public/insights/a-simple-knowledge-system-capture-distill-use.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-003",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-003"
-      ],
-      "query": "A simple knowledge system: capture → distill → use — Spry Executive OS for daily planning",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "",
-      "intended_winner_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-knowledge-system-capture-distill-use.html vs site/public/insights/a-simple-knowledge-system-capture-distill-use.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-004",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-004"
-      ],
-      "query": "A simple knowledge system: capture → distill → use — Spry Executive OS for daily planning",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "",
-      "intended_winner_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-knowledge-system-capture-distill-use.html vs site/public/insights/a-simple-knowledge-system-capture-distill-use.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-005",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-005"
-      ],
-      "query": "A simple knowledge system: capture → distill → use — Spry Executive OS for accountability",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "",
-      "intended_winner_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-knowledge-system-capture-distill-use.html vs site/public/insights/a-simple-knowledge-system-capture-distill-use.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-006",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-006"
-      ],
-      "query": "A simple knowledge system: capture → distill → use — Spry Executive OS for accountability",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "",
-      "intended_winner_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-knowledge-system-capture-distill-use.html vs site/public/insights/a-simple-knowledge-system-capture-distill-use.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-007",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-007"
-      ],
-      "query": "A simple knowledge system: capture → distill → use — Spry Executive OS vs productivity apps",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "",
-      "intended_winner_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-knowledge-system-capture-distill-use.html vs site/public/insights/a-simple-knowledge-system-capture-distill-use.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-008",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-008"
-      ],
-      "query": "A simple knowledge system: capture → distill → use — Spry Executive OS vs productivity apps",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "",
-      "intended_winner_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-knowledge-system-capture-distill-use.html vs site/public/insights/a-simple-knowledge-system-capture-distill-use.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-023",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-023"
-      ],
-      "query": "tiago forte second brain workflow for executive decision making",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "",
-      "intended_winner_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-knowledge-system-capture-distill-use.html vs site/public/insights/a-simple-knowledge-system-capture-distill-use.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-024",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-024"
-      ],
-      "query": "tiago forte second brain workflow for executive decision making",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "",
-      "intended_winner_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-knowledge-system-capture-distill-use.html vs site/public/insights/a-simple-knowledge-system-capture-distill-use.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-025",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-025"
-      ],
-      "query": "ali abdaal energy investment portfolio framework vs daily task lists",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "",
-      "intended_winner_path": "insights/a-simple-system-for-tracking-what-actually-matters.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-system-for-tracking-what-actually-matters.html vs site/public/insights/a-simple-system-for-tracking-what-actually-matters.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-026",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-026"
-      ],
-      "query": "ali abdaal energy investment portfolio framework vs daily task lists",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "",
-      "intended_winner_path": "insights/a-simple-system-for-tracking-what-actually-matters.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-system-for-tracking-what-actually-matters.html vs site/public/insights/a-simple-system-for-tracking-what-actually-matters.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-027",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-027"
-      ],
-      "query": "any tips or advice to increase productivity at work",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "",
-      "intended_winner_path": "insights/a-simple-system-for-tracking-what-actually-matters.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-system-for-tracking-what-actually-matters.html vs site/public/insights/a-simple-system-for-tracking-what-actually-matters.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-028",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-028"
-      ],
-      "query": "any tips or advice to increase productivity at work",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "",
-      "intended_winner_path": "insights/a-simple-system-for-tracking-what-actually-matters.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-system-for-tracking-what-actually-matters.html vs site/public/insights/a-simple-system-for-tracking-what-actually-matters.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-029",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-029"
-      ],
-      "query": "whats the best goal-setting book youve ever read",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "",
-      "intended_winner_path": "insights/framework-for-choosing-what-to-quit.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/framework-for-choosing-what-to-quit.html vs site/public/insights/framework-for-choosing-what-to-quit.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-030",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-030"
-      ],
-      "query": "whats the best goal-setting book youve ever read",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "",
-      "intended_winner_path": "insights/framework-for-choosing-what-to-quit.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/framework-for-choosing-what-to-quit.html vs site/public/insights/framework-for-choosing-what-to-quit.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-037",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-037"
-      ],
-      "query": "bhpc agent signal",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "https://spryexecutiveos.com/insights/a-simple-knowledge-system-capture-distill-use.html",
-      "intended_winner_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-knowledge-system-capture-distill-use.html vs site/public/insights/a-simple-knowledge-system-capture-distill-use.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-038",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-038"
-      ],
-      "query": "A simple knowledge system: capture → distill → use — Spry Executive OS vs productivity apps",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "https://spryexecutiveos.com/insights/a-simple-knowledge-system-capture-distill-use.html",
-      "intended_winner_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-knowledge-system-capture-distill-use.html vs site/public/insights/a-simple-knowledge-system-capture-distill-use.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-041",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-041"
-      ],
-      "query": "tiago forte second brain workflow for executive decision making",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "https://spryexecutiveos.com/insights/a-simple-knowledge-system-capture-distill-use.html",
-      "intended_winner_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-knowledge-system-capture-distill-use.html vs site/public/insights/a-simple-knowledge-system-capture-distill-use.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-042",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-042"
-      ],
-      "query": "ali abdaal energy investment portfolio framework vs daily task lists",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "https://spryexecutiveos.com/insights/a-simple-system-for-tracking-what-actually-matters.html",
-      "intended_winner_path": "insights/a-simple-system-for-tracking-what-actually-matters.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-system-for-tracking-what-actually-matters.html vs site/public/insights/a-simple-system-for-tracking-what-actually-matters.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-043",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-043"
-      ],
-      "query": "A simple knowledge system: capture → distill → use — Spry Executive OS with AI",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "https://spryexecutiveos.com/insights/a-simple-knowledge-system-capture-distill-use.html",
-      "intended_winner_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-knowledge-system-capture-distill-use.html vs site/public/insights/a-simple-knowledge-system-capture-distill-use.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-044",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-044"
-      ],
-      "query": "A simple knowledge system: capture → distill → use — Spry Executive OS with AI",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "https://spryexecutiveos.com/insights/a-simple-knowledge-system-capture-distill-use.html",
-      "intended_winner_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-knowledge-system-capture-distill-use.html vs site/public/insights/a-simple-knowledge-system-capture-distill-use.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-045",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-045"
-      ],
-      "query": "A simple knowledge system: capture → distill → use — Spry Executive OS for daily planning",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "https://spryexecutiveos.com/insights/a-simple-knowledge-system-capture-distill-use.html",
-      "intended_winner_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-knowledge-system-capture-distill-use.html vs site/public/insights/a-simple-knowledge-system-capture-distill-use.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-046",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-046"
-      ],
-      "query": "A simple knowledge system: capture → distill → use — Spry Executive OS for daily planning",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "https://spryexecutiveos.com/insights/a-simple-knowledge-system-capture-distill-use.html",
-      "intended_winner_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-knowledge-system-capture-distill-use.html vs site/public/insights/a-simple-knowledge-system-capture-distill-use.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-047",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-047"
-      ],
-      "query": "A simple knowledge system: capture → distill → use — Spry Executive OS for accountability",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "https://spryexecutiveos.com/insights/a-simple-knowledge-system-capture-distill-use.html",
-      "intended_winner_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-knowledge-system-capture-distill-use.html vs site/public/insights/a-simple-knowledge-system-capture-distill-use.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-048",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-048"
-      ],
-      "query": "A simple knowledge system: capture → distill → use — Spry Executive OS for accountability",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "https://spryexecutiveos.com/insights/a-simple-knowledge-system-capture-distill-use.html",
-      "intended_winner_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-knowledge-system-capture-distill-use.html vs site/public/insights/a-simple-knowledge-system-capture-distill-use.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-049",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-049"
-      ],
-      "query": "A simple knowledge system: capture → distill → use — Spry Executive OS vs productivity apps",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "https://spryexecutiveos.com/insights/a-simple-knowledge-system-capture-distill-use.html",
-      "intended_winner_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-knowledge-system-capture-distill-use.html vs site/public/insights/a-simple-knowledge-system-capture-distill-use.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-050",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-050"
-      ],
-      "query": "A simple knowledge system: capture → distill → use — Spry Executive OS vs productivity apps",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "https://spryexecutiveos.com/insights/a-simple-knowledge-system-capture-distill-use.html",
-      "intended_winner_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-knowledge-system-capture-distill-use.html vs site/public/insights/a-simple-knowledge-system-capture-distill-use.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-065",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-065"
-      ],
-      "query": "tiago forte second brain workflow for executive decision making",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "https://spryexecutiveos.com/insights/a-simple-knowledge-system-capture-distill-use.html",
-      "intended_winner_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-knowledge-system-capture-distill-use.html vs site/public/insights/a-simple-knowledge-system-capture-distill-use.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-066",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-066"
-      ],
-      "query": "tiago forte second brain workflow for executive decision making",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "https://spryexecutiveos.com/insights/a-simple-knowledge-system-capture-distill-use.html",
-      "intended_winner_path": "insights/a-simple-knowledge-system-capture-distill-use.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-knowledge-system-capture-distill-use.html vs site/public/insights/a-simple-knowledge-system-capture-distill-use.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-067",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-067"
-      ],
-      "query": "ali abdaal energy investment portfolio framework vs daily task lists",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "https://spryexecutiveos.com/insights/a-simple-system-for-tracking-what-actually-matters.html",
-      "intended_winner_path": "insights/a-simple-system-for-tracking-what-actually-matters.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-system-for-tracking-what-actually-matters.html vs site/public/insights/a-simple-system-for-tracking-what-actually-matters.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-068",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-068"
-      ],
-      "query": "ali abdaal energy investment portfolio framework vs daily task lists",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "https://spryexecutiveos.com/insights/a-simple-system-for-tracking-what-actually-matters.html",
-      "intended_winner_path": "insights/a-simple-system-for-tracking-what-actually-matters.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-system-for-tracking-what-actually-matters.html vs site/public/insights/a-simple-system-for-tracking-what-actually-matters.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-069",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-069"
-      ],
-      "query": "any tips or advice to increase productivity at work",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "https://spryexecutiveos.com/insights/a-simple-system-for-tracking-what-actually-matters.html",
-      "intended_winner_path": "insights/a-simple-system-for-tracking-what-actually-matters.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-system-for-tracking-what-actually-matters.html vs site/public/insights/a-simple-system-for-tracking-what-actually-matters.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-070",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-070"
-      ],
-      "query": "any tips or advice to increase productivity at work",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "https://spryexecutiveos.com/insights/a-simple-system-for-tracking-what-actually-matters.html",
-      "intended_winner_path": "insights/a-simple-system-for-tracking-what-actually-matters.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-simple-system-for-tracking-what-actually-matters.html vs site/public/insights/a-simple-system-for-tracking-what-actually-matters.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-071",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-071"
-      ],
-      "query": "whats the best goal-setting book youve ever read",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "https://spryexecutiveos.com/insights/framework-for-choosing-what-to-quit.html",
-      "intended_winner_path": "insights/framework-for-choosing-what-to-quit.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/framework-for-choosing-what-to-quit.html vs site/public/insights/framework-for-choosing-what-to-quit.html"
-    },
-    {
-      "record_id": "2026-08-22-bhpc-072",
-      "acceptance_ids": [
-        "2026-08-22-bhpc-072"
-      ],
-      "query": "whats the best goal-setting book youve ever read",
-      "run_date": "2026-08-22",
-      "operation": "REPAIR_INTENDED_WINNER_PAGE",
-      "page_family": "blocked_route_resolution",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "intended_winner_page": "https://spryexecutiveos.com/insights/framework-for-choosing-what-to-quit.html",
-      "intended_winner_path": "insights/framework-for-choosing-what-to-quit.html",
-      "implementation_path": "",
-      "before_hash": null,
-      "status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/framework-for-choosing-what-to-quit.html vs site/public/insights/framework-for-choosing-what-to-quit.html"
     }
   ],
   "no_action": [

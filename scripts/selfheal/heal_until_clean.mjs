@@ -47,6 +47,10 @@ const REPAIRS = {
     why: 'The extraction final-state repair writes the surface state this guard compares against.' },
   'VAL-EXTRACTION-CONTRACT-SELF-TEST': { command: 'npm run repair:extraction-contracts',
     why: 'repair_extraction_contracts.py is the only writer of the extraction contracts under test.' },
+  'VAL-FULL-PAGE-AUDIT': { command: 'npm run agent:bhpc:plan-exact && npm run agent:bhpc:apply-exact',
+    why: 'The page-seo contract inside this audit fails on record markers and required headings that the agent acceptance manifest expects; plan-exact/apply-exact are what write them. Proven: a page carrying 24 such failures went to 0 after one apply.' },
+  'VAL-BHPC-PAGE-SEO': { command: 'npm run agent:bhpc:plan-exact && npm run agent:bhpc:apply-exact',
+    why: 'Same contract, incremental mode - same writer.' },
   'validate:ui-test-parity': { command: 'npm run repair:citation-contract-surfaces',
     why: 'repair_ui_test_parity.py runs inside this chain and writes the parity manifest the check reads.' },
 };

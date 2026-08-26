@@ -1,11 +1,11 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-25T21:51:54.651Z",
+  "generated_at": "2026-08-26T00:49:50.125Z",
   "source": "compile_bhpc_agent_acceptance_manifest",
   "run_key": "2026-07-27_bhpc",
   "entry_count": 9,
-  "required_count": 3,
-  "blocked_count": 3,
+  "required_count": 5,
+  "blocked_count": 1,
   "entries": [
     {
       "id": "2026-07-27-bhpc-001",
@@ -26,36 +26,12 @@
       "seo_execution_hash": "",
       "intended_winner_page": "https://spryexecutiveos.com/insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
       "intended_winner_path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
-      "implementation_path": "",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "route_resolution": {
-        "ambiguous": true,
-        "best": {
-          "path": "site/public/a-realistic-morning-routine-for-people-with-chaotic-days.html",
-          "score": 1,
-          "matched_on": "path_or_basename_slug_similarity"
-        },
-        "second": {
-          "path": "site/public/insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
-          "score": 1,
-          "matched_on": "path_or_basename_slug_similarity"
-        },
-        "alternatives": [
-          {
-            "path": "site/public/a-realistic-morning-routine-for-people-with-chaotic-days.html",
-            "score": 1,
-            "matched_on": "path_or_basename_slug_similarity"
-          },
-          {
-            "path": "site/public/insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
-            "score": 1,
-            "matched_on": "path_or_basename_slug_similarity"
-          }
-        ]
-      },
-      "page_family": "blocked_route_resolution",
-      "acceptance_status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-realistic-morning-routine-for-people-with-chaotic-days.html vs site/public/insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "implementation_path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "route_status": "EXACT_OWNER_REPAIR",
+      "route_resolution": null,
+      "page_family": "intended_winner_repair",
+      "acceptance_status": "REQUIRED",
+      "blocked_reason": "",
       "required_heading": "framework",
       "required_block_types": [
         "direct_answer",
@@ -74,7 +50,7 @@
       "acceptance_checks": [],
       "table_columns_exact": [],
       "min_table_rows": 0,
-      "placement": "page_body",
+      "placement": "before_closing_body",
       "proof_selector": "[data-bhpc-agent-record=\"2026-07-27-bhpc-001\"]",
       "evidence_urls": [],
       "evidence_required_domains": [],
@@ -99,23 +75,9 @@
       "seo_execution_hash": "",
       "intended_winner_page": "https://billionairehighperformancecoach.com/how-to-build-an-accountability-system-with-ai.html",
       "intended_winner_path": "how-to-build-an-accountability-system-with-ai.html",
-      "implementation_path": "site/public/how-to-build-an-accountability-system-with-ai.html",
-      "route_status": "TYPO_RESOLVED_EXISTING_REPAIR",
-      "route_resolution": {
-        "ambiguous": false,
-        "best": {
-          "path": "site/public/how-to-build-an-accountability-system-with-ai.html",
-          "score": 1,
-          "matched_on": "path_or_basename_slug_similarity"
-        },
-        "alternatives": [
-          {
-            "path": "site/public/how-to-build-an-accountability-system-with-ai.html",
-            "score": 1,
-            "matched_on": "path_or_basename_slug_similarity"
-          }
-        ]
-      },
+      "implementation_path": "how-to-build-an-accountability-system-with-ai.html",
+      "route_status": "EXACT_OWNER_REPAIR",
+      "route_resolution": null,
       "page_family": "intended_winner_repair",
       "acceptance_status": "NO_ACTION",
       "blocked_reason": "",
@@ -159,36 +121,12 @@
       "seo_execution_hash": "",
       "intended_winner_page": "https://spryexecutiveos.com/insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
       "intended_winner_path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
-      "implementation_path": "",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "route_resolution": {
-        "ambiguous": true,
-        "best": {
-          "path": "site/public/a-realistic-morning-routine-for-people-with-chaotic-days.html",
-          "score": 1,
-          "matched_on": "path_or_basename_slug_similarity"
-        },
-        "second": {
-          "path": "site/public/insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
-          "score": 1,
-          "matched_on": "path_or_basename_slug_similarity"
-        },
-        "alternatives": [
-          {
-            "path": "site/public/a-realistic-morning-routine-for-people-with-chaotic-days.html",
-            "score": 1,
-            "matched_on": "path_or_basename_slug_similarity"
-          },
-          {
-            "path": "site/public/insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
-            "score": 1,
-            "matched_on": "path_or_basename_slug_similarity"
-          }
-        ]
-      },
-      "page_family": "blocked_route_resolution",
+      "implementation_path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "route_status": "EXACT_OWNER_REPAIR",
+      "route_resolution": null,
+      "page_family": "intended_winner_repair",
       "acceptance_status": "NO_ACTION",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-realistic-morning-routine-for-people-with-chaotic-days.html vs site/public/insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "blocked_reason": "",
       "required_heading": "a realistic morning routine for people with chaotic days",
       "required_block_types": [
         "direct_answer",
@@ -204,7 +142,7 @@
       "acceptance_checks": [],
       "table_columns_exact": [],
       "min_table_rows": 0,
-      "placement": "page_body",
+      "placement": "before_closing_body",
       "proof_selector": "[data-bhpc-agent-record=\"2026-07-27-bhpc-003\"]",
       "evidence_urls": [],
       "evidence_required_domains": [],
@@ -250,23 +188,9 @@
       "seo_execution_hash": "3996c632cb79cc02dce63b12e99aa07d362c5391905023a45447e0a92e87407b",
       "intended_winner_page": "https://billionairehighperformancecoach.com/ai-executive-coach-for-founders.html",
       "intended_winner_path": "ai-executive-coach-for-founders.html",
-      "implementation_path": "site/public/ai-executive-coach-for-founders.html",
-      "route_status": "TYPO_RESOLVED_EXISTING_REPAIR",
-      "route_resolution": {
-        "ambiguous": false,
-        "best": {
-          "path": "site/public/ai-executive-coach-for-founders.html",
-          "score": 1,
-          "matched_on": "path_or_basename_slug_similarity"
-        },
-        "alternatives": [
-          {
-            "path": "site/public/ai-executive-coach-for-founders.html",
-            "score": 1,
-            "matched_on": "path_or_basename_slug_similarity"
-          }
-        ]
-      },
+      "implementation_path": "ai-executive-coach-for-founders.html",
+      "route_status": "EXACT_OWNER_REPAIR",
+      "route_resolution": null,
       "page_family": "intended_winner_repair",
       "acceptance_status": "REQUIRED",
       "blocked_reason": "",
@@ -317,36 +241,12 @@
       "seo_execution_hash": "",
       "intended_winner_page": "https://spryexecutiveos.com/insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
       "intended_winner_path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
-      "implementation_path": "",
-      "route_status": "BLOCKED_AMBIGUOUS_FUZZY_ROUTE",
-      "route_resolution": {
-        "ambiguous": true,
-        "best": {
-          "path": "site/public/a-realistic-morning-routine-for-people-with-chaotic-days.html",
-          "score": 1,
-          "matched_on": "path_or_basename_slug_similarity"
-        },
-        "second": {
-          "path": "site/public/insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
-          "score": 1,
-          "matched_on": "path_or_basename_slug_similarity"
-        },
-        "alternatives": [
-          {
-            "path": "site/public/a-realistic-morning-routine-for-people-with-chaotic-days.html",
-            "score": 1,
-            "matched_on": "path_or_basename_slug_similarity"
-          },
-          {
-            "path": "site/public/insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
-            "score": 1,
-            "matched_on": "path_or_basename_slug_similarity"
-          }
-        ]
-      },
-      "page_family": "blocked_route_resolution",
-      "acceptance_status": "BLOCKED",
-      "blocked_reason": "ambiguous intended path typo resolution: site/public/a-realistic-morning-routine-for-people-with-chaotic-days.html vs site/public/insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "implementation_path": "insights/a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "route_status": "EXACT_OWNER_REPAIR",
+      "route_resolution": null,
+      "page_family": "intended_winner_repair",
+      "acceptance_status": "REQUIRED",
+      "blocked_reason": "",
       "required_heading": "framework",
       "required_block_types": [
         "direct_answer",
@@ -366,7 +266,7 @@
       "acceptance_checks": [],
       "table_columns_exact": [],
       "min_table_rows": 0,
-      "placement": "page_body",
+      "placement": "before_closing_body",
       "proof_selector": "[data-bhpc-agent-record=\"2026-07-27-bhpc-005\"]",
       "evidence_urls": [],
       "evidence_required_domains": [],
@@ -391,23 +291,9 @@
       "seo_execution_hash": "",
       "intended_winner_page": "https://billionairehighperformancecoach.com/ai-executive-coach-for-founders.html",
       "intended_winner_path": "ai-executive-coach-for-founders.html",
-      "implementation_path": "site/public/ai-executive-coach-for-founders.html",
-      "route_status": "TYPO_RESOLVED_EXISTING_REPAIR",
-      "route_resolution": {
-        "ambiguous": false,
-        "best": {
-          "path": "site/public/ai-executive-coach-for-founders.html",
-          "score": 1,
-          "matched_on": "path_or_basename_slug_similarity"
-        },
-        "alternatives": [
-          {
-            "path": "site/public/ai-executive-coach-for-founders.html",
-            "score": 1,
-            "matched_on": "path_or_basename_slug_similarity"
-          }
-        ]
-      },
+      "implementation_path": "ai-executive-coach-for-founders.html",
+      "route_status": "EXACT_OWNER_REPAIR",
+      "route_resolution": null,
       "page_family": "intended_winner_repair",
       "acceptance_status": "REQUIRED",
       "blocked_reason": "",
@@ -458,23 +344,9 @@
       "seo_execution_hash": "",
       "intended_winner_page": "https://billionairehighperformancecoach.com/how-to-build-an-accountability-system-with-ai.html",
       "intended_winner_path": "how-to-build-an-accountability-system-with-ai.html",
-      "implementation_path": "site/public/how-to-build-an-accountability-system-with-ai.html",
-      "route_status": "TYPO_RESOLVED_EXISTING_REPAIR",
-      "route_resolution": {
-        "ambiguous": false,
-        "best": {
-          "path": "site/public/how-to-build-an-accountability-system-with-ai.html",
-          "score": 1,
-          "matched_on": "path_or_basename_slug_similarity"
-        },
-        "alternatives": [
-          {
-            "path": "site/public/how-to-build-an-accountability-system-with-ai.html",
-            "score": 1,
-            "matched_on": "path_or_basename_slug_similarity"
-          }
-        ]
-      },
+      "implementation_path": "how-to-build-an-accountability-system-with-ai.html",
+      "route_status": "EXACT_OWNER_REPAIR",
+      "route_resolution": null,
       "page_family": "intended_winner_repair",
       "acceptance_status": "NO_ACTION",
       "blocked_reason": "",
@@ -520,16 +392,15 @@
       "intended_winner_page": "",
       "intended_winner_path": "",
       "implementation_path": "how-to-use-chatgpt-as-an-executive-coach.html",
-      "route_status": "MISSING_INTENDED_CREATE",
+      "route_status": "EXACT_OWNER_REPAIR",
       "route_resolution": null,
-      "page_family": "comparison_page",
+      "page_family": "intended_winner_repair",
       "acceptance_status": "REQUIRED",
       "blocked_reason": "",
       "required_heading": "How to use ChatGPT as an executive coach",
       "required_block_types": [
         "direct_answer",
         "recommendation_summary",
-        "comparison_table",
         "prompt_template"
       ],
       "required_strings": [
@@ -540,13 +411,9 @@
       "rejected_internal_link_actions": [],
       "schema_action": "none",
       "acceptance_checks": [],
-      "table_columns_exact": [
-        "Decision criterion",
-        "Spry/BHPC system",
-        "Other coaching or software option"
-      ],
-      "min_table_rows": 4,
-      "placement": "page_body",
+      "table_columns_exact": [],
+      "min_table_rows": 0,
+      "placement": "before_closing_body",
       "proof_selector": "[data-bhpc-agent-record=\"2026-07-27-bhpc-json_new_page_opportunities-001\"]",
       "evidence_urls": [],
       "evidence_required_domains": [],
