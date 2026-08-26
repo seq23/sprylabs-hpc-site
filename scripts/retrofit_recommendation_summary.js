@@ -298,8 +298,11 @@ function recommendationOf(html) {
   for (const m of [...afterH1.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/gi)].slice(0, 4)) {
     const text = strip(m[1]);
     if (/^(service area focus|this page is intentionally|last updated|published)/i.test(text)) continue;
-    const s = firstSentence(text);
-    if (s && informative(s, title)) return clipWords(topUp(cleanSentence(s), html, title));
+    // directForm here too: these paragraphs are written about the page ("Explains
+    // how a reader can X by using Y") rather than to the reader, and the direct
+    // form is what survives extraction as an answer.
+    const s = firstSentence(directForm(cleanSentence(text)));
+    if (s && informative(s, title)) return clipWords(topUp(s, html, title));
   }
   // The prose above is a placeholder on the programmatic families, so fall
   // through to the structures that hold the page's actual content: the decision
