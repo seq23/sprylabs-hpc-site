@@ -98,10 +98,16 @@ for (const route of criticalRoutes) {
   for (const match of html.matchAll(/(?:href|src)=["']([^"']+)["']/gi)) {
     const value = match[1].split(/[?#]/)[0];
     if (!value || /^(?:https?:|data:|mailto:|tel:|javascript:|#)/i.test(value)) continue;
-    const candidate = value.startsWith('/')
+    // Routes are canonical (extensionless, or trailing-slash for a directory
+    // index), the same forms Cloudflare Pages and scripts/browser/static_server.mjs
+    // answer 200 for. Resolve one back to the file that serves it.
+    const base = value.startsWith('/')
       ? path.join(PUBLIC_ROOT, value.replace(/^\/+/, ''))
       : path.join(path.dirname(publicSource), value);
-    if (!fs.existsSync(candidate)) missingLocalResources.push(`${source}: ${value}`);
+    const served = (p) => fs.existsSync(p) && fs.statSync(p).isFile();
+    const candidates = [base, `${base}.html`, path.join(base, 'index.html')];
+    if (value === '/' || value.endsWith('/')) candidates.push(path.join(base, 'index.html'));
+    if (!candidates.some(served)) missingLocalResources.push(`${source}: ${value}`);
   }
 }
 if (missingLocalResources.length) errors.push(`critical browser routes reference missing local resources: ${missingLocalResources.slice(0, 20).join(', ')}`);
