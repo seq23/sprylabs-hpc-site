@@ -9,6 +9,11 @@ npm run search:targets
 npm run search:observe
 npm run search:competitors
 
+# The provider_inputs directory holds only run outputs, so it is not tracked and
+# does not exist on a fresh checkout. gsc_search_analytics.py writes into it and
+# does not create it, so the cycle died with FileNotFoundError on every run that
+# had credentials - the rm below cannot create it either.
+mkdir -p data/search_intelligence/provider_inputs
 rm -f data/search_intelligence/provider_inputs/gsc_bhpc.json data/search_intelligence/provider_inputs/gsc_spry.json .gsc-service-account.json
 if [ -n "${GSC_SERVICE_ACCOUNT_JSON:-}" ]; then
   printf '%s' "$GSC_SERVICE_ACCOUNT_JSON" > .gsc-service-account.json
