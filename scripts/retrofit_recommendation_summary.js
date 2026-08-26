@@ -69,15 +69,206 @@ function panelByHeading(html, patterns) {
 }
 
 const norm = (v) => String(v || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
-/** A restatement of the title is not a summary - it tells the reader nothing. */
+
+// Phrasings the generators emit in place of an answer. `answer_promise` is the
+// clearest case: it is a description OF an answer ("a direct, bounded answer
+// that explains X"), not an answer, and it names the page's concept rather than
+// saying anything. These reached 860 summary blocks because the old
+// informative() check only rejected a candidate that equalled the title, and
+// the placeholder does not equal the title - it just says nothing. A block that
+// announces a gap is worse than no block, so these are rejected outright and
+// the page falls through to a real source below.
+const BOILERPLATE = [
+  /^a direct, bounded answer that explains/i,
+  /^this page fills the daily citation velocity gap/i,
+  /^this page gives a direct, extractable answer to the source query/i,
+  /reference surface that uses/i,
+  /is a named operating framework for understanding/i,
+  /^this page is intentionally narrow/i,
+  /^this is one of the frameworks inside/i,
+  /^explains the decision, the operating method, and the next practical step/i,
+  /^a short framing answer/i,
+];
+
+const STOPWORDS = new Set(['the', 'and', 'for', 'with', 'you', 'your', 'can', 'how', 'what', 'why',
+  'when', 'who', 'that', 'this', 'from', 'into', 'are', 'was', 'has', 'have', 'not', 'but', 'use',
+  'using', 'about', 'does', 'did', 'should', 'would', 'could', 'will', 'been', 'they', 'them']);
+
+/** The words that make the title this page and not another one. */
+function titleTokens(title) {
+  return norm(title).split(' ').filter((w) => w.length > 3 && !STOPWORDS.has(w)).slice(0, 6);
+}
+
+/**
+ * A restatement of the title is not a summary - it tells the reader nothing.
+ * Neither is a sentence about a different topic. The generators pin every page
+ * in a family to concepts[0], so a page about "planner for accountability"
+ * carries an answer about "never miss twice"; requiring the candidate to share
+ * at least one distinguishing word with the title catches that drift without
+ * needing to know which families are affected.
+ */
 function informative(candidate, title) {
   const c = norm(candidate);
   if (!c) return false;
+  if (BOILERPLATE.some((p) => p.test(String(candidate).trim()))) return false;
   const t = norm(title);
   if (!t) return true;
   if (c === t) return false;
   // Title plus a couple of filler words is still the title.
-  return !(c.startsWith(t) && c.length - t.length < 24);
+  if (c.startsWith(t) && c.length - t.length < 24) return false;
+  const tokens = titleTokens(title);
+  if (tokens.length && !tokens.some((tok) => c.includes(tok))) return false;
+  return true;
+}
+
+const cap = (s) => String(s).charAt(0).toUpperCase() + String(s).slice(1);
+
+/**
+ * The generators write the page's substance in the third person, describing
+ * what the page does rather than answering ("Explains how a reader can X by
+ * using Y"). Turning that into the direct form is a grammatical change to a
+ * sentence already on the page, not a new claim.
+ */
+/**
+ * directForm drops "a reader" as the subject, which strands the pronouns that
+ * referred to it. Repair only those - a full noun phrase like "a reader" is
+ * self-contained and is left exactly as written, because rewriting person
+ * across arbitrary sentences produces disagreement ("you opens their LLM").
+ */
+function repairStrandedPronouns(text) {
+  return String(text || '')
+    .replace(/\bthe LLM they already use\b/gi, 'the LLM you already use')
+    .replace(/\bthey already use\b/gi, 'you already use')
+    .replace(/\bfor a reader who is\b/gi, 'when you are')
+    .replace(/\bthe reader wants\b/gi, 'you want')
+    .replace(/\bthe reader needs\b/gi, 'you need');
+}
+
+// Bullets that instruct whoever is building the page, not whoever is reading
+// it. They are visible on the page but they are not an answer to anything.
+// The last entry is not meta but near-universal: it is on 1200 pages verbatim.
+// Appending it would lift most answers over the 40-word mark without telling
+// the reader anything this page does not share with a third of the site, which
+// is padding to hit a number rather than an answer.
+const META_BULLET = [/^anchor the page\b/i, /^close with\b/i, /\binstead of generic\b/i,
+  /^add visible authority\b/i, /^this section implements\b/i,
+  /^use it when the reader needs structure before motivation/i];
+
+/** Drop the generator's trailing scaffolding. Wording is left as the page has it. */
+function cleanSentence(text) {
+  return String(text || '').trim()
+    .replace(/\s*The specific query framing is:[\s\S]*$/i, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function directForm(text) {
+  const s = String(text || '').trim().replace(/\s+The specific query framing is:[\s\S]*$/i, '');
+  let m;
+  if ((m = s.match(/^Explains how a reader can (.+?) by using (.+)$/i))) return repairStrandedPronouns(`To ${m[1]}, use ${m[2]}`);
+  if ((m = s.match(/^Defines (.+?) as (.+)$/i))) return `${cap(m[1])} is ${m[2]}`;
+  if ((m = s.match(/^Turns (.+?) into a practical method for (.+)$/i))) return repairStrandedPronouns(`${cap(m[1])} works as a practical method ${m[2].replace(/^a reader who is /i, 'when you are ')}`);
+  if ((m = s.match(/^Maps the (.+?) into (.+)$/i))) return repairStrandedPronouns(`Map the ${m[1]} onto ${m[2]}`);
+  if ((m = s.match(/^Answers (.+)$/i))) return cap(m[1]);
+  return s;
+}
+
+/** Keep the snippet inside the span an answer engine will lift. */
+function clipWords(text, max = 60) {
+  const parts = String(text || '').trim().split(/\s+/).filter(Boolean);
+  if (parts.length <= max) return String(text).trim().replace(/\s+([,.;:])/g, '$1');
+  return `${parts.slice(0, max).join(' ').replace(/[,;:]?$/, '')}.`;
+}
+
+/**
+ * Comparison pages carry their real substance in the decision table, not in the
+ * prose - the prose is the placeholder. Both cells below are verbatim table
+ * content, so the composed sentence introduces nothing the page does not say.
+ */
+function comparisonAnswer(html, title) {
+  if (!/data-extraction-type="comparison"/i.test(html)) return '';
+  const m = title.match(/^(.+?)\s+vs\s+(.+?)(?:\s+for\s+(.+))?$/i);
+  if (!m) return '';
+  const [, subject, tool] = m;
+  const row = (label) => {
+    const re = new RegExp(`<th[^>]*scope="row"[^>]*>\\s*${label}\\s*</th>((?:\\s*<td[^>]*>[\\s\\S]*?</td>)+)`, 'i');
+    const hit = html.match(re);
+    if (!hit) return null;
+    const cells = [...hit[1].matchAll(/<td[^>]*>([\s\S]*?)<\/td>/gi)].map((c) => cleanSentence(strip(c[1])));
+    return cells.length >= 2 ? cells : null;
+  };
+  const structure = row('Operating structure');
+  if (!structure) return '';
+  const lower = (s) => s.charAt(0).toLowerCase() + s.slice(1);
+  let out = `${title}: ${subject} is ${lower(structure[0])} By comparison, a ${tool} ${lower(structure[1])}`;
+  const fit = row('Best fit');
+  if (fit) out += ` ${cap(fit[0])}`;
+  return out;
+}
+
+/**
+ * The extraction panels hold the page's own description of what it answers. A
+ * page can carry several: the first is often the generator's product blurb and
+ * the real definition sits in a later one, so try each and keep the first that
+ * survives the informative() check rather than giving up on the first miss.
+ */
+function extractionAnswer(html, title) {
+  const secs = [...html.matchAll(/<section[^>]*class="[^"]*citation-extraction[^"]*"[^>]*>([\s\S]*?)<\/section>/gi)];
+  for (const sec of secs) {
+    const para = sec[1].match(/<p[^>]*>([\s\S]*?)<\/p>/i);
+    if (!para) continue;
+    const base = cleanSentence(directForm(strip(para[1])));
+    if (!base || !informative(base, title)) continue;
+    const bullets = [...sec[1].matchAll(/<li[^>]*>([\s\S]*?)<\/li>/gi)]
+      .map((b) => cleanSentence(strip(b[1])))
+      .filter((b) => b && b.split(/\s+/).length > 4 && !META_BULLET.some((p) => p.test(b)));
+    let out = base.replace(/\.?$/, '.');
+    for (const b of bullets) {
+      if (out.split(/\s+/).length >= 40) break;
+      if (tooSimilar(b, out)) continue;
+      out += ` ${b.replace(/\.?$/, '.')}`;
+    }
+    return out;
+  }
+  return '';
+}
+
+/**
+ * A genuine but short answer is still better than a padded one, so this only
+ * ever appends sentences the page already carries, and stops as soon as the
+ * span is long enough to stand on its own.
+ */
+/**
+ * Two sentences that say the same thing in different words still read as
+ * padding, and the templates restate the page's one idea several ways. Compare
+ * word sets rather than strings so a restatement is caught.
+ */
+function tooSimilar(candidate, existing) {
+  const a = new Set(norm(candidate).split(' ').filter((w) => w.length > 3));
+  if (!a.size) return true;
+  const b = new Set(norm(existing).split(' ').filter((w) => w.length > 3));
+  let shared = 0;
+  for (const w of a) if (b.has(w)) shared++;
+  return shared / a.size > 0.6;
+}
+
+function topUp(text, html, title) {
+  let out = String(text || '');
+  const len = () => out.split(/\s+/).filter(Boolean).length;
+  if (len() >= 40) return out;
+  // Only the lede - the prose between the H1 and the first panel. Past that
+  // point sit worked examples ("A reader opens their LLM...") and the standing
+  // legal boundary, which are real content but are not this page's answer.
+  const afterH1 = (html.split(/<\/h1>/i)[1] || '').split(/<section\b/i)[0];
+  const paras = [...afterH1.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/gi)].map((m) => strip(m[1]));
+  for (const p of paras) {
+    if (len() >= 40) break;
+    const s = cleanSentence(p);
+    if (!s || !informative(s, title)) continue;
+    if (tooSimilar(s, out)) continue;
+    out += ` ${s.replace(/\.?$/, '.')}`;
+  }
+  return out;
 }
 
 /** The recommendation itself, in the page's own words. */
@@ -86,6 +277,12 @@ function recommendationOf(html) {
   const title = strip(h1 || '');
   const named = panelByHeading(html, [/^quick answer/, /^direct answer/, /^the short answer/, /^short answer/, /^bottom line/, /^answer\b/]);
   if (named) { const s = firstSentence(named); if (s && informative(s, title)) return s; }
+  // A comparison page's prose says only that it compares two things; the
+  // decision table is where it says how they differ. Prefer the table before
+  // falling back to prose, or the summary reads "Compares X with Y, focusing
+  // on..." - true, page-specific, and still not an answer to the question.
+  const table = comparisonAnswer(html, title);
+  if (table && informative(table, title)) return clipWords(table);
   // The intro often carries the answer as its final sentence, after the framing.
   const intro = html.match(/<div class="page-intro">([\s\S]*?)<\/div>/i)
     || html.match(/<(?:header|section)[^>]*class="[^"]*(?:hero|intro|lede)[^"]*"[^>]*>([\s\S]*?)<\/(?:header|section)>/i);
@@ -102,8 +299,15 @@ function recommendationOf(html) {
     const text = strip(m[1]);
     if (/^(service area focus|this page is intentionally|last updated|published)/i.test(text)) continue;
     const s = firstSentence(text);
-    if (s && informative(s, title)) return s;
+    if (s && informative(s, title)) return clipWords(topUp(cleanSentence(s), html, title));
   }
+  // The prose above is a placeholder on the programmatic families, so fall
+  // through to the structures that hold the page's actual content: the decision
+  // table on a comparison, and the extraction panel everywhere else. Both are
+  // visible on the page, which is what keeps the summary and any schema built
+  // from it in parity.
+  const panel = extractionAnswer(html, title);
+  if (panel) return clipWords(topUp(panel, html, title));
   return '';
 }
 
