@@ -1,0 +1,7 @@
+{
+  "fixture": "content-pattern-contract",
+  "expectation": "PASS",
+  "description": "A published page carrying all four blocking blocks: a direct-answer block (citation-definition, data-llm-answer, a labelled Quick/Direct/Short answer heading, or an opening paragraph of at least 80 characters), an h1 long enough to carry the searcher phrasing, no empty table cells, and a conversion path to /download, aplayermode.com or gumroad.com.",
+  "blocking_checks": ["direct_answer", "query_in_heading", "no_empty_table_cells", "conversion_path"],
+  "expected_exit_code": 0
+}

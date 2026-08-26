@@ -1767,9 +1767,29 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-174",
+      "validation_id": "VAL-112",
+      "lane": "citation-contract",
+      "command": "npm run validate:content-pattern",
+      "order": 177,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-175",
+      "validation_id": "VAL-113",
+      "lane": "citation-intelligence",
+      "command": "npm run validate:query-atlas",
+      "order": 178,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 177,
+  "entry_count": 178,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2027,6 +2047,14 @@
         {
           "id": "VAL-SEARCH-INTELLIGENCE",
           "command": "npm run validate:search-intelligence"
+        },
+        {
+          "id": "validate:content-pattern",
+          "command": "npm run validate:content-pattern"
+        },
+        {
+          "id": "validate:query-atlas",
+          "command": "npm run validate:query-atlas"
         }
       ]
     },
@@ -2101,6 +2129,14 @@
         {
           "id": "VAL-SEARCH-INTELLIGENCE",
           "command": "npm run validate:search-intelligence"
+        },
+        {
+          "id": "validate:content-pattern",
+          "command": "npm run validate:content-pattern"
+        },
+        {
+          "id": "validate:query-atlas",
+          "command": "npm run validate:query-atlas"
         }
       ]
     },

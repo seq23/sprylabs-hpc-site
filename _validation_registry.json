@@ -5660,8 +5660,64 @@
         "MX-173"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-112",
+      "status": "ADMITTED",
+      "name": "validate:content-pattern",
+      "check_type": "content",
+      "owning_lane": "citation-contract",
+      "risk_prevented": "Prevents publishing a page that an answer engine cannot quote or that gives a citation nowhere to go: no direct-answer block, an h1 too short to carry the searcher phrasing, a table with empty cells, or no route to purchase.",
+      "existing_coverage_gap": "The external review agent re-reported 27% of distinct defects on later runs despite them being marked released. No existing validator checked for the blocks the agent keeps asking for before publish; they were only found after audit.",
+      "scope": [
+        "site/public"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:content-pattern",
+      "implementation_path": "scripts/validators/validate_content_pattern_contract.js",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/content-pattern/pass.json",
+      "negative_fixture": "fixtures/validation/content-pattern/fail.json",
+      "evidence_output": "reports/validation/content-pattern-contract.json",
+      "runtime_budget_seconds": 30,
+      "maintenance_owner": "content",
+      "overlap_analysis": "Does not duplicate validate:citation-contract (schema and extraction markup) or validate:page-seo (title/meta/canonical). This checks the presence of the specific body blocks the review agent requests, which neither of those inspects.",
+      "decision": "ADMITTED as HARD_FAIL: all four blocking checks measure 100% across 2,811 published pages, so blocking cannot regress an already-clean surface.",
+      "decision_date": "2026-08-26",
+      "matrix_ids": [
+        "MX-174"
+      ]
+    },
+    {
+      "validation_id": "VAL-113",
+      "status": "ADMITTED",
+      "name": "validate:query-atlas",
+      "check_type": "content",
+      "owning_lane": "citation-intelligence",
+      "risk_prevented": "Prevents the query atlas from claiming coverage it cannot support - clusters without evidence-backed queries, or synthetic permutations counted as demand.",
+      "existing_coverage_gap": "The command was executable from package.json but never admitted to the registry, so it ran outside governance and its severity was undeclared.",
+      "scope": [
+        "data/queries"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:query-atlas",
+      "implementation_path": "scripts/atlas/validate_query_atlas.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/query-atlas/pass.json",
+      "negative_fixture": "fixtures/validation/query-atlas/fail.json",
+      "evidence_output": "reports/validation/query-atlas.json",
+      "runtime_budget_seconds": 20,
+      "maintenance_owner": "content",
+      "overlap_analysis": "Does not duplicate validate:query-owner-uniqueness, which checks that two pages do not claim the same query. This checks that the queries themselves are evidence-backed.",
+      "decision": "ADMITTED as HARD_FAIL: the validator already passes, and an atlas that overstates demand is the input to every downstream page decision.",
+      "decision_date": "2026-08-26",
+      "matrix_ids": [
+        "MX-175"
+      ]
     }
   ],
-  "record_count": 178,
+  "record_count": 180,
   "generated_at": "2026-08-08T23:30:00Z"
 }
