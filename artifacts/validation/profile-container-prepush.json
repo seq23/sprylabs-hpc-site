@@ -1,6 +1,6 @@
 {
   "profile": "container-prepush",
-  "started_at": "2026-08-15T22:17:52.573Z",
+  "started_at": "2026-08-26T06:43:17.542Z",
   "steps": [
     {
       "id": "VAL-ORCHESTRATION-CONTRACT",
@@ -363,12 +363,6 @@
       "status": "PASS"
     },
     {
-      "id": "VAL-SITE-LAYOUT-PARITY",
-      "command": "npm run validate:site-layout",
-      "exit_code": 0,
-      "status": "PASS"
-    },
-    {
       "id": "REPAIR-VISIBLE-CONTENT-ARTIFACTS",
       "command": "npm run repair:visible-content-artifacts",
       "exit_code": 0,
@@ -385,8 +379,89 @@
       "command": "npm run validate:search-intelligence",
       "exit_code": 0,
       "status": "PASS"
+    },
+    {
+      "id": "validate:content-pattern",
+      "command": "npm run validate:content-pattern",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:query-atlas",
+      "command": "npm run validate:query-atlas",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:knowledge-map-route",
+      "command": "npm run validate:knowledge-map-route",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:workflow-yaml-inventory",
+      "command": "npm run validate:workflow-yaml-inventory",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:workflow-runtime-mutations",
+      "command": "npm run validate:workflow-runtime-mutations",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:workflow-artifacts",
+      "command": "npm run validate:workflow-artifacts",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:strategy-gate",
+      "command": "npm run validate:strategy-gate",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "safe-harbor:validate",
+      "command": "npm run safe-harbor:validate",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:workflow-write-scopes",
+      "command": "npm run validate:workflow-write-scopes",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:artifact-hardening-suite",
+      "command": "npm run validate:artifact-hardening-suite",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:kpi-truth",
+      "command": "npm run validate:kpi-truth",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:admin-github-bridge",
+      "command": "npm run validate:admin-github-bridge",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:ownership",
+      "command": "npm run validate:ownership",
+      "exit_code": 0,
+      "status": "PASS"
     }
   ],
   "status": "PASS",
-  "finished_at": "2026-08-15T22:20:46.720Z"
+  "failure_count": 0,
+  "failures": [],
+  "stopped_early_at": null,
+  "finished_at": "2026-08-26T06:47:23.375Z"
 }

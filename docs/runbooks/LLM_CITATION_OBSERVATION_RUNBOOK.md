@@ -15,7 +15,7 @@ For each priority query, record:
 - cited URL;
 - evidence screenshot or exported answer path.
 
-Copy `data/answer_surface_monitoring/observations.manual.json.example` to the ignored manual observations file and add only real observations. Never seed synthetic mentions or citations.
+Copy `data/citation_opportunities/observations.manual.json` to the ignored manual observations file and add only real observations. Never seed synthetic mentions or citations.
 
 ## States
 

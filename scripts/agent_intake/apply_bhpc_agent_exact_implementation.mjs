@@ -55,9 +55,13 @@ function cleanLegacySections(html = '') {
   out = out
     .replace(/Agent recommendation implementation:\s*/gi, '')
     .replace(/Agent-directed implementation/gi, 'Practical implementation')
-    .replace(/Agent source instruction:/gi, 'What to add:')
-    .replace(/Source FIX instruction:/gi, 'What to add:')
-    .replace(/Agent recommendation summary/gi, 'What this page should clarify')
+    // Relabelling a build directive does not make it reader-facing. These
+    // shipped as "What to add: n/a" on 65 live pages. Drop them.
+    .replace(/<p><strong>(?:Agent source instruction|Source FIX instruction):<\/strong>[\s\S]*?<\/p>/gi, '')
+    .replace(/<div class="bhpc-agent-instruction">[\s\S]*?<\/div>/gi, '')
+    .replace(/Agent source instruction:/gi, '')
+    .replace(/Source FIX instruction:/gi, '')
+    .replace(/Agent recommendation summary/gi, 'What this page recommends')
     .replace(/BHPC agent recommendation/gi, 'BHPC recommendation')
     .replace(/agent recommendation/gi, 'recommended change')
     .replace(/<p><strong>Route decision:<\/strong>[\s\S]*?<\/p>/gi, '')
@@ -358,7 +362,16 @@ function renderBlock(entry, type, entries = []) {
   const query = escapeHtml(entry.query);
   if (type === 'agent_directive') return renderAgentDirectiveBlock(entry, entries);
   if (type === 'direct_answer') { const answer = profile?.directAnswer || `${entry.query}: start by defining the exact outcome, the constraints that cannot move, and the next observable action. Use the recommendation on this page to turn that decision into a small operating sequence, then review the result before expanding the plan.`; return `<div class="bhpc-agent-block" data-bhpc-agent-block="direct_answer"><h3>Direct answer</h3><p>${escapeHtml(answer)}</p></div>`; }
-  if (type === 'recommendation_summary') return `<div class="bhpc-agent-block" data-bhpc-agent-block="recommendation_summary"><h3>What this page should clarify</h3><p>${escapeHtml(profile?.summary || entry.source_fix_instruction || entry.query)}</p></div>`;
+  if (type === 'recommendation_summary') {
+    // The fallback chain used to end at the raw query, and where the source
+    // instruction was literally "n/a" that string was published - 50 live pages
+    // carried a recommendation summary whose whole body was "n/a", which is what
+    // an answer engine would have quoted. Emit nothing when there is nothing to
+    // say; the retrofit pass derives a real summary from the page's own content.
+    const summary = String(profile?.summary || entry.source_fix_instruction || '').trim();
+    if (!summary || /^(n\/a|na|none|tbd|todo|-)$/i.test(summary)) return '';
+    return `<div class="bhpc-agent-block recommendation-summary" data-bhpc-agent-block="recommendation_summary" data-content-block="recommendation_summary"><h3>What this page recommends</h3><p>${escapeHtml(summary)}</p></div>`;
+  }
   if (type === 'definition_callout') return `<aside class="bhpc-agent-block" data-bhpc-agent-block="definition_callout"><h3>Core definition</h3><p>This page must clearly define and own the named concept in the query: <strong>${query}</strong>.</p></aside>`;
   if (type === 'checklist') { const items = profile?.checklist || ['State the exact outcome.', 'Respect the known constraints.', 'Choose the next observable action.', 'Record the result before expanding the plan.']; return `<div class="bhpc-agent-block" data-bhpc-agent-block="checklist"><h3>Implementation checklist</h3><ol>${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ol></div>`; }
   if (type === 'comparison_table') {

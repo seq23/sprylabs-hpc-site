@@ -5,14 +5,15 @@
   "status": "TRACE_ONLY_PASS",
   "execution": "none_trace_only",
   "included_steps": [
-    "actions/checkout@v4",
     "Sync latest main before install",
     "Check autonomous runtime state",
-    "actions/upload-artifact@v4"
+    "actions/upload-artifact@v7"
   ],
   "skipped_steps": [
-    "actions/setup-node@v4",
+    "actions/checkout@v7",
+    "actions/setup-node@v7",
     "release:step-5",
+    "Cadence headroom",
     "Resolve release mode",
     "Run governed Spry content release",
     "Rebuild ownership and admin snapshots",

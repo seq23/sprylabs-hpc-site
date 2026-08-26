@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-15T22:20:34.823Z",
-  "files_scanned": 439,
-  "source_count": 217,
-  "hard_gate_source_count": 201,
-  "warning_source_count": 33,
+  "generated_at": "2026-08-26T06:47:09.713Z",
+  "files_scanned": 446,
+  "source_count": 221,
+  "hard_gate_source_count": 204,
+  "warning_source_count": 35,
   "records": [
     {
       "file": "scripts/admin/apply_overrides.js",
@@ -73,6 +73,18 @@
       "classification": "mixed"
     },
     {
+      "file": "scripts/assemble_pages_output.js",
+      "hard_gate_signals": 9,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/atlas/validate_query_atlas.mjs",
+      "hard_gate_signals": 3,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/audit_warnings.js",
       "hard_gate_signals": 0,
       "warning_signals": 13,
@@ -117,6 +129,12 @@
     {
       "file": "scripts/authority_scale/validate_max_fanout.mjs",
       "hard_gate_signals": 1,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/build_404.js",
+      "hard_gate_signals": 2,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -189,6 +207,12 @@
     {
       "file": "scripts/insert_alternatives_blocks.js",
       "hard_gate_signals": 2,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/install_clarity.js",
+      "hard_gate_signals": 4,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -332,7 +356,7 @@
     },
     {
       "file": "scripts/render/render_synthesis.js",
-      "hard_gate_signals": 1,
+      "hard_gate_signals": 2,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -409,18 +433,6 @@
       "classification": "hard-gate-source"
     },
     {
-      "file": "scripts/site_layout/run_with_public_root.mjs",
-      "hard_gate_signals": 4,
-      "warning_signals": 0,
-      "classification": "hard-gate-source"
-    },
-    {
-      "file": "scripts/site_layout/stage_public_root.mjs",
-      "hard_gate_signals": 1,
-      "warning_signals": 0,
-      "classification": "hard-gate-source"
-    },
-    {
       "file": "scripts/social/collect_social.js",
       "hard_gate_signals": 3,
       "warning_signals": 2,
@@ -437,6 +449,12 @@
       "hard_gate_signals": 1,
       "warning_signals": 0,
       "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/synthesis/build_synthesis_articles.js",
+      "hard_gate_signals": 0,
+      "warning_signals": 1,
+      "classification": "warning-source"
     },
     {
       "file": "scripts/validate_audience_framing.js",
@@ -521,12 +539,6 @@
       "hard_gate_signals": 4,
       "warning_signals": 1,
       "classification": "mixed"
-    },
-    {
-      "file": "scripts/validation/run_profile_with_public_root.mjs",
-      "hard_gate_signals": 2,
-      "warning_signals": 0,
-      "classification": "hard-gate-source"
     },
     {
       "file": "scripts/validation/run_rendered_schema_parity_sharded.mjs",
@@ -643,14 +655,20 @@
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/validation/validate_operator_doc_currency.mjs",
+      "hard_gate_signals": 1,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/validation/validate_page_seo_contract.mjs",
       "hard_gate_signals": 0,
-      "warning_signals": 3,
+      "warning_signals": 5,
       "classification": "warning-source"
     },
     {
       "file": "scripts/validation/validate_profile.mjs",
-      "hard_gate_signals": 5,
+      "hard_gate_signals": 7,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -687,7 +705,7 @@
     {
       "file": "scripts/validation/validate_validation_registry.mjs",
       "hard_gate_signals": 0,
-      "warning_signals": 3,
+      "warning_signals": 4,
       "classification": "warning-source"
     },
     {
@@ -967,6 +985,12 @@
       "classification": "mixed"
     },
     {
+      "file": "scripts/validators/validate_content_pattern_contract.js",
+      "hard_gate_signals": 2,
+      "warning_signals": 2,
+      "classification": "mixed"
+    },
+    {
       "file": "scripts/validators/validate_content_routing.js",
       "hard_gate_signals": 3,
       "warning_signals": 0,
@@ -987,12 +1011,6 @@
     {
       "file": "scripts/validators/validate_conversion_endpoint.js",
       "hard_gate_signals": 3,
-      "warning_signals": 0,
-      "classification": "hard-gate-source"
-    },
-    {
-      "file": "scripts/validators/validate_coverage_route_contract.mjs",
-      "hard_gate_signals": 2,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -1064,6 +1082,12 @@
     },
     {
       "file": "scripts/validators/validate_internal_authority_graph.js",
+      "hard_gate_signals": 2,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/validate_knowledge_map_route_contract.mjs",
       "hard_gate_signals": 2,
       "warning_signals": 0,
       "classification": "hard-gate-source"

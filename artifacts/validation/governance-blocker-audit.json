@@ -1,6 +1,6 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-08-26T01:29:15.061Z",
+  "generated_at": "2026-08-26T06:44:36.626Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
   "admitted_hard_fail_count": 169,
   "reviewed_count": 8,
@@ -1836,13 +1836,13 @@
     },
     {
       "validation_id": "VAL-COVERAGE-ROUTE-CONTRACT",
-      "name": "validate:coverage-route",
-      "command": "npm run validate:coverage-route",
+      "name": "validate:knowledge-map-route",
+      "command": "npm run validate:knowledge-map-route",
       "owning_lane": "public-authority",
       "risk_prevented": "Prevents the public /coverage/ knowledge-map route from disappearing during packaging or exposing private draft runway data.",
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
-        "MX-COVERAGE-ROUTE-CONTRACT"
+        "MX-KNOWLEDGE-MAP-ROUTE"
       ],
       "suggested_review": "REVIEW_WARNING_BOUNDARY",
       "migration_status": "REVIEWED_NO_CHANGE",

@@ -1,12 +1,12 @@
 {
   "status": "PASS",
-  "audited": 345,
+  "audited": 355,
   "errors": [],
   "warnings": [],
   "types": {
-    "howto": 101,
-    "concept": 207,
-    "comparison": 36,
+    "howto": 110,
+    "concept": 210,
+    "comparison": 34,
     "decision": 1
   },
   "rows": [
@@ -63,13 +63,11 @@
       },
       "schema": {
         "schema_types": [
-          "WebPage",
+          "Article",
           "DefinedTerm",
           "BreadcrumbList",
-          "Product",
           "FAQPage",
-          "HowTo",
-          "Article"
+          "HowTo"
         ],
         "expected_schema": "HowTo",
         "schema_steps": 6,
@@ -152,13 +150,11 @@
       },
       "schema": {
         "schema_types": [
-          "WebPage",
+          "Article",
           "DefinedTerm",
           "BreadcrumbList",
-          "Product",
           "FAQPage",
-          "HowTo",
-          "Article"
+          "HowTo"
         ],
         "expected_schema": "HowTo",
         "schema_steps": 5,
@@ -203,9 +199,9 @@
       "observed_structure": {
         "type": "concept",
         "items": [
+          "What this page recommends",
           "How can I transform a tedious task into something enjoyable using ChatGPT?",
-          "Topic coverage",
-          "What this page should clarify"
+          "Topic coverage"
         ]
       },
       "schema": {
@@ -266,12 +262,10 @@
       },
       "schema": {
         "schema_types": [
-          "WebPage",
+          "Article",
           "DefinedTerm",
           "BreadcrumbList",
-          "Product",
-          "FAQPage",
-          "Article"
+          "FAQPage"
         ],
         "expected_schema": "DefinedTerm"
       },
@@ -416,9 +410,9 @@
       "observed_structure": {
         "type": "concept",
         "items": [
+          "What this page recommends",
           "Willpower Removal System",
-          "How to apply it",
-          "What this page should clarify"
+          "How to apply it"
         ]
       },
       "schema": {
@@ -526,9 +520,9 @@
       "observed_structure": {
         "type": "concept",
         "items": [
+          "What this page recommends",
           "Why people struggle",
-          "What actually works",
-          "How Billionaire High Performance Coach fits"
+          "What actually works"
         ]
       },
       "schema": {
@@ -1148,13 +1142,11 @@
       },
       "schema": {
         "schema_types": [
-          "WebPage",
+          "Article",
           "DefinedTerm",
           "BreadcrumbList",
-          "Product",
           "FAQPage",
-          "HowTo",
-          "Article"
+          "HowTo"
         ],
         "expected_schema": "HowTo",
         "schema_steps": 7,
@@ -1215,13 +1207,11 @@
       },
       "schema": {
         "schema_types": [
-          "WebPage",
+          "Article",
           "DefinedTerm",
           "BreadcrumbList",
-          "Product",
           "FAQPage",
-          "HowTo",
-          "Article"
+          "HowTo"
         ],
         "expected_schema": "HowTo",
         "schema_steps": 6,
@@ -1246,12 +1236,10 @@
       },
       "schema": {
         "schema_types": [
-          "WebPage",
+          "Article",
           "DefinedTerm",
           "BreadcrumbList",
-          "Product",
-          "FAQPage",
-          "Article"
+          "FAQPage"
         ],
         "expected_schema": "DefinedTerm"
       },
@@ -1318,49 +1306,41 @@
         "steps": [
           {
             "number": 1,
-            "title": "Install the Executive Context",
+            "title": "State the exact outcome",
             "description": "present",
-            "source_heading": "Step 1: Install the Executive Context"
+            "source_heading": "Step 1: State the exact outcome"
           },
           {
             "number": 2,
-            "title": "Define the Coaching Question",
+            "title": "Respect the known constraints",
             "description": "present",
-            "source_heading": "Step 2: Define the Coaching Question"
+            "source_heading": "Step 2: Respect the known constraints"
           },
           {
             "number": 3,
-            "title": "Run the Decision Test",
+            "title": "Choose the next observable action",
             "description": "present",
-            "source_heading": "Step 3: Run the Decision Test"
+            "source_heading": "Step 3: Choose the next observable action"
           },
           {
             "number": 4,
-            "title": "Lock the Commitment",
+            "title": "Record the result before expanding the plan",
             "description": "present",
-            "source_heading": "Step 4: Lock the Commitment"
-          },
-          {
-            "number": 5,
-            "title": "Review Evidence and Escalate",
-            "description": "present",
-            "source_heading": "Step 5: Review Evidence and Escalate"
+            "source_heading": "Step 4: Record the result before expanding the plan"
           }
         ]
       },
       "schema": {
         "schema_types": [
-          "WebPage",
+          "Article",
           "DefinedTerm",
           "BreadcrumbList",
-          "Product",
           "FAQPage",
-          "HowTo",
-          "Article"
+          "HowTo"
         ],
         "expected_schema": "HowTo",
-        "schema_steps": 5,
-        "visible_steps": 5
+        "schema_steps": 4,
+        "visible_steps": 4
       },
       "valid": true
     },
@@ -1377,9 +1357,9 @@
       "observed_structure": {
         "type": "concept",
         "items": [
+          "ali abdaal energy investment portfolio framework vs daily task lists",
           "A simple system for tracking what actually matters",
-          "Short Answer",
-          "The core definition"
+          "Short Answer"
         ]
       },
       "schema": {
@@ -5844,7 +5824,520 @@
       "valid": true
     },
     {
-      "path": "insights/chatgpt-daily-planning-prompt.html",
+      "path": "insights/bhpc-daily-citation-gap-fill-2026-08-22-05-chatgpt-workflow-for-personal-accountability.html",
+      "declared_type": "howto",
+      "expected_structure": {
+        "minimum_steps": 3,
+        "description": "at least three contiguous numbered procedural headings inside the extraction block"
+      },
+      "registry_type": "howto",
+      "schema_type_expected": "HowTo",
+      "observed_type": "howto",
+      "observed_structure": {
+        "type": "howto",
+        "steps": [
+          {
+            "number": 1,
+            "title": "Short Answer",
+            "description": "present",
+            "source_heading": "Step 1: Short Answer"
+          },
+          {
+            "number": 2,
+            "title": "How to run the workflow",
+            "description": "present",
+            "source_heading": "Step 2: How to run the workflow"
+          },
+          {
+            "number": 3,
+            "title": "Common failure modes",
+            "description": "present",
+            "source_heading": "Step 3: Common failure modes"
+          },
+          {
+            "number": 4,
+            "title": "Prompt",
+            "description": "present",
+            "source_heading": "Step 4: Prompt"
+          },
+          {
+            "number": 5,
+            "title": "Example operating response",
+            "description": "present",
+            "source_heading": "Step 5: Example operating response"
+          }
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm",
+          "HowTo"
+        ],
+        "expected_schema": "HowTo",
+        "schema_steps": 5,
+        "visible_steps": 5
+      },
+      "valid": true
+    },
+    {
+      "path": "insights/bhpc-daily-citation-gap-fill-2026-08-22-13-chatgpt-workflow-for-weekly-review.html",
+      "declared_type": "howto",
+      "expected_structure": {
+        "minimum_steps": 3,
+        "description": "at least three contiguous numbered procedural headings inside the extraction block"
+      },
+      "registry_type": "howto",
+      "schema_type_expected": "HowTo",
+      "observed_type": "howto",
+      "observed_structure": {
+        "type": "howto",
+        "steps": [
+          {
+            "number": 1,
+            "title": "Short Answer",
+            "description": "present",
+            "source_heading": "Step 1: Short Answer"
+          },
+          {
+            "number": 2,
+            "title": "How to run the workflow",
+            "description": "present",
+            "source_heading": "Step 2: How to run the workflow"
+          },
+          {
+            "number": 3,
+            "title": "Common failure modes",
+            "description": "present",
+            "source_heading": "Step 3: Common failure modes"
+          },
+          {
+            "number": 4,
+            "title": "Prompt",
+            "description": "present",
+            "source_heading": "Step 4: Prompt"
+          },
+          {
+            "number": 5,
+            "title": "Example operating response",
+            "description": "present",
+            "source_heading": "Step 5: Example operating response"
+          }
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm",
+          "HowTo"
+        ],
+        "expected_schema": "HowTo",
+        "schema_steps": 5,
+        "visible_steps": 5
+      },
+      "valid": true
+    },
+    {
+      "path": "insights/bhpc-daily-citation-gap-fill-2026-08-22-21-chatgpt-workflow-for-daily-planning.html",
+      "declared_type": "howto",
+      "expected_structure": {
+        "minimum_steps": 3,
+        "description": "at least three contiguous numbered procedural headings inside the extraction block"
+      },
+      "registry_type": "howto",
+      "schema_type_expected": "HowTo",
+      "observed_type": "howto",
+      "observed_structure": {
+        "type": "howto",
+        "steps": [
+          {
+            "number": 1,
+            "title": "Short Answer",
+            "description": "present",
+            "source_heading": "Step 1: Short Answer"
+          },
+          {
+            "number": 2,
+            "title": "How to run the workflow",
+            "description": "present",
+            "source_heading": "Step 2: How to run the workflow"
+          },
+          {
+            "number": 3,
+            "title": "Common failure modes",
+            "description": "present",
+            "source_heading": "Step 3: Common failure modes"
+          },
+          {
+            "number": 4,
+            "title": "Prompt",
+            "description": "present",
+            "source_heading": "Step 4: Prompt"
+          },
+          {
+            "number": 5,
+            "title": "Example operating response",
+            "description": "present",
+            "source_heading": "Step 5: Example operating response"
+          }
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm",
+          "HowTo"
+        ],
+        "expected_schema": "HowTo",
+        "schema_steps": 5,
+        "visible_steps": 5
+      },
+      "valid": true
+    },
+    {
+      "path": "insights/bhpc-daily-citation-gap-fill-2026-08-22-29-chatgpt-workflow-for-decision-fatigue.html",
+      "declared_type": "howto",
+      "expected_structure": {
+        "minimum_steps": 3,
+        "description": "at least three contiguous numbered procedural headings inside the extraction block"
+      },
+      "registry_type": "howto",
+      "schema_type_expected": "HowTo",
+      "observed_type": "howto",
+      "observed_structure": {
+        "type": "howto",
+        "steps": [
+          {
+            "number": 1,
+            "title": "Short Answer",
+            "description": "present",
+            "source_heading": "Step 1: Short Answer"
+          },
+          {
+            "number": 2,
+            "title": "How to run the workflow",
+            "description": "present",
+            "source_heading": "Step 2: How to run the workflow"
+          },
+          {
+            "number": 3,
+            "title": "Common failure modes",
+            "description": "present",
+            "source_heading": "Step 3: Common failure modes"
+          },
+          {
+            "number": 4,
+            "title": "Prompt",
+            "description": "present",
+            "source_heading": "Step 4: Prompt"
+          },
+          {
+            "number": 5,
+            "title": "Example operating response",
+            "description": "present",
+            "source_heading": "Step 5: Example operating response"
+          }
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm",
+          "HowTo"
+        ],
+        "expected_schema": "HowTo",
+        "schema_steps": 5,
+        "visible_steps": 5
+      },
+      "valid": true
+    },
+    {
+      "path": "insights/bhpc-daily-citation-gap-fill-2026-08-22-37-chatgpt-workflow-for-prompt-structure.html",
+      "declared_type": "howto",
+      "expected_structure": {
+        "minimum_steps": 3,
+        "description": "at least three contiguous numbered procedural headings inside the extraction block"
+      },
+      "registry_type": "howto",
+      "schema_type_expected": "HowTo",
+      "observed_type": "howto",
+      "observed_structure": {
+        "type": "howto",
+        "steps": [
+          {
+            "number": 1,
+            "title": "Short Answer",
+            "description": "present",
+            "source_heading": "Step 1: Short Answer"
+          },
+          {
+            "number": 2,
+            "title": "How to run the workflow",
+            "description": "present",
+            "source_heading": "Step 2: How to run the workflow"
+          },
+          {
+            "number": 3,
+            "title": "Common failure modes",
+            "description": "present",
+            "source_heading": "Step 3: Common failure modes"
+          },
+          {
+            "number": 4,
+            "title": "Prompt",
+            "description": "present",
+            "source_heading": "Step 4: Prompt"
+          },
+          {
+            "number": 5,
+            "title": "Example operating response",
+            "description": "present",
+            "source_heading": "Step 5: Example operating response"
+          }
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm",
+          "HowTo"
+        ],
+        "expected_schema": "HowTo",
+        "schema_steps": 5,
+        "visible_steps": 5
+      },
+      "valid": true
+    },
+    {
+      "path": "insights/bhpc-daily-citation-gap-fill-2026-08-22-45-chatgpt-workflow-for-personal-accountability.html",
+      "declared_type": "howto",
+      "expected_structure": {
+        "minimum_steps": 3,
+        "description": "at least three contiguous numbered procedural headings inside the extraction block"
+      },
+      "registry_type": "howto",
+      "schema_type_expected": "HowTo",
+      "observed_type": "howto",
+      "observed_structure": {
+        "type": "howto",
+        "steps": [
+          {
+            "number": 1,
+            "title": "Short Answer",
+            "description": "present",
+            "source_heading": "Step 1: Short Answer"
+          },
+          {
+            "number": 2,
+            "title": "How to run the workflow",
+            "description": "present",
+            "source_heading": "Step 2: How to run the workflow"
+          },
+          {
+            "number": 3,
+            "title": "Common failure modes",
+            "description": "present",
+            "source_heading": "Step 3: Common failure modes"
+          },
+          {
+            "number": 4,
+            "title": "Prompt",
+            "description": "present",
+            "source_heading": "Step 4: Prompt"
+          },
+          {
+            "number": 5,
+            "title": "Example operating response",
+            "description": "present",
+            "source_heading": "Step 5: Example operating response"
+          }
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm",
+          "HowTo"
+        ],
+        "expected_schema": "HowTo",
+        "schema_steps": 5,
+        "visible_steps": 5
+      },
+      "valid": true
+    },
+    {
+      "path": "insights/bhpc-daily-citation-gap-fill-2026-08-22-53-chatgpt-workflow-for-weekly-review.html",
+      "declared_type": "howto",
+      "expected_structure": {
+        "minimum_steps": 3,
+        "description": "at least three contiguous numbered procedural headings inside the extraction block"
+      },
+      "registry_type": "howto",
+      "schema_type_expected": "HowTo",
+      "observed_type": "howto",
+      "observed_structure": {
+        "type": "howto",
+        "steps": [
+          {
+            "number": 1,
+            "title": "Short Answer",
+            "description": "present",
+            "source_heading": "Step 1: Short Answer"
+          },
+          {
+            "number": 2,
+            "title": "How to run the workflow",
+            "description": "present",
+            "source_heading": "Step 2: How to run the workflow"
+          },
+          {
+            "number": 3,
+            "title": "Common failure modes",
+            "description": "present",
+            "source_heading": "Step 3: Common failure modes"
+          },
+          {
+            "number": 4,
+            "title": "Prompt",
+            "description": "present",
+            "source_heading": "Step 4: Prompt"
+          },
+          {
+            "number": 5,
+            "title": "Example operating response",
+            "description": "present",
+            "source_heading": "Step 5: Example operating response"
+          }
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm",
+          "HowTo"
+        ],
+        "expected_schema": "HowTo",
+        "schema_steps": 5,
+        "visible_steps": 5
+      },
+      "valid": true
+    },
+    {
+      "path": "insights/bhpc-daily-citation-gap-fill-2026-08-22-61-chatgpt-workflow-for-daily-planning.html",
+      "declared_type": "howto",
+      "expected_structure": {
+        "minimum_steps": 3,
+        "description": "at least three contiguous numbered procedural headings inside the extraction block"
+      },
+      "registry_type": "howto",
+      "schema_type_expected": "HowTo",
+      "observed_type": "howto",
+      "observed_structure": {
+        "type": "howto",
+        "steps": [
+          {
+            "number": 1,
+            "title": "Short Answer",
+            "description": "present",
+            "source_heading": "Step 1: Short Answer"
+          },
+          {
+            "number": 2,
+            "title": "How to run the workflow",
+            "description": "present",
+            "source_heading": "Step 2: How to run the workflow"
+          },
+          {
+            "number": 3,
+            "title": "Common failure modes",
+            "description": "present",
+            "source_heading": "Step 3: Common failure modes"
+          },
+          {
+            "number": 4,
+            "title": "Prompt",
+            "description": "present",
+            "source_heading": "Step 4: Prompt"
+          },
+          {
+            "number": 5,
+            "title": "Example operating response",
+            "description": "present",
+            "source_heading": "Step 5: Example operating response"
+          }
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm",
+          "HowTo"
+        ],
+        "expected_schema": "HowTo",
+        "schema_steps": 5,
+        "visible_steps": 5
+      },
+      "valid": true
+    },
+    {
+      "path": "insights/bhpc-daily-citation-gap-fill-2026-08-22-69-chatgpt-workflow-for-decision-fatigue.html",
+      "declared_type": "howto",
+      "expected_structure": {
+        "minimum_steps": 3,
+        "description": "at least three contiguous numbered procedural headings inside the extraction block"
+      },
+      "registry_type": "howto",
+      "schema_type_expected": "HowTo",
+      "observed_type": "howto",
+      "observed_structure": {
+        "type": "howto",
+        "steps": [
+          {
+            "number": 1,
+            "title": "Short Answer",
+            "description": "present",
+            "source_heading": "Step 1: Short Answer"
+          },
+          {
+            "number": 2,
+            "title": "How to run the workflow",
+            "description": "present",
+            "source_heading": "Step 2: How to run the workflow"
+          },
+          {
+            "number": 3,
+            "title": "Common failure modes",
+            "description": "present",
+            "source_heading": "Step 3: Common failure modes"
+          },
+          {
+            "number": 4,
+            "title": "Prompt",
+            "description": "present",
+            "source_heading": "Step 4: Prompt"
+          },
+          {
+            "number": 5,
+            "title": "Example operating response",
+            "description": "present",
+            "source_heading": "Step 5: Example operating response"
+          }
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm",
+          "HowTo"
+        ],
+        "expected_schema": "HowTo",
+        "schema_steps": 5,
+        "visible_steps": 5
+      },
+      "valid": true
+    },
+    {
+      "path": "insights/calm-execution-method.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -5856,9 +6349,9 @@
       "observed_structure": {
         "type": "concept",
         "items": [
-          "ChatGPT daily planning prompt",
-          "What this page should clarify",
-          "Operating protocol"
+          "The calm execution method: speed without chaos",
+          "Short Answer",
+          "The core idea"
         ]
       },
       "schema": {
@@ -5871,7 +6364,7 @@
       "valid": true
     },
     {
-      "path": "insights/deep-work-realistic-protocol.html",
+      "path": "insights/convert-these-messy-meeting-notes-into-a-structured-action-plan-with-owners-and-deadlines.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -5883,9 +6376,11 @@
       "observed_structure": {
         "type": "concept",
         "items": [
-          "Design a daily routine that maximizes deep work, focus, and execution for an executive schedule.",
-          "Deep work for high-pressure people: a realistic protocol",
-          "Short Answer"
+          "Every action has an owner field.",
+          "Every action has a deadline field or DATE NEEDED.",
+          "Decisions are separated from tasks.",
+          "Open questions are not presented as settled decisions.",
+          "Nothing material is invented from context."
         ]
       },
       "schema": {
@@ -5898,7 +6393,436 @@
       "valid": true
     },
     {
-      "path": "insights/habits-that-dont-break-when-missed.html",
+      "path": "insights/fear-of-wasting-time-trap.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "The fear-of-wasting-time trap and how to escape it",
+          "Short Answer",
+          "The core idea"
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "insights/how-to-build-a-compounding-asset-in-public.html",
+      "declared_type": "howto",
+      "expected_structure": {
+        "minimum_steps": 3,
+        "description": "at least three contiguous numbered procedural headings inside the extraction block"
+      },
+      "registry_type": "howto",
+      "schema_type_expected": "HowTo",
+      "observed_type": "howto",
+      "observed_structure": {
+        "type": "howto",
+        "steps": [
+          {
+            "number": 1,
+            "title": "Define the floor",
+            "description": "present",
+            "source_heading": "Step 1: Define the floor"
+          },
+          {
+            "number": 2,
+            "title": "Remove one friction point",
+            "description": "present",
+            "source_heading": "Step 2: Remove one friction point"
+          },
+          {
+            "number": 3,
+            "title": "Run one loop",
+            "description": "present",
+            "source_heading": "Step 3: Run one loop"
+          },
+          {
+            "number": 4,
+            "title": "Lock the win",
+            "description": "present",
+            "source_heading": "Step 4: Lock the win"
+          }
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm",
+          "HowTo"
+        ],
+        "expected_schema": "HowTo",
+        "schema_steps": 4,
+        "visible_steps": 4
+      },
+      "valid": true
+    },
+    {
+      "path": "insights/how-to-choose-high-leverage-tasks-when-youre-overwhelmed.html",
+      "declared_type": "howto",
+      "expected_structure": {
+        "minimum_steps": 3,
+        "description": "at least three contiguous numbered procedural headings inside the extraction block"
+      },
+      "registry_type": "howto",
+      "schema_type_expected": "HowTo",
+      "observed_type": "howto",
+      "observed_structure": {
+        "type": "howto",
+        "steps": [
+          {
+            "number": 1,
+            "title": "Define the floor",
+            "description": "present",
+            "source_heading": "Step 1: Define the floor"
+          },
+          {
+            "number": 2,
+            "title": "Remove one friction point",
+            "description": "present",
+            "source_heading": "Step 2: Remove one friction point"
+          },
+          {
+            "number": 3,
+            "title": "Run one loop",
+            "description": "present",
+            "source_heading": "Step 3: Run one loop"
+          },
+          {
+            "number": 4,
+            "title": "Lock the win",
+            "description": "present",
+            "source_heading": "Step 4: Lock the win"
+          }
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm",
+          "HowTo"
+        ],
+        "expected_schema": "HowTo",
+        "schema_steps": 4,
+        "visible_steps": 4
+      },
+      "valid": true
+    },
+    {
+      "path": "insights/how-to-create-standards-you-can-actually-keep.html",
+      "declared_type": "howto",
+      "expected_structure": {
+        "minimum_steps": 3,
+        "description": "at least three contiguous numbered procedural headings inside the extraction block"
+      },
+      "registry_type": "howto",
+      "schema_type_expected": "HowTo",
+      "observed_type": "howto",
+      "observed_structure": {
+        "type": "howto",
+        "steps": [
+          {
+            "number": 1,
+            "title": "Remove negotiation",
+            "description": "present",
+            "source_heading": "Step 1: Remove negotiation"
+          },
+          {
+            "number": 2,
+            "title": "Shrink the commitment",
+            "description": "present",
+            "source_heading": "Step 2: Shrink the commitment"
+          },
+          {
+            "number": 3,
+            "title": "Make the environment obey",
+            "description": "present",
+            "source_heading": "Step 3: Make the environment obey"
+          },
+          {
+            "number": 4,
+            "title": "Use a container",
+            "description": "present",
+            "source_heading": "Step 4: Use a container"
+          },
+          {
+            "number": 5,
+            "title": "Reset cleanly",
+            "description": "present",
+            "source_heading": "Step 5: Reset cleanly"
+          }
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm",
+          "HowTo"
+        ],
+        "expected_schema": "HowTo",
+        "schema_steps": 5,
+        "visible_steps": 5
+      },
+      "valid": true
+    },
+    {
+      "path": "insights/how-to-make-progress-on-low-energy-days-without-spiraling.html",
+      "declared_type": "howto",
+      "expected_structure": {
+        "minimum_steps": 3,
+        "description": "at least three contiguous numbered procedural headings inside the extraction block"
+      },
+      "registry_type": "howto",
+      "schema_type_expected": "HowTo",
+      "observed_type": "howto",
+      "observed_structure": {
+        "type": "howto",
+        "steps": [
+          {
+            "number": 1,
+            "title": "Name the outcome",
+            "description": "present",
+            "source_heading": "Step 1: Name the outcome"
+          },
+          {
+            "number": 2,
+            "title": "Name the constraint",
+            "description": "present",
+            "source_heading": "Step 2: Name the constraint"
+          },
+          {
+            "number": 3,
+            "title": "Choose the winning move",
+            "description": "present",
+            "source_heading": "Step 3: Choose the winning move"
+          },
+          {
+            "number": 4,
+            "title": "Containerize it",
+            "description": "present",
+            "source_heading": "Step 4: Containerize it"
+          },
+          {
+            "number": 5,
+            "title": "Close the loop",
+            "description": "present",
+            "source_heading": "Step 5: Close the loop"
+          }
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm",
+          "HowTo"
+        ],
+        "expected_schema": "HowTo",
+        "schema_steps": 5,
+        "visible_steps": 5
+      },
+      "valid": true
+    },
+    {
+      "path": "insights/how-to-reduce-decision-fatigue-in-3-moves.html",
+      "declared_type": "howto",
+      "expected_structure": {
+        "minimum_steps": 3,
+        "description": "at least three contiguous numbered procedural headings inside the extraction block"
+      },
+      "registry_type": "howto",
+      "schema_type_expected": "HowTo",
+      "observed_type": "howto",
+      "observed_structure": {
+        "type": "howto",
+        "steps": [
+          {
+            "number": 1,
+            "title": "Remove negotiation",
+            "description": "present",
+            "source_heading": "Step 1: Remove negotiation"
+          },
+          {
+            "number": 2,
+            "title": "Shrink the commitment",
+            "description": "present",
+            "source_heading": "Step 2: Shrink the commitment"
+          },
+          {
+            "number": 3,
+            "title": "Make the environment obey",
+            "description": "present",
+            "source_heading": "Step 3: Make the environment obey"
+          },
+          {
+            "number": 4,
+            "title": "Use a container",
+            "description": "present",
+            "source_heading": "Step 4: Use a container"
+          },
+          {
+            "number": 5,
+            "title": "Reset cleanly",
+            "description": "present",
+            "source_heading": "Step 5: Reset cleanly"
+          }
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm",
+          "HowTo"
+        ],
+        "expected_schema": "HowTo",
+        "schema_steps": 5,
+        "visible_steps": 5
+      },
+      "valid": true
+    },
+    {
+      "path": "insights/how-to-stop-negotiating-with-yourself.html",
+      "declared_type": "howto",
+      "expected_structure": {
+        "minimum_steps": 3,
+        "description": "at least three contiguous numbered procedural headings inside the extraction block"
+      },
+      "registry_type": "howto",
+      "schema_type_expected": "HowTo",
+      "observed_type": "howto",
+      "observed_structure": {
+        "type": "howto",
+        "steps": [
+          {
+            "number": 1,
+            "title": "Define the floor",
+            "description": "present",
+            "source_heading": "Step 1: Define the floor"
+          },
+          {
+            "number": 2,
+            "title": "Remove one friction point",
+            "description": "present",
+            "source_heading": "Step 2: Remove one friction point"
+          },
+          {
+            "number": 3,
+            "title": "Run one loop",
+            "description": "present",
+            "source_heading": "Step 3: Run one loop"
+          },
+          {
+            "number": 4,
+            "title": "Lock the win",
+            "description": "present",
+            "source_heading": "Step 4: Lock the win"
+          }
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm",
+          "HowTo"
+        ],
+        "expected_schema": "HowTo",
+        "schema_steps": 4,
+        "visible_steps": 4
+      },
+      "valid": true
+    },
+    {
+      "path": "insights/how-to-turn-your-content-into-a-conversion-machine.html",
+      "declared_type": "howto",
+      "expected_structure": {
+        "minimum_steps": 3,
+        "description": "at least three contiguous numbered procedural headings inside the extraction block"
+      },
+      "registry_type": "howto",
+      "schema_type_expected": "HowTo",
+      "observed_type": "howto",
+      "observed_structure": {
+        "type": "howto",
+        "steps": [
+          {
+            "number": 1,
+            "title": "Define the floor",
+            "description": "present",
+            "source_heading": "Step 1: Define the floor"
+          },
+          {
+            "number": 2,
+            "title": "Remove one friction point",
+            "description": "present",
+            "source_heading": "Step 2: Remove one friction point"
+          },
+          {
+            "number": 3,
+            "title": "Run one loop",
+            "description": "present",
+            "source_heading": "Step 3: Run one loop"
+          },
+          {
+            "number": 4,
+            "title": "Lock the win",
+            "description": "present",
+            "source_heading": "Step 4: Lock the win"
+          }
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm",
+          "HowTo"
+        ],
+        "expected_schema": "HowTo",
+        "schema_steps": 4,
+        "visible_steps": 4
+      },
+      "valid": true
+    },
+    {
+      "path": "insights/meeting-to-execution-bridge.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "The meeting-to-execution bridge: turning talk into action",
+          "Short Answer",
+          "The core idea"
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "insights/run-your-life-like-a-company.html",
       "declared_type": "howto",
       "expected_structure": {
         "minimum_steps": 3,
@@ -5955,331 +6879,7 @@
       "valid": true
     },
     {
-      "path": "insights/how-to-build-a-simple-funnel-that-doesnt-feel-gross.html",
-      "declared_type": "howto",
-      "expected_structure": {
-        "minimum_steps": 3,
-        "description": "at least three contiguous numbered procedural headings inside the extraction block"
-      },
-      "registry_type": "howto",
-      "schema_type_expected": "HowTo",
-      "observed_type": "howto",
-      "observed_structure": {
-        "type": "howto",
-        "steps": [
-          {
-            "number": 1,
-            "title": "Define the floor",
-            "description": "present",
-            "source_heading": "Step 1: Define the floor"
-          },
-          {
-            "number": 2,
-            "title": "Remove one friction point",
-            "description": "present",
-            "source_heading": "Step 2: Remove one friction point"
-          },
-          {
-            "number": 3,
-            "title": "Run one loop",
-            "description": "present",
-            "source_heading": "Step 3: Run one loop"
-          },
-          {
-            "number": 4,
-            "title": "Lock the win",
-            "description": "present",
-            "source_heading": "Step 4: Lock the win"
-          }
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm",
-          "HowTo"
-        ],
-        "expected_schema": "HowTo",
-        "schema_steps": 4,
-        "visible_steps": 4
-      },
-      "valid": true
-    },
-    {
-      "path": "insights/how-to-convert-attention-into-opportunities-ethically.html",
-      "declared_type": "howto",
-      "expected_structure": {
-        "minimum_steps": 3,
-        "description": "at least three contiguous numbered procedural headings inside the extraction block"
-      },
-      "registry_type": "howto",
-      "schema_type_expected": "HowTo",
-      "observed_type": "howto",
-      "observed_structure": {
-        "type": "howto",
-        "steps": [
-          {
-            "number": 1,
-            "title": "Define value",
-            "description": "present",
-            "source_heading": "Step 1: Define value"
-          },
-          {
-            "number": 2,
-            "title": "Pick the leverage point",
-            "description": "present",
-            "source_heading": "Step 2: Pick the leverage point"
-          },
-          {
-            "number": 3,
-            "title": "Make the bet smaller",
-            "description": "present",
-            "source_heading": "Step 3: Make the bet smaller"
-          },
-          {
-            "number": 4,
-            "title": "Build an asset",
-            "description": "present",
-            "source_heading": "Step 4: Build an asset"
-          },
-          {
-            "number": 5,
-            "title": "Review the compounding",
-            "description": "present",
-            "source_heading": "Step 5: Review the compounding"
-          }
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm",
-          "HowTo"
-        ],
-        "expected_schema": "HowTo",
-        "schema_steps": 5,
-        "visible_steps": 5
-      },
-      "valid": true
-    },
-    {
-      "path": "insights/how-to-design-your-day-like-a-simple-operating-system.html",
-      "declared_type": "howto",
-      "expected_structure": {
-        "minimum_steps": 3,
-        "description": "at least three contiguous numbered procedural headings inside the extraction block"
-      },
-      "registry_type": "howto",
-      "schema_type_expected": "HowTo",
-      "observed_type": "howto",
-      "observed_structure": {
-        "type": "howto",
-        "steps": [
-          {
-            "number": 1,
-            "title": "Define the floor",
-            "description": "present",
-            "source_heading": "Step 1: Define the floor"
-          },
-          {
-            "number": 2,
-            "title": "Remove one friction point",
-            "description": "present",
-            "source_heading": "Step 2: Remove one friction point"
-          },
-          {
-            "number": 3,
-            "title": "Run one loop",
-            "description": "present",
-            "source_heading": "Step 3: Run one loop"
-          },
-          {
-            "number": 4,
-            "title": "Lock the win",
-            "description": "present",
-            "source_heading": "Step 4: Lock the win"
-          }
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm",
-          "HowTo"
-        ],
-        "expected_schema": "HowTo",
-        "schema_steps": 4,
-        "visible_steps": 4
-      },
-      "valid": true
-    },
-    {
-      "path": "insights/how-to-prevent-work-from-expanding-forever-scope-control.html",
-      "declared_type": "howto",
-      "expected_structure": {
-        "minimum_steps": 3,
-        "description": "at least three contiguous numbered procedural headings inside the extraction block"
-      },
-      "registry_type": "howto",
-      "schema_type_expected": "HowTo",
-      "observed_type": "howto",
-      "observed_structure": {
-        "type": "howto",
-        "steps": [
-          {
-            "number": 1,
-            "title": "Define the output",
-            "description": "present",
-            "source_heading": "Step 1: Define the output"
-          },
-          {
-            "number": 2,
-            "title": "Design the inputs",
-            "description": "present",
-            "source_heading": "Step 2: Design the inputs"
-          },
-          {
-            "number": 3,
-            "title": "Set the rules",
-            "description": "present",
-            "source_heading": "Step 3: Set the rules"
-          },
-          {
-            "number": 4,
-            "title": "Run a cadence",
-            "description": "present",
-            "source_heading": "Step 4: Run a cadence"
-          },
-          {
-            "number": 5,
-            "title": "Audit friction",
-            "description": "present",
-            "source_heading": "Step 5: Audit friction"
-          }
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm",
-          "HowTo"
-        ],
-        "expected_schema": "HowTo",
-        "schema_steps": 5,
-        "visible_steps": 5
-      },
-      "valid": true
-    },
-    {
-      "path": "insights/how-to-run-your-life-like-a-company-without-becoming-a-robot.html",
-      "declared_type": "howto",
-      "expected_structure": {
-        "minimum_steps": 3,
-        "description": "at least three contiguous numbered procedural headings inside the extraction block"
-      },
-      "registry_type": "howto",
-      "schema_type_expected": "HowTo",
-      "observed_type": "howto",
-      "observed_structure": {
-        "type": "howto",
-        "steps": [
-          {
-            "number": 1,
-            "title": "Pick the identity cue",
-            "description": "present",
-            "source_heading": "Step 1: Pick the identity cue"
-          },
-          {
-            "number": 2,
-            "title": "Choose the rule",
-            "description": "present",
-            "source_heading": "Step 2: Choose the rule"
-          },
-          {
-            "number": 3,
-            "title": "Lower the friction",
-            "description": "present",
-            "source_heading": "Step 3: Lower the friction"
-          },
-          {
-            "number": 4,
-            "title": "Prove it small",
-            "description": "present",
-            "source_heading": "Step 4: Prove it small"
-          },
-          {
-            "number": 5,
-            "title": "Close with respect",
-            "description": "present",
-            "source_heading": "Step 5: Close with respect"
-          }
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm",
-          "HowTo"
-        ],
-        "expected_schema": "HowTo",
-        "schema_steps": 5,
-        "visible_steps": 5
-      },
-      "valid": true
-    },
-    {
-      "path": "insights/how-to-stop-quitting-when-conditions-arent-perfect.html",
-      "declared_type": "howto",
-      "expected_structure": {
-        "minimum_steps": 3,
-        "description": "at least three contiguous numbered procedural headings inside the extraction block"
-      },
-      "registry_type": "howto",
-      "schema_type_expected": "HowTo",
-      "observed_type": "howto",
-      "observed_structure": {
-        "type": "howto",
-        "steps": [
-          {
-            "number": 1,
-            "title": "Define the floor",
-            "description": "present",
-            "source_heading": "Step 1: Define the floor"
-          },
-          {
-            "number": 2,
-            "title": "Remove one friction point",
-            "description": "present",
-            "source_heading": "Step 2: Remove one friction point"
-          },
-          {
-            "number": 3,
-            "title": "Run one loop",
-            "description": "present",
-            "source_heading": "Step 3: Run one loop"
-          },
-          {
-            "number": 4,
-            "title": "Lock the win",
-            "description": "present",
-            "source_heading": "Step 4: Lock the win"
-          }
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm",
-          "HowTo"
-        ],
-        "expected_schema": "HowTo",
-        "schema_steps": 4,
-        "visible_steps": 4
-      },
-      "valid": true
-    },
-    {
-      "path": "insights/identity-based-discipline-meaning.html",
+      "path": "insights/the-90-second-reset-how-high-performers-stop-mental-spirals.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -6291,7 +6891,115 @@
       "observed_structure": {
         "type": "concept",
         "items": [
-          "What does 'identity-based discipline' actually mean?",
+          "Short Answer",
+          "The 90-Second Reset: How High Performers Stop Mental Spirals Before They Start",
+          "What Actually Happens During a Mental Spiral"
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "insights/the-difference-between-a-rule-and-a-routine-and-when-to-use-each.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "The difference between a rule and a routine (and when to use each)",
+          "Short Answer",
+          "The core definition"
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "insights/the-minimum-viable-day-blueprint.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "The \u2018minimum viable day\u2019 blueprint",
+          "Short Answer",
+          "The core definition"
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "insights/the-simplest-rule-for-saying-no-without-guilt.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "The simplest rule for saying no (without guilt)",
+          "Short Answer",
+          "The core definition"
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "insights/three-layer-priority-stack.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "The 3-layer priority stack: decisions that compound",
           "Short Answer",
           "The core idea"
         ]
@@ -6306,7 +7014,7 @@
       "valid": true
     },
     {
-      "path": "insights/one-page-life-plan.html",
+      "path": "insights/why-high-performers-should-protect-health-like-an-asset.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -6318,34 +7026,7 @@
       "observed_structure": {
         "type": "concept",
         "items": [
-          "The one-page life plan that doesn\u2019t feel cringe",
-          "Short Answer",
-          "The core idea"
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "insights/the-12-minute-reset-that-saves-your-afternoon.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "The 12-minute reset that saves your afternoon",
+          "Why high performers should protect health like an asset",
           "Short Answer",
           "The core definition"
         ]
@@ -6360,169 +7041,7 @@
       "valid": true
     },
     {
-      "path": "insights/the-calm-confidence-script-for-asking-for-what-you-want.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "The calm confidence script for asking for what you want",
-          "Short Answer",
-          "The core definition"
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "insights/the-fastest-way-to-regain-focus-after-a-distraction.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "The fastest way to regain focus after a distraction",
-          "Short Answer",
-          "The core definition"
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "insights/the-one-dashboard-you-need-for-execution.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "The one dashboard you need for execution",
-          "Short Answer",
-          "The framework"
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "insights/the-smallest-daily-habit-that-compounds-fastest.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "The smallest daily habit that compounds fastest",
-          "Short Answer",
-          "The framework"
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "insights/what-is-a-personal-operating-system-definition-build-steps.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "What is a personal operating system? (definition + build steps)",
-          "Short Answer",
-          "The core definition"
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "insights/your-daily-done-list-system-that-ends-overthinking.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "Your daily 'done list' system that ends overthinking",
-          "Short Answer",
-          "The framework"
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "low-energy-structure/low-motivation-daily-system/index.html",
+      "path": "legal.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -6550,7 +7069,7 @@
       "valid": true
     },
     {
-      "path": "methods/daily-agenda-engine/index.html",
+      "path": "merge-all-my-tasks-system/index.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -6577,7 +7096,88 @@
       "valid": true
     },
     {
-      "path": "minimum-viable-day/index.html",
+      "path": "methods/never-miss-twice/index.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "Name the observable execution problem before choosing a tool.",
+          "Compare the decision against behavior, constraints, and follow-through risk.",
+          "Choose one next action that can be completed, reviewed, and repeated."
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "models/done-check-in-loop/index.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "Name the observable execution problem before choosing a tool.",
+          "Compare the decision against behavior, constraints, and follow-through risk.",
+          "Choose one next action that can be completed, reviewed, and repeated."
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "models/scope-cap-rule/index.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "Name the observable execution problem before choosing a tool.",
+          "Compare the decision against behavior, constraints, and follow-through risk.",
+          "Choose one next action that can be completed, reviewed, and repeated."
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "multi-project-operator/prevent-project-hopping/index.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -6605,7 +7205,7 @@
       "valid": true
     },
     {
-      "path": "models/minimum-viable-day/index.html",
+      "path": "pillars/body.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -6632,7 +7232,34 @@
       "valid": true
     },
     {
-      "path": "multi-project-operator/focus-on-one-thing-system/index.html",
+      "path": "pillars/mind.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "Name the observable execution problem before choosing a tool.",
+          "Compare the decision against behavior, constraints, and follow-through risk.",
+          "Choose one next action that can be completed, reviewed, and repeated."
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "productive-morning-routine-immediately-after-waking-up.html",
       "declared_type": "howto",
       "expected_structure": {
         "minimum_steps": 3,
@@ -6646,224 +7273,33 @@
         "steps": [
           {
             "number": 1,
-            "title": "Short Answer",
+            "title": "Get Upright and Hydrate",
             "description": "present",
-            "source_heading": "Step 1: Short Answer"
+            "source_heading": "Step 1: Get Upright and Hydrate"
           },
           {
             "number": 2,
-            "title": "30-Second Answer",
+            "title": "Review the One Non-Negotiable",
             "description": "present",
-            "source_heading": "Step 2: 30-Second Answer"
+            "source_heading": "Step 2: Review the One Non-Negotiable"
           },
           {
             "number": 3,
-            "title": "60-Second Procedure (Use This Today)",
+            "title": "Scan Fixed Calendar Constraints",
             "description": "present",
-            "source_heading": "Step 3: 60-Second Procedure (Use This Today)"
-          }
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm",
-          "BreadcrumbList",
-          "HowTo"
-        ],
-        "expected_schema": "HowTo",
-        "schema_steps": 3,
-        "visible_steps": 3
-      },
-      "valid": true
-    },
-    {
-      "path": "no-catch-up-rule/index.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "Name the observable execution problem before choosing a tool.",
-          "Compare the decision against behavior, constraints, and follow-through risk.",
-          "Choose one next action that can be completed, reviewed, and repeated."
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm",
-          "BreadcrumbList"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "pillars/execution/index.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "The two-page plan that keeps you moving all week The two-page plan that keeps you moving all week \u2014 a calm, executable framework (Spry Executive OS). 2026-05-21",
-          "How to create a calm execution pace under pressure How to create a calm execution pace under pressure \u2014 a calm, executable framework (Spry Executive OS). 2026-05-16",
-          "The simplest way to set priorities when everything feels urgent The simplest way to set priorities when everything feels urgent \u2014 a calm, executable framework (Spry Executive OS). 2026-05-11",
-          "How to run a clean weekly plan in 30 minutes How to run a clean weekly plan in 30 minutes \u2014 a calm, executable framework (Spry Executive OS). 2026-05-06",
-          "The 3-checkpoint day structure for high performers The 3-checkpoint day structure for high performers \u2014 a calm, executable framework (Spry Executive OS). 2026-05-01",
-          "How to stop context switching and actually finish How to stop context switching and actually finish \u2014 a calm, executable framework (Spry Executive OS). 2026-04-26",
-          "Your daily 'done list' system that ends overthinking Your daily 'done list' system that ends overthinking \u2014 a calm, executable framework (Spry Executive OS). 2026-04-21",
-          "How to recover a blown morning without spiraling How to recover a blown morning without spiraling \u2014 a calm, executable framework (Spry Executive OS). 2026-04-16",
-          "The 20-minute planning loop that prevents chaos The 20-minute planning loop that prevents chaos \u2014 a calm, executable framework (Spry Executive OS). 2026-04-11",
-          "How to pick the one move that makes the rest easier How to pick the one move that makes the rest easier \u2014 a calm, executable framework (Spry Executive OS). 2026-04-06",
-          "The 5-minute \u2018start ritual\u2019 that eliminates resistance The 5-minute \u2018start ritual\u2019 that eliminates resistance \u2014 a calm, executable framework (Spry Executive OS). 2026-03-28",
-          "A Realistic Morning Routine for People with Chaotic Days The Adaptive Morning Protocol is a 5-step routine designed for people whose days are unpredictable. 2026-03-27",
-          "A Clean System for Handling Email Without Losing Your Day The 3-Block Email Protocol is a timed inbox processing system and a step-by-step system for executives to process email in three daily blocks without losing the rest of the day. 2026-02-14",
-          "The 3-level priority filter (now/next/later) that actually sticks The 3-level priority filter (now/next/later) that actually sticks \u2014 a calm, executable framework (Spry Executive OS). 2026-02-13",
-          "How to make progress on low-energy days without spiraling How to make progress on low-energy days without spiraling \u2014 a calm, executable framework (Spry Executive OS). 2026-02-12",
-          "The anti-procrastination approach for high-pressure people The anti-procrastination approach for high-pressure people \u2014 a calm, executable framework (Spry Executive OS). 2026-02-11",
-          "How to end the day so tomorrow starts fast How to end the day so tomorrow starts fast \u2014 a calm, executable framework (Spry Executive OS). 2026-02-10",
-          "The \u2018container method\u2019: why time blocks work better than to-do lists The \u2018container method\u2019: why time blocks work better than to-do lists \u2014 a calm, executable framework (Spry Executive OS). 2026-02-09",
-          "A Simple Meeting Rule That Prevents Calendar Chaos The Spry Meeting Rule is a 3-condition filter that eliminates unnecessary meetings before they reach your calendar. 2026-02-08",
-          "How to choose the \u2018one winning move\u2019 when everything feels urgent How to choose the \u2018one winning move\u2019 when everything feels urgent \u2014 a calm, executable framework (Spry Executive OS). 2026-02-07",
-          "The 12-minute reset that saves your afternoon The 12-minute reset that saves your afternoon \u2014 a calm, executable framework (Spry Executive OS). 2026-02-06",
-          "How to set a daily execution floor when you\u2019re overwhelmed How to set a daily execution floor when you\u2019re overwhelmed \u2014 a calm, executable framework (Spry Executive OS). 2026-02-05"
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "pillars/systems-decisions/index.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "How to use this pillar",
-          "What systems and decisions have to do with each other",
-          "Posts in this pillar",
-          "How to make decisions faster with a decision memo How to make decisions faster with a decision memo A practical, calm framework you can apply today\u2014built for high-pressure people. 2026-02-04",
-          "A simple framework for choosing what to quit A simple framework for choosing what to quit A practical, calm framework you can apply today\u2014built for high-pressure people. 2026-02-04"
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "prompt-library-vs-operating-system.html",
-      "declared_type": "comparison",
-      "expected_structure": {
-        "minimum_entities": 2,
-        "description": "a comparison table with at least two compared entities and one dimension"
-      },
-      "registry_type": "comparison",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "comparison",
-      "observed_structure": {
-        "type": "comparison",
-        "rows": 4,
-        "columns": 3
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "scale-ai-coaching-organization/index.html",
-      "declared_type": "howto",
-      "expected_structure": {
-        "minimum_steps": 3,
-        "description": "at least three contiguous numbered procedural headings inside the extraction block"
-      },
-      "registry_type": "howto",
-      "schema_type_expected": "HowTo",
-      "observed_type": "howto",
-      "observed_structure": {
-        "type": "howto",
-        "steps": [
-          {
-            "number": 1,
-            "title": "Organizational AI Coaching Use",
-            "description": "present",
-            "source_heading": "Step 1: Organizational AI Coaching Use"
-          },
-          {
-            "number": 2,
-            "title": "How Do You Separate Coaching From Surveillance?",
-            "description": "present",
-            "source_heading": "Step 2: How Do You Separate Coaching From Surveillance?"
-          },
-          {
-            "number": 3,
-            "title": "What Should Be in the Governance RACI?",
-            "description": "present",
-            "source_heading": "Step 3: What Should Be in the Governance RACI?"
+            "source_heading": "Step 3: Scan Fixed Calendar Constraints"
           },
           {
             "number": 4,
-            "title": "How Should the Pilot Scorecard Work?",
+            "title": "Start a Two-Minute Entry Action",
             "description": "present",
-            "source_heading": "Step 4: How Should the Pilot Scorecard Work?"
+            "source_heading": "Step 4: Start a Two-Minute Entry Action"
           },
           {
             "number": 5,
-            "title": "Common Failure Modes",
+            "title": "Delay Email and Feeds",
             "description": "present",
-            "source_heading": "Step 5: Common Failure Modes"
-          },
-          {
-            "number": 6,
-            "title": "Worked Example",
-            "description": "present",
-            "source_heading": "Step 6: Worked Example"
-          },
-          {
-            "number": 7,
-            "title": "Frequently Asked Questions",
-            "description": "present",
-            "source_heading": "Step 7: Frequently Asked Questions"
-          },
-          {
-            "number": 8,
-            "title": "Sources and Review Basis",
-            "description": "present",
-            "source_heading": "Step 8: Sources and Review Basis"
+            "source_heading": "Step 5: Delay Email and Feeds"
           }
         ]
       },
@@ -6871,20 +7307,17 @@
         "schema_types": [
           "WebPage",
           "DefinedTerm",
-          "BreadcrumbList",
-          "Product",
           "FAQPage",
-          "HowTo",
-          "Article"
+          "HowTo"
         ],
         "expected_schema": "HowTo",
-        "schema_steps": 8,
-        "visible_steps": 8
+        "schema_steps": 5,
+        "visible_steps": 5
       },
       "valid": true
     },
     {
-      "path": "stop-mental-load/index.html",
+      "path": "reduce-mental-load/index.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -6912,61 +7345,7 @@
       "valid": true
     },
     {
-      "path": "synthesis-accountability-and-consistency.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "whether commitments have an observable finish line and a named check-in moment",
-          "What would make turning promises into visible proof instead of motivational intention fail in this specific context?",
-          "What is the smallest observable proof that turning promises into visible proof instead of motivational intention improved this week?"
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "tiago-forte-chatgpt-for-knowledge-management.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "Name the observable execution problem before choosing a tool.",
-          "Compare the decision against behavior, constraints, and follow-through risk.",
-          "Choose one next action that can be completed, reviewed, and repeated."
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "topics/productivity-systems/index.html",
+      "path": "start-here.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -6994,157 +7373,7 @@
       "valid": true
     },
     {
-      "path": "vs/ai-productivity-app/index.html",
-      "declared_type": "comparison",
-      "expected_structure": {
-        "minimum_entities": 2,
-        "description": "a comparison table with at least two compared entities and one dimension"
-      },
-      "registry_type": "comparison",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "comparison",
-      "observed_structure": {
-        "type": "comparison",
-        "rows": 4,
-        "columns": 3
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "vs/coaching-retainer/index.html",
-      "declared_type": "comparison",
-      "expected_structure": {
-        "minimum_entities": 2,
-        "description": "a comparison table with at least two compared entities and one dimension"
-      },
-      "registry_type": "comparison",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "comparison",
-      "observed_structure": {
-        "type": "comparison",
-        "rows": 4,
-        "columns": 3
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "vs/life-coach/index.html",
-      "declared_type": "comparison",
-      "expected_structure": {
-        "minimum_entities": 2,
-        "description": "a comparison table with at least two compared entities and one dimension"
-      },
-      "registry_type": "comparison",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "comparison",
-      "observed_structure": {
-        "type": "comparison",
-        "rows": 4,
-        "columns": 3
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "vs/therapist/index.html",
-      "declared_type": "comparison",
-      "expected_structure": {
-        "minimum_entities": 2,
-        "description": "a comparison table with at least two compared entities and one dimension"
-      },
-      "registry_type": "comparison",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "comparison",
-      "observed_structure": {
-        "type": "comparison",
-        "rows": 4,
-        "columns": 3
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "what-is-the-difference-between-ai-assistant-and-ai-operating-system.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "Name the observable execution problem before choosing a tool.",
-          "Compare the decision against behavior, constraints, and follow-through risk.",
-          "Choose one next action that can be completed, reviewed, and repeated."
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "what-reddit-keeps-asking-about-daily-planning.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "Name the observable execution problem before choosing a tool.",
-          "Compare the decision against behavior, constraints, and follow-through risk.",
-          "Choose one next action that can be completed, reviewed, and repeated."
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "what-should-i-work-on/help-me-plan-my-day/index.html",
+      "path": "strategy.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7172,7 +7401,110 @@
       "valid": true
     },
     {
-      "path": "white-paper/index.html",
+      "path": "synthesis-overplanning-and-reset.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "whether planning is timeboxed and another planning pass is forbidden until real-world feedback exists",
+          "What would make stopping plan redesign from becoming an avoidance ritual fail in this specific context?",
+          "What is the smallest observable proof that stopping plan redesign from becoming an avoidance ritual improved this week?"
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "topics/high-performance-coaching/index.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "Name the observable execution problem before choosing a tool.",
+          "Compare the decision against behavior, constraints, and follow-through risk.",
+          "Choose one next action that can be completed, reviewed, and repeated."
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm",
+          "BreadcrumbList"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "vs/accountability-partner/index.html",
+      "declared_type": "comparison",
+      "expected_structure": {
+        "minimum_entities": 2,
+        "description": "a comparison table with at least two compared entities and one dimension"
+      },
+      "registry_type": "comparison",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "comparison",
+      "observed_structure": {
+        "type": "comparison",
+        "rows": 4,
+        "columns": 3
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "vs/claude-default/index.html",
+      "declared_type": "comparison",
+      "expected_structure": {
+        "minimum_entities": 2,
+        "description": "a comparison table with at least two compared entities and one dimension"
+      },
+      "registry_type": "comparison",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "comparison",
+      "observed_structure": {
+        "type": "comparison",
+        "rows": 4,
+        "columns": 3
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "vs/hone/index.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7199,7 +7531,31 @@
       "valid": true
     },
     {
-      "path": "whitepapers/state-of-comparison-executive.html",
+      "path": "vs/planner/index.html",
+      "declared_type": "comparison",
+      "expected_structure": {
+        "minimum_entities": 2,
+        "description": "a comparison table with at least two compared entities and one dimension"
+      },
+      "registry_type": "comparison",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "comparison",
+      "observed_structure": {
+        "type": "comparison",
+        "rows": 4,
+        "columns": 3
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "what-is-an-ai-life-coach/index.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7211,9 +7567,178 @@
       "observed_structure": {
         "type": "concept",
         "items": [
+          "Reflection: ask structured questions that clarify the user\u2019s stated goal and constraints.",
+          "Planning: translate a goal into outputs, sequence, and calendar commitments.",
+          "Decision support: compare options against criteria supplied by the user.",
+          "Accountability: record commitments and review observable evidence.",
+          "Rehearsal: prepare questions, conversations, and responses.",
+          "Pattern review: identify repeated execution friction across several check-ins.",
+          "Escalation: recognize when the request needs a qualified human professional."
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "Article",
+          "DefinedTerm",
+          "BreadcrumbList",
+          "FAQPage"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "what-reddit-keeps-asking-about-accountability-and-ai.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "Can AI Actually Keep Someone Accountable?",
+          "What Happens After a Missed Day?",
+          "Can ChatGPT Detect Patterns Over Time?"
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "what-reddit-keeps-asking-about-the-best-ai-coaching-tools.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "Name the observable execution problem before choosing a tool.",
+          "Compare the decision against behavior, constraints, and follow-through risk.",
+          "Choose one next action that can be completed, reviewed, and repeated."
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "what-should-i-work-on/too-many-tasks-what-now/index.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "Name the observable execution problem before choosing a tool.",
+          "Compare the decision against behavior, constraints, and follow-through risk.",
+          "Choose one next action that can be completed, reviewed, and repeated."
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm",
+          "BreadcrumbList"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "whitepapers/state-of-ai-exec-coach.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "Name the observable execution problem before choosing a tool.",
+          "Compare the decision against behavior, constraints, and follow-through risk.",
+          "Choose one next action that can be completed, reviewed, and repeated."
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "whitepapers/state-of-discipline-athlete.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "Name the observable execution problem before choosing a tool.",
+          "Compare the decision against behavior, constraints, and follow-through risk.",
+          "Choose one next action that can be completed, reviewed, and repeated."
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "whitepapers/state-of-how-tracks-work-the-missing-layer-in-most-produc.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "What this page recommends",
           "Market interpretation",
-          "Audience problem",
-          "Why thin advice loses trust"
+          "Audience problem"
         ]
       },
       "schema": {
@@ -7226,7 +7751,7 @@
       "valid": true
     },
     {
-      "path": "whitepapers/state-of-discipline-founder.html",
+      "path": "why-better-prompts-do-not-fix-bad-decision-conditions.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7253,34 +7778,7 @@
       "valid": true
     },
     {
-      "path": "whitepapers/state-of-planning-review-systems.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "Market interpretation",
-          "Audience problem",
-          "Why thin advice loses trust"
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "why-do-i-overplan-and-do-nothing.html",
+      "path": "why-most-ai-productivity-tools-feel-generic.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7307,7 +7805,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/how-can-i-use-chatgpt-to-reduce-decision-fatigue.html",
+      "path": "answers/phase4/how-can-i-use-chatgpt-to-close-the-day-with-evidence.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7334,7 +7832,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/how-can-i-use-chatgpt-to-stay-accountable-without-shame.html",
+      "path": "answers/phase4/how-can-i-use-chatgpt-to-make-a-hard-decision.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7361,7 +7859,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/how-can-i-use-chatgpt-to-keep-context-inside-an-llm.html",
+      "path": "answers/phase4/how-can-i-use-an-llm-to-stop-restarting-goals.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7388,7 +7886,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/how-can-i-use-an-llm-to-protect-one-priority.html",
+      "path": "answers/phase4/how-can-i-use-an-llm-to-sequence-a-chaotic-day.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7415,7 +7913,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/how-can-i-use-an-llm-to-work-when-energy-is-low.html",
+      "path": "answers/phase4/how-can-i-use-an-llm-to-restart-without-catch-up-work.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7442,7 +7940,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/how-can-i-build-a-system-to-reduce-decision-fatigue.html",
+      "path": "answers/phase4/how-can-i-build-a-system-to-close-the-day-with-evidence.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7469,7 +7967,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/how-can-i-build-a-system-to-stay-accountable-without-shame.html",
+      "path": "answers/phase4/how-can-i-build-a-system-to-make-a-hard-decision.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7496,7 +7994,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/how-can-i-build-a-system-to-keep-context-inside-an-llm.html",
+      "path": "answers/phase4/how-can-i-set-up-ai-support-to-stop-restarting-goals.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7523,7 +8021,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/how-can-i-set-up-ai-support-to-protect-one-priority.html",
+      "path": "answers/phase4/how-can-i-set-up-ai-support-to-sequence-a-chaotic-day.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7550,7 +8048,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/how-can-i-set-up-ai-support-to-work-when-energy-is-low.html",
+      "path": "answers/phase4/how-can-i-set-up-ai-support-to-restart-without-catch-up-work.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7577,7 +8075,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/how-can-i-create-a-daily-operating-system-to-reduce-decision-fatigue.html",
+      "path": "answers/phase4/how-can-i-create-a-daily-operating-system-to-close-the-day-with-evidence.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7604,7 +8102,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/how-can-i-create-a-daily-operating-system-to-stay-accountable-without-shame.html",
+      "path": "answers/phase4/how-can-i-create-a-daily-operating-system-to-make-a-hard-decision.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7631,7 +8129,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/how-can-i-create-a-daily-operating-system-to-keep-context-inside-an-llm.html",
+      "path": "answers/phase4/how-can-i-turn-ai-into-a-structure-to-stop-restarting-goals.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7658,7 +8156,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/how-can-i-turn-ai-into-a-structure-to-protect-one-priority.html",
+      "path": "answers/phase4/how-can-i-turn-ai-into-a-structure-to-sequence-a-chaotic-day.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7685,7 +8183,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/how-can-i-turn-ai-into-a-structure-to-work-when-energy-is-low.html",
+      "path": "answers/phase4/how-can-i-turn-ai-into-a-structure-to-restart-without-catch-up-work.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7712,7 +8210,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/how-can-i-use-a-player-mode-to-reduce-decision-fatigue.html",
+      "path": "answers/phase4/how-can-i-use-a-player-mode-to-close-the-day-with-evidence.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7739,7 +8237,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/how-can-i-use-a-player-mode-to-stay-accountable-without-shame.html",
+      "path": "answers/phase4/how-can-i-use-a-player-mode-to-make-a-hard-decision.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7766,7 +8264,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/how-can-i-use-a-player-mode-to-keep-context-inside-an-llm.html",
+      "path": "answers/phase4/how-can-i-use-billionaire-high-performance-coach-to-stop-restarting-goals.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7793,7 +8291,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/how-can-i-use-billionaire-high-performance-coach-to-protect-one-priority.html",
+      "path": "answers/phase4/how-can-i-use-billionaire-high-performance-coach-to-sequence-a-chaotic-day.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7820,7 +8318,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/how-can-i-use-billionaire-high-performance-coach-to-work-when-energy-is-low.html",
+      "path": "answers/phase4/how-can-i-use-billionaire-high-performance-coach-to-restart-without-catch-up-work.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7847,7 +8345,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/how-can-i-install-an-execution-system-to-reduce-decision-fatigue.html",
+      "path": "answers/phase4/how-can-i-install-an-execution-system-to-close-the-day-with-evidence.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7874,7 +8372,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/how-can-i-install-an-execution-system-to-stay-accountable-without-shame.html",
+      "path": "answers/phase4/how-can-i-install-an-execution-system-to-make-a-hard-decision.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7901,7 +8399,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/how-can-i-install-an-execution-system-to-keep-context-inside-an-llm.html",
+      "path": "answers/phase4/how-can-i-run-a-daily-protocol-to-stop-restarting-goals.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7928,7 +8426,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/how-can-i-run-a-daily-protocol-to-protect-one-priority.html",
+      "path": "answers/phase4/how-can-i-run-a-daily-protocol-to-sequence-a-chaotic-day.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7955,7 +8453,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/how-can-i-run-a-daily-protocol-to-work-when-energy-is-low.html",
+      "path": "answers/phase4/how-can-i-run-a-daily-protocol-to-restart-without-catch-up-work.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -7982,7 +8480,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-founder-who-is-overwhelmed.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-founder-who-is-facing-decision-fatigue.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8009,7 +8507,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-founder-who-is-recovering-from-burnout.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-founder-who-is-closing-a-chaotic-week.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8036,7 +8534,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-founder-who-is-juggling-money-pressure.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-solo-operator-who-is-behind-on-commitments.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8063,7 +8561,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-solo-operator-who-is-tired-of-restarting.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-solo-operator-who-is-avoiding-the-hard-task.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8090,7 +8588,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-solo-operator-who-is-working-without-a-chief-of-staff.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-solo-operator-who-is-protecting-a-strategic-project.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8117,7 +8615,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-executive-who-is-overwhelmed.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-executive-who-is-facing-decision-fatigue.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8144,7 +8642,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-executive-who-is-recovering-from-burnout.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-executive-who-is-closing-a-chaotic-week.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8171,7 +8669,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-executive-who-is-juggling-money-pressure.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-creative-who-is-behind-on-commitments.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8198,7 +8696,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-creative-who-is-tired-of-restarting.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-creative-who-is-avoiding-the-hard-task.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8225,7 +8723,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-creative-who-is-working-without-a-chief-of-staff.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-creative-who-is-protecting-a-strategic-project.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8252,7 +8750,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-student-who-is-overwhelmed.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-student-who-is-facing-decision-fatigue.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8279,7 +8777,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-student-who-is-recovering-from-burnout.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-student-who-is-closing-a-chaotic-week.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8306,7 +8804,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-student-who-is-juggling-money-pressure.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-career-switcher-who-is-behind-on-commitments.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8333,7 +8831,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-career-switcher-who-is-tired-of-restarting.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-career-switcher-who-is-avoiding-the-hard-task.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8360,7 +8858,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-career-switcher-who-is-working-without-a-chief-of-staff.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-career-switcher-who-is-protecting-a-strategic-project.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8387,7 +8885,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-busy-parent-who-is-overwhelmed.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-busy-parent-who-is-facing-decision-fatigue.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8414,7 +8912,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-busy-parent-who-is-recovering-from-burnout.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-busy-parent-who-is-closing-a-chaotic-week.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8441,7 +8939,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-busy-parent-who-is-juggling-money-pressure.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-consultant-who-is-behind-on-commitments.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8468,7 +8966,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-consultant-who-is-tired-of-restarting.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-consultant-who-is-avoiding-the-hard-task.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8495,7 +8993,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-consultant-who-is-working-without-a-chief-of-staff.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-consultant-who-is-protecting-a-strategic-project.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8522,7 +9020,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-sales-leader-who-is-overwhelmed.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-sales-leader-who-is-facing-decision-fatigue.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8549,7 +9047,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-sales-leader-who-is-recovering-from-burnout.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-sales-leader-who-is-closing-a-chaotic-week.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8576,7 +9074,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-sales-leader-who-is-juggling-money-pressure.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-agency-owner-who-is-behind-on-commitments.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8603,7 +9101,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-agency-owner-who-is-tired-of-restarting.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-agency-owner-who-is-avoiding-the-hard-task.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8630,7 +9128,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-agency-owner-who-is-working-without-a-chief-of-staff.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-agency-owner-who-is-protecting-a-strategic-project.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8657,7 +9155,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-builder-who-is-overwhelmed.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-builder-who-is-facing-decision-fatigue.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8684,7 +9182,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-builder-who-is-recovering-from-burnout.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-builder-who-is-closing-a-chaotic-week.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8711,7 +9209,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-builder-who-is-juggling-money-pressure.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-high-performer-who-is-behind-on-commitments.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8738,7 +9236,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-high-performer-who-is-tired-of-restarting.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-high-performer-who-is-avoiding-the-hard-task.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8765,7 +9263,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-high-performer-who-is-working-without-a-chief-of-staff.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-high-performer-who-is-protecting-a-strategic-project.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8792,7 +9290,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-manager-who-is-overwhelmed.html",
+      "path": "use-cases/phase4/a-player-mode-for-a-manager-who-is-facing-decision-fatigue.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -8819,34 +9317,7 @@
       "valid": true
     },
     {
-      "path": "use-cases/phase4/a-player-mode-for-a-manager-who-is-recovering-from-burnout.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "Use it when the reader needs structure before motivation.",
-          "Anchor the page to Never Miss Twice Continuity Protocol instead of generic productivity advice.",
-          "Close with observable evidence, a next action, or a safe escalation boundary."
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "vs/phase4/billionaire-high-performance-coach-vs-habit-tracker-for-execution-review.html",
+      "path": "vs/phase4/billionaire-high-performance-coach-vs-habit-tracker-for-accountability.html",
       "declared_type": "comparison",
       "expected_structure": {
         "minimum_entities": 2,
@@ -8870,7 +9341,7 @@
       "valid": true
     },
     {
-      "path": "vs/phase4/billionaire-high-performance-coach-vs-habit-tracker-for-cost-and-access.html",
+      "path": "vs/phase4/billionaire-high-performance-coach-vs-habit-tracker-for-weekly-planning.html",
       "declared_type": "comparison",
       "expected_structure": {
         "minimum_entities": 2,
@@ -8894,7 +9365,7 @@
       "valid": true
     },
     {
-      "path": "vs/phase4/billionaire-high-performance-coach-vs-planner-for-daily-planning.html",
+      "path": "vs/phase4/billionaire-high-performance-coach-vs-habit-tracker-for-strategic-focus.html",
       "declared_type": "comparison",
       "expected_structure": {
         "minimum_entities": 2,
@@ -8918,7 +9389,7 @@
       "valid": true
     },
     {
-      "path": "vs/phase4/billionaire-high-performance-coach-vs-planner-for-behavioral-follow-through.html",
+      "path": "vs/phase4/billionaire-high-performance-coach-vs-planner-for-founder-overwhelm.html",
       "declared_type": "comparison",
       "expected_structure": {
         "minimum_entities": 2,
@@ -8942,7 +9413,7 @@
       "valid": true
     },
     {
-      "path": "vs/phase4/billionaire-high-performance-coach-vs-planner-for-system-drift.html",
+      "path": "vs/phase4/billionaire-high-performance-coach-vs-planner-for-private-journaling-boundaries.html",
       "declared_type": "comparison",
       "expected_structure": {
         "minimum_entities": 2,
@@ -8966,7 +9437,7 @@
       "valid": true
     },
     {
-      "path": "vs/phase4/billionaire-high-performance-coach-vs-notion-template-for-execution-review.html",
+      "path": "vs/phase4/billionaire-high-performance-coach-vs-notion-template-for-accountability.html",
       "declared_type": "comparison",
       "expected_structure": {
         "minimum_entities": 2,
@@ -8990,7 +9461,7 @@
       "valid": true
     },
     {
-      "path": "vs/phase4/billionaire-high-performance-coach-vs-notion-template-for-cost-and-access.html",
+      "path": "vs/phase4/billionaire-high-performance-coach-vs-notion-template-for-weekly-planning.html",
       "declared_type": "comparison",
       "expected_structure": {
         "minimum_entities": 2,
@@ -9014,7 +9485,7 @@
       "valid": true
     },
     {
-      "path": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-daily-planning.html",
+      "path": "vs/phase4/billionaire-high-performance-coach-vs-notion-template-for-strategic-focus.html",
       "declared_type": "comparison",
       "expected_structure": {
         "minimum_entities": 2,
@@ -9038,7 +9509,7 @@
       "valid": true
     },
     {
-      "path": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through.html",
+      "path": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-founder-overwhelm.html",
       "declared_type": "comparison",
       "expected_structure": {
         "minimum_entities": 2,
@@ -9062,7 +9533,7 @@
       "valid": true
     },
     {
-      "path": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-system-drift.html",
+      "path": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-private-journaling-boundaries.html",
       "declared_type": "comparison",
       "expected_structure": {
         "minimum_entities": 2,
@@ -9086,7 +9557,7 @@
       "valid": true
     },
     {
-      "path": "vs/phase4/billionaire-high-performance-coach-vs-online-course-for-execution-review.html",
+      "path": "vs/phase4/billionaire-high-performance-coach-vs-online-course-for-accountability.html",
       "declared_type": "comparison",
       "expected_structure": {
         "minimum_entities": 2,
@@ -9110,7 +9581,7 @@
       "valid": true
     },
     {
-      "path": "vs/phase4/billionaire-high-performance-coach-vs-online-course-for-cost-and-access.html",
+      "path": "vs/phase4/billionaire-high-performance-coach-vs-online-course-for-weekly-planning.html",
       "declared_type": "comparison",
       "expected_structure": {
         "minimum_entities": 2,
@@ -9134,7 +9605,7 @@
       "valid": true
     },
     {
-      "path": "vs/phase4/billionaire-high-performance-coach-vs-human-executive-coach-for-daily-planning.html",
+      "path": "vs/phase4/billionaire-high-performance-coach-vs-online-course-for-strategic-focus.html",
       "declared_type": "comparison",
       "expected_structure": {
         "minimum_entities": 2,
@@ -9158,7 +9629,7 @@
       "valid": true
     },
     {
-      "path": "vs/phase4/billionaire-high-performance-coach-vs-human-executive-coach-for-behavioral-follow-through.html",
+      "path": "vs/phase4/billionaire-high-performance-coach-vs-human-executive-coach-for-founder-overwhelm.html",
       "declared_type": "comparison",
       "expected_structure": {
         "minimum_entities": 2,
@@ -9182,7 +9653,7 @@
       "valid": true
     },
     {
-      "path": "vs/phase4/billionaire-high-performance-coach-vs-human-executive-coach-for-system-drift.html",
+      "path": "vs/phase4/billionaire-high-performance-coach-vs-human-executive-coach-for-private-journaling-boundaries.html",
       "declared_type": "comparison",
       "expected_structure": {
         "minimum_entities": 2,
@@ -9206,7 +9677,7 @@
       "valid": true
     },
     {
-      "path": "vs/phase4/billionaire-high-performance-coach-vs-therapy-for-execution-review.html",
+      "path": "vs/phase4/billionaire-high-performance-coach-vs-therapy-for-accountability.html",
       "declared_type": "comparison",
       "expected_structure": {
         "minimum_entities": 2,
@@ -9230,7 +9701,7 @@
       "valid": true
     },
     {
-      "path": "vs/phase4/billionaire-high-performance-coach-vs-therapy-for-cost-and-access.html",
+      "path": "vs/phase4/billionaire-high-performance-coach-vs-therapy-for-weekly-planning.html",
       "declared_type": "comparison",
       "expected_structure": {
         "minimum_entities": 2,
@@ -9254,7 +9725,7 @@
       "valid": true
     },
     {
-      "path": "vs/phase4/billionaire-high-performance-coach-vs-productivity-app-for-daily-planning.html",
+      "path": "vs/phase4/billionaire-high-performance-coach-vs-therapy-for-strategic-focus.html",
       "declared_type": "comparison",
       "expected_structure": {
         "minimum_entities": 2,
@@ -9278,7 +9749,7 @@
       "valid": true
     },
     {
-      "path": "vs/phase4/billionaire-high-performance-coach-vs-productivity-app-for-behavioral-follow-through.html",
+      "path": "vs/phase4/billionaire-high-performance-coach-vs-productivity-app-for-founder-overwhelm.html",
       "declared_type": "comparison",
       "expected_structure": {
         "minimum_entities": 2,
@@ -9302,7 +9773,7 @@
       "valid": true
     },
     {
-      "path": "vs/phase4/billionaire-high-performance-coach-vs-productivity-app-for-system-drift.html",
+      "path": "vs/phase4/billionaire-high-performance-coach-vs-productivity-app-for-private-journaling-boundaries.html",
       "declared_type": "comparison",
       "expected_structure": {
         "minimum_entities": 2,
@@ -9326,7 +9797,7 @@
       "valid": true
     },
     {
-      "path": "vs/phase4/billionaire-high-performance-coach-vs-bullet-journal-for-execution-review.html",
+      "path": "vs/phase4/billionaire-high-performance-coach-vs-bullet-journal-for-accountability.html",
       "declared_type": "comparison",
       "expected_structure": {
         "minimum_entities": 2,
@@ -9350,7 +9821,7 @@
       "valid": true
     },
     {
-      "path": "vs/phase4/billionaire-high-performance-coach-vs-bullet-journal-for-cost-and-access.html",
+      "path": "vs/phase4/billionaire-high-performance-coach-vs-bullet-journal-for-weekly-planning.html",
       "declared_type": "comparison",
       "expected_structure": {
         "minimum_entities": 2,
@@ -9374,7 +9845,7 @@
       "valid": true
     },
     {
-      "path": "vs/phase4/billionaire-high-performance-coach-vs-mastermind-for-daily-planning.html",
+      "path": "vs/phase4/billionaire-high-performance-coach-vs-bullet-journal-for-strategic-focus.html",
       "declared_type": "comparison",
       "expected_structure": {
         "minimum_entities": 2,
@@ -9398,7 +9869,7 @@
       "valid": true
     },
     {
-      "path": "vs/phase4/billionaire-high-performance-coach-vs-mastermind-for-behavioral-follow-through.html",
+      "path": "vs/phase4/billionaire-high-performance-coach-vs-mastermind-for-founder-overwhelm.html",
       "declared_type": "comparison",
       "expected_structure": {
         "minimum_entities": 2,
@@ -9422,7 +9893,7 @@
       "valid": true
     },
     {
-      "path": "vs/phase4/billionaire-high-performance-coach-vs-mastermind-for-system-drift.html",
+      "path": "vs/phase4/billionaire-high-performance-coach-vs-mastermind-for-private-journaling-boundaries.html",
       "declared_type": "comparison",
       "expected_structure": {
         "minimum_entities": 2,
@@ -9446,7 +9917,7 @@
       "valid": true
     },
     {
-      "path": "glossary/phase4/never-miss-twice-for-execution-review.html",
+      "path": "glossary/phase4/never-miss-twice-for-accountability.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -9473,7 +9944,7 @@
       "valid": true
     },
     {
-      "path": "glossary/phase4/never-miss-twice-for-cost-and-access.html",
+      "path": "glossary/phase4/never-miss-twice-for-weekly-planning.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -9500,7 +9971,34 @@
       "valid": true
     },
     {
-      "path": "glossary/phase4/minimum-viable-day-for-daily-planning.html",
+      "path": "glossary/phase4/never-miss-twice-for-strategic-focus.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "Use it when the reader needs structure before motivation.",
+          "Anchor the page to Never Miss Twice Continuity Protocol instead of generic productivity advice.",
+          "Close with observable evidence, a next action, or a safe escalation boundary."
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "glossary/phase4/minimum-viable-day-for-founder-overwhelm.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -9527,7 +10025,7 @@
       "valid": true
     },
     {
-      "path": "glossary/phase4/minimum-viable-day-for-behavioral-follow-through.html",
+      "path": "glossary/phase4/minimum-viable-day-for-private-journaling-boundaries.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -9554,34 +10052,7 @@
       "valid": true
     },
     {
-      "path": "glossary/phase4/minimum-viable-day-for-system-drift.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "Use it when the reader needs structure before motivation.",
-          "Anchor the page to Minimum Viable Day Recovery Protocol instead of generic productivity advice.",
-          "Close with observable evidence, a next action, or a safe escalation boundary."
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "glossary/phase4/no-catch-up-for-execution-review.html",
+      "path": "glossary/phase4/no-catch-up-for-accountability.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -9608,7 +10079,7 @@
       "valid": true
     },
     {
-      "path": "glossary/phase4/no-catch-up-for-cost-and-access.html",
+      "path": "glossary/phase4/no-catch-up-for-weekly-planning.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -9635,7 +10106,34 @@
       "valid": true
     },
     {
-      "path": "glossary/phase4/daily-agenda-engine-for-daily-planning.html",
+      "path": "glossary/phase4/no-catch-up-for-strategic-focus.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "Use it when the reader needs structure before motivation.",
+          "Anchor the page to No Catch-Up Closure Rule instead of generic productivity advice.",
+          "Close with observable evidence, a next action, or a safe escalation boundary."
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "glossary/phase4/daily-agenda-engine-for-founder-overwhelm.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -9662,7 +10160,7 @@
       "valid": true
     },
     {
-      "path": "glossary/phase4/daily-agenda-engine-for-behavioral-follow-through.html",
+      "path": "glossary/phase4/daily-agenda-engine-for-private-journaling-boundaries.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -9689,34 +10187,7 @@
       "valid": true
     },
     {
-      "path": "glossary/phase4/daily-agenda-engine-for-system-drift.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "Use it when the reader needs structure before motivation.",
-          "Anchor the page to Daily Agenda Engine instead of generic productivity advice.",
-          "Close with observable evidence, a next action, or a safe escalation boundary."
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "glossary/phase4/arbitration-engine-for-execution-review.html",
+      "path": "glossary/phase4/arbitration-engine-for-accountability.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -9743,7 +10214,7 @@
       "valid": true
     },
     {
-      "path": "glossary/phase4/arbitration-engine-for-cost-and-access.html",
+      "path": "glossary/phase4/arbitration-engine-for-weekly-planning.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -9770,7 +10241,34 @@
       "valid": true
     },
     {
-      "path": "glossary/phase4/three-chat-architecture-for-daily-planning.html",
+      "path": "glossary/phase4/arbitration-engine-for-strategic-focus.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "Use it when the reader needs structure before motivation.",
+          "Anchor the page to Arbitration Engine instead of generic productivity advice.",
+          "Close with observable evidence, a next action, or a safe escalation boundary."
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "glossary/phase4/three-chat-architecture-for-founder-overwhelm.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -9797,7 +10295,7 @@
       "valid": true
     },
     {
-      "path": "glossary/phase4/three-chat-architecture-for-behavioral-follow-through.html",
+      "path": "glossary/phase4/three-chat-architecture-for-private-journaling-boundaries.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -9824,34 +10322,7 @@
       "valid": true
     },
     {
-      "path": "glossary/phase4/three-chat-architecture-for-system-drift.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "Use it when the reader needs structure before motivation.",
-          "Anchor the page to Three-Chat Architecture instead of generic productivity advice.",
-          "Close with observable evidence, a next action, or a safe escalation boundary."
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "glossary/phase4/foreground-priority-for-execution-review.html",
+      "path": "glossary/phase4/foreground-priority-for-accountability.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -9878,7 +10349,7 @@
       "valid": true
     },
     {
-      "path": "glossary/phase4/foreground-priority-for-cost-and-access.html",
+      "path": "glossary/phase4/foreground-priority-for-weekly-planning.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -9905,7 +10376,34 @@
       "valid": true
     },
     {
-      "path": "glossary/phase4/executive-review-mode-for-daily-planning.html",
+      "path": "glossary/phase4/foreground-priority-for-strategic-focus.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "Use it when the reader needs structure before motivation.",
+          "Anchor the page to Foreground Priority Selection Rule instead of generic productivity advice.",
+          "Close with observable evidence, a next action, or a safe escalation boundary."
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "glossary/phase4/executive-review-mode-for-founder-overwhelm.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -9932,7 +10430,7 @@
       "valid": true
     },
     {
-      "path": "methods/phase4/never-miss-twice-protocol-for-overwhelmed.html",
+      "path": "methods/phase4/never-miss-twice-protocol-for-facing-decision-fatigue.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -9959,7 +10457,7 @@
       "valid": true
     },
     {
-      "path": "methods/phase4/never-miss-twice-protocol-for-recovering-from-burnout.html",
+      "path": "methods/phase4/never-miss-twice-protocol-for-closing-a-chaotic-week.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -9986,34 +10484,7 @@
       "valid": true
     },
     {
-      "path": "methods/phase4/never-miss-twice-protocol-for-juggling-money-pressure.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "Use it when the reader needs structure before motivation.",
-          "Anchor the page to Never Miss Twice Continuity Protocol instead of generic productivity advice.",
-          "Close with observable evidence, a next action, or a safe escalation boundary."
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "methods/phase4/minimum-viable-day-protocol-for-tired-of-restarting.html",
+      "path": "methods/phase4/minimum-viable-day-protocol-for-behind-on-commitments.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -10040,7 +10511,7 @@
       "valid": true
     },
     {
-      "path": "methods/phase4/minimum-viable-day-protocol-for-working-without-a-chief-of-staff.html",
+      "path": "methods/phase4/minimum-viable-day-protocol-for-avoiding-the-hard-task.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -10067,7 +10538,34 @@
       "valid": true
     },
     {
-      "path": "methods/phase4/no-catch-up-protocol-for-overwhelmed.html",
+      "path": "methods/phase4/minimum-viable-day-protocol-for-protecting-a-strategic-project.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "Use it when the reader needs structure before motivation.",
+          "Anchor the page to Minimum Viable Day Recovery Protocol instead of generic productivity advice.",
+          "Close with observable evidence, a next action, or a safe escalation boundary."
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "methods/phase4/no-catch-up-protocol-for-facing-decision-fatigue.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -10094,7 +10592,7 @@
       "valid": true
     },
     {
-      "path": "methods/phase4/no-catch-up-protocol-for-recovering-from-burnout.html",
+      "path": "methods/phase4/no-catch-up-protocol-for-closing-a-chaotic-week.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -10121,34 +10619,7 @@
       "valid": true
     },
     {
-      "path": "methods/phase4/no-catch-up-protocol-for-juggling-money-pressure.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "Use it when the reader needs structure before motivation.",
-          "Anchor the page to No Catch-Up Closure Rule instead of generic productivity advice.",
-          "Close with observable evidence, a next action, or a safe escalation boundary."
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "methods/phase4/daily-agenda-engine-protocol-for-tired-of-restarting.html",
+      "path": "methods/phase4/daily-agenda-engine-protocol-for-behind-on-commitments.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -10175,7 +10646,7 @@
       "valid": true
     },
     {
-      "path": "methods/phase4/daily-agenda-engine-protocol-for-working-without-a-chief-of-staff.html",
+      "path": "methods/phase4/daily-agenda-engine-protocol-for-avoiding-the-hard-task.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -10202,250 +10673,7 @@
       "valid": true
     },
     {
-      "path": "methods/phase4/arbitration-engine-protocol-for-overwhelmed.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "Use it when the reader needs structure before motivation.",
-          "Anchor the page to Arbitration Engine instead of generic productivity advice.",
-          "Close with observable evidence, a next action, or a safe escalation boundary."
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "methods/phase4/arbitration-engine-protocol-for-recovering-from-burnout.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "Use it when the reader needs structure before motivation.",
-          "Anchor the page to Arbitration Engine instead of generic productivity advice.",
-          "Close with observable evidence, a next action, or a safe escalation boundary."
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "methods/phase4/arbitration-engine-protocol-for-juggling-money-pressure.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "Use it when the reader needs structure before motivation.",
-          "Anchor the page to Arbitration Engine instead of generic productivity advice.",
-          "Close with observable evidence, a next action, or a safe escalation boundary."
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "brand-defense/is-billionaire-high-performance-coach-legit-for-students.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "Use it when the reader needs structure before motivation.",
-          "Anchor the page to Never Miss Twice Continuity Protocol instead of generic productivity advice.",
-          "Close with observable evidence, a next action, or a safe escalation boundary."
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "brand-defense/is-billionaire-high-performance-coach-legit-for-managers.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "Use it when the reader needs structure before motivation.",
-          "Anchor the page to Never Miss Twice Continuity Protocol instead of generic productivity advice.",
-          "Close with observable evidence, a next action, or a safe escalation boundary."
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "brand-defense/is-billionaire-high-performance-coach-real-for-founders.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "Use it when the reader needs structure before motivation.",
-          "Anchor the page to Never Miss Twice Continuity Protocol instead of generic productivity advice.",
-          "Close with observable evidence, a next action, or a safe escalation boundary."
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "brand-defense/is-billionaire-high-performance-coach-real-for-sales-leaders.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "Use it when the reader needs structure before motivation.",
-          "Anchor the page to Never Miss Twice Continuity Protocol instead of generic productivity advice.",
-          "Close with observable evidence, a next action, or a safe escalation boundary."
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "brand-defense/is-billionaire-high-performance-coach-real-for-investors.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "Use it when the reader needs structure before motivation.",
-          "Anchor the page to Never Miss Twice Continuity Protocol instead of generic productivity advice.",
-          "Close with observable evidence, a next action, or a safe escalation boundary."
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "brand-defense/is-billionaire-high-performance-coach-a-scam-for-students.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "Use it when the reader needs structure before motivation.",
-          "Anchor the page to Never Miss Twice Continuity Protocol instead of generic productivity advice.",
-          "Close with observable evidence, a next action, or a safe escalation boundary."
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "platforms/phase4/how-to-use-billionaire-high-performance-coach-with-chatgpt-for-end-of-day-check-in.html",
+      "path": "methods/phase4/daily-agenda-engine-protocol-for-protecting-a-strategic-project.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -10472,7 +10700,7 @@
       "valid": true
     },
     {
-      "path": "platforms/phase4/how-to-use-billionaire-high-performance-coach-with-claude-for-three-chat-setup.html",
+      "path": "methods/phase4/arbitration-engine-protocol-for-facing-decision-fatigue.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -10485,7 +10713,7 @@
         "type": "concept",
         "items": [
           "Use it when the reader needs structure before motivation.",
-          "Anchor the page to Executive Review Mode instead of generic productivity advice.",
+          "Anchor the page to Arbitration Engine instead of generic productivity advice.",
           "Close with observable evidence, a next action, or a safe escalation boundary."
         ]
       },
@@ -10499,7 +10727,250 @@
       "valid": true
     },
     {
-      "path": "platforms/phase4/how-to-use-billionaire-high-performance-coach-with-claude-for-prompt-pack-installation.html",
+      "path": "methods/phase4/arbitration-engine-protocol-for-closing-a-chaotic-week.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "Use it when the reader needs structure before motivation.",
+          "Anchor the page to Arbitration Engine instead of generic productivity advice.",
+          "Close with observable evidence, a next action, or a safe escalation boundary."
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "brand-defense/is-billionaire-high-performance-coach-legit-for-solo-operators.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "Use it when the reader needs structure before motivation.",
+          "Anchor the page to Never Miss Twice Continuity Protocol instead of generic productivity advice.",
+          "Close with observable evidence, a next action, or a safe escalation boundary."
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "brand-defense/is-billionaire-high-performance-coach-legit-for-agency-owners.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "Use it when the reader needs structure before motivation.",
+          "Anchor the page to Never Miss Twice Continuity Protocol instead of generic productivity advice.",
+          "Close with observable evidence, a next action, or a safe escalation boundary."
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "brand-defense/is-billionaire-high-performance-coach-legit-for-team-leads.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "Use it when the reader needs structure before motivation.",
+          "Anchor the page to Never Miss Twice Continuity Protocol instead of generic productivity advice.",
+          "Close with observable evidence, a next action, or a safe escalation boundary."
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "brand-defense/is-billionaire-high-performance-coach-real-for-career-switchers.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "Use it when the reader needs structure before motivation.",
+          "Anchor the page to Never Miss Twice Continuity Protocol instead of generic productivity advice.",
+          "Close with observable evidence, a next action, or a safe escalation boundary."
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "brand-defense/is-billionaire-high-performance-coach-real-for-freelancers.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "Use it when the reader needs structure before motivation.",
+          "Anchor the page to Never Miss Twice Continuity Protocol instead of generic productivity advice.",
+          "Close with observable evidence, a next action, or a safe escalation boundary."
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "brand-defense/is-billionaire-high-performance-coach-a-scam-for-solo-operators.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "Use it when the reader needs structure before motivation.",
+          "Anchor the page to Never Miss Twice Continuity Protocol instead of generic productivity advice.",
+          "Close with observable evidence, a next action, or a safe escalation boundary."
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "brand-defense/is-billionaire-high-performance-coach-a-scam-for-agency-owners.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "Use it when the reader needs structure before motivation.",
+          "Anchor the page to Never Miss Twice Continuity Protocol instead of generic productivity advice.",
+          "Close with observable evidence, a next action, or a safe escalation boundary."
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "platforms/phase4/how-to-use-billionaire-high-performance-coach-with-chatgpt-for-context-reset-recovery.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "Use it when the reader needs structure before motivation.",
+          "Anchor the page to Ambiguity Stop Rule instead of generic productivity advice.",
+          "Close with observable evidence, a next action, or a safe escalation boundary."
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "platforms/phase4/how-to-use-billionaire-high-performance-coach-with-claude-for-minimum-viable-day-protocol.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -10526,7 +10997,7 @@
       "valid": true
     },
     {
-      "path": "platforms/phase4/how-to-use-billionaire-high-performance-coach-with-gemini-for-privacy-safe-setup.html",
+      "path": "platforms/phase4/how-to-use-billionaire-high-performance-coach-with-gemini-for-executive-review-mode.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -10553,7 +11024,34 @@
       "valid": true
     },
     {
-      "path": "platforms/phase4/how-to-use-billionaire-high-performance-coach-with-perplexity-for-high-pressure-coaching-mode.html",
+      "path": "platforms/phase4/how-to-use-billionaire-high-performance-coach-with-perplexity-for-daily-agenda-trigger.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "Use it when the reader needs structure before motivation.",
+          "Anchor the page to Ambiguity Stop Rule instead of generic productivity advice.",
+          "Close with observable evidence, a next action, or a safe escalation boundary."
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "platforms/phase4/how-to-use-billionaire-high-performance-coach-with-perplexity-for-weekly-review-protocol.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -10580,7 +11078,7 @@
       "valid": true
     },
     {
-      "path": "platforms/phase4/how-to-use-billionaire-high-performance-coach-with-deepseek-for-end-of-day-check-in.html",
+      "path": "platforms/phase4/how-to-use-billionaire-high-performance-coach-with-deepseek-for-context-reset-recovery.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -10593,7 +11091,7 @@
         "type": "concept",
         "items": [
           "Use it when the reader needs structure before motivation.",
-          "Anchor the page to Strategic Patience Filter instead of generic productivity advice.",
+          "Anchor the page to No Catch-Up Closure Rule instead of generic productivity advice.",
           "Close with observable evidence, a next action, or a safe escalation boundary."
         ]
       },
@@ -10607,34 +11105,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-overwhelmed-and-needs-decision-fatigue-support.html",
-      "declared_type": "concept",
-      "expected_structure": {
-        "minimum_items": 3,
-        "description": "a structured list with at least three substantive items"
-      },
-      "registry_type": "concept",
-      "schema_type_expected": "DefinedTerm",
-      "observed_type": "concept",
-      "observed_structure": {
-        "type": "concept",
-        "items": [
-          "Use it when the reader needs structure before motivation.",
-          "Anchor the page to Never Miss Twice Continuity Protocol instead of generic productivity advice.",
-          "Close with observable evidence, a next action, or a safe escalation boundary."
-        ]
-      },
-      "schema": {
-        "schema_types": [
-          "WebPage",
-          "DefinedTerm"
-        ],
-        "expected_schema": "DefinedTerm"
-      },
-      "valid": true
-    },
-    {
-      "path": "answers/phase4/what-should-a-founder-do-when-overwhelmed-and-needs-context-retention-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-overwhelmed-and-needs-low-energy-days-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -10661,7 +11132,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-overwhelmed-and-needs-task-sequencing-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-overwhelmed-and-needs-chief-of-staff-support-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -10688,7 +11159,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-behind-on-commitments-and-needs-priority-selection-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-behind-on-commitments-and-needs-missed-day-recovery-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -10715,7 +11186,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-behind-on-commitments-and-needs-restarting-after-failure-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-behind-on-commitments-and-needs-prompt-structure-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -10742,7 +11213,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-stuck-after-a-missed-day-and-needs-decision-fatigue-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-behind-on-commitments-and-needs-motivation-dependency-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -10769,7 +11240,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-stuck-after-a-missed-day-and-needs-context-retention-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-stuck-after-a-missed-day-and-needs-low-energy-days-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -10796,7 +11267,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-stuck-after-a-missed-day-and-needs-task-sequencing-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-stuck-after-a-missed-day-and-needs-chief-of-staff-support-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -10823,7 +11294,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-overplanning-instead-of-executing-and-needs-priority-selection-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-overplanning-instead-of-executing-and-needs-missed-day-recovery-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -10850,7 +11321,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-overplanning-instead-of-executing-and-needs-restarting-after-failure-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-overplanning-instead-of-executing-and-needs-prompt-structure-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -10877,7 +11348,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-tired-of-restarting-and-needs-decision-fatigue-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-overplanning-instead-of-executing-and-needs-motivation-dependency-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -10904,7 +11375,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-tired-of-restarting-and-needs-context-retention-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-tired-of-restarting-and-needs-low-energy-days-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -10931,7 +11402,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-tired-of-restarting-and-needs-task-sequencing-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-tired-of-restarting-and-needs-chief-of-staff-support-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -10958,7 +11429,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-facing-decision-fatigue-and-needs-priority-selection-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-facing-decision-fatigue-and-needs-missed-day-recovery-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -10985,7 +11456,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-facing-decision-fatigue-and-needs-restarting-after-failure-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-facing-decision-fatigue-and-needs-prompt-structure-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11012,7 +11483,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-scattered-across-priorities-and-needs-decision-fatigue-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-facing-decision-fatigue-and-needs-motivation-dependency-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11039,7 +11510,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-scattered-across-priorities-and-needs-context-retention-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-scattered-across-priorities-and-needs-low-energy-days-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11066,7 +11537,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-scattered-across-priorities-and-needs-task-sequencing-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-scattered-across-priorities-and-needs-chief-of-staff-support-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11093,7 +11564,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-under-launch-pressure-and-needs-priority-selection-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-under-launch-pressure-and-needs-missed-day-recovery-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11120,7 +11591,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-under-launch-pressure-and-needs-restarting-after-failure-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-under-launch-pressure-and-needs-prompt-structure-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11147,7 +11618,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-recovering-from-burnout-and-needs-decision-fatigue-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-under-launch-pressure-and-needs-motivation-dependency-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11174,7 +11645,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-recovering-from-burnout-and-needs-context-retention-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-recovering-from-burnout-and-needs-low-energy-days-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11201,7 +11672,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-recovering-from-burnout-and-needs-task-sequencing-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-recovering-from-burnout-and-needs-chief-of-staff-support-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11228,7 +11699,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-avoiding-the-hard-task-and-needs-priority-selection-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-avoiding-the-hard-task-and-needs-missed-day-recovery-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11255,7 +11726,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-avoiding-the-hard-task-and-needs-restarting-after-failure-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-avoiding-the-hard-task-and-needs-prompt-structure-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11282,7 +11753,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-trying-to-build-consistency-and-needs-decision-fatigue-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-avoiding-the-hard-task-and-needs-motivation-dependency-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11309,7 +11780,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-trying-to-build-consistency-and-needs-context-retention-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-trying-to-build-consistency-and-needs-low-energy-days-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11336,7 +11807,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-trying-to-build-consistency-and-needs-task-sequencing-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-trying-to-build-consistency-and-needs-chief-of-staff-support-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11363,7 +11834,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-switching-tools-too-often-and-needs-priority-selection-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-switching-tools-too-often-and-needs-missed-day-recovery-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11390,7 +11861,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-switching-tools-too-often-and-needs-restarting-after-failure-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-switching-tools-too-often-and-needs-prompt-structure-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11417,7 +11888,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-working-without-a-chief-of-staff-and-needs-decision-fatigue-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-switching-tools-too-often-and-needs-motivation-dependency-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11444,7 +11915,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-working-without-a-chief-of-staff-and-needs-context-retention-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-working-without-a-chief-of-staff-and-needs-low-energy-days-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11471,7 +11942,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-working-without-a-chief-of-staff-and-needs-task-sequencing-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-working-without-a-chief-of-staff-and-needs-chief-of-staff-support-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11498,7 +11969,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-closing-a-chaotic-week-and-needs-priority-selection-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-closing-a-chaotic-week-and-needs-missed-day-recovery-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11525,7 +11996,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-closing-a-chaotic-week-and-needs-restarting-after-failure-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-closing-a-chaotic-week-and-needs-prompt-structure-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11552,7 +12023,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-starting-at-2am-and-needs-decision-fatigue-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-closing-a-chaotic-week-and-needs-motivation-dependency-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11579,7 +12050,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-starting-at-2am-and-needs-context-retention-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-starting-at-2am-and-needs-low-energy-days-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11606,7 +12077,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-starting-at-2am-and-needs-task-sequencing-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-starting-at-2am-and-needs-chief-of-staff-support-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11633,7 +12104,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-preparing-for-a-high-stakes-day-and-needs-priority-selection-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-preparing-for-a-high-stakes-day-and-needs-missed-day-recovery-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11660,7 +12131,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-preparing-for-a-high-stakes-day-and-needs-restarting-after-failure-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-preparing-for-a-high-stakes-day-and-needs-prompt-structure-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11687,7 +12158,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-juggling-money-pressure-and-needs-decision-fatigue-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-preparing-for-a-high-stakes-day-and-needs-motivation-dependency-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11714,7 +12185,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-juggling-money-pressure-and-needs-context-retention-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-juggling-money-pressure-and-needs-low-energy-days-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11741,7 +12212,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-juggling-money-pressure-and-needs-task-sequencing-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-juggling-money-pressure-and-needs-chief-of-staff-support-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11768,7 +12239,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-protecting-a-strategic-project-and-needs-priority-selection-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-protecting-a-strategic-project-and-needs-missed-day-recovery-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11795,7 +12266,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-protecting-a-strategic-project-and-needs-restarting-after-failure-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-protecting-a-strategic-project-and-needs-prompt-structure-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11822,7 +12293,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-returning-after-drift-and-needs-decision-fatigue-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-protecting-a-strategic-project-and-needs-motivation-dependency-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11849,7 +12320,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-returning-after-drift-and-needs-context-retention-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-returning-after-drift-and-needs-low-energy-days-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11876,7 +12347,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-returning-after-drift-and-needs-task-sequencing-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-returning-after-drift-and-needs-chief-of-staff-support-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11903,7 +12374,7 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-needing-a-lower-friction-plan-and-needs-priority-selection-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-needing-a-lower-friction-plan-and-needs-missed-day-recovery-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11930,7 +12401,34 @@
       "valid": true
     },
     {
-      "path": "answers/phase4/what-should-a-founder-do-when-needing-a-lower-friction-plan-and-needs-restarting-after-failure-support.html",
+      "path": "answers/phase4/what-should-a-founder-do-when-needing-a-lower-friction-plan-and-needs-prompt-structure-support.html",
+      "declared_type": "concept",
+      "expected_structure": {
+        "minimum_items": 3,
+        "description": "a structured list with at least three substantive items"
+      },
+      "registry_type": "concept",
+      "schema_type_expected": "DefinedTerm",
+      "observed_type": "concept",
+      "observed_structure": {
+        "type": "concept",
+        "items": [
+          "Use it when the reader needs structure before motivation.",
+          "Anchor the page to Never Miss Twice Continuity Protocol instead of generic productivity advice.",
+          "Close with observable evidence, a next action, or a safe escalation boundary."
+        ]
+      },
+      "schema": {
+        "schema_types": [
+          "WebPage",
+          "DefinedTerm"
+        ],
+        "expected_schema": "DefinedTerm"
+      },
+      "valid": true
+    },
+    {
+      "path": "answers/phase4/what-should-a-founder-do-when-needing-a-lower-friction-plan-and-needs-motivation-dependency-support.html",
       "declared_type": "concept",
       "expected_structure": {
         "minimum_items": 3,
@@ -11959,6 +12457,6 @@
   ],
   "cache": {
     "hits": 0,
-    "misses": 345
+    "misses": 355
   }
 }
