@@ -2,6 +2,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
+const { fileForRoute } = require('../lib/route_resolution.cjs');
 const ROOT = process.cwd();
 const GRAPH = path.join(ROOT, 'data/internal_authority_graph.json');
 const OUT = path.join(ROOT, '.build/internal_authority_graph_report.json');
@@ -16,15 +17,7 @@ function hrefs(html){
 // Node paths are canonical routes, which are extensionless since the canonical
 // contract moved off the redirecting .html form. Resolve one back to the file
 // that answers it.
-function fileFor(route){
-  const rel = String(route).replace(/^\//, '');
-  for (const candidate of [rel, `${rel}.html`, `${rel.replace(/\/$/, '')}/index.html`, 'index.html']) {
-    if (!candidate) continue;
-    const full = path.join(ROOT, candidate);
-    if (fs.existsSync(full) && fs.statSync(full).isFile()) return full;
-  }
-  return null;
-}
+const fileFor = (route) => fileForRoute(ROOT, route);
 function main(){
   const graph = readJSON(GRAPH);
   const report = { generated_at: new Date().toISOString(), checked: [], missing: [] };

@@ -236,7 +236,7 @@ function renderPage(page) {
       mainEntityOfPage:canonical,
       datePublished:page.published_at || page.reviewed_at,
       dateModified:page.reviewed_at,
-      author:{'@type':'Person',name:'S.L. Taylor',url:`https://${page.domain}/author.html`},
+      author:{'@type':'Person',name:'S.L. Taylor',url:`https://${page.domain}/author`},
       publisher:{'@type':'Organization',name:'Spry Labs',url:`https://${page.domain}/`,logo:{'@type':'ImageObject',url:`https://${page.domain}/assets/spry-logo.png`}},
       image:{'@type':'ImageObject',url:socialImage},
     });
@@ -257,7 +257,7 @@ function renderPage(page) {
 <nav aria-label="Breadcrumb" class="breadcrumb"><a href="/">Home</a><span class="sep">→</span><span>${esc(page.h1)}</span></nav>
 <h1>${esc(page.h1)}</h1>
 <p class="citation-definition"><strong>${esc(page.definition)}</strong></p>
-<p class="byline">By <a href="/author.html" rel="author">S.L. Taylor</a> · ${esc(brand)} · Published <time datetime="${esc(page.published_at || page.reviewed_at)}">${esc(page.published_at || page.reviewed_at)}</time> · Updated <time datetime="${esc(page.reviewed_at)}">${esc(page.reviewed_at)}</time></p>
+<p class="byline">By <a href="/author" rel="author">S.L. Taylor</a> · ${esc(brand)} · Published <time datetime="${esc(page.published_at || page.reviewed_at)}">${esc(page.published_at || page.reviewed_at)}</time> · Updated <time datetime="${esc(page.reviewed_at)}">${esc(page.reviewed_at)}</time></p>
 ${renderTldr(page)}
 ${aliases}
 <p class="lede">${esc(page.summary)}</p>
@@ -278,7 +278,7 @@ ${renderFanout(page)}
 ${renderPriorityCitation(page)}
 <p class="product-anchor">This is one of the frameworks inside the <a href="/download.html">Billionaire High Performance Coach system</a> — a structured executive OS for using ChatGPT as your accountability and decision partner.</p>
 <section class="card related-pages"><h2>Related Frameworks</h2><ul>${related}</ul></section>
-<section class="card author-bio" id="about-the-author"><h2>About the Author</h2><p><a href="/author.html" rel="author">S.L. Taylor</a> is the creator of Billionaire High Performance Coach and Spry Executive OS. This page is published through Spry Labs and reviewed under the site’s educational, organizational, and non-clinical content standards.</p></section>
+<section class="card author-bio" id="about-the-author"><h2>About the Author</h2><p><a href="/author" rel="author">S.L. Taylor</a> is the creator of Billionaire High Performance Coach and Spry Executive OS. This page is published through Spry Labs and reviewed under the site’s educational, organizational, and non-clinical content standards.</p></section>
 <section class="card editorial-note"><h2>Editorial Method</h2><p>This page was built from an approved query specification, assigned one primary intent, checked against existing query owners, and required to contain a page-specific framework and usable artifact. It is reviewed for visible-content and structured-data parity before publication.</p><p>Health-adjacent pages receive an additional non-diagnostic review. Product comparisons rely on current official product information where available and do not claim first-person testing unless such testing is documented.</p></section>
 </article></main>
 <footer class="footer" data-content-contract="cta-block"><div class="container"><p><a href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach" rel="noopener noreferrer">Get Instant Access</a> to the complete Billionaire High Performance Coach system, or <a href="https://aplayermode.com" rel="noopener noreferrer">explore A Player Mode</a>.</p><p>Educational and organizational content from Spry Labs. Results vary. Consequential decisions remain under human authority.</p></div></footer>

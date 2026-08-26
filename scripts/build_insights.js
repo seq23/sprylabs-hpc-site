@@ -620,9 +620,9 @@ function buildPostPages(posts, clustersMap) {
     const carriedPathways = extractCarriedPathways(path.join(OUT_DIR, `${post.slug}.html`));
     const readmeReviewDate = post.slug === "README" ? "2026-06-20" : "";
     const readmeAuthorityBlocks = readmeReviewDate ? `
-        <p class="byline">By <a href="/author.html" rel="author">S.L. Taylor</a> · Spry Labs · Reviewed <time datetime="${readmeReviewDate}">${readmeReviewDate}</time></p>
+        <p class="byline">By <a href="/author" rel="author">S.L. Taylor</a> · Spry Labs · Reviewed <time datetime="${readmeReviewDate}">${readmeReviewDate}</time></p>
         <section class="card"><h2>How to Navigate the Spry Insights Library</h2><p>Use the insights library as a decision map: find the exact framework, read the direct answer, apply it to one operating decision, and follow only the related pages that support that decision.</p></section>
-        <section class="card author-bio" id="about-the-author"><h2>About the Author</h2><p><a href="/author.html" rel="author">S.L. Taylor</a> is the creator of Billionaire High Performance Coach and Spry Executive OS. This page is published through Spry Labs and reviewed under the site educational, organizational, and non-clinical content standards.</p></section>
+        <section class="card author-bio" id="about-the-author"><h2>About the Author</h2><p><a href="/author" rel="author">S.L. Taylor</a> is the creator of Billionaire High Performance Coach and Spry Executive OS. This page is published through Spry Labs and reviewed under the site educational, organizational, and non-clinical content standards.</p></section>
         <section class="card editorial-note"><h2>Authority and Review Basis</h2><p>This README insight is reviewed under the Spry Labs <a href="/strategy.html">Citation Methodology</a>. It explains how the Spry Executive OS insights library should be navigated and does not claim medical, legal, financial, or therapeutic advice.</p></section>
         <section class="sources"><h2>Sources and reference context</h2><p><a href="/what-is-this-system.html">What this system is</a></p><p><a href="/strategy.html">Strategy overview</a></p><p><a href="/download.html">Product download</a></p></section>` : "";
 

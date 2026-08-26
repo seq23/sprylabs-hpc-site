@@ -110,7 +110,7 @@ for page in SPEC['pages']:
                 tldr=soup.select_one('aside.tldr')
                 if not tldr or norm(tldr.get_text(' ',strip=True).replace('TL;DR:','',1))!=norm(rule.get('required_tldr','')): fail(rel,'TL;DR parity failure')
                 byline=soup.select_one('p.byline')
-                if not byline or not byline.select_one('a[href="/author.html"][rel="author"]'): fail(rel,'visible author byline missing')
+                if not byline or not byline.select_one('a[href="/author"][rel="author"]'): fail(rel,'visible author byline missing')
                 times=byline.find_all('time') if byline else []
                 if len(times)<2 or any(t.get('datetime')!=rule.get('reviewed_at') for t in times[-1:]): fail(rel,'visible semantic review date missing or mismatched')
                 toc=soup.select_one('nav.toc')
@@ -122,14 +122,14 @@ for page in SPEC['pages']:
                 if not og or not tw or not og.get('content','').endswith(hero.get('src','')) or og.get('content')!=tw.get('content'): fail(rel,'social image metadata mismatch')
                 faq=soup.select_one('section.faq')
                 if not faq or len(faq.select('h3'))!=rule.get('required_faq_count',0): fail(rel,'visible FAQ count mismatch')
-                if not soup.select_one('section.author-bio a[href="/author.html"]'): fail(rel,'author bio missing')
+                if not soup.select_one('section.author-bio a[href="/author"]'): fail(rel,'author bio missing')
                 article=next((x for x in graph if x.get('@type')=='Article'),None)
                 if not article: fail(rel,'Article schema missing')
                 else:
                     if article.get('headline')!=page['h1'] or article.get('description')!=page['definition']: fail(rel,'Article headline/description mismatch')
                     if article.get('dateModified')!=rule.get('reviewed_at'): fail(rel,'Article dateModified mismatch')
                     author=article.get('author') or {}
-                    if author.get('@type')!='Person' or author.get('name')!='S.L. Taylor' or not author.get('url','').endswith('/author.html'): fail(rel,'Article author mismatch')
+                    if author.get('@type')!='Person' or author.get('name')!='S.L. Taylor' or not author.get('url','').endswith('/author'): fail(rel,'Article author mismatch')
                     if (article.get('image') or {}).get('url')!=og.get('content'): fail(rel,'Article image mismatch')
         except Exception as exc: fail(rel,f'invalid schema JSON: {exc}')
     for related in page.get('related_paths',[]):

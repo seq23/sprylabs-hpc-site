@@ -269,8 +269,20 @@ function renderHub(hub) {
   ];
   const items = hub.links.map((l) => `<li><a href="${esc(l.href)}">${esc(l.text)}</a></li>`).join('');
   return `<!doctype html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><title>${esc(hub.title)}</title><meta content="${esc(hub.description)}" name="description"/><link href="${canonical}" rel="canonical"/><meta content="${canonical}" property="og:url"/><meta content="${esc(hub.title)}" property="og:title"/><meta content="${esc(hub.description)}" property="og:description"/><meta content="${OG_IMAGE}" property="og:image"/><meta content="summary_large_image" name="twitter:card"/><meta content="${OG_IMAGE}" name="twitter:image"/><meta content="index,follow" name="robots"/><link href="/assets/styles.css" rel="stylesheet"/><script defer="" src="/assets/domain-context.js"></script><script id="CITATION_PAGE_SCHEMA" type="application/ld+json">${pyJson({ '@context': 'https://schema.org', '@graph': graph })}</script></head><body data-internal-nav-page="hub"><header class="header"><div class="header__inner container"><a class="brand" href="/">Billionaire High Performance Coach</a><nav class="nav"><a class="nav__link" href="/download.html">Download</a><a class="nav__link" href="/start-here">Start here</a></nav></div></header><main class="container main"><article class="content-article">${crumbs}<h1>${esc(hub.h1)}</h1><p class="citation-definition"><strong>${esc(hub.intro || hub.description)}</strong></p><section class="card" data-internal-nav="hub-index"><h2>${esc(hub.links.length)} pages</h2><ul>${items}</ul></section><section class="contract-cta" data-content-contract="cta-block"><p class="product-anchor">This is one of the frameworks inside the <a href="/download.html">Billionaire High Performance Coach system</a> — a structured executive OS for using ChatGPT as your accountability and decision partner.</p><p><a href="/download.html">Review the system manual to see how the full structure works</a>.</p></section></article></main><footer class="footer"><div class="footer__row"><a href="/download.html">Review the system manual</a></div></footer></body></html>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><title>${esc(hub.title)}</title><meta content="${esc(hub.description)}" name="description"/><link href="${canonical}" rel="canonical"/><meta content="${canonical}" property="og:url"/><meta content="${esc(hub.title)}" property="og:title"/><meta content="${esc(hub.description)}" property="og:description"/><meta content="${OG_IMAGE}" property="og:image"/><meta content="summary_large_image" name="twitter:card"/><meta content="${OG_IMAGE}" name="twitter:image"/><meta content="index,follow" name="robots"/><link href="/assets/styles.css" rel="stylesheet"/><script defer="" src="/assets/domain-context.js"></script><script id="CITATION_PAGE_SCHEMA" type="application/ld+json">${pyJson({ '@context': 'https://schema.org', '@graph': graph })}</script></head><body data-internal-nav-page="hub"><header class="header"><div class="header__inner container"><a class="brand" href="/">Billionaire High Performance Coach</a><nav class="nav"><a class="nav__link" href="/download.html">Download</a><a class="nav__link" href="/start-here">Start here</a></nav></div></header><main class="container main"><article class="content-article">${crumbs}<h1>${esc(hub.h1)}</h1><p class="citation-definition"><strong>${esc(hub.intro || hub.description)}</strong></p><section class="card" data-internal-nav="hub-index"><h2>${esc(hub.links.length)} pages</h2><ul>${items}</ul></section><section class="contract-cta" data-content-contract="cta-block"><p class="product-anchor">This is one of the frameworks inside the <a href="/download.html">Billionaire High Performance Coach system</a> — a structured executive OS for using ChatGPT as your accountability and decision partner.</p><p><a href="/download.html">Review the system manual to see how the full structure works</a>, or <a href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach">get the system now</a>.</p></section></article></main><footer class="footer"><div class="footer__row"><a href="/download.html">Review the system manual</a></div></footer></body></html>
 `;
+}
+
+// Append a block at the end of the page's main content. Naive
+// html.replace(/<\/article>/i, ...) matches the FIRST closing article, and
+// several pages nest <article class="source-record"> inside a sources section -
+// which put the related links inside the source ledger and broke its counts.
+function appendToMain(html, block) {
+  for (const closer of ['</main>', '</article>', '</body>']) {
+    const at = html.toLowerCase().lastIndexOf(closer);
+    if (at >= 0) return html.slice(0, at) + block + html.slice(at);
+  }
+  return html + block;
 }
 
 const HUB_INDEX_RE = /<section\b[^>]*data-internal-nav="hub-index"[^>]*>[\s\S]*?<\/section>/i;
@@ -294,8 +306,7 @@ for (const hub of hubs) {
     const before = html;
     const block = hubIndexSection(hub);
     if (HUB_INDEX_RE.test(html)) html = html.replace(HUB_INDEX_RE, block);
-    else if (/<\/article>/i.test(html)) html = html.replace(/<\/article>/i, `${block}</article>`);
-    else html = html.replace(/<\/main>/i, `${block}</main>`);
+    else html = appendToMain(html, block);
     if (html !== before) { fs.writeFileSync(hub.rel, html); hubsInjected++; }
     continue;
   }
@@ -309,7 +320,7 @@ for (const hub of hubs) {
 // nav[aria-label="Breadcrumbs"] / nav.breadcrumbs (which it does not). Both are
 // removed so a page ends up with exactly one visible trail.
 const BREADCRUMB_RE_G = /<nav\b[^>]*(?:aria-label="Breadcrumbs?"|class="[^"]*\bbreadcrumbs?\b[^"]*")[^>]*>[\s\S]*?<\/nav>/gi;
-const RELATED_RE = /<section\b[^>]*data-internal-nav="related"[^>]*>[\s\S]*?<\/section>/i;
+const RELATED_RE_G = /<section\b[^>]*data-internal-nav="related"[^>]*>[\s\S]*?<\/section>/gi;
 
 function replaceBreadcrumbJsonLd(html, node) {
   const scriptRe = /(<script id="CITATION_PAGE_SCHEMA"[^>]*>)([\s\S]*?)(<\/script>)/i;
@@ -379,9 +390,10 @@ for (const pg of pages) {
       ? `<p>Also in this area: ${carried.map((c) => `<a href="${esc(c.href)}">${esc(c.text)}</a>`).join(', ')}.</p>`
       : '';
     const block = `<section class="card" data-internal-nav="related"><h2>Related pages</h2><ul>${picks.map((s) => `<li><a href="${esc(s.route)}">${esc(s.h1)}</a></li>`).join('')}</ul>${carriedHtml}<p><a href="${esc(parent.href)}">See all ${esc(parent.name.toLowerCase())} pages</a></p></section>`;
-    if (RELATED_RE.test(html)) html = html.replace(RELATED_RE, block);
-    else if (/<\/article>/i.test(html)) html = html.replace(/<\/article>/i, `${block}</article>`);
-    else html = html.replace(/<\/main>/i, `${block}</main>`);
+    // Remove any previous block first: an in-place replace would keep a block
+    // that an earlier run had put in the wrong container.
+    html = html.replace(RELATED_RE_G, '');
+    html = appendToMain(html, block);
   }
 
   if (html !== before) { fs.writeFileSync(pg.rel, html); pagesTouched++; }

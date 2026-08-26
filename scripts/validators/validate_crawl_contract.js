@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 const fs=require('fs'); const path=require('path');
+const { fileForRoute } = require('../lib/route_resolution.cjs');
 const root=process.cwd(); const bad=[];
 const priority=JSON.parse(fs.readFileSync(path.join(root,'data/index_priority.json'),'utf8'));
 // /sitemap.xml is now a host-neutral sitemap index; the URLs live in the two
@@ -13,12 +14,8 @@ const llms=fs.existsSync(path.join(root,'llms.txt'))?fs.readFileSync(path.join(r
 // directory index). Resolve one back to the file that answers it.
 function fileFor(url){
   if(url==='/download') return 'download.html';
-  const rel=url.replace(/^\//,'');
-  if(rel==='') return 'index.html';
-  for(const candidate of [rel, `${rel}.html`, `${rel.replace(/\/$/,'')}/index.html`]){
-    if(fs.existsSync(path.join(root,candidate))) return candidate;
-  }
-  return rel;
+  const abs = fileForRoute(root, url);
+  return abs ? path.relative(root, abs) : url.replace(/^\//,'');
 }
 for(const group of ['money','comparison','authority']){
   for(const url of priority.classes[group]||[]){

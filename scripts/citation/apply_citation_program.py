@@ -492,7 +492,7 @@ def add_schema(soup: BeautifulSoup, path: str, spec: dict):
     if path in {'about.html','spry-labs.html'}:
         graph.append({'@type':'Organization','@id':_absolute_url(canonical,'/about.html#organization'),'name':'Spry Labs','url':_absolute_url(canonical,'/about.html')})
     if path in {'author.html','sequoia-taylor.html'}:
-        graph.append({'@type':'Person','@id':_absolute_url(canonical,'/author.html#person'),'name':'S.L. Taylor','url':_absolute_url(canonical,'/author.html'),'worksFor':{'@type':'Organization','name':'Spry Labs'}})
+        graph.append({'@type':'Person','@id':_absolute_url(canonical,'/author#person'),'name':'S.L. Taylor','url':_absolute_url(canonical,'/author'),'worksFor':{'@type':'Organization','name':'Spry Labs'}})
     script=soup.new_tag('script', id='CITATION_PAGE_SCHEMA', type='application/ld+json')
     script.string=json.dumps({'@context':'https://schema.org','@graph':graph},ensure_ascii=False,separators=(',',':'))
     (soup.body or soup).append(script)

@@ -2,6 +2,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
+const { fileForRoute } = require('../lib/route_resolution.cjs');
 const ROOT = process.cwd();
 const META = path.join(ROOT, 'data/query_metadata.json');
 function fail(msg){ console.error(`[validate_fanout_blocks] FAIL: ${msg}`); process.exit(1); }
@@ -9,8 +10,8 @@ if (!fs.existsSync(META)) fail('missing data/query_metadata.json');
 const meta = JSON.parse(fs.readFileSync(META, 'utf8'));
 let checked = 0;
 for (const item of meta.items || []) {
-  const file = path.join(ROOT, item.path.replace(/^\//,''));
-  if (!fs.existsSync(file)) fail(`page missing: ${item.path}`);
+  const file = fileForRoute(ROOT, item.path);
+  if (!file) fail(`page missing: ${item.path}`);
   const html = fs.readFileSync(file, 'utf8');
   if (!html.includes('data-fanout-query-cluster="true"')) fail(`${item.path} missing fanout query cluster block`);
   if (!html.includes(`data-fanout-topic="${item.query_cluster}"`)) fail(`${item.path} fanout block does not match query cluster ${item.query_cluster}`);
