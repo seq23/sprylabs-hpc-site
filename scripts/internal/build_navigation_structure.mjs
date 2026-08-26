@@ -128,8 +128,14 @@ function pyJson(value) {
 const DENY_TOP = new Set(['.git', '.github', '.build', '.pages-output', '.wrangler',
   '.validation-cache', '.validation-runtime', 'node_modules', 'scripts', 'data', 'reports',
   'artifacts', 'docs', 'tests', 'fixtures', 'config', 'content', 'functions', 'seo',
-  'LICENSES', 'dist', 'admin', 'coverage', 'test-results', 'playwright-report']);
+  'LICENSES', 'dist', 'admin', 'coverage', 'test-results', 'playwright-report',
+  // templates/ holds page skeletons with {{h1}} placeholders, not pages. The
+  // same exclusion exists in repair_dual_domain_metadata.js and
+  // validate_money_link_floor.js.
+  'templates', '_ops']);
 const NEVER_LISTED = new Set(['index.html', '404.html', 'admin.html', 'download.html']);
+const PLACEHOLDER_RE = /\{\{[^}]+\}\}|<%|%>|TODO_PLACEHOLDER/i;
+const RELATED_BLOCK_RE = /<section\b[^>]*data-internal-nav="related"[^>]*>[\s\S]*?<\/section>/gi;
 // The hubs this script owns, so a re-run does not list its own output.
 // Anchored to the known section ids: a loose [a-z0-9-]+/index.html would also
 // swallow ordinary one-level pages like agency/ or adhd-tips/ and quietly drop
@@ -157,6 +163,10 @@ for (const rel of walkHtml(ROOT, 0, [])) {
   if (ownedHubs.has(rel) || HUB_RE.test(rel)) continue;
   const html = fs.readFileSync(rel, 'utf8');
   if (/content=["'][^"']*noindex/i.test(html)) continue;
+  // Test the page without any block this script owns: an earlier run could have
+  // linked a template here, and the placeholder it carried would then make the
+  // page look like a template itself and freeze the bad block in place.
+  if (PLACEHOLDER_RE.test(html.replace(RELATED_BLOCK_RE, ''))) continue;
   const meta = citableByPath.get(rel);
   const route = routeFor(rel);
   const host = meta ? 'https://' + meta.canonical_domain : hostFor(route);
@@ -320,7 +330,7 @@ for (const hub of hubs) {
 // nav[aria-label="Breadcrumbs"] / nav.breadcrumbs (which it does not). Both are
 // removed so a page ends up with exactly one visible trail.
 const BREADCRUMB_RE_G = /<nav\b[^>]*(?:aria-label="Breadcrumbs?"|class="[^"]*\bbreadcrumbs?\b[^"]*")[^>]*>[\s\S]*?<\/nav>/gi;
-const RELATED_RE_G = /<section\b[^>]*data-internal-nav="related"[^>]*>[\s\S]*?<\/section>/gi;
+const RELATED_RE_G = RELATED_BLOCK_RE;
 
 function replaceBreadcrumbJsonLd(html, node) {
   const scriptRe = /(<script id="CITATION_PAGE_SCHEMA"[^>]*>)([\s\S]*?)(<\/script>)/i;
