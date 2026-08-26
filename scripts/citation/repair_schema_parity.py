@@ -245,7 +245,15 @@ def update_schema(path: Path):
         return True
     return False
 
+# download.html is under a protected baseline: it is the revenue surface, its
+# hash is asserted by validate:reopened-baseline, and it has been corrupted by
+# a self-heal pass before. Reserializing it through BeautifulSoup rewrites
+# every meta tag's attribute order, which changes the hash without changing a
+# word - so this file is never opened here, not even to read it.
+PROTECTED = {'download.html'}
+
 def repair_one(rel: str) -> int:
+    if str(rel).lstrip('./') in PROTECTED: return 0
     fp=ROOT/rel
     return 1 if fp.is_file() and update_schema(fp) else 0
 

@@ -140,9 +140,21 @@ function addAtom(atom) {
   if (stripped.split(/\s+/).filter(Boolean).length < 12) return false;
   plannedPaths.add(atom.path); plannedQueries.add(normalize(atom.query)); atoms.push(atom); return true;
 }
+
+// The `unique` clause is written as a third-person sentence about the page
+// ("Compares X with Y"), so splicing it after "to help readers" produced
+// "to help readers Compares X with Y" on 1,567 pages - the first bold line
+// under the H1, and the first thing an extractor reads. Put the verb in the
+// base form the sentence actually needs.
+const READER_VERB = {Uses:'use', Maps:'map', Explains:'explain', Compares:'compare',
+  Defines:'define', Turns:'turn', Answers:'answer', Shows:'show', Provides:'provide'};
+function forReaders(clause) {
+  return String(clause || '').replace(/^([A-Z][a-z]+)\b/, (m, verb) => READER_VERB[verb] || m.toLowerCase());
+}
+
 function commonAtomFields(type, query, path, concept, unique, intent, cta='download_soft') {
   const framework = `${titleCase(concept.framework.replace(/\bProtocol\b|\bRule\b|\bFlow\b/g,'').trim())} ${type.replace(/_/g,' ')} ${String(atoms.length+1).padStart(4,'0')}`;
-  const definition = `The ${framework} is a ${type.replace(/_/g,' ')} reference surface that uses ${concept.framework} to help readers ${unique.replace(/\.$/,'')}.`;
+  const definition = `The ${framework} is a ${type.replace(/_/g,' ')} reference surface that uses ${concept.framework} to help readers ${forReaders(unique.replace(/\.$/,''))}.`;
   return {
     id: `aplayer-phase4-${String(atoms.length+1).padStart(4,'0')}`,
     source: GENERATED_SOURCE,
