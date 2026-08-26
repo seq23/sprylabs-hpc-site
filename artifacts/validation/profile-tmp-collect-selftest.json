@@ -1,0 +1,38 @@
+{
+  "profile": "tmp-collect-selftest",
+  "started_at": "2026-08-26T00:33:44.762Z",
+  "steps": [
+    {
+      "id": "validate:step-a",
+      "command": "node -e \"console.log('A ok')\"",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:step-b-fails",
+      "command": "node -e \"console.error('B failing'); process.exit(1)\"",
+      "exit_code": 1,
+      "status": "FAIL"
+    },
+    {
+      "id": "validate:step-c",
+      "command": "node -e \"console.log('C ok - proves the run continued')\"",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:step-d-fails",
+      "command": "node -e \"console.error('D failing'); process.exit(1)\"",
+      "exit_code": 1,
+      "status": "FAIL"
+    }
+  ],
+  "status": "FAIL",
+  "failure_count": 2,
+  "failures": [
+    "validate:step-b-fails",
+    "validate:step-d-fails"
+  ],
+  "stopped_early_at": null,
+  "finished_at": "2026-08-26T00:33:44.943Z"
+}

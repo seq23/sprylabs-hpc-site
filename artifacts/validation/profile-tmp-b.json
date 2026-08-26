@@ -1,0 +1,19 @@
+{
+  "profile": "tmp-b",
+  "started_at": "2026-08-26T00:33:56.330Z",
+  "steps": [
+    {
+      "id": "build:all",
+      "command": "node -e \"console.error('build broke'); process.exit(1)\"",
+      "exit_code": 1,
+      "status": "FAIL"
+    }
+  ],
+  "status": "FAIL",
+  "failure_count": 1,
+  "failures": [
+    "build:all"
+  ],
+  "stopped_early_at": "build:all",
+  "finished_at": "2026-08-26T00:33:56.368Z"
+}
