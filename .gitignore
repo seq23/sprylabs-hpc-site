@@ -13,7 +13,10 @@ logs/
 !.env.example
 .wrangler/
 tmp/
-coverage/
+# NOTE: coverage/ here is a published site section (coverage/index.html,
+# "Coverage | Spry Executive OS"), not test-coverage output. Ignoring it by the
+# usual Node convention meant it was never deployed, while sitemap.xml has
+# advertised /coverage/ since 2026-06-21 - a 404 in the sitemap the whole time.
 __pycache__/
 *.pyc
 reports/programmatic-candidate-results.json
