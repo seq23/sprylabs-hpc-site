@@ -274,6 +274,7 @@ function renderHub(hub) {
       isPartOf: { '@type': 'WebSite', '@id': hub.host + '/#website', url: hub.host + '/' },
       publisher: { '@type': 'Organization', name: 'Spry Labs', url: 'https://billionairehighperformancecoach.com/' } },
     breadcrumbJsonLd(canonical, hub.host, hub.parents, hub.h1),
+    { '@type': 'DefinedTerm', '@id': canonical + '#framework', name: hub.h1, description: hub.description, inDefinedTermSet: 'Spry Executive OS' },
     { '@type': 'ItemList', '@id': canonical + '#itemlist', numberOfItems: hub.links.length,
       itemListElement: hub.links.map((l, i) => ({ '@type': 'ListItem', position: i + 1, name: l.text, url: hub.host + l.href })) },
   ];
@@ -314,6 +315,9 @@ for (const hub of hubs) {
   if (onDisk !== null && !ownGenerated) {
     let html = fs.readFileSync(hub.rel, 'utf8');
     const before = html;
+    // A page can become a hub after having been an ordinary page. Drop the
+    // related block it carried: a hub already lists its whole section.
+    html = html.replace(RELATED_BLOCK_RE, '');
     const block = hubIndexSection(hub);
     if (HUB_INDEX_RE.test(html)) html = html.replace(HUB_INDEX_RE, block);
     else html = appendToMain(html, block);
@@ -390,21 +394,23 @@ for (const pg of pages) {
   // --- siblings: a rotating window so the whole topic gets inbound links,
   //     not just whichever pages happen to sort first ---
   const pool = info.siblings.filter((s) => s.rel !== pg.rel);
-  if (pool.length || carried.length) {
-    const start = siblingCursor.get(pg.topicId) || 0;
-    const picks = [];
-    for (let i = 0; i < Math.min(SIBLINGS_PER_PAGE, pool.length); i++) picks.push(pool[(start + i) % pool.length]);
-    siblingCursor.set(pg.topicId, (start + Math.max(1, Math.floor(pool.length / Math.max(1, info.siblings.length)) || 1) + 1) % pool.length);
-    const parent = info.crumbs[info.crumbs.length - 1];
-    const carriedHtml = carried.length
-      ? `<p>Also in this area: ${carried.map((c) => `<a href="${esc(c.href)}">${esc(c.text)}</a>`).join(', ')}.</p>`
-      : '';
-    const block = `<section class="card" data-internal-nav="related"><h2>Related pages</h2><ul>${picks.map((s) => `<li><a href="${esc(s.route)}">${esc(s.h1)}</a></li>`).join('')}</ul>${carriedHtml}<p><a href="${esc(parent.href)}">See all ${esc(parent.name.toLowerCase())} pages</a></p></section>`;
-    // Remove any previous block first: an in-place replace would keep a block
-    // that an earlier run had put in the wrong container.
-    html = html.replace(RELATED_RE_G, '');
-    html = appendToMain(html, block);
-  }
+  const start = siblingCursor.get(pg.topicId) || 0;
+  const picks = [];
+  for (let i = 0; i < Math.min(SIBLINGS_PER_PAGE, pool.length); i++) picks.push(pool[(start + i) % pool.length]);
+  if (pool.length) siblingCursor.set(pg.topicId, (start + Math.max(1, Math.floor(pool.length / Math.max(1, info.siblings.length)) || 1) + 1) % pool.length);
+  const parent = info.crumbs[info.crumbs.length - 1];
+  const carriedHtml = carried.length
+    ? `<p>Also in this area: ${carried.map((c) => `<a href="${esc(c.href)}">${esc(c.text)}</a>`).join(', ')}.</p>`
+    : '';
+  const listHtml = picks.length
+    ? `<ul>${picks.map((s) => `<li><a href="${esc(s.route)}">${esc(s.h1)}</a></li>`).join('')}</ul>`
+    : '';
+  const block = `<section class="card" data-internal-nav="related"><h2>Related pages</h2>${listHtml}${carriedHtml}<p><a href="${esc(parent.href)}">See all ${esc(parent.name.toLowerCase())} pages</a></p></section>`;
+  // Removal is unconditional. Doing it inside the "has siblings" branch left a
+  // stale block on every page that is the only member of its topic - including
+  // blocks an earlier run had filled with template placeholders.
+  html = html.replace(RELATED_RE_G, '');
+  html = appendToMain(html, block);
 
   if (html !== before) { fs.writeFileSync(pg.rel, html); pagesTouched++; }
 }

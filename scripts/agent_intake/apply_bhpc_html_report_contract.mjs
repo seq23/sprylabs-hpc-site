@@ -89,12 +89,12 @@ function fixHowTracks(){
   const rel='how-tracks-work.html'; const fp=path.join(ROOT,rel); let html=read(fp); if(!html) return {path:rel, changed:false, error:'missing_file'};
   const before=html;
   const replacements={
-    'href="/ai-executive-coach.html"':'href="https://billionairehighperformancecoach.com/ai-executive-coach.html"',
-    'href="/ai-coach-vs-human-coach-for-founders.html"':'href="https://billionairehighperformancecoach.com/ai-coach-vs-human-coach-for-founders.html"',
-    'href="/can-ai-replace-an-executive-coach.html"':'href="https://billionairehighperformancecoach.com/can-ai-replace-an-executive-coach.html"',
-    'href="/ai-workflow-for-founders.html"':'href="https://billionairehighperformancecoach.com/ai-workflow-for-founders.html"',
-    'href="/decision-fatigue-and-structured-ai-support.html"':'href="https://billionairehighperformancecoach.com/decision-fatigue-and-structured-ai-support.html"',
-    'href="/ai-accountability-system-vs-habit-tracker.html"':'href="https://billionairehighperformancecoach.com/ai-accountability-system-vs-habit-tracker.html"'
+    'href="/ai-executive-coach"':'href="https://billionairehighperformancecoach.com/ai-executive-coach.html"',
+    'href="/ai-coach-vs-human-coach-for-founders"':'href="https://billionairehighperformancecoach.com/ai-coach-vs-human-coach-for-founders.html"',
+    'href="/can-ai-replace-an-executive-coach"':'href="https://billionairehighperformancecoach.com/can-ai-replace-an-executive-coach.html"',
+    'href="/ai-workflow-for-founders"':'href="https://billionairehighperformancecoach.com/ai-workflow-for-founders.html"',
+    'href="/decision-fatigue-and-structured-ai-support"':'href="https://billionairehighperformancecoach.com/decision-fatigue-and-structured-ai-support.html"',
+    'href="/ai-accountability-system-vs-habit-tracker"':'href="https://billionairehighperformancecoach.com/ai-accountability-system-vs-habit-tracker.html"'
   };
   for (const [from,to] of Object.entries(replacements)) html=replaceHref(html,from,to);
   write(fp,html); return {path:rel, changed:html!==before};
@@ -103,8 +103,8 @@ function fixLifeCoachCluster(){
   const rel='clusters/life-coach-alternatives.html'; const fp=path.join(ROOT,rel); let html=read(fp); if(!html) return {path:rel, changed:false, error:'missing_file'};
   const before=html;
   const pairs={
-    'href="/answers/do-you-need-a-life-coach-or-a-system.html"':'href="https://spryexecutiveos.com/answers/ai-executive-coach-alternative.html"',
-    'href="/answers/executive-coach.html"':'href="https://spryexecutiveos.com/answers/ai-accountability-system-vs-coach.html"',
+    'href="/answers/do-you-need-a-life-coach-or-a-system"':'href="https://spryexecutiveos.com/answers/ai-executive-coach-alternative.html"',
+    'href="/answers/executive-coach"':'href="https://spryexecutiveos.com/answers/ai-accountability-system-vs-coach.html"',
     'href="/billionaire-high-performance-coach-vs-coaching/"':'href="https://spryexecutiveos.com/comparisons/bhpc-vs-betterup.html"',
     'href="/billionaire-high-performance-coach-vs-therapy/"':'href="https://spryexecutiveos.com/vs/therapist/"'
   };

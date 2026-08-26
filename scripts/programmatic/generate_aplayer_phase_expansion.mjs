@@ -368,7 +368,7 @@ function renderTable(atom) {
 }
 function renderPage(atom) {
   const related = atom.internal_links.map(link => `<li><a href="${esc(link)}">${esc(link === '/download.html' ? 'Install the Billionaire High Performance Coach system' : link.replace(/^\//,'').replace(/\/$/,'').replace(/[-/]/g,' '))}</a></li>`).join('');
-  const sourceBlock = atom.page_type === 'comparison' ? `<section class="card sources"><h2>Source and verification note</h2><p class="comparison-disclosure">${esc(atom.conflict_disclosure)}</p><ul><li><a href="/download.html">Billionaire High Performance Coach product page</a></li><li><a href="/citation-methodology.html">BHPC citation methodology</a></li></ul></section>` : '';
+  const sourceBlock = atom.page_type === 'comparison' ? `<section class="card sources"><h2>Source and verification note</h2><p class="comparison-disclosure">${esc(atom.conflict_disclosure)}</p><ul><li><a href="/download.html">Billionaire High Performance Coach product page</a></li><li><a href="/citation-methodology">BHPC citation methodology</a></li></ul></section>` : '';
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -385,7 +385,7 @@ function renderPage(atom) {
   <script type="application/ld+json" id="CITATION_PAGE_SCHEMA">${renderSchema(atom)}</script>
 </head>
 <body data-page-key="reference">
-<header class="premium-header"><div class="premium-header__shell"><div class="brand-lockup"><a class="brand-wordmark" href="/">Billionaire High Performance Coach</a><span>by Spry Executive OS</span></div><nav class="premium-nav"><a href="/download.html">Buy</a><a href="/answers/">Answers</a><a href="/citation-methodology.html">Methodology</a></nav></div></header>
+<header class="premium-header"><div class="premium-header__shell"><div class="brand-lockup"><a class="brand-wordmark" href="/">Billionaire High Performance Coach</a><span>by Spry Executive OS</span></div><nav class="premium-nav"><a href="/download.html">Buy</a><a href="/answers/">Answers</a><a href="/citation-methodology">Methodology</a></nav></div></header>
 <main class="container main"><article class="content-article citation-page">
 <h1>${esc(atom.query)}</h1>
 <p class="citation-definition"><strong>${esc(atom.definition)}</strong></p>

@@ -91,7 +91,7 @@ def ensure_sources(soup, main, minimum):
         section=soup.new_tag('section'); section['class']='sources'; main.append(section)
         h=soup.new_tag('h2'); h.string='Sources and reference context'; section.append(h)
     links=section.select('a[href]')
-    defaults=[('/what-is-this-system.html','What this system is'),('/strategy.html','Strategy overview'),('/download.html','Product download')]
+    defaults=[('/what-is-this-system','What this system is'),('/strategy','Strategy overview'),('/download.html','Product download')]
     for href,label in defaults:
         if len(section.select('a[href]'))>=minimum: break
         p=soup.new_tag('p'); a=soup.new_tag('a',href=href); a.string=label; p.append(a); section.append(p)

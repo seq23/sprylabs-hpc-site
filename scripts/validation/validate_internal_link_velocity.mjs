@@ -6,7 +6,10 @@ for (const r of rows) {
   const text = fs.existsSync(r.path) ? fs.readFileSync(r.path,'utf8') : '';
   const links=[...text.matchAll(/href=["']([^"']+)["']/g)].map(m=>m[1]).filter(h=>h.startsWith('/')&&!h.startsWith('//'));
   if (links.length < 4) errors.push(`${r.path}: fewer than four internal links`);
-  for (const required of ['/download.html','/citation-methodology.html']) if (!links.includes(required)) errors.push(`${r.path}: missing required internal link ${required}`);
+  // /download.html keeps its extension: it is the frozen revenue surface and
+  // its canonical still names the .html form. Everything else is asserted in
+  // the 200-serving form.
+  for (const required of ['/download.html','/citation-methodology']) if (!links.includes(required)) errors.push(`${r.path}: missing required internal link ${required}`);
 }
 fs.mkdirSync('artifacts/diagnostics/container-current/validate-internal-link-velocity',{recursive:true});
 fs.writeFileSync('artifacts/diagnostics/container-current/validate-internal-link-velocity/summary.json', JSON.stringify({status:errors.length?'FAIL':'PASS',checked:rows.length,errors},null,2)+'\n');

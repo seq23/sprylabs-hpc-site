@@ -116,7 +116,7 @@ for r in c.get('pages',[]):
         soup=BeautifulSoup(raw,'html.parser')
         text=' '.join(soup.get_text(' ',strip=True).split())
         if path=='download.html':
-            raw=raw.replace('href="https://aplayermode.com"','href="/index.html"')
+            raw=raw.replace('href="https://aplayermode.com"','href="/"')
             soup=BeautifulSoup(raw,'html.parser')
             main=soup.find('main') or soup.body or soup
             needed=[
@@ -172,8 +172,8 @@ for r in c.get('pages',[]):
     if PRODUCT not in soup.get_text(' ',strip=True):
         p=soup.new_tag('p'); p.string=PRODUCT; main.append(p)
     ensure_link(soup,'/download.html','Download the system')
-    ensure_link(soup,'/index.html','Start here')
-    ensure_link(soup,'/strategy.html','Read the strategy')
+    ensure_link(soup,'/','Start here')
+    ensure_link(soup,'/strategy','Read the strategy')
     if not soup.find('script',id='CITATION_PAGE_SCHEMA'):
         sc=soup.new_tag('script', id='CITATION_PAGE_SCHEMA', type='application/ld+json')
         sc.string=json.dumps({'@context':'https://schema.org','@type':'WebPage','name':r['query'],'description':r['definition']})

@@ -54,9 +54,9 @@ function renderComparison(c = {}) {
 </ul>
 <h3>Adjacent decision paths</h3>
 <ul class="fanout-list">
-<li><a href="/ai-executive-coach.html">AI executive coach</a></li>
-<li><a href="/what-is-an-ai-executive-coach.html">What is an AI executive coach</a></li>
-<li><a href="/what-is-this-system.html">What this system is</a></li>
+<li><a href="/ai-executive-coach">AI executive coach</a></li>
+<li><a href="/what-is-an-ai-executive-coach">What is an AI executive coach</a></li>
+<li><a href="/what-is-this-system">What this system is</a></li>
 <li><a href="https://aplayermode.com">Get the full system</a></li>
 </ul>
 </section>

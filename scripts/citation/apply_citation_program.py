@@ -205,8 +205,8 @@ if AGENT_HTML_REPORT_SPEC_PATH.exists():
 
 
 RELATED = [
-    ("/chatgpt-accountability-partner.html", "Use ChatGPT as an accountability partner"),
-    ("/ai-executive-coach.html", "Understand an AI executive coach"),
+    ("/chatgpt-accountability-partner", "Use ChatGPT as an accountability partner"),
+    ("/ai-executive-coach", "Understand an AI executive coach"),
     ("/how-to-stay-consistent/", "Use Minimum Viable Cadence"),
     ("/continuity-collapse-pattern/", "Read the Continuity Collapse Pattern"),
 ]
@@ -490,7 +490,7 @@ def add_schema(soup: BeautifulSoup, path: str, spec: dict):
         graph.append(BHPC_WEBSITE)
         graph.extend(BHPC_MENTION_TERMS)
     if path in {'about.html','spry-labs.html'}:
-        graph.append({'@type':'Organization','@id':_absolute_url(canonical,'/about.html#organization'),'name':'Spry Labs','url':_absolute_url(canonical,'/about.html')})
+        graph.append({'@type':'Organization','@id':_absolute_url(canonical,'/about#organization'),'name':'Spry Labs','url':_absolute_url(canonical,'/about')})
     if path in {'author.html','sequoia-taylor.html'}:
         graph.append({'@type':'Person','@id':_absolute_url(canonical,'/author#person'),'name':'S.L. Taylor','url':_absolute_url(canonical,'/author'),'worksFor':{'@type':'Organization','name':'Spry Labs'}})
     script=soup.new_tag('script', id='CITATION_PAGE_SCHEMA', type='application/ld+json')
@@ -640,7 +640,7 @@ def sync_agent_page_admission_records() -> int:
         if path in by_path:
             continue
         route="/"+path
-        if route.endswith("/index.html"):
+        if route.endswith("/"):
             route=route[:-10]
         canonical=canonical_for(path)
         record={
@@ -1226,7 +1226,7 @@ def update_discovery(pages,queries,frameworks):
     routes=[]
     for page in active:
         url="/"+page["path"]
-        if url.endswith("/index.html"): url=url[:-10]
+        if url.endswith("/"): url=url[:-10]
         routes.append({"route_id":f"ROUTE-{len(routes)+1:04d}","path":url,"source_file":page["path"],"canonical_url":page["canonical_url"],"canonical_domain":page["canonical_domain"],"h1":page["query"],"framework":page["framework"],"safe_controls":["internal-links"],"priority":bool(page.get("priority"))})
     (ROOT/"data/routes/public_route_manifest.json").write_text(json.dumps({"schema_version":"1.0","generated_at":TODAY,"route_count":len(routes),"routes":routes},indent=2,ensure_ascii=False)+"\n")
     critical_path=ROOT/"data/routes/critical_browser_route_manifest.json"

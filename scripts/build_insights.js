@@ -10,7 +10,9 @@ const CONTENT_DIR = path.join(ROOT, "content", "insights");
 const OUT_DIR = path.join(ROOT, "insights");
 const PILLARS_DIR = path.join(ROOT, "pillars");
 const TOPICS_DIR = path.join(ROOT, "topics"); // sitemap references; may be generated elsewhere
-const SITEMAP_PATH = path.join(ROOT, "sitemap.xml");
+// sitemap.xml is the host-neutral sitemap index; the spry urlset - which is
+// what this generator maintains - lives in sitemap-spry.xml.
+const SITEMAP_PATH = path.join(ROOT, "sitemap-spry.xml");
 const LLMS_PATH = path.join(ROOT, "llms.txt");
 const CLUSTERS_PATH = path.join(CONTENT_DIR, "_clusters.json");
 const TEMPLATES_DIR = path.join(ROOT, "templates");
@@ -40,8 +42,8 @@ function exists(p) { try { fs.accessSync(p); return true; } catch { return false
 // `apply_citation_layer.js` puts `<script id="CITATION_PAGE_SCHEMA">` there.
 // Measured before this fix: a bare `node scripts/build_insights.js` took all 25
 // markdown-backed insights pages that carried agent blocks from 4-11 blocks to 0,
-// and dropped the links inside them (/citation-methodology.html,
-// /ai-executive-coach.html, /chatgpt-accountability-partner.html).
+// and dropped the links inside them (/citation-methodology,
+// /ai-executive-coach, /chatgpt-accountability-partner).
 // The rule below is "carry forward everything after </footer> that this builder did
 // not write itself": strip the closing document scaffold and the JSON-LD scripts this
 // builder emits, and re-emit whatever remains. That keeps the operation idempotent -
@@ -89,7 +91,7 @@ function writePageUtf8(p, s) {
 // PRIORITY/NEW_PAGES specs, and those specs are regenerated from a rotating backlog:
 // once a page drops out of the current slice the card is never re-emitted, and this
 // builder's article rebuild deletes it permanently along with its four outbound links
-// (/chatgpt-accountability-partner.html, /ai-executive-coach.html,
+// (/chatgpt-accountability-partner, /ai-executive-coach,
 // /how-to-stay-consistent/, /continuity-collapse-pattern/). Carry it forward instead.
 // patch_priority() is guarded by `if not soup.select_one('[data-citation-opportunity=
 // "bhpc-priority"]')`, so a carried card is never duplicated when the page is back in
@@ -290,7 +292,7 @@ const HEADER_HTML = readNavFromIndex();
 const FOOTER_HTML = readFooterFromIndex();
 
 function stylesheetHref(activePath) {
-  // activePath is site-root relative: "/insights/foo.html" or "/pillars/<slug>/index.html"
+  // activePath is site-root relative: "/insights/foo.html" or "/pillars/<slug>/"
   if (activePath.startsWith("/pillars/")) return "../../assets/site.css";
   if (activePath.startsWith("/insights/")) return "../assets/site.css";
   if (activePath.startsWith("/topics/")) return "../../assets/site.css";
@@ -538,7 +540,7 @@ function buildPillars(posts, clusters) {
         <div><strong>Target coverage:</strong> ${c.query_goal_per_day ? htmlEscape(String(c.query_goal_per_day)) : "—"} queries/day</div>
         <div style="margin-top:6px"><strong>Revenue path:</strong> ${c.revenue_path ? htmlEscape(c.revenue_path) : "—"}</div>
         ${c.atlas_take ? `<div style="margin-top:10px"><strong>Atlas take:</strong> ${htmlEscape(c.atlas_take)}</div>` : ""}
-        <div style="margin-top:10px"><a class="btn" href="/atlas.html#${htmlEscape(c.id)}">See Atlas for this pillar</a></div>
+        <div style="margin-top:10px"><a class="btn" href="/atlas#${htmlEscape(c.id)}">See Atlas for this pillar</a></div>
       </div>
       <section class="card" style="margin-top:18px">
         <h2>How to use this pillar</h2>
@@ -623,8 +625,8 @@ function buildPostPages(posts, clustersMap) {
         <p class="byline">By <a href="/author" rel="author">S.L. Taylor</a> · Spry Labs · Reviewed <time datetime="${readmeReviewDate}">${readmeReviewDate}</time></p>
         <section class="card"><h2>How to Navigate the Spry Insights Library</h2><p>Use the insights library as a decision map: find the exact framework, read the direct answer, apply it to one operating decision, and follow only the related pages that support that decision.</p></section>
         <section class="card author-bio" id="about-the-author"><h2>About the Author</h2><p><a href="/author" rel="author">S.L. Taylor</a> is the creator of Billionaire High Performance Coach and Spry Executive OS. This page is published through Spry Labs and reviewed under the site educational, organizational, and non-clinical content standards.</p></section>
-        <section class="card editorial-note"><h2>Authority and Review Basis</h2><p>This README insight is reviewed under the Spry Labs <a href="/strategy.html">Citation Methodology</a>. It explains how the Spry Executive OS insights library should be navigated and does not claim medical, legal, financial, or therapeutic advice.</p></section>
-        <section class="sources"><h2>Sources and reference context</h2><p><a href="/what-is-this-system.html">What this system is</a></p><p><a href="/strategy.html">Strategy overview</a></p><p><a href="/download.html">Product download</a></p></section>` : "";
+        <section class="card editorial-note"><h2>Authority and Review Basis</h2><p>This README insight is reviewed under the Spry Labs <a href="/strategy">Citation Methodology</a>. It explains how the Spry Executive OS insights library should be navigated and does not claim medical, legal, financial, or therapeutic advice.</p></section>
+        <section class="sources"><h2>Sources and reference context</h2><p><a href="/what-is-this-system">What this system is</a></p><p><a href="/strategy">Strategy overview</a></p><p><a href="/download.html">Product download</a></p></section>` : "";
 
     const bodyHtml = `${directAnswer}
     <article class="article">
@@ -821,7 +823,7 @@ function buildAtlasPage(clusters, posts) {
     title: "Atlas — Spry Executive OS",
     description: "An opinionated map of Spry: the pillars, what they cover, and where to start.",
     canonical,
-    activePath: "/atlas.html",
+    activePath: "/atlas",
     contentHtml,
     atlasNavHtml, // subtle and non-broken (no margin overflow) if CSS supports it
     jsonLd: jsonLdCollection({ title: "Atlas", description: "Spry Atlas page", url: canonical }),

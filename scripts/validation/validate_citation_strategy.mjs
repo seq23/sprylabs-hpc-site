@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
+import { createRequire } from 'node:module';
+const requireCjs = createRequire(import.meta.url);
+// Route contract: the URL that answers 200 without a redirect hop.
+const { routeFor } = requireCjs('../lib/dual_domain_policy.cjs');
 import path from 'node:path';
 import {readJson,fail,pass,writeSummary} from './common.mjs';
 const errors=[];
@@ -45,7 +49,7 @@ for(const rel of [
 const sitemapBhpc=fs.readFileSync('sitemap-bhpc.xml','utf8');
 const llmsTxt=fs.readFileSync('llms.txt','utf8');
 for(const rel of (inventory.files || []).slice(0, 110)){
-  const url='https://billionairehighperformancecoach.com/' + rel.replace(/index\.html$/,'');
+  const url='https://billionairehighperformancecoach.com' + routeFor(rel);
   if(!sitemapBhpc.includes(url)) errors.push(`sitemap-bhpc missing phase page: ${url}`);
   if(!llmsTxt.includes(url)) errors.push(`llms.txt missing phase page: ${url}`);
 }
