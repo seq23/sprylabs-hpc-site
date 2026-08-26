@@ -608,22 +608,61 @@
           "answer_mentions_brand": false
         }
       ]
+    },
+    {
+      "run_at": "2026-08-26T17:01:27.411Z",
+      "provider": "openrouter",
+      "engines": [
+        "mistralai/mistral-nemo"
+      ],
+      "mode": "grounded",
+      "queries": 2,
+      "observations": [
+        {
+          "query": "ai coaching tools",
+          "engine": "openrouter:mistralai/mistral-nemo",
+          "mode": "grounded",
+          "observed_at": "2026-08-26T17:01:27.411Z",
+          "status": "observed",
+          "cited_domains": [],
+          "cited_ours": [],
+          "self_cited": false,
+          "named_in_answer": [],
+          "answer_mentions_brand": false
+        },
+        {
+          "query": "adhd productivity",
+          "engine": "openrouter:mistralai/mistral-nemo",
+          "mode": "grounded",
+          "observed_at": "2026-08-26T17:01:27.411Z",
+          "status": "observed",
+          "cited_domains": [
+            "blog.make10000hours.com",
+            "psychologytoday.com",
+            "neurolaunch.com",
+            "additudemag.com",
+            "neurosity.co"
+          ],
+          "cited_ours": [],
+          "self_cited": false,
+          "named_in_answer": [],
+          "answer_mentions_brand": false
+        }
+      ]
     }
   ],
   "latest_summary": {
-    "run_at": "2026-08-26T14:12:28.760Z",
+    "run_at": "2026-08-26T17:01:27.411Z",
     "provider": "openrouter",
     "engines": [
-      "ibm-granite/granite-4.0-h-micro",
-      "inclusionai/ling-3.0-flash",
       "mistralai/mistral-nemo"
     ],
-    "mode": "knowledge",
-    "queries": 5,
-    "observations": 15,
+    "mode": "grounded",
+    "queries": 2,
+    "observations": 2,
     "self_cited": 0,
     "errored": 0,
-    "_mode_note": "knowledge: counted when the model named us unprompted, with no retrieval. Weaker than a citation and must not be reported as one.",
+    "_mode_note": "grounded: counted when the answer was built from one of our pages",
     "self_cited_rate_pct": 0
   }
 }
