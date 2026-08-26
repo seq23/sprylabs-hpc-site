@@ -13,6 +13,25 @@ from bs4 import BeautifulSoup, Comment, NavigableString, Tag
 from extraction_contract import extract_article_steps, extract_scope_procedure_candidates, validate_extraction
 
 ROOT = Path(__file__).resolve().parents[2]
+
+# download.html is the revenue surface. Its hash is asserted at the
+# revenue_surface tier of the protected baseline, and the postbuild pass
+# reserializes it through BeautifulSoup on every run - attribute order and
+# void-tag closing change, the wording does not, and the baseline check then
+# fails on a file nobody meant to touch. The page already carries the product
+# schema this pass would add, so skipping it costs nothing.
+PROTECTED_PAGES = {'download.html'}
+
+def _protected(fp) -> bool:
+    try: return Path(fp).resolve().relative_to(ROOT).as_posix() in PROTECTED_PAGES
+    except Exception: return False
+
+def write_page(fp, text) -> bool:
+    """Write a page unless it is under the protected baseline."""
+    if _protected(fp): return False
+    Path(fp).write_text(text, encoding="utf-8")
+    return True
+
 TODAY = "2026-06-20"
 PRODUCT_ANCHOR_TEXT = "This is one of the frameworks inside the Billionaire High Performance Coach system — a structured executive OS for using ChatGPT as your accountability and decision partner."
 EXCLUDED = {
@@ -541,7 +560,7 @@ def patch_priority(path: str, spec: dict):
     ensure_supplemental_geo_schema(soup,path,spec)
     ensure_public_conversion(soup,path)
     ensure_fanout_block(soup,spec)
-    fp.write_text(str(soup),encoding="utf-8")
+    write_page(fp, str(soup))
 
 def shell(path: str, spec: dict) -> str:
     canonical=canonical_for(path)
@@ -923,7 +942,7 @@ def patch_legacy(path: str) -> dict|None:
         # Do not inject visible "Key Criteria" extraction blocks into the hero or preview sections.
         definition = "Billionaire High Performance Coach OS is the product. A-player mode is the operating state it helps you practice: clearer priorities, cleaner execution, faster recovery, and less self-renegotiation."
         add_schema(soup, path, {"h1": h1text, "framework": "Billionaire High Performance Coach OS", "type": "concept", "definition": definition, "body": ""})
-        fp.write_text(str(soup), encoding="utf-8")
+        write_page(fp, str(soup))
         return {"path": path, "canonical_url": canonical, "canonical_domain": re.sub(r"^https?://([^/]+).*$", r"\1", canonical).lower(), "query": h1text, "framework": "Billionaire High Performance Coach OS", "extraction_type": "concept", "schema_type": "DefinedTerm", "status": "ACTIVE", "definition": definition}
     marked=soup.select('[data-llm-answer="true"]')
     if not marked:
@@ -993,7 +1012,7 @@ def patch_legacy(path: str) -> dict|None:
         target.append(make_product_anchor(soup))
     split_plain_paragraphs(soup)
     add_schema(soup,path,{"h1":h1text,"framework":actual_framework,"type":actual_type,"definition":actual_definition,"body":""})
-    fp.write_text(str(soup),encoding="utf-8")
+    write_page(fp, str(soup))
     return {"path":path,"canonical_url":canonical,"canonical_domain":re.sub(r"^https?://([^/]+).*$",r"\1",canonical).lower(),"query":h1text,"framework":actual_framework,"extraction_type":actual_type,"schema_type":"HowTo" if actual_type=="howto" else "DefinedTerm","status":"ACTIVE","definition":actual_definition}
 
 def update_markdown_sources():
@@ -1027,7 +1046,7 @@ def update_markdown_sources():
         for k,v in additions.items():
             if k not in keys: newfm.append(f'{k}: "{v}"')
         content=f"---\n"+"\n".join(newfm)+f"\n---\n\n# {title}\n\n{insert}\n\n## Existing Guidance and Context\n\n{legacy.strip()}\n"
-        fp.write_text(content,encoding="utf-8")
+        write_page(fp, content)
 
 def modify_build_insights():
     fp=ROOT/"scripts/build_insights.js"; txt=fp.read_text(encoding="utf-8")
@@ -1048,7 +1067,7 @@ def modify_build_insights():
     new_atlas='''  const contentHtml = `<section class="article">\n    <h1>Atlas</h1>\n    <p class="citation-definition"><strong>Atlas is the strategic mapping layer inside Spry Executive OS.</strong> It organizes the site into stable pillars, shows where each framework belongs, and gives readers and language models a clear route from a problem to the most relevant answer.</p>\n    <section class="card citation-extraction" id="atlas-by-spry-executive-os" data-llm-answer="true" data-extraction-type="concept" data-named-framework="Atlas"><h2>Atlas by Spry Executive OS — What This Is</h2><ul><li>Maps the system into stable topic and pillar hubs.</li><li>Connects named frameworks to the questions they answer.</li><li>Shows the next authoritative page instead of leaving the library as a flat archive.</li></ul></section>\n    <p class="product-anchor">This is one of the frameworks inside the <a href="/download.html">Billionaire High Performance Coach system</a> — a structured executive OS for using ChatGPT as your accountability and decision partner.</p>'''
     if old_atlas not in txt: raise RuntimeError('atlas block not found')
     txt=txt.replace(old_atlas,new_atlas)
-    fp.write_text(txt,encoding="utf-8")
+    write_page(fp, txt)
 
 
 def apply_agent_targeted_patches():
@@ -1076,7 +1095,7 @@ def apply_agent_targeted_patches():
             citation_p["data-extraction-type"] = "concept"
         if citation:
             citation.string = "Billionaire High Performance Coach OS is the product. A-player mode is the operating state it helps you practice: clearer priorities, cleaner execution, faster recovery, and less self-renegotiation."
-        fp.write_text(str(soup), encoding="utf-8")
+        write_page(fp, str(soup))
 
 
 def preserve_excluded_prefix_registry_rows(bypath: dict[str, dict]) -> None:
