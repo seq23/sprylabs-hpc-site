@@ -21,3 +21,8 @@ reports/programmatic-candidate-results.json
 .validation-cache/
 
 .validation-runtime/
+
+# Generated deployment mirror of site/public. Pages publishes site/public
+# directly (wrangler.toml pages_build_output_dir), and build_dist.mjs regenerates
+# this on every staged run, so tracking it committed every content change twice.
+dist/
