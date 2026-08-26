@@ -170,6 +170,13 @@ function insert(html, block) {
   // block-level sibling in every one of these templates, so inserting there is
   // structurally safe without knowing the markup, and it lands the block right
   // after the lede - inside the opening third of the page.
+  // Never land inside a section the page's own pipeline strips and rebuilds. On
+  // pages whose only h2 sits inside that section, "before the first h2" put the
+  // block there, and the next apply removed the section - taking the block and
+  // every real block after it. Four insight pages lost their trust, source and
+  // definition blocks that way. Sit in front of the section instead.
+  const rebuilt = html.search(/<section\b[^>]*class=["'][^"']*(?:bhpc-agent-semantic-repair|agent-exact-citation-repair)[^"']*["']/i);
+  if (rebuilt >= 0) return html.slice(0, rebuilt) + block + html.slice(rebuilt);
   if (process.env.RS_INSERT === 'before-first-h2') {
     const body = html.search(/<\/h1>/i);
     if (body >= 0) {

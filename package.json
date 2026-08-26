@@ -301,7 +301,7 @@
     "search:cycle": "npm run search:targets && npm run search:observe && npm run search:competitors && npm run search:truth && npm run search:diagnose && npm run search:repair:prepare && npm run search:repair:apply && npm run search:retest && npm run search:evidence && npm run search:status && npm run agency:build && npm run validate:search-intelligence",
     "repair:visible-content-artifacts": "node scripts/repair/repair_visible_pipeline_artifacts.mjs",
     "repair:published-agent-blocks": "node scripts/repair/repair_published_agent_blocks.mjs --apply",
-    "retrofit:recommendation-summary": "RS_INSERT=before-first-h2 RS_PANEL_CLASS=bhpc-agent-block RS_AGENT_ATTR=1 RS_EXCLUDE=^download\\.html$ node scripts/retrofit_recommendation_summary.js --apply .",
+    "retrofit:recommendation-summary": "RS_INSERT=before-first-h2 RS_PANEL_CLASS=citation-summary RS_EXCLUDE=^download\\.html$ node scripts/retrofit_recommendation_summary.js --apply .",
     "validate:visible-content-artifacts": "node scripts/validation/validate_visible_content_artifacts.mjs",
     "workflow:search-intelligence": "node scripts/workflow/run_topology_lane.mjs --lane search-intelligence",
     "search:intelligence-cycle": "bash .github/scripts/run_search_intelligence_cycle.sh",

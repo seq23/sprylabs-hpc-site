@@ -20,7 +20,18 @@ for (const spec of plan.specs || []) {
   const html = fs.readFileSync(abs, 'utf8');
   const fam = spec.page_family || 'answer_page';
   const required = unique([...requiredBlockTypesForPageFamily(fam), ...(spec.required_block_types || [])]);
-  for (const block of required) if (!html.includes(`data-bhpc-agent-block="${block}"`)) errors.push(`missing_semantic_block:${spec.record_id}:${fam}:${block}`);
+  // A block also counts when it carries the canonical data-content-block marker.
+  // The retrofit writes recommendation_summary blocks outside the agent section,
+  // and tagging those with data-bhpc-agent-block made the applier's section strip
+  // start at the retrofit block and delete every real block after it - which cost
+  // four insight pages their trust, source and definition blocks and the links
+  // inside them. The marker a block carries should not determine whether other
+  // content survives.
+  for (const block of required) {
+    const present = html.includes(`data-bhpc-agent-block="${block}"`)
+      || html.includes(`data-content-block="${block}"`);
+    if (!present) errors.push(`missing_semantic_block:${spec.record_id}:${fam}:${block}`);
+  }
   if (!html.includes('data-bhpc-agent-semantic="true"')) errors.push(`missing_semantic_marker:${spec.record_id}`);
   if (/marker-only/i.test(html)) errors.push(`marker_only_language_present:${spec.record_id}`);
   if (spec.operation === 'CREATE_NEW_TARGET_PAGE') {
