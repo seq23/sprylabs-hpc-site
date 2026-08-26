@@ -10,7 +10,7 @@ if VENDOR.is_dir(): sys.path.insert(0,str(VENDOR))
 from bs4 import BeautifulSoup
 CITATION_DIR=Path(__file__).resolve().parents[1]/"citation"
 sys.path.insert(0,str(CITATION_DIR))
-from extraction_contract import extract_scope_steps
+from extraction_contract import extract_scope_steps, visible_faq_pairs as visible_faq
 from cache.page_cache import lookup as cache_lookup, store as cache_store
 from page_scope import validation_paths
 
@@ -27,17 +27,6 @@ def schema_types(graph):
         if isinstance(t,list): out.extend(t)
         elif t: out.append(t)
     return out
-
-def visible_faq(soup):
-    section=soup.select_one('section[data-visible-faq="true"], section.faq, section#faq, section.citation-faq')
-    if not section: return []
-    pairs=[]
-    for h in section.find_all(['h3','h2']):
-        q=norm(h.get_text(' ',strip=True))
-        if q.casefold().startswith('frequently asked'): continue
-        p=h.find_next_sibling('p')
-        if p: pairs.append((q,norm(p.get_text(' ',strip=True))))
-    return pairs
 
 def visible_steps(soup):
     block=soup.select_one('[data-llm-answer="true"][data-extraction-type="howto"]')

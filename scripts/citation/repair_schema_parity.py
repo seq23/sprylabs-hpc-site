@@ -85,37 +85,7 @@ def visible_breadcrumbs(soup, canonical):
     if current: items.append((norm(current[-1].get_text(' ',strip=True)),canonical))
     return items
 
-def visible_faq(soup):
-    pairs=[]
-    # A page can carry more than one Q&A block; the previous select_one saw only
-    # the first and silently dropped the rest out of the schema.
-    for section in soup.select('section[data-visible-faq="true"], section.faq, section#faq, section.citation-faq'):
-        for h in section.find_all(['h3','h2']):
-            q=norm(h.get_text(' ',strip=True))
-            if q.casefold().startswith('frequently asked'): continue
-            p=h.find_next_sibling('p')
-            if p:
-                a=norm(p.get_text(' ',strip=True))
-                if a: pairs.append((q,a))
-    # A page whose H1 is itself a question already is a question and an answer:
-    # the heading asks it, and the summary block directly beneath it answers it.
-    # Both are visible, so the schema still claims nothing the reader cannot
-    # see - which is the whole contract this file exists to keep. Only used
-    # when the page has no Q&A section of its own, so it never displaces one.
-    if not pairs:
-        h1=soup.find('h1')
-        ans=soup.select_one('p.recommendation-summary__answer')
-        if h1 is not None and ans is not None:
-            q=norm(h1.get_text(' ',strip=True))
-            a=norm(ans.get_text(' ',strip=True))
-            # An answer shorter than a dozen words is a label, not an answer.
-            if q.endswith('?') and len(a.split())>=12 and norm(a).casefold()!=q.casefold():
-                pairs.append((q,a))
-    out=[];seen=set()
-    for q,a in pairs:
-        if (q,a) in seen: continue
-        seen.add((q,a));out.append((q,a))
-    return out
+from extraction_contract import visible_faq_pairs as visible_faq
 
 def update_schema(path: Path):
     raw=path.read_text(encoding='utf-8', errors='ignore')

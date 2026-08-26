@@ -181,3 +181,40 @@ def surface_fingerprint(soup:BeautifulSoup):
  block=soup.select_one('[data-llm-answer="true"]');graph,_=schema_graph(soup)
  payload={'block':str(block) if block else None,'schema':graph}
  return hashlib.sha256(json.dumps(payload,sort_keys=True,ensure_ascii=False).encode()).hexdigest()
+
+
+def _norm_text(value): return ' '.join((value or '').split())
+
+def visible_faq_pairs(soup):
+ """The one definition of what counts as FAQ content a reader can see.
+
+ Two shapes qualify. A dedicated Q&A section is the obvious one. The second is
+ a page whose H1 is itself a question and which answers it in the summary block
+ directly beneath: the heading asks it, the block answers it, and both are
+ visible, so schema built from the pair still claims nothing the reader cannot
+ read. The generator, the repair pass and the validators all call this, because
+ when they each carried their own copy they disagreed - the repair emitted
+ FAQPage for a question-titled page and the validators then reported it as
+ schema without visible backing.
+ """
+ pairs=[]
+ for section in soup.select('section[data-visible-faq="true"], section.faq, section#faq, section.llm-faq, section.citation-faq'):
+  for h in section.find_all(['h3','h2']):
+   q=_norm_text(h.get_text(' ',strip=True))
+   if not q or q.casefold().startswith('frequently asked'): continue
+   p=h.find_next_sibling('p')
+   if p:
+    a=_norm_text(p.get_text(' ',strip=True))
+    if a: pairs.append((q,a))
+ if not pairs:
+  h1=soup.find('h1'); ans=soup.select_one('p.recommendation-summary__answer')
+  if h1 is not None and ans is not None:
+   q=_norm_text(h1.get_text(' ',strip=True)); a=_norm_text(ans.get_text(' ',strip=True))
+   # Under a dozen words it is a label, not an answer worth publishing as one.
+   if q.endswith('?') and len(a.split())>=12 and a.casefold()!=q.casefold():
+    pairs.append((q,a))
+ out=[];seen=set()
+ for q,a in pairs:
+  if (q,a) in seen: continue
+  seen.add((q,a)); out.append((q,a))
+ return out
