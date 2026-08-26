@@ -84,8 +84,24 @@ export function runPageAudit({mode, label, evidenceFile}) {
     if (run(id, cmd, args) !== 0) break;
   }
 
+  // Compact the cache journal and sweep unreachable objects now that every shard
+  // has exited. This is the only thing bounding the store: page-index.json holds
+  // just the current fingerprint per (validator, page), so each content change
+  // strands its predecessor. With no sweep the cache reached 97,003 objects /
+  // 381 MB against 8,481 live results before anyone noticed.
+  //
+  // Deliberately after the shards rather than inside them - prune treats the
+  // index as its root set, so it must never run while a validator is still
+  // adding to it. Its exit code is not allowed to change the audit result: a
+  // failed sweep is a disk-space problem, not a validation failure.
+  run('cache_prune', 'node', ['scripts/validation/cache/validation_cache.mjs', 'prune']);
+
   const summary = {
-    status: results.every(r => r.exit_code === 0) ? 'PASS' : 'FAIL',
+    status: results
+      .filter(r => r.id !== 'cache_prune')
+      .every(r => r.exit_code === 0)
+      ? 'PASS'
+      : 'FAIL',
     mode,
     elapsed_ms: Date.now() - started,
     steps: results,
