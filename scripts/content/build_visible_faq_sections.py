@@ -34,8 +34,11 @@ The hard rules
   compares equal by construction rather than by luck.
 
 Idempotent: the block it writes is delimited by ``data-faq-source="page-sections"``
-and is replaced, not appended, on re-run. Pages that already carry a visible FAQ
-under the extraction contract are left alone.
+and is replaced, not appended, on re-run. A page that already shows Q&A this pass
+did not write keeps its copy untouched, but has its FAQPage schema synced to that
+copy - this is the last step in build:all to write either half, and
+retrofit:recommendation-summary runs after the schema is compiled, so a page can
+otherwise end the build with schema describing wording that is no longer on it.
 """
 from __future__ import annotations
 
@@ -449,8 +452,19 @@ def upsert_faq_schema(html: str, canonical: str, pairs) -> str | None:
     if not isinstance(graph, list):
         return None
     node = faq_node(canonical, pairs)
-    graph = [n for n in graph if not (isinstance(n, dict) and n.get("@type") == "FAQPage")]
-    graph.append(node)
+    at = next((i for i, n in enumerate(graph) if isinstance(n, dict) and n.get("@type") == "FAQPage"), None)
+    if at is None:
+        graph = [n for n in graph if not (isinstance(n, dict) and n.get("@type") == "FAQPage")]
+        graph.append(node)
+    else:
+        # Replace in place. Dropping and re-appending moves the node to the end
+        # of the graph, which rewrites 702 pages to say exactly what they
+        # already said - churn a reviewer has to read past and a diff that hides
+        # the pages where something really changed.
+        if graph[at] == node:
+            return html
+        graph = list(graph)
+        graph[at] = node
     data["@graph"] = graph
     return html[: m.start()] + m.group(1) + py_json(data) + m.group(3) + html[m.end():]
 
@@ -501,12 +515,31 @@ def process(rel: str, path: Path, corpus, apply: bool):
         return "noindex", None
     already = MARKER in html
     soup = BeautifulSoup(html, "lxml")
-    if not already and visible_faq_pairs(soup):
-        return "has-visible-faq", None
     canonical_tag = soup.select_one('link[rel="canonical"]')
     canonical = canonical_tag.get("href", "") if canonical_tag else ""
     if not canonical:
         return "no-canonical", None
+    if not already:
+        existing = visible_faq_pairs(soup)
+        if existing:
+            # The page already shows Q&A this pass did not write. Leave the copy
+            # alone, but make the schema agree with it, because this step is the
+            # last writer of either half in build:all. Two pages reached FAIL
+            # exactly here: retrofit:recommendation-summary runs after the
+            # schema is compiled and adds a p.recommendation-summary__answer,
+            # which under the extraction contract turns a question-titled page
+            # into a visible FAQ - one then had no FAQPage node at all and the
+            # other had one built from the previous wording. Syncing here means
+            # a later pass changing the copy cannot leave schema describing text
+            # that is no longer on the page.
+            synced = upsert_faq_schema(html, canonical, existing)
+            if synced is None:
+                return "has-visible-faq", None
+            if synced != html:
+                if apply:
+                    path.write_text(synced, encoding="utf-8")
+                return "schema-synced", None
+            return "has-visible-faq", None
     if already:
         # Re-derive from the page as it stands today, ignoring the block this
         # script wrote last time, so refreshed prose flows through.
