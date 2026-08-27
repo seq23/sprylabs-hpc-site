@@ -22,13 +22,26 @@ const templates = [
   'implementation checklist for {family} and {pillar}',
   'source-backed answer page for {family} in {pillar}'
 ];
+// The candidate space is pillars x query families x templates, and it is
+// finite: every distinct combination, generated once.
+//
+// This loop used to be `while (candidates.length < minimum)` wrapped around the
+// same three nested loops, with a `cycle` counter appended to each query
+// ("... - strategy gap fill 1" ... 2700) so the repeats would look like
+// distinct rows. The combination space is 288 rows; the floor demanded 2700, so
+// roughly 2400 of them were the same queries emitted again under a new number.
+// That is a quota manufacturing its own supply, the same failure that put 743
+// filler pages into the library through the BHPC report contract.
+//
+// The generator now emits its real space once and stops. If that is fewer rows
+// than the six-month target, validate_strategy_gap_fill_contract.mjs reports
+// the shortfall instead of failing, and nothing is invented to close it.
 const candidates = [];
-let cycle = 1;
-while (candidates.length < minimum) {
+{
   for (const pillar of pillars) {
     for (const family of families) {
       for (const template of templates) {
-        const query = `${template.replace('{family}', family).replace('{pillar}', pillar)} — strategy gap fill ${cycle}`;
+        const query = template.replace('{family}', family).replace('{pillar}', pillar);
         const pageFamily = familyKinds[candidates.length % familyKinds.length];
         const routeBase = pageFamily === 'comparison_page' ? 'vs' : pageFamily === 'framework_page' ? 'methods' : pageFamily === 'cluster_page' ? 'clusters' : 'answers';
         candidates.push({
@@ -41,7 +54,7 @@ while (candidates.length < minimum) {
           query,
           status: 'BACKLOG_READY',
           page_family: pageFamily,
-          target_path: `${routeBase}/${String(candidates.length+1).padStart(5,'0')}-${slugify(query.replace(/strategy gap fill \d+$/,''))}/index.html`,
+          target_path: `${routeBase}/${String(candidates.length+1).padStart(5,'0')}-${slugify(query)}/index.html`,
           prevalidation_required: true,
           self_healing_required: true,
           claim_boundary: 'Educational and organizational support only; no therapy, medical, legal, financial, or guaranteed outcome claims.',
@@ -50,15 +63,12 @@ while (candidates.length < minimum) {
           fallback_gap_fill: true,
           reviewed_at: process.env.SOURCE_DATE || '2026-07-03'
         });
-        if (candidates.length >= minimum) break;
       }
-      if (candidates.length >= minimum) break;
     }
-    if (candidates.length >= minimum) break;
   }
-  cycle += 1;
 }
-const payload = {schema_version:'1.0', generated_at:`${process.env.SOURCE_DATE || '2026-07-03'}T00:00:00.000Z`, strategy_profile:'data/strategy/citation_strategy_profile.json', time_horizon_days:horizon, daily_target_units:dailyTarget, minimum_units:minimum, candidate_count:candidates.length, candidates};
+const shortfall = Math.max(0, minimum - candidates.length);
+const payload = {schema_version:'1.0', generated_at:`${process.env.SOURCE_DATE || '2026-07-03'}T00:00:00.000Z`, strategy_profile:'data/strategy/citation_strategy_profile.json', time_horizon_days:horizon, daily_target_units:dailyTarget, minimum_units:minimum, targets_are_quotas:false, candidate_count:candidates.length, backlog_shortfall:shortfall, backlog_status:shortfall?'SHORT_OF_TARGET':'TARGET_MET', candidates};
 write('data/strategy/strategy_gap_fill_backlog.json', payload);
-write('artifacts/validation/strategy-gap-fill-backlog.json', {status:'PASS', candidate_count:candidates.length, minimum_units: minimum, sample:candidates.slice(0,10)});
-console.log(`[bhpc-strategy-gap-fill] PASS: candidates=${candidates.length}; minimum=${minimum}`);
+write('artifacts/validation/strategy-gap-fill-backlog.json', {status:'PASS', candidate_count:candidates.length, minimum_units: minimum, backlog_shortfall:shortfall, backlog_status:payload.backlog_status, sample:candidates.slice(0,10)});
+console.log(`[bhpc-strategy-gap-fill] PASS: candidates=${candidates.length}; minimum=${minimum}; backlog=${payload.backlog_status}; shortfall=${shortfall}`);

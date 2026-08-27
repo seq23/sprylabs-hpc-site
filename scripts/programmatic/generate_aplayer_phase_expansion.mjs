@@ -136,9 +136,32 @@ collectExistingPaths();
 const existingQueries = new Set(readJson('data/citation/query_registry.json',{queries:[]}).queries.map(q => normalize(q.query)));
 const plannedPaths = new Set();
 const plannedQueries = new Set();
+// A cap on a bad run, not a number to reach. Named so it cannot be mistaken
+// for a target the way the bare 1400 literal was.
+const ATOM_SAFETY_CAP = Number(process.env.ATOM_SAFETY_CAP || 1400);
+
+// Every record this generator wrote used to be stamped `admission_level:
+// 'baseline'`. In validate_programmatic_admission.py the substantive checks -
+// word count, unique artifact, worked example, source floor, unique_atom
+// strength, and all lane-required fields - are guarded by
+// `if record.get('admission_level')=='full'`. So the generator was assigning
+// its own pages the level that skips them. 2,152 of the 2,214 admitted records
+// carry 'baseline'; 62 carry 'full'. 97.2% of the library opted itself out of
+// the quality gate at the moment it was written.
+//
+// New pages are admitted at 'full' and face the checks. The existing 2,152 keep
+// 'baseline' - re-levelling them would fail the build on the whole corpus,
+// which produces a validator someone switches off rather than one that holds -
+// and are reported by validate_demand_backed_pages.mjs as repair candidates.
+const NEW_PAGE_ADMISSION_LEVEL = 'full';
 const atoms = [];
 function addAtom(atom) {
-  if (atoms.length >= 1400) return false;
+  // The 1400 ceiling paired with the 1400 floor that used to sit at the bottom
+  // of this file: together they made the output a fixed number rather than a
+  // consequence of the material. The ceiling stays as a per-run safety cap so a
+  // loop bug cannot emit unbounded pages, but nothing now forces the run to
+  // reach it.
+  if (atoms.length >= ATOM_SAFETY_CAP) return false;
   if (plannedPaths.has(atom.path) || existingPaths.has(atom.path)) return false;
   if (plannedQueries.has(normalize(atom.query)) || existingQueries.has(normalize(atom.query))) return false;
   const stripped = normalize(atom.unique_atom.replace(new RegExp(atom.query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'ig'), ''));
@@ -280,7 +303,7 @@ function typeCount(type){ return atoms.filter(a=>a.page_type===type).length; }
 let replenishmentGuard = 0;
 for (const lane of replenishmentLanes) {
   for (const audience of audiences) for (const state of states) for (const dimension of dimensions) for (const concept of concepts) {
-    if (atoms.length >= 1400 || typeCount(lane.type) >= lane.limit) break;
+    if (atoms.length >= ATOM_SAFETY_CAP || typeCount(lane.type) >= lane.limit) break;
     replenishmentGuard++;
     if (replenishmentGuard > 200000) break;
     if (lane.type === 'answer') {
@@ -433,7 +456,7 @@ function updateRegistries() {
     newCitable.push({path:atom.path, canonical_url:atom.canonical_url, canonical_domain:atom.canonical_domain, query:atom.query, framework:atom.framework, extraction_type:extraction, schema_type:'DefinedTerm', status:'ACTIVE', definition:atom.definition, source:GENERATED_SOURCE, priority:false});
     newQueries.push({query_id:`QRY-${String(++q).padStart(4,'0')}`, query:atom.query, intent_class:atom.intent, primary_page:atom.path, supporting_pages:[], canonical_domain:atom.canonical_domain, priority:'P4', release_status:'ACTIVE', aliases:[], observation_cluster:atom.page_type, source:GENERATED_SOURCE});
     newFrameworks.push({framework_id:`FW-${String(++f).padStart(4,'0')}`, name:atom.framework, definition:atom.definition, primary_url:atom.canonical_url, supporting_urls:[], aliases:[atom.concept.framework], prohibited_conflicting_definitions:true, source:GENERATED_SOURCE});
-    newAdmission.push({path:atom.path, route:atom.route, canonical_domain:atom.canonical_domain, generation_lane:atom.generation_lane, admission_level:'baseline', status:'ADMITTED', primary_query:atom.query, query_aliases:[], intent:atom.intent, cluster:atom.page_type, framework:atom.framework, unique_atom:atom.unique_atom, artifact_type:atom.artifact_type, entity:atom.entity || null, use_case:atom.use_case || null, comparison_entities:atom.comparison_entities || null, comparison_methodology:atom.comparison_methodology || null, official_sources:atom.official_sources || null, conflict_disclosure:atom.conflict_disclosure || null, verified_at:atom.verified_at || null, health_adjacent:false, commercial_comparison:atom.page_type === 'comparison', admitted_at:TODAY, source:GENERATED_SOURCE, product_angle:atom.product_angle, reader_problem:atom.reader_problem, answer_promise:atom.answer_promise, methodology_anchor:atom.methodology_anchor, internal_links:atom.internal_links, cta_profile:atom.cta_profile, claim_safety_level:atom.claim_safety_level, review_status:atom.review_status, last_reviewed:atom.last_reviewed, reviewer_or_publisher:atom.reviewer_or_publisher, schema_type:atom.schema_type});
+    newAdmission.push({path:atom.path, route:atom.route, canonical_domain:atom.canonical_domain, generation_lane:atom.generation_lane, admission_level:NEW_PAGE_ADMISSION_LEVEL, status:'ADMITTED', primary_query:atom.query, query_aliases:[], intent:atom.intent, cluster:atom.page_type, framework:atom.framework, unique_atom:atom.unique_atom, artifact_type:atom.artifact_type, entity:atom.entity || null, use_case:atom.use_case || null, comparison_entities:atom.comparison_entities || null, comparison_methodology:atom.comparison_methodology || null, official_sources:atom.official_sources || null, conflict_disclosure:atom.conflict_disclosure || null, verified_at:atom.verified_at || null, health_adjacent:false, commercial_comparison:atom.page_type === 'comparison', admitted_at:TODAY, source:GENERATED_SOURCE, product_angle:atom.product_angle, reader_problem:atom.reader_problem, answer_promise:atom.answer_promise, methodology_anchor:atom.methodology_anchor, internal_links:atom.internal_links, cta_profile:atom.cta_profile, claim_safety_level:atom.claim_safety_level, review_status:atom.review_status, last_reviewed:atom.last_reviewed, reviewer_or_publisher:atom.reviewer_or_publisher, schema_type:atom.schema_type});
     newAnswers.push({url:atom.canonical_url, title:atom.query, description:atom.definition, queries_supported:[atom.query], primary_citation_targets:['/'+atom.path], named_framework:atom.framework, citation_strategy:GENERATED_SOURCE});
   }
   citable.pages.push(...newCitable); citable.generated_at = TODAY;
@@ -613,11 +636,25 @@ function writeDocs() {
   fs.writeFileSync('docs/runbooks/CITATION_PHASE_INTEGRATION_PLAN.md', `# Citation Phase Integration Plan\n\nGenerated: ${TODAY}\n\n## Rule\n\nOne content automation release system. One admission registry. One release atom contract. One validation spine.\n\n## Phase state after this baseline\n\n- Phase 1: implemented in repo.\n- Phase 2: implemented at 2,000+ active reference surfaces if validation count remains above threshold.\n- Phase 3: repo implementation complete with external proof queues pending.\n- Phase 4: runway active toward 5K+, not falsely complete.\n\n## Anti-slop gate\n\nEvery new generated page has a release atom, safe claim classification, internal links, citation registry entry, query registry entry, sitemap inclusion, and llms-full inclusion.\n`, 'utf8');
 }
 
-// Floor: atoms accumulate by design.
-if (atoms.length < 1400) {
-  console.error(`[aplayer-phase-expansion] expected 1400 atoms, got ${atoms.length}`);
+// This used to be a floor: `if (atoms.length < 1400) process.exit(1)`, labelled
+// "atoms accumulate by design". A floor on a count is an instruction to
+// manufacture. The replenishment loop above it exists only to satisfy this line
+// - it re-runs the same four nested loops over audiences x states x dimensions
+// x concepts until the number is reached, with a 200,000-iteration guard
+// because that is how many tries it can take. The repo already knows where that
+// leads: 743 pages were published carrying "a Spry Executive OS fallback content
+// surface created to keep the 75-page daily citation velocity cadence intact"
+// as the sentence defining them to readers, and 2,412 duplicate gap-fill stubs
+// were dropped for the same reason.
+//
+// A generator should stop when it runs out of material, not when it hits a
+// number. Failing on an empty run is still worth doing - that means something
+// broke - so that is what is checked.
+if (atoms.length === 0) {
+  console.error('[aplayer-phase-expansion] produced no atoms; refusing to write an empty release');
   process.exit(1);
 }
+console.log(`[aplayer-phase-expansion] ${atoms.length} atoms from the available material (no floor).`);
 writePages();
 updateRegistries();
 updatePublicRouteManifest();
