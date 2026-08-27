@@ -61,7 +61,19 @@ for (const entry of manifest.entries || []) {
   const html = exists ? fs.readFileSync(abs, 'utf8') : '';
   const normalizedHtml = normalize(html);
   const stringResults = (entry.required_strings || []).map(required => ({required, found: normalize(required).split(' ').filter(Boolean).every(token => normalizedHtml.includes(token))}));
-  const blockResults = (entry.required_block_types || []).map(type => ({type, found: html.includes(`data-bhpc-agent-block="${type}"`)}));
+  // Accept either marker, exactly as validate_bhpc_rich_new_page_contract.mjs
+  // does and for the reason recorded there: recommendation_summary is written
+  // by the retrofit pass, outside the agent section, carrying
+  // data-content-block. The applier deliberately emits nothing for that block
+  // when its only source is source_fix_instruction - operator-facing audit
+  // critique that must not be published as page copy - so the retrofit is the
+  // only thing that supplies it. Tagging the retrofit's output with
+  // data-bhpc-agent-block instead is the one fix that must not be used: it
+  // makes the applier's section strip start at the retrofit block and delete
+  // every real block after it, which already cost four insight pages their
+  // trust, source and definition blocks. The marker a block carries should not
+  // decide whether the block counts.
+  const blockResults = (entry.required_block_types || []).map(type => ({type, found: html.includes(`data-bhpc-agent-block="${type}"`) || html.includes(`data-content-block="${type}"`)}));
   const recordFound = html.includes(attrNeedle(entry.record_id));
   const legacyMarkerFound = /Agent Exact Citation Repair|exact intended-winner pipeline/i.test(html);
   const planned = plannedPaths.has(rel);
