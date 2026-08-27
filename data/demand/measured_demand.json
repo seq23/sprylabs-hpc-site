@@ -19,11 +19,12 @@
     "billionairehighperformancecoach.com",
     "aplayermode.com"
   ],
-  "record_count": 99,
-  "total_measured_volume_per_month": 65775,
+  "record_count": 101,
+  "total_measured_volume_per_month": 65910,
   "by_tier": {
-    "T2b": 30,
-    "T1": 69
+    "T2b": 32,
+    "T1": 68,
+    "T3": 1
   },
   "records": [
     {
@@ -544,10 +545,19 @@
     {
       "query": "ai business coach",
       "query_normalized": "ai business coach",
-      "volume": 5,
+      "volume": 110,
       "keyword_difficulty": 28,
-      "source_type": "gsc_search_analytics",
-      "evidence_tier": "T1"
+      "source_type": "semrush_keyword_magic",
+      "evidence_tier": "T2b",
+      "target_domain": "billionairehighperformancecoach.com",
+      "gsc_impressions_90d": 5,
+      "superseded_tier": "T1",
+      "note": "Semrush US volume 110/mo, KD 28, CPC $8.37 (Portfolio Search Packet v2, pulled 2026-08-24). GSC separately recorded 5 impressions over the 90-day window while no page targeted the query.",
+      "aliases": [
+        "ai business coach: what it can and cannot do",
+        "ai coach for business",
+        "ai business coaching"
+      ]
     },
     {
       "query": "ai leadership coaching tool",
@@ -916,6 +926,36 @@
       "keyword_difficulty": null,
       "source_type": "gsc_search_analytics",
       "evidence_tier": "T1"
+    },
+    {
+      "query": "adhd time blindness strategies",
+      "query_normalized": "adhd time blindness strategies",
+      "volume": 30,
+      "keyword_difficulty": 0,
+      "source_type": "semrush_keyword_magic",
+      "evidence_tier": "T2b",
+      "target_domain": "spryexecutiveos.com",
+      "repointed_from": "aplayermode.com",
+      "repoint_reason": "owner_decision_2026_08_27_source_domain_is_redirect_only"
+    },
+    {
+      "query": "how much does an executive coach cost",
+      "query_normalized": "how much does an executive coach cost",
+      "volume": null,
+      "keyword_difficulty": null,
+      "source_type": "owner_approved_seed",
+      "evidence_tier": "T3",
+      "target_domain": "billionairehighperformancecoach.com",
+      "approved_by": "owner, relayed via coordinator",
+      "approved_at": "2026-08-27",
+      "aliases": [
+        "how much does an executive coach cost?",
+        "executive coaching cost",
+        "what does an executive coach cost",
+        "executive coach pricing",
+        "how much does business coaching cost"
+      ],
+      "note": "No measured volume exists for cost intent in this vertical in any source available to this repo: absent from the 47-row Semrush T2b universe and from all 71 GSC evidence rows. Seeded on query shape, not on measured volume, under owner_seed_policy. The shape inference is cross-vertical - all 65 grounded citation observations are dental, medical, legal and immigration, none from this cluster - and supports only an ordering: bare head terms slot to unbranded sites least often, every modified shape materially more often. volume is null because it is unknown, not because it is zero."
     }
   ],
   "domain_policy": {

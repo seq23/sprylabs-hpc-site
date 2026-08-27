@@ -7,6 +7,9 @@ import {groupBhpcSemanticEntries, renderBhpcRecordEvidence, renderBhpcVisibleSou
 import {normalizeBhpcInternalLinkHref, normalizeBhpcExternalCtaHref} from '../lib/bhpc_internal_links.mjs';
 import {mergeBhpcExternalCtaLinks} from '../lib/bhpc_conversion_contract.mjs';
 import {BHPC_PRODUCT_ANCHOR_SENTENCE, bhpcGeneratedCitationDefinition} from '../lib/bhpc_public_page_contract.mjs';
+import {createRequire} from 'node:module';
+const requireCjs = createRequire(import.meta.url);
+const {routeFor: sharedRouteFor} = requireCjs('../lib/dual_domain_policy.cjs');
 
 function ensureDir(file) { fs.mkdirSync(path.dirname(file), {recursive: true}); }
 function escapeHtml(value = '') {
@@ -574,7 +577,12 @@ function fullHtml(pathValue, entries, spec = {}) {
   const primary = entries[0];
   const title = primary.query || 'BHPC Agent Semantic Page';
   const description = `${title}: a practical Spry Executive OS guide with clear decision criteria, implementation steps, and next actions.`.slice(0, 155);
-  const canonical = `https://spryexecutiveos.com/${pathValue}`;
+  // pathValue is a repo file path. Concatenating it onto the host produced a
+  // canonical naming the .html form, which 301s to the clean route - the exact
+  // tag/redirect disagreement the route contract exists to prevent. Any page
+  // this generator rewrote after the contract change got the redirecting form
+  // put back on it.
+  const canonical = `https://spryexecutiveos.com${sharedRouteFor(pathValue)}`;
   return `<!doctype html>
 <html lang="en">
 <head>

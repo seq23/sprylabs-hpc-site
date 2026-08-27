@@ -234,10 +234,23 @@ def query_collision_errors(records,result):
     return errors
 
 def compare_with_references(records,result,soups):
+    # Compare a new page against EVERY admitted page, not just the 62 marked
+    # admission_level == 'full'.
+    #
+    # The pool used to carry the same `admission_level != 'full'` filter the
+    # quality checks use, which meant a candidate was measured for duplication
+    # against 62 of 2,214 admitted pages. A new page could be a near-verbatim copy
+    # of any of the 2,152 others and score zero similarity, because they were never
+    # loaded. The duplication gate was reading a 3% sample of its own corpus.
+    #
+    # Widening this cannot fail a page for its own content. References are only ever
+    # compared against - they are not validated here, and no threshold is applied to
+    # them - so the only new outcome is catching a duplicate that used to pass. That
+    # is why this is safe to widen while the corpus selection in main() is not.
     errors=[]; candidate_paths={r.get('path') for r in records}
     references=[]
     for ref in REGISTRY:
-        if ref.get('status')!='ADMITTED' or ref.get('admission_level')!='full' or ref.get('path') in candidate_paths: continue
+        if ref.get('status')!='ADMITTED' or ref.get('path') in candidate_paths: continue
         fp=ROOT/ref.get('path','')
         if not fp.exists(): continue
         soup=BeautifulSoup(fp.read_text(encoding='utf-8'),'html.parser')
@@ -281,12 +294,32 @@ def main():
         manifest=json.loads((ROOT/'data/content/programmatic_candidate_manifest.json').read_text(encoding='utf-8'))
         records=manifest.get('candidates',[])
     else:
+        # The corpus run inspects records marked admission_level == 'full'. That is
+        # 62 of 2,214 admitted pages, because generate_aplayer_phase_expansion.mjs
+        # stamped its own output 'baseline' - the level under which every
+        # substantive check in run() is skipped - so 97% of the library opted itself
+        # out of the gate at the moment it was written. The generator now stamps
+        # 'full' (NEW_PAGE_ADMISSION_LEVEL), so this closes going forward.
+        #
+        # The 2,152 already on disk are NOT silently promoted here. Holding them to
+        # thresholds they were never written against would fail the build on
+        # thousands of pages at once, which is a retirement and rewriting programme,
+        # not a validator change. What does change is that the exclusion stops being
+        # invisible: the count is printed on every run and recorded in the JSON
+        # payload, so the size of the debt is in front of whoever reads the output
+        # instead of buried in a list comprehension.
         records=[x for x in REGISTRY if x.get('status')=='ADMITTED' and x.get('admission_level')=='full']
+        admitted_total=sum(1 for x in REGISTRY if x.get('status')=='ADMITTED')
+        excluded=admitted_total-len(records)
+        if excluded:
+            print(f'[validate:programmatic-admission] NOTE: {excluded} of {admitted_total} admitted pages carry admission_level != "full" and are not inspected by the substantive checks. They predate the gate. New pages are stamped "full" by scripts/programmatic/generate_aplayer_phase_expansion.mjs and are inspected. This is recorded quality debt, not a passing result.')
     errors,result,soups=run(records,similarity_check=True)
     if args.candidate_only and records:
         extra=query_collision_errors(records,result); errors.extend(extra)
         extra=compare_with_references(records,result,soups); errors.extend(extra)
-    payload={'status':'PASS' if not errors else 'FAIL','pages':len(records),'accepted':sum(1 for x in result if x['accepted']),'rejected':sum(1 for x in result if not x['accepted']),'results':result}
+    payload={'status':'PASS' if not errors else 'FAIL','pages':len(records),
+             'admitted_total':sum(1 for x in REGISTRY if x.get('status')=='ADMITTED'),
+             'not_inspected_pre_gate':sum(1 for x in REGISTRY if x.get('status')=='ADMITTED' and x.get('admission_level')!='full'),'accepted':sum(1 for x in result if x['accepted']),'rejected':sum(1 for x in result if not x['accepted']),'results':result}
     if args.json_output: Path(args.json_output).write_text(json.dumps(payload,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
     if errors and not args.no_fail_quality:
         print('[validate:programmatic-admission] FAIL')

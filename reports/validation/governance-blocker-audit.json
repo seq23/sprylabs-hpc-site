@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-08-27T01:08:36.345Z",
+  "generated_at": "2026-08-27T17:08:30.690Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 170,
+  "admitted_hard_fail_count": 171,
   "reviewed_count": 8,
-  "unreviewed_count": 162,
+  "unreviewed_count": 163,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 128,
+    "REVIEW_REQUIRED": 129,
     "EXISTING_REPAIR_AVAILABLE": 6,
     "TRUE_BLOCKER": 26,
     "REVIEW_WARNING_BOUNDARY": 10
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 128,
+    "REVIEW_REQUIRED": 129,
     "EXISTING_REPAIR_AVAILABLE": 6,
     "TRUE_BLOCKER": 26,
     "REVIEW_WARNING_BOUNDARY": 2
   },
   "migration_status_counts": {
-    "UNREVIEWED": 162,
+    "UNREVIEWED": 163,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -2578,6 +2578,21 @@
         "MX-175"
       ],
       "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-116",
+      "name": "validate:atlas-units",
+      "command": "npm run validate:atlas-units",
+      "owning_lane": "citation-intelligence",
+      "risk_prevented": "Prevents two incompatible quantities from sharing one demand field again. `volume` held monthly search volume on keyword-tool rows and this domain's OWN 90-day impression count on GSC rows, and rank_score was computed straight off it, so 'ai business coach' scored on 5 impressions instead of its real 110/mo search volume - 22x low - and sorted below queries with a fraction of its market demand.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-178"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",
       "decision": null,
       "evidence": []

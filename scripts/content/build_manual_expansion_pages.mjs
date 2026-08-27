@@ -108,6 +108,38 @@ function faqItems(page) {
       : {q:'Does this framework guarantee an outcome?',a:'No. It creates a clearer process and evidence loop, but results depend on context, execution, resources, and decisions outside the framework.'},
   ];
 }
+// Implementation notes and failure-mode remedies default to generic guidance so
+// every pre-existing page renders byte-identically. A page becomes substantive by
+// supplying `step_notes[i]` and `failure_remedies[i]` in
+// data/content/manual_expansion_pages.json - parallel, optional, additive arrays.
+// Repeating one generic closing paragraph under six numbered checkpoints is the
+// template-fill pattern this repo has already paid for twice.
+const GENERIC_STEP_NOTE_A = 'Before acting, write the current constraint and the smallest observable result this checkpoint should create.';
+const GENERIC_STEP_NOTE_B = 'Run this checkpoint in one bounded context, then record what changed. When the result is incomplete, preserve the last known state and choose the smallest valid restart instead of expanding the plan.';
+const GENERIC_FAILURE_REMEDY = 'Use the framework to identify the failed condition and return to the smallest action that restores evidence. Do not interpret the failure as a permanent identity judgment.';
+
+function renderImplementationNotes(page) {
+  const notes = Array.isArray(page.step_notes) ? page.step_notes : [];
+  const body = page.steps.map((step, index) => {
+    const note = notes[index];
+    if (!note) {
+      return `<h3>Checkpoint ${index + 1}</h3><p>${esc(step)} ${GENERIC_STEP_NOTE_A}</p><p>${GENERIC_STEP_NOTE_B}</p>`;
+    }
+    const heading = typeof note === 'object' && note.title ? note.title : `Checkpoint ${index + 1}`;
+    const text = typeof note === 'object' ? note.text : note;
+    return `<h3>${esc(heading)}</h3><p>${esc(step)}</p><p>${esc(text)}</p>`;
+  }).join('');
+  return `<section class="card implementation-notes"><h2>Implementation Notes for ${esc(page.framework)}</h2>${body}</section>`;
+}
+
+function renderFailureModes(page) {
+  const remedies = Array.isArray(page.failure_remedies) ? page.failure_remedies : [];
+  return page.failure_modes.map((item, index) => {
+    const remedy = remedies[index] || GENERIC_FAILURE_REMEDY;
+    return `<h3>Failure Mode ${index + 1}: ${esc(item)}</h3><p>${esc(remedy)}</p>`;
+  }).join('\n');
+}
+
 function renderFaq(page) {
   return `<section class="card faq" id="faq" data-visible-faq="true"><h2>Frequently Asked Questions</h2>${faqItems(page).map((item)=>`<h3>${esc(item.q)}</h3><p>${esc(item.a)}</p>`).join('')}</section>`;
 }
@@ -211,7 +243,7 @@ function renderPage(page) {
   }).filter(Boolean).join('\n');
   const aliases = page.aliases.length ? `<p class="muted"><strong>Also answers:</strong> ${page.aliases.map(esc).join('; ')}.</p>` : '';
   const limits = page.limits.map((item)=>`<li>${esc(item)}</li>`).join('');
-  const failures = page.failure_modes.map((item,index)=>`<h3>Failure Mode ${index+1}: ${esc(item)}</h3><p>Use the framework to identify the failed condition and return to the smallest action that restores evidence. Do not interpret the failure as a permanent identity judgment.</p>`).join('\n');
+  const failures = renderFailureModes(page);
   const acceptanceRule = acceptanceByPath.get(page.path) || {};
   const requiredSchemaTypes = new Set(acceptanceRule.required_schema_types || []);
   const faq = faqItems(page);
@@ -267,7 +299,7 @@ ${renderExtraction(page)}
 ${page.type === 'comparison' || page.type === 'decision' ? '' : renderArtifact(page)}
 ${renderAdditionalSections(page)}
 <section class="card"><h2>Why This Framework Works</h2><p>The framework reduces hidden decisions and turns an abstract goal into observable actions, evidence, and review. It also makes failure diagnosable: the reader can see whether the problem was task clarity, capacity, environment, timing, authority, or the absence of a recovery rule.</p><p>Use the framework as a bounded experiment. Keep the first version small enough to run under ordinary conditions, record what actually happened, and change one operating variable at a time instead of replacing the entire system.</p></section>
-<section class="card implementation-notes"><h2>Implementation Notes for ${esc(page.framework)}</h2>${page.steps.map((step,index)=>`<h3>Checkpoint ${index+1}</h3><p>${esc(step)} Before acting, write the current constraint and the smallest observable result this checkpoint should create.</p><p>Run this checkpoint in one bounded context, then record what changed. When the result is incomplete, preserve the last known state and choose the smallest valid restart instead of expanding the plan.</p>`).join('')}</section>
+${renderImplementationNotes(page)}
 <section class="card" id="common-failure-modes"><h2>Common Failure Modes</h2>${failures}</section>
 <section class="card worked-example" id="worked-example"><h2>Worked Example: ${esc(page.worked_example.title)}</h2><p>${esc(page.worked_example.text)}</p><p><strong>What to measure:</strong> Did the framework produce a clearer decision, a completed action, a shorter recovery time, or a better handoff? Record the observable outcome rather than whether the process felt impressive.</p></section>
 <section class="card"><h2>When to Use Another Kind of Support</h2><ul>${limits}</ul><p>${esc(page.product_angle)}</p></section>
@@ -285,6 +317,57 @@ ${renderPriorityCitation(page)}
 ${renderPriorityCitationSchema(page, canonical)}
 <script id="CITATION_PAGE_SCHEMA" type="application/ld+json">${JSON.stringify(schema).replace(/</g,'\\u003c')}</script>
 </body></html>`;
+}
+
+// --- surgical section re-render -------------------------------------------
+// The committed HTML is builder output plus a post-processing chain (citation
+// layer, breadcrumbs, Clarity, internal links). A full rebuild does not
+// reproduce it, so re-running the builder to fix prose would silently revert
+// that chain. --sections-only rewrites just the three template-fill sections
+// (implementation notes, failure modes, FAQ) and the FAQ schema node, in place,
+// leaving every other byte of the page untouched.
+function innerOf(sectionHtml) {
+  return sectionHtml.replace(/^<section[^>]*>/, '').replace(/<\/section>$/, '');
+}
+function replaceSectionInner(html, openRe, innerHtml) {
+  const re = new RegExp(`(${openRe})([\\s\\S]*?)(<\\/section>)`);
+  if (!re.test(html)) return {html, ok: false};
+  return {html: html.replace(re, (_m, open, _old, close) => `${open}${innerHtml}${close}`), ok: true};
+}
+function updateFaqSchema(html, page) {
+  const re = /(<script id="CITATION_PAGE_SCHEMA" type="application\/ld\+json">)([\s\S]*?)(<\/script>)/;
+  const m = html.match(re);
+  if (!m) return {html, ok: false};
+  let obj;
+  try { obj = JSON.parse(m[2]); } catch { return {html, ok: false}; }
+  const nodes = Array.isArray(obj['@graph']) ? obj['@graph'] : [obj];
+  const faqNode = nodes.find((n) => n && n['@type'] === 'FAQPage');
+  if (!faqNode) return {html, ok: false};
+  faqNode.mainEntity = faqItems(page).map((item) => ({'@type':'Question',name:item.q,acceptedAnswer:{'@type':'Answer',text:item.a}}));
+  return {html: html.replace(re, (_x, open, _old, close) => `${open}${JSON.stringify(obj)}${close}`), ok: true};
+}
+if (process.argv.includes('--sections-only')) {
+  let touched = 0;
+  const misses = [];
+  for (const page of payload.pages) {
+    const out = path.join(ROOT, page.path);
+    if (!fs.existsSync(out)) { misses.push(`${page.path}: file missing`); continue; }
+    let html = fs.readFileSync(out, 'utf8');
+    const before = html;
+    let r;
+    r = replaceSectionInner(html, '<section class="card implementation-notes"[^>]*>', innerOf(renderImplementationNotes(page)));
+    if (!r.ok) misses.push(`${page.path}: implementation-notes section not found`); else html = r.html;
+    r = replaceSectionInner(html, '<section class="card"[^>]*id="common-failure-modes"[^>]*>', `<h2>Common Failure Modes</h2>${renderFailureModes(page)}`);
+    if (!r.ok) misses.push(`${page.path}: common-failure-modes section not found`); else html = r.html;
+    r = replaceSectionInner(html, '<section class="card faq"[^>]*>', innerOf(renderFaq(page)));
+    if (!r.ok) misses.push(`${page.path}: faq section not found`); else html = r.html;
+    r = updateFaqSchema(html, page);
+    if (!r.ok) misses.push(`${page.path}: FAQPage schema node not found`); else html = r.html;
+    if (html !== before) { fs.writeFileSync(out, html, 'utf8'); touched += 1; }
+  }
+  console.log(`manual expansion --sections-only: rewrote sections in ${touched} page(s)`);
+  if (misses.length) { console.error(`unmatched section anchors (${misses.length}):`); for (const x of misses) console.error(`  ${x}`); process.exit(1); }
+  process.exit(0);
 }
 
 if (payload.page_count !== payload.pages.length) {
