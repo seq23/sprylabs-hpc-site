@@ -1820,16 +1820,26 @@
     },
     {
       "matrix_id": "MX-179",
+      "validation_id": "VAL-117",
+      "lane": "content-admission",
+      "command": "npm run validate:admission-level-stability",
+      "order": 180,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-180",
       "validation_id": "VAL-CANONICAL-NO-REDIRECT",
       "lane": "validation-control-plane",
       "command": "npm run validate:canonical-no-redirect",
-      "order": 179,
+      "order": 180,
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
     }
   ],
-  "entry_count": 182,
+  "entry_count": 183,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -1943,6 +1953,10 @@
         {
           "id": "VAL-EXTRACTION-FINAL-NORMALIZATION",
           "command": "npm run repair:extraction-final-state"
+        },
+        {
+          "id": "VAL-117",
+          "command": "npm run validate:admission-level-stability"
         },
         {
           "id": "validate:content-release",
