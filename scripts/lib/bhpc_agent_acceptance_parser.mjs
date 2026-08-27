@@ -17,16 +17,31 @@ function actionableInstruction(value='',query=''){
   const action=segments.slice().reverse().find(segment=>/^(?:add|create|include|publish|build|replace|define|link|insert|rewrite|expand|clarify)\b/i.test(segment));
   return clean(action||segments.at(-1)||query);
 }
+// An audit row often names the heading it wants and then describes the shape it
+// wants underneath it: "Add H2 titled 'The 3-Part Email System with H3s for
+// Filter Batch and Triage each with 2-3 sentence definitions'". Only the first
+// half is a heading. Carrying the rest through made every consumer treat the
+// layout brief as subject matter - the applier published it as an <h2> and as a
+// "Related reader questions" entry, and the acceptance validator then required
+// that text to stay visible, which is why it survived on live pages.
+export function stripBhpcHeadingLayoutBrief(value=''){
+  return String(value)
+    .replace(/\s+with\s+(?:numbered\s+)?h[1-6]s?\b[\s\S]*$/i,'')
+    .replace(/\s+each\s+with\s+[\d\u2013-]+\s*(?:to\s*\d+\s*)?sentences?\b[\s\S]*$/i,'')
+    .replace(/\s+/g,' ')
+    .trim();
+}
+
 export function deriveBhpcRequiredHeading(fix='',query=''){
   const segments=meaningfulSegments(fix);
   for(const segment of segments.slice().reverse()){
     const named=segment.match(/(?:titled|called|named)\s*["“”']?([^"“”'.;|]{4,140})/i);
-    if(named) return clean(named[1]).slice(0,180);
+    if(named) return stripBhpcHeadingLayoutBrief(clean(named[1])).slice(0,180);
     if(/(?:h2|h3|heading|section|callout|boxed quote)/i.test(segment)){
       const quoted=[...segment.matchAll(/["“”'`]([^"“”'`]{4,180})["“”'`]/g)].map(match=>clean(match[1])).filter(Boolean);
-      if(quoted.length) return quoted.at(-1).slice(0,180);
+      if(quoted.length) return stripBhpcHeadingLayoutBrief(quoted.at(-1)).slice(0,180);
       const subject=segment.match(/(?:defining|about|for|matching)\s+(?:the\s+)?([^.;|]{4,140}?)(?:\s+(?:under|after|before|to improve|on the page)|$)/i);
-      if(subject) return clean(subject[1]).slice(0,180);
+      if(subject) return stripBhpcHeadingLayoutBrief(clean(subject[1])).slice(0,180);
     }
   }
   return clean(query).slice(0,180);

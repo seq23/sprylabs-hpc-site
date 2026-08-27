@@ -411,6 +411,9 @@ function replaceBreadcrumbJsonLd(html, node) {
 
 let pagesTouched = 0;
 const siblingCursor = new Map();
+// Every route this build actually publishes: the content pages plus the hubs.
+// templates/ and anything else excluded from `pages` is deliberately absent.
+const publishedRoutes = new Set([...pages.map((p) => p.route), ...hubs.map((h) => h.route), '/']);
 for (const pg of pages) {
   const info = topicHubByPage.get(pg.rel);
   if (!info) continue;
@@ -512,6 +515,13 @@ for (const pg of pages) {
     const href = m[1];
     const text = norm(m[2].replace(/<[^>]+>/g, ''));
     if (!href.startsWith('/') || kept.has(href) || !text) continue;
+    // Only rescue a link that still points at a page this build publishes. An
+    // earlier run linked templates/ skeletons from these blocks, and carrying
+    // one back brings its {{h1}} anchor text with it - which is the exact fault
+    // the PLACEHOLDER_RE guard above exists to prevent, and it makes the host
+    // page read as an unresolved template to the structural validator. A link
+    // whose target is no longer a published page is not a link worth keeping.
+    if (!publishedRoutes.has(href)) continue;
     if (carried.some((c) => c.href === href) || rescued.some((c) => c.href === href)) continue;
     rescued.push({ href, text });
   }

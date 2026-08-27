@@ -557,12 +557,29 @@ def process(rel: str, path: Path, corpus, apply: bool):
         return "insufficient", None
     block = render_block(pairs)
     out = insert_block(BLOCK_RE.sub("", html) if already else html, block)
-    out = upsert_faq_schema(out, canonical, pairs)
-    if out is None:
-        return "no-schema-block", None
+    schemed = upsert_faq_schema(out, canonical, pairs)
+    deferred = schemed is None
+    if not deferred:
+        out = schemed
     if apply and out != html:
         path.write_text(out, encoding="utf-8")
-    return ("written" if out != html else "unchanged"), pairs
+    status = "written" if out != html else "unchanged"
+    if deferred:
+        # No CITATION_PAGE_SCHEMA on the page yet. Inside build:all this is not
+        # an error and not a reason to skip: the late page generators
+        # (build:aplayer-phase-expansion, build:agent-accepted-content) run
+        # after apply_citation_program has compiled schema, so 550 pages reach
+        # this step without a schema block and would otherwise get no FAQ at
+        # all - measured, and it was the whole of a 74% -> 55% drop in coverage
+        # across a full rebuild.
+        #
+        # Publishing the visible half alone is safe because
+        # scripts/citation/repair_schema_parity.py creates the schema block and
+        # derives the FAQPage node from exactly these visible pairs, using the
+        # same visible_faq_pairs() contract. The two halves are reconciled
+        # before anything validates them.
+        status = "deferred-schema" if out != html else "deferred-schema-unchanged"
+    return status, pairs
 
 
 def drop_faq_schema(html: str) -> str:
