@@ -1,0 +1,915 @@
+{
+  "schema_version": "1.0",
+  "purpose": "The queries this repo has evidence for. Contrast with data/intake/query_universe.json (9,404 rows, 4,166 distinct, no volume field of any kind) and data/authority_scale/fanout_100k/ (100,000 cartesian combinations).",
+  "provenance": {
+    "sources": [
+      "data/queries/evidence/evidence_queries.json (Google Search Console, T1)",
+      "data/search/semrush_manual_expansion.json (owner-supplied Semrush research, T2b)",
+      "Portfolio Search Packet v2, Semrush US, pulled 2026-08-24 (T2b)"
+    ],
+    "measured_fields": [
+      "volume",
+      "keyword_difficulty"
+    ],
+    "note": "GSC rows report impressions over the pull window; that is a measurement, not an estimate."
+  },
+  "owner_seed_policy": "An owner may add a record with source_type owner_approved_seed and volume null. It must carry approved_by and approved_at.",
+  "domains": [
+    "spryexecutiveos.com",
+    "billionairehighperformancecoach.com",
+    "aplayermode.com"
+  ],
+  "record_count": 99,
+  "total_measured_volume_per_month": 65775,
+  "by_tier": {
+    "T2b": 30,
+    "T1": 69
+  },
+  "records": [
+    {
+      "query": "How to Stop Overthinking",
+      "query_normalized": "how to stop overthinking",
+      "volume": 14800,
+      "keyword_difficulty": 49,
+      "aliases": [],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "spryexecutiveos.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "How Long Does It Take to Form a Habit?",
+      "query_normalized": "how long does it take to form a habit?",
+      "volume": 6600,
+      "keyword_difficulty": 49,
+      "aliases": [
+        "how long does it take to build a habit"
+      ],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "spryexecutiveos.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "ADHD Productivity System",
+      "query_normalized": "adhd productivity system",
+      "volume": 5500,
+      "keyword_difficulty": 30,
+      "aliases": [
+        "adhd productivity",
+        "productivity system for adhd"
+      ],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "spryexecutiveos.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "Decision Fatigue: What It Is and How to Reduce It",
+      "query_normalized": "decision fatigue: what it is and how to reduce it",
+      "volume": 5400,
+      "keyword_difficulty": 59,
+      "aliases": [],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "spryexecutiveos.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "Task Paralysis: What It Is and How to Break the Loop",
+      "query_normalized": "task paralysis: what it is and how to break the loop",
+      "volume": 4400,
+      "keyword_difficulty": 29,
+      "aliases": [],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "spryexecutiveos.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "How to Recover From Burnout",
+      "query_normalized": "how to recover from burnout",
+      "volume": 4400,
+      "keyword_difficulty": 42,
+      "aliases": [],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "spryexecutiveos.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "Executive Dysfunction and ADHD",
+      "query_normalized": "executive dysfunction and adhd",
+      "volume": 3600,
+      "keyword_difficulty": 34,
+      "aliases": [],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "spryexecutiveos.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "How to Stop Being Lazy",
+      "query_normalized": "how to stop being lazy",
+      "volume": 2900,
+      "keyword_difficulty": 31,
+      "aliases": [],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "spryexecutiveos.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "How to Focus With ADHD",
+      "query_normalized": "how to focus with adhd",
+      "volume": 1900,
+      "keyword_difficulty": 30,
+      "aliases": [],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "spryexecutiveos.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "How to Be a Better Husband",
+      "query_normalized": "how to be a better husband",
+      "volume": 1900,
+      "keyword_difficulty": 22,
+      "aliases": [],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "billionairehighperformancecoach.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "How to Be Productive Without Overplanning",
+      "query_normalized": "how to be productive without overplanning",
+      "volume": 1300,
+      "keyword_difficulty": 28,
+      "aliases": [],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "spryexecutiveos.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "How to Stay Motivated at Work",
+      "query_normalized": "how to stay motivated at work",
+      "volume": 1300,
+      "keyword_difficulty": 30,
+      "aliases": [],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "spryexecutiveos.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "How to Fix Brain Fog",
+      "query_normalized": "how to fix brain fog",
+      "volume": 1300,
+      "keyword_difficulty": 48,
+      "aliases": [],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "spryexecutiveos.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "Personal Development Plan Template",
+      "query_normalized": "personal development plan template",
+      "volume": 1300,
+      "keyword_difficulty": 36,
+      "aliases": [],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "billionairehighperformancecoach.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "How to Get Your Life Together",
+      "query_normalized": "how to get your life together",
+      "volume": 1200,
+      "keyword_difficulty": 13,
+      "aliases": [
+        "how do i get my life together"
+      ],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "spryexecutiveos.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "Best Planner for ADHD in 2026",
+      "query_normalized": "best planner for adhd in 2026",
+      "volume": 1000,
+      "keyword_difficulty": 23,
+      "aliases": [
+        "best adhd planner"
+      ],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "spryexecutiveos.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "How to Build Discipline",
+      "query_normalized": "how to build discipline",
+      "volume": 1000,
+      "keyword_difficulty": 43,
+      "aliases": [],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "spryexecutiveos.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "How to Stay Consistent",
+      "query_normalized": "how to stay consistent",
+      "volume": 720,
+      "keyword_difficulty": 28,
+      "aliases": [],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "spryexecutiveos.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "How to Stay Consistent With Goals",
+      "query_normalized": "how to stay consistent with goals",
+      "volume": 720,
+      "keyword_difficulty": 24,
+      "aliases": [],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "spryexecutiveos.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "How to Be a Better Man",
+      "query_normalized": "how to be a better man",
+      "volume": 720,
+      "keyword_difficulty": 19,
+      "aliases": [],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "billionairehighperformancecoach.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "ADHD Time Management Tools",
+      "query_normalized": "adhd time management tools",
+      "volume": 480,
+      "keyword_difficulty": 27,
+      "aliases": [],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "spryexecutiveos.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "How to Be a Better Leader",
+      "query_normalized": "how to be a better leader",
+      "volume": 480,
+      "keyword_difficulty": 39,
+      "aliases": [],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "billionairehighperformancecoach.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "90-Day Plan Template",
+      "query_normalized": "90-day plan template",
+      "volume": 390,
+      "keyword_difficulty": 23,
+      "aliases": [],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "spryexecutiveos.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "Sunday Reset Checklist",
+      "query_normalized": "sunday reset checklist",
+      "volume": 320,
+      "keyword_difficulty": 3,
+      "aliases": [],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "spryexecutiveos.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "Quarterly Planning Template",
+      "query_normalized": "quarterly planning template",
+      "volume": 320,
+      "keyword_difficulty": 10,
+      "aliases": [],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "spryexecutiveos.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "How to Stop Overthinking at Night",
+      "query_normalized": "how to stop overthinking at night",
+      "volume": 320,
+      "keyword_difficulty": 22,
+      "aliases": [],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "spryexecutiveos.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "How to Plan Your Day",
+      "query_normalized": "how to plan your day",
+      "volume": 260,
+      "keyword_difficulty": 21,
+      "aliases": [],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "spryexecutiveos.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "ai coaching tools",
+      "query_normalized": "ai coaching tools",
+      "volume": 209,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "adhd productivity",
+      "query_normalized": "adhd productivity",
+      "volume": 170,
+      "keyword_difficulty": 22,
+      "source_type": "semrush_keyword_magic",
+      "evidence_tier": "T2b"
+    },
+    {
+      "query": "ai coach vs movement investigation",
+      "query_normalized": "ai coach vs movement investigation",
+      "volume": 152,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "How to Plan Your Week",
+      "query_normalized": "how to plan your week",
+      "volume": 110,
+      "keyword_difficulty": 22,
+      "aliases": [],
+      "source_type": "owner_supplied_semrush",
+      "evidence_tier": "T2b",
+      "target_domain": "spryexecutiveos.com",
+      "observed_date": "2026-06-18"
+    },
+    {
+      "query": "ai coach for founders and consultants",
+      "query_normalized": "ai coach for founders and consultants",
+      "volume": 76,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai accountability partner",
+      "query_normalized": "ai accountability partner",
+      "volume": 70,
+      "keyword_difficulty": 10,
+      "source_type": "semrush_keyword_magic",
+      "evidence_tier": "T2b"
+    },
+    {
+      "query": "ai tools for coaches",
+      "query_normalized": "ai tools for coaches",
+      "volume": 69,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai tools for team coaching",
+      "query_normalized": "ai tools for team coaching",
+      "volume": 44,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "best ai coach",
+      "query_normalized": "best ai coach",
+      "volume": 37,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai coaching platform",
+      "query_normalized": "ai coaching platform",
+      "volume": 28,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "phone vortex meaning",
+      "query_normalized": "phone vortex meaning",
+      "volume": 22,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "human-like ai coach",
+      "query_normalized": "human-like ai coach",
+      "volume": 19,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "best ai coaching software",
+      "query_normalized": "best ai coaching software",
+      "volume": 15,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai performance coach",
+      "query_normalized": "ai performance coach",
+      "volume": 14,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai coaching tool for managers",
+      "query_normalized": "ai coaching tool for managers",
+      "volume": 13,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "best ai coaching",
+      "query_normalized": "best ai coaching",
+      "volume": 12,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "build an ai coaching clone",
+      "query_normalized": "build an ai coaching clone",
+      "volume": 12,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "nua coach alternative",
+      "query_normalized": "nua coach alternative",
+      "volume": 11,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai coaching vs human coaching",
+      "query_normalized": "ai coaching vs human coaching",
+      "volume": 7,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai tool for coaches",
+      "query_normalized": "ai tool for coaches",
+      "volume": 7,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "compare humantelligence",
+      "query_normalized": "compare humantelligence",
+      "volume": 7,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "sprylabs",
+      "query_normalized": "sprylabs",
+      "volume": 7,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai coaching automation",
+      "query_normalized": "ai coaching automation",
+      "volume": 6,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai coaching platforms",
+      "query_normalized": "ai coaching platforms",
+      "volume": 6,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "spry reddit",
+      "query_normalized": "spry reddit",
+      "volume": 6,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai business coach",
+      "query_normalized": "ai business coach",
+      "volume": 5,
+      "keyword_difficulty": 28,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai leadership coaching tool",
+      "query_normalized": "ai leadership coaching tool",
+      "volume": 5,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "daily execution",
+      "query_normalized": "daily execution",
+      "volume": 5,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "human coaching",
+      "query_normalized": "human coaching",
+      "volume": 5,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "top 5 ai tools every coach should use 2025",
+      "query_normalized": "top 5 ai tools every coach should use 2025",
+      "volume": 5,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai coach for high achievers",
+      "query_normalized": "ai coach for high achievers",
+      "volume": 4,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai influence coach for workflow planning",
+      "query_normalized": "ai influence coach for workflow planning",
+      "volume": 4,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai speech coach vs human coach",
+      "query_normalized": "ai speech coach vs human coach",
+      "volume": 4,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "human coach",
+      "query_normalized": "human coach",
+      "volume": 4,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "life coach alternative",
+      "query_normalized": "life coach alternative",
+      "volume": 4,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "yes causing ai coach for high achievers",
+      "query_normalized": "yes causing ai coach for high achievers",
+      "volume": 4,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai chief of staff tool",
+      "query_normalized": "ai chief of staff tool",
+      "volume": 3,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai coach for workflow planning",
+      "query_normalized": "ai coach for workflow planning",
+      "volume": 3,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai coach matching",
+      "query_normalized": "ai coach matching",
+      "volume": 3,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai coaching tool",
+      "query_normalized": "ai coaching tool",
+      "volume": 3,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai executive coaching",
+      "query_normalized": "ai executive coaching",
+      "volume": 3,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai influence coach for high achievers",
+      "query_normalized": "ai influence coach for high achievers",
+      "volume": 3,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai manual coach",
+      "query_normalized": "ai manual coach",
+      "volume": 3,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "mnimum viable day",
+      "query_normalized": "mnimum viable day",
+      "volume": 3,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "planning system",
+      "query_normalized": "planning system",
+      "volume": 3,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai coaching analytics platform",
+      "query_normalized": "ai coaching analytics platform",
+      "volume": 2,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai coaching platforms skill assessments performance",
+      "query_normalized": "ai coaching platforms skill assessments performance",
+      "volume": 2,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai coaching vs coaching management platform — what's the difference?",
+      "query_normalized": "ai coaching vs coaching management platform — what's the difference?",
+      "volume": 2,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai executive coach",
+      "query_normalized": "ai executive coach",
+      "volume": 2,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai for team coaching",
+      "query_normalized": "ai for team coaching",
+      "volume": 2,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai-powered personalized coaching tool",
+      "query_normalized": "ai-powered personalized coaching tool",
+      "volume": 2,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "best ai coaching apps",
+      "query_normalized": "best ai coaching apps",
+      "volume": 2,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "best ai life coach",
+      "query_normalized": "best ai life coach",
+      "volume": 2,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "cycle reset",
+      "query_normalized": "cycle reset",
+      "volume": 2,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "execution routines",
+      "query_normalized": "execution routines",
+      "volume": 2,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "executive dysfunction tools",
+      "query_normalized": "executive dysfunction tools",
+      "volume": 2,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "executive os demo",
+      "query_normalized": "executive os demo",
+      "volume": 2,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "human coach vs ai leadership platform for fixing trust issues",
+      "query_normalized": "human coach vs ai leadership platform for fixing trust issues",
+      "volume": 2,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "adhd activation",
+      "query_normalized": "adhd activation",
+      "volume": 1,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai accountability coach",
+      "query_normalized": "ai accountability coach",
+      "volume": 1,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai for chiefs of staff",
+      "query_normalized": "ai for chiefs of staff",
+      "volume": 1,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai powered coaching tools",
+      "query_normalized": "ai powered coaching tools",
+      "volume": 1,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai-driven manager coaching tools",
+      "query_normalized": "ai-driven manager coaching tools",
+      "volume": 1,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "ai-powered coaching solutions",
+      "query_normalized": "ai-powered coaching solutions",
+      "volume": 1,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "automated coaching assistant",
+      "query_normalized": "automated coaching assistant",
+      "volume": 1,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "best ai coaches",
+      "query_normalized": "best ai coaches",
+      "volume": 1,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "best ai coaching platforms",
+      "query_normalized": "best ai coaching platforms",
+      "volume": 1,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "best ai executive coaching tools",
+      "query_normalized": "best ai executive coaching tools",
+      "volume": 1,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "coach human",
+      "query_normalized": "coach human",
+      "volume": 1,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "coaching intelligence platform",
+      "query_normalized": "coaching intelligence platform",
+      "volume": 1,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "human matched executive coaching",
+      "query_normalized": "human matched executive coaching",
+      "volume": 1,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    },
+    {
+      "query": "reset model",
+      "query_normalized": "reset model",
+      "volume": 1,
+      "keyword_difficulty": null,
+      "source_type": "gsc_search_analytics",
+      "evidence_tier": "T1"
+    }
+  ]
+}
