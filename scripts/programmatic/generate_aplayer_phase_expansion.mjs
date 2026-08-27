@@ -55,6 +55,36 @@ function maxNumber(records, field, prefix) {
   }
   return max;
 }
+// Admission levels recorded for paths this generator has already admitted, read
+// BEFORE removeGeneratedRecords() erases them.
+//
+// removeGeneratedRecords() deletes every record this generator owns and every
+// page directory it owns, then the run re-creates all of them. That keeps the
+// run idempotent, but it also means the generator cannot tell a page it wrote
+// months ago from a page it is writing for the first time: on every build the
+// whole corpus arrives at updateRegistries() as "new". Stamping all of it
+// NEW_PAGE_ADMISSION_LEVEL re-levels pages that were admitted under the old
+// contract, which is the one outcome the change that introduced that constant
+// said must not happen ("The existing 2,152 keep 'baseline' - re-levelling them
+// would fail the build on the whole corpus"), and which
+// validate_programmatic_admission.py also states ("The 2,152 already on disk are
+// NOT silently promoted here"). It did happen: all 1,400 generated pages were
+// promoted to 'full' at build time and all 1,400 then failed their lane
+// contracts.
+//
+// So carry the recorded level across the wipe. A path already in the admission
+// registry keeps the level it was admitted at; a path that is genuinely new gets
+// NEW_PAGE_ADMISSION_LEVEL and faces every substantive check. The gate is
+// unchanged and the debt stays visible - the validator prints and records the
+// count of records it is not inspecting.
+const PRIOR_ADMISSION_LEVELS = new Map(
+  (readJson('data/content/page_admission_registry.json', {records:[]}).records || [])
+    .filter(row => row && row.path && row.admission_level)
+    .map(row => [row.path, row.admission_level])
+);
+function admissionLevelFor(pagePath) {
+  return PRIOR_ADMISSION_LEVELS.get(pagePath) || NEW_PAGE_ADMISSION_LEVEL;
+}
 function removeGeneratedRecords() {
   const files = [
     ['data/citation/citable_pages.json', 'pages'],
@@ -153,6 +183,13 @@ const ATOM_SAFETY_CAP = Number(process.env.ATOM_SAFETY_CAP || 1400);
 // 'baseline' - re-levelling them would fail the build on the whole corpus,
 // which produces a validator someone switches off rather than one that holds -
 // and are reported by validate_demand_backed_pages.mjs as repair candidates.
+//
+// "New" has to mean new. This constant alone did not deliver that, because
+// removeGeneratedRecords() wipes and re-creates the entire generated corpus on
+// every run, so every already-admitted page reached updateRegistries() looking
+// new and was re-levelled to 'full'. The build then failed on 1,400 pages at
+// once - the exact outcome the paragraph above rules out. admissionLevelFor()
+// carries the recorded level across that wipe; see PRIOR_ADMISSION_LEVELS.
 const NEW_PAGE_ADMISSION_LEVEL = 'full';
 const atoms = [];
 function addAtom(atom) {
@@ -456,7 +493,7 @@ function updateRegistries() {
     newCitable.push({path:atom.path, canonical_url:atom.canonical_url, canonical_domain:atom.canonical_domain, query:atom.query, framework:atom.framework, extraction_type:extraction, schema_type:'DefinedTerm', status:'ACTIVE', definition:atom.definition, source:GENERATED_SOURCE, priority:false});
     newQueries.push({query_id:`QRY-${String(++q).padStart(4,'0')}`, query:atom.query, intent_class:atom.intent, primary_page:atom.path, supporting_pages:[], canonical_domain:atom.canonical_domain, priority:'P4', release_status:'ACTIVE', aliases:[], observation_cluster:atom.page_type, source:GENERATED_SOURCE});
     newFrameworks.push({framework_id:`FW-${String(++f).padStart(4,'0')}`, name:atom.framework, definition:atom.definition, primary_url:atom.canonical_url, supporting_urls:[], aliases:[atom.concept.framework], prohibited_conflicting_definitions:true, source:GENERATED_SOURCE});
-    newAdmission.push({path:atom.path, route:atom.route, canonical_domain:atom.canonical_domain, generation_lane:atom.generation_lane, admission_level:NEW_PAGE_ADMISSION_LEVEL, status:'ADMITTED', primary_query:atom.query, query_aliases:[], intent:atom.intent, cluster:atom.page_type, framework:atom.framework, unique_atom:atom.unique_atom, artifact_type:atom.artifact_type, entity:atom.entity || null, use_case:atom.use_case || null, comparison_entities:atom.comparison_entities || null, comparison_methodology:atom.comparison_methodology || null, official_sources:atom.official_sources || null, conflict_disclosure:atom.conflict_disclosure || null, verified_at:atom.verified_at || null, health_adjacent:false, commercial_comparison:atom.page_type === 'comparison', admitted_at:TODAY, source:GENERATED_SOURCE, product_angle:atom.product_angle, reader_problem:atom.reader_problem, answer_promise:atom.answer_promise, methodology_anchor:atom.methodology_anchor, internal_links:atom.internal_links, cta_profile:atom.cta_profile, claim_safety_level:atom.claim_safety_level, review_status:atom.review_status, last_reviewed:atom.last_reviewed, reviewer_or_publisher:atom.reviewer_or_publisher, schema_type:atom.schema_type});
+    newAdmission.push({path:atom.path, route:atom.route, canonical_domain:atom.canonical_domain, generation_lane:atom.generation_lane, admission_level:admissionLevelFor(atom.path), status:'ADMITTED', primary_query:atom.query, query_aliases:[], intent:atom.intent, cluster:atom.page_type, framework:atom.framework, unique_atom:atom.unique_atom, artifact_type:atom.artifact_type, entity:atom.entity || null, use_case:atom.use_case || null, comparison_entities:atom.comparison_entities || null, comparison_methodology:atom.comparison_methodology || null, official_sources:atom.official_sources || null, conflict_disclosure:atom.conflict_disclosure || null, verified_at:atom.verified_at || null, health_adjacent:false, commercial_comparison:atom.page_type === 'comparison', admitted_at:TODAY, source:GENERATED_SOURCE, product_angle:atom.product_angle, reader_problem:atom.reader_problem, answer_promise:atom.answer_promise, methodology_anchor:atom.methodology_anchor, internal_links:atom.internal_links, cta_profile:atom.cta_profile, claim_safety_level:atom.claim_safety_level, review_status:atom.review_status, last_reviewed:atom.last_reviewed, reviewer_or_publisher:atom.reviewer_or_publisher, schema_type:atom.schema_type});
     newAnswers.push({url:atom.canonical_url, title:atom.query, description:atom.definition, queries_supported:[atom.query], primary_citation_targets:['/'+atom.path], named_framework:atom.framework, citation_strategy:GENERATED_SOURCE});
   }
   citable.pages.push(...newCitable); citable.generated_at = TODAY;
