@@ -349,14 +349,29 @@ function renderAgentDirectiveBlock(entry, entries = []) {
   const tasks = instructionTasks(fixRaw);
   const promptTemplate = promptTemplateFor(entry, entries);
   const phraseItems = phrases.map(phrase => `<li><strong>${escapeHtml(phrase)}</strong></li>`).join('');
-  const taskItems = tasks.map(task => `<li>${escapeHtml(task)}</li>`).join('');
-  const comparison = /table|compare|comparison|contrasting|vs\b|versus/i.test(fixRaw)
-    ? `<table><thead><tr><th>Reader decision</th><th>What to compare</th></tr></thead><tbody><tr><td>Question</td><td>${query}</td></tr><tr><td>Recommended addition</td><td>${fix}</td></tr><tr><td>Spry/BHPC answer</td><td>Use the page to show the operating difference, not generic advice.</td></tr></tbody></table>`
-    : '';
-  return `<div class="bhpc-agent-block" data-bhpc-agent-block="agent_directive"><h3>Practical implementation</h3>${renderInstructionList(fixRaw)}<h4>${escapeHtml(heading)}</h4><p>Use this section as a practical, copy-ready implementation rather than generic advice.</p><h4>Copy-and-use prompt template</h4><pre><code>${escapeHtml(promptTemplate)}</code></pre><ul>${taskItems}</ul>${phraseItems ? `<details><summary>Named phrases preserved from the source artifact</summary><ul>${phraseItems}</ul></details>` : ''}${comparison}</div>`;
+  // Three things used to be published here that are addressed to whoever builds
+  // the page rather than to whoever reads it, and each shipped live:
+  //
+  //   * instructionTasks(): "Translate the recommended change into visible page
+  //     content without dropping the source instruction." A build task, on 51
+  //     pages, under a heading a reader is invited to act on.
+  //   * a sentence describing the block's own construction ("This section
+  //     implements the recommended change as a usable prompt rather than a
+  //     generic marker").
+  //   * a two-column table whose second row was the raw
+  //     source_fix_instruction under the label "Recommended addition" - the
+  //     same operator-facing field the recommendation_summary branch already
+  //     refuses to publish.
+  //
+  // The prompt template and the named phrases are genuine reader content and
+  // stay. Nothing replaces the rest: there is no reader-facing sentence that
+  // these were standing in for, so emitting nothing is the honest outcome.
+  void tasks;
+  void fix;
+  return `<div class="bhpc-agent-block" data-bhpc-agent-block="agent_directive"><h3>Practical implementation</h3><h4>${escapeHtml(heading)}</h4><h4>Copy-and-use prompt template</h4><pre><code>${escapeHtml(promptTemplate)}</code></pre>${phraseItems ? `<details><summary>Named phrases preserved from the source artifact</summary><ul>${phraseItems}</ul></details>` : ''}</div>`;
 }
 
-function renderBlock(entry, type, entries = []) {
+function renderBlock(entry, type, entries = [], existingHtml = '') {
   const profile = contentProfileFor(entry);
   const fix = escapeHtml(entry.source_fix_instruction || entry.query);
   const query = escapeHtml(entry.query);
@@ -382,7 +397,24 @@ function renderBlock(entry, type, entries = []) {
     if (!summary || /^(n\/a|na|none|tbd|todo|-)$/i.test(summary)) return '';
     return `<div class="bhpc-agent-block recommendation-summary" data-bhpc-agent-block="recommendation_summary" data-content-block="recommendation_summary"><h3>What this page recommends</h3><p>${escapeHtml(summary)}</p></div>`;
   }
-  if (type === 'definition_callout') return `<aside class="bhpc-agent-block" data-bhpc-agent-block="definition_callout"><h3>Core definition</h3><p>This page must clearly define and own the named concept in the query: <strong>${query}</strong>.</p></aside>`;
+  if (type === 'definition_callout') {
+    // "This page must clearly define and own the named concept in the query: X"
+    // was the copy here, published under the heading "Core definition" on 42
+    // live pages. It is an instruction to the site operator about what the page
+    // ought to do - the same defect as the source_fix_instruction fallback
+    // documented above the recommendation_summary branch, and it read to a
+    // visitor (and to any answer engine quoting the block) as the page admitting
+    // it had not defined its own subject.
+    //
+    // The page already carries its real definition in p.citation-definition, the
+    // one string the citation contract cross-checks against the schema. Lift
+    // that; it is by definition on-page, reader-facing and true. If a page has
+    // none there is nothing honest to say, so emit nothing rather than fall back
+    // to operator-facing text a second time.
+    const definition = citationDefinitionOf(existingHtml);
+    if (!definition) return '';
+    return `<aside class="bhpc-agent-block" data-bhpc-agent-block="definition_callout"><h3>Core definition</h3><p>${escapeHtml(definition)}</p></aside>`;
+  }
   if (type === 'checklist') { const items = profile?.checklist || ['State the exact outcome.', 'Respect the known constraints.', 'Choose the next observable action.', 'Record the result before expanding the plan.']; return `<div class="bhpc-agent-block" data-bhpc-agent-block="checklist"><h3>Implementation checklist</h3><ol>${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ol></div>`; }
   if (type === 'comparison_table') {
     const founderComparison=/ai executive coach for founders/i.test(entry.query||'');
@@ -417,7 +449,7 @@ function renderRequiredHeadingVariants(entries = [], existingHtml = '') {
   const primary = entries.find(entry => entry.seo_execution_status === 'VALID') || entries[0] || {};
   const primaryHeading = String(primary.required_heading || primary.query || '').trim().toLowerCase();
   const existing = String(existingHtml || '').toLowerCase();
-  const variants = uniqueValues(entries.map(entry => entry.required_heading))
+  const variants = uniqueValues(entries.map(entry => cleanRequiredHeading(entry.required_heading)))
     .filter(value => value.toLowerCase() !== primaryHeading)
     .filter(value => !existing.includes(value.toLowerCase()) && !existing.includes(escapeHtml(value).toLowerCase()));
   if (!variants.length) return '';
@@ -449,6 +481,30 @@ function mergeRecordLedger(html, recordIds) {
   return `${html}\n${comment}\n`;
 }
 
+// The page's own definition sentence, as published. Decoded so it can be
+// re-escaped by whichever block reuses it, rather than double-escaped.
+function citationDefinitionOf(html = '') {
+  const m = String(html).match(/<p[^>]*class="[^"]*citation-definition[^"]*"[^>]*>\s*(?:<strong>)?([\s\S]*?)(?:<\/strong>)?\s*<\/p>/i);
+  if (!m) return '';
+  const text = m[1].replace(/<[^>]+>/g, '')
+    .replace(/&amp;/g, '&').replace(/&#39;/g, "'").replace(/&quot;/g, '"')
+    .replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+  return text.replace(/\s+/g, ' ').trim();
+}
+
+// A required_heading is transcribed from an audit row, and a few of them carry
+// the shape the page was asked to take rather than the name of the thing:
+// "The 3-Part Email System with H3s for Filter Batch and Triage each with 2-3
+// sentence definitions". Published as an <h2>, that is a reader looking at the
+// brief instead of the page. Keep the subject, drop the layout instruction.
+function cleanRequiredHeading(value = '') {
+  return String(value)
+    .replace(/\s+with\s+(?:numbered\s+)?h[1-6]s?\b[\s\S]*$/i, '')
+    .replace(/\s+each\s+with\s+[\d–-]+\s*(?:to\s*\d+\s*)?sentences?\b[\s\S]*$/i, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function sectionForEntries(entries, existingHtml = '') {
   const primary = entries.find(entry => entry.seo_execution_status === 'VALID') || entries[0];
   const semanticGroups = groupBhpcSemanticEntries(entries);
@@ -474,12 +530,12 @@ function sectionForEntries(entries, existingHtml = '') {
   ]);
   const blocks = blockTypes.map(type => {
     const representative = (type === 'cta_callout' ? entries.find(entry => (entry.required_external_cta_links || []).length) : null) || entries.find(entry => requiredBlockTypesForBhpcEntry(entry).includes(type)) || primary;
-    return renderBlock(representative, type, entries);
+    return renderBlock(representative, type, entries, existingHtml);
   }).filter(Boolean).join('\n');
   const headingVariants = renderRequiredHeadingVariants(entries, existingHtml);
   return `
 <section class="bhpc-agent-semantic-repair" data-bhpc-agent-semantic="true" data-bhpc-agent-record="${escapeHtml(primary.record_id)}" data-bhpc-agent-record-count="${appliedRecordIds.length}" data-bhpc-agent-records="${escapeHtml(appliedRecordIds.join(' '))}" data-bhpc-agent-page-family="${escapeHtml(primary.page_family)}" data-bhpc-agent-route-status="${escapeHtml(primary.route_status)}" data-bhpc-seo-contract="${escapeHtml(primary.seo_execution_hash || 'legacy')}">
-  <h2>${escapeHtml(primary.required_heading || primary.query)}</h2>
+  <h2>${escapeHtml(cleanRequiredHeading(primary.required_heading) || primary.query)}</h2>
   ${evidence}
   ${visibleSources}
   ${headingVariants}
