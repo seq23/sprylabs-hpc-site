@@ -1817,9 +1817,19 @@
       "severity": "INFO",
       "release_effect": false,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-179",
+      "validation_id": "VAL-CANONICAL-NO-REDIRECT",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:canonical-no-redirect",
+      "order": 179,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 181,
+  "entry_count": 182,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2137,6 +2147,10 @@
         {
           "id": "VAL-114",
           "command": "npm run validate:operator-doc-currency"
+        },
+        {
+          "id": "VAL-CANONICAL-NO-REDIRECT",
+          "command": "npm run validate:canonical-no-redirect"
         }
       ]
     },
