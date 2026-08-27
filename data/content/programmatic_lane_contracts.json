@@ -101,54 +101,69 @@
       "source_floor": 0
     },
     "glossary": {
-      "minimum_word_count": 0,
-      "required_artifacts": false,
-      "worked_example": false,
+      "minimum_word_count": 700,
+      "required_artifacts": true,
+      "worked_example": true,
       "cta_profile": "full",
       "source_floor": 0,
       "required_fields": [
         "unique_atom"
-      ]
+      ],
+      "_floor_basis": "Measured: 150 pages in this lane, shortest 732 words. Floor set below that so nothing already written fails, and far enough above zero to bind the next generated page.",
+      "_artifacts_basis": "All pages measured in this lane already carry a worked example and an artifact, so requiring them costs nothing today and binds future output.",
+      "_source_floor_note": "Kept at 0. Every page in this lane currently cites zero official sources, and the honest fix is to attach real ones, not to assert a floor the generator would then have to invent citations to clear."
     },
     "method": {
-      "minimum_word_count": 0,
-      "required_artifacts": false,
-      "worked_example": false,
+      "minimum_word_count": 700,
+      "required_artifacts": true,
+      "worked_example": true,
       "cta_profile": "full",
       "source_floor": 0,
       "required_fields": [
         "unique_atom"
-      ]
+      ],
+      "_floor_basis": "Measured: 100 pages in this lane, shortest 738 words. Floor set below that so nothing already written fails, and far enough above zero to bind the next generated page.",
+      "_artifacts_basis": "All pages measured in this lane already carry a worked example and an artifact, so requiring them costs nothing today and binds future output.",
+      "_source_floor_note": "Kept at 0. Every page in this lane currently cites zero official sources, and the honest fix is to attach real ones, not to assert a floor the generator would then have to invent citations to clear."
     },
     "platform": {
-      "minimum_word_count": 0,
-      "required_artifacts": false,
-      "worked_example": false,
+      "minimum_word_count": 800,
+      "required_artifacts": true,
+      "worked_example": true,
       "cta_profile": "full",
       "source_floor": 0,
       "required_fields": [
         "unique_atom"
-      ]
+      ],
+      "_floor_basis": "Measured: 50 pages in this lane, shortest 851 words. Floor set below that so nothing already written fails, and far enough above zero to bind the next generated page.",
+      "_artifacts_basis": "All pages measured in this lane already carry a worked example and an artifact, so requiring them costs nothing today and binds future output.",
+      "_source_floor_note": "Kept at 0. Every page in this lane currently cites zero official sources, and the honest fix is to attach real ones, not to assert a floor the generator would then have to invent citations to clear."
     },
     "brand_defense": {
-      "minimum_word_count": 0,
-      "required_artifacts": false,
-      "worked_example": false,
+      "minimum_word_count": 550,
+      "required_artifacts": true,
+      "worked_example": true,
       "cta_profile": "full",
       "source_floor": 0,
       "required_fields": [
         "unique_atom"
-      ]
+      ],
+      "_floor_basis": "Measured: 50 pages in this lane, shortest 596 words. Floor set below that so nothing already written fails, and far enough above zero to bind the next generated page.",
+      "_artifacts_basis": "All pages measured in this lane already carry a worked example and an artifact, so requiring them costs nothing today and binds future output.",
+      "_source_floor_note": "Kept at 0. Every page in this lane currently cites zero official sources, and the honest fix is to attach real ones, not to assert a floor the generator would then have to invent citations to clear."
     },
     "citation_phase_expansion": {
-      "minimum_word_count": 0,
-      "required_artifacts": false,
-      "worked_example": false,
+      "minimum_word_count": 700,
+      "required_artifacts": true,
+      "worked_example": true,
       "cta_profile": "full",
       "source_floor": 0,
       "required_fields": [
         "unique_atom"
-      ]
+      ],
+      "_floor_basis": "No pages in this lane yet. Floor matches the glossary/method lanes it most resembles, so the first page written into it is held to a real number rather than to zero.",
+      "_artifacts_basis": "All pages measured in this lane already carry a worked example and an artifact, so requiring them costs nothing today and binds future output.",
+      "_source_floor_note": "Kept at 0. Every page in this lane currently cites zero official sources, and the honest fix is to attach real ones, not to assert a floor the generator would then have to invent citations to clear."
     },
     "citation_velocity_batch": {
       "minimum_word_count": 800,
@@ -187,5 +202,6 @@
       "same_answer_similarity_max": 0.85,
       "query_alias_collision_check": true
     }
-  }
+  },
+  "_zero_threshold_note": "glossary, method, platform, brand_defense and citation_phase_expansion carried minimum_word_count 0, required_artifacts false and worked_example false - written that way by scripts/programmatic/generate_aplayer_phase_expansion.mjs for its own lanes, so its pages faced no threshold even when inspected. Replaced with floors derived from what each lane already produces. legacy is left at 0 deliberately: it is the explicit pre-gate bucket for 726 pages that predate any contract, and giving it a floor would assert a standard those pages were never written against."
 }
