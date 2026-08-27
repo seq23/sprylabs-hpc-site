@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0",
   "validator": "content-pattern-contract",
-  "generated_at": "2026-08-27T01:10:59.292Z",
+  "generated_at": "2026-08-27T17:08:27.476Z",
   "enforcement": "block",
   "scanned_root": ".",
-  "pages_checked": 3004,
+  "pages_checked": 2254,
   "status": "PASS",
   "blocking_failures": 0,
   "summary": [
@@ -46,29 +46,29 @@
     {
       "id": "comparison_table",
       "blocking": false,
-      "pages_missing": 1460,
-      "coverage_pct": 51.4,
+      "pages_missing": 706,
+      "coverage_pct": 68.7,
       "why": "no comparison or cost table (agent request #2, 529 occurrences)"
     },
     {
       "id": "concrete_numbers",
       "blocking": false,
-      "pages_missing": 2693,
-      "coverage_pct": 10.4,
+      "pages_missing": 1943,
+      "coverage_pct": 13.8,
       "why": "no concrete cost or timeline figures (agent request #5, 365 occurrences)"
     },
     {
       "id": "named_sources",
       "blocking": false,
-      "pages_missing": 1056,
-      "coverage_pct": 64.8,
+      "pages_missing": 313,
+      "coverage_pct": 86.1,
       "why": "no named primary source (agent request #6, 288 occurrences)"
     },
     {
       "id": "faq",
       "blocking": false,
-      "pages_missing": 734,
-      "coverage_pct": 75.6,
+      "pages_missing": 679,
+      "coverage_pct": 69.9,
       "why": "no FAQ block or FAQPage schema (agent request #9)"
     },
     {
@@ -81,8 +81,8 @@
     {
       "id": "recommendation_summary",
       "blocking": false,
-      "pages_missing": 126,
-      "coverage_pct": 95.8,
+      "pages_missing": 117,
+      "coverage_pct": 94.8,
       "why": "no recommendation summary - asked for on 913 of 913 agent recommendations, the single most requested block"
     },
     {
@@ -95,36 +95,36 @@
     {
       "id": "source_block",
       "blocking": false,
-      "pages_missing": 914,
-      "coverage_pct": 69.6,
+      "pages_missing": 171,
+      "coverage_pct": 92.4,
       "why": "no sources block (agent requested 384 times) - a claim with no visible provenance is the first thing an engine discounts"
     },
     {
       "id": "protocol",
       "blocking": false,
-      "pages_missing": 1777,
-      "coverage_pct": 40.8,
+      "pages_missing": 1768,
+      "coverage_pct": 21.6,
       "why": "no ordered protocol (agent requested 305 times) - ordered steps are what gets lifted for \"how do I\""
     },
     {
       "id": "cta_callout",
       "blocking": false,
       "pages_missing": 1518,
-      "coverage_pct": 49.5,
+      "coverage_pct": 32.7,
       "why": "no next-step callout (agent requested 272 times) - the conversion link exists but nothing frames it as the next action"
     },
     {
       "id": "prompt_template",
       "blocking": false,
-      "pages_missing": 2910,
-      "coverage_pct": 3.1,
+      "pages_missing": 2160,
+      "coverage_pct": 4.2,
       "why": "no copy-ready prompt (agent requested 255 times) - this is the artifact this audience actually reuses"
     },
     {
       "id": "trust_block",
       "blocking": false,
-      "pages_missing": 2868,
-      "coverage_pct": 4.5,
+      "pages_missing": 2114,
+      "coverage_pct": 6.2,
       "why": "no trust or authorship block (agent requested 215 times) - entity clarity is a citation factor"
     }
   ],
@@ -171,6 +171,7 @@
       "adhd-and-motivation/index.html",
       "adhd-evening-routine/index.html",
       "adhd-productivity-system/index.html",
+      "adhd-time-blindness-strategies/index.html",
       "adhd-time-management-tools/index.html",
       "adhd-tips/index.html",
       "agent/bhpc/a-realistic-morning-routine-for-people-with-chaotic-days-spry-executive-os-for-accountability.html",
@@ -185,8 +186,7 @@
       "agent/bhpc/chatgpt-prompt-to-reframe-tasks-with-curiosity-or-experimentation-for-better-engagement.html",
       "agent/bhpc/chatgpt-prompt-to-transform-boring-tasks-into-enjoyable-activities-using-ali-abdaal-s-feel-good-.html",
       "agent/bhpc/how-can-i-transform-a-tedious-task-into-something-enjoyable-using-chatgpt.html",
-      "agent/bhpc/how-to-a-simple-knowledge-system-capture-distill-use-spry-executive-os.html",
-      "agent/bhpc/how-to-create-a-weekly-debrief-prompt-in-chatgpt-for-goal-tracking.html"
+      "agent/bhpc/how-to-a-simple-knowledge-system-capture-distill-use-spry-executive-os.html"
     ],
     "named_sources": [
       "a-practical-way-to-build-consistency-without-streak-pressure.html",
@@ -219,7 +219,6 @@
       "a-practical-way-to-build-consistency-without-streak-pressure.html",
       "a-realistic-morning-routine-for-people-with-chaotic-days.html",
       "a-simple-knowledge-system-capture-distill-use.html",
-      "a-simple-system-for-tracking-what-actually-matters.html",
       "about.html",
       "accountability-system/accountability-without-coach/index.html",
       "accountability-system/automated-accountability-with-chatgpt/index.html",
@@ -240,6 +239,7 @@
       "agent/bhpc/chatgpt-prompt-to-assess-sustainable-vs-burnout-habits-based-on-ali-abdaal-s-energy-management.html",
       "agent/bhpc/chatgpt-prompt-to-reframe-tasks-with-curiosity-or-experimentation-for-better-engagement.html",
       "agent/bhpc/chatgpt-prompt-to-transform-boring-tasks-into-enjoyable-activities-using-ali-abdaal-s-feel-good-.html",
+      "agent/bhpc/how-can-i-transform-a-tedious-task-into-something-enjoyable-using-chatgpt.html",
       "agent/bhpc/how-to-a-simple-knowledge-system-capture-distill-use-spry-executive-os.html"
     ],
     "structured_data": [],
@@ -326,7 +326,7 @@
       "agent/bhpc/what-is-a-simple-knowledge-system-capture-distill-use-spry-executive-os.html",
       "agent/index.html",
       "ai-accountability-coach-vs-human-executive-coach.html",
-      "ai-executive-coach-alternative-for-high-performers.html"
+      "ai-business-coach/index.html"
     ],
     "cta_callout": [
       "about.html",
@@ -371,6 +371,7 @@
       "adhd-evening-routine/index.html",
       "adhd-morning-routine/index.html",
       "adhd-productivity-system/index.html",
+      "adhd-time-blindness-strategies/index.html",
       "adhd-time-management-tools/index.html",
       "adhd-time-management/index.html",
       "adhd-tips/index.html",
@@ -379,8 +380,7 @@
       "agent/bhpc/how-to-create-a-weekly-debrief-prompt-in-chatgpt-for-goal-tracking.html",
       "agent/bhpc/what-is-a-realistic-morning-routine-for-people-with-chaotic-days-spry-executive-os.html",
       "agent/index.html",
-      "ai-accountability-coach-vs-human-executive-coach.html",
-      "ai-accountability-partner/index.html"
+      "ai-accountability-coach-vs-human-executive-coach.html"
     ],
     "trust_block": [
       "a-practical-way-to-build-consistency-without-streak-pressure.html",
