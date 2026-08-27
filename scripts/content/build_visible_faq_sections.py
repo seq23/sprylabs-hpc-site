@@ -22,10 +22,13 @@ The hard rules
 --------------
 * An answer is page text, never new text. If a page has nothing to say, it gets
   no FAQ. Skipping is the correct outcome; empty ``mainEntity`` is not.
-* At least MIN_SPECIFIC of the pairs must come from page-specific sections. The
-  site-wide boilerplate ("Boundaries" is identical on 2,000 pages) can round out
-  a set but can never be the reason a page qualifies. A page whose whole FAQ is
-  boilerplate is worse than a page with no FAQ.
+* At least MIN_SPECIFIC of the pairs must be answers that are not boilerplate,
+  measured over the corpus rather than assumed: any answer string that appears
+  verbatim on more than BOILERPLATE_PAGES pages is treated as boilerplate no
+  matter which section produced it. Boilerplate can round out a set; it can
+  never be the reason a page qualifies. A page whose whole FAQ is the same four
+  paragraphs as two thousand others is worse than a page with no FAQ, which is
+  the failure mode this library already has.
 * The visible ``<p>`` and the schema ``acceptedAnswer.text`` are written from
   the same Python string, so scripts/validation/validate_rendered_schema_parity.py
   compares equal by construction rather than by luck.
@@ -72,18 +75,44 @@ BLOCK_RE = re.compile(
 )
 
 MIN_ANSWER_WORDS = 14
-MAX_ANSWER_WORDS = 85
+MAX_ANSWER_WORDS = 60
 MIN_PAIRS = 3
 MAX_PAIRS = 5
 MIN_SPECIFIC = 2
 
+# An answer that appears verbatim on more than this many pages is boilerplate,
+# whatever section it came from. Measured rather than hand-listed: the same
+# "Boundaries" paragraph is on 2,000 pages and the same "Operating protocol"
+# list on several hundred, and a hand-maintained deny-list would drift out of
+# date the first time a generator changed its wording. 25 is above the size of
+# the largest genuinely-shared family (the six pages of a single framework) and
+# far below the templated blocks.
+#
+# 60 rather than a round 25 because the distribution has a clean gap there.
+# Measured over every candidate answer in the library: strings occurring 26-120
+# times are, without exception, the topic-slotted workflow prose ("Start with a
+# plain description of the <topic> situation...") shared by the 28 pages of one
+# topic - genuinely about that topic. The next tier up starts at 525 and is
+# identical everywhere it appears. Nothing sits between the two.
+BOILERPLATE_PAGES = 60
+
+# An answer whose words are almost entirely the question's own words restates
+# the question instead of answering it. "X Framework is a named operating
+# framework for understanding x through observable signals" is the shape.
+MAX_QUESTION_OVERLAP = 0.62
+
 # Heading text (casefolded, exact after normalisation) -> the question that
-# section actually answers, and whether the section's prose is specific to the
-# page or is site-wide boilerplate. {framework} is filled from the page's own
-# data-named-framework attribute; if the page has none, the entry is skipped
-# rather than filled with a guess.
+# section actually answers. {framework} is filled from the page's own
+# data-named-framework attribute and {h1q} from its H1; if the page supplies
+# neither, the entry is skipped rather than filled with a guess.
+#
+# The third field is a hint only. Whether an answer is page-specific is decided
+# by counting how many pages publish that exact string, because the hint was
+# wrong in both directions: "Implementation checklist" and "Operating protocol"
+# read as page-specific section names and are in fact identical on hundreds of
+# pages, while "Worked Example" is templated but names the page's own framework.
 SECTION_QUESTIONS = [
-    # (matcher, question template, page_specific)
+    # (matcher, question template, likely_specific)
     ("what this page recommends", "{h1q}", True),
     ("short answer", "{h1q}", True),
     ("direct answer", "{h1q}", True),
@@ -98,21 +127,20 @@ SECTION_QUESTIONS = [
     ("the framework", "How is {framework} structured?", True),
     ("workflow", "How do I run this workflow?", True),
     ("how to run the workflow", "How do I run this workflow?", True),
-    ("operating protocol", "What is the operating protocol?", True),
+    ("operating protocol", "What is the operating protocol?", False),
     ("how it works inside the os", "How does {framework} work inside the system?", True),
     ("decision rules", "How do I decide what to do next?", True),
     ("common failure modes", "What usually goes wrong with this?", True),
     ("common failure modes and the fix", "What usually goes wrong, and how do I fix it?", True),
     ("implementation notes", "How do I put this into practice?", True),
-    ("practical implementation", "How do I put this into practice?", True),
-    ("implementation checklist", "What does the implementation checklist cover?", True),
+    ("practical implementation", "How do I put this into practice?", False),
+    ("implementation checklist", "What does the implementation checklist cover?", False),
     ("quick comparison", "How do these options compare?", True),
     ("comparison matrix", "How do these options compare?", True),
     ("decision comparison", "How do these options compare?", True),
     ("when bhpc is the better fit", "When is this the better fit?", True),
     ("a 10-minute today plan", "What can I do about this in ten minutes?", True),
     ("how to use this page", "How should I use this page?", True),
-    ("topic coverage", "What does this page cover?", True),
     ("scope and limitations", "What are the limits of this page?", False),
     ("boundaries", "Is this professional advice?", False),
     ("where this fits in the system", "How does this fit into the wider system?", False),
@@ -124,6 +152,29 @@ SECTION_LOOKUP = {}
 for _key, _q, _spec in SECTION_QUESTIONS:
     SECTION_LOOKUP.setdefault(_key, (_q, _spec))
 
+# Prose that describes how the library is operated rather than answering a
+# reader's question. It is on the page - 743 pages carry the daily-cadence
+# fallback definition as their own definition sentence - but promoting it into
+# an FAQ would put the publishing schedule in front of readers as though it
+# were the subject. Those pages are left without an FAQ instead; the definition
+# itself is a separate, larger problem than this pass should be solving.
+INTERNAL_REGISTER = re.compile(
+    r"fallback content surface|citation velocity cadence|daily release target|"
+    r"agent report supplies|page admission|gap-fill content|internal audit|"
+    r"citation strength|for llm extraction|schema markup",
+    re.I,
+)
+
+# A definition built by wrapping the page title in framework language carries no
+# information: strip the title out of it and nothing is left. It is the site's
+# canonical definition string, so it stays on the page, but it is not an answer.
+EMPTY_DEFINITION = re.compile(
+    r"is a (?:named |Spry Executive OS |Billionaire High Performance Coach and Spry Executive OS )*"
+    r"(?:operating )?framework for (?:understanding|when)\b.*?"
+    r"through observable signals, decision criteria, and practical next actions",
+    re.I | re.S,
+)
+
 # Headings whose content is a prompt, a nav list or a reflection exercise: real
 # copy, but not an answer to anything.
 SKIP_HEADINGS = {
@@ -134,6 +185,10 @@ SKIP_HEADINGS = {
     "citation and authority signals", "related reader questions", "questions people ask next",
     "atlas: questions this page answers", "frequently asked questions", "faq",
     "browse the library", "want the full system?",
+    # The internal source-record export the page was built from, published under
+    # a reader-facing heading. Removed from pages by
+    # scripts/repair/repair_published_agent_blocks.mjs; never an FAQ answer.
+    "topic coverage",
 }
 
 
@@ -224,7 +279,11 @@ def framework_of(soup) -> str:
     if block:
         name = norm(block.get("data-named-framework") or "")
         if name:
-            return clean_h1(name)
+            # Generated names carry a category suffix ("Accountability mirror
+            # Framework") that reads as part of the name in a heading and as a
+            # stutter in a question. Drop it for the question only; the schema
+            # DefinedTerm keeps the full name.
+            return re.sub(r"\s+(Framework|Method|Protocol|System)$", "", clean_h1(name))
     return ""
 
 
@@ -246,6 +305,10 @@ def candidate_pairs(soup):
             return
         if "{" in question:
             return
+        # A heading lifted straight off the page can start lowercase; as a
+        # question in its own right it should not.
+        if question[:1].islower():
+            question = question[0].upper() + question[1:]
         words = len(answer.split())
         if words < MIN_ANSWER_WORDS:
             return
@@ -254,8 +317,15 @@ def candidate_pairs(soup):
         key_a = answer.casefold()
         if key_q in seen_q or key_a in seen_a:
             return
-        # An answer that merely restates the question is not an answer.
+        # An answer that merely restates the question is not an answer. The
+        # exact-match case is the obvious one; the common one is a definition
+        # sentence built by wrapping the title in framework language, which
+        # shares almost every word with the question it is filed under.
         if key_a == key_q:
+            return
+        if question_overlap(question, answer) > MAX_QUESTION_OVERLAP:
+            return
+        if INTERNAL_REGISTER.search(answer) or EMPTY_DEFINITION.search(answer):
             return
         seen_q.add(key_q)
         seen_a.add(key_a)
@@ -295,10 +365,32 @@ def candidate_pairs(soup):
     return out
 
 
-def select_pairs(pairs):
-    """Page-specific answers first, boilerplate only as filler, never as reason."""
-    specific = [(q, a) for q, a, s in pairs if s]
-    generic = [(q, a) for q, a, s in pairs if not s]
+_WORD = re.compile(r"[a-z0-9']+")
+
+
+def question_overlap(question: str, answer: str) -> float:
+    """Share of the answer's words that the question already contains."""
+    q = set(_WORD.findall(question.casefold()))
+    a = _WORD.findall(answer.casefold())
+    if not a:
+        return 1.0
+    return sum(1 for w in a if w in q) / len(a)
+
+
+def select_pairs(pairs, corpus):
+    """Distinctive answers first; boilerplate rounds out, never qualifies."""
+    # Two independent tests, and an answer has to pass both to count towards the
+    # minimum. The corpus count catches templates nobody listed; the per-section
+    # hint catches templates that are rare enough to slip under it - the agent
+    # renderer's default checklist and protocol are fixed strings that only
+    # appear on the subset of pages without a route-specific profile, which is
+    # few enough to look distinctive by frequency alone and is not.
+    specific, generic = [], []
+    for q, a, hint in pairs:
+        if hint and corpus.get(a.casefold(), 0) <= BOILERPLATE_PAGES:
+            specific.append((q, a))
+        else:
+            generic.append((q, a))
     if len(specific) < MIN_SPECIFIC:
         return []
     chosen = specific[:MAX_PAIRS]
@@ -393,7 +485,17 @@ def walk():
         yield rel, path
 
 
-def process(rel: str, path: Path, apply: bool):
+def candidates_for(path: Path):
+    """Pass-one view of a page: every pair it could support, ignoring any block
+    a previous run of this script left behind."""
+    try:
+        html = path.read_text(encoding="utf-8")
+    except Exception:
+        return []
+    return candidate_pairs(BeautifulSoup(BLOCK_RE.sub("", html), "lxml"))
+
+
+def process(rel: str, path: Path, corpus, apply: bool):
     html = path.read_text(encoding="utf-8")
     if 'name="robots"' in html and re.search(r'content="[^"]*noindex', html, re.I):
         return "noindex", None
@@ -410,7 +512,7 @@ def process(rel: str, path: Path, apply: bool):
         # script wrote last time, so refreshed prose flows through.
         stripped = BLOCK_RE.sub("", html)
         soup = BeautifulSoup(stripped, "lxml")
-    pairs = select_pairs(candidate_pairs(soup))
+    pairs = select_pairs(candidate_pairs(soup), corpus)
     if not pairs:
         if already and apply:
             # The page no longer supports the FAQ it was given: withdraw both
@@ -455,10 +557,20 @@ def main():
     ap.add_argument("--sample", type=int, default=0, help="print N generated FAQs and exit")
     args = ap.parse_args()
 
+    # Pass one measures how often each candidate answer occurs across the whole
+    # library, so pass two can tell a page's own prose from a shared template
+    # without a hand-maintained list of the templates.
+    pages = list(walk())
+    corpus: dict[str, int] = {}
+    for rel, path in pages:
+        for _q, answer, _hint in candidates_for(path):
+            key = answer.casefold()
+            corpus[key] = corpus.get(key, 0) + 1
+
     counts = {}
     samples = []
-    for rel, path in walk():
-        status, pairs = process(rel, path, args.apply and not args.sample)
+    for rel, path in pages:
+        status, pairs = process(rel, path, corpus, args.apply and not args.sample)
         counts[status] = counts.get(status, 0) + 1
         if args.sample and pairs and len(samples) < args.sample:
             samples.append((rel, pairs))
