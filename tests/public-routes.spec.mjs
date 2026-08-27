@@ -1,6 +1,9 @@
 import { test, expect } from '@playwright/test';
 import fs from 'node:fs';
 
+// Both forms resolve to the same page; /author is the one that returns 200.
+const AUTHOR_HREF = ['/author', '/author.html'];
+
 const manifest = JSON.parse(fs.readFileSync('data/routes/critical_browser_route_manifest.json', 'utf8'));
 const acceptance = JSON.parse(fs.readFileSync('data/citation/priority_page_acceptance.json', 'utf8'));
 const manualAcceptance = JSON.parse(fs.readFileSync('data/citation/manual_expansion_acceptance.json', 'utf8'));
@@ -104,14 +107,24 @@ for (const route of manifest.routes) {
       }
       if (acceptanceRule.premium_geo) {
         await expect(page.locator('aside.tldr')).toHaveCount(1);
-        await expect(page.locator('p.byline a[href="/author.html"][rel="author"]')).toHaveCount(1);
+        // Match the author link by rel, not by an exact href. Cloudflare Pages
+        // serves author.html at /author and 308s /author.html to it, and the
+        // generators were deliberately fixed to stop emitting the redirecting
+        // form - so pinning this to "/author.html" made the audit assert the
+        // one shape the repo had just been corrected not to produce. It failed
+        // against a page that was right. Accept either form; reject anything
+        // that is neither.
+        const authorLink = page.locator('p.byline a[rel="author"]');
+        await expect(authorLink).toHaveCount(1);
+        expect(AUTHOR_HREF).toContain(await authorLink.getAttribute('href'));
         await expect(page.locator('p.byline time[datetime]')).toHaveCount(2);
         expect(await page.locator('nav.toc a[href^="#"]').count()).toBeGreaterThanOrEqual(3);
         const hero = page.locator('figure.page-hero-image img');
         await expect(hero).toHaveCount(1);
         await expect(hero).toBeVisible();
         expect(await page.locator('section.sources a[href^="http"]').count()).toBeGreaterThanOrEqual(acceptanceRule.required_source_count || 0);
-        await expect(page.locator('section.author-bio a[href="/author.html"]')).toHaveCount(1);
+        const bioLink = page.locator('section.author-bio a[href="/author"], section.author-bio a[href="/author.html"]');
+        await expect(bioLink).toHaveCount(1);
         const graph = JSON.parse(schemaText)['@graph'];
         const types = graph.map(node => node['@type']);
         for (const requiredType of acceptanceRule.required_schema_types || []) expect(types).toContain(requiredType);
