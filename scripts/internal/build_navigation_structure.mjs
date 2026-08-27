@@ -26,7 +26,21 @@ const ROOT = process.cwd();
 const { routeFor, hostFor } = requireCjs(path.join(ROOT, 'scripts/lib/dual_domain_policy.cjs'));
 
 const MAX_LINKS_PER_HUB = 70;
-const SIBLINGS_PER_PAGE = 6;
+// Raised from 6. The property in this portfolio that measurably earns AI
+// citations carries a median of 30 internal links per page against this
+// library's 13, and the two properties in the estate sitting at zero citations
+// are the two that are almost entirely orphaned
+// (local-guides-generator/docs/strategy/cited-property-profile.md). Nine
+// siblings and four cross-section topic routes take the median to the high
+// teens without turning the block into a dump: every link is inside the page's
+// own topic, and the per-hub cap is unchanged.
+const SIBLINGS_PER_PAGE = 9;
+// The same topic, in the other parts of the library that cover it. A page about
+// consistency in insights/ should reach the methods/, answers/ and glossary/
+// treatments of consistency, which nothing previously connected: the sibling
+// window never crossed a section boundary, so the sections were parallel silos
+// joined only at the homepage.
+const CROSS_SECTION_TOPIC_LINKS = 4;
 const PROTECTED = new Set(['download.html']);
 
 const OG_IMAGE = 'https://billionairehighperformancecoach.com/assets/img/bhpc-hero-square.png';
@@ -190,6 +204,9 @@ for (const pg of pages) {
 // belong directly on the section hub, one click closer.
 const hubs = [];   // {rel, route, host, title, h1, description, parents:[{name,href}], links:[{href,text}]}
 const topicHubByPage = new Map();
+// topicId -> the topic hub in each section that covers it, so a page can reach
+// the same subject in the other parts of the library.
+const topicHubsByTopic = new Map();
 
 function sectionHubRel(section) {
   return section === 'guides' ? 'guides/index.html' : `${section}/index.html`;
@@ -235,6 +252,8 @@ for (const [section, topics] of bySection) {
           links: chunk.map((pg) => ({ href: pg.route, text: pg.h1 })),
         });
         sectionLinks.push({ href: route, text: `${label} — ${chunk.length} pages` });
+        if (!topicHubsByTopic.has(topicId)) topicHubsByTopic.set(topicId, []);
+        topicHubsByTopic.get(topicId).push({ section, route, label, sectionName, count: chunk.length });
         const crumbs = [sectionCrumb, { name: label, href: route }];
         for (const pg of chunk) topicHubByPage.set(pg.rel, { crumbs, siblings: chunk });
       });
@@ -424,12 +443,34 @@ for (const pg of pages) {
   html = html.replace(/(<h1\b)/i, `${crumbHtml}$1`);
   html = replaceBreadcrumbJsonLd(html, breadcrumbJsonLd(onPageCanonical, pg.host, info.crumbs, pg.h1));
 
-  // --- siblings: a rotating window so the whole topic gets inbound links,
-  //     not just whichever pages happen to sort first ---
+  // --- siblings: whatever this page already links to, then a rotating window
+  //     over the rest so the whole topic accumulates inbound links rather than
+  //     only whichever pages happen to sort first ---
+  //
+  // Seeding with the page's current siblings makes each run a superset of the
+  // last. Rotating from scratch every time does not remove a link on balance -
+  // the block gets longer - but it does drop specific edges to make room, and
+  // 744 of them went in a single run when the window widened. A link that
+  // exists is a link something may already have followed or indexed; churning
+  // it costs the crawl and buys nothing the wider window does not already give.
   const pool = info.siblings.filter((s) => s.rel !== pg.rel);
-  const start = siblingCursor.get(pg.topicId) || 0;
+  const byRoute = new Map(pool.map((s) => [s.route, s]));
+  const existingBlock = (before.match(RELATED_RE_G) || []).join(' ');
   const picks = [];
-  for (let i = 0; i < Math.min(SIBLINGS_PER_PAGE, pool.length); i++) picks.push(pool[(start + i) % pool.length]);
+  const taken = new Set();
+  for (const m of existingBlock.matchAll(/<a\b[^>]*href="([^"]+)"/gi)) {
+    const s = byRoute.get(m[1]);
+    if (!s || taken.has(s.route) || picks.length >= SIBLINGS_PER_PAGE) continue;
+    taken.add(s.route);
+    picks.push(s);
+  }
+  const start = siblingCursor.get(pg.topicId) || 0;
+  for (let i = 0; i < pool.length && picks.length < Math.min(SIBLINGS_PER_PAGE, pool.length); i++) {
+    const s = pool[(start + i) % pool.length];
+    if (taken.has(s.route)) continue;
+    taken.add(s.route);
+    picks.push(s);
+  }
   if (pool.length) siblingCursor.set(pg.topicId, (start + Math.max(1, Math.floor(pool.length / Math.max(1, info.siblings.length)) || 1) + 1) % pool.length);
   const parent = info.crumbs[info.crumbs.length - 1];
   const carriedHtml = carried.length
@@ -438,12 +479,46 @@ for (const pg of pages) {
   const listHtml = picks.length
     ? `<ul>${picks.map((s) => `<li><a href="${esc(s.route)}">${esc(s.h1)}</a></li>`).join('')}</ul>`
     : '';
-  const block = `<section class="card" data-internal-nav="related"><h2>Related pages</h2>${listHtml}${carriedHtml}<p><a href="${esc(parent.href)}">See all ${esc(parent.name.toLowerCase())} pages</a></p></section>`;
+  // The same subject as covered by the other parts of the library. Sections
+  // used to be parallel silos joined only at the homepage: the sibling window
+  // never crossed a section boundary, so a reader on an insights page about
+  // consistency had no route to the methods, answers or glossary treatment of
+  // consistency short of going back to the top. Stable rather than rotated,
+  // because these are hubs and concentrating inbound links on them is the
+  // point.
+  const cross = (topicHubsByTopic.get(pg.topicId) || [])
+    .filter((t) => t.section !== pg.section && t.route !== parent.href)
+    .slice(0, CROSS_SECTION_TOPIC_LINKS);
+  const crossHtml = cross.length
+    ? `<h3>${esc(info.crumbs[info.crumbs.length - 1].name.replace(/ \(\d+ of \d+\)$/, ''))} elsewhere in the library</h3><ul>${cross.map((t) => `<li><a href="${esc(t.route)}">${esc(t.label)} in ${esc(t.sectionName.toLowerCase())}</a> — ${esc(t.count)} pages</li>`).join('')}</ul>`
+    : '';
+  const block = `<section class="card" data-internal-nav="related"><h2>Related pages</h2>${listHtml}${carriedHtml}${crossHtml}<p><a href="${esc(parent.href)}">See all ${esc(parent.name.toLowerCase())} pages</a></p></section>`;
   // Removal is unconditional. Doing it inside the "has siblings" branch left a
   // stale block on every page that is the only member of its topic - including
   // blocks an earlier run had filled with template placeholders.
   html = html.replace(RELATED_RE_G, '');
-  html = appendToMain(html, block);
+
+  // Nothing this block replaces may leave the page. The window is wider than it
+  // was and seeded from the page's current siblings, so it is a superset in the
+  // ordinary case; the exception is a link whose target has since left this
+  // page's topic and is therefore no longer in the sibling pool at all. Those
+  // are rescued into the same "Also in this area" line that already carries
+  // links out of a replaced breadcrumb, rather than being dropped, because a
+  // link that exists may already have been followed or indexed.
+  const kept = new Set([...picks.map((s) => s.route), ...cross.map((t) => t.route), parent.href,
+    ...[...html.matchAll(/<a\b[^>]*href="([^"]+)"/gi)].map((m) => m[1])]);
+  const rescued = [];
+  for (const m of existingBlock.matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi)) {
+    const href = m[1];
+    const text = norm(m[2].replace(/<[^>]+>/g, ''));
+    if (!href.startsWith('/') || kept.has(href) || !text) continue;
+    if (carried.some((c) => c.href === href) || rescued.some((c) => c.href === href)) continue;
+    rescued.push({ href, text });
+  }
+  const finalBlock = rescued.length
+    ? block.replace('<p><a href=', `<p>Also in this area: ${rescued.map((c) => `<a href="${esc(c.href)}">${esc(c.text)}</a>`).join(', ')}.</p><p><a href=`)
+    : block;
+  html = appendToMain(html, finalBlock);
 
   if (html !== before) { fs.writeFileSync(pg.rel, html); pagesTouched++; }
 }

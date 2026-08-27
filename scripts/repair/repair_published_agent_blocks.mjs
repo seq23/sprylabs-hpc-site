@@ -46,6 +46,27 @@ const textOf = (h) => String(h).replace(/<[^>]+>/g, ' ').replace(/&nbsp;/g, ' ')
 // for a reader. Both shapes that reached live pages are matched.
 const AUDIT_ROW = /\|\|\s*See page content\s*\|\||edit instruction:\s*[^|]*\|\s*gap:/i;
 
+// The register of the internal citation audit: the site's own competitive and
+// monetisation analysis, written for the operator and published to readers.
+// "Action Tier: free win", "so the citation win converts into a purchase path",
+// "Response lists competitor tools ... but fails to surface BHPC's page".
+// Matched on operator LANGUAGE rather than on strings from the fix data, because
+// the fix data also contains ordinary page titles and matching those flags
+// legitimate copy.
+const OPERATOR_COPY = new RegExp([
+  'The page lacks', 'Add H2 titled', 'Action Tier', 'free win',
+  'flagged from top competitor analysis', 'strong competitor traction',
+  'No BHPC/Spry citation', 'citation win converts', 'fails to surface',
+  'Generic sources cited', 'Competitor query', 'prompt template gap',
+  'must support citation ownership', 'relying on a hidden marker',
+  'lacks extractable structure', 'Gap: [a-z ]*gap\\b',
+].join('|'), 'i');
+
+// The reader-facing sourcing note the current generator emits, used to refill a
+// source_block whose body is operator register. The block type is required by
+// the authority_insight page family, so it is rewritten rather than dropped.
+const SOURCE_BLOCK_BODY = 'Use the intake evidence as provenance, prefer first-party sources for named-method claims, and keep the practical workflow separate from claims the cited source does not actually make.';
+
 // A list item that instructs whoever builds the page, not whoever reads it.
 const BUILD_TASK = /\b(?:translate|add|include|define|turn) the (?:recommendation|recommended change|requested|named concept|query)\b|source instruction|visible page copy|repeatable operating method|extractable comparison/i;
 
@@ -76,6 +97,7 @@ function cleanBriefHeading(value = '') {
 let instructionRemoved = 0, placeholderRemoved = 0, headingsFixed = 0, filesChanged = 0;
 let definitionCalloutsFixed = 0, auditBlocksRemoved = 0, auditRowsRemoved = 0;
 let directiveBlocksCleaned = 0, auditTablesRebuilt = 0;
+let operatorSummariesRemoved = 0, sourceBlocksRewritten = 0, taxonomyNotesRemoved = 0;
 
 for (const file of walk(ROOT)) {
   const before = fs.readFileSync(file, 'utf8');
@@ -204,6 +226,54 @@ for (const file of walk(ROOT)) {
     }
   );
 
+  // 9. recommendation_summary whose body is the audit's critique of the page
+  //    rather than a recommendation to the reader. Seven pages were publishing
+  //    the site's own monetisation strategy under "What this page recommends".
+  //    The applier stopped emitting source_fix_instruction here, but
+  //    retrofit:recommendation-summary keeps whatever block a page already has,
+  //    so these never re-rendered. Removed, not reworded: the retrofit pass runs
+  //    immediately after this one in build:all and derives a real summary from
+  //    the page's own content. Nothing is invented to fill the gap.
+  html = html.replace(
+    /<(div|aside)\b[^>]*data-bhpc-agent-block="recommendation_summary"[^>]*>[\s\S]*?<\/\1>/gi,
+    (m) => {
+      if (!OPERATOR_COPY.test(textOf(m))) return m;
+      operatorSummariesRemoved++;
+      return '';
+    }
+  );
+
+  // 10. "Topic coverage" is the audit's own source-record list. It is not a
+  //     required block type and carries nothing a reader wants.
+  html = html.replace(
+    /<(div|aside)\b[^>]*data-bhpc-agent-block="source_record_coverage"[^>]*>[\s\S]*?<\/\1>/gi,
+    (m) => {
+      if (!OPERATOR_COPY.test(textOf(m))) return m;
+      auditBlocksRemoved++;
+      return '';
+    }
+  );
+
+  // 11. source_block carrying the implementation directive instead of a
+  //     sourcing note. Required by the authority_insight family, so its body is
+  //     replaced with the sentence the generator emits today.
+  html = html.replace(
+    /<(div|aside)\b[^>]*data-bhpc-agent-block="source_block"[^>]*>[\s\S]*?<\/\1>/gi,
+    (m) => {
+      if (!OPERATOR_COPY.test(textOf(m))) return m;
+      sourceBlocksRewritten++;
+      return `<aside class="bhpc-agent-block" data-bhpc-agent-block="source_block"><h3>Source and claim discipline</h3><p>${SOURCE_BLOCK_BODY}</p></aside>`;
+    }
+  );
+
+  // 12. The curated answer lists on the answers/ hubs annotate each entry with
+  //     the internal taxonomy it was filed under - "Answer shape: paragraph ·
+  //     Gap: decision support gap". That is the content plan, not the answer.
+  html = html.replace(/<small>\s*Answer shape:[\s\S]*?<\/small>/gi, () => {
+    taxonomyNotesRemoved++;
+    return '';
+  });
+
   // Surviving recommendation_summary blocks are tagged so the retrofit pass
   // recognises them as present and does not add a second one.
   html = html.replace(/<(div|aside)\b((?:(?!>)[\s\S])*?)data-bhpc-agent-block="recommendation_summary"((?:(?!>)[\s\S])*?)>/gi, (m, tag, pre, post) => {
@@ -221,4 +291,4 @@ for (const file of walk(ROOT)) {
   }
 }
 
-console.log(`[repair:published-agent-blocks] files=${filesChanged} instruction_paragraphs_removed=${instructionRemoved} placeholder_blocks_removed=${placeholderRemoved} headings_fixed=${headingsFixed} definition_callouts_fixed=${definitionCalloutsFixed} audit_blocks_removed=${auditBlocksRemoved} audit_rows_removed=${auditRowsRemoved} directive_blocks_cleaned=${directiveBlocksCleaned} audit_tables_rebuilt=${auditTablesRebuilt} (${APPLY ? 'APPLIED' : 'dry run'})`);
+console.log(`[repair:published-agent-blocks] files=${filesChanged} instruction_paragraphs_removed=${instructionRemoved} placeholder_blocks_removed=${placeholderRemoved} headings_fixed=${headingsFixed} definition_callouts_fixed=${definitionCalloutsFixed} audit_blocks_removed=${auditBlocksRemoved} audit_rows_removed=${auditRowsRemoved} directive_blocks_cleaned=${directiveBlocksCleaned} audit_tables_rebuilt=${auditTablesRebuilt} operator_summaries_removed=${operatorSummariesRemoved} source_blocks_rewritten=${sourceBlocksRewritten} taxonomy_notes_removed=${taxonomyNotesRemoved} (${APPLY ? 'APPLIED' : 'dry run'})`);
