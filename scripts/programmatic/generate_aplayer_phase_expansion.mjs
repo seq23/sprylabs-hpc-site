@@ -559,8 +559,21 @@ function updateSitemapsAndLlms() {
 }
 function updatePhaseAndStrategyFiles() {
   const laneContracts = readJson('data/content/programmatic_lane_contracts.json', {schema_version:'1.0',generated_at:TODAY,lanes:{},programmatic_axes:{}});
-  const baselineLane = {minimum_word_count:0, required_artifacts:false, worked_example:false, cta_profile:'full', source_floor:0, required_fields:['unique_atom']};
-  for (const lane of ['glossary','method','platform','brand_defense','citation_phase_expansion']) laneContracts.lanes[lane] = laneContracts.lanes[lane] || baselineLane;
+  // A generator does not get to write its own thresholds to zero.
+  //
+  // This used to seed its five lanes with {minimum_word_count: 0,
+  // required_artifacts: false, worked_example: false, source_floor: 0} - so even a
+  // page stamped admission_level 'full' faced no floor, because the lane it landed
+  // in had none. Between that and the 'baseline' admission level, the pages this
+  // script writes were exempt from the quality gate twice over.
+  //
+  // The seed is now the same shape the lanes actually meet, measured across what
+  // they have already produced (see _floor_basis in the contract file). If this
+  // script ever adds a lane the contract does not know about, that lane starts with
+  // a real floor rather than with permission to publish anything.
+  const seedLane = (minimum_word_count) => ({minimum_word_count, required_artifacts:true, worked_example:true, cta_profile:'full', source_floor:0, required_fields:['unique_atom']});
+  const LANE_SEEDS = {glossary:700, method:700, platform:800, brand_defense:550, citation_phase_expansion:700};
+  for (const [lane, floor] of Object.entries(LANE_SEEDS)) laneContracts.lanes[lane] = laneContracts.lanes[lane] || seedLane(floor);
   laneContracts.generated_at = TODAY;
   writeJson('data/content/programmatic_lane_contracts.json', laneContracts);
   const counts = atoms.reduce((acc,a)=>{acc[a.page_type]=(acc[a.page_type]||0)+1; return acc;},{});
