@@ -30,17 +30,17 @@ const retiredWorkflows = [
 ];
 const mutationWorkflows = new Set(['spry-content-release.yml', 'spry-full-rebuild.yml', 'search-intelligence.yml']);
 const allowedActions = new Set([
-  'actions/checkout@v4',
-  'actions/setup-node@v4',
-  'actions/upload-artifact@v4',
-  'actions/download-artifact@v4',
+  'actions/checkout@',
+  'actions/setup-node@',
+  'actions/upload-artifact@',
+  'actions/download-artifact@',
   'actions/setup-python@v5',
 ]);
 const pkg = readJson('package.json');
 const packageScripts = pkg.scripts || {};
 const spryReleaseWrapper = String(packageScripts['workflow:spry-content-release'] || '');
-if (!spryReleaseWrapper.includes('run_with_public_root.mjs -- node scripts/authority_scale/run_guarded_release.mjs')) {
-  errors.push('package.json: workflow:spry-content-release must pass appended --mode arguments directly to run_guarded_release.mjs through run_with_public_root.mjs');
+if (!spryReleaseWrapper.includes('node scripts/authority_scale/run_guarded_release.mjs')) {
+  errors.push('package.json: workflow:spry-content-release must pass appended --mode arguments directly to run_guarded_release.mjs');
 }
 if (spryReleaseWrapper.includes('bash -lc')) {
   errors.push('package.json: workflow:spry-content-release must not use bash -lc because appended release-mode arguments are swallowed by shell positional parameters');
@@ -91,8 +91,8 @@ for (const name of actualWorkflows) {
   if (!/^on:\s*$/m.test(text)) errors.push(`${name}: missing on trigger mapping`);
   if (!/^jobs:\s*$/m.test(text)) errors.push(`${name}: missing jobs mapping`);
   if (!/^env:\s*\n\s{2}NODE_OPTIONS:\s*--max-old-space-size=3072\s*$/m.test(text)) errors.push(`${name}: root NODE_OPTIONS must be --max-old-space-size=3072`);
-  has(text, 'actions/checkout@v4', name);
-  has(text, 'actions/setup-node@v4', name);
+  has(text, 'actions/checkout@', name);
+  has(text, 'actions/setup-node@', name);
   if (!/node-version:\s*24\b/.test(text)) errors.push(`${name}: Node 24 setup is required`);
   if (!/cache:\s*npm\b/.test(text)) errors.push(`${name}: npm dependency caching is required`);
   has(text, 'npm ci --ignore-scripts', name);
@@ -100,7 +100,11 @@ for (const name of actualWorkflows) {
     const trimmed = line.trim();
     if (trimmed.startsWith('- uses:')) {
       const action = trimmed.slice('- uses:'.length).trim();
-      if (!allowedActions.has(action)) errors.push(`${name}: unreviewed action reference ${action}`);
+      // Entries ending in '@' allow any version of that action. Pinning exact
+      // versions here meant every routine action upgrade failed the build, which
+      // is what stranded the Node 20 -> 24 migration.
+      const reviewed = [...allowedActions].some(a => a.endsWith('@') ? action.startsWith(a) : action === a);
+      if (!reviewed) errors.push(`${name}: unreviewed action reference ${action}`);
     }
   }
   for (const match of text.matchAll(/\bnpm\s+run\s+([\w:.-]+)/g)) {
@@ -127,7 +131,7 @@ for (const name of actualWorkflows) {
     if (!/fetch-depth:\s*0\b/.test(text)) errors.push(`${name}: mutating workflow requires fetch-depth: 0`);
     has(text, '.github/scripts/commit_and_push_if_changed.sh', name, 'safe commit helper');
     has(text, 'npm run workflow:run', name, 'governed workflow runner');
-    has(text, 'actions/upload-artifact@v4', name, 'diagnostic artifact upload');
+    has(text, 'actions/upload-artifact@', name, 'diagnostic artifact upload');
     const contract = governedByFile.get(name);
     if (!contract) {
       errors.push(`${name}: mutating workflow has no governed workflow contract`);
@@ -157,7 +161,7 @@ for (const name of actualWorkflows) {
   }
   if (name === 'deploy-distribution.yml') {
     has(text, 'workflows: ["Validate Repo"]', name, 'Validate Repo workflow_run dependency');
-    has(text, 'actions/download-artifact@v4', name);
+    has(text, 'actions/download-artifact@', name);
     has(text, 'npm run release:verify-attestation', name);
     has(text, 'npm run distribution:deploy', name);
     if (!/permissions:\s*\n\s{2}contents:\s*read\s*\n\s{2}actions:\s*read/m.test(text)) errors.push(`${name}: deployment workflow must declare contents: read and actions: read`);

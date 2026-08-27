@@ -28,6 +28,56 @@ for(const r of registry){
    for(const f of ['positive_fixture','negative_fixture']) if(r[f]&&!fs.existsSync(r[f])) strongWarnings.push(`${r.validation_id}: missing governance fixture ${r[f]}`);
  }
 }
+// An admitted validator that appears in no profile never runs. The matrix says
+// it is HARD_FAIL and the registry reports the control plane safe, so it reads
+// as protection that does not exist. That is not hypothetical: validate:
+// coverage-route was written in July 2026 specifically to stop the /coverage/
+// route regressing, was admitted at HARD_FAIL, and was placed in no profile -
+// so the route 404'd for two months and a coverage.json carrying draft counts
+// and the forward publishing runway shipped publicly the whole time.
+//
+// Reported as a strong warning rather than an error because several admitted
+// entries are legitimately not profile steps: orchestrators that RUN a profile
+// would recurse, and post-deploy audits need a live deployment. Reachability is
+// computed transitively, so a validator invoked inside another step counts.
+function profileReachableCommands(){
+  const scripts=(()=>{try{return JSON.parse(fs.readFileSync('package.json','utf8')).scripts||{}}catch{return {}}})();
+  const reached=new Set();
+  const expand=(cmd,seen)=>{
+    for(const name of String(cmd||'').match(/npm run [A-Za-z0-9:_-]+/g)||[]){
+      const id=name.replace('npm run ','');
+      if(seen.has(id)) continue;
+      seen.add(id); reached.add(id);
+      if(scripts[id]) expand(scripts[id],seen);
+    }
+  };
+  for(const profile of Object.values(profiles)){
+    for(const step of profile.steps||[]){
+      reached.add(step.command);
+      expand(step.command,new Set());
+    }
+  }
+  return reached;
+}
+const reachable=profileReachableCommands();
+const unreachable=matrix
+  .filter(m=>m.status==='ADMITTED' && !String(m.command||'').endsWith('.yml'))
+  .filter(m=>{
+    const name=String(m.command||'').replace('npm run ','');
+    return !reachable.has(name) && !reachable.has(m.command);
+  })
+  .map(m=>m.matrix_id);
+// Entries with a recorded reason in profile_exclusions are deliberate. Warning
+// about all of them made the signal unusable, which is how the coverage-route
+// guard stayed unnoticed inside a list of 69. Warn only about the unreviewed,
+// and separately surface the ones marked NEEDS TRIAGE so a real failure parked
+// as an exclusion cannot quietly become permanent.
+const exclusions=matrixDoc.profile_exclusions||{};
+const unclassified=unreachable.filter(id=>!exclusions[id]);
+const needsTriage=Object.entries(exclusions).filter(([,reason])=>String(reason).startsWith('NEEDS TRIAGE')).map(([id])=>id);
+if(unclassified.length) strongWarnings.push(`${unclassified.length} admitted matrix entr${unclassified.length===1?'y is':'ies are'} in no profile with no recorded reason: ${unclassified.slice(0,12).join(', ')}${unclassified.length>12?', ...':''}`);
+if(needsTriage.length) warnings.push(`${needsTriage.length} admitted validator(s) excluded pending triage: ${needsTriage.join(', ')}`);
+
 const matrixIds=new Set(); const matrixByValidation=new Map();
 for(const m of matrix){
  if(matrixIds.has(m.matrix_id)) errors.push(`duplicate matrix_id ${m.matrix_id}`); matrixIds.add(m.matrix_id);

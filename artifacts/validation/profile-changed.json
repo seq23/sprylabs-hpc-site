@@ -1,6 +1,6 @@
 {
   "profile": "changed",
-  "started_at": "2026-08-22T13:35:41.920Z",
+  "started_at": "2026-08-27T17:08:12.310Z",
   "steps": [
     {
       "id": "VAL-ORCHESTRATION-CONTRACT",
@@ -103,8 +103,35 @@
       "command": "npm run validate:search-intelligence",
       "exit_code": 0,
       "status": "PASS"
+    },
+    {
+      "id": "validate:content-pattern",
+      "command": "npm run validate:content-pattern",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:query-atlas",
+      "command": "npm run validate:query-atlas",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:atlas-units",
+      "command": "npm run validate:atlas-units",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:knowledge-map-route",
+      "command": "npm run validate:knowledge-map-route",
+      "exit_code": 0,
+      "status": "PASS"
     }
   ],
   "status": "PASS",
-  "finished_at": "2026-08-22T13:35:52.820Z"
+  "failure_count": 0,
+  "failures": [],
+  "stopped_early_at": null,
+  "finished_at": "2026-08-27T17:08:28.335Z"
 }

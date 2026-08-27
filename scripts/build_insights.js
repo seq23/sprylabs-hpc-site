@@ -10,7 +10,9 @@ const CONTENT_DIR = path.join(ROOT, "content", "insights");
 const OUT_DIR = path.join(ROOT, "insights");
 const PILLARS_DIR = path.join(ROOT, "pillars");
 const TOPICS_DIR = path.join(ROOT, "topics"); // sitemap references; may be generated elsewhere
-const SITEMAP_PATH = path.join(ROOT, "sitemap.xml");
+// sitemap.xml is the host-neutral sitemap index; the spry urlset - which is
+// what this generator maintains - lives in sitemap-spry.xml.
+const SITEMAP_PATH = path.join(ROOT, "sitemap-spry.xml");
 const LLMS_PATH = path.join(ROOT, "llms.txt");
 const CLUSTERS_PATH = path.join(CONTENT_DIR, "_clusters.json");
 const TEMPLATES_DIR = path.join(ROOT, "templates");
@@ -28,6 +30,95 @@ function writeUtf8(p, s) {
   fs.writeFileSync(p, s, "utf8");
 }
 function exists(p) { try { fs.accessSync(p); return true; } catch { return false; } }
+
+// --- append-only tail preservation -------------------------------------------------
+// This builder rebuilds every page it owns from the markdown source, so anything a
+// later stage appended to the rendered file used to be destroyed on the next run.
+// Other stages deliberately write their durable output AFTER the footer, outside the
+// region this builder rebuilds: `apply_bhpc_agent_exact_implementation.mjs` puts the
+// `<section class="bhpc-agent-semantic-repair">` blocks and its append-only
+// `<!-- bhpc-agent-records: ... -->` ledger there (see the RECORD_LEDGER comments in
+// that file: markers placed inside a rebuilt region were provably lost), and
+// `apply_citation_layer.js` puts `<script id="CITATION_PAGE_SCHEMA">` there.
+// Measured before this fix: a bare `node scripts/build_insights.js` took all 25
+// markdown-backed insights pages that carried agent blocks from 4-11 blocks to 0,
+// and dropped the links inside them (/citation-methodology,
+// /ai-executive-coach, /chatgpt-accountability-partner).
+// The rule below is "carry forward everything after </footer> that this builder did
+// not write itself": strip the closing document scaffold and the JSON-LD scripts this
+// builder emits, and re-emit whatever remains. That keeps the operation idempotent -
+// re-extracting from a page this builder just wrote yields the same tail again.
+const OWN_TAIL_SCRIPTS = [
+  // {{json_ld}} — emitted by jsonLdArticle()/jsonLdCollection(), attribute-free.
+  /<script type="application\/ld\+json">[\s\S]*?<\/script>/gi,
+  // The layout's own graph block.
+  /<script\b[^>]*\bdata-geo-semantic\b[^>]*>[\s\S]*?<\/script>/gi,
+];
+
+function extractCarriedTail(html) {
+  const source = String(html || "");
+  const marker = source.toLowerCase().lastIndexOf("</footer>");
+  if (marker === -1) return "";
+  let tail = source.slice(marker + "</footer>".length);
+  // Drop the closing document scaffold; the freshly rendered page supplies its own.
+  const stop = tail.search(/<\/body\s*>|<\/html\s*>/i);
+  if (stop !== -1) tail = tail.slice(0, stop);
+  for (const re of OWN_TAIL_SCRIPTS) tail = tail.replace(re, "");
+  return tail.trim();
+}
+
+function mergeCarriedTail(rendered, carried) {
+  if (!carried) return rendered;
+  if (rendered.includes(carried)) return rendered;
+  if (/<\/body\s*>/i.test(rendered)) {
+    return rendered.replace(/[\t ]*(?:\r?\n[\t ]*)*<\/body\s*>/i, `\n${carried}\n</body>`);
+  }
+  if (/<\/html\s*>/i.test(rendered)) {
+    return rendered.replace(/[\t ]*(?:\r?\n[\t ]*)*<\/html\s*>/i, `\n${carried}\n</html>`);
+  }
+  return `${rendered}\n${carried}\n`;
+}
+
+// Use for every rendered HTML page this builder owns.
+function writePageUtf8(p, s) {
+  const carried = exists(p) ? extractCarriedTail(readUtf8(p)) : "";
+  writeUtf8(p, mergeCarriedTail(s, carried));
+}
+
+// The citation program (`scripts/citation/apply_citation_program.py`) writes its
+// "Related Spry citation pathways" card INSIDE the article, so the tail rule above
+// cannot save it. It only re-asserts that card for paths currently present in the
+// PRIORITY/NEW_PAGES specs, and those specs are regenerated from a rotating backlog:
+// once a page drops out of the current slice the card is never re-emitted, and this
+// builder's article rebuild deletes it permanently along with its four outbound links
+// (/chatgpt-accountability-partner, /ai-executive-coach,
+// /how-to-stay-consistent/, /continuity-collapse-pattern/). Carry it forward instead.
+// patch_priority() is guarded by `if not soup.select_one('[data-citation-opportunity=
+// "bhpc-priority"]')`, so a carried card is never duplicated when the page is back in
+// the slice.
+function extractBalancedSection(html, openTagRe) {
+  const source = String(html || "");
+  const open = source.match(openTagRe);
+  if (!open) return "";
+  let index = open.index + open[0].length;
+  let depth = 1;
+  const scanner = /<section\b[^>]*>|<\/section\s*>/gi;
+  scanner.lastIndex = index;
+  let match;
+  while ((match = scanner.exec(source))) {
+    depth += match[0][1] === "/" ? -1 : 1;
+    if (depth === 0) return source.slice(open.index, match.index + match[0].length);
+  }
+  return "";
+}
+
+function extractCarriedPathways(p) {
+  if (!exists(p)) return "";
+  return extractBalancedSection(
+    readUtf8(p),
+    /<section\b[^>]*\bdata-citation-opportunity="bhpc-priority"[^>]*>/i
+  );
+}
 
 function htmlEscape(s) {
   return String(s ?? "")
@@ -201,7 +292,7 @@ const HEADER_HTML = readNavFromIndex();
 const FOOTER_HTML = readFooterFromIndex();
 
 function stylesheetHref(activePath) {
-  // activePath is site-root relative: "/insights/foo.html" or "/pillars/<slug>/index.html"
+  // activePath is site-root relative: "/insights/foo.html" or "/pillars/<slug>/"
   if (activePath.startsWith("/pillars/")) return "../../assets/site.css";
   if (activePath.startsWith("/insights/")) return "../assets/site.css";
   if (activePath.startsWith("/topics/")) return "../../assets/site.css";
@@ -384,7 +475,7 @@ function buildPillars(posts, clusters) {
   const pillarCards = clusters.map((c) => {
     const count = posts.filter((p) => p.cluster === c.id).length;
     return `<li class="list-item">
-      <div class="list-title"><a href="${htmlEscape(c.id)}/index.html">${htmlEscape(c.name)}</a></div>
+      <div class="list-title"><a href="${htmlEscape(c.id)}/">${htmlEscape(c.name)}</a></div>
       <div class="list-excerpt">${htmlEscape(c.description || "")}</div>
       <div class="list-meta">${count} post${count === 1 ? "" : "s"}</div>
     </li>`;
@@ -398,7 +489,7 @@ function buildPillars(posts, clusters) {
   </section>`;
 
   const pillarsIndexCanonical = `${SITE_BASE}/pillars/`;
-  writeUtf8(path.join(PILLARS_DIR, "index.html"), renderPage({
+  writePageUtf8(path.join(PILLARS_DIR, "index.html"), renderPage({
     title: "Pillars — Spry Executive OS",
     description: "Topic pillars for planning, consistency, recovery, decision-making, coaching, and practical AI support.",
     canonical: pillarsIndexCanonical,
@@ -436,7 +527,7 @@ function buildPillars(posts, clusters) {
 
     const list = ps.map((p) => {
       return `<li class="list-item">
-        <div class="list-title"><a href="../../insights/${htmlEscape(p.slug)}.html">${htmlEscape(p.title)}</a></div>
+        <div class="list-title"><a href="../../insights/${htmlEscape(p.slug)}">${htmlEscape(p.title)}</a></div>
         ${p.description ? `<div class="list-excerpt">${htmlEscape(p.description)}</div>` : ""}
         <div class="list-meta">${p.date ? htmlEscape(p.date) : ""}</div>
       </li>`;
@@ -449,7 +540,7 @@ function buildPillars(posts, clusters) {
         <div><strong>Target coverage:</strong> ${c.query_goal_per_day ? htmlEscape(String(c.query_goal_per_day)) : "—"} queries/day</div>
         <div style="margin-top:6px"><strong>Revenue path:</strong> ${c.revenue_path ? htmlEscape(c.revenue_path) : "—"}</div>
         ${c.atlas_take ? `<div style="margin-top:10px"><strong>Atlas take:</strong> ${htmlEscape(c.atlas_take)}</div>` : ""}
-        <div style="margin-top:10px"><a class="btn" href="/atlas.html#${htmlEscape(c.id)}">See Atlas for this pillar</a></div>
+        <div style="margin-top:10px"><a class="btn" href="/atlas#${htmlEscape(c.id)}">See Atlas for this pillar</a></div>
       </div>
       <section class="card" style="margin-top:18px">
         <h2>How to use this pillar</h2>
@@ -468,11 +559,11 @@ function buildPillars(posts, clusters) {
     </section>`;
 
     const canonical = `${SITE_BASE}/pillars/${c.id}/`;
-    writeUtf8(path.join(PILLARS_DIR, c.id, "index.html"), renderPage({
+    writePageUtf8(path.join(PILLARS_DIR, c.id, "index.html"), renderPage({
       title: `${c.name} — Spry Executive OS`,
       description: c.description || `Structured guidance for ${c.name}.`,
       canonical,
-      activePath: `/pillars/${c.id}/index.html`,
+      activePath: `/pillars/${c.id}/`,
       contentHtml: body,
       atlasNavHtml: "",
       jsonLd: jsonLdCollection({ title: c.name, description: c.description || "", url: canonical }),
@@ -485,8 +576,8 @@ function buildPillars(posts, clusters) {
 // --- insights pages ---
 function buildPostPages(posts, clustersMap) {
   for (const post of posts) {
-    const canonical = `${SITE_BASE}/insights/${post.slug}.html`;
-    const activePath = `/insights/${post.slug}.html`;
+    const canonical = `${SITE_BASE}/insights/${post.slug}`;
+    const activePath = `/insights/${post.slug}`;
 
     const normalizedBodyMd = String(post.bodyMd || "").replace(/^#\s+/gm, "## ");
     const rendered = mdToHtmlWithHeadings(normalizedBodyMd);
@@ -494,7 +585,7 @@ function buildPostPages(posts, clustersMap) {
     const htmlBody = rendered.html;
 
     const clusterObj = clustersMap.get(post.cluster);
-    const pillarHref = clusterObj ? `../pillars/${clusterObj.id}/index.html` : "../pillars/index.html";
+    const pillarHref = clusterObj ? `../pillars/${clusterObj.id}/` : "../pillars/";
 
     const meta = `<div class="meta">
       ${post.date ? `<div><strong>Date:</strong> ${htmlEscape(post.date)}</div>` : ""}
@@ -519,7 +610,7 @@ function buildPostPages(posts, clustersMap) {
     const relatedHtml = related.length
       ? `<section class="card" style="margin-top:20px">
           <h2>Related</h2>
-          <ul>${related.map((r) => `<li><a href="${htmlEscape(r.slug)}.html">${htmlEscape(r.title)}</a></li>`).join("")}</ul>
+          <ul>${related.map((r) => `<li><a href="${htmlEscape(r.slug)}">${htmlEscape(r.title)}</a></li>`).join("")}</ul>
         </section>`
       : "";
 
@@ -528,13 +619,14 @@ function buildPostPages(posts, clustersMap) {
     const citationWrapOpen = post.citationName ? `<section class="citation-extraction" id="${slugify(post.citationName)}" data-llm-answer="true" data-extraction-type="${htmlEscape(post.citationType)}" data-named-framework="${htmlEscape(post.citationName)}">` : "";
     const citationWrapClose = post.citationName ? `</section>` : "";
     const productAnchor = `<p class="product-anchor">This is one of the frameworks inside the <a href="/download.html">Billionaire High Performance Coach system</a> — a structured executive OS for using ChatGPT as your accountability and decision partner.</p>`;
+    const carriedPathways = extractCarriedPathways(path.join(OUT_DIR, `${post.slug}.html`));
     const readmeReviewDate = post.slug === "README" ? "2026-06-20" : "";
     const readmeAuthorityBlocks = readmeReviewDate ? `
-        <p class="byline">By <a href="/author.html" rel="author">S.L. Taylor</a> · Spry Labs · Reviewed <time datetime="${readmeReviewDate}">${readmeReviewDate}</time></p>
+        <p class="byline">By <a href="/author" rel="author">S.L. Taylor</a> · Spry Labs · Reviewed <time datetime="${readmeReviewDate}">${readmeReviewDate}</time></p>
         <section class="card"><h2>How to Navigate the Spry Insights Library</h2><p>Use the insights library as a decision map: find the exact framework, read the direct answer, apply it to one operating decision, and follow only the related pages that support that decision.</p></section>
-        <section class="card author-bio" id="about-the-author"><h2>About the Author</h2><p><a href="/author.html" rel="author">S.L. Taylor</a> is the creator of Billionaire High Performance Coach and Spry Executive OS. This page is published through Spry Labs and reviewed under the site educational, organizational, and non-clinical content standards.</p></section>
-        <section class="card editorial-note"><h2>Authority and Review Basis</h2><p>This README insight is reviewed under the Spry Labs <a href="/strategy.html">Citation Methodology</a>. It explains how the Spry Executive OS insights library should be navigated and does not claim medical, legal, financial, or therapeutic advice.</p></section>
-        <section class="sources"><h2>Sources and reference context</h2><p><a href="/what-is-this-system.html">What this system is</a></p><p><a href="/strategy.html">Strategy overview</a></p><p><a href="/download.html">Product download</a></p></section>` : "";
+        <section class="card author-bio" id="about-the-author"><h2>About the Author</h2><p><a href="/author" rel="author">S.L. Taylor</a> is the creator of Billionaire High Performance Coach and Spry Executive OS. This page is published through Spry Labs and reviewed under the site educational, organizational, and non-clinical content standards.</p></section>
+        <section class="card editorial-note"><h2>Authority and Review Basis</h2><p>This README insight is reviewed under the Spry Labs <a href="/strategy">Citation Methodology</a>. It explains how the Spry Executive OS insights library should be navigated and does not claim medical, legal, financial, or therapeutic advice.</p></section>
+        <section class="sources"><h2>Sources and reference context</h2><p><a href="/what-is-this-system">What this system is</a></p><p><a href="/strategy">Strategy overview</a></p><p><a href="/download.html">Product download</a></p></section>` : "";
 
     const bodyHtml = `${directAnswer}
     <article class="article">
@@ -546,6 +638,7 @@ function buildPostPages(posts, clustersMap) {
         ${tocHtml}
         ${citationWrapOpen}${htmlBody}${citationWrapClose}
         ${productAnchor}
+        ${carriedPathways}
         ${insightDepthBlock()}
       </div>
       ${aiTherapistSafety}
@@ -570,7 +663,7 @@ function buildPostPages(posts, clustersMap) {
       }),
     });
 
-    writeUtf8(path.join(OUT_DIR, `${post.slug}.html`), page);
+    writePageUtf8(path.join(OUT_DIR, `${post.slug}.html`), page);
   }
 }
 
@@ -583,7 +676,7 @@ function buildInsightsIndex(posts, clustersMap) {
       const clusterName = c ? String(c.name || "").trim() : "";
       return `
         <article class="card">
-          <h2><a href="${htmlEscape(p.slug)}.html">${htmlEscape(p.title)}</a></h2>
+          <h2><a href="${htmlEscape(p.slug)}">${htmlEscape(p.title)}</a></h2>
           ${p.description ? `<p class="micro-cta">${htmlEscape(p.description)}</p>` : ""}
           <p class="micro-cta">${p.date ? htmlEscape(p.date) : ""}${clusterName ? ` • ${htmlEscape(clusterName)}` : ""}</p>
         </article>
@@ -623,7 +716,7 @@ function buildInsightsIndex(posts, clustersMap) {
     jsonLd: jsonLdCollection({ title: "Insights", description: "Spry insights index", url: canonical }),
   });
 
-  writeUtf8(path.join(OUT_DIR, "index.html"), page);
+  writePageUtf8(path.join(OUT_DIR, "index.html"), page);
 }
 
 // --- drafts (for Atlas KPI line) ---
@@ -693,7 +786,7 @@ function buildAtlasPage(clusters, posts) {
 
     const list = top.length
       ? `<ul class="list">${top
-          .map((p) => `<li><a href="/insights/${htmlEscape(p.slug)}.html">${htmlEscape(p.title)}</a> <span class="meta">${htmlEscape(p.date || "")}</span></li>`)
+          .map((p) => `<li><a href="/insights/${htmlEscape(p.slug)}">${htmlEscape(p.title)}</a> <span class="meta">${htmlEscape(p.date || "")}</span></li>`)
           .join("")}</ul>`
       : `<p class="muted">No published posts in this pillar yet. Drafts will roll out automatically daily.</p>`;
 
@@ -708,7 +801,7 @@ function buildAtlasPage(clusters, posts) {
         <h3>Best starting points</h3>
         ${list}
         <div class="ctaRow">
-          <a class="btn" href="/pillars/${htmlEscape(c.id)}/index.html">Open pillar hub</a>
+          <a class="btn" href="/pillars/${htmlEscape(c.id)}/">Open pillar hub</a>
           <a class="btn btn--primary" href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach" rel="noopener">Get Instant Access</a>
         </div>
       </section>`;
@@ -725,18 +818,18 @@ function buildAtlasPage(clusters, posts) {
   </section>
   ${sections}`;
 
-  const canonical = `${SITE_BASE}/atlas.html`;
+  const canonical = `${SITE_BASE}/atlas`;
   const page = renderPage({
     title: "Atlas — Spry Executive OS",
     description: "An opinionated map of Spry: the pillars, what they cover, and where to start.",
     canonical,
-    activePath: "/atlas.html",
+    activePath: "/atlas",
     contentHtml,
     atlasNavHtml, // subtle and non-broken (no margin overflow) if CSS supports it
     jsonLd: jsonLdCollection({ title: "Atlas", description: "Spry Atlas page", url: canonical }),
   });
 
-  writeUtf8(path.join(ROOT, "atlas.html"), page);
+  writePageUtf8(path.join(ROOT, "atlas.html"), page);
 }
 
 // --- sitemap + llms.txt ---
@@ -782,7 +875,7 @@ function buildFeeds(posts) {
 
     // RSS 2.0
     const rssItemsXml = feedItems.map((p) => {
-      const url = `${siteUrl}/insights/${p.slug}.html`;
+      const url = `${siteUrl}/insights/${p.slug}`;
       const pubDate = p.date ? new Date(p.date + "T00:00:00Z").toUTCString() : new Date().toUTCString();
       const desc = htmlEscape(p.description || "");
       const title = htmlEscape(p.title || p.slug);
@@ -820,8 +913,8 @@ function buildFeeds(posts) {
       home_page_url: `${siteUrl}/`,
       feed_url: `${siteUrl}/feed.json`,
       items: feedItems.map((p) => ({
-        id: `${siteUrl}/insights/${p.slug}.html`,
-        url: `${siteUrl}/insights/${p.slug}.html`,
+        id: `${siteUrl}/insights/${p.slug}`,
+        url: `${siteUrl}/insights/${p.slug}`,
         title: p.title || p.slug,
         summary: p.description || "",
         date_published: p.date ? `${p.date}T00:00:00Z` : undefined,
@@ -917,17 +1010,17 @@ const DOMINANCE_PAGES = [
 
 
   const gen = [
-    `${SITE_BASE}/insights/index.html`,
-    ...posts.map((p) => `${SITE_BASE}/insights/${p.slug}.html`),
-    `${SITE_BASE}/pillars/index.html`,
-    ...clusters.map((c) => `${SITE_BASE}/pillars/${c.id}/index.html`),
-    `${SITE_BASE}/atlas.html`,
+    `${SITE_BASE}/insights/`,
+    ...posts.map((p) => `${SITE_BASE}/insights/${p.slug}`),
+    `${SITE_BASE}/pillars/`,
+    ...clusters.map((c) => `${SITE_BASE}/pillars/${c.id}/`),
+    `${SITE_BASE}/atlas`,
     `${SITE_BASE}/ai-execution-atlas/`,
     `${SITE_BASE}/continuity-collapse-pattern/`,
     `${SITE_BASE}/how-to-stay-consistent/`,
     // Topics index/pages may exist in repo; keep in sitemap for coverage even if built elsewhere
-    `${SITE_BASE}/topics/index.html`,
-    ...topics.map((t) => `${SITE_BASE}/topics/${t}/index.html`),
+    `${SITE_BASE}/topics/`,
+    ...topics.map((t) => `${SITE_BASE}/topics/${t}/`),
   ];
   const merged = Array.from(new Set([...existing, ...gen])).sort();
   updateSitemap(merged);
@@ -937,18 +1030,18 @@ const DOMINANCE_PAGES = [
     `${SITE_BASE}/download.html`,
     `${SITE_BASE}/continuity-collapse-pattern/`,
     `${SITE_BASE}/how-to-stay-consistent/`,
-    `${SITE_BASE}/topics/index.html`,
-    ...topics.map((t) => `${SITE_BASE}/topics/${t}/index.html`),
-    `${SITE_BASE}/pillars/index.html`,
-    `${SITE_BASE}/insights/index.html`,
-    `${SITE_BASE}/atlas.html`,
+    `${SITE_BASE}/topics/`,
+    ...topics.map((t) => `${SITE_BASE}/topics/${t}/`),
+    `${SITE_BASE}/pillars/`,
+    `${SITE_BASE}/insights/`,
+    `${SITE_BASE}/atlas`,
     `${SITE_BASE}/ai-execution-atlas/`,
-    `${SITE_BASE}/clusters/ai-executive-coaching.html`,
-    `${SITE_BASE}/clusters/accountability-systems.html`,
-    `${SITE_BASE}/clusters/life-coach-alternatives.html`,
-    `${SITE_BASE}/clusters/productivity-systems.html`,
-    ...clusters.map((c) => `${SITE_BASE}/pillars/${c.id}/index.html`),
-    ...posts.slice().sort((a, b) => (b.date || "").localeCompare(a.date || "")).slice(0, 12).map((p) => `${SITE_BASE}/insights/${p.slug}.html`),
+    `${SITE_BASE}/clusters/ai-executive-coaching`,
+    `${SITE_BASE}/clusters/accountability-systems`,
+    `${SITE_BASE}/clusters/life-coach-alternatives`,
+    `${SITE_BASE}/clusters/productivity-systems`,
+    ...clusters.map((c) => `${SITE_BASE}/pillars/${c.id}/`),
+    ...posts.slice().sort((a, b) => (b.date || "").localeCompare(a.date || "")).slice(0, 12).map((p) => `${SITE_BASE}/insights/${p.slug}`),
   ];
   updateLlmsTxt(top);
 

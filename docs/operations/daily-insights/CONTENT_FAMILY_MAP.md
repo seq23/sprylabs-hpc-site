@@ -63,7 +63,7 @@ Use this family when you want to understand the day-by-day article flow.
 Operator-only files, validators, manifests, release notes, and visibility artifacts.
 
 Locations:
-- `scripts/validators/legacy_ops/` and `reports/audits/`
+- `scripts/validators/legacy_ops/` and `docs/audits/`
 - `docs/runbooks/`
 - validator scripts in `scripts/validators/legacy_ops/`
 
@@ -71,7 +71,7 @@ Locations:
 Current-state maps that explain what the site covers.
 
 Primary route:
-- `/coverage/`
+- `/knowledge-map/`
 
-Use `/coverage/` to understand what exists now.
+Use `/knowledge-map/` to understand what exists now.
 Use `/docs/operations/daily-insights/*` to understand what changed over time.

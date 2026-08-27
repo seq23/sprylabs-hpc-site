@@ -1,23 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-08-22T13:35:55.349Z",
+  "generated_at": "2026-08-27T18:00:29.736Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 167,
+  "admitted_hard_fail_count": 171,
   "reviewed_count": 8,
-  "unreviewed_count": 159,
+  "unreviewed_count": 163,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 127,
+    "REVIEW_REQUIRED": 129,
     "EXISTING_REPAIR_AVAILABLE": 6,
     "TRUE_BLOCKER": 26,
-    "REVIEW_WARNING_BOUNDARY": 8
+    "REVIEW_WARNING_BOUNDARY": 10
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 127,
+    "REVIEW_REQUIRED": 129,
     "EXISTING_REPAIR_AVAILABLE": 6,
-    "TRUE_BLOCKER": 26
+    "TRUE_BLOCKER": 26,
+    "REVIEW_WARNING_BOUNDARY": 2
   },
   "migration_status_counts": {
-    "UNREVIEWED": 159,
+    "UNREVIEWED": 163,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -1835,13 +1836,13 @@
     },
     {
       "validation_id": "VAL-COVERAGE-ROUTE-CONTRACT",
-      "name": "validate:coverage-route",
-      "command": "npm run validate:coverage-route",
+      "name": "validate:knowledge-map-route",
+      "command": "npm run validate:knowledge-map-route",
       "owning_lane": "public-authority",
       "risk_prevented": "Prevents the public /coverage/ knowledge-map route from disappearing during packaging or exposing private draft runway data.",
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
-        "MX-COVERAGE-ROUTE-CONTRACT"
+        "MX-KNOWLEDGE-MAP-ROUTE"
       ],
       "suggested_review": "REVIEW_WARNING_BOUNDARY",
       "migration_status": "REVIEWED_NO_CHANGE",
@@ -2547,6 +2548,66 @@
         "MX-173"
       ],
       "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-112",
+      "name": "validate:content-pattern",
+      "command": "npm run validate:content-pattern",
+      "owning_lane": "citation-contract",
+      "risk_prevented": "Prevents publishing a page that an answer engine cannot quote or that gives a citation nowhere to go: no direct-answer block, an h1 too short to carry the searcher phrasing, a table with empty cells, or no route to purchase.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-174"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-113",
+      "name": "validate:query-atlas",
+      "command": "npm run validate:query-atlas",
+      "owning_lane": "citation-intelligence",
+      "risk_prevented": "Prevents the query atlas from claiming coverage it cannot support - clusters without evidence-backed queries, or synthetic permutations counted as demand.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-175"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-116",
+      "name": "validate:atlas-units",
+      "command": "npm run validate:atlas-units",
+      "owning_lane": "citation-intelligence",
+      "risk_prevented": "Prevents two incompatible quantities from sharing one demand field again. `volume` held monthly search volume on keyword-tool rows and this domain's OWN 90-day impression count on GSC rows, and rank_score was computed straight off it, so 'ai business coach' scored on 5 impressions instead of its real 110/mo search volume - 22x low - and sorted below queries with a fraction of its market demand.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-178"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-114",
+      "name": "validate:operator-doc-currency",
+      "command": "npm run validate:operator-doc-currency",
+      "owning_lane": "repo-governance",
+      "risk_prevented": "Prevents operator runbooks from pointing at repo paths and routes that no longer exist. The guide kept routing readers to /coverage/ after it was renamed to /knowledge-map/, and to an audit directory that had been deleted, because nothing checked.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-176"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
       "migration_status": "UNREVIEWED",
       "decision": null,
       "evidence": []

@@ -34,7 +34,7 @@ function updateSitemap() {
 }
 
 function rebuildCoverage() {
-  execFileSync(process.execPath, [path.join(ROOT, 'scripts/build_coverage_map.js')], { stdio: 'inherit' });
+  execFileSync(process.execPath, [path.join(ROOT, 'scripts/build_knowledge_map.js')], { stdio: 'inherit' });
 }
 
 updateLlms();

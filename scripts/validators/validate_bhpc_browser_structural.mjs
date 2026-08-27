@@ -5,7 +5,7 @@ const ROOT = process.cwd();
 function walk(dir, out = []) {
   if (!fs.existsSync(dir)) return out;
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    if (['.git','node_modules','templates','data','_ops','reports','artifacts','scripts','docs','fixtures'].includes(entry.name)) continue;
+    if (['.git','.pages-output', 'node_modules','templates','data','_ops','reports','artifacts','scripts','docs','fixtures'].includes(entry.name)) continue;
     const file = path.join(dir, entry.name);
     if (entry.isDirectory()) walk(file, out);
     else if (entry.isFile() && entry.name.endsWith('.html')) out.push(file);

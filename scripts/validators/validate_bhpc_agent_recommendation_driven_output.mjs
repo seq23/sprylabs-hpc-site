@@ -33,6 +33,15 @@ for(const entry of manifest.entries||[]){
   if(!tokenCovered(entry.required_heading,text))errors.push(`${entry.record_id}:heading_not_visible:${rel}`);
   for(const type of entry.required_block_types||[]){if(type==='internal_link_set')continue;if(!html.includes(`data-bhpc-agent-block="${type}"`))errors.push(`${entry.record_id}:missing_block:${type}:${rel}`)}
   for(const link of entry.required_internal_links||[]){const mutation=resolveBhpcInternalLinkAction(link);if(mutation.status!=='RESOLVED'){errors.push(`${entry.record_id}:invalid_internal_link_action:${mutation.reason}`);continue}const source=path.join(ROOT,mutation.from_path);if(!fs.existsSync(source)){errors.push(`${entry.record_id}:missing_internal_link_source:${mutation.from_path}`);continue}if(!hasBhpcInternalLinkMutation(fs.readFileSync(source,'utf8'),mutation))errors.push(`${entry.record_id}:missing_internal_link_pair:${mutation.from_path}:${mutation.href}:${mutation.anchor_text}`)}
+  // Either marker counts, matching validate_bhpc_rich_new_page_contract.mjs and
+  // trace_bhpc_agent_exact_implementation.mjs. recommendation_summary is written
+  // by the retrofit pass outside the agent section, carrying data-content-block,
+  // because the applier emits nothing for it rather than publish the operator
+  // audit critique that is its only other source. Re-tagging the retrofit's
+  // output as an agent block is the one fix that must not be used: it makes the
+  // applier's section strip delete every real block after it.
+  for(const type of entry.required_block_types||[]){if(type==='internal_link_set'&&!(entry.required_internal_links||[]).length)continue;if(!(html.includes(`data-bhpc-agent-block="${type}"`)||html.includes(`data-content-block="${type}"`)))errors.push(`${entry.record_id}:missing_block:${type}:${rel}`)}
+  for(const link of entry.required_internal_links||[]){const href=normalizeBhpcInternalLinkHref(link.to_url);if(!href){errors.push(`${entry.record_id}:non_internal_link_in_required_internal_links:${link.to_url||'missing'}:${rel}`);continue}if(!html.includes(`href="${href}"`)&&!html.includes(`href='${href}'`))errors.push(`${entry.record_id}:missing_internal_link:${href}:${rel}`)}
   for(const link of entry.required_external_cta_links||[]){const href=normalizeBhpcExternalCtaHref(link.to_url);if(!href){errors.push(`${entry.record_id}:unapproved_external_cta:${link.to_url||'missing'}:${rel}`);continue}if(!html.includes(`href="${href}"`)&&!html.includes(`href='${href}'`))errors.push(`${entry.record_id}:missing_external_cta:${href}:${rel}`)}
   if(/Agent recommendation implementation|Agent-directed implementation|Agent source instruction|Route decision:/i.test(text))errors.push(`${entry.record_id}:public_operational_scaffolding:${rel}`);
   if(!appliedIds.has(String(entry.id)))errors.push(`${entry.record_id}:acceptance_not_applied:${entry.id}`);

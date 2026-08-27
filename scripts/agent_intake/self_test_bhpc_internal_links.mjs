@@ -11,7 +11,7 @@ import {BHPC_PRODUCT_ANCHOR_SENTENCE, bhpcGeneratedCitationDefinition} from '../
 assert.equal(normalizeBhpcInternalLinkHref('/download.html'), '/download.html');
 assert.equal(normalizeBhpcInternalLinkHref('https://spryexecutiveos.com/download.html'), '/download.html');
 assert.equal(normalizeBhpcInternalLinkHref('https://www.spryexecutiveos.com/download.html?src=agent#buy'), '/download.html?src=agent#buy');
-assert.equal(normalizeBhpcInternalLinkHref('https://billionairehighperformancecoach.com/faq.html'), '/faq.html');
+assert.equal(normalizeBhpcInternalLinkHref('https://billionairehighperformancecoach.com/faq.html'), '/faq');
 assert.equal(normalizeBhpcInternalLinkHref('https://sprylabs.gumroad.com/l/billionaire-high-performance-coach'), '');
 assert.equal(normalizeBhpcExternalCtaHref('https://sprylabs.gumroad.com/l/billionaire-high-performance-coach'), 'https://sprylabs.gumroad.com/l/billionaire-high-performance-coach');
 assert.equal(normalizeBhpcExternalCtaHref('https://evil.example/buy'), '');

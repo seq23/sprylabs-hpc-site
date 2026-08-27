@@ -85,16 +85,7 @@ def visible_breadcrumbs(soup, canonical):
     if current: items.append((norm(current[-1].get_text(' ',strip=True)),canonical))
     return items
 
-def visible_faq(soup):
-    section=soup.select_one('section[data-visible-faq="true"], section.faq, section#faq, section.citation-faq')
-    if not section: return []
-    pairs=[]
-    for h in section.find_all(['h3','h2']):
-        q=norm(h.get_text(' ',strip=True))
-        if q.casefold().startswith('frequently asked'): continue
-        p=h.find_next_sibling('p')
-        if p: pairs.append((q,norm(p.get_text(' ',strip=True))))
-    return pairs
+from extraction_contract import visible_faq_pairs as visible_faq
 
 def update_schema(path: Path):
     raw=path.read_text(encoding='utf-8', errors='ignore')
@@ -224,7 +215,15 @@ def update_schema(path: Path):
         return True
     return False
 
+# download.html is under a protected baseline: it is the revenue surface, its
+# hash is asserted by validate:reopened-baseline, and it has been corrupted by
+# a self-heal pass before. Reserializing it through BeautifulSoup rewrites
+# every meta tag's attribute order, which changes the hash without changing a
+# word - so this file is never opened here, not even to read it.
+PROTECTED = {'download.html'}
+
 def repair_one(rel: str) -> int:
+    if str(rel).lstrip('./') in PROTECTED: return 0
     fp=ROOT/rel
     return 1 if fp.is_file() and update_schema(fp) else 0
 

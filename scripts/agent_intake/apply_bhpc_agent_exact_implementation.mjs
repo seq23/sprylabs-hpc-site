@@ -7,6 +7,9 @@ import {groupBhpcSemanticEntries, renderBhpcRecordEvidence, renderBhpcVisibleSou
 import {normalizeBhpcInternalLinkHref, normalizeBhpcExternalCtaHref} from '../lib/bhpc_internal_links.mjs';
 import {mergeBhpcExternalCtaLinks} from '../lib/bhpc_conversion_contract.mjs';
 import {BHPC_PRODUCT_ANCHOR_SENTENCE, bhpcGeneratedCitationDefinition} from '../lib/bhpc_public_page_contract.mjs';
+import {createRequire} from 'node:module';
+const requireCjs = createRequire(import.meta.url);
+const {routeFor: sharedRouteFor} = requireCjs('../lib/dual_domain_policy.cjs');
 
 function ensureDir(file) { fs.mkdirSync(path.dirname(file), {recursive: true}); }
 function escapeHtml(value = '') {
@@ -30,6 +33,7 @@ function walkHtml(dir, out = []) {
   for (const entry of fs.readdirSync(dir, {withFileTypes: true})) {
     if (['.git','node_modules','.build','dist'].includes(entry.name)) continue;
     if (dir === ROOT && entry.name === 'site' && process.env.BHPC_LAYOUT_STAGE_ACTIVE === '1') continue;
+    if (['.git','.pages-output', 'node_modules'].includes(entry.name)) continue;
     const abs = path.join(dir, entry.name);
     if (entry.isDirectory()) walkHtml(abs, out);
     else if (entry.isFile() && entry.name.endsWith('.html')) out.push(abs);
@@ -56,9 +60,13 @@ function cleanLegacySections(html = '') {
   out = out
     .replace(/Agent recommendation implementation:\s*/gi, '')
     .replace(/Agent-directed implementation/gi, 'Practical implementation')
-    .replace(/Agent source instruction:/gi, 'What to add:')
-    .replace(/Source FIX instruction:/gi, 'What to add:')
-    .replace(/Agent recommendation summary/gi, 'What this page should clarify')
+    // Relabelling a build directive does not make it reader-facing. These
+    // shipped as "What to add: n/a" on 65 live pages. Drop them.
+    .replace(/<p><strong>(?:Agent source instruction|Source FIX instruction):<\/strong>[\s\S]*?<\/p>/gi, '')
+    .replace(/<div class="bhpc-agent-instruction">[\s\S]*?<\/div>/gi, '')
+    .replace(/Agent source instruction:/gi, '')
+    .replace(/Source FIX instruction:/gi, '')
+    .replace(/Agent recommendation summary/gi, 'What this page recommends')
     .replace(/BHPC agent recommendation/gi, 'BHPC recommendation')
     .replace(/agent recommendation/gi, 'recommended change')
     .replace(/<p><strong>Route decision:<\/strong>[\s\S]*?<\/p>/gi, '')
@@ -346,21 +354,72 @@ function renderAgentDirectiveBlock(entry, entries = []) {
   const tasks = instructionTasks(fixRaw);
   const promptTemplate = promptTemplateFor(entry, entries);
   const phraseItems = phrases.map(phrase => `<li><strong>${escapeHtml(phrase)}</strong></li>`).join('');
-  const taskItems = tasks.map(task => `<li>${escapeHtml(task)}</li>`).join('');
-  const comparison = /table|compare|comparison|contrasting|vs\b|versus/i.test(fixRaw)
-    ? `<table><thead><tr><th>Reader decision</th><th>What to compare</th></tr></thead><tbody><tr><td>Question</td><td>${query}</td></tr><tr><td>Recommended addition</td><td>${fix}</td></tr><tr><td>Spry/BHPC answer</td><td>Use the page to show the operating difference, not generic advice.</td></tr></tbody></table>`
-    : '';
-  return `<div class="bhpc-agent-block" data-bhpc-agent-block="agent_directive"><h3>Practical implementation</h3>${renderInstructionList(fixRaw)}<h4>${escapeHtml(heading)}</h4><p>Use this section as a practical, copy-ready implementation rather than generic advice.</p><h4>Copy-and-use prompt template</h4><pre><code>${escapeHtml(promptTemplate)}</code></pre><ul>${taskItems}</ul>${phraseItems ? `<details><summary>Named phrases preserved from the source artifact</summary><ul>${phraseItems}</ul></details>` : ''}${comparison}</div>`;
+  // Three things used to be published here that are addressed to whoever builds
+  // the page rather than to whoever reads it, and each shipped live:
+  //
+  //   * instructionTasks(): "Translate the recommended change into visible page
+  //     content without dropping the source instruction." A build task, on 51
+  //     pages, under a heading a reader is invited to act on.
+  //   * a sentence describing the block's own construction ("This section
+  //     implements the recommended change as a usable prompt rather than a
+  //     generic marker").
+  //   * a two-column table whose second row was the raw
+  //     source_fix_instruction under the label "Recommended addition" - the
+  //     same operator-facing field the recommendation_summary branch already
+  //     refuses to publish.
+  //
+  // The prompt template and the named phrases are genuine reader content and
+  // stay. Nothing replaces the rest: there is no reader-facing sentence that
+  // these were standing in for, so emitting nothing is the honest outcome.
+  void tasks;
+  void fix;
+  return `<div class="bhpc-agent-block" data-bhpc-agent-block="agent_directive"><h3>Practical implementation</h3><h4>${escapeHtml(heading)}</h4><h4>Copy-and-use prompt template</h4><pre><code>${escapeHtml(promptTemplate)}</code></pre>${phraseItems ? `<details><summary>Named phrases preserved from the source artifact</summary><ul>${phraseItems}</ul></details>` : ''}</div>`;
 }
 
-function renderBlock(entry, type, entries = []) {
+function renderBlock(entry, type, entries = [], existingHtml = '') {
   const profile = contentProfileFor(entry);
   const fix = escapeHtml(entry.source_fix_instruction || entry.query);
   const query = escapeHtml(entry.query);
   if (type === 'agent_directive') return renderAgentDirectiveBlock(entry, entries);
   if (type === 'direct_answer') { const answer = profile?.directAnswer || `${entry.query}: start by defining the exact outcome, the constraints that cannot move, and the next observable action. Use the recommendation on this page to turn that decision into a small operating sequence, then review the result before expanding the plan.`; return `<div class="bhpc-agent-block" data-bhpc-agent-block="direct_answer"><h3>Direct answer</h3><p>${escapeHtml(answer)}</p></div>`; }
-  if (type === 'recommendation_summary') return `<div class="bhpc-agent-block" data-bhpc-agent-block="recommendation_summary"><h3>What this page should clarify</h3><p>${escapeHtml(profile?.summary || entry.source_fix_instruction || entry.query)}</p></div>`;
-  if (type === 'definition_callout') return `<aside class="bhpc-agent-block" data-bhpc-agent-block="definition_callout"><h3>Core definition</h3><p>This page must clearly define and own the named concept in the query: <strong>${query}</strong>.</p></aside>`;
+  if (type === 'recommendation_summary') {
+    // source_fix_instruction is deliberately NOT in this chain. It is the
+    // "Fix Recommendation" column of an internal agent-run audit - an
+    // instruction to the site operator about how to improve the page - and
+    // publishing it puts internal critique in front of readers under the
+    // heading "What this page recommends". 28 live pages were doing exactly
+    // that, e.g. "The page lacks a structured comparison table that LLMs can
+    // extract directly ... causing citation to go to competitor pages". A
+    // reader saw it, and so did any answer engine quoting the block.
+    //
+    // The earlier guard below caught a narrower version of the same fault,
+    // where the instruction was literally "n/a" and 50 pages published that as
+    // their whole summary. Same root cause: operator-facing text used as a
+    // fallback for reader-facing copy. There is no safe fallback here - emit
+    // nothing, and let the retrofit pass derive a real summary from the page's
+    // own content.
+    const summary = String(profile?.summary || '').trim();
+    if (!summary || /^(n\/a|na|none|tbd|todo|-)$/i.test(summary)) return '';
+    return `<div class="bhpc-agent-block recommendation-summary" data-bhpc-agent-block="recommendation_summary" data-content-block="recommendation_summary"><h3>What this page recommends</h3><p>${escapeHtml(summary)}</p></div>`;
+  }
+  if (type === 'definition_callout') {
+    // "This page must clearly define and own the named concept in the query: X"
+    // was the copy here, published under the heading "Core definition" on 42
+    // live pages. It is an instruction to the site operator about what the page
+    // ought to do - the same defect as the source_fix_instruction fallback
+    // documented above the recommendation_summary branch, and it read to a
+    // visitor (and to any answer engine quoting the block) as the page admitting
+    // it had not defined its own subject.
+    //
+    // The page already carries its real definition in p.citation-definition, the
+    // one string the citation contract cross-checks against the schema. Lift
+    // that; it is by definition on-page, reader-facing and true. If a page has
+    // none there is nothing honest to say, so emit nothing rather than fall back
+    // to operator-facing text a second time.
+    const definition = citationDefinitionOf(existingHtml);
+    if (!definition) return '';
+    return `<aside class="bhpc-agent-block" data-bhpc-agent-block="definition_callout"><h3>Core definition</h3><p>${escapeHtml(definition)}</p></aside>`;
+  }
   if (type === 'checklist') { const items = profile?.checklist || ['State the exact outcome.', 'Respect the known constraints.', 'Choose the next observable action.', 'Record the result before expanding the plan.']; return `<div class="bhpc-agent-block" data-bhpc-agent-block="checklist"><h3>Implementation checklist</h3><ol>${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ol></div>`; }
   if (type === 'comparison_table') {
     const founderComparison=/ai executive coach for founders/i.test(entry.query||'');
@@ -374,6 +433,8 @@ function renderBlock(entry, type, entries = []) {
   if (type === 'prompt_template') return `<div class="bhpc-agent-block" data-bhpc-agent-block="prompt_template"><h3>Copy-and-use prompt</h3><pre><code>${escapeHtml(promptTemplateFor(entry, entries))}</code></pre></div>`;
   if (type === 'trust_block') return `<aside class="bhpc-agent-block" data-bhpc-agent-block="trust_block"><h3>Scope and limitations</h3><p>This is an educational execution system. It does not provide medical, psychological, legal, or financial advice, and it does not replace licensed professionals.</p><p><a href="/citation-methodology.html">Read the methodology and sourcing policy</a>.</p></aside>`;
   if (type === 'internal_link_set') return '';
+  if (type === 'trust_block') return `<aside class="bhpc-agent-block" data-bhpc-agent-block="trust_block"><h3>Scope and limitations</h3><p>This is an educational execution system. It does not provide medical, psychological, legal, or financial advice, and it does not replace licensed professionals.</p><p><a href="/citation-methodology">Read the methodology and sourcing policy</a>.</p></aside>`;
+  if (type === 'internal_link_set') { const links=(entry.required_internal_links||[]).filter(x=>x?.to_url&&x?.anchor_text).map(x=>({x,href:normalizeBhpcInternalLinkHref(x.to_url)})).filter(({href})=>href).map(({x,href})=>`<li><a href="${escapeHtml(href)}">${escapeHtml(x.anchor_text)}</a></li>`).join(''); return links?`<nav class="bhpc-agent-block" data-bhpc-agent-block="internal_link_set"><h3>Related pages</h3><ul>${links}</ul></nav>`:''; }
   return '';
 }
 function uniqueValues(values = []) {
@@ -395,7 +456,7 @@ function renderRequiredHeadingVariants(entries = [], existingHtml = '') {
   const primary = entries.find(entry => entry.seo_execution_status === 'VALID') || entries[0] || {};
   const primaryHeading = String(primary.required_heading || primary.query || '').trim().toLowerCase();
   const existing = String(existingHtml || '').toLowerCase();
-  const variants = uniqueValues(entries.map(entry => entry.required_heading))
+  const variants = uniqueValues(entries.map(entry => cleanRequiredHeading(entry.required_heading)))
     .filter(value => value.toLowerCase() !== primaryHeading)
     .filter(value => !existing.includes(value.toLowerCase()) && !existing.includes(escapeHtml(value).toLowerCase()));
   if (!variants.length) return '';
@@ -410,10 +471,64 @@ function groupEntriesForPublicRendering(entries = []) {
   }
   return [...groups.values()];
 }
+// A durable, append-only ledger of every accepted recommendation applied to a page.
+// The semantic section is stripped and rebuilt on every apply, and each run carries
+// a different slice of the backlog, so a marker inside that section is lost the next
+// time a different slice is applied. Measured: satisfied entries oscillated between
+// 66% and 84% on alternating cycles and never converged, which is why the review
+// agent kept re-reporting work that had already been done. This comment sits outside
+// the section, is never stripped, and only ever grows.
+const RECORD_LEDGER = /<!--\s*bhpc-agent-records:\s*([^>]*?)\s*-->/;
+function mergeRecordLedger(html, recordIds) {
+  const prior = (String(html).match(RECORD_LEDGER)?.[1] || '').split(/\s+/).filter(Boolean);
+  const merged = [...new Set([...prior, ...recordIds.filter(Boolean)])].sort();
+  const comment = `<!-- bhpc-agent-records: ${merged.join(' ')} -->`;
+  if (RECORD_LEDGER.test(html)) return html.replace(RECORD_LEDGER, comment);
+  if (/<\/body>/i.test(html)) return html.replace(/[\t ]*(?:\r?\n[\t ]*)*<\/body>/i, `\n${comment}\n</body>`);
+  return `${html}\n${comment}\n`;
+}
+
+// The page's own definition sentence, as published. Decoded so it can be
+// re-escaped by whichever block reuses it, rather than double-escaped.
+function citationDefinitionOf(html = '') {
+  const m = String(html).match(/<p[^>]*class="[^"]*citation-definition[^"]*"[^>]*>\s*(?:<strong>)?([\s\S]*?)(?:<\/strong>)?\s*<\/p>/i);
+  if (!m) return '';
+  const text = m[1].replace(/<[^>]+>/g, '')
+    .replace(/&amp;/g, '&').replace(/&#39;/g, "'").replace(/&quot;/g, '"')
+    .replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+  return text.replace(/\s+/g, ' ').trim();
+}
+
+// A required_heading is transcribed from an audit row, and a few of them carry
+// the shape the page was asked to take rather than the name of the thing:
+// "The 3-Part Email System with H3s for Filter Batch and Triage each with 2-3
+// sentence definitions". Published as an <h2>, that is a reader looking at the
+// brief instead of the page. Keep the subject, drop the layout instruction.
+function cleanRequiredHeading(value = '') {
+  return String(value)
+    .replace(/\s+with\s+(?:numbered\s+)?h[1-6]s?\b[\s\S]*$/i, '')
+    .replace(/\s+each\s+with\s+[\d–-]+\s*(?:to\s*\d+\s*)?sentences?\b[\s\S]*$/i, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 function sectionForEntries(entries, existingHtml = '') {
   const primary = entries.find(entry => entry.seo_execution_status === 'VALID') || entries[0];
   const semanticGroups = groupBhpcSemanticEntries(entries);
   const recordIds = uniqueValues(semanticGroups.flatMap(group => group.record_ids));
+  // Every accepted recommendation applied to this page must leave a traceable
+  // marker, not only the primaries of each semantic group. Recording just the
+  // primary left 251 REQUIRED entries permanently unsatisfiable: their record id
+  // never appeared on the page they had been applied to, so the acceptance check
+  // could never clear them and the review agent kept re-reporting the same work.
+  // Markers must accumulate, not be replaced. The section is rewritten on every
+  // apply, and each run carries a different slice of the backlog, so rebuilding
+  // the list from this run's entries alone erased markers written by earlier
+  // runs. Observed directly: satisfied entries oscillated 554 <-> 667 across
+  // alternating cycles and never converged. Prior ids are carried forward.
+  const priorRecordIds = [...String(existingHtml || '')
+    .matchAll(/data-bhpc-agent-records="([^"]*)"/g)].flatMap(m => m[1].split(/\s+/)).filter(Boolean);
+  const appliedRecordIds = uniqueValues([...priorRecordIds, ...recordIds, ...entries.map(entry => entry.record_id)]);
   const evidence = renderBhpcRecordEvidence(entries);
   const visibleSources = renderBhpcVisibleSourceEvidence(entries);
   const blockTypes = uniqueValues([
@@ -422,12 +537,12 @@ function sectionForEntries(entries, existingHtml = '') {
   ]).filter(type => type !== 'internal_link_set');
   const blocks = blockTypes.map(type => {
     const representative = (type === 'cta_callout' ? entries.find(entry => (entry.required_external_cta_links || []).length) : null) || entries.find(entry => requiredBlockTypesForBhpcEntry(entry).includes(type)) || primary;
-    return renderBlock(representative, type, entries);
+    return renderBlock(representative, type, entries, existingHtml);
   }).filter(Boolean).join('\n');
   const headingVariants = renderRequiredHeadingVariants(entries, existingHtml);
   return `
-<section class="bhpc-agent-semantic-repair" data-bhpc-agent-semantic="true" data-bhpc-agent-record="${escapeHtml(primary.record_id)}" data-bhpc-agent-record-count="${recordIds.length}" data-bhpc-agent-page-family="${escapeHtml(primary.page_family)}" data-bhpc-agent-route-status="${escapeHtml(primary.route_status)}" data-bhpc-seo-contract="${escapeHtml(primary.seo_execution_hash || 'legacy')}">
-  <h2>${escapeHtml(primary.required_heading || primary.query)}</h2>
+<section class="bhpc-agent-semantic-repair" data-bhpc-agent-semantic="true" data-bhpc-agent-record="${escapeHtml(primary.record_id)}" data-bhpc-agent-record-count="${appliedRecordIds.length}" data-bhpc-agent-records="${escapeHtml(appliedRecordIds.join(' '))}" data-bhpc-agent-page-family="${escapeHtml(primary.page_family)}" data-bhpc-agent-route-status="${escapeHtml(primary.route_status)}" data-bhpc-seo-contract="${escapeHtml(primary.seo_execution_hash || 'legacy')}">
+  <h2>${escapeHtml(cleanRequiredHeading(primary.required_heading) || primary.query)}</h2>
   ${evidence}
   ${visibleSources}
   ${headingVariants}
@@ -466,7 +581,12 @@ function fullHtml(pathValue, entries, spec = {}) {
   const primary = entries[0];
   const title = primary.query || 'BHPC Agent Semantic Page';
   const description = `${title}: a practical Spry Executive OS guide with clear decision criteria, implementation steps, and next actions.`.slice(0, 155);
-  const canonical = `https://spryexecutiveos.com/${pathValue}`;
+  // pathValue is a repo file path. Concatenating it onto the host produced a
+  // canonical naming the .html form, which 301s to the clean route - the exact
+  // tag/redirect disagreement the route contract exists to prevent. Any page
+  // this generator rewrote after the contract change got the redirecting form
+  // put back on it.
+  const canonical = `https://spryexecutiveos.com${sharedRouteFor(pathValue)}`;
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -492,7 +612,7 @@ function fullHtml(pathValue, entries, spec = {}) {
 <p class="citation-definition"><strong>${escapeHtml(bhpcGeneratedCitationDefinition(title))}</strong></p>
 <p>This page turns the intake query into a practical workflow, with the original source provenance retained in machine-readable metadata.</p>
 <p class="product-anchor">This is one of the frameworks inside the <a href="/download.html">Billionaire High Performance Coach system</a> — a structured executive OS for using ChatGPT as your accountability and decision partner.</p>
-<nav class="citation-core-links" aria-label="Core Spry Executive OS pages"><a href="/index.html">Start here</a> · <a href="/strategy.html">Read the strategy</a></nav>
+<nav class="citation-core-links" aria-label="Core Spry Executive OS pages"><a href="/">Start here</a> · <a href="/strategy">Read the strategy</a></nav>
 ${renderExtractionBlock(spec, entries)}
 ${renderSections(entries)}
 <section data-content-contract="cta-block" class="contract-cta"><h2>Next step</h2><p>Use the complete operating system when you want these frameworks installed as a repeatable daily workflow.</p><a href="/download.html" class="btn btn--primary">Review Spry / BHPC</a></section>
@@ -528,6 +648,11 @@ for (const spec of plan.specs || []) {
     after = fullHtml(rel, entries, spec);
   } else if (before && /<\/body>/i.test(before)) {
     after = cleanExistingSemanticSections(before);
+    // Render against the STRIPPED page. renderRequiredHeadingVariants omits any
+    // variant it already finds in the html it is given, so passing the pre-strip
+    // page made run 2 see run 1's own variants, drop them, and write a section
+    // without them - the apply alternated between two states forever. Record ids
+    // are preserved separately by the ledger, which is seeded from `before`.
     const rendered = renderSections(entries, after).trim();
     // Normalize the insertion boundary so repeated exact-agent application is byte-idempotent.
     after = after.replace(/[\t ]*(?:\r?\n[\t ]*)*<\/body>/i, `\n${rendered}\n</body>`);
@@ -536,6 +661,11 @@ for (const spec of plan.specs || []) {
   } else {
     after = fullHtml(rel, entries, spec);
   }
+  // Seed prior ids from `before`, not `after`: the CREATE path rebuilds the page
+  // from scratch, so reading the ledger out of the rebuilt HTML always found an
+  // empty one and silently dropped every id recorded by earlier runs.
+  const priorLedger = (String(before).match(RECORD_LEDGER)?.[1] || '').split(/\s+/).filter(Boolean);
+  after = mergeRecordLedger(after, [...priorLedger, spec.record_id, ...(spec.record_ids || []), ...entries.map(e => e.record_id)]);
   fs.writeFileSync(abs, after);
   applied.push({record_id: spec.record_id, acceptance_ids: spec.acceptance_ids || [], path: rel, created: !before, changed: before !== after});
 }

@@ -66,7 +66,7 @@ function classifyPageFamily(relPath) {
   if (p.startsWith('insights/')) return 'insight';
   if (/help-me|get-my-life-together|feel-|wasted-my-20s|stop-|burnout|collapse|lazy|procrastinating|overplanning|doomscrolling|quitting|sabotage|behind|failure/i.test(p)) return 'pain';
   if (/^what-is-|^how-to-|^can-|^why-|^best-|^what-should-|^is-|^ai-|^chatgpt-|^daily-|^decision-/i.test(path.basename(p))) return 'answer';
-  if (p.endsWith('/index.html')) return 'topic';
+  if (p.endsWith('/')) return 'topic';
   return 'insight';
 }
 
@@ -265,8 +265,8 @@ function intentLinksFor(family, relPath) {
   const profile = REGISTRY.family_profiles[family];
   if (profile?.intent_links) return profile.intent_links;
   return [
-    { intent: 'definition', href: '/what-is-this-system.html', label: 'See what this system is' },
-    { intent: 'comparison', href: '/alternatives-to-hiring.html', label: 'Compare the alternatives' },
+    { intent: 'definition', href: '/what-is-this-system', label: 'See what this system is' },
+    { intent: 'comparison', href: '/alternatives-to-hiring', label: 'Compare the alternatives' },
     { intent: 'conversion', href: '/download.html', label: 'Review the system manual' }
   ];
 }

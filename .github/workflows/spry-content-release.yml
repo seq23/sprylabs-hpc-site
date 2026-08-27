@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Sync latest main before install
@@ -67,12 +67,21 @@ jobs:
           console.log(`run=${state.autopublishing === 'paused' || state.emergency_stop === true ? 'false' : 'true'}`);
           NODE
           fi
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         if: steps.runtime.outputs.run == 'true'
         with:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
+      # Reports whether adding volume is still being absorbed. Advisory: it refuses
+      # to hold publishing on pre-2026-08-26 data, because that window measures a
+      # site whose sitemaps were never submitted and whose unknown URLs returned 200.
+      - name: Cadence headroom
+        continue-on-error: true
+        env:
+          GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
+          GSC_SITES: ${{ secrets.GSC_SITE_URL_SPRY }},${{ secrets.GSC_SITE_URL_BHPC }}
+        run: npm run cadence:headroom
         if: steps.runtime.outputs.run == 'true'
       - name: Resolve release mode
         if: steps.runtime.outputs.run == 'true'
@@ -88,6 +97,25 @@ jobs:
       - name: Rebuild ownership and admin snapshots
         if: steps.runtime.outputs.run == 'true'
         run: npm run ownership:build && npm run admin:build
+      # The gate runs before anything is committed, so a release that published
+      # faster than the cap allows fails here and its pages never land.
+      - name: Cadence gate
+        run: npm run cadence:gate
+
+      # A read-only gate with no advancer is a ratchet. Nothing else in this
+      # repository writes data/cadence/known_urls.json - checking deliberately
+      # stopped writing it so the gate could not consume its own evidence - so if
+      # the one workflow that publishes never records what it published, the
+      # ledger freezes while the library grows and the count of "new" URLs climbs
+      # every run until it crosses the cap and stays over it permanently, with no
+      # bad release behind it.
+      #
+      # Reachable only after the gate above exited zero, so the cap still binds:
+      # an over-cap release fails at that step and never reaches this one.
+      - name: Record the released URL set as the new cadence baseline
+        run: |
+          node scripts/cadence_gate.js --accept --reason "Spry content release run ${{ github.run_id }} on $(date -u +%F): the cadence gate cleared before this step, so the released URL set is inside the declared weekly cap."
+
       - name: Commit validated Spry content release
         if: steps.runtime.outputs.run == 'true'
         env:
@@ -98,7 +126,7 @@ jobs:
             npm run admin:build
         run: |
           ./.github/scripts/commit_and_push_if_changed.sh "spry content release" spry-content-release
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: spry-content-release-trace-${{ github.run_id }}

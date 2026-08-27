@@ -18,7 +18,7 @@ function decodeEntities(value) {
 
 function walk(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    if (['node_modules', '.git', '_ops', 'scripts', 'data', '.github', 'audit', '.build', 'releases', 'templates', 'docs'].includes(entry.name)) continue;
+    if (['.pages-output', 'node_modules', '.git', '_ops', 'scripts', 'data', '.github', 'audit', '.build', 'releases', 'templates', 'docs'].includes(entry.name)) continue;
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) walk(full);
     else if (entry.isFile() && entry.name.endsWith('.html')) checkFile(full);

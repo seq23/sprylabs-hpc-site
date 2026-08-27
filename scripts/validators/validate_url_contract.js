@@ -6,7 +6,7 @@ const ROOT = process.cwd();
 const FORBIDDEN = /https?:\/\/aplayermode\.com\/download\b|aplayermode\.com\/download\b/g;
 const APPROVED_EXTERNAL = new Set(['https://aplayermode.com','http://aplayermode.com']);
 const exts = new Set(['.html','.htm','.js','.json','.txt','.xml','.md','.css']);
-const skip = new Set(['.git','node_modules','dist','coverage','tmp','.build','releases','_ops','audit']);
+const skip = new Set(['.git','.pages-output', 'node_modules','dist','coverage','tmp','.build','releases','_ops','audit']);
 let failures = [];
 function walk(dir){
   for (const ent of fs.readdirSync(dir,{withFileTypes:true})){

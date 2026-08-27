@@ -3,7 +3,7 @@ const fs = require("fs");
 const required = [
   "llms.txt",
   "answers.json",
-  "coverage.json",
+  "knowledge-map.json",
   "data/query_coverage_map.json",
   "data/query_metadata.json",
   "data/internal_authority_graph.json",

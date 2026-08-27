@@ -45,7 +45,22 @@ for (const record of registry.pages || []) {
   const types = new Set(graph.flatMap(node => Array.isArray(node['@type']) ? node['@type'] : [node['@type']]).filter(Boolean));
   if (![...types].some(type => ['WebPage','Article','BlogPosting'].includes(type))) errors.push(`${rel}: primary page schema missing`);
   if (!types.has('DefinedTerm')) errors.push(`${rel}: DefinedTerm schema missing`);
-  const hasVisibleFaq = /<section[^>]+(?:class=["'][^"']*(?:faq|citation-faq)[^"']*["']|data-visible-faq=["']true["'])/i.test(html);
+  // A page whose H1 is a question and which answers it in the visible summary
+  // block holds its Q&A in the page's own structure rather than in a
+  // section.faq wrapper. repair_schema_parity builds FAQPage from exactly that
+  // pair, so this check has to recognise the same shape - otherwise it reports
+  // drift on pages whose schema is fully backed by text the reader can see.
+  // The conditions below mirror that rule exactly, including the twelve-word
+  // floor that treats a shorter string as a label rather than an answer.
+  const faqSection = /<section[^>]+(?:class=["'][^"']*(?:faq|citation-faq)[^"']*["']|data-visible-faq=["']true["'])/i.test(html);
+  const h1Match = /<h1[^>]*>([\s\S]*?)<\/h1>/i.exec(html);
+  const answerMatch = /class=["'][^"']*recommendation-summary__answer[^"']*["'][^>]*>([\s\S]*?)<\/p>/i.exec(html);
+  const plain = (v) => String(v || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+  const questionTitled = !!h1Match && !!answerMatch
+    && /\?$/.test(plain(h1Match[1]))
+    && plain(answerMatch[1]).split(' ').filter(Boolean).length >= 12
+    && plain(answerMatch[1]).toLowerCase() !== plain(h1Match[1]).toLowerCase();
+  const hasVisibleFaq = faqSection || questionTitled;
   if (hasVisibleFaq !== types.has('FAQPage')) errors.push(`${rel}: FAQPage presence does not match visible FAQ presence`);
   if (types.has('SoftwareApplication')) errors.push(`${rel}: blanket SoftwareApplication schema is not permitted on editorial pages`);
 }

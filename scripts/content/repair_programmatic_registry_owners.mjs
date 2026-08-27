@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
+import { createRequire } from 'node:module';
+const requireCjs = createRequire(import.meta.url);
+const { routeFor: sharedRouteFor } = requireCjs('../lib/dual_domain_policy.cjs');
 
 const registryPath = 'data/content/page_admission_registry.json';
 const queryPath = 'data/citation/query_registry.json';
@@ -70,15 +73,13 @@ function uniqueQueryFor(row, seenKeys) {
   }
   return candidate;
 }
+// Route form is the shared dual-domain contract: the URL that answers 200
+// without a redirect hop. See scripts/lib/dual_domain_policy.cjs.
 function canonicalUrlFor(row) {
-  const route = String(row.primary_page || '').replace(/index\.html$/, '').replace(/\\/g, '/');
-  return `https://${row.canonical_domain || 'spryexecutiveos.com'}/${route}`;
+  return `https://${row.canonical_domain || 'spryexecutiveos.com'}${routeForPath(row.primary_page)}`;
 }
 function routeForPath(primaryPage = '') {
-  const path = String(primaryPage || '').replace(/\\/g, '/');
-  if (path === 'index.html') return '/';
-  if (path.endsWith('/index.html')) return `/${path.slice(0, -'/index.html'.length)}/`;
-  return `/${path}`;
+  return sharedRouteFor(String(primaryPage || ''));
 }
 function targetFor(row) {
   return `/${String(row.primary_page || '').replace(/\\/g, '/')}`;

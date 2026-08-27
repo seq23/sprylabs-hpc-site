@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const root = process.cwd();
+const { routeFor } = require('../lib/dual_domain_policy.cjs');
 const dataPath = path.join(root, 'data/citation_opportunities/bhpc_priority_queries.json');
 if (!fs.existsSync(dataPath)) {
   console.log('[citation:warn] WARN: data/citation_opportunities/bhpc_priority_queries.json not found; citation readiness skipped');
@@ -35,7 +36,11 @@ for (const item of items) {
 }
 const answerIndex = read('answers.json');
 for (const item of items) {
-  if (!answerIndex.includes(item.answer_page)) warnings.push(`answers.json missing ${item.answer_page}`);
+  // answers.json holds canonical URLs, which are the 200-serving form and no
+  // longer carry .html; answer_page is a repo-relative file path. Compare via
+  // the route contract rather than assuming the two strings match.
+  const route = routeFor(item.answer_page);
+  if (!answerIndex.includes(route)) warnings.push(`answers.json missing ${item.answer_page} (route ${route})`);
 }
 const llms = read('llms.txt');
 for (const item of items) {

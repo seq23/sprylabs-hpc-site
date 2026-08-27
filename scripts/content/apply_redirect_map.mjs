@@ -13,7 +13,7 @@ const excluded = new Set([
   'docs/REDIRECT_MIGRATION_HISTORY.md',
 ]);
 const textExtensions = new Set(['.html', '.xml', '.txt', '.json', '.md', '.js', '.mjs', '.cjs']);
-const skipDirs = new Set(['.git', 'node_modules', 'artifacts', 'coverage', 'reports', '.build', 'test-results', 'playwright-report']);
+const skipDirs = new Set(['.git', '.pages-output', 'node_modules', 'artifacts', 'coverage', 'reports', '.build', 'test-results', 'playwright-report']);
 
 function routeFromSource(sourcePath) {
   const normalized = '/' + sourcePath.replace(/^\/+/, '');
@@ -25,6 +25,12 @@ function variantsFor(sourcePath) {
   const route = routeFromSource(sourcePath);
   const variants = new Set([route, '/' + sourcePath.replace(/^\/+/, ''), sourcePath.replace(/^\/+/, ''), route.replace(/^\//, '')]);
   if (route.endsWith('/')) variants.add(route.slice(0, -1));
+  // A retired page can also be referenced by its canonical (extensionless)
+  // route. Without this the redirect map stopped matching the day the route
+  // contract dropped .html, and generators quietly relinked to a dead URL.
+  for (const value of [...variants]) {
+    if (value.endsWith('.html')) variants.add(value.slice(0, -'.html'.length));
+  }
   for (const domain of domains) {
     for (const value of [...variants]) {
       variants.add(`https://${domain}${value}`);
@@ -38,6 +44,37 @@ const mappings = redirects.map((entry) => ({
   target: entry.target,
   variants: variantsFor(entry.source_path),
 }));
+
+// A file that does not name any retired route cannot produce a replacement, so
+// it does not need the per-variant loops below.
+//
+// Those loops are O(mappings x variants x corpus): every mapping contributes
+// about 16 variants, and each variant costs an includes() scan plus a compiled
+// RegExp for every text file in the tree. At the three redirects this script
+// was written for that is invisible. Retiring the 743 fallback gap-fill routes
+// takes it to roughly 11,900 variant passes over 156 MB across 10,852 files,
+// twice per build - measured at about 16s for a single 5.5 MB registry, so tens
+// of minutes added to every build from then on, permanently.
+//
+// Every textual form of a route - absolute, relative, extensionless, or
+// domain-qualified - still contains the route's own last path segment. Testing
+// one combined alternation of those segments per file skips the files that
+// cannot match. Files that can match take exactly the path they took before, so
+// the output is unchanged; only the ones with nothing to find are skipped.
+//
+// If any mapping yields an empty segment the guard disables itself rather than
+// risk skipping a file it cannot reason about.
+function routeSegment(sourcePath) {
+  const clean = sourcePath.replace(/^\/+/, '').replace(/\/index\.html$/, '').replace(/\.html$/, '');
+  const parts = clean.split('/').filter(Boolean);
+  return parts.length ? parts[parts.length - 1] : '';
+}
+const segments = mappings.map((mapping) => routeSegment(mapping.source_path));
+const canPrefilter = segments.every((segment) => segment.length > 0);
+const prefilter = canPrefilter
+  ? new RegExp([...new Set(segments)].map((segment) => segment.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'))
+  : null;
+let filesSkippedByPrefilter = 0;
 
 for (const mapping of mappings) {
   fs.rmSync(path.join(ROOT, mapping.source_path), {force: true});
@@ -58,7 +95,10 @@ function replaceUrlValue(value, rel) {
   const bare = suffix ? result.slice(0, -suffix.length) : result;
   if (!/^[a-z][a-z0-9+.-]*:/i.test(bare) && !bare.startsWith('/') && !bare.startsWith('#')) {
     const resolved = path.posix.normalize(path.posix.join(path.posix.dirname(rel), bare));
-    const relativeMatch = mappings.find((mapping) => mapping.source_path === resolved);
+    // A relative link can name the clean route as well as the file, so resolve
+    // both shapes back to the retired source path.
+    const candidates = [resolved, `${resolved}.html`, path.posix.join(resolved.replace(/\/$/, ''), 'index.html')];
+    const relativeMatch = mappings.find((mapping) => candidates.includes(mapping.source_path));
     if (relativeMatch) return relativeMatch.target + suffix;
   }
   for (const mapping of mappings) {
@@ -111,6 +151,7 @@ function walk(dir) {
     if (entry.isDirectory()) walk(full);
     else if (entry.isFile() && textExtensions.has(path.extname(entry.name)) && !excluded.has(rel)) {
       const before = fs.readFileSync(full, 'utf8');
+      if (prefilter && !prefilter.test(before)) { filesSkippedByPrefilter += 1; continue; }
       const { out, replacements } = rewriteText(rel, before);
       if (replacements && out !== before) {
         fs.writeFileSync(full, out, 'utf8');
@@ -126,7 +167,9 @@ fs.mkdirSync(evidenceDir, { recursive: true });
 fs.writeFileSync(path.join(evidenceDir, 'summary.json'), JSON.stringify({
   status: 'PASS',
   redirect_count: mappings.length,
+  files_skipped_by_prefilter: filesSkippedByPrefilter,
+  prefilter_active: Boolean(prefilter),
   changed_files: changed,
   total_replacements: changed.reduce((sum, item) => sum + item.replacements, 0),
 }, null, 2) + '\n');
-console.log(`[redirects:apply] OK: ${mappings.length} redirects; ${changed.length} files updated; ${changed.reduce((sum, item) => sum + item.replacements, 0)} replacements`);
+console.log(`[redirects:apply] OK: ${mappings.length} redirects; ${changed.length} files updated; ${changed.reduce((sum, item) => sum + item.replacements, 0)} replacements; ${filesSkippedByPrefilter} files skipped by prefilter`);

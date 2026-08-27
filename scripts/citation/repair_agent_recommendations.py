@@ -91,7 +91,7 @@ def ensure_sources(soup, main, minimum):
         section=soup.new_tag('section'); section['class']='sources'; main.append(section)
         h=soup.new_tag('h2'); h.string='Sources and reference context'; section.append(h)
     links=section.select('a[href]')
-    defaults=[('/what-is-this-system.html','What this system is'),('/strategy.html','Strategy overview'),('/download.html','Product download')]
+    defaults=[('/what-is-this-system','What this system is'),('/strategy','Strategy overview'),('/download.html','Product download')]
     for href,label in defaults:
         if len(section.select('a[href]'))>=minimum: break
         p=soup.new_tag('p'); a=soup.new_tag('a',href=href); a.string=label; p.append(a); section.append(p)
@@ -128,6 +128,12 @@ def repair_item(item):
     if item.get('required_bold_heading'): ensure_bold_heading(soup,main,item['required_bold_heading'])
     if item.get('query'): ensure_product_anchor(soup,main)
     new=str(soup)
+    # download.html is the revenue surface and sits at the revenue_surface tier
+    # of the protected baseline. Reserializing it through BeautifulSoup changes
+    # its hash without changing a word, which trips validate:ownership on a page
+    # nobody intended to edit.
+    if str(fp.resolve().name)=='download.html' and fp.resolve().parent==ROOT.resolve():
+        return False
     if new!=raw:
         fp.write_text(new,encoding='utf-8')
         return True

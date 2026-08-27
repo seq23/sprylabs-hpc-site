@@ -40,11 +40,15 @@ export function assertKnownBlockTypes(types = []) {
 export const BHPC_PAGE_FAMILY_REQUIRED_BLOCKS = Object.freeze({
   comparison_page: Object.freeze([
     BHPC_AGENT_BLOCK_TYPES.COMPARISON_TABLE,
-    BHPC_AGENT_BLOCK_TYPES.DIRECT_ANSWER
+    BHPC_AGENT_BLOCK_TYPES.DIRECT_ANSWER,
+    // Requested on 913 of 913 accepted recommendations - the most asked-for block
+    // in the whole dataset - but absent from this family until now.
+    BHPC_AGENT_BLOCK_TYPES.RECOMMENDATION_SUMMARY
   ]),
   authority_insight: Object.freeze([
     BHPC_AGENT_BLOCK_TYPES.SOURCE_BLOCK,
-    BHPC_AGENT_BLOCK_TYPES.DIRECT_ANSWER
+    BHPC_AGENT_BLOCK_TYPES.DIRECT_ANSWER,
+    BHPC_AGENT_BLOCK_TYPES.RECOMMENDATION_SUMMARY
   ]),
   answer_page: Object.freeze([
     BHPC_AGENT_BLOCK_TYPES.DIRECT_ANSWER,

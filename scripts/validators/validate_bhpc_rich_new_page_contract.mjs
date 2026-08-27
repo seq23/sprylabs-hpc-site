@@ -20,8 +20,20 @@ for (const spec of plan.specs || []) {
   if (!fs.existsSync(abs)) { errors.push(`implementation_page_missing:${spec.record_id}:${spec.implementation_path}`); continue; }
   const html = fs.readFileSync(abs, 'utf8');
   const fam = spec.page_family || 'answer_page';
+  // internal_link_set is verified below against plan.link_mutations, not by marker.
   const required = unique([...requiredBlockTypesForPageFamily(fam), ...(spec.required_block_types || [])]).filter(block=>block!=='internal_link_set');
-  for (const block of required) if (!html.includes(`data-bhpc-agent-block="${block}"`)) errors.push(`missing_semantic_block:${spec.record_id}:${fam}:${block}`);
+  // A block also counts when it carries the canonical data-content-block marker.
+  // The retrofit writes recommendation_summary blocks outside the agent section,
+  // and tagging those with data-bhpc-agent-block made the applier's section strip
+  // start at the retrofit block and delete every real block after it - which cost
+  // four insight pages their trust, source and definition blocks and the links
+  // inside them. The marker a block carries should not determine whether other
+  // content survives.
+  for (const block of required) {
+    const present = html.includes(`data-bhpc-agent-block="${block}"`)
+      || html.includes(`data-content-block="${block}"`);
+    if (!present) errors.push(`missing_semantic_block:${spec.record_id}:${fam}:${block}`);
+  }
   for(const mutation of (plan.link_mutations||[]).filter(item=>(spec.acceptance_ids||[]).includes(item.acceptance_id))){const source=path.join(ROOT,mutation.from_path);if(!fs.existsSync(source)||!hasBhpcInternalLinkMutation(fs.existsSync(source)?fs.readFileSync(source,'utf8'):'',mutation))errors.push(`missing_source_internal_link:${spec.record_id}:${mutation.from_path}:${mutation.anchor_text}`)}
   if (!html.includes('data-bhpc-agent-semantic="true"')) errors.push(`missing_semantic_marker:${spec.record_id}`);
   if (/marker-only/i.test(html)) errors.push(`marker_only_language_present:${spec.record_id}`);

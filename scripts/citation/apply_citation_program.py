@@ -9,15 +9,37 @@ VENDOR_DIR = Path(__file__).resolve().parents[1] / "_vendor"
 if VENDOR_DIR.is_dir():
     sys.path.insert(0, str(VENDOR_DIR))
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "lib"))
+from route_policy import route_for  # noqa: E402
+
 from bs4 import BeautifulSoup, Comment, NavigableString, Tag
-from extraction_contract import extract_article_steps, extract_scope_procedure_candidates, validate_extraction
+from extraction_contract import extract_article_steps, extract_scope_procedure_candidates, extract_scope_steps, validate_extraction
 
 ROOT = Path(__file__).resolve().parents[2]
+
+# download.html is the revenue surface. Its hash is asserted at the
+# revenue_surface tier of the protected baseline, and the postbuild pass
+# reserializes it through BeautifulSoup on every run - attribute order and
+# void-tag closing change, the wording does not, and the baseline check then
+# fails on a file nobody meant to touch. The page already carries the product
+# schema this pass would add, so skipping it costs nothing.
+PROTECTED_PAGES = {'download.html'}
+
+def _protected(fp) -> bool:
+    try: return Path(fp).resolve().relative_to(ROOT).as_posix() in PROTECTED_PAGES
+    except Exception: return False
+
+def write_page(fp, text) -> bool:
+    """Write a page unless it is under the protected baseline."""
+    if _protected(fp): return False
+    Path(fp).write_text(text, encoding="utf-8")
+    return True
+
 TODAY = "2026-06-20"
 PRODUCT_ANCHOR_TEXT = "This is one of the frameworks inside the Billionaire High Performance Coach system — a structured executive OS for using ChatGPT as your accountability and decision partner."
 EXCLUDED = {
     "admin.html",
-    "coverage/index.html",
+    "knowledge-map/index.html",
     "reports/answer-surface-dashboard.html",
 }
 EXCLUDED_PREFIXES = ("templates/", "artifacts/", "fixtures/", "node_modules/", ".git/", "answers/phase4/", "use-cases/phase4/", "vs/phase4/", "glossary/phase4/", "methods/phase4/", "brand-defense/", "platforms/phase4/")
@@ -183,8 +205,8 @@ if AGENT_HTML_REPORT_SPEC_PATH.exists():
 
 
 RELATED = [
-    ("/chatgpt-accountability-partner.html", "Use ChatGPT as an accountability partner"),
-    ("/ai-executive-coach.html", "Understand an AI executive coach"),
+    ("/chatgpt-accountability-partner", "Use ChatGPT as an accountability partner"),
+    ("/ai-executive-coach", "Understand an AI executive coach"),
     ("/how-to-stay-consistent/", "Use Minimum Viable Cadence"),
     ("/continuity-collapse-pattern/", "Read the Continuity Collapse Pattern"),
 ]
@@ -294,9 +316,7 @@ MANUAL_REDIRECTS = load_manual_redirects()
 
 def canonical_for(path: str) -> str:
     if path in MANUAL_PAGES:
-        host = f"https://{MANUAL_PAGES[path]['domain']}/"
-        route=path[:-len("index.html")] if path.endswith("/index.html") else path
-        return host + route
+        return f"https://{MANUAL_PAGES[path]['domain']}" + route_for(path)
     spry_prefixes=("insights/","continuity-collapse-pattern/","how-to-stay-consistent/","atlas.html","pillars/","topics/","models/","answers/","clusters/","whitepapers/","coverage/","reports/","ai-execution-atlas/")
     if path.startswith("comparisons/bhpc-vs-"):
         host="https://billionairehighperformancecoach.com/"
@@ -304,8 +324,7 @@ def canonical_for(path: str) -> str:
         host="https://spryexecutiveos.com/"
     else:
         host="https://billionairehighperformancecoach.com/"
-    route=path[:-len("index.html")] if path.endswith("/index.html") else path
-    return host + route
+    return host.rstrip("/") + route_for(path)
 
 def ensure_meta(soup: BeautifulSoup, h1: str, definition: str, canonical: str):
     head=soup.head or soup
@@ -382,24 +401,35 @@ def _visible_faq_pairs(soup: BeautifulSoup) -> list[tuple[str,str]]:
     return dedup
 
 def _visible_howto_steps(soup: BeautifulSoup) -> list[dict]:
+    # A page describes exactly one procedure, so the HowTo node must describe
+    # exactly the sequence the extraction contract recognises: the first
+    # contiguous 1..N run of numbered headings inside the extraction block.
+    #
+    # This used to collect *every* heading matching /^(Step|Phase|Block|Stage) \d+/,
+    # which is not a sequence rule. Pages that carry a second, restarted numbered
+    # block inside the same extraction section (an authored Step 1..3 followed by
+    # a generated Step 1..3) produced a six-step HowTo describing a procedure that
+    # does not exist on the page, while extraction still saw three. It also missed
+    # bare-numbered headings ("1) Define the output"), which the contract accepts,
+    # so those pages lost their HowTo node entirely.
+    #
+    # extract_scope_steps is the same helper repair_schema_parity.py and
+    # validate_rendered_schema_parity.py use, so schema, repair and proof now all
+    # read the visible page through one definition of "a step".
     block=soup.select_one('[data-llm-answer="true"][data-extraction-type="howto"]')
     if not block: return []
     steps=[]
-    for h in block.find_all(['h2','h3']):
-        name=clean_text(h.get_text(' ',strip=True))
-        if not re.match(r'^(Step|Phase|Block|Stage)\s+\d+',name,re.I):
-            continue
-        texts=[]
-        node=h.find_next_sibling()
-        while node and getattr(node,'name',None) not in ['h2','h3']:
-            if getattr(node,'name',None) in ['p','li']:
-                value=clean_text(node.get_text(' ',strip=True))
-                if value: texts.append(value)
-            node=node.find_next_sibling()
-        text=' '.join(texts) or name
+    for step in extract_scope_steps(block):
+        source=step.get('source_heading') or f"Step {step['number']}: {step['title']}"
+        h=None
+        for cand in block.find_all(['h2','h3','h4']):
+            if clean_text(cand.get_text(' ',strip=True))==source:
+                h=cand; break
+        if h is None: continue
+        name=f"Step {step['number']}: {step['title']}"
         ident=h.get('id') or slug(name)
         h['id']=ident
-        steps.append({'@type':'HowToStep','name':name,'text':text,'url':'#'+ident})
+        steps.append({'@type':'HowToStep','name':name,'text':clean_text(step.get('description') or ''),'url':'#'+ident})
     return steps
 
 def _visible_breadcrumbs(soup: BeautifulSoup, canonical: str) -> list[dict]:
@@ -471,9 +501,9 @@ def add_schema(soup: BeautifulSoup, path: str, spec: dict):
         graph.append(BHPC_WEBSITE)
         graph.extend(BHPC_MENTION_TERMS)
     if path in {'about.html','spry-labs.html'}:
-        graph.append({'@type':'Organization','@id':_absolute_url(canonical,'/about.html#organization'),'name':'Spry Labs','url':_absolute_url(canonical,'/about.html')})
+        graph.append({'@type':'Organization','@id':_absolute_url(canonical,'/about#organization'),'name':'Spry Labs','url':_absolute_url(canonical,'/about')})
     if path in {'author.html','sequoia-taylor.html'}:
-        graph.append({'@type':'Person','@id':_absolute_url(canonical,'/author.html#person'),'name':'S.L. Taylor','url':_absolute_url(canonical,'/author.html'),'worksFor':{'@type':'Organization','name':'Spry Labs'}})
+        graph.append({'@type':'Person','@id':_absolute_url(canonical,'/author#person'),'name':'S.L. Taylor','url':_absolute_url(canonical,'/author'),'worksFor':{'@type':'Organization','name':'Spry Labs'}})
     script=soup.new_tag('script', id='CITATION_PAGE_SCHEMA', type='application/ld+json')
     script.string=json.dumps({'@context':'https://schema.org','@graph':graph},ensure_ascii=False,separators=(',',':'))
     (soup.body or soup).append(script)
@@ -541,7 +571,7 @@ def patch_priority(path: str, spec: dict):
     ensure_supplemental_geo_schema(soup,path,spec)
     ensure_public_conversion(soup,path)
     ensure_fanout_block(soup,spec)
-    fp.write_text(str(soup),encoding="utf-8")
+    write_page(fp, str(soup))
 
 def shell(path: str, spec: dict) -> str:
     canonical=canonical_for(path)
@@ -621,7 +651,7 @@ def sync_agent_page_admission_records() -> int:
         if path in by_path:
             continue
         route="/"+path
-        if route.endswith("/index.html"):
+        if route.endswith("/"):
             route=route[:-10]
         canonical=canonical_for(path)
         record={
@@ -923,7 +953,7 @@ def patch_legacy(path: str) -> dict|None:
         # Do not inject visible "Key Criteria" extraction blocks into the hero or preview sections.
         definition = "Billionaire High Performance Coach OS is the product. A-player mode is the operating state it helps you practice: clearer priorities, cleaner execution, faster recovery, and less self-renegotiation."
         add_schema(soup, path, {"h1": h1text, "framework": "Billionaire High Performance Coach OS", "type": "concept", "definition": definition, "body": ""})
-        fp.write_text(str(soup), encoding="utf-8")
+        write_page(fp, str(soup))
         return {"path": path, "canonical_url": canonical, "canonical_domain": re.sub(r"^https?://([^/]+).*$", r"\1", canonical).lower(), "query": h1text, "framework": "Billionaire High Performance Coach OS", "extraction_type": "concept", "schema_type": "DefinedTerm", "status": "ACTIVE", "definition": definition}
     marked=soup.select('[data-llm-answer="true"]')
     if not marked:
@@ -993,7 +1023,7 @@ def patch_legacy(path: str) -> dict|None:
         target.append(make_product_anchor(soup))
     split_plain_paragraphs(soup)
     add_schema(soup,path,{"h1":h1text,"framework":actual_framework,"type":actual_type,"definition":actual_definition,"body":""})
-    fp.write_text(str(soup),encoding="utf-8")
+    write_page(fp, str(soup))
     return {"path":path,"canonical_url":canonical,"canonical_domain":re.sub(r"^https?://([^/]+).*$",r"\1",canonical).lower(),"query":h1text,"framework":actual_framework,"extraction_type":actual_type,"schema_type":"HowTo" if actual_type=="howto" else "DefinedTerm","status":"ACTIVE","definition":actual_definition}
 
 def update_markdown_sources():
@@ -1027,7 +1057,7 @@ def update_markdown_sources():
         for k,v in additions.items():
             if k not in keys: newfm.append(f'{k}: "{v}"')
         content=f"---\n"+"\n".join(newfm)+f"\n---\n\n# {title}\n\n{insert}\n\n## Existing Guidance and Context\n\n{legacy.strip()}\n"
-        fp.write_text(content,encoding="utf-8")
+        write_page(fp, content)
 
 def modify_build_insights():
     fp=ROOT/"scripts/build_insights.js"; txt=fp.read_text(encoding="utf-8")
@@ -1048,7 +1078,7 @@ def modify_build_insights():
     new_atlas='''  const contentHtml = `<section class="article">\n    <h1>Atlas</h1>\n    <p class="citation-definition"><strong>Atlas is the strategic mapping layer inside Spry Executive OS.</strong> It organizes the site into stable pillars, shows where each framework belongs, and gives readers and language models a clear route from a problem to the most relevant answer.</p>\n    <section class="card citation-extraction" id="atlas-by-spry-executive-os" data-llm-answer="true" data-extraction-type="concept" data-named-framework="Atlas"><h2>Atlas by Spry Executive OS — What This Is</h2><ul><li>Maps the system into stable topic and pillar hubs.</li><li>Connects named frameworks to the questions they answer.</li><li>Shows the next authoritative page instead of leaving the library as a flat archive.</li></ul></section>\n    <p class="product-anchor">This is one of the frameworks inside the <a href="/download.html">Billionaire High Performance Coach system</a> — a structured executive OS for using ChatGPT as your accountability and decision partner.</p>'''
     if old_atlas not in txt: raise RuntimeError('atlas block not found')
     txt=txt.replace(old_atlas,new_atlas)
-    fp.write_text(txt,encoding="utf-8")
+    write_page(fp, txt)
 
 
 def apply_agent_targeted_patches():
@@ -1076,7 +1106,7 @@ def apply_agent_targeted_patches():
             citation_p["data-extraction-type"] = "concept"
         if citation:
             citation.string = "Billionaire High Performance Coach OS is the product. A-player mode is the operating state it helps you practice: clearer priorities, cleaner execution, faster recovery, and less self-renegotiation."
-        fp.write_text(str(soup), encoding="utf-8")
+        write_page(fp, str(soup))
 
 
 def preserve_excluded_prefix_registry_rows(bypath: dict[str, dict]) -> None:
@@ -1207,7 +1237,7 @@ def update_discovery(pages,queries,frameworks):
     routes=[]
     for page in active:
         url="/"+page["path"]
-        if url.endswith("/index.html"): url=url[:-10]
+        if url.endswith("/"): url=url[:-10]
         routes.append({"route_id":f"ROUTE-{len(routes)+1:04d}","path":url,"source_file":page["path"],"canonical_url":page["canonical_url"],"canonical_domain":page["canonical_domain"],"h1":page["query"],"framework":page["framework"],"safe_controls":["internal-links"],"priority":bool(page.get("priority"))})
     (ROOT/"data/routes/public_route_manifest.json").write_text(json.dumps({"schema_version":"1.0","generated_at":TODAY,"route_count":len(routes),"routes":routes},indent=2,ensure_ascii=False)+"\n")
     critical_path=ROOT/"data/routes/critical_browser_route_manifest.json"
@@ -1232,21 +1262,33 @@ def update_discovery(pages,queries,frameworks):
         if current.get("required_representative_dimensions"):
             payload["required_representative_dimensions"]=current["required_representative_dimensions"]
         critical_path.write_text(json.dumps(payload,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
-    # sitemaps: preserve existing URLs, remove retired routes, and add active canonicals
-    for name,domain in [("sitemap.xml",None),("sitemap-spry.xml","spryexecutiveos.com"),("sitemap-bhpc.xml","billionairehighperformancecoach.com")]:
+    # Sitemaps are rebuilt from the active canonical set rather than unioned with
+    # whatever the file already held. The union kept every superseded URL alive
+    # forever, which is how the .html forms stayed in the sitemap after they
+    # started 301-ing; a sitemap that advertises redirects is what Bing files
+    # under "URLs redirecting" and drops.
+    for name,domain in [("sitemap-spry.xml","spryexecutiveos.com"),("sitemap-bhpc.xml","billionairehighperformancecoach.com")]:
         fp=ROOT/name
         if not fp.exists(): continue
-        text=fp.read_text(encoding="utf-8")
-        urls=set(re.findall(r"<loc>(.*?)</loc>",text))
-        retired={f"https://{item['domain']}/" + (path[:-len('index.html')] if path.endswith('/index.html') else path) for path,item in MANUAL_REDIRECTS.items()}
-        urls.difference_update(retired)
-        if name == "sitemap.xml":
-            urls.update(["https://billionairehighperformancecoach.com/sitemap-bhpc.xml", "https://spryexecutiveos.com/sitemap-spry.xml"])
-            urls.update(p["canonical_url"] for p in active)
-        else:
-            urls.update(p["canonical_url"] for p in active if p["canonical_domain"].lower()==domain)
+        urls={p["canonical_url"] for p in active if p["canonical_domain"].lower()==domain}
+        if domain=="spryexecutiveos.com":
+            urls.add("https://spryexecutiveos.com/knowledge-map/")
         xml='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+"\n".join(f'  <url><loc>{u}</loc><lastmod>{TODAY}</lastmod></url>' for u in sorted(urls))+"\n</urlset>\n"
         fp.write_text(xml,encoding="utf-8")
+    # One Pages deployment answers both hosts, so /sitemap.xml is served on both.
+    # It has to be a host-neutral sitemap index: a urlset here would hand one
+    # host a file full of the other host's URLs, which is rejected wholesale.
+    root_map=ROOT/"sitemap.xml"
+    if root_map.exists():
+        existing=root_map.read_text(encoding="utf-8")
+        comments="\n".join(line for line in existing.splitlines() if "priority-coverage" in line)
+        lines=['<?xml version="1.0" encoding="UTF-8"?>',
+               '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+               f'  <sitemap><loc>https://billionairehighperformancecoach.com/sitemap-bhpc.xml</loc><lastmod>{TODAY}</lastmod></sitemap>',
+               f'  <sitemap><loc>https://spryexecutiveos.com/sitemap-spry.xml</loc><lastmod>{TODAY}</lastmod></sitemap>']
+        if comments: lines.append(comments)
+        lines.append('</sitemapindex>')
+        root_map.write_text("\n".join(lines)+"\n",encoding="utf-8")
     browser_contract=ROOT/"config/validation/browser_suite_contract.json"
     if browser_contract.exists():
         contract=json.loads(browser_contract.read_text(encoding="utf-8"))

@@ -25,10 +25,17 @@ def norm(s): return ' '.join(re.sub(r'[^a-z0-9]+',' ',(s or '').casefold()).spli
 def text_of(node): return node.get_text(' ',strip=True) if node else ''
 def shingles(s,n=5):
     w=[x.casefold() for x in words(s)]
-    return {tuple(w[i:i+n]) for i in range(max(0,len(w)-n+1))}
+    return frozenset(hash(tuple(w[i:i+n])) for i in range(max(0,len(w)-n+1)))
+def jaccard(sa,sb):
+    # Same value as the string form below; kept separate so the O(n^2) pass can
+    # shingle each page once instead of re-shingling both sides of every pair.
+    # With every page passing its per-page checks the pass compares ~1.07M
+    # pairs, and re-shingling made that a multi-hour step.
+    if not sa or not sb: return 0.0
+    inter=len(sa&sb)
+    return inter/max(1,len(sa)+len(sb)-inter)
 def similarity(a,b,n=5):
-    sa,sb=shingles(a,n),shingles(b,n)
-    return len(sa&sb)/max(1,len(sa|sb)) if sa and sb else 0.0
+    return jaccard(shingles(a,n),shingles(b,n))
 def main_unique_text(soup):
     chunks=[]
     for sel in ['[data-llm-answer="true"]','.page-artifact','.worked-example','.page-specific-section']:
@@ -174,23 +181,28 @@ def run(records, similarity_check=True):
         if not errs and txt: texts.append((record.get('path'),txt,record))
 
     if similarity_check:
-        for i,(pa,ta,ra) in enumerate(texts):
-            for pb,tb,rb in texts[i+1:]:
-                score=similarity(ta,tb)
+        # Precompute every shingle set once. Each of these depends only on a
+        # single record, so nothing about the comparison changes.
+        entity_limit=float(AXES.get('entity_use_case',{}).get('entity_substitution_similarity_max',0.65))
+        answer_limit=float(AXES.get('question_cluster',{}).get('same_answer_similarity_max',0.85))
+        prepared=[]
+        for pa,ta,ra in texts:
+            lane=ra.get('generation_lane')
+            stripped=shingles(remove_terms(ta,str(ra.get('entity') or ''),str(ra.get('use_case') or '')),4) if lane=='entity_use_case' else None
+            answer=direct_answer_text(soups.get(pa)) if lane=='question_cluster' else ''
+            prepared.append((pa,ra,lane,shingles(ta),stripped,norm(answer),shingles(answer,2) if lane=='question_cluster' else None))
+        for i,(pa,ra,lane_a,sa,stripped_a,norm_a,ans_a) in enumerate(prepared):
+            for pb,rb,lane_b,sb,stripped_b,norm_b,ans_b in prepared[i+1:]:
+                score=jaccard(sa,sb)
                 if score>0.72:
                     add_pair_error(all_errors,result,(pa,pb),f'{pa} vs {pb}: main-content similarity {score:.3f} exceeds 0.72')
-                if ra.get('generation_lane')=='entity_use_case' and rb.get('generation_lane')=='entity_use_case':
-                    aa=remove_terms(ta,str(ra.get('entity') or ''),str(ra.get('use_case') or ''))
-                    bb=remove_terms(tb,str(rb.get('entity') or ''),str(rb.get('use_case') or ''))
-                    limit=float(AXES.get('entity_use_case',{}).get('entity_substitution_similarity_max',0.65))
-                    score2=similarity(aa,bb,4)
-                    if score2>limit:
-                        add_pair_error(all_errors,result,(pa,pb),f'{pa} vs {pb}: entity-substitution similarity {score2:.3f} exceeds {limit}')
-                if ra.get('generation_lane')=='question_cluster' and rb.get('generation_lane')=='question_cluster':
-                    qa=direct_answer_text(soups.get(pa)); qb=direct_answer_text(soups.get(pb))
-                    limit=float(AXES.get('question_cluster',{}).get('same_answer_similarity_max',0.85))
-                    score3=similarity(qa,qb,2)
-                    if norm(qa)==norm(qb) or score3>limit:
+                if lane_a=='entity_use_case' and lane_b=='entity_use_case':
+                    score2=jaccard(stripped_a,stripped_b)
+                    if score2>entity_limit:
+                        add_pair_error(all_errors,result,(pa,pb),f'{pa} vs {pb}: entity-substitution similarity {score2:.3f} exceeds {entity_limit}')
+                if lane_a=='question_cluster' and lane_b=='question_cluster':
+                    score3=jaccard(ans_a,ans_b)
+                    if norm_a==norm_b or score3>answer_limit:
                         add_pair_error(all_errors,result,(pa,pb),f'{pa} vs {pb}: question answers are equivalent ({score3:.3f}); merge as aliases or FAQ')
     return all_errors,result,soups
 
@@ -222,10 +234,23 @@ def query_collision_errors(records,result):
     return errors
 
 def compare_with_references(records,result,soups):
+    # Compare a new page against EVERY admitted page, not just the 62 marked
+    # admission_level == 'full'.
+    #
+    # The pool used to carry the same `admission_level != 'full'` filter the
+    # quality checks use, which meant a candidate was measured for duplication
+    # against 62 of 2,214 admitted pages. A new page could be a near-verbatim copy
+    # of any of the 2,152 others and score zero similarity, because they were never
+    # loaded. The duplication gate was reading a 3% sample of its own corpus.
+    #
+    # Widening this cannot fail a page for its own content. References are only ever
+    # compared against - they are not validated here, and no threshold is applied to
+    # them - so the only new outcome is catching a duplicate that used to pass. That
+    # is why this is safe to widen while the corpus selection in main() is not.
     errors=[]; candidate_paths={r.get('path') for r in records}
     references=[]
     for ref in REGISTRY:
-        if ref.get('status')!='ADMITTED' or ref.get('admission_level')!='full' or ref.get('path') in candidate_paths: continue
+        if ref.get('status')!='ADMITTED' or ref.get('path') in candidate_paths: continue
         fp=ROOT/ref.get('path','')
         if not fp.exists(): continue
         soup=BeautifulSoup(fp.read_text(encoding='utf-8'),'html.parser')
@@ -269,12 +294,32 @@ def main():
         manifest=json.loads((ROOT/'data/content/programmatic_candidate_manifest.json').read_text(encoding='utf-8'))
         records=manifest.get('candidates',[])
     else:
+        # The corpus run inspects records marked admission_level == 'full'. That is
+        # 62 of 2,214 admitted pages, because generate_aplayer_phase_expansion.mjs
+        # stamped its own output 'baseline' - the level under which every
+        # substantive check in run() is skipped - so 97% of the library opted itself
+        # out of the gate at the moment it was written. The generator now stamps
+        # 'full' (NEW_PAGE_ADMISSION_LEVEL), so this closes going forward.
+        #
+        # The 2,152 already on disk are NOT silently promoted here. Holding them to
+        # thresholds they were never written against would fail the build on
+        # thousands of pages at once, which is a retirement and rewriting programme,
+        # not a validator change. What does change is that the exclusion stops being
+        # invisible: the count is printed on every run and recorded in the JSON
+        # payload, so the size of the debt is in front of whoever reads the output
+        # instead of buried in a list comprehension.
         records=[x for x in REGISTRY if x.get('status')=='ADMITTED' and x.get('admission_level')=='full']
+        admitted_total=sum(1 for x in REGISTRY if x.get('status')=='ADMITTED')
+        excluded=admitted_total-len(records)
+        if excluded:
+            print(f'[validate:programmatic-admission] NOTE: {excluded} of {admitted_total} admitted pages carry admission_level != "full" and are not inspected by the substantive checks. They predate the gate. New pages are stamped "full" by scripts/programmatic/generate_aplayer_phase_expansion.mjs and are inspected. This is recorded quality debt, not a passing result.')
     errors,result,soups=run(records,similarity_check=True)
     if args.candidate_only and records:
         extra=query_collision_errors(records,result); errors.extend(extra)
         extra=compare_with_references(records,result,soups); errors.extend(extra)
-    payload={'status':'PASS' if not errors else 'FAIL','pages':len(records),'accepted':sum(1 for x in result if x['accepted']),'rejected':sum(1 for x in result if not x['accepted']),'results':result}
+    payload={'status':'PASS' if not errors else 'FAIL','pages':len(records),
+             'admitted_total':sum(1 for x in REGISTRY if x.get('status')=='ADMITTED'),
+             'not_inspected_pre_gate':sum(1 for x in REGISTRY if x.get('status')=='ADMITTED' and x.get('admission_level')!='full'),'accepted':sum(1 for x in result if x['accepted']),'rejected':sum(1 for x in result if not x['accepted']),'results':result}
     if args.json_output: Path(args.json_output).write_text(json.dumps(payload,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
     if errors and not args.no_fail_quality:
         print('[validate:programmatic-admission] FAIL')

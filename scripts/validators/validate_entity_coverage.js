@@ -2,6 +2,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
+const { fileForRoute } = require('../lib/route_resolution.cjs');
 const ROOT = process.cwd();
 function fail(msg){ console.error(`[validate_entity_coverage] FAIL: ${msg}`); process.exit(1); }
 function readJson(rel){ try { return JSON.parse(fs.readFileSync(path.join(ROOT, rel), 'utf8')); } catch(e){ fail(`missing or invalid ${rel}: ${e.message}`); } }
@@ -12,9 +13,8 @@ const categoryEntities = registry.categories || [];
 if (platformEntities.length < 4) fail('coaching_platforms must include at least 4 entities');
 if (categoryEntities.length < 7) fail('categories must include at least 7 entities');
 for (const item of metadata.items || []) {
-  const rel = item.path.replace(/^\//,'');
-  const file = path.join(ROOT, rel);
-  if (!fs.existsSync(file)) fail(`metadata target missing: ${item.path}`);
+  const file = fileForRoute(ROOT, item.path);
+  if (!file) fail(`metadata target missing: ${item.path}`);
   const html = fs.readFileSync(file,'utf8');
   const lower = html.toLowerCase();
   const foundPlatforms = platformEntities.filter(e => lower.includes(String(e).toLowerCase()));

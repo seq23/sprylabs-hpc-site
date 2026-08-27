@@ -9,6 +9,11 @@ npm run search:targets
 npm run search:observe
 npm run search:competitors
 
+# The provider_inputs directory holds only run outputs, so it is not tracked and
+# does not exist on a fresh checkout. gsc_search_analytics.py writes into it and
+# does not create it, so the cycle died with FileNotFoundError on every run that
+# had credentials - the rm below cannot create it either.
+mkdir -p data/search_intelligence/provider_inputs
 rm -f data/search_intelligence/provider_inputs/gsc_bhpc.json data/search_intelligence/provider_inputs/gsc_spry.json .gsc-service-account.json
 if [ -n "${GSC_SERVICE_ACCOUNT_JSON:-}" ]; then
   printf '%s' "$GSC_SERVICE_ACCOUNT_JSON" > .gsc-service-account.json
@@ -27,7 +32,11 @@ npm run search:diagnose
 npm run search:repair:prepare
 npm run search:repair:apply
 npm run agency:build
-npm run site:build
+# site:build built dist/ from the site/public staging layout and synced it to
+# the repo root. That layout was deleted deliberately; the site is served from
+# the root now, so there is nothing to stage. The script was removed from
+# package.json and these two call sites were missed, which failed the cycle
+# with 'Missing script: site:build' on every run.
 npm run validate:search-intelligence
 npm run validate:changed
 
@@ -39,6 +48,5 @@ npm run search:retest
 npm run search:evidence
 npm run search:status
 npm run agency:build
-npm run site:build
 npm run validate:search-intelligence
 node scripts/search_intelligence/prove_agent_separation.mjs --check

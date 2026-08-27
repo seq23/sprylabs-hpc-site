@@ -3,7 +3,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 
 export const ROOT = process.cwd();
-const SKIP = new Set(['.git','node_modules','artifacts','reports','.build','coverage','test-results','playwright-report','.cache','.tmp','.validation-cache','.validation-runtime']);
+const SKIP = new Set(['.git','.pages-output', 'node_modules','artifacts','reports','.build','coverage','test-results','playwright-report','.cache','.tmp','.validation-cache','.validation-runtime']);
 
 export function readJson(rel) {
   return JSON.parse(fs.readFileSync(path.join(ROOT, rel), 'utf8'));

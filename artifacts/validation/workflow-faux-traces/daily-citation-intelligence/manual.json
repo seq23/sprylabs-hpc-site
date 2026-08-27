@@ -5,15 +5,16 @@
   "status": "TRACE_ONLY_PASS",
   "execution": "none_trace_only",
   "included_steps": [
-    "actions/checkout@v4",
+    "actions/checkout@v7",
     "Sync latest main before install",
-    "actions/setup-node@v4",
+    "actions/setup-node@v7",
     "daily-citation-intelligence:step-4",
     "Check autonomous runtime state",
     "Run autonomous zero-dollar gap-filling lane",
+    "Observe whether answer engines cite us",
     "Validate ownership and Safe Harbor",
     "Commit validated changes",
-    "actions/upload-artifact@v4"
+    "actions/upload-artifact@v7"
   ],
   "skipped_steps": [],
   "assertions": [

@@ -39,8 +39,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: npm
@@ -57,7 +57,7 @@ jobs:
             echo "run_id=${{ github.event.workflow_run.id }}" >> "$GITHUB_OUTPUT"
             echo "commit_sha=${{ github.event.workflow_run.head_sha }}" >> "$GITHUB_OUTPUT"
           fi
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v7
         with:
           name: ${{ steps.artifact.outputs.name }}
           path: .
@@ -78,7 +78,7 @@ jobs:
         run: |
           if [ -n "${GSC_SERVICE_ACCOUNT_JSON:-}" ]; then
             umask 077
-            printf '%s' "$GSC_SERVICE_ACCOUNT_JSON" > .gsc-service-account.json
+            printf '%s' "$GSC_SERVICE_ACCOUNT_JSON" > "$RUNNER_TEMP/.gsc-service-account.json"
           fi
       - name: Verify attestation and deploy IndexNow distribution
         env:
@@ -92,14 +92,25 @@ jobs:
           GSC_SITE_URL_SPRY: ${{ secrets.GSC_SITE_URL_SPRY }}
           GSC_SITE_URL_BHPC: ${{ secrets.GSC_SITE_URL_BHPC }}
         run: |
-          if [ ! -f .gsc-service-account.json ]; then echo "GSC skipped: service account not configured"; exit 0; fi
+          if [ ! -f "$RUNNER_TEMP/.gsc-service-account.json" ]; then echo "GSC skipped: service account not configured"; exit 0; fi
+          # The Search Console client is not in the base image. The submit and inspect
+          # scripts below and the ingestion both import it, so without this the whole
+          # step would fail on 'No module named google' the moment credentials were
+          # finally configured - which is exactly what happened on first test.
+          python3 -m pip install --quiet --upgrade pip
+          python3 -m pip install --quiet google-api-python-client google-auth
+          # Ingest what people actually searched before submitting. Without this the
+          # query atlas is gated on modelled demand while measured demand sits unread
+          # in Search Console. Evidence-only: it does not admit, publish, or change
+          # cadence.
+          GSC_SERVICE_ACCOUNT_JSON="$RUNNER_TEMP/.gsc-service-account.json" GSC_SITE_URL="$GSC_SITE_URL_SPRY" npm run queries:ingest || true
           if [ -n "${GSC_SITE_URL_SPRY:-}" ]; then
             grep '^https://spryexecutiveos.com/' .build/indexnow-priority.txt > .build/gsc-priority-spry.txt || true
-            python3 scripts/distribution/gsc_submit_sitemaps.py .gsc-service-account.json "$GSC_SITE_URL_SPRY" https://spryexecutiveos.com/sitemap-spry.xml
-            python3 scripts/distribution/gsc_inspect_urls.py .gsc-service-account.json "$GSC_SITE_URL_SPRY" .build/gsc-priority-spry.txt .build/inspection-results-spry.json
+            python3 scripts/distribution/gsc_submit_sitemaps.py "$RUNNER_TEMP/.gsc-service-account.json" "$GSC_SITE_URL_SPRY" https://spryexecutiveos.com/sitemap-spry.xml
+            python3 scripts/distribution/gsc_inspect_urls.py "$RUNNER_TEMP/.gsc-service-account.json" "$GSC_SITE_URL_SPRY" .build/gsc-priority-spry.txt .build/inspection-results-spry.json
           fi
           if [ -n "${GSC_SITE_URL_BHPC:-}" ]; then
             grep '^https://billionairehighperformancecoach.com/' .build/indexnow-priority.txt > .build/gsc-priority-bhpc.txt || true
-            python3 scripts/distribution/gsc_submit_sitemaps.py .gsc-service-account.json "$GSC_SITE_URL_BHPC" https://billionairehighperformancecoach.com/sitemap-bhpc.xml
-            python3 scripts/distribution/gsc_inspect_urls.py .gsc-service-account.json "$GSC_SITE_URL_BHPC" .build/gsc-priority-bhpc.txt .build/inspection-results-bhpc.json
+            python3 scripts/distribution/gsc_submit_sitemaps.py "$RUNNER_TEMP/.gsc-service-account.json" "$GSC_SITE_URL_BHPC" https://billionairehighperformancecoach.com/sitemap-bhpc.xml
+            python3 scripts/distribution/gsc_inspect_urls.py "$RUNNER_TEMP/.gsc-service-account.json" "$GSC_SITE_URL_BHPC" .build/gsc-priority-bhpc.txt .build/inspection-results-bhpc.json
           fi

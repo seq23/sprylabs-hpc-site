@@ -24,12 +24,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Validate main-writer coordination and push recovery
         run: bash .github/scripts/test_commit_and_push_if_changed.sh
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: npm
@@ -37,7 +37,14 @@ jobs:
       - name: Build and validate exact distribution artifact
         run: |
           npm run release:ci-validate
-      - uses: actions/upload-artifact@v4
+      - name: Cadence gate
+        # Blocks publishing faster than the library can be kept inside the
+        # 91-day window where pages stay citable. Warnings (library over
+        # ceiling, uniform lastmod) are reported without failing the run.
+        run: |
+          npm run cadence:gate
+          npm run cadence:template-share
+      - uses: actions/upload-artifact@v7
         if: success()
         with:
           name: spry-validated-${{ github.sha }}
@@ -47,7 +54,7 @@ jobs:
             .build/**
             reports/validation-attestation.json
             artifacts/validation/**
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: spry-validation-diagnostics-${{ github.run_id }}

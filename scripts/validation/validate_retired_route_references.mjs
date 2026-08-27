@@ -7,7 +7,7 @@ const ROOT = process.cwd();
 const config = JSON.parse(fs.readFileSync('data/content/manual_redirects.json', 'utf8'));
 const redirects = config.redirects || [];
 const errors = [];
-const skipDirs = new Set(['.git', 'node_modules', 'artifacts', 'coverage', 'reports', '.build', 'test-results', 'playwright-report']);
+const skipDirs = new Set(['.git', '.pages-output', 'node_modules', 'artifacts', 'coverage', 'reports', '.build', 'test-results', 'playwright-report']);
 const allowedFiles = new Set(['data/content/manual_redirects.json', '_redirects', 'docs/REDIRECT_MIGRATION_HISTORY.md', 'scripts/validation/validate_manual_expansion.py']);
 const scanExtensions = new Set(['.html', '.xml', '.txt', '.json', '.md', '.js', '.mjs', '.cjs']);
 

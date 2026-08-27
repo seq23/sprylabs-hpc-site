@@ -4091,7 +4091,7 @@
     {
       "validation_id": "VAL-COVERAGE-ROUTE-CONTRACT",
       "status": "ADMITTED",
-      "name": "validate:coverage-route",
+      "name": "validate:knowledge-map-route",
       "check_type": "artifact-packaging",
       "owning_lane": "public-authority",
       "risk_prevented": "Prevents the public /coverage/ knowledge-map route from disappearing during packaging or exposing private draft runway data.",
@@ -4100,17 +4100,17 @@
         "coverage/index.html",
         "coverage/coverage.json",
         "data/admin/coverage_operations.json",
-        "scripts/build_coverage_map.js",
+        "scripts/build_knowledge_map.js",
         "scripts/release/package_baseline.mjs",
         "_baseline_packaging_contract.json"
       ],
       "proposed_severity": "HARD_FAIL",
-      "command": "npm run validate:coverage-route",
-      "implementation_path": "scripts/validators/validate_coverage_route_contract.mjs",
+      "command": "npm run validate:knowledge-map-route",
+      "implementation_path": "scripts/validators/validate_knowledge_map_route_contract.mjs",
       "environment": "container",
       "proof_tier": 1,
-      "positive_fixture": "fixtures/validation/coverage-route/pass.json",
-      "negative_fixture": "fixtures/validation/coverage-route/fail.json",
+      "positive_fixture": "fixtures/validation/knowledge-map-route/pass.json",
+      "negative_fixture": "fixtures/validation/knowledge-map-route/fail.json",
       "evidence_output": "stdout",
       "runtime_budget_seconds": 20,
       "maintenance_owner": "repo",
@@ -4119,7 +4119,7 @@
       "decision": "Admitted after hostile review found that artifact packaging removed the valid public /coverage/ route.",
       "decision_date": "2026-07-10",
       "matrix_ids": [
-        "MX-COVERAGE-ROUTE-CONTRACT"
+        "MX-KNOWLEDGE-MAP-ROUTE"
       ],
       "not_applicable_reason": null
     },
@@ -5662,6 +5662,212 @@
       "not_applicable_reason": null
     },
     {
+      "validation_id": "VAL-112",
+      "status": "ADMITTED",
+      "name": "validate:content-pattern",
+      "check_type": "content",
+      "owning_lane": "citation-contract",
+      "risk_prevented": "Prevents publishing a page that an answer engine cannot quote or that gives a citation nowhere to go: no direct-answer block, an h1 too short to carry the searcher phrasing, a table with empty cells, or no route to purchase.",
+      "existing_coverage_gap": "The external review agent re-reported 27% of distinct defects on later runs despite them being marked released. No existing validator checked for the blocks the agent keeps asking for before publish; they were only found after audit.",
+      "scope": [
+        "site/public"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:content-pattern",
+      "implementation_path": "scripts/validators/validate_content_pattern_contract.js",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/content-pattern/pass.json",
+      "negative_fixture": "fixtures/validation/content-pattern/fail.json",
+      "evidence_output": "reports/validation/content-pattern-contract.json",
+      "runtime_budget_seconds": 30,
+      "maintenance_owner": "content",
+      "overlap_analysis": "Does not duplicate validate:citation-contract (schema and extraction markup) or validate:page-seo (title/meta/canonical). This checks the presence of the specific body blocks the review agent requests, which neither of those inspects.",
+      "decision": "ADMITTED as HARD_FAIL: all four blocking checks measure 100% across 2,811 published pages, so blocking cannot regress an already-clean surface.",
+      "decision_date": "2026-08-26",
+      "matrix_ids": [
+        "MX-174"
+      ]
+    },
+    {
+      "validation_id": "VAL-113",
+      "status": "ADMITTED",
+      "name": "validate:query-atlas",
+      "check_type": "content",
+      "owning_lane": "citation-intelligence",
+      "risk_prevented": "Prevents the query atlas from claiming coverage it cannot support - clusters without evidence-backed queries, or synthetic permutations counted as demand.",
+      "existing_coverage_gap": "The command was executable from package.json but never admitted to the registry, so it ran outside governance and its severity was undeclared.",
+      "scope": [
+        "data/queries"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:query-atlas",
+      "implementation_path": "scripts/atlas/validate_query_atlas.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/query-atlas/pass.json",
+      "negative_fixture": "fixtures/validation/query-atlas/fail.json",
+      "evidence_output": "reports/validation/query-atlas.json",
+      "runtime_budget_seconds": 20,
+      "maintenance_owner": "content",
+      "overlap_analysis": "Does not duplicate validate:query-owner-uniqueness, which checks that two pages do not claim the same query. This checks that the queries themselves are evidence-backed.",
+      "decision": "ADMITTED as HARD_FAIL: the validator already passes, and an atlas that overstates demand is the input to every downstream page decision.",
+      "decision_date": "2026-08-26",
+      "matrix_ids": [
+        "MX-175"
+      ]
+    },
+    {
+      "validation_id": "VAL-116",
+      "status": "ADMITTED",
+      "name": "validate:atlas-units",
+      "check_type": "content",
+      "owning_lane": "citation-intelligence",
+      "risk_prevented": "Prevents two incompatible quantities from sharing one demand field again. `volume` held monthly search volume on keyword-tool rows and this domain's OWN 90-day impression count on GSC rows, and rank_score was computed straight off it, so 'ai business coach' scored on 5 impressions instead of its real 110/mo search volume - 22x low - and sorted below queries with a fraction of its market demand.",
+      "existing_coverage_gap": "VAL-113 checked that a publishable query had SOME demand number, but could not tell which unit that number was in, so it passed on a value that meant the wrong thing.",
+      "scope": [
+        "data/queries",
+        "data/authority_scale",
+        "scripts/atlas",
+        "scripts/queries"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:atlas-units",
+      "implementation_path": "scripts/atlas/validate_atlas_units.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "evidence_output": "reports/validation/atlas-units.json",
+      "runtime_budget_seconds": 20,
+      "maintenance_owner": "content",
+      "overlap_analysis": "Does not duplicate VAL-113 (validate:query-atlas), which gates PUBLISHABILITY on evidence tier and cluster coverage. This gates the UNIT CONTRACT: that the ambiguous field is gone, that a GSC row's search_volume carries keyword-tool provenance, that demand_basis matches the populated fields, that rank_score is banded so units never sort as peers, and that no source file still reads the removed field.",
+      "decision": "ADMITTED as HARD_FAIL: rank_score is the input to every page decision, and a unit error there is silent - it produces a plausible number rather than an error. The source-scan check exists because a stale consumer reading the removed key would get null, not a throw.",
+      "decision_date": "2026-08-27",
+      "matrix_ids": [
+        "MX-178"
+      ]
+    },
+    {
+      "validation_id": "VAL-114",
+      "status": "ADMITTED",
+      "name": "validate:operator-doc-currency",
+      "check_type": "documentation",
+      "owning_lane": "repo-governance",
+      "risk_prevented": "Prevents operator runbooks from pointing at repo paths and routes that no longer exist. The guide kept routing readers to /coverage/ after it was renamed to /knowledge-map/, and to an audit directory that had been deleted, because nothing checked.",
+      "existing_coverage_gap": "No validator read the operator docs at all. Every other check reads code, data or published HTML, so documentation drift was invisible until an operator followed a stale instruction.",
+      "scope": [
+        "docs/runbooks",
+        "docs/operations"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:operator-doc-currency",
+      "implementation_path": "scripts/validation/validate_operator_doc_currency.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "stdout: OPERATOR DOC CURRENCY PASS/FAIL with the count of path references checked",
+      "runtime_budget_seconds": 20,
+      "maintenance_owner": "repo",
+      "overlap_analysis": "Does not duplicate validate:retired-route-references, which scans published HTML for links to retired routes. This reads Markdown operator documentation and resolves the repo paths it names.",
+      "retirement_offset": null,
+      "decision": "ADMITTED as HARD_FAIL: the check passes on the current tree (92 references, all present), is read-only, and costs seconds, so blocking cannot regress a clean surface.",
+      "decision_date": "2026-08-26",
+      "matrix_ids": [
+        "MX-176"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-115",
+      "status": "ADMITTED",
+      "name": "citation:probe",
+      "check_type": "evidence",
+      "owning_lane": "citation-intelligence",
+      "risk_prevented": "Records whether an answer engine actually cited our domains for a priority query, so AEO progress is read from observations rather than inferred from proxies.",
+      "existing_coverage_gap": "query:test:zero-cost makes no network calls - it prints a worksheet for a human to fill in - so no automated run had ever observed a citation.",
+      "scope": [
+        "data/signals"
+      ],
+      "proposed_severity": "INFO",
+      "command": "npm run citation:probe",
+      "implementation_path": "scripts/llm_citation_probe.mjs",
+      "environment": "network",
+      "proof_tier": 3,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "data/signals/llm_citation_observations.json",
+      "runtime_budget_seconds": 120,
+      "maintenance_owner": "content",
+      "overlap_analysis": "Does not duplicate validate:citation-contract or validate:citation-strategy, which check what the repo publishes. This records what an external engine did with it.",
+      "retirement_offset": null,
+      "decision": "ADMITTED as INFO: it is a measurement, not a gate. It needs a live API key and writes an observation file, so it runs on the daily-citation-intelligence schedule rather than per push, and exits 0 when it cannot measure.",
+      "decision_date": "2026-08-26",
+      "matrix_ids": [
+        "MX-177"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-117",
+      "status": "ADMITTED",
+      "name": "validate:admission-level-stability",
+      "check_type": "invariant",
+      "owning_lane": "content-admission",
+      "risk_prevented": "A build stage silently re-levelling pages that are already in data/content/page_admission_registry.json. admission_level decides which lane contract validate_programmatic_admission.py enforces on a page, so re-levelling at build time either fails the release on a corpus that was never written against those thresholds, or - in the demotion direction, which is the live risk now that 1,466 records carry 'full' - removes published pages from the substantive checks while the build still passes.",
+      "existing_coverage_gap": "validate:programmatic-registry only checks that admission_level is one of baseline/full. validate:programmatic-admission reads the level and reports how many records it is skipping, but treats whatever the build wrote as given. validate:demand-backed-pages warns about pages admitted after the gate that carry \"baseline\", not about pages whose level the build changed. Nothing compared the committed registry with the built one, so generate_aplayer_phase_expansion.mjs promoting all 1,400 of its pages to \"full\" on every run was invisible until 2,250 lane-contract errors landed in CI - truncated to the first 300, which read as \"300 short pages\".",
+      "scope": [
+        "data/content/page_admission_registry.json"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:admission-level-stability",
+      "implementation_path": "scripts/validation/validate_admission_level_stability.mjs",
+      "environment": "container",
+      "proof_tier": 2,
+      "positive_fixture": "fixtures/validation/admission-level/pass.json",
+      "negative_fixture": "fixtures/validation/admission-level/fail.json",
+      "evidence_output": "artifacts/diagnostics/container-current/admission-level-stability/summary.json",
+      "runtime_budget_seconds": 15,
+      "maintenance_owner": "content",
+      "overlap_analysis": "Does not duplicate validate:programmatic-admission, which judges page bodies against the level recorded for them. This one judges the level itself, and only its stability across a build. It does not overlap validate:clean-rebuild-parity either: that compares two builds of the same tree, so a stage that re-levels deterministically is identical in both and passes.",
+      "retirement_offset": null,
+      "decision": "ADMITTED as HARD_FAIL in container-prepush, placed immediately before validate:content-release so a re-levelling is named before the lane-contract failures it causes. The promotion incident that motivated it is resolved at the cause (6a759335d gave the 1,400 generated pages the material to earn 'full'), but nothing keeps that correct: this guard is what makes the next silent re-level - in either direction - fail on its own name instead of as 300 truncated lines of downstream symptoms. Both fixtures are executed by the script on every run, so the recorded proof cannot rot into decoration.",
+      "decision_date": "2026-08-27",
+      "matrix_ids": [
+        "MX-179"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-CANONICAL-NO-REDIRECT",
+      "status": "ADMITTED",
+      "name": "validate:canonical-no-redirect",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:canonical-no-redirect",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-canonical-no-redirect/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-08-27",
+      "matrix_ids": [
+        "MX-180"
+      ],
+      "not_applicable_reason": null
+    },
+    {
       "validation_id": "VAL-AGENT-INTAKE-TRANSACTION",
       "status": "ADMITTED",
       "name": "release:agent-intake:transaction",
@@ -5733,6 +5939,6 @@
       "not_applicable_reason": null
     }
   ],
-  "record_count": 180,
+  "record_count": 185,
   "generated_at": "2026-08-08T23:30:00Z"
 }

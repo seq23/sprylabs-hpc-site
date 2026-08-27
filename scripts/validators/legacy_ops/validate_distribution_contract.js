@@ -48,7 +48,7 @@ const keyCandidates = [
   path.join(root, keyFile)
 ];
 const keyPath = keyCandidates.find(candidate => fs.existsSync(candidate));
-if (!keyPath) fail(`configured key file missing from site/public, dist, and legacy repo root: ${keyFile}`);
+if (!keyPath) fail(`configured key file missing from the repository root: ${keyFile}`);
 const content = fs.readFileSync(keyPath, 'utf8').trim();
 if (content !== key) fail(`configured key file mismatch: ${path.relative(root, keyPath)}`);
 const bootstrapSource = fs.readFileSync(path.join(root, 'scripts/distribution', 'bootstrap_distribution.sh'), 'utf8');

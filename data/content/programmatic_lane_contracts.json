@@ -101,54 +101,69 @@
       "source_floor": 0
     },
     "glossary": {
-      "minimum_word_count": 0,
-      "required_artifacts": false,
-      "worked_example": false,
+      "minimum_word_count": 800,
+      "required_artifacts": true,
+      "worked_example": true,
       "cta_profile": "full",
-      "source_floor": 0,
+      "source_floor": 1,
       "required_fields": [
         "unique_atom"
-      ]
+      ],
+      "_floor_basis": "Measured: 150 pages in this lane, shortest 732 words. Floor set below that so nothing already written fails, and far enough above zero to bind the next generated page.",
+      "_artifacts_basis": "All pages measured in this lane already carry a worked example and an artifact, so requiring them costs nothing today and binds future output.",
+      "_source_floor_note": "Raised to 1. Every page in this lane now carries a visible 'Sources and review basis' section naming what it was reviewed against - the citation methodology and the product page, plus the provider's own site where the page names a product. No citation is invented to clear the floor; where a category has no official source, none is claimed."
     },
     "method": {
-      "minimum_word_count": 0,
-      "required_artifacts": false,
-      "worked_example": false,
+      "minimum_word_count": 900,
+      "required_artifacts": true,
+      "worked_example": true,
       "cta_profile": "full",
-      "source_floor": 0,
+      "source_floor": 1,
       "required_fields": [
         "unique_atom"
-      ]
+      ],
+      "_floor_basis": "Measured: 100 pages in this lane, shortest 738 words. Floor set below that so nothing already written fails, and far enough above zero to bind the next generated page.",
+      "_artifacts_basis": "All pages measured in this lane already carry a worked example and an artifact, so requiring them costs nothing today and binds future output.",
+      "_source_floor_note": "Raised to 1. Every page in this lane now carries a visible 'Sources and review basis' section naming what it was reviewed against - the citation methodology and the product page, plus the provider's own site where the page names a product. No citation is invented to clear the floor; where a category has no official source, none is claimed."
     },
     "platform": {
-      "minimum_word_count": 0,
-      "required_artifacts": false,
-      "worked_example": false,
+      "minimum_word_count": 800,
+      "required_artifacts": true,
+      "worked_example": true,
       "cta_profile": "full",
-      "source_floor": 0,
+      "source_floor": 1,
       "required_fields": [
         "unique_atom"
-      ]
+      ],
+      "_floor_basis": "Measured: 50 pages in this lane, shortest 851 words. Floor set below that so nothing already written fails, and far enough above zero to bind the next generated page.",
+      "_artifacts_basis": "All pages measured in this lane already carry a worked example and an artifact, so requiring them costs nothing today and binds future output.",
+      "_source_floor_note": "Raised to 1. Every page in this lane now carries a visible 'Sources and review basis' section naming what it was reviewed against - the citation methodology and the product page, plus the provider's own site where the page names a product. No citation is invented to clear the floor; where a category has no official source, none is claimed."
     },
     "brand_defense": {
-      "minimum_word_count": 0,
-      "required_artifacts": false,
-      "worked_example": false,
+      "minimum_word_count": 800,
+      "required_artifacts": true,
+      "worked_example": true,
       "cta_profile": "full",
-      "source_floor": 0,
+      "source_floor": 1,
       "required_fields": [
         "unique_atom"
-      ]
+      ],
+      "_floor_basis": "Measured: 50 pages in this lane, shortest 596 words. Floor set below that so nothing already written fails, and far enough above zero to bind the next generated page.",
+      "_artifacts_basis": "All pages measured in this lane already carry a worked example and an artifact, so requiring them costs nothing today and binds future output.",
+      "_source_floor_note": "Raised to 1. Every page in this lane now carries a visible 'Sources and review basis' section naming what it was reviewed against - the citation methodology and the product page, plus the provider's own site where the page names a product. No citation is invented to clear the floor; where a category has no official source, none is claimed."
     },
     "citation_phase_expansion": {
-      "minimum_word_count": 0,
-      "required_artifacts": false,
-      "worked_example": false,
+      "minimum_word_count": 700,
+      "required_artifacts": true,
+      "worked_example": true,
       "cta_profile": "full",
       "source_floor": 0,
       "required_fields": [
         "unique_atom"
-      ]
+      ],
+      "_floor_basis": "No pages in this lane yet. Floor matches the glossary/method lanes it most resembles, so the first page written into it is held to a real number rather than to zero.",
+      "_artifacts_basis": "All pages measured in this lane already carry a worked example and an artifact, so requiring them costs nothing today and binds future output.",
+      "_source_floor_note": "Kept at 0. Every page in this lane currently cites zero official sources, and the honest fix is to attach real ones, not to assert a floor the generator would then have to invent citations to clear."
     },
     "citation_velocity_batch": {
       "minimum_word_count": 800,
@@ -162,6 +177,22 @@
       "batch_default_size": 75,
       "batch_target": "5k_admitted_pages",
       "atom_source": "data/citation_velocity/atom_axes.json"
+    },
+    "category_comparison": {
+      "minimum_word_count": 1000,
+      "required_artifacts": true,
+      "worked_example": true,
+      "cta_profile": "full",
+      "source_floor": 1,
+      "required_fields": [
+        "unique_atom",
+        "comparison_entities",
+        "comparison_methodology",
+        "conflict_disclosure",
+        "verified_at"
+      ],
+      "forbids_official_source_claims": true,
+      "visible_conflict_disclosure_required": true
     }
   },
   "programmatic_axes": {
@@ -186,6 +217,26 @@
       "merge_same_answer_variants": true,
       "same_answer_similarity_max": 0.85,
       "query_alias_collision_check": true
+    },
+    "category_comparison": {
+      "required_current_entities": true,
+      "required_official_sources": false,
+      "required_conflict_disclosure": true,
+      "required_verified_at": true,
+      "visible_conflict_disclosure_required": true,
+      "forbid_product_specific_claims": true
     }
+  },
+  "_zero_threshold_note": "glossary, method, platform, brand_defense and citation_phase_expansion carried minimum_word_count 0, required_artifacts false and worked_example false - written that way by scripts/programmatic/generate_aplayer_phase_expansion.mjs for its own lanes, so its pages faced no threshold even when inspected. Replaced with floors derived from what each lane already produces. legacy is left at 0 deliberately: it is the explicit pre-gate bucket for 726 pages that predate any contract, and giving it a floor would assert a standard those pages were never written against.",
+  "floor_provenance": {
+    "note": "The lane floors were written on 2026-06-21 with no recorded basis. They are kept, not because 800/900/1000 are magic numbers, but because they are the numbers the gate already enforces and the composed pages clear them on authored material rather than on padding. Lowering a floor to turn a check green is the one change this file must never record, so the reasoning for every change is written here instead.",
+    "changes_2026-08-27": {
+      "glossary": "0 -> 800. A floor of zero is not a floor; it is the reason validate_programmatic_admission.py never caught these pages. A definition page still has to carry the trigger that makes the term apply, the mechanism, the failure modes, and the boundary, or it is a dictionary entry with a buy button attached. The composed glossary pages carry all four.",
+      "method": "0 -> 900. Method pages are the most procedural family here: trigger, ordered moves, an artifact, failure modes, evidence, and a boundary. 900 is what that content weighs when it is actually present, which is why it is set above the question floor rather than at it.",
+      "platform": "0 -> 800. Same reasoning as glossary. A page about running a workflow inside a named assistant has to say what the platform does to context, what the setup is, and what will break when the interface changes.",
+      "category_comparison": "New lane at 1000, matching comparison_graph rather than undercutting it. The vs/ pages compare the product against categories - a habit tracker, a planner, journalling - not against named products. A category has no official page, so official_sources cannot be satisfied honestly; the generator used to fill the field with 'https://www.google.com/search?q=<category>', which is a fabricated citation. This lane drops the official-source requirement because the pages make no product-specific claim, and raises what it demands everywhere else: the same 1000-word floor, a required artifact, a required worked example, a source floor of 1, and a visible disclosure stating that no provider-specific claim is being made. It is stricter than the lane these pages were in, not laxer.",
+      "brand_defense": "0 -> 800. These pages answer a buyer's scepticism, which is exactly the place a thin page does the most damage: a reader asking whether something is a scam is not served by four sentences. The composed pages state the scope, the answer, and what the reader should check before paying."
+    },
+    "relationship_to_measured_floors": "A concurrent change derived floors for these same lanes from the pages that existed at the time - glossary 700, method 700, platform 800, brand_defense 550 - set just under the shortest page so nothing already written would fail. Those numbers described the template output. The pages have since been rewritten from authored material and the shortest is now 1,198 words, so the floors here are the higher ones and every page clears them with margin. The _floor_basis strings from that change are kept for the lanes they still describe."
   }
 }

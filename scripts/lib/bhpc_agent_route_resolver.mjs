@@ -59,7 +59,7 @@ function walkHtml(dir = ROOT, prefix = '') {
   const out = [];
   if (!fs.existsSync(dir)) return out;
   for (const name of fs.readdirSync(dir)) {
-    if (['.git','node_modules','.wrangler','.cache','dist'].includes(name)) continue;
+    if (['.git','.pages-output', 'node_modules','.wrangler','.cache','dist'].includes(name)) continue;
     const abs = path.join(dir, name);
     const rel = prefix ? `${prefix}/${name}` : name;
     const stat = fs.statSync(abs);

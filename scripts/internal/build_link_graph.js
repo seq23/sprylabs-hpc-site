@@ -2,6 +2,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
+const { fileForRoute } = require('../lib/route_resolution.cjs');
 const ROOT = process.cwd();
 const GRAPH = path.join(ROOT, 'data/internal_authority_graph.json');
 const OUT = path.join(ROOT, '.build/internal_authority_graph_report.json');
@@ -13,12 +14,16 @@ function hrefs(html){
   while ((m = re.exec(html))) found.add(m[1]);
   return [...found];
 }
+// Node paths are canonical routes, which are extensionless since the canonical
+// contract moved off the redirecting .html form. Resolve one back to the file
+// that answers it.
+const fileFor = (route) => fileForRoute(ROOT, route);
 function main(){
   const graph = readJSON(GRAPH);
   const report = { generated_at: new Date().toISOString(), checked: [], missing: [] };
   for (const node of graph.nodes || []) {
-    const file = path.join(ROOT, node.path.replace(/^\//, ''));
-    if (!fs.existsSync(file)) {
+    const file = fileFor(node.path);
+    if (!file) {
       report.missing.push({ path: node.path, reason: 'source page missing' });
       continue;
     }

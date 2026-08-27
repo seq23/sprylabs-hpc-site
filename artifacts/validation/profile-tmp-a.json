@@ -1,0 +1,25 @@
+{
+  "profile": "tmp-a",
+  "started_at": "2026-08-26T00:33:56.186Z",
+  "steps": [
+    {
+      "id": "validate:x",
+      "command": "node -e \"process.exit(1)\"",
+      "exit_code": 1,
+      "status": "FAIL"
+    },
+    {
+      "id": "validate:y",
+      "command": "node -e \"console.log('y ran')\"",
+      "exit_code": 0,
+      "status": "PASS"
+    }
+  ],
+  "status": "FAIL",
+  "failure_count": 1,
+  "failures": [
+    "validate:x"
+  ],
+  "stopped_early_at": null,
+  "finished_at": "2026-08-26T00:33:56.278Z"
+}

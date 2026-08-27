@@ -1,0 +1,7 @@
+{
+  "fixture": "content-pattern-contract",
+  "expectation": "FAIL",
+  "description": "A published page missing any blocking block - no direct-answer block, an h1 too short to carry the query on a non-hub page, a table shipping empty cells, or no route to purchase. Any one of these makes the page either unquotable by an answer engine or a citation that lands with nowhere to go.",
+  "blocking_checks": ["direct_answer", "query_in_heading", "no_empty_table_cells", "conversion_path"],
+  "expected_exit_code": 1
+}

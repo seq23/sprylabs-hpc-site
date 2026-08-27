@@ -24,7 +24,7 @@ function readJson(rel, fallback) {
 function walkHtml(dir, out = []) {
   if (!fs.existsSync(dir)) return out;
   for (const entry of fs.readdirSync(dir, {withFileTypes: true})) {
-    if (['.git', 'node_modules', '.validation-runtime'].includes(entry.name)) continue;
+    if (['.git', '.pages-output', 'node_modules', '.validation-runtime'].includes(entry.name)) continue;
     const abs = path.join(dir, entry.name);
     if (entry.isDirectory()) walkHtml(abs, out);
     else if (entry.isFile() && entry.name.endsWith('.html')) out.push(abs);
@@ -121,6 +121,20 @@ for (const abs of files) {
     const heading = stripTags(entry.required_heading || '');
     if (heading && !stripTags(html).toLowerCase().includes(heading.toLowerCase())) failures.push({path: rel, code: 'MISSING_REQUIRED_HEADING', detail: heading});
     for (const link of entry.required_internal_links || []) {
+      if (!link?.to_url) continue;
+      let pathname = '';
+      try { pathname = new URL(link.to_url, 'https://billionairehighperformancecoach.com').pathname; } catch { pathname = String(link.to_url); }
+      // A link action whose to_url resolves to this same page is a self-link. The
+      // apply step cannot render it as a related-page link, so requiring its anchor
+      // text here can never be satisfied. Skip it and record it as a data warning
+      // against the emitting record rather than blocking every downstream deploy.
+      if (pathname.replace(/^\/+/, '') === rel) {
+        warnings.push({path: rel, code: 'SELF_REFERENTIAL_LINK_ACTION', detail: pathname, record_id: entry.record_id});
+        continue;
+      }
+      if (!html.includes(`href="${pathname}"`) && !html.includes(`href='${pathname}'`)) failures.push({path: rel, code: 'MISSING_REQUIRED_LINK', detail: pathname});
+      // Link presence is an invariant; exact anchor wording is a recommendation.
+      if (link.anchor_text && !stripTags(html).toLowerCase().includes(String(link.anchor_text).toLowerCase())) warnings.push({path: rel, code: 'ANCHOR_TEXT_MISMATCH', detail: link.anchor_text, record_id: entry.record_id});
       const mutation = resolveBhpcInternalLinkAction(link);
       if (mutation.status !== 'RESOLVED') { failures.push({path: rel, code: 'INVALID_INTERNAL_LINK_ACTION', detail: mutation.reason}); continue; }
       const sourceAbs = path.join(ROOT, mutation.from_path);

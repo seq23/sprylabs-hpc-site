@@ -2,6 +2,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { createRequire } from 'node:module';
+const requireCjs = createRequire(import.meta.url);
+const { routeFor: sharedRouteFor } = requireCjs('../lib/dual_domain_policy.cjs');
 
 const ROOT = process.cwd();
 const TODAY = new Date().toISOString().slice(0, 10);
@@ -50,12 +53,14 @@ function titleCase(value='') {
   }).join(' ').replace(/\bChatgpt\b/g, 'ChatGPT').replace(/\bA-player\b/gi, 'A-player');
 }
 function words(s='') { return String(s).match(/\b[\w’'-]+\b/g) || []; }
-function routeFor(rel) { return '/' + rel.replace(/index\.html$/, '').replace(/\.html$/, '.html'); }
+// Route form is the shared dual-domain contract: the URL that answers 200
+// without a redirect hop. See scripts/lib/dual_domain_policy.cjs.
+function routeFor(rel) { return sharedRouteFor(rel); }
 function canonicalFor(rel) { return `https://${DOMAIN}${routeFor(rel)}`; }
 function hash(value) { return crypto.createHash('sha256').update(value).digest('hex').slice(0, 16); }
 function htmlFiles(dir=ROOT, out=[]) {
   for (const entry of fs.readdirSync(dir, {withFileTypes: true})) {
-    if (['.git', 'node_modules', '.build', 'artifacts', 'coverage', 'reports', 'test-results', 'playwright-report'].includes(entry.name)) continue;
+    if (['.git', '.pages-output', 'node_modules', '.build', 'artifacts', 'coverage', 'reports', 'test-results', 'playwright-report'].includes(entry.name)) continue;
     const fp = path.join(dir, entry.name);
     if (entry.isDirectory()) htmlFiles(fp, out);
     else if (entry.isFile() && entry.name.endsWith('.html')) out.push(path.relative(ROOT, fp).split(path.sep).join('/'));
@@ -74,6 +79,18 @@ const ledger = readJson('data/citation_velocity/generated_ledger.json', {schema_
 const dailyRuns = readJson('data/citation_velocity/daily_runs.json', {schema_version:'1.0', runs:[]});
 const admissions = readJson('data/content/page_admission_registry.json', {records:[]});
 const queryRegistry = readJson('data/citation/query_registry.json', {queries:[]});
+
+// The `unique` clause is written as a third-person sentence about the page
+// ("Compares X with Y"), so splicing it after "to help readers" produced
+// "to help readers Compares X with Y" on 1,567 pages - the first bold line
+// under the H1, and the first thing an extractor reads. Put the verb in the
+// base form the sentence actually needs.
+const READER_VERB = {Uses:'use', Maps:'map', Explains:'explain', Compares:'compare',
+  Defines:'define', Turns:'turn', Answers:'answer', Shows:'show', Provides:'provide'};
+function forReaders(clause) {
+  return String(clause || '').replace(/^([A-Z][a-z]+)\b/, (m, verb) => READER_VERB[verb] || m.toLowerCase());
+}
+
 const existingPaths = new Set([...htmlFiles(), ...(admissions.records || []).map(r => r.path)]);
 const existingQueries = new Set([...(queryRegistry.queries || []).map(q => norm(q.query)), ...(admissions.records || []).map(r => norm(r.primary_query))]);
 const generatedAtomIds = new Set((ledger.generated_atoms || []).map(item => item.atom_id));
@@ -124,7 +141,7 @@ function commonAtom({lane, pageType, query, path: rel, concept, unique, intent, 
     reviewer_or_publisher: 'Spry Labs / S.L. Taylor',
     schema_type: lane === 'question_cluster' ? 'FAQPage' : (lane === 'method' ? 'HowTo' : 'DefinedTerm'),
     framework: fw,
-    definition: `The ${fw} is a ${pageType.replace(/_/g, ' ')} reference surface that uses ${concept.framework} to help readers ${unique.replace(/\.$/, '')}.`,
+    definition: `The ${fw} is a ${pageType.replace(/_/g, ' ')} reference surface that uses ${concept.framework} to help readers ${forReaders(unique.replace(/\.$/, ''))}.`,
     summary: `${concept.framework} helps convert pressure, competing priorities, and open loops into a concrete execution sequence. The goal is not motivation. The goal is to reduce cognitive load by giving the LLM a stable operating role.`,
     direct_answer: `Use ${concept.framework} to move the next decision into a structured LLM workflow: name the pressure, choose one priority, define the smallest viable action, and close the loop with evidence.`,
     worked_example: `A reader opens their LLM and says they are ${unique.replace(/^Explains how /, '').replace(/\.$/, '')}. Instead of asking for generic advice, they ask the system to apply ${concept.framework}. The output becomes one next move, one constraint, and one review point.`,

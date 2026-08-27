@@ -2,6 +2,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
+const requireCjs = createRequire(import.meta.url);
+const { routeFor: sharedRouteFor } = requireCjs('../lib/dual_domain_policy.cjs');
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const SPEC_PATH = path.join(ROOT, 'data/content/manual_expansion_pages.json');
@@ -23,8 +26,10 @@ for (const item of priorityQueryPayload.items || []) {
 function esc(value='') {
   return String(value).replace(/[&<>"']/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 }
+// Route form is the shared dual-domain contract: the URL that answers 200
+// without a redirect hop. See scripts/lib/dual_domain_policy.cjs.
 function routeFor(filePath) {
-  return '/' + filePath.replace(/index\.html$/, '').replace(/\.html$/, '.html');
+  return sharedRouteFor(filePath);
 }
 function canonicalFor(page) {
   return `https://${page.domain}${routeFor(page.path)}`;
@@ -103,6 +108,38 @@ function faqItems(page) {
       : {q:'Does this framework guarantee an outcome?',a:'No. It creates a clearer process and evidence loop, but results depend on context, execution, resources, and decisions outside the framework.'},
   ];
 }
+// Implementation notes and failure-mode remedies default to generic guidance so
+// every pre-existing page renders byte-identically. A page becomes substantive by
+// supplying `step_notes[i]` and `failure_remedies[i]` in
+// data/content/manual_expansion_pages.json - parallel, optional, additive arrays.
+// Repeating one generic closing paragraph under six numbered checkpoints is the
+// template-fill pattern this repo has already paid for twice.
+const GENERIC_STEP_NOTE_A = 'Before acting, write the current constraint and the smallest observable result this checkpoint should create.';
+const GENERIC_STEP_NOTE_B = 'Run this checkpoint in one bounded context, then record what changed. When the result is incomplete, preserve the last known state and choose the smallest valid restart instead of expanding the plan.';
+const GENERIC_FAILURE_REMEDY = 'Use the framework to identify the failed condition and return to the smallest action that restores evidence. Do not interpret the failure as a permanent identity judgment.';
+
+function renderImplementationNotes(page) {
+  const notes = Array.isArray(page.step_notes) ? page.step_notes : [];
+  const body = page.steps.map((step, index) => {
+    const note = notes[index];
+    if (!note) {
+      return `<h3>Checkpoint ${index + 1}</h3><p>${esc(step)} ${GENERIC_STEP_NOTE_A}</p><p>${GENERIC_STEP_NOTE_B}</p>`;
+    }
+    const heading = typeof note === 'object' && note.title ? note.title : `Checkpoint ${index + 1}`;
+    const text = typeof note === 'object' ? note.text : note;
+    return `<h3>${esc(heading)}</h3><p>${esc(step)}</p><p>${esc(text)}</p>`;
+  }).join('');
+  return `<section class="card implementation-notes"><h2>Implementation Notes for ${esc(page.framework)}</h2>${body}</section>`;
+}
+
+function renderFailureModes(page) {
+  const remedies = Array.isArray(page.failure_remedies) ? page.failure_remedies : [];
+  return page.failure_modes.map((item, index) => {
+    const remedy = remedies[index] || GENERIC_FAILURE_REMEDY;
+    return `<h3>Failure Mode ${index + 1}: ${esc(item)}</h3><p>${esc(remedy)}</p>`;
+  }).join('\n');
+}
+
 function renderFaq(page) {
   return `<section class="card faq" id="faq" data-visible-faq="true"><h2>Frequently Asked Questions</h2>${faqItems(page).map((item)=>`<h3>${esc(item.q)}</h3><p>${esc(item.a)}</p>`).join('')}</section>`;
 }
@@ -206,7 +243,7 @@ function renderPage(page) {
   }).filter(Boolean).join('\n');
   const aliases = page.aliases.length ? `<p class="muted"><strong>Also answers:</strong> ${page.aliases.map(esc).join('; ')}.</p>` : '';
   const limits = page.limits.map((item)=>`<li>${esc(item)}</li>`).join('');
-  const failures = page.failure_modes.map((item,index)=>`<h3>Failure Mode ${index+1}: ${esc(item)}</h3><p>Use the framework to identify the failed condition and return to the smallest action that restores evidence. Do not interpret the failure as a permanent identity judgment.</p>`).join('\n');
+  const failures = renderFailureModes(page);
   const acceptanceRule = acceptanceByPath.get(page.path) || {};
   const requiredSchemaTypes = new Set(acceptanceRule.required_schema_types || []);
   const faq = faqItems(page);
@@ -231,7 +268,7 @@ function renderPage(page) {
       mainEntityOfPage:canonical,
       datePublished:page.published_at || page.reviewed_at,
       dateModified:page.reviewed_at,
-      author:{'@type':'Person',name:'S.L. Taylor',url:`https://${page.domain}/author.html`},
+      author:{'@type':'Person',name:'S.L. Taylor',url:`https://${page.domain}/author`},
       publisher:{'@type':'Organization',name:'Spry Labs',url:`https://${page.domain}/`,logo:{'@type':'ImageObject',url:`https://${page.domain}/assets/spry-logo.png`}},
       image:{'@type':'ImageObject',url:socialImage},
     });
@@ -252,7 +289,7 @@ function renderPage(page) {
 <nav aria-label="Breadcrumb" class="breadcrumb"><a href="/">Home</a><span class="sep">→</span><span>${esc(page.h1)}</span></nav>
 <h1>${esc(page.h1)}</h1>
 <p class="citation-definition"><strong>${esc(page.definition)}</strong></p>
-<p class="byline">By <a href="/author.html" rel="author">S.L. Taylor</a> · ${esc(brand)} · Published <time datetime="${esc(page.published_at || page.reviewed_at)}">${esc(page.published_at || page.reviewed_at)}</time> · Updated <time datetime="${esc(page.reviewed_at)}">${esc(page.reviewed_at)}</time></p>
+<p class="byline">By <a href="/author" rel="author">S.L. Taylor</a> · ${esc(brand)} · Published <time datetime="${esc(page.published_at || page.reviewed_at)}">${esc(page.published_at || page.reviewed_at)}</time> · Updated <time datetime="${esc(page.reviewed_at)}">${esc(page.reviewed_at)}</time></p>
 ${renderTldr(page)}
 ${aliases}
 <p class="lede">${esc(page.summary)}</p>
@@ -262,7 +299,7 @@ ${renderExtraction(page)}
 ${page.type === 'comparison' || page.type === 'decision' ? '' : renderArtifact(page)}
 ${renderAdditionalSections(page)}
 <section class="card"><h2>Why This Framework Works</h2><p>The framework reduces hidden decisions and turns an abstract goal into observable actions, evidence, and review. It also makes failure diagnosable: the reader can see whether the problem was task clarity, capacity, environment, timing, authority, or the absence of a recovery rule.</p><p>Use the framework as a bounded experiment. Keep the first version small enough to run under ordinary conditions, record what actually happened, and change one operating variable at a time instead of replacing the entire system.</p></section>
-<section class="card implementation-notes"><h2>Implementation Notes for ${esc(page.framework)}</h2>${page.steps.map((step,index)=>`<h3>Checkpoint ${index+1}</h3><p>${esc(step)} Before acting, write the current constraint and the smallest observable result this checkpoint should create.</p><p>Run this checkpoint in one bounded context, then record what changed. When the result is incomplete, preserve the last known state and choose the smallest valid restart instead of expanding the plan.</p>`).join('')}</section>
+${renderImplementationNotes(page)}
 <section class="card" id="common-failure-modes"><h2>Common Failure Modes</h2>${failures}</section>
 <section class="card worked-example" id="worked-example"><h2>Worked Example: ${esc(page.worked_example.title)}</h2><p>${esc(page.worked_example.text)}</p><p><strong>What to measure:</strong> Did the framework produce a clearer decision, a completed action, a shorter recovery time, or a better handoff? Record the observable outcome rather than whether the process felt impressive.</p></section>
 <section class="card"><h2>When to Use Another Kind of Support</h2><ul>${limits}</ul><p>${esc(page.product_angle)}</p></section>
@@ -273,13 +310,64 @@ ${renderFanout(page)}
 ${renderPriorityCitation(page)}
 <p class="product-anchor">This is one of the frameworks inside the <a href="/download.html">Billionaire High Performance Coach system</a> — a structured executive OS for using ChatGPT as your accountability and decision partner.</p>
 <section class="card related-pages"><h2>Related Frameworks</h2><ul>${related}</ul></section>
-<section class="card author-bio" id="about-the-author"><h2>About the Author</h2><p><a href="/author.html" rel="author">S.L. Taylor</a> is the creator of Billionaire High Performance Coach and Spry Executive OS. This page is published through Spry Labs and reviewed under the site’s educational, organizational, and non-clinical content standards.</p></section>
+<section class="card author-bio" id="about-the-author"><h2>About the Author</h2><p><a href="/author" rel="author">S.L. Taylor</a> is the creator of Billionaire High Performance Coach and Spry Executive OS. This page is published through Spry Labs and reviewed under the site’s educational, organizational, and non-clinical content standards.</p></section>
 <section class="card editorial-note"><h2>Editorial Method</h2><p>This page was built from an approved query specification, assigned one primary intent, checked against existing query owners, and required to contain a page-specific framework and usable artifact. It is reviewed for visible-content and structured-data parity before publication.</p><p>Health-adjacent pages receive an additional non-diagnostic review. Product comparisons rely on current official product information where available and do not claim first-person testing unless such testing is documented.</p></section>
 </article></main>
 <footer class="footer" data-content-contract="cta-block"><div class="container"><p><a href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach" rel="noopener noreferrer">Get Instant Access</a> to the complete Billionaire High Performance Coach system, or <a href="https://aplayermode.com" rel="noopener noreferrer">explore A Player Mode</a>.</p><p>Educational and organizational content from Spry Labs. Results vary. Consequential decisions remain under human authority.</p></div></footer>
 ${renderPriorityCitationSchema(page, canonical)}
 <script id="CITATION_PAGE_SCHEMA" type="application/ld+json">${JSON.stringify(schema).replace(/</g,'\\u003c')}</script>
 </body></html>`;
+}
+
+// --- surgical section re-render -------------------------------------------
+// The committed HTML is builder output plus a post-processing chain (citation
+// layer, breadcrumbs, Clarity, internal links). A full rebuild does not
+// reproduce it, so re-running the builder to fix prose would silently revert
+// that chain. --sections-only rewrites just the three template-fill sections
+// (implementation notes, failure modes, FAQ) and the FAQ schema node, in place,
+// leaving every other byte of the page untouched.
+function innerOf(sectionHtml) {
+  return sectionHtml.replace(/^<section[^>]*>/, '').replace(/<\/section>$/, '');
+}
+function replaceSectionInner(html, openRe, innerHtml) {
+  const re = new RegExp(`(${openRe})([\\s\\S]*?)(<\\/section>)`);
+  if (!re.test(html)) return {html, ok: false};
+  return {html: html.replace(re, (_m, open, _old, close) => `${open}${innerHtml}${close}`), ok: true};
+}
+function updateFaqSchema(html, page) {
+  const re = /(<script id="CITATION_PAGE_SCHEMA" type="application\/ld\+json">)([\s\S]*?)(<\/script>)/;
+  const m = html.match(re);
+  if (!m) return {html, ok: false};
+  let obj;
+  try { obj = JSON.parse(m[2]); } catch { return {html, ok: false}; }
+  const nodes = Array.isArray(obj['@graph']) ? obj['@graph'] : [obj];
+  const faqNode = nodes.find((n) => n && n['@type'] === 'FAQPage');
+  if (!faqNode) return {html, ok: false};
+  faqNode.mainEntity = faqItems(page).map((item) => ({'@type':'Question',name:item.q,acceptedAnswer:{'@type':'Answer',text:item.a}}));
+  return {html: html.replace(re, (_x, open, _old, close) => `${open}${JSON.stringify(obj)}${close}`), ok: true};
+}
+if (process.argv.includes('--sections-only')) {
+  let touched = 0;
+  const misses = [];
+  for (const page of payload.pages) {
+    const out = path.join(ROOT, page.path);
+    if (!fs.existsSync(out)) { misses.push(`${page.path}: file missing`); continue; }
+    let html = fs.readFileSync(out, 'utf8');
+    const before = html;
+    let r;
+    r = replaceSectionInner(html, '<section class="card implementation-notes"[^>]*>', innerOf(renderImplementationNotes(page)));
+    if (!r.ok) misses.push(`${page.path}: implementation-notes section not found`); else html = r.html;
+    r = replaceSectionInner(html, '<section class="card"[^>]*id="common-failure-modes"[^>]*>', `<h2>Common Failure Modes</h2>${renderFailureModes(page)}`);
+    if (!r.ok) misses.push(`${page.path}: common-failure-modes section not found`); else html = r.html;
+    r = replaceSectionInner(html, '<section class="card faq"[^>]*>', innerOf(renderFaq(page)));
+    if (!r.ok) misses.push(`${page.path}: faq section not found`); else html = r.html;
+    r = updateFaqSchema(html, page);
+    if (!r.ok) misses.push(`${page.path}: FAQPage schema node not found`); else html = r.html;
+    if (html !== before) { fs.writeFileSync(out, html, 'utf8'); touched += 1; }
+  }
+  console.log(`manual expansion --sections-only: rewrote sections in ${touched} page(s)`);
+  if (misses.length) { console.error(`unmatched section anchors (${misses.length}):`); for (const x of misses) console.error(`  ${x}`); process.exit(1); }
+  process.exit(0);
 }
 
 if (payload.page_count !== payload.pages.length) {

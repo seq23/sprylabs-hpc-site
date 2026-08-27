@@ -7,7 +7,7 @@ const bad = [];
 const exts = new Set(['.html', '.js', '.json', '.xml', '.txt', '.md']);
 function walk(dir) {
   for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
-    if (['.git', 'node_modules', 'tmp', 'coverage', '.build', 'releases', '_ops', 'audit'].includes(ent.name)) continue;
+    if (['.git', '.pages-output', 'node_modules', 'tmp', 'coverage', '.build', 'releases', '_ops', 'audit'].includes(ent.name)) continue;
     const p = path.join(dir, ent.name);
     if (ent.isDirectory()) walk(p);
     else if (exts.has(path.extname(ent.name))) check(p);

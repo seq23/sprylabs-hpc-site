@@ -3,7 +3,7 @@
  * Inserts a canonical "A note on alternatives" block into each /answers/*.html page
  * immediately before the footer <footer class="footer" role="contentinfo">.
  *
- * Excludes /answers/index.html (answers hub).
+ * Excludes /answers/ (answers hub).
  *
  * Idempotent: if a page already contains '<h2>A note on alternatives</h2>' it will skip.
  */

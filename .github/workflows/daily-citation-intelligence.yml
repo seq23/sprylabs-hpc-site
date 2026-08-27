@@ -16,13 +16,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 55
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with: {fetch-depth: 0}
       - name: Sync latest main before install
         run: |
           git fetch origin main
           git reset --hard origin/main
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with: {node-version: 24, cache: npm}
       - run: npm ci --ignore-scripts
       - name: Check autonomous runtime state
@@ -40,6 +40,17 @@ jobs:
       - name: Run autonomous zero-dollar gap-filling lane
         if: steps.runtime.outputs.run == 'true'
         run: npm run workflow:zero-dollar-autonomous
+      - name: Observe whether answer engines cite us
+        # The probe shipped in seven repos and was invoked by none of them, so no
+        # citation observation was ever taken. Grounded mode reads the pages the
+        # answer was actually built from; knowledge mode would only show whether
+        # a model memorised the brand, which is not a citation.
+        if: steps.runtime.outputs.run == 'true'
+        continue-on-error: true
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          CITATION_PROBE_MODE: grounded
+        run: node scripts/llm_citation_probe.mjs --limit 25
       - name: Validate ownership and Safe Harbor
         if: steps.runtime.outputs.run == 'true'
         run: npm run validate:ownership && npm run safe-harbor:validate
@@ -48,11 +59,12 @@ jobs:
         env:
           WORKFLOW_ARGV: >-
             npm run workflow:zero-dollar-autonomous &&
+            node scripts/llm_citation_probe.mjs --limit 25 &&
             npm run validate:ownership &&
             npm run safe-harbor:validate
         run: |
           ./.github/scripts/commit_and_push_if_changed.sh "zero-dollar citation intelligence: autonomous gap fill" daily-citation-intelligence
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: always()
         with:
           name: spry-daily-citation-intelligence-${{ github.run_id }}

@@ -5,7 +5,14 @@ const path = require('path');
 const { routeFor, hostFor } = require('../lib/dual_domain_policy.cjs');
 
 const root = process.cwd();
-const skipDirs = new Set(['.git','node_modules','_ops','templates','docs']);
+const skipDirs = new Set(['.git','.pages-output', 'node_modules','_ops','templates','docs']);
+// download.html is the revenue surface and its bytes are frozen at a known hash
+// (data/release/frozen_output_registry.json). This walker used to be harmless
+// here only by accident: routeFor kept the .html form, so the canonical it
+// computed already matched the file. Now that the route contract is
+// extensionless, an unguarded pass would rewrite the frozen page. Skip it
+// explicitly rather than relying on the computed value happening to match.
+const protectedFiles = new Set(['download.html']);
 const publishedManifestPath = path.join(root, 'data/reddit/published_manifest.json');
 const publishedManifest = fs.existsSync(publishedManifestPath) ? JSON.parse(fs.readFileSync(publishedManifestPath, 'utf8')) : { items: [] };
 const publishedHostOverrides = new Map((publishedManifest.items || []).map((item) => [item.route, item.canonical_host]));
@@ -16,6 +23,7 @@ function walk(dir, out=[]) {
     const full=path.join(dir,entry.name);
     const rel=path.relative(root,full).replace(/\\/g,'/');
     if (rel.startsWith('data/report_fixes/agent_runs/')) continue;
+    if (protectedFiles.has(rel)) continue;
     if (entry.isDirectory()) walk(full,out);
     else if (entry.name.endsWith('.html')) out.push(full);
   }
@@ -91,12 +99,38 @@ let changedFiles=0;
 let inserted=0;
 const changes=[];
 const files = walk(root);
+
+// Every tracked .html file, so an absolute internal URL can be recognised as a
+// real page and rewritten to the route form that answers 200. Built once.
+const trackedHtml = new Set(
+  files.map((f) => path.relative(root, f).replace(/\\/g, '/'))
+);
+
+// The canonical tag was not the only place the .html form leaked. The JSON-LD
+// @id, url and mainEntityOfPage fields carry the same self-reference, and a
+// schema graph that identifies a page by a URL which 301s is the same defect
+// wearing a different hat - it just is not visible in <link rel=canonical>.
+// Rewrite any absolute internal URL whose path is a real tracked page through
+// the shared route contract. download.html is excluded by routeFor itself
+// (FROZEN_HTML_ROUTES), so its URL is returned unchanged wherever it appears.
+const ABSOLUTE_INTERNAL = /https:\/\/(billionairehighperformancecoach\.com|spryexecutiveos\.com)\/([A-Za-z0-9._\/-]*\.html)/g;
+function normalizeInternalUrls(html) {
+  return html.replace(ABSOLUTE_INTERNAL, (match, host, relPath) => {
+    if (!trackedHtml.has(relPath)) return match;
+    const r = routeFor(relPath);
+    // routeFor keeps the .html form for the frozen route; leave those alone.
+    if (r.endsWith('.html')) return match;
+    return `https://${host}${r}`;
+  });
+}
+
 for (const file of files) {
   const rel=path.relative(root,file).replace(/\\/g,'/');
   const route=routeFor(rel);
   const canonical=hostFor(route,publishedHostOverrides)+route;
   let html=fs.readFileSync(file,'utf8');
   const before=html;
+  html=normalizeInternalUrls(html);
   let r=replaceTagValue(html,'link','rel','canonical','href',canonical); html=r.html;
   if (!r.changed && /<head\b/i.test(html)) {
     html=html.replace(/<head([^>]*)>/i, `<head$1>\n<link rel="canonical" href="${canonical}">`);

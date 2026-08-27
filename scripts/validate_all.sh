@@ -34,7 +34,7 @@ node scripts/validators/validate_vertical_keys.js
 node scripts/validators/validate_content_routing.js
 node scripts/validators/validate_extractability.js
 node scripts/validators/validate_priority_llm_surfaces.js
-node scripts/build_coverage_map.js
+node scripts/build_knowledge_map.js
 node scripts/validators/legacy_ops/validate_distribution_contract.js
 node scripts/validators/legacy_ops/validate_dual_domain_contract.js
 node scripts/validators/legacy_ops/validate_internal_links.js
