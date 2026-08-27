@@ -16,7 +16,9 @@ for(const script of commands){
   const direct=process.env.AGENT_INTAKE_DIRECT_EXECUTION==='1';
   const file=script==='agent:bhpc:apply-exact'?'scripts/agent_intake/apply_bhpc_agent_exact_implementation.mjs':'scripts/agent_intake/apply_bhpc_internal_link_mutations.mjs';
   const result=direct
-    ?spawnSync(process.execPath,['scripts/site_layout/run_with_public_root.mjs','--','bash','-lc',`node ${file}`],{cwd:ROOT,stdio:'inherit',env:process.env})
+    // main deleted scripts/site_layout/run_with_public_root.mjs with the whole
+    // site/public staging layout, so run the target script directly.
+    ?spawnSync(process.execPath,[file],{cwd:ROOT,stdio:'inherit',env:process.env})
     :spawnSync('npm',['run',script],{cwd:ROOT,stdio:'inherit',env:process.env});
   command_results.push({script,status:result.status,execution:direct?'direct-artifact-qa':'npm'});if(result.status!==0)break
 }
