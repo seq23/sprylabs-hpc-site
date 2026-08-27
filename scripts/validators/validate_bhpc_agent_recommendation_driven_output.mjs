@@ -39,8 +39,14 @@ for(const entry of manifest.entries||[]){
   // audit critique that is its only other source. Re-tagging the retrofit's
   // output as an agent block is the one fix that must not be used: it makes the
   // applier's section strip delete every real block after it.
-  for(const type of entry.required_block_types||[]){if(type==='internal_link_set'&&!(entry.required_internal_links||[]).length)continue;if(!(html.includes(`data-bhpc-agent-block="${type}"`)||html.includes(`data-content-block="${type}"`)))errors.push(`${entry.record_id}:missing_block:${type}:${rel}`)}
-  for(const link of entry.required_internal_links||[]){const href=normalizeBhpcInternalLinkHref(link.to_url);if(!href){errors.push(`${entry.record_id}:non_internal_link_in_required_internal_links:${link.to_url||'missing'}:${rel}`);continue}if(!html.includes(`href="${href}"`)&&!html.includes(`href='${href}'`))errors.push(`${entry.record_id}:missing_internal_link:${href}:${rel}`)}
+  const selfHref=normalizeBhpcInternalLinkHref('/'+rel.replace(/(?:\/index)?\.html$/,''));
+  const nonSelfLinks=(entry.required_internal_links||[]).filter((l)=>{const h=normalizeBhpcInternalLinkHref(l.to_url);return h&&h!==selfHref});
+  for(const type of entry.required_block_types||[]){if(type==='internal_link_set'&&!nonSelfLinks.length)continue;if(!(html.includes(`data-bhpc-agent-block="${type}"`)||html.includes(`data-content-block="${type}"`)))errors.push(`${entry.record_id}:missing_block:${type}:${rel}`)}
+  // A required link whose target resolves to this same page is a self-link. The
+  // apply step cannot render a page as its own related-page link, so requiring the
+  // href here can never be satisfied -- it fails forever regardless of the build.
+  // validate_page_seo_contract already skips these for the same reason.
+  for(const link of entry.required_internal_links||[]){const href=normalizeBhpcInternalLinkHref(link.to_url);if(!href){errors.push(`${entry.record_id}:non_internal_link_in_required_internal_links:${link.to_url||'missing'}:${rel}`);continue}if(selfHref&&href===selfHref)continue;if(!html.includes(`href="${href}"`)&&!html.includes(`href='${href}'`))errors.push(`${entry.record_id}:missing_internal_link:${href}:${rel}`)}
   for(const link of entry.required_external_cta_links||[]){const href=normalizeBhpcExternalCtaHref(link.to_url);if(!href){errors.push(`${entry.record_id}:unapproved_external_cta:${link.to_url||'missing'}:${rel}`);continue}if(!html.includes(`href="${href}"`)&&!html.includes(`href='${href}'`))errors.push(`${entry.record_id}:missing_external_cta:${href}:${rel}`)}
   if(/Agent recommendation implementation|Agent-directed implementation|Agent source instruction|Route decision:/i.test(text))errors.push(`${entry.record_id}:public_operational_scaffolding:${rel}`);
   if(!appliedIds.has(String(entry.id)))errors.push(`${entry.record_id}:acceptance_not_applied:${entry.id}`);
