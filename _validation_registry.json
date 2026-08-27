@@ -5806,8 +5806,68 @@
         "MX-177"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-117",
+      "status": "ADMITTED",
+      "name": "validate:admission-level-stability",
+      "check_type": "invariant",
+      "owning_lane": "content-admission",
+      "risk_prevented": "A build stage silently re-levelling pages that are already in data/content/page_admission_registry.json. admission_level decides which lane contract validate_programmatic_admission.py enforces on a page, so re-levelling at build time either fails the release on a corpus that was never written against those thresholds, or - in the demotion direction, which is the live risk now that 1,466 records carry 'full' - removes published pages from the substantive checks while the build still passes.",
+      "existing_coverage_gap": "validate:programmatic-registry only checks that admission_level is one of baseline/full. validate:programmatic-admission reads the level and reports how many records it is skipping, but treats whatever the build wrote as given. validate:demand-backed-pages warns about pages admitted after the gate that carry \"baseline\", not about pages whose level the build changed. Nothing compared the committed registry with the built one, so generate_aplayer_phase_expansion.mjs promoting all 1,400 of its pages to \"full\" on every run was invisible until 2,250 lane-contract errors landed in CI - truncated to the first 300, which read as \"300 short pages\".",
+      "scope": [
+        "data/content/page_admission_registry.json"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:admission-level-stability",
+      "implementation_path": "scripts/validation/validate_admission_level_stability.mjs",
+      "environment": "container",
+      "proof_tier": 2,
+      "positive_fixture": "fixtures/validation/admission-level/pass.json",
+      "negative_fixture": "fixtures/validation/admission-level/fail.json",
+      "evidence_output": "artifacts/diagnostics/container-current/admission-level-stability/summary.json",
+      "runtime_budget_seconds": 15,
+      "maintenance_owner": "content",
+      "overlap_analysis": "Does not duplicate validate:programmatic-admission, which judges page bodies against the level recorded for them. This one judges the level itself, and only its stability across a build. It does not overlap validate:clean-rebuild-parity either: that compares two builds of the same tree, so a stage that re-levels deterministically is identical in both and passes.",
+      "retirement_offset": null,
+      "decision": "ADMITTED as HARD_FAIL in container-prepush, placed immediately before validate:content-release so a re-levelling is named before the lane-contract failures it causes. The promotion incident that motivated it is resolved at the cause (6a759335d gave the 1,400 generated pages the material to earn 'full'), but nothing keeps that correct: this guard is what makes the next silent re-level - in either direction - fail on its own name instead of as 300 truncated lines of downstream symptoms. Both fixtures are executed by the script on every run, so the recorded proof cannot rot into decoration.",
+      "decision_date": "2026-08-27",
+      "matrix_ids": [
+        "MX-179"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-CANONICAL-NO-REDIRECT",
+      "status": "ADMITTED",
+      "name": "validate:canonical-no-redirect",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:canonical-no-redirect",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-canonical-no-redirect/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-08-27",
+      "matrix_ids": [
+        "MX-180"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 183,
+  "record_count": 185,
   "generated_at": "2026-08-08T23:30:00Z"
 }

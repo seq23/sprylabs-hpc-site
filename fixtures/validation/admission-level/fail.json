@@ -1,0 +1,56 @@
+{
+  "note": "Self-test fixture for validate:admission-level-stability. Covers all three failure shapes: answers/phase4/a.html is promoted baseline -> full by the build (what generate_aplayer_phase_expansion.mjs did to all 1,400 of its pages); manual/b.html is demoted full -> baseline, which silently removes a published page from the substantive checks; and dup/d.html leaves the build carrying two different levels at once, so row order would otherwise decide which contract it is judged against.",
+  "expected_drift": [
+    {
+      "path": "answers/phase4/a.html",
+      "committed": "baseline",
+      "built": "full"
+    },
+    {
+      "path": "dup/d.html",
+      "committed": "baseline",
+      "built": "ambiguous(baseline|full)"
+    },
+    {
+      "path": "manual/b.html",
+      "committed": "full",
+      "built": "baseline"
+    }
+  ],
+  "committed": {
+    "records": [
+      {
+        "path": "answers/phase4/a.html",
+        "admission_level": "baseline"
+      },
+      {
+        "path": "manual/b.html",
+        "admission_level": "full"
+      },
+      {
+        "path": "dup/d.html",
+        "admission_level": "baseline"
+      }
+    ]
+  },
+  "built": {
+    "records": [
+      {
+        "path": "answers/phase4/a.html",
+        "admission_level": "full"
+      },
+      {
+        "path": "manual/b.html",
+        "admission_level": "baseline"
+      },
+      {
+        "path": "dup/d.html",
+        "admission_level": "baseline"
+      },
+      {
+        "path": "dup/d.html",
+        "admission_level": "full"
+      }
+    ]
+  }
+}

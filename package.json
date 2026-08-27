@@ -113,6 +113,7 @@
     "workflow:whitepaper": "npm run workflow:content-expansion -- --mode=whitepaper",
     "validate:programmatic-registry": "node scripts/validation/validate_programmatic_registry.mjs",
     "validate:programmatic-admission": "node scripts/validation/python_runtime.mjs run scripts/validation/validate_programmatic_admission.py",
+    "validate:admission-level-stability": "node scripts/validation/validate_admission_level_stability.mjs",
     "validate:retired-route-references": "node scripts/validation/validate_retired_route_references.mjs",
     "validate:clean-rebuild-parity": "node scripts/validation/validate_clean_rebuild_parity.mjs",
     "release:ci-validate": "node scripts/release/ci_validate.mjs",
@@ -324,7 +325,8 @@
     "sitemap:lastmod": "node scripts/sitemap_lastmod.js",
     "citation:probe": "node scripts/llm_citation_probe.mjs",
     "cadence:template-share": "node scripts/template_share.js",
-    "validate:demand-backed-pages": "node scripts/validation/validate_demand_backed_pages.mjs"
+    "validate:demand-backed-pages": "node scripts/validation/validate_demand_backed_pages.mjs",
+    "validate:canonical-no-redirect": "node scripts/validation/validate_canonical_no_redirect.mjs"
   },
   "engines": {
     "node": ">=24.0.0"

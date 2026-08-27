@@ -1,0 +1,52 @@
+{
+  "note": "Self-test fixture for validate:admission-level-stability. `committed` is the registry as committed; `built` is the registry after the build. A path in both must keep its admission_level. Here answers/phase4/a.html keeps 'baseline', a new path is added at 'full', a retired path is dropped, and dup/d.html appears twice on both sides at the same level - all legitimate, so the expected result is no drift.",
+  "expected_drift": [],
+  "committed": {
+    "records": [
+      {
+        "path": "answers/phase4/a.html",
+        "admission_level": "baseline"
+      },
+      {
+        "path": "manual/b.html",
+        "admission_level": "full"
+      },
+      {
+        "path": "retired/c.html",
+        "admission_level": "baseline"
+      },
+      {
+        "path": "dup/d.html",
+        "admission_level": "baseline"
+      },
+      {
+        "path": "dup/d.html",
+        "admission_level": "baseline"
+      }
+    ]
+  },
+  "built": {
+    "records": [
+      {
+        "path": "answers/phase4/a.html",
+        "admission_level": "baseline"
+      },
+      {
+        "path": "manual/b.html",
+        "admission_level": "full"
+      },
+      {
+        "path": "answers/phase4/new.html",
+        "admission_level": "full"
+      },
+      {
+        "path": "dup/d.html",
+        "admission_level": "baseline"
+      },
+      {
+        "path": "dup/d.html",
+        "admission_level": "baseline"
+      }
+    ]
+  }
+}

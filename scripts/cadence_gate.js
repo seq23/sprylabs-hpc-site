@@ -95,6 +95,18 @@ const ageDays = (d) => Math.floor((today - new Date(d)) / 86400000);
 // like a publishing spree, which is exactly the signal this is meant to
 // distinguish. New means a URL that was not in the sitemap last time this ran.
 const ledgerPath = path.join(ROOT, 'data/cadence/known_urls.json');
+
+// --accept records the current URL set as the new baseline, and requires a reason so
+// the ledger says WHY an overage was accepted rather than that someone re-ran the gate.
+const ACCEPT = process.argv.includes('--accept');
+const ACCEPT_REASON = (() => {
+  const i = process.argv.indexOf('--reason');
+  return i !== -1 && process.argv[i + 1] ? process.argv[i + 1] : null;
+})();
+if (ACCEPT && !ACCEPT_REASON) {
+  console.error('--accept requires --reason "<why this URL set is accepted>". The ledger records a decision, not a re-run.');
+  process.exit(2);
+}
 let known = new Set();
 let ledgerExists = fs.existsSync(ledgerPath);
 if (ledgerExists) {
@@ -161,11 +173,21 @@ const report = {
   status: blocking.length ? 'BLOCKED' : 'CLEAR',
 };
 
-// Record the current URL set so the next run can tell new from refreshed. Written
-// whether or not the gate blocks: the ledger is a record of what exists, not a
-// reward for passing.
-fs.mkdirSync(path.dirname(ledgerPath), { recursive: true });
-fs.writeFileSync(ledgerPath, JSON.stringify({ generated_at: report_date(), urls: [...urls.keys()].sort() }, null, 2) + '\n');
+// The ledger is what "new since the last run" is measured against, so CHECKING must
+// never write it. It used to be written on every run; the comment argued the ledger
+// records what exists rather than rewarding a pass, which is true of a ledger and
+// fatal for a gate: the check consumed its own evidence, so any block cleared itself
+// on the next run with no change to the tree. Measured here: run1 exit 1, run2 exit 0.
+//
+// Recording an accepted URL set is now a separate, deliberate act.
+if (ACCEPT) {
+  fs.mkdirSync(path.dirname(ledgerPath), { recursive: true });
+  fs.writeFileSync(
+    ledgerPath,
+    JSON.stringify({ generated_at: report_date(), accepted_reason: ACCEPT_REASON, urls: [...urls.keys()].sort() }, null, 2) + '\n',
+  );
+  console.log(`CADENCE LEDGER ACCEPTED: ${urls.size} url(s) recorded as known. Reason: ${ACCEPT_REASON}`);
+}
 
 fs.mkdirSync(path.join(ROOT, 'reports/cadence'), { recursive: true });
 fs.writeFileSync(path.join(ROOT, 'reports/cadence/cadence-gate.json'), JSON.stringify(report, null, 2) + '\n');
