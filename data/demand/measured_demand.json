@@ -346,7 +346,10 @@
       "volume": 170,
       "keyword_difficulty": 22,
       "source_type": "semrush_keyword_magic",
-      "evidence_tier": "T2b"
+      "evidence_tier": "T2b",
+      "target_domain": "spryexecutiveos.com",
+      "repointed_from": "aplayermode.com",
+      "repoint_reason": "owner_decision_2026_08_27_source_domain_is_redirect_only"
     },
     {
       "query": "ai coach vs movement investigation",
@@ -381,7 +384,10 @@
       "volume": 70,
       "keyword_difficulty": 10,
       "source_type": "semrush_keyword_magic",
-      "evidence_tier": "T2b"
+      "evidence_tier": "T2b",
+      "target_domain": "spryexecutiveos.com",
+      "repointed_from": "aplayermode.com",
+      "repoint_reason": "owner_decision_2026_08_27_source_domain_is_redirect_only"
     },
     {
       "query": "ai tools for coaches",
@@ -911,5 +917,16 @@
       "source_type": "gsc_search_analytics",
       "evidence_tier": "T1"
     }
-  ]
+  ],
+  "domain_policy": {
+    "serving_domains": [
+      "spryexecutiveos.com",
+      "billionairehighperformancecoach.com"
+    ],
+    "redirect_only_domains": [
+      "aplayermode.com"
+    ],
+    "note": "aplayermode.com is a redirect-only host: it 301s to billionairehighperformancecoach.com/download.html and will never serve pages (owner decision, 2026-08-27). Demand must never be attributed to a host that serves nothing - a query mapped there looks covered on a spreadsheet and is unreachable in practice. The validator refuses any record whose target_domain is listed here."
+  },
+  "repointed_records": 2
 }

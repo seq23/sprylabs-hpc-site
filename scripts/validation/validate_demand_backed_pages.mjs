@@ -116,6 +116,29 @@ if (legacyBaseline.length) {
 }
 notes.push(`demand: ${(demand.records || []).length} measured queries worth ${demand.total_measured_volume_per_month || 0}/mo, by tier ${JSON.stringify(demand.by_tier || {})}`);
 
+// --- 4. demand may not be attributed to a host that serves nothing ----------
+// aplayermode.com is a redirect-only host: it 301s to
+// billionairehighperformancecoach.com/download.html and will never serve pages
+// (owner decision, 2026-08-27). The Semrush packet nonetheless mapped ~1,540/mo
+// of ADHD and executive-function demand to it. A query pointed at a host that
+// serves nothing reads as covered on a spreadsheet and is unreachable in
+// practice, which is a worse failure than an uncovered query, because it does
+// not look like one. Two records were re-pointed to spryexecutiveos.com, which
+// already serves the pages. This check stops the mapping drifting back.
+const redirectOnly = new Set(demand.domain_policy?.redirect_only_domains || []);
+if (redirectOnly.size) {
+  const stranded = (demand.records || []).filter((r) => r.target_domain && redirectOnly.has(r.target_domain));
+  if (stranded.length) {
+    errors.push(
+      `${stranded.length} demand record(s) point at a redirect-only host that serves no pages ` +
+      `(${[...redirectOnly].join(', ')}). Re-point them at a serving domain or the demand is unreachable:\n  ` +
+      stranded.slice(0, 10).map((r) => `${r.query} -> ${r.target_domain}`).join('\n  ')
+    );
+  } else {
+    notes.push(`domain policy: ${redirectOnly.size} redirect-only host(s) declared, 0 demand records stranded on them (${demand.repointed_records || 0} re-pointed)`);
+  }
+}
+
 for (const n of notes) console.log(`note: ${n}`);
 if (errors.length) {
   console.error('validate:demand-backed-pages FAILED');
