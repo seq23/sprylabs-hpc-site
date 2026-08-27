@@ -93,6 +93,25 @@ jobs:
       - name: Rebuild ownership and admin snapshots
         if: steps.runtime.outputs.run == 'true'
         run: npm run ownership:build && npm run admin:build
+      # The gate runs before anything is committed, so a release that published
+      # faster than the cap allows fails here and its pages never land.
+      - name: Cadence gate
+        run: npm run cadence:gate
+
+      # A read-only gate with no advancer is a ratchet. Nothing else in this
+      # repository writes data/cadence/known_urls.json - checking deliberately
+      # stopped writing it so the gate could not consume its own evidence - so if
+      # the one workflow that publishes never records what it published, the
+      # ledger freezes while the library grows and the count of "new" URLs climbs
+      # every run until it crosses the cap and stays over it permanently, with no
+      # bad release behind it.
+      #
+      # Reachable only after the gate above exited zero, so the cap still binds:
+      # an over-cap release fails at that step and never reaches this one.
+      - name: Record the released URL set as the new cadence baseline
+        run: |
+          node scripts/cadence_gate.js --accept --reason "Spry content release run ${{ github.run_id }} on $(date -u +%F): the cadence gate cleared before this step, so the released URL set is inside the declared weekly cap."
+
       - name: Commit validated Spry content release
         if: steps.runtime.outputs.run == 'true'
         env:
