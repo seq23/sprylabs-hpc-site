@@ -21,3 +21,17 @@
 /coverage/ /knowledge-map/ 301
 /coverage /knowledge-map/ 301
 /coverage.json /knowledge-map.json 301
+
+# Retired 2026-08-27: 743 `bhpc-daily-citation-gap-fill-*` pages and the 10
+# paginated `chatgpt-prompts-and-setup-N` hubs that existed only to carry links
+# to them. The pages were produced by a quota branch that manufactured filler
+# when an agent report supplied fewer pages than a 75/day target, and two pages
+# on different topics were 97.83% word-identical. Cause fixed in 87ecb6780.
+#
+# Wildcards rather than 753 explicit rules: each source needs both its .html and
+# extensionless form, so explicit rules would approach the 2,100-rule ceiling for
+# no benefit. Neither pattern can over-match - the surviving canonical hub is
+# `/insights/topics/chatgpt-prompts-and-setup/` with no dash suffix, and no file
+# beginning `bhpc-daily-citation-gap-fill` remains on disk.
+/insights/bhpc-daily-citation-gap-fill-* /insights/topics/chatgpt-prompts-and-setup/ 301
+/insights/topics/chatgpt-prompts-and-setup-* /insights/topics/chatgpt-prompts-and-setup/ 301
