@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-27T16:04:34.938Z",
-  "page_count": 65,
+  "generated_at": "2026-08-27T16:07:14.369Z",
+  "page_count": 66,
   "pages": [
     {
       "slug": "adhd-productivity-system",
@@ -6990,6 +6990,137 @@
         "ai-executive-coach.html",
         "ai-coach-vs-human-coach.html",
         "executive-coach-cost/index.html"
+      ]
+    },
+    {
+      "slug": "ai-accountability-partner",
+      "path": "ai-accountability-partner/index.html",
+      "h1": "AI Accountability Partner",
+      "framework": "AI Accountability Loop",
+      "type": "howto",
+      "definition": "The AI Accountability Loop is a six-part cycle that turns a language model into an accountability partner: checkable commitments, a fixed check-in, enough context to be challenged, a written record that includes misses, a pre-agreed response to a miss, and an escalation rule to a person.",
+      "cluster": "ai-accountability",
+      "domain": "spryexecutiveos.com",
+      "operation": "EXPAND",
+      "summary": "An AI accountability partner works when it closes a loop: something committed, something checked, something recorded. Most attempts fail not because the model is weak but because nothing is written down and nothing returns to it, which leaves a supportive conversation and no accountability at all.",
+      "steps": [
+        "Write each commitment in a form that can be checked rather than judged.",
+        "Fix a recurring check-in at the same time and in the same place.",
+        "Give the system the context it needs to challenge you, not just to agree.",
+        "Record every outcome in one place, including the misses.",
+        "Decide what happens after a miss before you miss.",
+        "Escalate to a person when the pattern stops being a planning problem."
+      ],
+      "step_titles": [
+        "Commit",
+        "Check",
+        "Context",
+        "Record",
+        "Recover",
+        "Escalate"
+      ],
+      "step_notes": [
+        "\"Work on the deck\" cannot be checked; \"finish slides four to nine\" can. A checkable commitment names an observable end state, so the check-in becomes a matter of fact rather than a negotiation about whether you tried hard enough. This single change does more than any prompt wording.",
+        "Accountability is created by the return visit, not by the promise. Put the check-in in the calendar at a fixed time and keep it in one conversation thread, so the system has continuity and you are not deciding each day whether to face it.",
+        "A model given only your plan will improve your plan. Give it the constraint you are avoiding — the deadline you doubt, the commitment you have already moved twice — and instruct it explicitly to name what you are dodging rather than to encourage you.",
+        "The record is the part that makes patterns visible, and misses are the entries that carry the information. A log containing only successes cannot show you that every third Wednesday collapses, which is precisely the finding that changes a plan.",
+        "Decide the recovery rule in advance: resume at the smallest valid unit, no catch-up debt, and one line explaining what blocked it. Deciding this while you are already behind guarantees the harshest available answer, which is what usually ends the arrangement.",
+        "A system that cannot start for three weeks running is not producing a planning problem. Persistent inability to act, or distress around it, is a reason to involve a person - a colleague, a coach, or a clinician - rather than to refine the prompt again."
+      ],
+      "artifact": {
+        "title": "AI Accountability Loop Record",
+        "kind": "matrix",
+        "rows": [
+          [
+            "Stage",
+            "What it produces",
+            "What it looks like when it is missing"
+          ],
+          [
+            "Commit",
+            "An observable end state with a date",
+            "Vague intentions that cannot be checked"
+          ],
+          [
+            "Check",
+            "A fixed recurring return to the commitment",
+            "A supportive conversation that never comes back"
+          ],
+          [
+            "Context",
+            "A challenge to the framing you arrived with",
+            "Agreement and encouragement"
+          ],
+          [
+            "Record",
+            "A log that contains the misses",
+            "A history of successes only"
+          ],
+          [
+            "Recover",
+            "A pre-agreed restart after a miss",
+            "Catch-up debt and abandonment"
+          ],
+          [
+            "Escalate",
+            "A human involved at the right threshold",
+            "Months of prompt refinement"
+          ]
+        ]
+      },
+      "failure_modes": [
+        "Commitments written so loosely that no check-in can fail them.",
+        "Letting the model encourage instead of instructing it to challenge.",
+        "Using it to plan and never returning to what was planned."
+      ],
+      "failure_remedies": [
+        "A commitment that cannot fail cannot hold you to anything, and it converts the check-in into a mood assessment. Rewrite it until a stranger reading it could tell you whether it was done.",
+        "Encouragement is the default behaviour, not a choice the system made about you. If you want the assumption named and the strongest counter-case stated, that has to be a standing instruction, repeated in the check-in itself.",
+        "Planning is the enjoyable half and produces nothing on its own. The loop only closes when a scheduled check-in reads back what was committed, which is why the calendar entry matters more than the prompt."
+      ],
+      "worked_example": {
+        "title": "A solo operator running a weekly loop",
+        "text": "An operator commits on Monday to sending three specific proposals by Thursday and logs it in one thread. The system is told the operator has moved this commitment twice already, and opens Thursday by asking which of the three were sent. Two were. The record notes the third was blocked by a missing price, the recovery rule resumes at the smallest unit rather than demanding all three, and the following Monday the system asks about the missing price before anything else is planned."
+      },
+      "limits": [
+        "This is an organizational support, not therapy, medical care, or licensed advice, and it is not a substitute for human relationships or professional help.",
+        "A language model has no stake in your outcome and no duty of care. It will not notice that you have quietly stopped returning unless the check-in is scheduled outside the conversation."
+      ],
+      "aliases": [
+        "ai accountability partner app",
+        "accountability partner ai",
+        "chatgpt accountability partner"
+      ],
+      "sources": [
+        "https://www.betterup.com/blog/executive-coaching",
+        "https://www.coachhub.com/executive-coaching",
+        "https://torch.io/"
+      ],
+      "health_adjacent": false,
+      "reviewed_at": "2026-08-27",
+      "product_angle": "Use the loop as the operating cycle around any AI accountability setup, including this one.",
+      "faq": [
+        {
+          "q": "Does an AI accountability partner actually work?",
+          "a": "It works to the extent that it closes a loop: a checkable commitment, a scheduled return, and a written record. Where those three exist it functions as a reliable prompt to face what you said you would do. Where they are missing it produces a supportive conversation and no accountability."
+        },
+        {
+          "q": "How is this different from just using ChatGPT to plan?",
+          "a": "Planning is a single pass; accountability requires the return visit. The difference is entirely in the check-in and the record, which live in your calendar and your log rather than in the model."
+        },
+        {
+          "q": "What should I do when I miss a commitment?",
+          "a": "Apply the recovery rule you set in advance: resume at the smallest valid unit, add no catch-up work, and record one line about what blocked it. Deciding the response while you are already behind reliably produces the harshest answer, which is what ends most attempts."
+        },
+        {
+          "q": "Does this framework guarantee an outcome?",
+          "a": "No. It creates a clearer process and evidence loop, but results depend on context, execution, resources, and decisions outside the framework."
+        }
+      ],
+      "related_paths": [
+        "ai-business-coach/index.html",
+        "ai-executive-coach.html",
+        "adhd-productivity-system/index.html"
       ]
     }
   ]
