@@ -1839,7 +1839,7 @@
       "status": "ADMITTED"
     },
     {
-      "matrix_id": "MX-174",
+      "matrix_id": "MX-181",
       "validation_id": "VAL-AGENT-INTAKE-TRANSACTION",
       "lane": "agent-intake",
       "command": "npm run release:agent-intake:transaction",
@@ -1849,7 +1849,7 @@
       "status": "ADMITTED"
     },
     {
-      "matrix_id": "MX-175",
+      "matrix_id": "MX-182",
       "validation_id": "VAL-AGENT-INTAKE-PUSH-GATE",
       "lane": "agent-intake",
       "command": "npm run release:agent-intake:push-gate",
@@ -2376,7 +2376,9 @@
     "MX-VAL-FSA-RELEASE": "release-time or generator command, not a per-push check",
     "MX-VAL-FSA-SCORE": "release-time or generator command, not a per-push check",
     "MX-VAL-FSA-SELFHEAL": "release-time or generator command, not a per-push check",
-    "MX-177": "network measurement that writes an observation file; runs on the daily-citation-intelligence schedule, not per push"
+    "MX-177": "network measurement that writes an observation file; runs on the daily-citation-intelligence schedule, not per push",
+    "MX-181": "release-time transaction, not a per-push check: runs the full intake, finalize, authority-scale freeze and validation chain",
+    "MX-182": "release-time push gate, not a per-push check: guards the push itself, so running it inside a pre-push profile would be circular"
   },
   "profile_exclusions_policy": "Admitted entries that are deliberately not profile steps, each with the reason. validate_validation_registry warns only about entries missing from this map, so an unreviewed orphan is visible while a reasoned exclusion is not noise. Entries marked NEEDS TRIAGE are real failures or real environment gaps that should be fixed and then armed - they are not permanent exclusions."
 }
