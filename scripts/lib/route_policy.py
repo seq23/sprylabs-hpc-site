@@ -17,7 +17,12 @@ sitemap and the route manifests continue to agree with each other.
 """
 from __future__ import annotations
 
-FROZEN_HTML_ROUTES = {"download.html"}
+# Mirrors scripts/lib/dual_domain_policy.cjs. Kept empty and in sync: the owner
+# authorised removing `.html` from download.html's canonical and og:url, so its
+# route is now /download like every other page. Two policy files that disagree
+# about routing is how a page ends up declaring one URL while the sitemap
+# advertises another.
+FROZEN_HTML_ROUTES: set[str] = set()
 
 
 def route_for(rel: str) -> str:
