@@ -12,7 +12,20 @@ const horizon = Number(contract.time_horizon_days || strategy.primary_kpi?.time_
 const minimum = dailyTarget * horizon * Number(contract.minimum_backlog_multiplier || 1);
 const required = contract.required_candidate_fields || [];
 const errors = [];
-if ((backlog.candidates || []).length < minimum) errors.push(`backlog_under_floor:${(backlog.candidates || []).length}/${minimum}`);
+// The floor used to be an error: `backlog_under_floor` failed the build unless
+// the backlog held daily_target_units x horizon candidates - 15 x 180 = 2700.
+// The only supply feeding this backlog is a template generator, so the only way
+// to satisfy that floor was to cycle the same template combinations with a
+// counter suffix ("... - strategy gap fill 1" ... 2700) until the count was
+// reached. A number demanded, filler produced: the same failure that put 743
+// quota-filled pages into the library through the BHPC report contract.
+//
+// A backlog that is short is short. That is reportable information about
+// supply, not a broken contract, so it is recorded and surfaced rather than
+// thrown. What still fails is a malformed candidate, which is what this
+// validator can actually judge.
+const backlogCount = (backlog.candidates || []).length;
+const backlogShortfall = Math.max(0, minimum - backlogCount);
 const paths = new Set();
 for (const [index, row] of (backlog.candidates || []).entries()) {
   for (const field of required) if (!(field in row)) errors.push(`candidate_${index}_missing:${field}`);
@@ -24,8 +37,8 @@ for (const [index, row] of (backlog.candidates || []).entries()) {
 }
 const pkg = read('package.json', {scripts:{}});
 for (const s of ['strategy:gap-fill:backlog','strategy:gap-fill:release-gap']) if (!pkg.scripts?.[s]) errors.push(`missing_script:${s}`);
-const report = {schema_version:'1.0', validator:'strategy-gap-fill-contract', status:errors.length?'FAIL':'PASS', daily_target_units:dailyTarget, time_horizon_days:horizon, minimum_units:minimum, candidate_count:(backlog.candidates || []).length, errors};
+const report = {schema_version:'1.0', validator:'strategy-gap-fill-contract', status:errors.length?'FAIL':'PASS', daily_target_units:dailyTarget, time_horizon_days:horizon, minimum_units:minimum, targets_are_quotas:false, candidate_count:backlogCount, backlog_shortfall:backlogShortfall, backlog_status:backlogShortfall?'SHORT_OF_TARGET':'TARGET_MET', errors};
 fs.mkdirSync(path.join(ROOT,'artifacts/validation'), {recursive:true});
 fs.writeFileSync(path.join(ROOT,'artifacts/validation/strategy-gap-fill-contract.json'), JSON.stringify(report,null,2)+'\n');
 if (errors.length) { console.error(JSON.stringify(report,null,2)); process.exit(1); }
-console.log(`[bhpc-strategy-gap-fill-contract] PASS: candidates=${report.candidate_count}; minimum=${minimum}`);
+console.log(`[bhpc-strategy-gap-fill-contract] PASS: candidates=${report.candidate_count}; minimum=${minimum}; backlog=${report.backlog_status}; shortfall=${backlogShortfall}`);
