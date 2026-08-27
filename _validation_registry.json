@@ -5813,7 +5813,7 @@
       "name": "validate:admission-level-stability",
       "check_type": "invariant",
       "owning_lane": "content-admission",
-      "risk_prevented": "A build stage silently re-levelling pages that are already in data/content/page_admission_registry.json. admission_level decides which lane contract validate_programmatic_admission.py enforces on a page, so re-levelling at build time either fails the release on a corpus that was never written against those thresholds, or - in the demotion direction - removes published pages from the substantive checks while the build still passes.",
+      "risk_prevented": "A build stage silently re-levelling pages that are already in data/content/page_admission_registry.json. admission_level decides which lane contract validate_programmatic_admission.py enforces on a page, so re-levelling at build time either fails the release on a corpus that was never written against those thresholds, or - in the demotion direction, which is the live risk now that 1,466 records carry 'full' - removes published pages from the substantive checks while the build still passes.",
       "existing_coverage_gap": "validate:programmatic-registry only checks that admission_level is one of baseline/full. validate:programmatic-admission reads the level and reports how many records it is skipping, but treats whatever the build wrote as given. validate:demand-backed-pages warns about pages admitted after the gate that carry \"baseline\", not about pages whose level the build changed. Nothing compared the committed registry with the built one, so generate_aplayer_phase_expansion.mjs promoting all 1,400 of its pages to \"full\" on every run was invisible until 2,250 lane-contract errors landed in CI - truncated to the first 300, which read as \"300 short pages\".",
       "scope": [
         "data/content/page_admission_registry.json"
@@ -5830,7 +5830,7 @@
       "maintenance_owner": "content",
       "overlap_analysis": "Does not duplicate validate:programmatic-admission, which judges page bodies against the level recorded for them. This one judges the level itself, and only its stability across a build. It does not overlap validate:clean-rebuild-parity either: that compares two builds of the same tree, so a stage that re-levels deterministically is identical in both and passes.",
       "retirement_offset": null,
-      "decision": "ADMITTED as HARD_FAIL in container-prepush, placed immediately before validate:content-release so the re-levelling is named before the lane-contract failures it causes. Both fixtures are executed on every run by the script itself, so the recorded proof cannot rot into decoration.",
+      "decision": "ADMITTED as HARD_FAIL in container-prepush, placed immediately before validate:content-release so a re-levelling is named before the lane-contract failures it causes. The promotion incident that motivated it is resolved at the cause (6a759335d gave the 1,400 generated pages the material to earn 'full'), but nothing keeps that correct: this guard is what makes the next silent re-level - in either direction - fail on its own name instead of as 300 truncated lines of downstream symptoms. Both fixtures are executed by the script on every run, so the recorded proof cannot rot into decoration.",
       "decision_date": "2026-08-27",
       "matrix_ids": [
         "MX-179"

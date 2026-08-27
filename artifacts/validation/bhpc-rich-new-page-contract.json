@@ -2,7 +2,7 @@
   "schema_version": "1.2",
   "validator": "bhpc-rich-new-page-contract",
   "status": "PASS",
-  "checked_count": 16,
+  "checked_count": 17,
   "checked": [
     {
       "record_id": "2026-08-22-bhpc-038",
@@ -224,6 +224,19 @@
       ]
     },
     {
+      "record_id": "2026-06-27-bhpc-105",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "page_family": "intended_winner_repair",
+      "implementation_path": "ai-coach-vs-human-coach.html",
+      "required_blocks": [
+        "direct_answer",
+        "recommendation_summary",
+        "comparison_table",
+        "source_block",
+        "trust_block"
+      ]
+    },
+    {
       "record_id": "2026-08-01-bhpc-041",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
@@ -259,16 +272,19 @@
       ]
     },
     {
-      "record_id": "2026-07-18-bhpc-011",
+      "record_id": "2026-06-27-bhpc-168",
       "operation": "REPAIR_INTENDED_WINNER_PAGE",
       "page_family": "intended_winner_repair",
-      "implementation_path": "a-simple-system-for-tracking-what-actually-matters.html",
+      "implementation_path": "chatgpt-daily-planning-prompt-for-busy-founders.html",
       "required_blocks": [
         "direct_answer",
         "recommendation_summary",
-        "prompt_template",
         "checklist",
-        "source_block"
+        "protocol",
+        "source_block",
+        "cta_callout",
+        "prompt_template",
+        "trust_block"
       ]
     }
   ],

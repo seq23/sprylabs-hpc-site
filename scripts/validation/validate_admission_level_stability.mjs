@@ -14,17 +14,22 @@
  * are judged against - in either direction:
  *
  *   - promotion (baseline -> full) fails the build on a corpus that was never
- *     written against those thresholds, which is what happened when
+ *     written against those thresholds. That is not hypothetical: when
  *     generate_aplayer_phase_expansion.mjs began stamping every page it
- *     re-created with NEW_PAGE_ADMISSION_LEVEL. It wipes and re-creates its
- *     whole 1,400-page corpus on every run, so every already-admitted page
- *     arrived looking new; all 1,400 were promoted to 'full' and all 1,400 then
- *     failed their lane contracts. CI printed only the first 300 of 2,250
+ *     re-created with NEW_PAGE_ADMISSION_LEVEL, all 1,400 of its pages were
+ *     promoted at build time - it wipes and re-creates its whole corpus on every
+ *     run, so every already-admitted page arrived looking new - and all 1,400
+ *     then failed their lane contracts. CI printed only the first 300 of 2,250
  *     errors, so the failure read as "300 short pages" rather than "the entire
- *     generated library was re-levelled".
+ *     generated library was re-levelled". That corpus has since been given the
+ *     material to earn 'full' honestly (6a759335d), so today the promotion is
+ *     correct and the committed registry records it. The guard stays because
+ *     nothing makes it stay correct: the next generator to re-level silently
+ *     gets the same 2,250-error, 300-line-truncated report.
  *
- *   - demotion (full -> baseline) is worse and quieter: it takes pages out of
- *     the substantive checks entirely, and the build still passes. Nothing else
+ *   - demotion (full -> baseline) is the live risk now that 1,466 records carry
+ *     'full', and it is the quieter of the two: it takes published pages out of
+ *     the substantive checks entirely and the build still passes. Nothing else
  *     in the profile would report it.
  *
  * So: for every path present in both the committed registry and the built one,
@@ -61,11 +66,13 @@ function committedRegistry() {
   }
 }
 
-// A path can appear more than once in the registry - one currently appears 753
-// times - so collect the DISTINCT levels recorded for it rather than keeping
-// whichever record happens to be last. If a path carries two different levels in
-// the same file, taking one of them silently would decide, by row order, which
-// contract the page is judged against; that is reported instead.
+// The registry is currently one record per path, but it has not always been: it
+// carried /insights/topics/chatgpt-prompts-and-setup/ 753 times as recently as
+// b09354b0e. So collect the DISTINCT levels recorded for a path rather than
+// keeping whichever record happens to be last. If a path ever carries two
+// different levels in the same file, taking one of them silently would decide,
+// by row order, which contract the page is judged against; that is reported
+// instead.
 function levels(doc, label) {
   const records = doc && Array.isArray(doc.records) ? doc.records : null;
   if (!records) internalError(`${label} has no records array`);
