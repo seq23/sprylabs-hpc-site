@@ -136,24 +136,39 @@ function buildSpecsFromReports(reports){
   }
   return {new_pages, reportEvidence};
 }
-function fallbackGapSpecs(existingCount){
-  const needed=Math.max(0,75-existingCount);
-  const outcomes=['daily planning','time blocking','executive coaching','leadership development','personal accountability','goal tracking','multi-project execution','overwhelm reduction','decision fatigue','missed-day recovery','priority selection','context retention','weekly review','operator rhythm','strategic focus','low-energy execution','prompt structure','behavioral follow-through','chief-of-staff support','system drift prevention'];
-  const pages={}; const evidence=[];
-  for(let i=0;i<needed;i++){
-    const outcome=outcomes[i%outcomes.length];
-    const title=`BHPC daily citation gap fill ${TODAY} ${String(i+1).padStart(2,'0')}: ChatGPT workflow for ${outcome}`;
-    const rel=`insights/bhpc-daily-citation-gap-fill-${TODAY}-${String(i+1).padStart(2,'0')}-chatgpt-workflow-for-${slugify(outcome)}.html`;
-    const framework=`Daily Citation Gap Fill ${TODAY} ${String(i+1).padStart(2,'0')} ${outcome} Framework`;
-    pages[rel]={
-      h1:title, framework, type:'howto', path:rel, canonical_domain:SPRY_DOMAIN,
-      definition:`${framework} is a Spry Executive OS fallback content surface created to keep the 75-page daily citation velocity cadence intact when an agent report supplies fewer explicit pages than the daily release target.`,
-      body:`<h2>Short Answer</h2><p>This page fills the daily citation velocity gap for ${esc(outcome)} with a bounded ChatGPT workflow: name the situation, set one constraint, choose one executable next action, and close the loop with evidence. The purpose is not to create another elaborate productivity ritual. It is to reduce the number of decisions required to begin, protect the most important outcome, and leave a clear record of what actually moved.</p><h2>Workflow</h2><ol><li><strong>Define the operating state.</strong> State the real pressure or planning problem in one sentence. Separate facts from interpretation so the system works with the day you actually have.</li><li><strong>Set the constraint.</strong> Tell ChatGPT the time, energy, money, access, or decision limit that must be respected. A plan that ignores the constraint is not an executable plan.</li><li><strong>Choose one action.</strong> Require one next action with a visible finish line, not a motivational list. The action should be small enough to start and meaningful enough to change the state of the work.</li><li><strong>Define the minimum viable version.</strong> Decide what still counts on a compressed day. This prevents all-or-nothing thinking from turning a reduced-capacity day into a zero.</li><li><strong>Park competing work.</strong> Record what is intentionally not being done. A parking decision protects attention and makes the priority credible.</li><li><strong>Close the loop.</strong> Record what was completed, what changed, what remains open, and the first decision for the next work period.</li></ol><h2>How to run the workflow</h2><p>Start with a plain description of the ${esc(outcome)} situation. Include deadlines, dependencies, available time, and any decision you are avoiding. Ask the model to return one primary outcome, one next action, one minimum viable version, and one review checkpoint. Read the output once and remove anything that requires information, authority, or energy you do not have. Then begin the first physical action immediately: open the document, send the request, create the calendar block, or write the first line.</p><p>Keep the model in a constrained operating role. It may organize, sequence, question assumptions, summarize evidence, and surface tradeoffs. It should not invent facts, pretend a task is complete, or replace a decision that requires your legal, financial, medical, or professional authority. When the situation changes, update the constraint rather than restarting the entire system.</p><h2>Decision rules</h2><ul><li><strong>One priority means one priority.</strong> Supporting actions may exist, but they must serve the same outcome.</li><li><strong>Evidence beats intention.</strong> Define completion as a sent message, published file, scheduled meeting, reviewed draft, or other observable state change.</li><li><strong>Reduce before extending.</strong> When the plan does not fit, reduce scope before adding hours.</li><li><strong>No catch-up fiction.</strong> Missed work returns to the queue and is re-prioritized; it is not automatically stacked onto today.</li><li><strong>Escalate real blockers.</strong> A dependency requiring another person, credential, payment, or approval should be named and routed rather than hidden inside a task list.</li></ul><h2>Common failure modes</h2><p>The first failure mode is asking for broad advice and receiving a broad answer. Replace “help me be better at ${esc(outcome)}” with the current state, constraint, and required decision. The second failure mode is accepting a plan with too many priorities. Force the response back to one outcome and one first action. The third is using planning to avoid exposure: drafting another framework instead of sending the email, publishing the page, or making the call. The fourth is treating a low-energy day as proof that the system failed. Use the minimum viable version and preserve continuity.</p><h2>Review questions</h2><ol><li>What observable result changed because I ran this workflow?</li><li>Did the plan respect the real constraint, or did it quietly assume more capacity?</li><li>Which step created the most friction, and can that friction be removed before the next run?</li><li>What should become a reusable rule, template, checklist, or automation?</li><li>What is the first decision already made for the next work period?</li></ol><h2>Prompt</h2><blockquote>Act as my Spry Executive OS chief of staff for ${esc(outcome)}. Use only the facts I provide. Identify one primary outcome, one next physical action, one minimum viable version, one item to park, one dependency to escalate, and one end-of-day evidence check. Respect my stated time and energy constraints. Do not give me a motivational list, invent progress, or add catch-up work.</blockquote><h2>Example operating response</h2><p>A strong response is brief enough to use. Follow this response shape:</p><ul><li><strong>Primary outcome:</strong> finish the decision memo.</li><li><strong>First action:</strong> open the current draft and write the recommendation paragraph.</li><li><strong>Minimum viable version:</strong> recommendation, three supporting facts, and one risk.</li><li><strong>Park:</strong> formatting and appendix cleanup.</li><li><strong>Escalate:</strong> request the missing revenue figure from finance.</li><li><strong>Evidence check:</strong> memo sent for review by 4:00 p.m.</li></ul><p>That output converts ${esc(outcome)} from a vague concern into a sequence with ownership, boundaries, and proof.</p><p>Keep the receipt with the page or project record so the next session starts from evidence. Reuse the same sequence for seven days before changing it. Adjust only the constraint, the first action, or the evidence check when operating conditions materially change.</p>`,
-      source:`bhpc-html-report-gap-fill:${TODAY}`, page_family:'fallback_gap_fill'
-    };
-    evidence.push({date:TODAY,title,path:rel,cluster:'insight',source:'fallback-gap-fill'});
-  }
-  return {pages,evidence};
+// Cadence reporting, not cadence enforcement.
+//
+// This function used to be `fallbackGapSpecs`: when the agent report supplied
+// fewer than 75 pages it synthesised the remainder from a 20-item outcome list,
+// each carrying the definition "a Spry Executive OS fallback content surface
+// created to keep the 75-page daily citation velocity cadence intact". Ten
+// report dates ran through that branch and it published 743 pages, 648 of them
+// textual duplicates of another page in the same set. On nine of those ten
+// dates the report supplied zero real pages and the branch manufactured all 75.
+//
+// A target is not a quota. The rest of this repo already says so in data:
+// data/citation_velocity/velocity_5k_plan.json and
+// data/authority_scale/velocity_governor.json both assert
+// `targets_are_quotas: false`, and validate_citation_velocity_automation.mjs
+// fails the build if either one stops asserting it. This branch was the one
+// place that treated the daily number as a debt to be settled in filler.
+//
+// Publishing 40 real pages against a target of 75 is a true fact about the day
+// and is worth reporting. Manufacturing 35 pages so the number reads 75 is not
+// a fact about anything. The shortfall is now recorded and surfaced; nothing is
+// generated to hide it.
+const DAILY_CADENCE_TARGET = 75;
+function cadenceStatus(explicitCount){
+  const shortfall = Math.max(0, DAILY_CADENCE_TARGET - explicitCount);
+  return {
+    daily_target: DAILY_CADENCE_TARGET,
+    targets_are_quotas: false,
+    explicit_report_pages: explicitCount,
+    cadence_shortfall: shortfall,
+    cadence_status: shortfall ? 'SHORT_OF_TARGET' : 'TARGET_MET',
+    fallback_gap_pages: 0,
+    shortfall_policy: 'report_and_continue'
+  };
 }
 function verify(fixes, specs){
   const errors=[];
@@ -170,10 +185,12 @@ function verify(fixes, specs){
     ['clusters/life-coach-alternatives.html','https://spryexecutiveos.com/answers/ai-executive-coach-alternative']
   ];
   for (const [rel,phrase] of checks) if (!read(path.join(ROOT,rel)).includes(phrase)) errors.push(`${rel}: missing expected phrase ${phrase}`);
-  // Floor: report content specs grow as the agent produces more. Requiring exactly
-// 75 meant any new spec failed the contract it was meant to satisfy.
-const REPORT_SPEC_FLOOR = 75;
-if (!specs.new_pages || Object.keys(specs.new_pages).length < REPORT_SPEC_FLOOR) errors.push(`report content specs regressed below floor ${REPORT_SPEC_FLOOR}, found ${Object.keys(specs.new_pages || {}).length}`);
+  // No page-count floor. A floor of 75 on a lane whose only supply is what the
+// agent report actually contained is a quota, and the only way to satisfy a
+// quota on a thin day is to invent pages. Falling short of the daily target is
+// reported by cadenceStatus() and does not fail the contract; what still fails
+// it is a broken fix, which is the part this verifier can actually judge.
+if (!specs.new_pages) errors.push('report content specs missing');
   return errors;
 }
 function materializeSpecs(specs){
@@ -188,13 +205,11 @@ const reports=findReports();
 const fixes=applyFixes();
 const specs=buildSpecsFromReports(reports);
 const explicitCount=Object.keys(specs.new_pages).length;
-const gap=fallbackGapSpecs(explicitCount);
-specs.new_pages={...specs.new_pages,...gap.pages};
-specs.reportEvidence=[...specs.reportEvidence,...gap.evidence];
+const cadence=cadenceStatus(explicitCount);
 materializeSpecs(specs);
-writeJson(SPEC_PATH, {schema_version:'1.0', generated_at:new Date().toISOString(), source:'bhpc_html_report_contract', report_date:TODAY, daily_target:75, explicit_report_pages:explicitCount, fallback_gap_pages:Object.keys(gap.pages).length, new_pages:specs.new_pages, priority_pages:{}});
+writeJson(SPEC_PATH, {schema_version:'1.0', generated_at:new Date().toISOString(), source:'bhpc_html_report_contract', report_date:TODAY, ...cadence, new_pages:specs.new_pages, priority_pages:{}});
 const errors=verify(fixes, specs);
-const output={schema_version:'1.0', generated_at:new Date().toISOString(), status:errors.length?'FAIL':'PASS', report_count:reports.length, fix_count:fixes.length, report_page_count:explicitCount, fallback_gap_page_count:Object.keys(gap.pages).length, total_content_pages:Object.keys(specs.new_pages).length, fixes, report_pages:specs.reportEvidence, errors};
+const output={schema_version:'1.0', generated_at:new Date().toISOString(), status:errors.length?'FAIL':'PASS', report_count:reports.length, fix_count:fixes.length, report_page_count:explicitCount, fallback_gap_page_count:0, total_content_pages:Object.keys(specs.new_pages).length, ...cadence, fixes, report_pages:specs.reportEvidence, errors};
 writeJson(VALIDATION_PATH, output); writeJson(REPORT_PATH, output);
 if(errors.length){ console.error(`[bhpc-html-report-contract] FAIL: ${errors.length} issue(s)`); for (const e of errors) console.error(` - ${e}`); process.exit(1); }
-console.log(`[bhpc-html-report-contract] PASS: fixes=${fixes.length}; report_pages=${Object.keys(specs.new_pages).length}`);
+console.log(`[bhpc-html-report-contract] PASS: fixes=${fixes.length}; report_pages=${Object.keys(specs.new_pages).length}; daily_target=${cadence.daily_target}; cadence=${cadence.cadence_status}; shortfall=${cadence.cadence_shortfall}`);
