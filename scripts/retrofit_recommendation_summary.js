@@ -107,6 +107,29 @@ function titleTokens(title) {
  * at least one distinguishing word with the title catches that drift without
  * needing to know which families are affected.
  */
+// A title token and the body's form of the same word are often different parts
+// of speech - a page titled "How to Stay Consistent" writes "consistency" and
+// "follow-through" throughout its body and never the adjective. Exact substring
+// matching then rejects every real candidate and the page gets no summary at
+// all, which is how how-to-stay-consistent/index.html ended up as the one page
+// on the site with no locatable recommendation. Stemming both sides fixes that
+// without loosening the drift check, which exists to catch a candidate about a
+// genuinely different topic.
+const SUFFIXES = ['iness','ation','ingly','ency','ance','ence','ent','ing','ies','ely','ed','ly','es','s','y'];
+function stem(word) {
+  const w = String(word || '');
+  for (const suf of SUFFIXES) {
+    if (w.length - suf.length >= 4 && w.endsWith(suf)) return w.slice(0, w.length - suf.length);
+  }
+  return w;
+}
+// Off by default. Relaxing morphology for every page reshuffles which candidate
+// wins the chain on pages that already resolve - measured at 10 pages, one of
+// which dropped from a named protocol to generic filler. It is only ever
+// enabled for a second pass on a page the strict chain left empty, so a page
+// that already has a summary keeps exactly the one it has.
+let RELAX_MORPHOLOGY = false;
+
 function informative(candidate, title) {
   const c = norm(candidate);
   if (!c) return false;
@@ -117,7 +140,7 @@ function informative(candidate, title) {
   // Title plus a couple of filler words is still the title.
   if (c.startsWith(t) && c.length - t.length < 24) return false;
   const tokens = titleTokens(title);
-  if (tokens.length && !tokens.some((tok) => c.includes(tok))) return false;
+  if (tokens.length && !tokens.some((tok) => c.includes(tok) || (RELAX_MORPHOLOGY && c.includes(stem(tok))))) return false;
   return true;
 }
 
@@ -272,7 +295,7 @@ function topUp(text, html, title) {
 }
 
 /** The recommendation itself, in the page's own words. */
-function recommendationOf(html) {
+function recommendationFrom(html) {
   const h1 = (html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i) || [])[1];
   const title = strip(h1 || '');
   const named = panelByHeading(html, [/^quick answer/, /^direct answer/, /^the short answer/, /^short answer/, /^bottom line/, /^answer\b/]);
@@ -312,6 +335,15 @@ function recommendationOf(html) {
   const panel = extractionAnswer(html, title);
   if (panel) return clipWords(topUp(panel, html, title));
   return '';
+}
+
+// Strict first, so pages that already resolve are untouched. The relaxed pass
+// only ever runs where the alternative is no block at all.
+function recommendationOf(html) {
+  const strict = recommendationFrom(html);
+  if (strict) return strict;
+  RELAX_MORPHOLOGY = true;
+  try { return recommendationFrom(html); } finally { RELAX_MORPHOLOGY = false; }
 }
 
 function primaryCta(html) {
