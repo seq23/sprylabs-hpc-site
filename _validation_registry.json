@@ -5718,6 +5718,35 @@
       ]
     },
     {
+      "validation_id": "VAL-116",
+      "status": "ADMITTED",
+      "name": "validate:atlas-units",
+      "check_type": "content",
+      "owning_lane": "citation-intelligence",
+      "risk_prevented": "Prevents two incompatible quantities from sharing one demand field again. `volume` held monthly search volume on keyword-tool rows and this domain's OWN 90-day impression count on GSC rows, and rank_score was computed straight off it, so 'ai business coach' scored on 5 impressions instead of its real 110/mo search volume - 22x low - and sorted below queries with a fraction of its market demand.",
+      "existing_coverage_gap": "VAL-113 checked that a publishable query had SOME demand number, but could not tell which unit that number was in, so it passed on a value that meant the wrong thing.",
+      "scope": [
+        "data/queries",
+        "data/authority_scale",
+        "scripts/atlas",
+        "scripts/queries"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:atlas-units",
+      "implementation_path": "scripts/atlas/validate_atlas_units.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "evidence_output": "reports/validation/atlas-units.json",
+      "runtime_budget_seconds": 20,
+      "maintenance_owner": "content",
+      "overlap_analysis": "Does not duplicate VAL-113 (validate:query-atlas), which gates PUBLISHABILITY on evidence tier and cluster coverage. This gates the UNIT CONTRACT: that the ambiguous field is gone, that a GSC row's search_volume carries keyword-tool provenance, that demand_basis matches the populated fields, that rank_score is banded so units never sort as peers, and that no source file still reads the removed field.",
+      "decision": "ADMITTED as HARD_FAIL: rank_score is the input to every page decision, and a unit error there is silent - it produces a plausible number rather than an error. The source-scan check exists because a stale consumer reading the removed key would get null, not a throw.",
+      "decision_date": "2026-08-27",
+      "matrix_ids": [
+        "MX-178"
+      ]
+    },
+    {
       "validation_id": "VAL-114",
       "status": "ADMITTED",
       "name": "validate:operator-doc-currency",
@@ -5779,6 +5808,6 @@
       "not_applicable_reason": null
     }
   ],
-  "record_count": 182,
+  "record_count": 183,
   "generated_at": "2026-08-08T23:30:00Z"
 }
