@@ -101,41 +101,41 @@
       "source_floor": 0
     },
     "glossary": {
-      "minimum_word_count": 0,
-      "required_artifacts": false,
-      "worked_example": false,
+      "minimum_word_count": 800,
+      "required_artifacts": true,
+      "worked_example": true,
       "cta_profile": "full",
-      "source_floor": 0,
+      "source_floor": 1,
       "required_fields": [
         "unique_atom"
       ]
     },
     "method": {
-      "minimum_word_count": 0,
-      "required_artifacts": false,
-      "worked_example": false,
+      "minimum_word_count": 900,
+      "required_artifacts": true,
+      "worked_example": true,
       "cta_profile": "full",
-      "source_floor": 0,
+      "source_floor": 1,
       "required_fields": [
         "unique_atom"
       ]
     },
     "platform": {
-      "minimum_word_count": 0,
-      "required_artifacts": false,
-      "worked_example": false,
+      "minimum_word_count": 800,
+      "required_artifacts": true,
+      "worked_example": true,
       "cta_profile": "full",
-      "source_floor": 0,
+      "source_floor": 1,
       "required_fields": [
         "unique_atom"
       ]
     },
     "brand_defense": {
-      "minimum_word_count": 0,
-      "required_artifacts": false,
-      "worked_example": false,
+      "minimum_word_count": 800,
+      "required_artifacts": true,
+      "worked_example": true,
       "cta_profile": "full",
-      "source_floor": 0,
+      "source_floor": 1,
       "required_fields": [
         "unique_atom"
       ]
@@ -162,6 +162,22 @@
       "batch_default_size": 75,
       "batch_target": "5k_admitted_pages",
       "atom_source": "data/citation_velocity/atom_axes.json"
+    },
+    "category_comparison": {
+      "minimum_word_count": 1000,
+      "required_artifacts": true,
+      "worked_example": true,
+      "cta_profile": "full",
+      "source_floor": 1,
+      "required_fields": [
+        "unique_atom",
+        "comparison_entities",
+        "comparison_methodology",
+        "conflict_disclosure",
+        "verified_at"
+      ],
+      "forbids_official_source_claims": true,
+      "visible_conflict_disclosure_required": true
     }
   },
   "programmatic_axes": {
@@ -186,6 +202,24 @@
       "merge_same_answer_variants": true,
       "same_answer_similarity_max": 0.85,
       "query_alias_collision_check": true
+    },
+    "category_comparison": {
+      "required_current_entities": true,
+      "required_official_sources": false,
+      "required_conflict_disclosure": true,
+      "required_verified_at": true,
+      "visible_conflict_disclosure_required": true,
+      "forbid_product_specific_claims": true
+    }
+  },
+  "floor_provenance": {
+    "note": "The lane floors were written on 2026-06-21 with no recorded basis. They are kept, not because 800/900/1000 are magic numbers, but because they are the numbers the gate already enforces and the composed pages clear them on authored material rather than on padding. Lowering a floor to turn a check green is the one change this file must never record, so the reasoning for every change is written here instead.",
+    "changes_2026-08-27": {
+      "glossary": "0 -> 800. A floor of zero is not a floor; it is the reason validate_programmatic_admission.py never caught these pages. A definition page still has to carry the trigger that makes the term apply, the mechanism, the failure modes, and the boundary, or it is a dictionary entry with a buy button attached. The composed glossary pages carry all four.",
+      "method": "0 -> 900. Method pages are the most procedural family here: trigger, ordered moves, an artifact, failure modes, evidence, and a boundary. 900 is what that content weighs when it is actually present, which is why it is set above the question floor rather than at it.",
+      "platform": "0 -> 800. Same reasoning as glossary. A page about running a workflow inside a named assistant has to say what the platform does to context, what the setup is, and what will break when the interface changes.",
+      "category_comparison": "New lane at 1000, matching comparison_graph rather than undercutting it. The vs/ pages compare the product against categories - a habit tracker, a planner, journalling - not against named products. A category has no official page, so official_sources cannot be satisfied honestly; the generator used to fill the field with 'https://www.google.com/search?q=<category>', which is a fabricated citation. This lane drops the official-source requirement because the pages make no product-specific claim, and raises what it demands everywhere else: the same 1000-word floor, a required artifact, a required worked example, a source floor of 1, and a visible disclosure stating that no provider-specific claim is being made. It is stricter than the lane these pages were in, not laxer.",
+      "brand_defense": "0 -> 800. These pages answer a buyer's scepticism, which is exactly the place a thin page does the most damage: a reader asking whether something is a scam is not served by four sentences. The composed pages state the scope, the answer, and what the reader should check before paying."
     }
   }
 }

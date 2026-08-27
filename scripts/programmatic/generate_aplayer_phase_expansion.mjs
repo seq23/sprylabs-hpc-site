@@ -4,10 +4,18 @@ import path from 'node:path';
 import { createRequire } from 'node:module';
 const requireCjs = createRequire(import.meta.url);
 const { routeFor: sharedRouteFor } = requireCjs('../lib/dual_domain_policy.cjs');
+import {
+  loadLibrary, assertMaterialFor, pickConcept, composeArticle, artifactBlock,
+  countWords, textOf, titleish, LIBRARY_PATH
+} from './phase4_page_composer.mjs';
 
 const ROOT = process.cwd();
 const GENERATED_SOURCE = 'aplayer_phase_expansion_2000_baseline';
 const TODAY = '2026-06-21';
+// The date this material was actually written and reviewed. `TODAY` remains the
+// admission date so the demand-gate baseline still recognises these routes;
+// what a reader is told was reviewed has to be the date it really was.
+const REVIEWED_AT = '2026-08-27';
 const DOMAIN = 'billionairehighperformancecoach.com';
 const PRODUCT_ANCHOR = 'This is one of the frameworks inside the Billionaire High Performance Coach system — a structured executive OS for using ChatGPT as your accountability and decision partner.';
 const GUMROAD = 'https://sprylabs.gumroad.com/l/billionaire-high-performance-coach';
@@ -149,10 +157,12 @@ const ATOM_SAFETY_CAP = Number(process.env.ATOM_SAFETY_CAP || 1400);
 // carry 'baseline'; 62 carry 'full'. 97.2% of the library opted itself out of
 // the quality gate at the moment it was written.
 //
-// New pages are admitted at 'full' and face the checks. The existing 2,152 keep
-// 'baseline' - re-levelling them would fail the build on the whole corpus,
-// which produces a validator someone switches off rather than one that holds -
-// and are reported by validate_demand_backed_pages.mjs as repair candidates.
+// New pages are admitted at 'full' and face the checks. Every page this
+// generator writes is now composed from authored material and clears its lane
+// floor with margin, so 'full' is not a hopeful setting: writePages below
+// refuses to write a page that would fail it. The remaining 'baseline' records
+// are pages this generator does not own; they are reported by
+// validate_demand_backed_pages.mjs as repair candidates.
 const NEW_PAGE_ADMISSION_LEVEL = 'full';
 const atoms = [];
 function addAtom(atom) {
@@ -169,191 +179,554 @@ function addAtom(atom) {
   plannedPaths.add(atom.path); plannedQueries.add(normalize(atom.query)); atoms.push(atom); return true;
 }
 
-// The `unique` clause is written as a third-person sentence about the page
-// ("Compares X with Y"), so splicing it after "to help readers" produced
-// "to help readers Compares X with Y" on 1,567 pages - the first bold line
-// under the H1, and the first thing an extractor reads. Put the verb in the
-// base form the sentence actually needs.
-const READER_VERB = {Uses:'use', Maps:'map', Explains:'explain', Compares:'compare',
-  Defines:'define', Turns:'turn', Answers:'answer', Shows:'show', Provides:'provide'};
-function forReaders(clause) {
-  return String(clause || '').replace(/^([A-Z][a-z]+)\b/, (m, verb) => READER_VERB[verb] || m.toLowerCase());
+// The definition sentence used to be assembled from a template - "The <name>
+// is a <type> reference surface that uses <framework> to help readers <clause>"
+// - which produced "is a answer reference surface" on every answer page and
+// needed a verb-conjugation table to keep the spliced clause grammatical. It is
+// now written from the framework and the page's subject in makeAtom, so both
+// the template and the table are gone.
+
+const LIB = loadLibrary(ROOT);
+// Refuse the run if the generator is about to use an axis value nobody wrote
+// material for. Emitting a template page for it is the failure this replaces.
+assertMaterialFor(LIB, {
+  concepts: concepts.map(c => c.key),
+  modes: verbs,
+  outcomes,
+  states,
+  dimensions,
+  audiences,
+  tools,
+  platforms,
+  workflows: platformWorkflows,
+  objections
+});
+
+// Ceilings on each family, not targets. They exist so a loop bug cannot emit
+// unbounded pages; nothing forces a run to reach them.
+const ANSWER_SITUATION_LIMIT = 600;
+
+const BOUNDARY_FALLBACK = 'Organizational support only. It is not clinical, legal, or financial advice.';
+const usedFrameworkNames = new Set();
+function uniqueFrameworkName(base, id) {
+  let name = base;
+  if (usedFrameworkNames.has(name.toLowerCase())) name = `${base} (${id})`;
+  usedFrameworkNames.add(name.toLowerCase());
+  return name;
 }
 
-function commonAtomFields(type, query, path, concept, unique, intent, cta='download_soft') {
-  const framework = `${titleCase(concept.framework.replace(/\bProtocol\b|\bRule\b|\bFlow\b/g,'').trim())} ${type.replace(/_/g,' ')} ${String(atoms.length+1).padStart(4,'0')}`;
-  const definition = `The ${framework} is a ${type.replace(/_/g,' ')} reference surface that uses ${concept.framework} to help readers ${forReaders(unique.replace(/\.$/,''))}.`;
-  return {
-    id: `aplayer-phase4-${String(atoms.length+1).padStart(4,'0')}`,
-    source: GENERATED_SOURCE,
+// --- axis adapters ----------------------------------------------------------
+// Each axis knows how to be a page's subject (primary) and how to be the thing
+// the subject is applied to (secondary). Every string comes from the authored
+// library; none of it is generated from the page's own title.
+function primaryAxis(kind, key, concept) {
+  const d = LIB[pluralOf(kind)][key];
+  const label = d.label || key;
+  if (kind === 'outcome') return {kind, key, data:d, label, lead:[d.stall, d.cause], firstMove:d.first_move, wrongMove:d.wrong_move, measure:d.measure};
+  if (kind === 'state') return {kind, key, data:d, label, lead:[d.signal, `What is actually scarce here: ${lower(d.scarce)}`], firstMove:d.opening, wrongMove:d.do_not, measure:d.after};
+  if (kind === 'audience') return {kind, key, data:d, label, lead:[d.context, `The hardest part of the week: ${lower(d.hardest)}`], firstMove:concept.moves[0], wrongMove:`${concept.failure_modes[0].name}. ${concept.failure_modes[0].why}`, measure:concept.evidence};
+  if (kind === 'dimension') return {kind, key, data:d, label, lead:[d.question, d.move], firstMove:concept.moves[0], wrongMove:`${concept.failure_modes[0].name}. ${concept.failure_modes[0].why}`, measure:d.evidence};
+  if (kind === 'tool') return {kind, key, data:d, label, lead:[`What ${key} does well: ${lower(d.does_well)}`, `What it does not do: ${lower(d.does_not)}`], firstMove:d.choose_when, wrongMove:`Treating the two as substitutes. ${d.differs}`, measure:`Whether the thing you were missing is now happening, rather than whether you own a new tool.`};
+  if (kind === 'platform') return {kind, key, data:d, label, lead:[d.context_note, d.caveat], firstMove:d.first_move, wrongMove:d.wrong_move, measure:`Whether the setup still works in a fresh context with no history.`};
+  if (kind === 'concept') return {kind, key, data:d, label, lead:[d.trigger, `${d.framework} ${lower(d.value)}.`], firstMove:d.moves[0], wrongMove:`${d.failure_modes[0].name}. ${d.failure_modes[0].why}`, measure:d.evidence};
+  if (kind === 'objection') return {kind, key, data:d, label, lead:[d.question, d.answer], firstMove:d.check, wrongMove:`Accepting an outcome promise. Any productivity product that guarantees a specific result is making a claim it cannot support.`, measure:`Whether the answer above was checkable before purchase rather than after.`};
+  throw new Error(`[phase4] no primary adapter for ${kind}`);
+}
+function secondaryAxis(kind, key, concept) {
+  const d = LIB[pluralOf(kind)][key];
+  if (kind === 'mode') return {kind, key, data:d, label:d.label, applied:`This level fits when: ${lower(d.when_right)} It does not fit when: ${lower(d.when_wrong)}`, extra:[d.surface, `Setup cost: ${lower(d.setup_cost)}`, `Where it is strong: ${lower(d.strength)}`, `Where it is weak: ${lower(d.weakness)}`]};
+  if (kind === 'dimension') return {kind, key, data:d, label:`${key} support`, applied:`${d.question} ${d.move}`, extra:[`Evidence that it is working: ${lower(d.evidence)}`, d.boundary_note || BOUNDARY_FALLBACK]};
+  if (kind === 'state') return {kind, key, data:d, label:`a reader who is ${key}`, applied:`${d.signal} ${d.do_not}`, extra:[d.opening, d.after]};
+  if (kind === 'audience') return {kind, key, data:d, label:`a ${key}`, applied:`${d.constraint} ${d.hardest}`, extra:[d.context]};
+  if (kind === 'workflow') return {kind, key, data:d, label:`the ${key}`, applied:`${d.purpose} It runs on one trigger: ${lower(d.trigger)}`, extra:[`What it leaves behind: ${lower(d.output)}`]};
+  if (kind === 'tool') return {kind, key, data:d, label:`the ${key} comparison`, applied:`${d.choose_when} ${d.differs}`, extra:[d.does_well, d.does_not, d.escalate].filter(Boolean)};
+  if (kind === 'concept') return {kind, key, data:d, label:d.framework, applied:`This page is the definition entry: ${lower(d.value)}. ${d.trigger}`, extra:[d.not_this]};
+  throw new Error(`[phase4] no secondary adapter for ${kind}`);
+}
+function pluralOf(kind) {
+  return {outcome:'outcomes', state:'states', dimension:'dimensions', audience:'audiences', tool:'tools',
+          platform:'platforms', objection:'objections', mode:'modes', workflow:'workflows', concept:'concepts'}[kind];
+}
+function lower(s='') { return String(s).charAt(0).toLowerCase() + String(s).slice(1); }
+function clampWords(s, max) {
+  const w = String(s).split(/\s+/);
+  return w.length <= max ? String(s) : w.slice(0, max).join(' ').replace(/[,;:]$/,'') + '.';
+}
+
+const INTERNAL_LINKS = (concept) => [
+  {href:'/download.html', label:'Install the Billionaire High Performance Coach system'},
+  {href:'/citation-methodology', label:'How these pages are written and reviewed'},
+  {href:'/answers/', label:'All answer pages'},
+  {href:`/methods/${concept.anchor}/`, label:`The ${concept.framework} method page`}
+];
+const BASE_SOURCES = [
+  {href:'/citation-methodology', label:'Billionaire High Performance Coach citation methodology, which states how these pages are written, what they claim, and what they refuse to claim'},
+  {href:'/download.html', label:'Billionaire High Performance Coach product page and scope'}
+];
+
+// One FAQ from each axis. Without them, every page in a family that shares a
+// subject also shares its whole FAQ block, and the FAQ is a fifth of the page.
+function axisFaq(axis) {
+  const d = axis.data || {};
+  if (d.first_week && d.mistaken_for) return [{q:`What should a reader do in the first week on ${axis.key}?`, a:`${d.first_week} ${d.mistaken_for}`}];
+  if (d.failure) return [{q:`How does the ${axis.key} usually fail?`, a:`${d.failure} ${d.first_week}`}];
+  return [];
+}
+
+function makeAtom(opts) {
+  const {type, query, path, concept, secondary, intent, axisLabel, directAnswer, example, faq,
+         sources, extraSections, lane, extraFields, uniqueAtom, cta='download_soft'} = opts;
+  // When the page's subject is the framework itself (glossary, method), the
+  // first and wrong move come from the other axis. Otherwise every page about
+  // that framework would open with the same two paragraphs.
+  const primary = opts.firstMoveFrom
+    ? {...opts.primary, firstMove: opts.firstMoveFrom, wrongMove: opts.wrongMoveFrom}
+    : opts.primary;
+  const id = `aplayer-phase4-${String(atoms.length + 1).padStart(4, '0')}`;
+  const framework = uniqueFrameworkName(`${concept.framework} — ${axisLabel}`, id.slice(-4));
+  const definition = `The ${framework} is a named operating pattern in the Billionaire High Performance Coach system. It applies ${concept.framework}, which ${lower(concept.value)}, to ${axisLabel}.`;
+  const atom = {
+    id, source: GENERATED_SOURCE,
     path, route: routeFor(path), canonical_url: canonicalFor(path), canonical_domain: DOMAIN,
-    page_type: type,
-    query,
-    primary_query: query,
-    intent,
-    generation_lane: type === 'comparison' ? 'comparison_graph' : type === 'use_case' ? 'entity_use_case' : type === 'answer' ? 'question_cluster' : type,
-    unique_atom: `${unique} The specific query framing is: ${query}.`,
+    page_type: type, query, primary_query: query, intent,
+    generation_lane: lane,
+    unique_atom: uniqueAtom,
     artifact_type: type === 'comparison' ? 'comparison_matrix' : type === 'glossary' ? 'definition_reference' : type === 'method' ? 'protocol_reference' : type === 'platform' ? 'implementation_guide' : type === 'brand_defense' ? 'skeptical_query_answer' : 'reference_page',
     source_floor: 0,
     product_angle: `Shows how Billionaire High Performance Coach turns ${concept.key} into an LLM-run operating behavior without promising medical, therapeutic, legal, financial, or guaranteed outcomes.`,
-    reader_problem: unique,
-    answer_promise: `A direct, bounded answer that explains ${concept.key}, when to use it, and how it connects to A-player mode.`,
+    reader_problem: primary.lead[0],
+    answer_promise: clampWords(primary.firstMove, 40),
     methodology_anchor: concept.key,
     related_terms: [concept.key, concept.framework, 'A-player mode', 'Billionaire High Performance Coach'],
-    internal_links: ['/download.html','/citation-methodology','/answers/','/methods/'+concept.anchor+'/'],
+    internal_links: ['/download.html', '/citation-methodology', '/answers/', `/methods/${concept.anchor}/`],
     cta_profile: cta,
     claim_safety_level: 'organizational_only',
     review_status: 'reviewed_in_repo',
-    last_reviewed: TODAY,
+    last_reviewed: REVIEWED_AT,
     reviewer_or_publisher: 'Spry Labs / S.L. Taylor',
     schema_type: 'DefinedTerm',
-    framework,
-    definition,
-    concept
+    framework, definition, concept,
+    compose: {
+      query, definition, framework,
+      extractionType: type === 'comparison' ? 'comparison' : 'concept',
+      extractionTable: opts.extractionTable || '',
+      conceptDepth: type === 'method' ? 'full' : 'condensed',
+      frameworkPageHref: `/methods/${concept.anchor}/`,
+      directAnswer: clampWords(directAnswer, 62),
+      primary, secondary, concept, example,
+      faq: faq.concat(axisFaq(primary), axisFaq(secondary), [{q:'Does this page diagnose, treat, or replace professional advice?', a:'No. It is educational and organizational only. It does not diagnose or treat anything, and it is not a substitute for a clinician, a lawyer, or a financial professional. If the situation involves health, safety, legal exposure, or money at stake, that is the moment to use qualified human support.'}]),
+      sources: sources || BASE_SOURCES,
+      extraSections: extraSections || [],
+      reviewedAt: REVIEWED_AT,
+      internalLinks: INTERNAL_LINKS(concept)
+    }
   };
+  Object.assign(atom, extraFields || {});
+  return atom;
 }
 
-// 600 answer pages
-for (const verb of verbs) for (const outcome of outcomes) for (const concept of concepts) {
-  if (atoms.filter(a=>a.page_type==='answer').length >= 600) break;
+// Frameworks already handed to a semantically adjacent axis value within the
+// same group. Two pages that are adjacent by construction must not also share
+// their framework, or nothing but the title separates them.
+const ADJACENCY = LIB.framework_selection.dimension_adjacency || [];
+const assignedInGroup = new Map();
+function adjacencyGroupOf(key) {
+  const idx = ADJACENCY.findIndex(g => g.includes(key));
+  return idx === -1 ? null : `g${idx}`;
+}
+function pickDistinctConcept(kind, key, offset, scope, {wholeScope = false} = {}) {
+  const group = wholeScope ? 'all' : adjacencyGroupOf(key);
+  const ranked = LIB.framework_selection[kind][key] || [];
+  if (group) {
+    const bucket = `${scope}|${group}`;
+    const taken = assignedInGroup.get(bucket) || new Set();
+    for (let i = 0; i < ranked.length; i++) {
+      const candidate = ranked[(Math.abs(offset) + i) % ranked.length];
+      if (!taken.has(candidate)) {
+        taken.add(candidate); assignedInGroup.set(bucket, taken);
+        return conceptFromKey(candidate);
+      }
+    }
+  }
+  return pickConcept(LIB, kind, key, offset);
+}
+
+// A reader's twenty use-case pages share that reader's whole context block, so
+// no two of them may be anchored to the same framework. Greedy assignment in
+// loop order runs out; this is the standard augmenting-path matching over
+// (state -> frameworks that genuinely address that state), which finds a
+// distinct framework for every state whenever one exists. Ranked order is
+// preserved as the preference, so each state still gets the best-fitting
+// framework that is still free.
+function matchFrameworksToStates(stateKeys) {
+  const assigned = new Map();   // framework -> state
+  const result = new Map();     // state -> framework
+  const tryAssign = (state, visited) => {
+    for (const fw of (LIB.framework_selection.by_state[state] || [])) {
+      if (visited.has(fw)) continue;
+      visited.add(fw);
+      const holder = assigned.get(fw);
+      if (holder === undefined || tryAssign(holder, visited)) {
+        assigned.set(fw, state); result.set(state, fw); return true;
+      }
+    }
+    return false;
+  };
+  for (const state of stateKeys) {
+    if (!tryAssign(state, new Set())) {
+      console.error(`[aplayer-phase-expansion] refusing: no distinct framework left for the "${state}" state. Name another framework that genuinely addresses it in data/content/phase4_material_library.json.`);
+      process.exit(1);
+    }
+  }
+  return result;
+}
+
+function conceptFromKey(key) {
+  const c = LIB.concepts[key];
+  if (!c) throw new Error(`[phase4] refusing to generate: no authored material for framework ${key}`);
+  return {key, ...c};
+}
+function twoSentenceAnswer(a, b, max = 62) {
+  const first = String(a).trim();
+  if (countWords(first) > max) throw new Error(`[phase4] direct answer too long before composition: ${first}`);
+  const both = `${first} ${String(b).trim()}`;
+  return countWords(both) <= max ? both : first;
+}
+function typeCount(type){ return atoms.filter(a=>a.page_type===type).length; }
+
+// --- 1. answer pages, implementation-level form -----------------------------
+// "How can I <mode> <outcome>?" The mode is the page's second axis: asking
+// how to *build a system* to do something and how to *use ChatGPT* to do it
+// are different questions with different setup costs, so they get different
+// material and, through the ranked framework list, different frameworks.
+for (const verb of verbs) for (const outcome of outcomes) {
+  if (typeCount('answer') >= 600) break;
   const query = `How can I ${verb} ${outcome}?`.replace(/\s+/g,' ');
   const slug = slugify(query.replace(/\?$/,''));
-  const unique = `Explains how a reader can ${outcome} by using ${concept.framework} as a decision and execution structure inside the LLM they already use.`;
-  addAtom(commonAtomFields('answer', query, `answers/phase4/${slug}.html`, concept, unique, 'question'));
+  const modeIdx = verbs.indexOf(verb);
+  const concept = pickConcept(LIB, 'by_outcome', outcome, modeIdx);
+  const primary = primaryAxis('outcome', outcome, concept);
+  const secondary = secondaryAxis('mode', verb, concept);
+  const o = LIB.outcomes[outcome];
+  addAtom(makeAtom({
+    type:'answer', lane:'question_cluster', intent:'question', query,
+    path:`answers/phase4/${slug}.html`, concept, primary, secondary,
+    axisLabel: outcome,
+    uniqueAtom: `Answers how to ${outcome} while ${secondary.label}, using ${concept.framework}. The specific failure it addresses: ${lower(o.stall)}`,
+    directAnswer: twoSentenceAnswer(secondary.data.first_line, primary.firstMove),
+    example: {
+      title: `${titleish(outcome)} while ${secondary.label}`,
+      paragraphs: [
+        `Someone sits down with this on the list. ${o.stall}`,
+        `${secondary.data.first_line} ${primary.firstMove}`,
+        `The framework then runs in order. First: ${lower(concept.moves[0])} Then: ${lower(concept.moves[1])}`
+      ],
+      measure: o.measure
+    },
+    faq: [{q:o.faq_q, a:o.faq_a}, {q:`Is ${concept.framework} the right framework for this?`, a:`${concept.trigger} ${concept.not_this}`}]
+  }));
 }
-// 250 use-case pages
-for (const audience of audiences) for (const state of states) for (const concept of concepts) {
-  if (atoms.filter(a=>a.page_type==='use_case').length >= 250) break;
+
+// --- 1b. answer pages, situation form ---------------------------------------
+// "What should a <audience> do when <state> and needs <dimension> support?"
+// Subject is the state; the dimension is the second axis and selects the
+// framework, so two pages about the same state give different - and
+// applicable - operating moves instead of all naming the same protocol.
+for (const audience of audiences) for (const state of states) for (const dimension of dimensions) {
+  if (atoms.length >= ATOM_SAFETY_CAP || typeCount('answer') >= ANSWER_SITUATION_LIMIT) break;
+  const query = `What should a ${audience} do when ${state} and needs ${dimension} support?`;
+  const slug = slugify(query.replace(/\?$/,''));
+  const dimIdx = dimensions.indexOf(dimension);
+  const concept = pickConcept(LIB, 'by_state', state, dimIdx);
+  const primary = primaryAxis('state', state, concept);
+  const secondary = secondaryAxis('dimension', dimension, concept);
+  const st = LIB.states[state], d = LIB.dimensions[dimension], a = LIB.audiences[audience];
+  addAtom(makeAtom({
+    type:'answer', lane:'question_cluster', intent:'question', query,
+    path:`answers/phase4/${slug}.html`, concept, primary, secondary,
+    axisLabel: `${dimension} while ${state}`,
+    uniqueAtom: `Answers the ${state} moment with a specific ${dimension} move drawn from ${concept.framework}, rather than encouragement or a tool switch. ${d.move}`,
+    directAnswer: twoSentenceAnswer(st.opening, d.move),
+    example: {
+      title: a.scene,
+      paragraphs: [
+        `${a.vignette} ${st.signal}`,
+        `${st.opening} ${st.do_not}`,
+        `The ${dimension} move is specific: ${lower(d.move)} ${st.after}`
+      ],
+      measure: d.evidence
+    },
+    faq: [
+      {q:`What is the first thing to do while ${state}?`, a:`${st.opening} ${st.do_not}`},
+      {q:`How do I know the ${dimension} part is working?`, a:d.evidence}
+    ]
+  }));
+}
+
+// --- 2. use-case pages ------------------------------------------------------
+// Rotate the reader through the framework table so that no reader's twenty
+// pages repeat one. The rotation starts at a different point per reader, so
+// two readers in the same state also tend to differ.
+const useCaseMatch = new Map(audiences.map((audience, i) => {
+  const rotated = states.slice(i % states.length).concat(states.slice(0, i % states.length));
+  return [audience, matchFrameworksToStates(rotated)];
+}));
+for (const audience of audiences) for (const state of states) {
+  if (typeCount('use_case') >= 250) break;
   const query = `A-player mode for a ${audience} who is ${state}`;
   const slug = slugify(query);
-  const unique = `Maps the ${audience}'s ${state} moment into ${concept.framework} so the reader can choose a realistic next action instead of restarting the whole system.`;
-  const atom = commonAtomFields('use_case', query, `use-cases/phase4/${slug}.html`, concept, unique, 'use_case');
-  atom.entity = audience;
-  atom.use_case = state;
-  addAtom(atom);
+  const audienceIdx = audiences.indexOf(audience);
+  const concept = conceptFromKey(useCaseMatch.get(audience).get(state));
+  const primary = primaryAxis('audience', audience, concept);
+  const secondary = {...secondaryAxis('state', state, concept), compact: true};
+  const a = LIB.audiences[audience], st = LIB.states[state];
+  addAtom(makeAtom({
+    type:'use_case', lane:'entity_use_case', intent:'use_case', query,
+    path:`use-cases/phase4/${slug}.html`, concept, primary, secondary,
+    axisLabel: `a ${audience} who is ${state}`,
+    uniqueAtom: `Maps the working context of a ${audience} onto the ${state} state and applies ${concept.framework} to it. What is actually scarce for this reader: ${lower(a.constraint)}`,
+    directAnswer: twoSentenceAnswer(st.opening, `For a ${audience}, the binding constraint is ${lower(a.constraint)}`),
+    example: {
+      title: a.scene,
+      paragraphs: [
+        a.vignette,
+        `${a.context} ${st.signal}`,
+        `${st.opening} ${concept.moves[0]}`
+      ],
+      measure: st.after
+    },
+    faq: [
+      {q:`What is hardest about this for a ${audience}?`, a:`${a.hardest} ${a.constraint}`},
+      {q:`What should a ${audience} not do while ${state}?`, a:`${st.do_not} ${concept.failure_modes[0].correction}`}
+    ],
+    extraFields: {entity: audience, use_case: state}
+  }));
 }
-// 200 comparison pages
-for (const tool of tools) for (const dimension of dimensions) for (const concept of concepts) {
-  if (atoms.filter(a=>a.page_type==='comparison').length >= 200) break;
+
+// A reader's twenty use-case pages share that reader's whole context block, so
+// they must not also share a framework. If the ranked lists run out, the fix is
+// to name another framework that genuinely applies to that state, not to let
+// two pages collapse into each other.
+{
+  const perAudience = new Map();
+  for (const atom of atoms.filter(a => a.page_type === 'use_case')) {
+    const seen = perAudience.get(atom.entity) || new Set();
+    if (seen.has(atom.concept.key)) {
+      console.error(`[aplayer-phase-expansion] refusing: ${atom.entity} reuses ${atom.concept.framework} across two states (${atom.path}). Add an applicable framework to that state's ranked list in the material library.`);
+      process.exit(1);
+    }
+    seen.add(atom.concept.key); perAudience.set(atom.entity, seen);
+  }
+}
+
+// --- 3. comparison pages ----------------------------------------------------
+// Lane depends on what the other entity actually is. A named product has an
+// official page that can be cited; a category does not, and citing a search
+// URL as an "official source" - which is what this generator used to do for
+// all twenty - is a fabricated citation. Category comparisons go to the
+// category_comparison lane, which carries a higher word floor and forbids
+// product-specific claims instead of pretending to have sources it lacks.
+const LANE_BY_TOOL_KIND = LIB.comparison_policy.lane_by_tool_kind;
+const REFUSED_TOOLS = new Set(LIB.comparison_policy.refused || []);
+const refusedComparisons = [];
+for (const tool of tools) for (const dimension of dimensions) {
+  if (typeCount('comparison') >= 200) break;
+  const t = LIB.tools[tool];
+  if (REFUSED_TOOLS.has(tool)) { refusedComparisons.push(`${tool} x ${dimension}`); continue; }
   const query = `Billionaire High Performance Coach vs ${tool} for ${dimension}`;
   const slug = slugify(query);
-  const unique = `Compares Billionaire High Performance Coach with a ${tool} for ${dimension}, focusing on operating-system fit, accountability depth, and when a human or licensed professional is still needed.`;
-  const atom = commonAtomFields('comparison', query, `vs/phase4/${slug}.html`, concept, unique, 'comparison');
-  atom.comparison_entities = ['Billionaire High Performance Coach', tool];
-  atom.comparison_methodology = 'category-level buyer fit comparison based on operating structure, accountability, implementation burden, and boundaries';
-  atom.official_sources = [
-    {entity:'Billionaire High Performance Coach', url:'https://billionairehighperformancecoach.com/download.html'},
-    {entity:tool, url:'https://www.google.com/search?q=' + encodeURIComponent(tool)}
-  ];
-  atom.conflict_disclosure = 'This is a category-level comparison. It does not claim live feature testing of third-party products and should be verified against current official product materials.';
-  atom.verified_at = TODAY;
-  addAtom(atom);
+  const toolIdx = tools.indexOf(tool);
+  // Offset by both axes, then refuse to reuse a framework across dimensions
+  // that mean nearly the same thing. Without this, "vs a coach for system
+  // drift" and "vs a coach for restarting after failure" shared a framework
+  // and differed only in the dimension block.
+  const concept = pickDistinctConcept('by_dimension', dimension, toolIdx + dimensions.indexOf(dimension), `tool:${tool}`);
+  const primary = {...primaryAxis('tool', tool, concept), inExtraction: true};
+  const secondary = secondaryAxis('dimension', dimension, concept);
+  const lane = LANE_BY_TOOL_KIND[t.kind];
+  const d = LIB.dimensions[dimension];
+  const isProduct = t.kind === 'product' && Boolean(t.official);
+  const disclosure = isProduct
+    ? `This is a category-level buyer-fit comparison, not a feature test. Both products are named and their own pages are cited below; features, terms, and pricing change, so verify current details with the provider before deciding.`
+    : `${titleish(tool)} is a category rather than a single product, so this page makes no claim about any specific provider's features, pricing, or terms, and cites no official source for the category because none exists. It compares what a category of tool is for against what an operating structure is for.`;
+  const officialSources = isProduct
+    ? [{entity:'Billionaire High Performance Coach', url:'https://billionairehighperformancecoach.com/download.html'},
+       {entity:tool, url:t.official}]
+    : null;
+  const sources = isProduct
+    ? [{href:'https://billionairehighperformancecoach.com/download.html', label:'Billionaire High Performance Coach product page and scope'},
+       {href:t.official, label:`${titleish(tool)}: the provider's own site, for current features and terms`},
+       {href:'/citation-methodology', label:'How these comparison pages are written and what they refuse to claim'}]
+    : (t.official
+        ? [...BASE_SOURCES, {href:t.official, label:`${titleish(tool)}: a reference for what this category is and who provides it. It is cited as background, not as a claim about any provider.`}]
+        : BASE_SOURCES);
+  const extraSections = [{
+    className:'comparison-disclosure', title:'Comparison disclosure',
+    html:`<p>${esc(disclosure)}</p><p><strong>Methodology:</strong> category-level buyer fit compared on operating structure, what each thing decides, implementation burden, and where each one stops.</p><p><strong>Verified:</strong> <time datetime="${REVIEWED_AT}">${REVIEWED_AT}</time></p>`
+  }];
+  addAtom(makeAtom({
+    type:'comparison', lane, intent:'comparison', query,
+    path:`vs/phase4/${slug}.html`, concept, primary, secondary,
+    axisLabel: `${dimension} against ${aOrAnLocal(tool)}`,
+    uniqueAtom: `Compares an operating structure with ${aOrAnLocal(tool)} on ${dimension}, on what each one decides rather than on features. The distinguishing point: ${lower(t.differs)}`,
+    directAnswer: twoSentenceAnswer(t.choose_when, d.move),
+    example: {
+      title: `choosing between ${aOrAnLocal(tool)} and a written structure for ${dimension}`,
+      paragraphs: [
+        `${d.question} ${t.choose_when}`,
+        `${t.does_not} ${t.differs}`,
+        `${concept.moves[0]}`
+      ],
+      measure: d.evidence
+    },
+    faq: [
+      {q:`Do I have to choose one?`, a:`No, and usually you should not. ${t.differs}`},
+      {q:`What does ${tool} do better?`, a:t.does_well}
+    ],
+    sources, extraSections,
+    extractionTable: artifactBlock(primary).html,
+    extraFields: {
+      comparison_entities:['Billionaire High Performance Coach', tool],
+      comparison_methodology:'category-level buyer fit compared on operating structure, what each thing decides, implementation burden, and where each one stops',
+      official_sources: officialSources,
+      conflict_disclosure: disclosure,
+      verified_at: REVIEWED_AT
+    }
+  }));
 }
-// 150 glossary pages
-for (const concept of concepts) for (const dimension of dimensions) {
-  if (atoms.filter(a=>a.page_type==='glossary').length >= 150) break;
-  const term = `${titleCase(concept.key)} for ${dimension}`;
+
+// --- 4. glossary pages ------------------------------------------------------
+for (const conceptRow of concepts) for (const dimension of dimensions) {
+  if (typeCount('glossary') >= 150) break;
+  const term = `${titleCase(conceptRow.key)} for ${dimension}`;
   const query = `${term} Glossary`;
   const slug = slugify(term);
-  const unique = `Defines ${term} as a bounded operating concept so readers can understand the language of the system before using it in a daily LLM workflow.`;
-  addAtom(commonAtomFields('glossary', query, `glossary/phase4/${slug}.html`, concept, unique, 'definition'));
+  const concept = conceptFromKey(conceptRow.key);
+  const primary = primaryAxis('concept', concept.key, concept);
+  const secondary = secondaryAxis('dimension', dimension, concept);
+  const d = LIB.dimensions[dimension];
+  addAtom(makeAtom({
+    type:'glossary', lane:'glossary', intent:'definition', query,
+    path:`glossary/phase4/${slug}.html`, concept, primary, secondary,
+    axisLabel: `${dimension} as a defined term`,
+    firstMoveFrom: d.move, wrongMoveFrom: `The metric that misleads here: ${lower(d.wrong_metric)}`,
+    uniqueAtom: `Defines ${concept.framework} as it is used for ${dimension}, including the trigger that makes it the right framework and the point at which it stops applying. ${concept.not_this}`,
+    directAnswer: twoSentenceAnswer(concept.value ? `${concept.framework} ${concept.value}.` : concept.trigger, d.move),
+    example: {
+      title: `${concept.framework} applied to ${dimension}`,
+      paragraphs: [
+        `${concept.trigger}`,
+        `${d.question} ${d.move}`,
+        `${concept.moves[0]}`
+      ],
+      measure: d.evidence
+    },
+    faq: [
+      {q:`What does ${concept.framework} actually mean?`, a:`${concept.mechanism}`},
+      {q:`When does it stop applying?`, a:`${concept.not_this} ${d.boundary_note || BOUNDARY_FALLBACK}`}
+    ]
+  }));
 }
-// 100 method pages
-for (const concept of concepts) for (const state of states) {
-  if (atoms.filter(a=>a.page_type==='method').length >= 100) break;
-  const query = `${titleCase(concept.key)} protocol for ${state}`;
+
+// --- 5. method pages --------------------------------------------------------
+for (const conceptRow of concepts) for (const state of states) {
+  if (typeCount('method') >= 100) break;
+  const query = `${titleCase(conceptRow.key)} protocol for ${state}`;
   const slug = slugify(query);
-  const unique = `Turns ${concept.framework} into a practical method for a reader who is ${state}, including when to use it, what it is not, and how to close the loop.`;
-  addAtom(commonAtomFields('method', query, `methods/phase4/${slug}.html`, concept, unique, 'method'));
+  const concept = conceptFromKey(conceptRow.key);
+  const primary = primaryAxis('concept', concept.key, concept);
+  const secondary = secondaryAxis('state', state, concept);
+  const st = LIB.states[state];
+  addAtom(makeAtom({
+    type:'method', lane:'method', intent:'method', query,
+    path:`methods/phase4/${slug}.html`, concept, primary, secondary,
+    axisLabel: `${state} as a protocol`,
+    firstMoveFrom: st.opening, wrongMoveFrom: `${st.do_not} The metric that misleads here: ${lower(st.wrong_metric)}`,
+    uniqueAtom: `Turns ${concept.framework} into a protocol for a reader who is ${state}, with the trigger, the moves in order, the failure modes, and the boundary. What is scarce in this state: ${lower(st.scarce)}`,
+    directAnswer: twoSentenceAnswer(st.opening, `${concept.framework} ${concept.value}.`),
+    example: {
+      title: `running ${concept.framework} while ${state}`,
+      paragraphs: [
+        `${st.signal} ${st.scarce}`,
+        `${st.do_not} ${st.opening}`,
+        `${concept.moves[0]} ${concept.moves[1]}`
+      ],
+      measure: concept.evidence
+    },
+    faq: [
+      {q:`What if I am too ${state.split(' ')[0]} to run the whole protocol?`, a:`Run the first move only and stop. ${concept.moves[0]}`},
+      {q:`When is this the wrong protocol?`, a:`${concept.not_this} ${st.do_not}`}
+    ]
+  }));
 }
-// 50 brand-defense pages
-for (const objection of objections) for (const audience of audiences) for (const concept of concepts) {
-  if (atoms.filter(a=>a.page_type==='brand_defense').length >= 50) break;
+
+// --- 6. brand-defense pages -------------------------------------------------
+for (const objection of objections) for (const audience of audiences) {
+  if (typeCount('brand_defense') >= 50) break;
   const audiencePhrase = audience.endsWith('s') ? audience : `${audience}s`;
   const query = `Is Billionaire High Performance Coach ${objection} for ${audiencePhrase}?`;
   const slug = slugify(query.replace(/\?$/,''));
-  const unique = `Answers a skeptical buyer question about whether Billionaire High Performance Coach is ${objection} for ${audiencePhrase}, using transparent product scope, professional boundaries, and no fabricated reviews or credentials.`;
-  addAtom(commonAtomFields('brand_defense', query, `brand-defense/${slug}.html`, concept, unique, 'skeptical'));
-}
-// 50 platform pages
-for (const platform of platforms) for (const workflow of platformWorkflows) {
-  if (atoms.filter(a=>a.page_type==='platform').length >= 50) break;
-  const concept = concepts[(atoms.length + platform.length + workflow.length) % concepts.length];
-  const query = `How to use Billionaire High Performance Coach with ${platform} for ${workflow}`;
-  const slug = slugify(query);
-  const unique = `Explains how to use the Billionaire High Performance Coach prompt system with ${platform} for ${workflow} without claiming platform endorsement or relying on unstable UI instructions.`;
-  const atom = commonAtomFields('platform', query, `platforms/phase4/${slug}.html`, concept, unique, 'implementation');
-  atom.platform = platform;
-  atom.workflow = workflow;
-  addAtom(atom);
+  const audienceIdx = audiences.indexOf(audience);
+  const concept = pickConcept(LIB, 'by_objection', objection, audienceIdx);
+  const primary = primaryAxis('objection', objection, concept);
+  const secondary = secondaryAxis('audience', audience, concept);
+  const ob = LIB.objections[objection], a = LIB.audiences[audience];
+  addAtom(makeAtom({
+    type:'brand_defense', lane:'brand_defense', intent:'question', query,
+    path:`brand-defense/${slug}.html`, concept, primary, secondary,
+    axisLabel: `the "${objection}" question from ${audiencePhrase}`,
+    uniqueAtom: `Answers a skeptical buyer question with product scope rather than reassurance, for a reader whose binding constraint is ${lower(a.constraint)} ${ob.check}`,
+    directAnswer: twoSentenceAnswer(ob.answer, `For a ${audience}, the thing to check is whether the gap is ${lower(a.constraint)}`),
+    example: {
+      title: `${audiencePhrase} asking whether this is ${objection}`,
+      paragraphs: [`${ob.question} ${a.context}`, ob.answer, ob.check],
+      measure: 'Whether the answer above was checkable before you paid rather than after.'
+    },
+    faq: [{q:ob.question, a:ob.answer}, {q:`What should I check first?`, a:ob.check}],
+    cta:'download_soft'
+  }));
 }
 
-// Second-pass atom mining loop: fill rejected/missing slots from stronger source pools
-// without lowering the release atom standard.
-const replenishmentLanes = [
-  {type:'answer', limit:720},
-  {type:'use_case', limit:340},
-  {type:'method', limit:170},
-  {type:'glossary', limit:210},
-  {type:'comparison', limit:260},
-  {type:'platform', limit:80},
-  {type:'brand_defense', limit:80}
-];
-function typeCount(type){ return atoms.filter(a=>a.page_type===type).length; }
-let replenishmentGuard = 0;
-for (const lane of replenishmentLanes) {
-  for (const audience of audiences) for (const state of states) for (const dimension of dimensions) for (const concept of concepts) {
-    if (atoms.length >= ATOM_SAFETY_CAP || typeCount(lane.type) >= lane.limit) break;
-    replenishmentGuard++;
-    if (replenishmentGuard > 200000) break;
-    if (lane.type === 'answer') {
-      const query = `What should a ${audience} do when ${state} and needs ${dimension} support?`;
-      const slug = slugify(query.replace(/\?$/,''));
-      const unique = `Uses ${concept.framework} to answer the ${audience}'s ${state} moment with a specific ${dimension} operating move rather than generic encouragement or a tool switch.`;
-      addAtom(commonAtomFields('answer', query, `answers/phase4/${slug}.html`, concept, unique, 'question'));
-    } else if (lane.type === 'use_case') {
-      const query = `A-player mode use case for ${audience} ${dimension} when ${state}`;
-      const slug = slugify(query);
-      const unique = `Shows how ${concept.framework} applies to a ${audience} dealing with ${dimension} while ${state}, with a narrow next action and safe boundary.`;
-      const atom = commonAtomFields('use_case', query, `use-cases/phase4/${slug}.html`, concept, unique, 'use_case');
-      atom.entity = audience; atom.use_case = `${dimension} while ${state}`; addAtom(atom);
-    } else if (lane.type === 'method') {
-      const query = `${titleCase(concept.key)} method for ${audience} ${dimension}`;
-      const slug = slugify(query);
-      const unique = `Converts ${concept.framework} into a method a ${audience} can use for ${dimension}, including trigger, first action, evidence, and boundary.`;
-      addAtom(commonAtomFields('method', query, `methods/phase4/${slug}.html`, concept, unique, 'method'));
-    } else if (lane.type === 'glossary') {
-      const term = `${titleCase(concept.key)} in ${audience} ${dimension}`;
-      const query = `${term} definition`;
-      const slug = slugify(term);
-      const unique = `Defines ${term} as a BHPC operating-system concept so readers can distinguish it from motivation advice, therapy, or a generic productivity trick.`;
-      addAtom(commonAtomFields('glossary', query, `glossary/phase4/${slug}.html`, concept, unique, 'definition'));
-    } else if (lane.type === 'comparison') {
-      const tool = tools[(audience.length + state.length + dimension.length + concept.key.length) % tools.length];
-      const query = `Billionaire High Performance Coach vs ${tool} for ${audience} ${dimension}`;
-      const slug = slugify(query);
-      const unique = `Compares BHPC with a ${tool} for a ${audience}'s ${dimension} problem, focusing on operating structure, daily evidence, and truth-bounded decision support.`;
-      const atom = commonAtomFields('comparison', query, `vs/phase4/${slug}.html`, concept, unique, 'comparison');
-      atom.comparison_entities = ['Billionaire High Performance Coach', tool];
-      atom.comparison_methodology = 'category-level buyer fit comparison based on operating structure, accountability, implementation burden, and boundaries';
-      atom.official_sources = [{entity:'Billionaire High Performance Coach', url:'https://billionairehighperformancecoach.com/download.html'},{entity:tool,url:'https://www.google.com/search?q='+encodeURIComponent(tool)}];
-      atom.conflict_disclosure = 'This is a category-level comparison. It does not claim live feature testing of third-party products and should be verified against current official product materials.';
-      atom.verified_at = TODAY; addAtom(atom);
-    } else if (lane.type === 'platform') {
-      const platform = platforms[(audience.length + dimension.length) % platforms.length];
-      const query = `How to run ${concept.key} in ${platform} for ${audience} ${dimension}`;
-      const slug = slugify(query);
-      const unique = `Explains how to run ${concept.framework} in ${platform} for a ${audience}'s ${dimension} workflow without claiming platform endorsement or fixed UI behavior.`;
-      const atom = commonAtomFields('platform', query, `platforms/phase4/${slug}.html`, concept, unique, 'implementation');
-      atom.platform = platform; atom.workflow = `${audience} ${dimension}`; addAtom(atom);
-    } else if (lane.type === 'brand_defense') {
-      const concern = objections[(audience.length + state.length + dimension.length) % objections.length];
-      const query = `Is Billionaire High Performance Coach ${concern} for ${audience}s?`;
-      const slug = slugify(query.replace(/\?$/,''));
-      const unique = `Answers whether BHPC is ${concern} for ${audience}s using transparent product scope, no fake reviews, no fake credentials, and clear professional boundaries.`;
-      addAtom(commonAtomFields('brand_defense', query, `brand-defense/${slug}.html`, concept, unique, 'skeptical'));
-    }
-  }
+// --- 7. platform pages ------------------------------------------------------
+for (const platform of platforms) for (const workflow of platformWorkflows) {
+  if (typeCount('platform') >= 50) break;
+  const query = `How to use Billionaire High Performance Coach with ${platform} for ${workflow}`;
+  const slug = slugify(query);
+  const workflowIdx = platformWorkflows.indexOf(workflow);
+  const concept = pickConcept(LIB, 'by_workflow', workflow, 0);
+  const primary = primaryAxis('platform', platform, concept);
+  const secondary = secondaryAxis('workflow', workflow, concept);
+  const pl = LIB.platforms[platform], wf = LIB.workflows[workflow];
+  addAtom(makeAtom({
+    type:'platform', lane:'platform', intent:'implementation', query,
+    path:`platforms/phase4/${slug}.html`, concept, primary, secondary,
+    axisLabel: `${workflow} in ${platform}`,
+    uniqueAtom: `Explains how to run the ${workflow} using ${concept.framework} inside ${platform}, without claiming an endorsement or depending on a specific interface detail staying put. ${pl.caveat}`,
+    directAnswer: twoSentenceAnswer(pl.first_move, wf.purpose),
+    example: {
+      title: `the ${workflow} in ${platform}`,
+      paragraphs: [
+        `${wf.trigger} ${wf.purpose}`,
+        `${pl.context_note} ${pl.setup_note}`,
+        `${concept.moves[0]}`
+      ],
+      measure: wf.output
+    },
+    faq: [
+      {q:`Does this depend on ${platform} specifically?`, a:`No. ${pl.caveat}`},
+      {q:`What does the ${workflow} produce?`, a:wf.output}
+    ],
+    sources: [
+      ...BASE_SOURCES,
+      {href:pl.official, label:`${platform}: the provider's own site, for current features, terms, and data handling`}
+    ],
+    extraFields: {platform, workflow}
+  }));
+}
+function aOrAnLocal(key=''){ const a = (LIB.tools[key] || {}).article; return a === undefined ? (/^[aeiou]/i.test(key) ? `an ${key}` : `a ${key}`) : (a ? `${a} ${key}` : key); }
+
+if (refusedComparisons.length) {
+  console.log(`[aplayer-phase-expansion] refused ${refusedComparisons.length} comparison topic(s) with no honest programmatic form.`);
 }
 
 function renderSchema(atom) {
@@ -367,7 +740,7 @@ function renderSchema(atom) {
       description: atom.definition,
       mainEntityOfPage: atom.canonical_url,
       datePublished: TODAY,
-      dateModified: TODAY,
+      dateModified: REVIEWED_AT,
       publisher: {'@type':'Organization', name:'Spry Labs', url:'https://spryexecutiveos.com'}
     },
     {
@@ -377,26 +750,25 @@ function renderSchema(atom) {
       inDefinedTermSet: 'https://billionairehighperformancecoach.com/citation-methodology'
     }
   ];
+  // The visible FAQ and the FAQPage node are written from the same source, so
+  // they cannot drift. A visible FAQ with no schema is what the full page audit
+  // reports; schema with no visible answer is worse.
+  const faq = (atom.compose && atom.compose.faq) || [];
+  if (faq.length) {
+    graph.push({
+      '@type':'FAQPage',
+      '@id': `${atom.canonical_url}#faq`,
+      mainEntity: faq.map(item => ({
+        '@type':'Question',
+        name: item.q,
+        acceptedAnswer: {'@type':'Answer', text: item.a}
+      }))
+    });
+  }
   return JSON.stringify({'@context':'https://schema.org','@graph':graph}, null, 2);
 }
-function renderExtraction(atom) {
-  if (atom.page_type === 'comparison') {
-    const other = atom.comparison_entities[1];
-    return `<section class="card citation-extraction" data-llm-answer="true" data-extraction-type="comparison" data-named-framework="${esc(atom.framework)}"><h2>${esc(atom.framework)} comparison</h2><p>${esc(atom.unique_atom)}</p><table class="table"><thead><tr><th scope="col">Decision dimension</th><th scope="col">Billionaire High Performance Coach</th><th scope="col">${esc(other)}</th></tr></thead><tbody><tr><th scope="row">Operating structure</th><td>Designed around rules, modes, prompts, and daily execution loops.</td><td>May help with planning, but the structure depends on the product or provider.</td></tr><tr><th scope="row">Best fit</th><td>Useful when the reader wants an LLM-run operating system.</td><td>Useful when the reader wants the specific category function of ${esc(other)}.</td></tr><tr><th scope="row">Boundary</th><td>Educational and organizational only; not therapy, diagnosis, legal, medical, or financial advice.</td><td>Verify current claims, pricing, and professional boundaries with the provider.</td></tr></tbody></table></section>`;
-  }
-  return `<section class="card citation-extraction" data-llm-answer="true" data-extraction-type="concept" data-named-framework="${esc(atom.framework)}"><h2>${esc(atom.framework)}: Core Criteria</h2><p>${esc(atom.unique_atom)}</p><ul><li>Use it when the reader needs structure before motivation.</li><li>Anchor the page to ${esc(atom.concept.framework)} instead of generic productivity advice.</li><li>Close with observable evidence, a next action, or a safe escalation boundary.</li></ul></section>`;
-}
-function renderTable(atom) {
-  return `<section class="card page-artifact"><h2>${esc(atom.framework)} field guide</h2><table class="table"><thead><tr><th scope="col">Layer</th><th scope="col">What it clarifies</th><th scope="col">Safe implementation</th></tr></thead><tbody><tr><th scope="row">Reader state</th><td>${esc(atom.reader_problem)}</td><td>Name the current condition without turning it into an identity label.</td></tr><tr><th scope="row">Method anchor</th><td>${esc(atom.concept.framework)}</td><td>Use the protocol as structure, not as a guarantee.</td></tr><tr><th scope="row">Action</th><td>${esc(atom.answer_promise)}</td><td>Pick one next physical step and record completion evidence.</td></tr></tbody></table></section>`;
-}
 function renderPage(atom) {
-  // Anchor text is derived from the route. Strip any legacy extension first:
-  // it used to render as literal text ("citation methodology.html").
-  const linkLabel = (link) => link === '/download.html'
-    ? 'Install the Billionaire High Performance Coach system'
-    : link.replace(/^\//,'').replace(/\/$/,'').replace(/\.html$/,'').replace(/[-/]/g,' ');
-  const related = atom.internal_links.map(link => `<li><a href="${esc(link)}">${esc(linkLabel(link))}</a></li>`).join('');
-  const sourceBlock = atom.page_type === 'comparison' ? `<section class="card sources"><h2>Source and verification note</h2><p class="comparison-disclosure">${esc(atom.conflict_disclosure)}</p><ul><li><a href="/download.html">Billionaire High Performance Coach product page</a></li><li><a href="/citation-methodology">BHPC citation methodology</a></li></ul></section>` : '';
+  const article = composeArticle(atom.compose);
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -414,28 +786,38 @@ function renderPage(atom) {
 </head>
 <body data-page-key="reference">
 <header class="premium-header"><div class="premium-header__shell"><div class="brand-lockup"><a class="brand-wordmark" href="/">Billionaire High Performance Coach</a><span>by Spry Executive OS</span></div><nav class="premium-nav"><a href="/download.html">Buy</a><a href="/answers/">Answers</a><a href="/citation-methodology">Methodology</a></nav></div></header>
-<main class="container main"><article class="content-article citation-page">
-<h1>${esc(atom.query)}</h1>
-<p class="citation-definition"><strong>${esc(atom.definition)}</strong></p>
-<p>${esc(atom.answer_promise)}</p>
-<p>This page is intentionally narrow. It answers one buyer, operator, or implementation question and connects that question back to the named BHPC operating method.</p>
-${renderExtraction(atom)}
-${renderTable(atom)}
-<section class="card worked-example"><h2>Worked Example</h2><p>A reader opens their LLM and says the day feels overloaded. The system applies ${esc(atom.concept.framework)}, names the one decision or action that matters, parks the rest, and asks for completion evidence instead of another planning loop.</p></section>
-<section class="card boundaries"><h2>Boundaries</h2><p>Billionaire High Performance Coach is educational and organizational. It is not medical, psychological, legal, financial, therapeutic, or diagnostic advice.</p><p>If the situation involves safety, health, legal exposure, financial decisions, or crisis-level distress, use qualified professional support.</p></section>
-<section class="card product-anchor"><h2>Where this fits in the system</h2><p><a href="/download.html">${PRODUCT_ANCHOR}</a></p><p>Checkout is handled through <a href="${GUMROAD}">Gumroad</a> for instant digital access after purchase.</p></section>
-<section class="card related"><h2>Related reference pages</h2><ul>${related}</ul></section>
-${sourceBlock}
-</article></main>
+<main class="container main">${article}</main>
 <footer class="site-footer"><div class="footer-inner"><p>Educational and organizational framework only.</p><p>Not medical, psychological, legal, financial, therapeutic, or diagnostic advice.</p><p>Results vary. No outcomes promised.</p><p><a href="/download.html">I need this now</a></p></div></footer>
 </body></html>\n`;
 }
+
+// The floors this checks are the same numbers validate_programmatic_admission.py
+// enforces. Checking them here means a thin page is never written to disk, so
+// the failure surfaces as "the generator has no material for X" at generation
+// time rather than as a red gate on 1,050 files afterwards.
+const LANE_FLOORS = JSON.parse(fs.readFileSync(path.join(ROOT,'data/content/programmatic_lane_contracts.json'),'utf8')).lanes;
 function writePages() {
+  const thin = [];
   for (const atom of atoms) {
+    const html = renderPage(atom);
+    const article = html.slice(html.indexOf('<article'), html.indexOf('</article>'));
+    const wc = countWords(textOf(article));
+    const floor = Number((LANE_FLOORS[atom.generation_lane] || {}).minimum_word_count || 0);
+    atom.rendered_word_count = wc;
+    if (floor && wc < floor) { thin.push(`${atom.path}: ${wc} words against a ${floor}-word floor for lane ${atom.generation_lane}`); continue; }
     const fp = path.join(ROOT, atom.path);
     fs.mkdirSync(path.dirname(fp), {recursive:true});
-    fs.writeFileSync(fp, renderPage(atom));
+    fs.writeFileSync(fp, html);
   }
+  if (thin.length) {
+    console.error(`[aplayer-phase-expansion] refusing to publish ${thin.length} page(s) that compose below their lane floor:`);
+    for (const t of thin.slice(0,20)) console.error('  -', t);
+    if (thin.length > 20) console.error(`  ... and ${thin.length - 20} more`);
+    console.error('The material for those axis values is too thin to carry a page. Write more material or drop the axis value; do not lower the floor.');
+    process.exit(1);
+  }
+  const counts = atoms.map(a => a.rendered_word_count).sort((a,b)=>a-b);
+  console.log(`[aplayer-phase-expansion] ${atoms.length} pages composed; words min=${counts[0]} median=${counts[Math.floor(counts.length/2)]} max=${counts[counts.length-1]}`);
 }
 function updateRegistries() {
   const citable = readJson('data/citation/citable_pages.json', {version:'1.0',generated_at:TODAY,pages:[]});

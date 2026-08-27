@@ -25,10 +25,17 @@ def norm(s): return ' '.join(re.sub(r'[^a-z0-9]+',' ',(s or '').casefold()).spli
 def text_of(node): return node.get_text(' ',strip=True) if node else ''
 def shingles(s,n=5):
     w=[x.casefold() for x in words(s)]
-    return {tuple(w[i:i+n]) for i in range(max(0,len(w)-n+1))}
+    return frozenset(hash(tuple(w[i:i+n])) for i in range(max(0,len(w)-n+1)))
+def jaccard(sa,sb):
+    # Same value as the string form below; kept separate so the O(n^2) pass can
+    # shingle each page once instead of re-shingling both sides of every pair.
+    # With every page passing its per-page checks the pass compares ~1.07M
+    # pairs, and re-shingling made that a multi-hour step.
+    if not sa or not sb: return 0.0
+    inter=len(sa&sb)
+    return inter/max(1,len(sa)+len(sb)-inter)
 def similarity(a,b,n=5):
-    sa,sb=shingles(a,n),shingles(b,n)
-    return len(sa&sb)/max(1,len(sa|sb)) if sa and sb else 0.0
+    return jaccard(shingles(a,n),shingles(b,n))
 def main_unique_text(soup):
     chunks=[]
     for sel in ['[data-llm-answer="true"]','.page-artifact','.worked-example','.page-specific-section']:
@@ -174,23 +181,28 @@ def run(records, similarity_check=True):
         if not errs and txt: texts.append((record.get('path'),txt,record))
 
     if similarity_check:
-        for i,(pa,ta,ra) in enumerate(texts):
-            for pb,tb,rb in texts[i+1:]:
-                score=similarity(ta,tb)
+        # Precompute every shingle set once. Each of these depends only on a
+        # single record, so nothing about the comparison changes.
+        entity_limit=float(AXES.get('entity_use_case',{}).get('entity_substitution_similarity_max',0.65))
+        answer_limit=float(AXES.get('question_cluster',{}).get('same_answer_similarity_max',0.85))
+        prepared=[]
+        for pa,ta,ra in texts:
+            lane=ra.get('generation_lane')
+            stripped=shingles(remove_terms(ta,str(ra.get('entity') or ''),str(ra.get('use_case') or '')),4) if lane=='entity_use_case' else None
+            answer=direct_answer_text(soups.get(pa)) if lane=='question_cluster' else ''
+            prepared.append((pa,ra,lane,shingles(ta),stripped,norm(answer),shingles(answer,2) if lane=='question_cluster' else None))
+        for i,(pa,ra,lane_a,sa,stripped_a,norm_a,ans_a) in enumerate(prepared):
+            for pb,rb,lane_b,sb,stripped_b,norm_b,ans_b in prepared[i+1:]:
+                score=jaccard(sa,sb)
                 if score>0.72:
                     add_pair_error(all_errors,result,(pa,pb),f'{pa} vs {pb}: main-content similarity {score:.3f} exceeds 0.72')
-                if ra.get('generation_lane')=='entity_use_case' and rb.get('generation_lane')=='entity_use_case':
-                    aa=remove_terms(ta,str(ra.get('entity') or ''),str(ra.get('use_case') or ''))
-                    bb=remove_terms(tb,str(rb.get('entity') or ''),str(rb.get('use_case') or ''))
-                    limit=float(AXES.get('entity_use_case',{}).get('entity_substitution_similarity_max',0.65))
-                    score2=similarity(aa,bb,4)
-                    if score2>limit:
-                        add_pair_error(all_errors,result,(pa,pb),f'{pa} vs {pb}: entity-substitution similarity {score2:.3f} exceeds {limit}')
-                if ra.get('generation_lane')=='question_cluster' and rb.get('generation_lane')=='question_cluster':
-                    qa=direct_answer_text(soups.get(pa)); qb=direct_answer_text(soups.get(pb))
-                    limit=float(AXES.get('question_cluster',{}).get('same_answer_similarity_max',0.85))
-                    score3=similarity(qa,qb,2)
-                    if norm(qa)==norm(qb) or score3>limit:
+                if lane_a=='entity_use_case' and lane_b=='entity_use_case':
+                    score2=jaccard(stripped_a,stripped_b)
+                    if score2>entity_limit:
+                        add_pair_error(all_errors,result,(pa,pb),f'{pa} vs {pb}: entity-substitution similarity {score2:.3f} exceeds {entity_limit}')
+                if lane_a=='question_cluster' and lane_b=='question_cluster':
+                    score3=jaccard(ans_a,ans_b)
+                    if norm_a==norm_b or score3>answer_limit:
                         add_pair_error(all_errors,result,(pa,pb),f'{pa} vs {pb}: question answers are equivalent ({score3:.3f}); merge as aliases or FAQ')
     return all_errors,result,soups
 
