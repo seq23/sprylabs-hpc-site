@@ -187,12 +187,21 @@ const report = {
 //
 // Recording an accepted URL set is now a separate, deliberate act.
 if (ACCEPT) {
+  // The ledger accumulates: a URL once seen stays known. The sitemap this reads
+  // is batch-limited - prepare_distribution_artifacts.js publishes an active
+  // window and defers the rest (measured: active_limit=100, deferred=2127) - so
+  // the URL set ROTATES between runs. Snapshotting it meant a page published
+  // months ago re-entered the active window and was counted as "new", which is
+  // what reported 13 new URLs here for pages like /comparisons/bhpc-vs-hone.html
+  // that have existed all along. A union keeps the check honest: genuinely new
+  // pages still register exactly once, and rotation cannot manufacture them.
   fs.mkdirSync(path.dirname(ledgerPath), { recursive: true });
+  const merged = [...new Set([...known, ...urls.keys()])].sort();
   fs.writeFileSync(
     ledgerPath,
-    JSON.stringify({ generated_at: report_date(), accepted_reason: ACCEPT_REASON, urls: [...urls.keys()].sort() }, null, 2) + '\n',
+    JSON.stringify({ generated_at: report_date(), accepted_reason: ACCEPT_REASON, urls: merged }, null, 2) + '\n',
   );
-  console.log(`CADENCE LEDGER ACCEPTED: ${urls.size} url(s) recorded as known. Reason: ${ACCEPT_REASON}`);
+  console.log(`CADENCE LEDGER ACCEPTED: ${merged.length} url(s) recorded as known (${urls.size} in this run's sitemap, ${merged.length - known.size} newly added). Reason: ${ACCEPT_REASON}`);
 }
 
 fs.mkdirSync(path.join(ROOT, 'reports/cadence'), { recursive: true });
