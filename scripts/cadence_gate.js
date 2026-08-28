@@ -128,7 +128,12 @@ const blocking = [];
 const warnings = [];
 
 if (ledgerExists && newUrls.length > policy.new_pages_per_week) {
-  blocking.push(`weekly_cap: ${newUrls.length} URLs are new since the last run, cap is ${policy.new_pages_per_week} per week`);
+  // Name them. Reporting only a count means the operator has to rebuild the
+  // sitemap by hand to learn which pages tripped the cap, which is the slowest
+  // possible way to answer "what did I just publish".
+  const shown = newUrls.slice(0, 25).map((u) => `\n           ${u}`).join('');
+  const more = newUrls.length > 25 ? `\n           ... and ${newUrls.length - 25} more` : '';
+  blocking.push(`weekly_cap: ${newUrls.length} URLs are new since the last run, cap is ${policy.new_pages_per_week} per week${shown}${more}`);
 }
 if (stalePct > policy.stale_tolerance_pct) {
   blocking.push(`refresh_debt: ${stale} of ${dated.length} pages (${stalePct.toFixed(0)}%) are older than ${policy.refresh_window_days} days, tolerance is ${policy.stale_tolerance_pct}%`);
@@ -165,6 +170,7 @@ const report = {
   fresh_within_30d: fresh30,
   lastmod_within_7d: publishedThisWeek,
   new_since_last_run: ledgerExists ? newUrls.length : null,
+  new_urls: ledgerExists ? newUrls : null,
   ledger_initialised: ledgerExists,
   maintainable_ceiling: ceiling,
   policy: { ...policy, _source: undefined },
