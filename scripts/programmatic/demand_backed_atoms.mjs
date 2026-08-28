@@ -94,6 +94,23 @@ function atlasOrder(atlas) {
 /**
  * @returns {{candidates: Array, refused: Array, stats: Object}}
  */
+// The per-run page cap is the cadence policy's new_pages_per_week, read from the
+// same data/cadence/policy.json that scripts/cadence_gate.js enforces against.
+// These were previously two independent numbers - this generator defaulted to 25
+// while the gate allowed 2 - so a full run emitted pages the gate then refused,
+// and CI blocked on every release. Deriving the cap from the policy makes the
+// producer and its guard share one number: raising the policy raises the
+// generator, and neither can drift from the other.
+function defaultPageCap(root = process.cwd()) {
+  const override = Number(process.env.DEMAND_PAGE_CAP);
+  if (Number.isFinite(override) && override > 0) return override;
+  const policy = readJson(root, 'data/cadence/policy.json', null);
+  const cap = Number(policy?.new_pages_per_week);
+  // 2 is cadence_gate.js's own DEFAULT_POLICY.new_pages_per_week; matching it
+  // here keeps the two in step when the policy file is absent.
+  return Number.isFinite(cap) && cap > 0 ? cap : 2;
+}
+
 export function selectDemandCandidates({
   root = process.cwd(),
   library,
@@ -101,7 +118,7 @@ export function selectDemandCandidates({
   hasQuery,         // (normalizedQuery) => boolean, a query already owned by a page
   slugify,
   servingDomain,    // the domain this generator writes pages for
-  limit = Number(process.env.DEMAND_PAGE_CAP || 25),
+  limit = defaultPageCap(root),
 } = {}) {
   const map = readJson(root, MAP_PATH, null);
   if (!map) throw new Error(`[demand-backed] refusing to run: ${MAP_PATH} is missing. The mapping from a measured query to authored material is not something this script may guess.`);
