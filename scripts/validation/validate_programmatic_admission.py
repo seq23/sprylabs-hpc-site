@@ -16,6 +16,17 @@ LANES=CONTRACT['lanes']
 AXES=CONTRACT.get('programmatic_axes',{})
 REGISTRY=json.loads((ROOT/'data/content/page_admission_registry.json').read_text(encoding='utf-8'))['records']
 HEALTH=json.loads((ROOT/'data/citation/health_adjacent_content_contract.json').read_text(encoding='utf-8'))
+# Lanes whose page is an answer to a query. They share the direct-answer length
+# cap and the same-answer duplication check; only question_cluster additionally
+# requires the query to be phrased as a question, because a demand-backed page's
+# query is whatever a searcher actually typed.
+ANSWER_LANES={'question_cluster','demand_backed'}
+_DEMAND_PATH=ROOT/'data/demand/measured_demand.json'
+MEASURED_QUERIES=set()
+if _DEMAND_PATH.is_file():
+    for _r in json.loads(_DEMAND_PATH.read_text(encoding='utf-8')).get('records',[]):
+        for _q in [_r.get('query'),_r.get('query_normalized'),*(_r.get('aliases') or [])]:
+            if _q: MEASURED_QUERIES.add(' '.join(re.sub(r'[^a-z0-9]+',' ',str(_q).casefold()).split()))
 WORD=re.compile(r"\b[\w’'-]+\b",re.UNICODE)
 SENTENCE=re.compile(r'[.!?](?:[”"\']?)(?=\s|$)')
 DATE=re.compile(r'^\d{4}-\d{2}-\d{2}$')
@@ -159,6 +170,26 @@ def inspect(record):
 
         if lane_name=='question_cluster':
             if not str(record.get('primary_query','')).rstrip().endswith('?'): errors.append(f'{path}: question-cluster primary query must be a literal question')
+
+        if lane_name=='demand_backed':
+            # A page in this lane exists because a query was measured. It has to
+            # be able to name that measurement, and the query on the page has to
+            # be the query that was measured - otherwise the lane is just a
+            # cheaper question_cluster with the demand claim attached.
+            evidence=record.get('demand_evidence') or {}
+            if not isinstance(evidence,dict) or not evidence: errors.append(f'{path}: demand-backed page carries no demand_evidence')
+            else:
+                value=evidence.get('demand_value')
+                if not isinstance(value,(int,float)) or value<=0: errors.append(f'{path}: demand-backed page records no positive measured demand value')
+                if not evidence.get('evidence_tier'): errors.append(f'{path}: demand-backed page records no evidence tier')
+                if not evidence.get('demand_basis'): errors.append(f'{path}: demand-backed page does not say which unit its demand was measured in')
+                measured=norm(evidence.get('measured_query') or record.get('primary_query'))
+                if MEASURED_QUERIES and measured not in MEASURED_QUERIES:
+                    errors.append(f'{path}: demand-backed page claims a query that is not in data/demand/measured_demand.json')
+                if norm(record.get('primary_query')) != measured:
+                    errors.append(f'{path}: page query does not match the measured query it claims')
+
+        if lane_name in ANSWER_LANES:
             max_words=int(lane.get('direct_answer_max_words',70))
             if first_answer_words(soup)>max_words: errors.append(f'{path}: direct answer exceeds {max_words} words')
 
@@ -189,8 +220,8 @@ def run(records, similarity_check=True):
         for pa,ta,ra in texts:
             lane=ra.get('generation_lane')
             stripped=shingles(remove_terms(ta,str(ra.get('entity') or ''),str(ra.get('use_case') or '')),4) if lane=='entity_use_case' else None
-            answer=direct_answer_text(soups.get(pa)) if lane=='question_cluster' else ''
-            prepared.append((pa,ra,lane,shingles(ta),stripped,norm(answer),shingles(answer,2) if lane=='question_cluster' else None))
+            answer=direct_answer_text(soups.get(pa)) if lane in ANSWER_LANES else ''
+            prepared.append((pa,ra,lane,shingles(ta),stripped,norm(answer),shingles(answer,2) if lane in ANSWER_LANES else None))
         for i,(pa,ra,lane_a,sa,stripped_a,norm_a,ans_a) in enumerate(prepared):
             for pb,rb,lane_b,sb,stripped_b,norm_b,ans_b in prepared[i+1:]:
                 score=jaccard(sa,sb)
@@ -200,7 +231,7 @@ def run(records, similarity_check=True):
                     score2=jaccard(stripped_a,stripped_b)
                     if score2>entity_limit:
                         add_pair_error(all_errors,result,(pa,pb),f'{pa} vs {pb}: entity-substitution similarity {score2:.3f} exceeds {entity_limit}')
-                if lane_a=='question_cluster' and lane_b=='question_cluster':
+                if lane_a in ANSWER_LANES and lane_b in ANSWER_LANES:
                     score3=jaccard(ans_a,ans_b)
                     if norm_a==norm_b or score3>answer_limit:
                         add_pair_error(all_errors,result,(pa,pb),f'{pa} vs {pb}: question answers are equivalent ({score3:.3f}); merge as aliases or FAQ')
@@ -267,7 +298,7 @@ def compare_with_references(records,result,soups):
             if score>0.72:
                 msg=f'{item["path"]} vs admitted {ref.get("path")}: main-content similarity {score:.3f} exceeds 0.72'
                 item['accepted']=False; item['errors'].append(msg); errors.append(msg); break
-            if record.get('generation_lane')=='question_cluster' and ref.get('generation_lane')=='question_cluster':
+            if record.get('generation_lane') in ANSWER_LANES and ref.get('generation_lane') in ANSWER_LANES:
                 qa=direct_answer_text(soup); qb=direct_answer_text(refsoup)
                 limit=float(AXES.get('question_cluster',{}).get('same_answer_similarity_max',0.85))
                 score2=similarity(qa,qb,2)

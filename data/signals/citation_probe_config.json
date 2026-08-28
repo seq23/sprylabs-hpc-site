@@ -5,5 +5,7 @@
     "spryexecutiveos.com",
     "aplayermode.com"
   ],
-  "queries_file": "data/queries/evidence/evidence_queries.json"
+  "queries_file": "data/queries/evidence/evidence_queries.json",
+  "openrouter_grounded_model": "openai/gpt-4o-mini",
+  "_grounded_model_why": "Grounded mode is pinned to OpenRouter's web plugin because Gemini grounded search is hard-blocked on this project's key: plain generateContent returns 200 and the same call with tools:[{google_search:{}}] returns 429 RESOURCE_EXHAUSTED, reproduced across three models and persistent. This model answers with message.annotations[].url_citation entries, which is the citation observation the probe exists to take."
 }

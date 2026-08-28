@@ -27,14 +27,32 @@
   "purpose": "Independent SEO/AEO/GEO closed loop: target queries -> grounded observation -> competitor/reference comparison -> GSC truth -> diagnosis -> bounded non-agent existing-page repair -> validation -> same-query retest -> before/after evidence. It is separate from AI-agent intake and never changes publishing cadence.",
   "providers": {
     "grounded_search": {
-      "provider_id": "google_genai_grounded_search",
-      "credential_env": "GEMINI_API_KEY",
+      "provider_id": "openrouter_web_plugin",
+      "credential_env": "OPENROUTER_API_KEY",
       "model_env": "SEARCH_INTELLIGENCE_GROUNDING_MODEL",
-      "default_model": "gemini-2.5-flash",
-      "endpoint": "https://generativelanguage.googleapis.com/v1beta/models",
+      "default_model": "openai/gpt-4o-mini",
+      "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+      "request_shape": {
+        "plugins": [
+          {
+            "id": "web",
+            "max_results": 10
+          }
+        ],
+        "citations_read_from": "choices[0].message.annotations[].url_citation.url"
+      },
       "default_daily_call_budget": 24,
       "budget_env": "SEARCH_INTELLIGENCE_DAILY_CALL_BUDGET",
-      "produces_literal_serp_rank": false
+      "produces_literal_serp_rank": false,
+      "why_not_gemini": "Google GenAI grounded search is hard-blocked on this project's key. A plain generateContent call returns 200; the identical call carrying tools:[{google_search:{}}] returns 429 RESOURCE_EXHAUSTED. Reproduced across three models and persistent, so it is a capability block rather than a transient quota. The lane pointed at it anyway, recorded calls_attempted: 0 with 'No grounded-search credential was available', and that untested state was read downstream as if it were a finding.",
+      "retired_provider": {
+        "provider_id": "google_genai_grounded_search",
+        "credential_env": "GEMINI_API_KEY",
+        "endpoint": "https://generativelanguage.googleapis.com/v1beta/models",
+        "default_model": "gemini-2.5-flash",
+        "status": "HARD_BLOCKED_ON_GROUNDING",
+        "kept_for": "provenance of observations recorded before the repoint"
+      }
     },
     "search_console": {
       "provider_id": "google_search_console",

@@ -780,6 +780,15 @@
             ]
           },
           {
+            "label": "atlas:build",
+            "command": [
+              "npm",
+              "run",
+              "atlas:build"
+            ],
+            "note": "Rank the measured Search Console/keyword evidence before anything composes. Without this stage the atlas was built once and never again, and the demand-backed composition family would rank tonight's queries against a stale file."
+          },
+          {
             "label": "release:agent-intake:raw",
             "command": [
               "npm",
@@ -818,6 +827,18 @@
               "run",
               "validate:batch-g-continuity"
             ]
+          },
+          {
+            "label": "selfheal",
+            "command": [
+              "npm",
+              "run",
+              "selfheal",
+              "--",
+              "--profile=content-quality",
+              "--max=2"
+            ],
+            "note": "The real bounded repair -> revalidate -> retry loop. It was wired to nothing; what ran instead was a straight-line repair->validate with no retry. A quality failure now gets repaired, revalidated and retried, and an unrepairable one stops the run by name rather than passing."
           }
         ]
       }

@@ -1837,9 +1837,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-181",
+      "validation_id": "VAL-DEMAND-BACKED-PAGES",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:demand-backed-pages",
+      "order": 181,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 183,
+  "entry_count": 184,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2287,6 +2297,56 @@
         {
           "id": "VAL-BHPC-PAGE-SEO-FULL",
           "command": "npm run validate:page-seo:full"
+        }
+      ]
+    },
+    "content-quality": {
+      "description": "Content-quality profile for the nightly content lane's self-heal loop. Every step here is already a container-prepush step; this profile is the subset that judges what a content release just wrote, so scripts/selfheal/heal_until_clean.mjs can repair -> rebuild -> revalidate -> retry against it without re-running build:all on each attempt. It weakens nothing: the same steps still run, unchanged, in container-prepush.",
+      "extends": [],
+      "steps": [
+        {
+          "id": "validate:programmatic-registry",
+          "command": "npm run validate:programmatic-registry"
+        },
+        {
+          "id": "VAL-QUERY-OWNER-UNIQUENESS",
+          "command": "npm run validate:query-owner-uniqueness"
+        },
+        {
+          "id": "VAL-VISIBLE-CONTENT-ARTIFACTS",
+          "command": "npm run validate:visible-content-artifacts"
+        },
+        {
+          "id": "validate:citation-contract",
+          "command": "npm run validate:citation-contract"
+        },
+        {
+          "id": "VAL-117",
+          "command": "npm run validate:admission-level-stability"
+        },
+        {
+          "id": "validate:release-atom-contract",
+          "command": "node scripts/validation/validate_release_atom_contract.mjs"
+        },
+        {
+          "id": "validate:no-keyword-swap-pages",
+          "command": "node scripts/validation/validate_no_keyword_swap_pages.mjs"
+        },
+        {
+          "id": "validate:claim-safety",
+          "command": "node scripts/validation/validate_claim_safety.mjs"
+        },
+        {
+          "id": "validate:demand-backed-pages",
+          "command": "npm run validate:demand-backed-pages"
+        },
+        {
+          "id": "validate:sitemap-coverage",
+          "command": "node scripts/validation/validate_sitemap_coverage.mjs"
+        },
+        {
+          "id": "validate:llms-full-coverage",
+          "command": "node scripts/validation/validate_llms_full_coverage.mjs"
         }
       ]
     }

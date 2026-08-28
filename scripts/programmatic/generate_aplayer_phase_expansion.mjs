@@ -8,6 +8,7 @@ import {
   loadLibrary, assertMaterialFor, pickConcept, composeArticle, artifactBlock,
   countWords, textOf, titleish, LIBRARY_PATH
 } from './phase4_page_composer.mjs';
+import { selectDemandCandidates } from './demand_backed_atoms.mjs';
 
 const ROOT = process.cwd();
 const GENERATED_SOURCE = 'aplayer_phase_expansion_2000_baseline';
@@ -40,7 +41,9 @@ function titleCase(value='') {
     if (/^(ai|llm|bhpc|faq|os)$/i.test(w)) return w.toUpperCase();
     if (/^(and|or|for|to|with|after|before|without|when|from|into|as|of|in|on)$/i.test(w)) return w.toLowerCase();
     return w.charAt(0).toUpperCase() + w.slice(1);
-  }).join(' ').replace(/\bChatgpt\b/g,'ChatGPT').replace(/\bA-player\b/g,'A-player');
+  }).join(' ').replace(/\bChatgpt\b/g,'ChatGPT').replace(/\bA-player\b/g,'A-player')
+   // Hyphenated compounds come through the per-word capitaliser as "Ai-driven".
+   .replace(/\bAi-([a-z])/g, (m, c) => `AI-${c.toUpperCase()}`);
 }
 // Route form is the shared dual-domain contract: the URL that answers 200
 // without a redirect hop. See scripts/lib/dual_domain_policy.cjs.
@@ -63,6 +66,34 @@ function maxNumber(records, field, prefix) {
   }
   return max;
 }
+// The directories this generator owns outright. Every page under them is
+// written by this script and by nothing else, so a registry row pointing into
+// one of them is this script's row regardless of what its `source` field says.
+const GENERATED_DIRS = ['answers/phase4','answers/demand','use-cases/phase4','vs/phase4','glossary/phase4','methods/phase4','brand-defense','platforms/phase4'];
+function isGeneratedRow(row) {
+  if (row.source === GENERATED_SOURCE || row.citation_strategy === GENERATED_SOURCE) return true;
+  // Ownership by path, not only by label.
+  //
+  // The citation postbuild normalises registry rows and drops the `source`
+  // field while doing it. A row that lost its label survived the source-only
+  // filter below, so the next run saw its query as already owned, skipped it,
+  // and left a registry row and a sitemap URL pointing at a file this script
+  // had just deleted - eleven "file missing" audit failures with nothing on
+  // disk to explain them.
+  const candidates = [row.path, row.primary_page, row.source_file, row.target_file,
+    ...(row.primary_citation_targets || [])];
+  for (const value of candidates) {
+    const rel = String(value || '').replace(/^\//, '');
+    if (rel && GENERATED_DIRS.some(d => rel.startsWith(`${d}/`))) return true;
+  }
+  for (const value of [row.canonical_url, row.url, row.primary_url]) {
+    if (!value) continue;
+    let pathname = '';
+    try { pathname = new URL(String(value)).pathname.replace(/^\//, ''); } catch { pathname = ''; }
+    if (pathname && GENERATED_DIRS.some(d => pathname.startsWith(`${d}/`))) return true;
+  }
+  return false;
+}
 function removeGeneratedRecords() {
   const files = [
     ['data/citation/citable_pages.json', 'pages'],
@@ -73,15 +104,15 @@ function removeGeneratedRecords() {
   ];
   for (const [file,key] of files) {
     const data = ensureArrayPayload(file, key);
-    data[key] = data[key].filter(row => row.source !== GENERATED_SOURCE && row.citation_strategy !== GENERATED_SOURCE);
+    data[key] = data[key].filter(row => !isGeneratedRow(row));
     if (file.includes('page_admission_registry')) data.record_count = data.records.length;
     writeJson(file, data);
   }
   const manifest = readJson('data/content/programmatic_candidate_manifest.json', {schema_version:'1.0',generated_at:TODAY,lane:'aplayer_phase_expansion',run_id:'',candidates:[]});
-  manifest.candidates = (manifest.candidates || []).filter(row => row.source !== GENERATED_SOURCE);
+  manifest.candidates = (manifest.candidates || []).filter(row => !isGeneratedRow(row));
   manifest.generated_at = TODAY;
   writeJson('data/content/programmatic_candidate_manifest.json', manifest);
-  const dirs = ['answers/phase4','use-cases/phase4','vs/phase4','glossary/phase4','methods/phase4','brand-defense','platforms/phase4'];
+  const dirs = GENERATED_DIRS;
   for (const d of dirs) {
     const fp = path.join(ROOT,d);
     if (fs.existsSync(fp)) fs.rmSync(fp,{recursive:true,force:true});
@@ -165,18 +196,29 @@ const ATOM_SAFETY_CAP = Number(process.env.ATOM_SAFETY_CAP || 1400);
 // validate_demand_backed_pages.mjs as repair candidates.
 const NEW_PAGE_ADMISSION_LEVEL = 'full';
 const atoms = [];
+// The safety cap bounds the CARTESIAN families - the ones whose size is a
+// product of hardcoded axis lists and could run away on a loop bug. Pages
+// composed from measured demand are bounded separately by DEMAND_PAGE_CAP and
+// are not counted against it: making them share the cap would mean every new
+// demand-backed page evicted an already-published permutation page, which is
+// a deletion of live URLs to pay for an addition. Both budgets are ceilings,
+// neither is a target.
+let cartesianCount = 0;
 function addAtom(atom) {
   // The 1400 ceiling paired with the 1400 floor that used to sit at the bottom
   // of this file: together they made the output a fixed number rather than a
   // consequence of the material. The ceiling stays as a per-run safety cap so a
   // loop bug cannot emit unbounded pages, but nothing now forces the run to
   // reach it.
-  if (atoms.length >= ATOM_SAFETY_CAP) return false;
+  const isDemand = atom.generation_lane === 'demand_backed';
+  if (!isDemand && cartesianCount >= ATOM_SAFETY_CAP) return false;
   if (plannedPaths.has(atom.path) || existingPaths.has(atom.path)) return false;
   if (plannedQueries.has(normalize(atom.query)) || existingQueries.has(normalize(atom.query))) return false;
   const stripped = normalize(atom.unique_atom.replace(new RegExp(atom.query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'ig'), ''));
   if (stripped.split(/\s+/).filter(Boolean).length < 12) return false;
-  plannedPaths.add(atom.path); plannedQueries.add(normalize(atom.query)); atoms.push(atom); return true;
+  plannedPaths.add(atom.path); plannedQueries.add(normalize(atom.query)); atoms.push(atom);
+  if (!isDemand) cartesianCount += 1;
+  return true;
 }
 
 // The definition sentence used to be assembled from a template - "The <name>
@@ -392,7 +434,123 @@ function twoSentenceAnswer(a, b, max = 62) {
   const both = `${first} ${String(b).trim()}`;
   return countWords(both) <= max ? both : first;
 }
-function typeCount(type){ return atoms.filter(a=>a.page_type===type).length; }
+// Counts the cartesian families only. The per-family ceilings below exist to
+// bound those products; demand-backed pages have their own budget and must not
+// consume a permutation family's ceiling.
+function typeCount(type){ return atoms.filter(a=>a.page_type===type && a.generation_lane!=='demand_backed').length; }
+
+// --- 0. demand-backed pages -------------------------------------------------
+// This family runs FIRST, and that ordering is the fix.
+//
+// Every family below is a cartesian product of hardcoded axis lists, so their
+// output is a fixed set: the nightly release recomposed the same 1,400 pages
+// every night for eighteen days and added nothing, while 68 measured queries
+// carrying 888 Search Console impressions had no page at all. Measured demand
+// was ingested into data/queries/evidence/evidence_queries.json, consolidated
+// into data/demand/measured_demand.json, ranked by scripts/atlas - and never
+// read by anything that composes.
+//
+// It is read here. A measured query that matches authored material composes a
+// page ahead of the fixed families, so the run's output changes when demand
+// changes. A measured query that matches nothing is refused by name, with its
+// reason, in reports/content/demand_backed_composition.json - it is not
+// templated into a page, because a page written to fill a slot is the failure
+// this repo already retired 743 pages over.
+const demandSelection = selectDemandCandidates({
+  root: ROOT,
+  library: LIB,
+  hasPath: (rel) => existingPaths.has(rel),
+  hasQuery: (q) => existingQueries.has(q),
+  slugify,
+  servingDomain: DOMAIN,
+});
+const demandComposed = [];
+const demandRefused = [...demandSelection.refused];
+function conceptSelectorFor(candidate) {
+  const axes = [candidate.primary, candidate.secondary];
+  const byKind = (kind) => axes.find(a => a.axis === kind);
+  const d = byKind('dimension'); if (d) return ['by_dimension', d.key];
+  const s = byKind('state'); if (s) return ['by_state', s.key];
+  const o = byKind('outcome'); if (o) return ['by_outcome', o.key];
+  const j = byKind('objection'); if (j) return ['by_objection', j.key];
+  const w = byKind('workflow'); if (w) return ['by_workflow', w.key];
+  if (candidate.framework_selector_dimension) return ['by_dimension', candidate.framework_selector_dimension];
+  return [null, null];
+}
+for (const candidate of demandSelection.candidates) {
+  const [selector, selectorKey] = conceptSelectorFor(candidate);
+  if (!selector) {
+    demandRefused.push({query: candidate.query, demand_value: candidate.demand_value, reason: 'neither matched axis selects a framework in framework_selection, so no framework can be chosen without guessing'});
+    continue;
+  }
+  const concept = candidate.primary.axis === 'concept'
+    ? conceptFromKey(candidate.primary.key)
+    : pickConcept(LIB, selector, selectorKey, candidate.offset);
+  const primary = primaryAxis(candidate.primary.axis, candidate.primary.key, concept);
+  const secondary = secondaryAxis(candidate.secondary.axis, candidate.secondary.key, concept);
+  const secData = LIB[{outcome:'outcomes',state:'states',dimension:'dimensions',audience:'audiences',tool:'tools',platform:'platforms',objection:'objections',mode:'modes',workflow:'workflows',concept:'concepts'}[candidate.secondary.axis]][candidate.secondary.key] || {};
+  const secondSentence = secData.move || secData.opening || secData.constraint || secData.first_move || secData.purpose || secData.choose_when || primary.measure;
+  const displayQuery = titleCase(candidate.query.replace(/\?$/,'')) + (candidate.query.trim().endsWith('?') ? '?' : '');
+  const basis = candidate.demand_basis === 'own_impressions_over_the_measured_gsc_window'
+    ? `${candidate.demand_value} impressions this domain actually received for it over the measured Search Console window`
+    : `${candidate.demand_value} monthly searches reported by a keyword tool`;
+  const atom = makeAtom({
+    type: 'answer', lane: 'demand_backed', intent: 'question', query: displayQuery,
+    path: candidate.path, concept, primary, secondary,
+    axisLabel: `${candidate.primary.key} for ${candidate.secondary.key}`,
+    uniqueAtom: `Written because this exact query was measured, not permuted: ${basis}. It answers it with ${concept.framework} applied to ${candidate.primary.key} on ${candidate.secondary.key}, and names the move that looks right and is not: ${lower(primary.wrongMove)}`,
+    directAnswer: twoSentenceAnswer(primary.firstMove, secondSentence),
+    example: {
+      title: `${displayQuery} in practice`,
+      paragraphs: [
+        `${primary.lead[0]} ${primary.lead[1]}`,
+        `${primary.firstMove} ${secondary.applied}`,
+        `The framework then runs in order. First: ${lower(concept.moves[0])} Then: ${lower(concept.moves[1])}`
+      ],
+      measure: primary.measure
+    },
+    faq: [
+      {q: `What does this actually change?`, a: `${primary.firstMove} ${concept.evidence}`},
+      {q: `What is the move that looks right and is not?`, a: primary.wrongMove}
+    ],
+    extraFields: {
+      demand_evidence: {
+        measured_query: candidate.query,
+        evidence_tier: candidate.evidence_tier,
+        demand_value: candidate.demand_value,
+        demand_basis: candidate.demand_basis,
+        rank_band: candidate.rank_band,
+        rank_score: candidate.rank_score,
+        ranked_through_atlas: candidate.ranked_through_atlas,
+        source_type: candidate.source_type,
+        observed_date: candidate.observed_date
+      }
+    }
+  });
+  if (addAtom(atom)) demandComposed.push({...candidate, path: atom.path, framework: atom.framework, page_query: displayQuery});
+  else demandRefused.push({query: candidate.query, demand_value: candidate.demand_value, reason: 'the composed path or query collided with a page that already exists'});
+}
+{
+  const report = {
+    schema_version: '1.0',
+    generated_at: new Date().toISOString(),
+    input: {demand: 'data/demand/measured_demand.json', atlas: 'data/authority_scale/query_atlas.json', map: 'data/content/demand_axis_map.json', material: LIBRARY_PATH},
+    stats: {...demandSelection.stats, composed: demandComposed.length, refused: demandRefused.length},
+    composed: demandComposed,
+    refused: demandRefused
+  };
+  fs.mkdirSync(path.join(ROOT,'reports/content'), {recursive:true});
+  fs.writeFileSync(path.join(ROOT,'reports/content/demand_backed_composition.json'), JSON.stringify(report,null,2)+'\n');
+  // Rule 0: this stage never exits quietly having done nothing. It either
+  // composed pages from measured demand, or it names why every measured query
+  // was refused.
+  if (demandComposed.length) {
+    console.log(`[demand-backed] composed ${demandComposed.length} page(s) from measured demand worth ${report.stats.demand_value_composed} measured units; ${demandRefused.length} measured quer(ies) refused by name in reports/content/demand_backed_composition.json`);
+  } else {
+    const top = demandRefused.slice(0,3).map(r=>`"${r.query}": ${r.reason}`).join('; ');
+    console.log(`[demand-backed] NO-COMPOSITION (named): ${demandSelection.stats.records_considered} measured record(s) considered, 0 composable. Leading reasons - ${top || 'no measured records present'}. Full list: reports/content/demand_backed_composition.json`);
+  }
+}
 
 // --- 1. answer pages, implementation-level form -----------------------------
 // "How can I <mode> <outcome>?" The mode is the page's second axis: asking
@@ -433,7 +591,7 @@ for (const verb of verbs) for (const outcome of outcomes) {
 // framework, so two pages about the same state give different - and
 // applicable - operating moves instead of all naming the same protocol.
 for (const audience of audiences) for (const state of states) for (const dimension of dimensions) {
-  if (atoms.length >= ATOM_SAFETY_CAP || typeCount('answer') >= ANSWER_SITUATION_LIMIT) break;
+  if (cartesianCount >= ATOM_SAFETY_CAP || typeCount('answer') >= ANSWER_SITUATION_LIMIT) break;
   const query = `What should a ${audience} do when ${state} and needs ${dimension} support?`;
   const slug = slugify(query.replace(/\?$/,''));
   const dimIdx = dimensions.indexOf(dimension);
@@ -838,7 +996,7 @@ function updateRegistries() {
     newCitable.push({path:atom.path, canonical_url:atom.canonical_url, canonical_domain:atom.canonical_domain, query:atom.query, framework:atom.framework, extraction_type:extraction, schema_type:'DefinedTerm', status:'ACTIVE', definition:atom.definition, source:GENERATED_SOURCE, priority:false});
     newQueries.push({query_id:`QRY-${String(++q).padStart(4,'0')}`, query:atom.query, intent_class:atom.intent, primary_page:atom.path, supporting_pages:[], canonical_domain:atom.canonical_domain, priority:'P4', release_status:'ACTIVE', aliases:[], observation_cluster:atom.page_type, source:GENERATED_SOURCE});
     newFrameworks.push({framework_id:`FW-${String(++f).padStart(4,'0')}`, name:atom.framework, definition:atom.definition, primary_url:atom.canonical_url, supporting_urls:[], aliases:[atom.concept.framework], prohibited_conflicting_definitions:true, source:GENERATED_SOURCE});
-    newAdmission.push({path:atom.path, route:atom.route, canonical_domain:atom.canonical_domain, generation_lane:atom.generation_lane, admission_level:NEW_PAGE_ADMISSION_LEVEL, status:'ADMITTED', primary_query:atom.query, query_aliases:[], intent:atom.intent, cluster:atom.page_type, framework:atom.framework, unique_atom:atom.unique_atom, artifact_type:atom.artifact_type, entity:atom.entity || null, use_case:atom.use_case || null, comparison_entities:atom.comparison_entities || null, comparison_methodology:atom.comparison_methodology || null, official_sources:atom.official_sources || null, conflict_disclosure:atom.conflict_disclosure || null, verified_at:atom.verified_at || null, health_adjacent:false, commercial_comparison:atom.page_type === 'comparison', admitted_at:TODAY, source:GENERATED_SOURCE, product_angle:atom.product_angle, reader_problem:atom.reader_problem, answer_promise:atom.answer_promise, methodology_anchor:atom.methodology_anchor, internal_links:atom.internal_links, cta_profile:atom.cta_profile, claim_safety_level:atom.claim_safety_level, review_status:atom.review_status, last_reviewed:atom.last_reviewed, reviewer_or_publisher:atom.reviewer_or_publisher, schema_type:atom.schema_type});
+    newAdmission.push({path:atom.path, route:atom.route, canonical_domain:atom.canonical_domain, generation_lane:atom.generation_lane, admission_level:NEW_PAGE_ADMISSION_LEVEL, status:'ADMITTED', primary_query:atom.query, query_aliases:[], intent:atom.intent, cluster:atom.page_type, framework:atom.framework, unique_atom:atom.unique_atom, artifact_type:atom.artifact_type, entity:atom.entity || null, use_case:atom.use_case || null, comparison_entities:atom.comparison_entities || null, comparison_methodology:atom.comparison_methodology || null, official_sources:atom.official_sources || null, conflict_disclosure:atom.conflict_disclosure || null, verified_at:atom.verified_at || null, health_adjacent:false, commercial_comparison:atom.page_type === 'comparison', demand_evidence:atom.demand_evidence || null, admitted_at:TODAY, source:GENERATED_SOURCE, product_angle:atom.product_angle, reader_problem:atom.reader_problem, answer_promise:atom.answer_promise, methodology_anchor:atom.methodology_anchor, internal_links:atom.internal_links, cta_profile:atom.cta_profile, claim_safety_level:atom.claim_safety_level, review_status:atom.review_status, last_reviewed:atom.last_reviewed, reviewer_or_publisher:atom.reviewer_or_publisher, schema_type:atom.schema_type});
     newAnswers.push({url:atom.canonical_url, title:atom.query, description:atom.definition, queries_supported:[atom.query], primary_citation_targets:['/'+atom.path], named_framework:atom.framework, citation_strategy:GENERATED_SOURCE});
   }
   citable.pages.push(...newCitable); citable.generated_at = TODAY;
@@ -1049,6 +1207,60 @@ if (atoms.length === 0) {
   console.error('[aplayer-phase-expansion] produced no atoms; refusing to write an empty release');
   process.exit(1);
 }
+// A demand-backed page is composed from two authored axis entries, and one of
+// the cartesian families may already have composed a page from the same two.
+// When that happens the two pages are near-identical and only their titles
+// differ - the exact failure validate_programmatic_admission.py catches at
+// 0.72 main-content similarity, and the exact failure this repo retired 2,412
+// stub pages over. Screening it here means the duplicate is never written and
+// the reason is recorded next to the query, rather than surfacing as a red gate
+// on a page nobody can trace back to a decision.
+function screenDemandDuplicates() {
+  if (!demandComposed.length) return;
+  const mainText = (atom) => {
+    const html = renderPage(atom);
+    return textOf(html.slice(html.indexOf('<article'), html.indexOf('</article>')));
+  };
+  const shingles = (text, n = 5) => {
+    const w = String(text).toLowerCase().match(/\b[\w'-]+\b/g) || [];
+    const out = new Set();
+    for (let i = 0; i + n <= w.length; i += 1) out.add(w.slice(i, i + n).join(' '));
+    return out;
+  };
+  const jaccard = (a, b) => {
+    if (!a.size || !b.size) return 0;
+    let inter = 0;
+    for (const x of a) if (b.has(x)) inter += 1;
+    return inter / (a.size + b.size - inter);
+  };
+  const LIMIT = 0.72;
+  const others = atoms.filter(a => a.generation_lane !== 'demand_backed').map(a => shingles(mainText(a)));
+  const drop = new Set();
+  for (const atom of atoms.filter(a => a.generation_lane === 'demand_backed')) {
+    const mine = shingles(mainText(atom));
+    let worst = 0;
+    for (const other of others) { const s = jaccard(mine, other); if (s > worst) worst = s; }
+    if (worst > LIMIT) {
+      drop.add(atom.path);
+      const row = demandComposed.find(c => c.path === atom.path);
+      demandRefused.push({query: row ? row.query : atom.query, demand_value: row ? row.demand_value : null,
+        reason: `composed page is ${worst.toFixed(3)} similar to a page an existing family already wrote from the same authored material (limit ${LIMIT}); the material carries one page, not two`});
+    }
+  }
+  if (!drop.size) return;
+  for (let i = atoms.length - 1; i >= 0; i -= 1) if (drop.has(atoms[i].path)) atoms.splice(i, 1);
+  for (let i = demandComposed.length - 1; i >= 0; i -= 1) if (drop.has(demandComposed[i].path)) demandComposed.splice(i, 1);
+  const reportPath = path.join(ROOT,'reports/content/demand_backed_composition.json');
+  const report = JSON.parse(fs.readFileSync(reportPath,'utf8'));
+  report.composed = demandComposed;
+  report.refused = demandRefused;
+  report.stats.composed = demandComposed.length;
+  report.stats.refused = demandRefused.length;
+  report.stats.demand_value_composed = demandComposed.reduce((n,c)=>n+(c.demand_value||0),0);
+  fs.writeFileSync(reportPath, JSON.stringify(report,null,2)+'\n');
+  console.log(`[demand-backed] dropped ${drop.size} composed page(s) that duplicated an existing family's material; reasons in reports/content/demand_backed_composition.json`);
+}
+screenDemandDuplicates();
 console.log(`[aplayer-phase-expansion] ${atoms.length} atoms from the available material (no floor).`);
 writePages();
 updateRegistries();

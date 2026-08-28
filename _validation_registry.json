@@ -5866,8 +5866,41 @@
         "MX-180"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-DEMAND-BACKED-PAGES",
+      "status": "ADMITTED",
+      "name": "validate:demand-backed-pages",
+      "check_type": "invariant",
+      "owning_lane": "content-admission",
+      "risk_prevented": "A page published with no measured demand behind it, a sitemap URL that does not render, and a page admitted at 'baseline' - the level that skips word count, unique artifact, worked example, source floor and unique_atom strength in validate_programmatic_admission.py. The validator existed and was in no profile, so nothing ran it.",
+      "existing_coverage_gap": "Nothing else compares the admission registry against data/demand/measured_demand.json. It was written after the 743 fallback pages and 2,412 duplicate gap-fill stubs were retired and then left unwired, so the check that found those was not standing.",
+      "scope": [
+        "data/content/page_admission_registry.json",
+        "data/demand/measured_demand.json",
+        "sitemap-bhpc.xml",
+        "sitemap-spry.xml"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:demand-backed-pages",
+      "implementation_path": "scripts/validation/validate_demand_backed_pages.mjs",
+      "environment": "container",
+      "proof_tier": 2,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "stdout notes: sitemap coverage, admission levels, demand totals, domain policy",
+      "runtime_budget_seconds": 60,
+      "maintenance_owner": "content",
+      "overlap_analysis": "Does not duplicate validate:sitemap-coverage (registry -> sitemap) - this goes sitemap -> file on disk. Does not duplicate VAL-117, which judges the stability of an admission level across a build rather than whether a new page had demand behind it at all.",
+      "retirement_offset": null,
+      "decision": "ADMITTED as HARD_FAIL and placed in the content-quality profile, which is the self-heal loop's profile in the nightly content lane - the point where new pages are written. It is what gates the demand-backed pages this change introduces. Deliberately not added to container-prepush in this change: 2,214 pre-gate routes are exempt through data/demand/pre_gate_page_baseline.json, so on a push it would judge only the handful of post-gate pages and that exemption should be narrowed on its own terms, not silently here.",
+      "decision_date": "2026-08-28",
+      "matrix_ids": [
+        "MX-181"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 185,
+  "record_count": 186,
   "generated_at": "2026-08-08T23:30:00Z"
 }

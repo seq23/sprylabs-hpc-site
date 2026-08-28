@@ -193,6 +193,22 @@
       ],
       "forbids_official_source_claims": true,
       "visible_conflict_disclosure_required": true
+    },
+    "demand_backed": {
+      "minimum_word_count": 900,
+      "required_artifacts": true,
+      "worked_example": true,
+      "cta_profile": "full",
+      "source_floor": 0,
+      "required_fields": [
+        "unique_atom",
+        "demand_evidence"
+      ],
+      "direct_answer_max_words": 70,
+      "same_answer_similarity_max": 0.85,
+      "_lane_basis": "Pages composed against a query this portfolio actually measured, rather than against a permutation of hardcoded axis lists. The page's primary_query is the measured query verbatim, which is why these cannot sit in question_cluster: that lane requires a literal question and a measured query is whatever the searcher typed.",
+      "_floor_basis": "Floor set at 900, above question_cluster's 800, because a demand-backed page is composed from two authored axis entries plus a framework and has no excuse to be thinner than a permuted one. Measured: the eleven pages in this lane run 1,403-1,573 words.",
+      "_demand_provenance": "validate_programmatic_admission.py additionally requires every record in this lane to carry demand_evidence with a positive measured value, and its primary_query to match a record in data/demand/measured_demand.json. A page in this lane that cannot name the measurement behind it fails; it may not fall back to the legacy lane's zero floor."
     }
   },
   "programmatic_axes": {
@@ -225,6 +241,9 @@
       "required_verified_at": true,
       "visible_conflict_disclosure_required": true,
       "forbid_product_specific_claims": true
+    },
+    "demand_backed": {
+      "same_answer_similarity_max": 0.85
     }
   },
   "_zero_threshold_note": "glossary, method, platform, brand_defense and citation_phase_expansion carried minimum_word_count 0, required_artifacts false and worked_example false - written that way by scripts/programmatic/generate_aplayer_phase_expansion.mjs for its own lanes, so its pages faced no threshold even when inspected. Replaced with floors derived from what each lane already produces. legacy is left at 0 deliberately: it is the explicit pre-gate bucket for 726 pages that predate any contract, and giving it a floor would assert a standard those pages were never written against.",

@@ -57,7 +57,10 @@ jobs:
 
       - name: Run governed search-intelligence closed loop
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          # Grounded observation is served by OpenRouter's web plugin. Gemini grounded
+          # search is hard-blocked on this project's key (429 RESOURCE_EXHAUSTED on any
+          # call carrying tools:[{google_search:{}}], reproduced across three models).
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
           GSC_SITE_URL_SPRY: ${{ secrets.GSC_SITE_URL_SPRY }}
           GSC_SITE_URL_BHPC: ${{ secrets.GSC_SITE_URL_BHPC }}
@@ -68,7 +71,10 @@ jobs:
       - name: Commit evidence and bounded non-agent repairs safely
         if: ${{ github.event_name == 'schedule' || inputs.commit_evidence }}
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          # Grounded observation is served by OpenRouter's web plugin. Gemini grounded
+          # search is hard-blocked on this project's key (429 RESOURCE_EXHAUSTED on any
+          # call carrying tools:[{google_search:{}}], reproduced across three models).
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
           GSC_SITE_URL_SPRY: ${{ secrets.GSC_SITE_URL_SPRY }}
           GSC_SITE_URL_BHPC: ${{ secrets.GSC_SITE_URL_BHPC }}
