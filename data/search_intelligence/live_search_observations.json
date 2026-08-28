@@ -1,17 +1,694 @@
 {
   "schema_version": "1.1",
-  "generated_at": "2026-08-27T17:08:28.499Z",
-  "provider_state": "UNAVAILABLE",
-  "overall_status": "UNAVAILABLE",
+  "generated_at": "2026-08-28T17:29:26.290Z",
+  "provider_state": "DEGRADED",
+  "overall_status": "DEGRADED",
   "status_is_healthy": false,
   "observation_kind": "grounded_search_observation",
   "is_literal_serp_rank": false,
   "budget": {
     "eligible_targets": 120,
     "call_budget": 24,
-    "calls_attempted": 0,
-    "call_failures": 0
+    "calls_attempted": 24,
+    "call_failures": 18
   },
-  "unavailable_note": "No grounded-search credential (GEMINI_API_KEY) or provider export was available.",
-  "observations": []
+  "unavailable_note": "18/24 grounded observation calls failed.",
+  "observations": [
+    {
+      "observation_id": "spry_obs_a2fd7d046b32",
+      "target_id": "si_32f3803b2df5ecc9",
+      "query": "accountability partner vs traditional coaching for athletes",
+      "status": "OBSERVED",
+      "observed_at": "2026-08-28T17:28:46.272Z",
+      "observation_kind": "grounded_search_observation",
+      "is_literal_serp_rank": false,
+      "truth_source": "google_genai_grounded_search",
+      "model": "gemini-2.5-flash",
+      "expected_owned_url": "https://spryexecutiveos.com/billionaire-high-performance-coach-vs-coaching/",
+      "own_domain_referenced": false,
+      "own_urls_referenced": [],
+      "referenced_domains": [
+        "commitaction.com",
+        "facebook.com",
+        "medium.com",
+        "td.org",
+        "waynepernell.com"
+      ],
+      "references": [
+        {
+          "domain": "waynepernell.com",
+          "title": "waynepernell.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQF3qWdUwFHxIbI8hGyuFXr5IadawbzYe-fjK2vhlVmemTGx5ZqexsFZocnxX8pWsd3SvdBjkTFJnvFwTJ1D1cCAbRK4BJZ9Ttr6Xto16Rt37QW6IWSefjx8vSY3JIbr3hPnaO8szFHAL2hoTUqtDrQK2e_P831jIAUyUP8="
+        },
+        {
+          "domain": "commitaction.com",
+          "title": "commitaction.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGpEMa_NyBy8xCQBP5-33io66_rUGWkMTDliIeWGveXpSDFGbdZiH6KaWB-T3MMLcFbg2zOQsB8biPTDHYg9QNrJH3asOKdAfpq-RBqFMpCN_fjwjAN6RGWjGvvNIosuFtIN0B9xV9v31G80dcIh_f2PbwDSckOvlviyqPCJbK5WI6zQdmRDA=="
+        },
+        {
+          "domain": "medium.com",
+          "title": "medium.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFpJinvreWHaNkMXYdJAUmnYXTiUMrUScyK7VSbaJofU8O2_ytPG_9xgkKijxHu3fMTWd4nNS6XHcL2kVuQguG0gB2Z9K62Ifit6pT8XdgiMMJFYFIjnWdCKWtyyWiTqBuGQ_NQ4T_x0ANvZUKN7dvQDo3vySje_iSaahutQZa4PgFoiUtt-NVwzUD88QfILjAvGFJL96J4ChP73-_xryLHpGf4x8QNxcaKiyF_3x9dH-BTdcG9dHJqTZU="
+        },
+        {
+          "domain": "td.org",
+          "title": "td.org",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHv45QC8OhYQu1tVR0dOQpa2d-1eKtvxYUo3s7XqHRsnRPmQkhQlhgi4rXiKpJItKTBrEoj1a8XIxTzk3VUswyFRjkKg5SNGf8VQ2nQy5N6MBzc8FNbyIpE4tZcefXWLJDySykAdJDCinFUnENuW1ubU-pkJ4ui5YeIKHkCqOnvuLVJDdTtgqAQlsRbOJ4SI7pKztY="
+        },
+        {
+          "domain": "facebook.com",
+          "title": "facebook.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGecZDHpiR1Q6Rxub4d8aj7p0VKsxH6XoJ_yGGGIt5m2Pm2_CUxnpfV4xkeiSsAavKp961LXCed-hsCM9AYQ3hgCuBUJlO_nrR_0TMj3a65h8prsQfXyxHHumffbvA110E2r7sHHgPJ7Cv6ImUAvLRdv2XVVV1DAQrrTpQ0kXWxJ-ejMlIxUXYN_TgtDS0cVaRKsLmExJgDweiNDntwgEmuI8xIlyM_kO9Hto2gOkA_gvh-KSnjUossImeq1uSosY74zqMdXAmsWOsSvZgZxpXcNNk="
+        }
+      ],
+      "provider_web_search_queries": [
+        "accountability partner vs traditional coaching for athletes"
+      ],
+      "answer_excerpt": "When searching for \"accountability partner vs traditional coaching for athletes,\" a searcher would be pointed to a variety of sources, primarily:\n\n*   **Articles and Blog Posts from Coaching and Professional Development Websites:** Many results come from sites dedicated to coaching, leadership development, and productivity. These often compare and contrast the roles of accountability partners and professional coaches, detailing their differences in structure, expertise, and expected outcomes. Examples include articles that define what an accountability coach is versus an accountability partner, discuss the benefits of each, and offer guidance on when to choose one over the other. Some articles may specifically mention athletes as an example when discussing the importance of accountability.\n*   **Business Coaching and Consultancy Sites:** Some sources originate from companies or individua",
+      "evidence_ref": "grounded_response_sha256:07b150e5549c2073205459a707945b9862723954f67cebe29c9d2312ef890653",
+      "truth_boundary": "Grounded search observation only; not literal Google SERP rank or Search Console performance."
+    },
+    {
+      "target_id": "si_3d069f4e467d790e",
+      "query": "accountability partner vs traditional coaching for body goal users",
+      "status": "FAILED",
+      "failure_reason": "provider_http_429:{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage",
+      "observation_kind": "grounded_search_observation",
+      "is_literal_serp_rank": false,
+      "own_domain_referenced": null,
+      "referenced_domains": []
+    },
+    {
+      "target_id": "si_825221be30c32bff",
+      "query": "AI accountability system for athletes and career acceleration",
+      "status": "FAILED",
+      "failure_reason": "provider_http_429:{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage",
+      "observation_kind": "grounded_search_observation",
+      "is_literal_serp_rank": false,
+      "own_domain_referenced": null,
+      "referenced_domains": []
+    },
+    {
+      "target_id": "si_a6e777f581230a4f",
+      "query": "accountability partner vs traditional coaching for entrepreneurs",
+      "status": "FAILED",
+      "failure_reason": "provider_http_429:{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage",
+      "observation_kind": "grounded_search_observation",
+      "is_literal_serp_rank": false,
+      "own_domain_referenced": null,
+      "referenced_domains": []
+    },
+    {
+      "target_id": "si_4b2edf4b08e23a5c",
+      "query": "accountability partner vs traditional coaching for missed-day recovery users",
+      "status": "FAILED",
+      "failure_reason": "provider_http_429:{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage",
+      "observation_kind": "grounded_search_observation",
+      "is_literal_serp_rank": false,
+      "own_domain_referenced": null,
+      "referenced_domains": []
+    },
+    {
+      "target_id": "si_ca29e8e84ae01aee",
+      "query": "accountability partner vs traditional coaching for decision-fatigue users",
+      "status": "FAILED",
+      "failure_reason": "provider_http_429:{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage",
+      "observation_kind": "grounded_search_observation",
+      "is_literal_serp_rank": false,
+      "own_domain_referenced": null,
+      "referenced_domains": []
+    },
+    {
+      "target_id": "si_71602c84cba6b752",
+      "query": "AI accountability system for athletes and nutrition discipline",
+      "status": "FAILED",
+      "failure_reason": "provider_http_429:{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage",
+      "observation_kind": "grounded_search_observation",
+      "is_literal_serp_rank": false,
+      "own_domain_referenced": null,
+      "referenced_domains": []
+    },
+    {
+      "target_id": "si_69be0c866520cafe",
+      "query": "AI accountability system for athletes and performance routines",
+      "status": "FAILED",
+      "failure_reason": "provider_http_429:{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage",
+      "observation_kind": "grounded_search_observation",
+      "is_literal_serp_rank": false,
+      "own_domain_referenced": null,
+      "referenced_domains": []
+    },
+    {
+      "target_id": "si_227a512b7e5e794b",
+      "query": "accountability partner vs traditional coaching for busy parents",
+      "status": "FAILED",
+      "failure_reason": "provider_http_429:{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage",
+      "observation_kind": "grounded_search_observation",
+      "is_literal_serp_rank": false,
+      "own_domain_referenced": null,
+      "referenced_domains": []
+    },
+    {
+      "target_id": "si_e986d710752f4c71",
+      "query": "AI accountability system for body goal users and workout execution",
+      "status": "FAILED",
+      "failure_reason": "provider_http_429:{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage",
+      "observation_kind": "grounded_search_observation",
+      "is_literal_serp_rank": false,
+      "own_domain_referenced": null,
+      "referenced_domains": []
+    },
+    {
+      "target_id": "si_279afbf681094995",
+      "query": "accountability partner vs traditional coaching for founders",
+      "status": "FAILED",
+      "failure_reason": "provider_http_429:{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage",
+      "observation_kind": "grounded_search_observation",
+      "is_literal_serp_rank": false,
+      "own_domain_referenced": null,
+      "referenced_domains": []
+    },
+    {
+      "target_id": "si_c3a6ab7a7294fd69",
+      "query": "accountability partner vs traditional coaching for consistency strugglers",
+      "status": "FAILED",
+      "failure_reason": "provider_http_429:{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage",
+      "observation_kind": "grounded_search_observation",
+      "is_literal_serp_rank": false,
+      "own_domain_referenced": null,
+      "referenced_domains": []
+    },
+    {
+      "target_id": "si_743735e61b713d96",
+      "query": "AI accountability system for athletes and emotional reset",
+      "status": "FAILED",
+      "failure_reason": "provider_http_429:{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage",
+      "observation_kind": "grounded_search_observation",
+      "is_literal_serp_rank": false,
+      "own_domain_referenced": null,
+      "referenced_domains": []
+    },
+    {
+      "target_id": "si_5e505db655b87770",
+      "query": "accountability partner vs traditional coaching for overplanners",
+      "status": "FAILED",
+      "failure_reason": "provider_http_429:{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage",
+      "observation_kind": "grounded_search_observation",
+      "is_literal_serp_rank": false,
+      "own_domain_referenced": null,
+      "referenced_domains": []
+    },
+    {
+      "target_id": "si_40b4a30e73ff3d31",
+      "query": "accountability partner vs traditional coaching for upwardly mobile executives",
+      "status": "FAILED",
+      "failure_reason": "provider_http_429:{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage",
+      "observation_kind": "grounded_search_observation",
+      "is_literal_serp_rank": false,
+      "own_domain_referenced": null,
+      "referenced_domains": []
+    },
+    {
+      "target_id": "si_11a7e9cb5b23839c",
+      "query": "accountability partner vs traditional coaching for creators",
+      "status": "FAILED",
+      "failure_reason": "provider_http_429:{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage",
+      "observation_kind": "grounded_search_observation",
+      "is_literal_serp_rank": false,
+      "own_domain_referenced": null,
+      "referenced_domains": []
+    },
+    {
+      "target_id": "si_a2a38b367c9e5ea9",
+      "query": "AI accountability system for body goal users and nutrition discipline",
+      "status": "FAILED",
+      "failure_reason": "provider_http_429:{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage",
+      "observation_kind": "grounded_search_observation",
+      "is_literal_serp_rank": false,
+      "own_domain_referenced": null,
+      "referenced_domains": []
+    },
+    {
+      "target_id": "si_44ebe09f8ee049df",
+      "query": "AI accountability system for busy parents and performance routines",
+      "status": "FAILED",
+      "failure_reason": "provider_http_429:{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage",
+      "observation_kind": "grounded_search_observation",
+      "is_literal_serp_rank": false,
+      "own_domain_referenced": null,
+      "referenced_domains": []
+    },
+    {
+      "target_id": "si_619a2bb84be9fced",
+      "query": "AI accountability system for athletes and weight loss adherence",
+      "status": "FAILED",
+      "failure_reason": "provider_http_429:{\n  \"error\": {\n    \"code\": 429,\n    \"message\": \"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage",
+      "observation_kind": "grounded_search_observation",
+      "is_literal_serp_rank": false,
+      "own_domain_referenced": null,
+      "referenced_domains": []
+    },
+    {
+      "observation_id": "spry_obs_f4e23ecdc0d0",
+      "target_id": "si_47e1df4fae6660cc",
+      "query": "AI accountability system for athletes and chief-of-staff operating rhythm",
+      "status": "OBSERVED",
+      "observed_at": "2026-08-28T17:28:54.459Z",
+      "observation_kind": "grounded_search_observation",
+      "is_literal_serp_rank": false,
+      "truth_source": "google_genai_grounded_search",
+      "model": "gemini-2.5-flash",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-chief-of-staff-support",
+      "own_domain_referenced": false,
+      "own_urls_referenced": [],
+      "referenced_domains": [
+        "everfit.io",
+        "executivewaypoint.com",
+        "goelate.com",
+        "monkhouseandcompany.com",
+        "myclearstep.com",
+        "plavno.io",
+        "timefold.ai",
+        "wsc-sports.com",
+        "youtube.com"
+      ],
+      "references": [
+        {
+          "domain": "plavno.io",
+          "title": "plavno.io",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHRbVXsQDQKa2eGbcSxpYiNFW16leyEnoW7LpT1Eqlte-ACkPtsNl4n4-luoeuMvtswrc7R6NMvEgKA1rADM-opIAYUyxxONh5iCpZzh_uBCd8CfVw53VODZUMhJc7LUXjF9yPogUiic0RGQVwRTVLARWKyx1YZwnpd46swuV3DRW729Xoe_dI5AB5Ybw6JTvtkcxo="
+        },
+        {
+          "domain": "wsc-sports.com",
+          "title": "wsc-sports.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGqECYp0BA0WDNwB1XzRpRY00Ywa99ZRsv7J_oqJ9UKbJBgO4RS3Hn56cBLUrq_aUs8ThGTzBzW1pWKQ55tOs9xrS3aSyZVpz7kmw360_8NRRIEqje-Xyjn2CBZk0iXXu8Oe6QgLj_okRDnup5_vbPXRWgnfCMQRnjFROOwVZIxlZppIbK_qjtFXExB_Inc1OnlJU4zkOCHWZ-pZf4PIFqP3fFyRcQqwrjZlfgwadcaAZRG"
+        },
+        {
+          "domain": "youtube.com",
+          "title": "youtube.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEH04mTiVAYwbM0Iy76syXc3t1oxd6TwCmDaRRZBlBc54CVg82ILfsYtBXQp11h_3AnbXzz5Gehne1qlZQSBo2XulgFPTReU1wHOzIF1kHKagC1swJzjkoX-B752JLYbMFfNY5uP2g="
+        },
+        {
+          "domain": "myclearstep.com",
+          "title": "myclearstep.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGNYABSnEkd9u3din9FTZbRJj7M5WtzxQ6alaLGqEXX0iJph-eeTkb5OGIPFD_tbuO9lWd1b91yfDbvBxN6IQsYqKLnZip_4dIIb-E9aS_s8aNfY3btUzoQMpddiTn1y_T1SxagcNr4-zXQFvuYClnKKqjdZ6SushHOQ9aNcX9JKUGCzPSjkBc65A=="
+        },
+        {
+          "domain": "everfit.io",
+          "title": "everfit.io",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFbi8wIGUXM9gVp0zQHrc31Mnu-WW_JcHTzUELT1vxmUQEQwjswQ2YSmmGuuDMHHSt0xtoO5aSJYMfzQMcBKRW5aeUIUWj8ht7LsBGc5zUC-jzBD9l5TjMPn1ZvOHQQjQ1wrIXliW0c_xjI-TvcFgyRTWDbJWzo5h2Dyg8MN5RtQ1ciQaS0KsJ_rFLF9SC5q9t1IoI="
+        },
+        {
+          "domain": "goelate.com",
+          "title": "goelate.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQH2STKb2ut9H0L08xiFM7HnbjazWndXFuoEcFPzR8NHsfHBHtd3iTf0rq95ThvCoL9CWtjqTFD5jLMDvCX0wSdrdPWJLe1ljy725iwoqrp_-G_Pa36jk3KjpCrZ0BlBP2G-j8jFKhiCxQUwB4HR2iSEieHX"
+        },
+        {
+          "domain": "goelate.com",
+          "title": "goelate.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGhYgqpXx9wZgX24xm1aAI6KFgvsoBMrlzQaDhjDnvrE4yg6bm6mMkNWd0cvGXf4hu-CmVz5dNYFuhgnQGzjdBWP2UK95ak1cA9oVmTpDCzybJ597-pLSrNYTCJAodjguKeRGbOSBwMVp1NTepXa6DTJy3uZMceeJdrH4K46mlvjHPCsczAauSOwfcRbVzLG-axp_Tc_GGYKLsNRkjZlCCEU2arZKn_xSTGU0hn"
+        },
+        {
+          "domain": "executivewaypoint.com",
+          "title": "executivewaypoint.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEOSUMQeANGbcDlCgEGKM2cwVhEMPO1c_3_wUtAp26e8po2AFNP2cNUIrjfUR8O0HZ6EQed49bSKxt76e6okIVkUuOLSya-TKvmMR-grISOo_83hnxtuebJN6SqjkdXw1OGW5Qk5dTCXJiqvbUtEqi4I-9Uo9xSUfPpjMuNpQ=="
+        },
+        {
+          "domain": "monkhouseandcompany.com",
+          "title": "monkhouseandcompany.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEzB_RSTglxxvM7OTEyA_TUMmVTh5zfk1GLp8ZE263ovSjvy8Xl2rqoZlpkxIhpuaDyj1sELeN8-yC4ioVxz5x9dNckDia9muAGhVH-AD_L_TKue0ZgkJ8OVvnViqZGB-8ZDdeAFp65yyXERicxlJy1BOASQWZnF_7YDpAfYElfnHUFIJ2YGKkclEIyaySUXWA="
+        },
+        {
+          "domain": "timefold.ai",
+          "title": "timefold.ai",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFSOSMXXNwQVqhkjOCLVrayGeiMcX71LZxZ7l9Ahul3Sxvgne64uzxqkKSDPlgzfsqxVAtixJ_FtCI6DwtXLlCB__vwzBR1lVUwySY9Rg4hLpj_VVb6mKMxqebcJuSiHa4o7K_Zh_cphwoUqjA_GrI="
+        }
+      ],
+      "provider_web_search_queries": [
+        "AI accountability system for athletes",
+        "chief-of-staff operating rhythm"
+      ],
+      "answer_excerpt": "When searching for \"AI accountability system for athletes,\" a searcher would likely be pointed to:\n\n*   **AI-powered athlete analytics platforms and software provider websites** that offer solutions for tracking performance, managing development frameworks, and improving coaching decisions. These platforms often highlight features like structured records, review visibility for operational accountability, and individualized benchmarks.\n*   **Articles and blogs discussing the transformation of elite sports through AI coaching** and the use of wearables to synthesize data for performance enhancement, injury prevention, and fostering athlete accountability through self-monitoring.\n*   **Websites of companies offering specialized athlete monitoring systems** for metrics such as weight, hydration, and body composition, emphasizing automated, reliable data collection to improve accountability a",
+      "evidence_ref": "grounded_response_sha256:9f49a4484ce48814ce2f42f20eac22ea26a28844a565a9a2afb8634340550689",
+      "truth_boundary": "Grounded search observation only; not literal Google SERP rank or Search Console performance."
+    },
+    {
+      "observation_id": "spry_obs_4cc2325c7695",
+      "target_id": "si_1c55b81181c26676",
+      "query": "AI accountability system for body goal users and fitness consistency",
+      "status": "OBSERVED",
+      "observed_at": "2026-08-28T17:29:01.553Z",
+      "observation_kind": "grounded_search_observation",
+      "is_literal_serp_rank": false,
+      "truth_source": "google_genai_grounded_search",
+      "model": "gemini-2.5-flash",
+      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
+      "own_domain_referenced": false,
+      "own_urls_referenced": [],
+      "referenced_domains": [
+        "fitbod.me",
+        "fitness.edu.au",
+        "fitt.co",
+        "getfitcraft.com",
+        "openai.com",
+        "rayfit.com",
+        "reddit.com",
+        "sensai.fit",
+        "substack.com",
+        "theguardian.com",
+        "youtube.com",
+        "zing.coach"
+      ],
+      "references": [
+        {
+          "domain": "getfitcraft.com",
+          "title": "getfitcraft.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHIWMbw8EeXyesugOi8HOd2au_9aPXbTCNF-APbBTjc8xHtHi0jNqAWwmm-Jo45D4UFif5_G9oHN4v-wBGBWpVkghysE2zRKXBnrl-2er1BiM1mkYGjJ3h2hKDYfq8e66iMoNUsBxfgCkujqDrALoS8t5k-GjDus1i3v0k="
+        },
+        {
+          "domain": "fitbod.me",
+          "title": "fitbod.me",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQH0sGpWHKL3ENCMWWTCv1_KpAEPX52QmZ7eMpMuXMujOMcdbLIrTyqmqX5OJXSc09zIhNP9nhMoxHsqnyPzAQZUN3ROoh50TCmC3uqn0KLD53gzm35maBDFOmZeNZm-lm6IgaRG32c3VIQcx4EwsdJx1teGgz-ySnVCtZdiR-y5fSd-pNtYWaIcVhPG7UhJW4GSfQLxr6uLjlVZsLMcRNgAVMHhag=="
+        },
+        {
+          "domain": "sensai.fit",
+          "title": "sensai.fit",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEumKn_hnzh27-P2IcfteTCG2LdTUnAXawyFoc3f6-yYqE5PA_1slfEHMzmMGow6VJ-dafgpKQHODbfToPOsay5MtT6Dufcr2zxTHscpg-lwNdA4rlctWXWfMNERRodN_OicpHLhc2AygAfF2o1X3Z_d9a5XwkhxLk2"
+        },
+        {
+          "domain": "fitness.edu.au",
+          "title": "fitness.edu.au",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEhm7SYvsqYR3IuIH3jfucMqewZT0oKQzNabyYeT1jix4crru82TfJIG7I6aOSSBN6Vx7ILRivJd04-IOmMMInQ1qLvTAajG450eQ3T_K0Tu-r_20okwAw9mYlbL7tWRzrO-2E_X9pWg_k6X3azpLnUu7p2g_7ljVkTlYqnJEjP0IMZmmwowOC3R9iNaGvGCxwPjMI62DnhiRkwtk5RfvYDXJv24xjuxjgq"
+        },
+        {
+          "domain": "zing.coach",
+          "title": "zing.coach",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHN3CLBfvmoLRQauXKSIOiqs1VxDcAIWgv3N57kexYTNDAzKPJDV54mj3GzN4XwqpYmLSWWR_qQgQq8tA3KbFheMiYt2X-6JX_L4j01ZQPGDbbICRQS64zHttlLTA3B7B6shFui8x40AeZLXtS1r7wuKA=="
+        },
+        {
+          "domain": "fitt.co",
+          "title": "fitt.co",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGXOSWmb5zeEp29pbVO-qI4Rlk3zFK-XO1WobOsTPVUoRe2ObKmkQH423oRjoUMJaa6ebmpa1J_RmUtCnT2oOdkYw12BDDsrbxkY9W81Fz2e3ua7a4u1eehuBzCn_2MDGvYOWmk5056PE_dzU7snk2dPhiAZhOXA0xcIg=="
+        },
+        {
+          "domain": "youtube.com",
+          "title": "youtube.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGPuigWxGgqADxfmTbCNYcMAHBTBEtMcoTsSZTSyNNwIMenYXUGbDSOV85-06Sr63xTxlvgCNlb4U07mT-vw83cZMAayhShRhqgc1xiLuNPBTFJYtm77K2N02NQ-Dp-wlv_spx43Uk="
+        },
+        {
+          "domain": "rayfit.com",
+          "title": "rayfit.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGNYRzXSDrljUnaDQzIF1xZJbuUyYz0EJebysXXQCeKyZBhRz4fYm3GccCLNTH87DAWAbPmjnJBzAQ87xFJa5Iuv0xZGlMG-D4UEWKIRYBoFxwPTzhe21rLB--iPNTqToyJzm-PvxbXdQiW_VHV1hLt4eCMiDzUhxjYNyXvZD0arx8Ujw=="
+        },
+        {
+          "domain": "theguardian.com",
+          "title": "theguardian.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQF6e0Jqk6ukKoBJB14YhcEGLRd6D4DJHvfwt-xBRyChDRFiL9d3vmaUJgdVZ88Z4B0xzBruzuJUUIFK2xbtxFcKfVJQoG262VkRZUr7KKSw5JPb2SnqcyKVtp724f0DmihmrrrDyx_w9uycMq9XjRtDrZ88ASyKfC6esWVB80kYhgjAQd-nMA=="
+        },
+        {
+          "domain": "reddit.com",
+          "title": "reddit.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQF_kylx4VyhnUWFZOR0BDdQLg_Nrrm_yaE-qVvQB7v5cx2rez9GA4XGk7WwbET_ht084vjQ2t5LGZXTFeqLKiH-UE_9j29O3gDEkuMYgURNuoJ-N92eyjH1r0EKQFpTUp-r0t1glLjNofB78R87p7EtBx_m-tII9Y_a7PV09jr4doSBL-ptwGOach55cNN_WkNKn4OF3Tek5V_xp8pQQ1tw"
+        },
+        {
+          "domain": "substack.com",
+          "title": "substack.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQH4xy4TGvhJZx0e0ktAFx2mJK1GBjk-Wv2le8E4K8Pjxf_gMX_M9bSHa2P7xApRJkIMSSXLZruj-S2TRmzy3s305qKs5ZweKPVXAkwT-UcXxfoB1qJirYG-YHws-ERpDBiiUy66zs3gUgpfev8JvEqCGmQc7NwlDbjnV9US6fiCV5LySg=="
+        },
+        {
+          "domain": "openai.com",
+          "title": "openai.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFo9OVlItVq4pBw6BGD7rlEV-BCcYxAlxU0cVY3SPtZoCwhXOGUCGiSYAtldcT60FltlOptyeYpeP-O6tgN0phW28h5lk35NIekgeVchm_8vW7Aj2W9vRrnfa3_nerl"
+        }
+      ],
+      "provider_web_search_queries": [
+        "AI accountability system for body goal users and fitness consistency",
+        "AI fitness tracking accountability",
+        "AI personal training body goals consistency"
+      ],
+      "answer_excerpt": "A search for \"AI accountability system for body goal users and fitness consistency\" would point a searcher to several types of pages and sources. These primarily include articles reviewing and comparing various AI-powered fitness applications, discussions on the capabilities of AI in personalized fitness, analyses of AI versus human accountability, user experience accounts, and industry insights into the AI fitness market.\n\nSpecifically, a searcher would likely be directed to:\n\n*   **Fitness App Reviews and Comparisons:** These pages often detail different AI fitness applications designed to enhance accountability and consistency. Examples include comprehensive lists and analyses of apps like FitCraft, Strava, Peloton, Apple Fitness+, StickK, Fitbod, Alpha Progression AI, Caliber, Gymaholic, TrainHeroic, Hevy, Strong, and Zing Coach. These sources typically outline features such as gamif",
+      "evidence_ref": "grounded_response_sha256:1516333267984d8306f51870915159e755f4079f0b3b8bde54a9a6cb071c9864",
+      "truth_boundary": "Grounded search observation only; not literal Google SERP rank or Search Console performance."
+    },
+    {
+      "observation_id": "spry_obs_b18efa6a239f",
+      "target_id": "si_d5b119e160eb9799",
+      "query": "AI accountability system for athletes and goal tracking",
+      "status": "OBSERVED",
+      "observed_at": "2026-08-28T17:29:09.442Z",
+      "observation_kind": "grounded_search_observation",
+      "is_literal_serp_rank": false,
+      "truth_source": "google_genai_grounded_search",
+      "model": "gemini-2.5-flash",
+      "expected_owned_url": "https://spryexecutiveos.com/insights/how-chatgpt-can-improve-personal-accountability-and-goal-tracking",
+      "own_domain_referenced": false,
+      "own_urls_referenced": [],
+      "referenced_domains": [
+        "aivancity.ai",
+        "athletica.ai",
+        "callplaybook.com",
+        "gmu.edu",
+        "goalbadger.app",
+        "humango.ai",
+        "medium.com",
+        "metabrainlabs.com",
+        "nih.gov",
+        "servenomaster.com",
+        "shellypalmer.com",
+        "sparkemtech.co.uk",
+        "tability.io",
+        "topuniversities.com",
+        "wsc-sports.com"
+      ],
+      "references": [
+        {
+          "domain": "gmu.edu",
+          "title": "gmu.edu",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGUUMb2-TLtoe5jMamYphpKFfzjKQa3HIVMOscJfld7R8YUVCyuxjg__7eVsTzANnpqG1pEYXN8fkPKU7lXLKcffjO-6yRI8ti-1s9auBKdOrh17mcXO_vZFJVfbtzAu_c5K3fvQL6jlN5TLTsimn1RSZ14diZRunhwtXKQlA5xu8yyxNZGl9fpfyyq3q5d3FZoI6zVv9wSU9i-7agWoaVPMxCyMLs3dzPclZiWTOj1"
+        },
+        {
+          "domain": "wsc-sports.com",
+          "title": "wsc-sports.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFlQ4xEBsOMHSuu3uQ23zEecN1cSLV0e5hHkbjFCrJf2G4ibwDqJ49dyh0uRbixQ-C0o1OrZX95I8LCdUXUCJuVXJgknNo0ADtAcNkGKgOYJNMfd4f2NtEStoRzJPeUg8osxekmKSDRfaPxaL82P7EuLdWVcWxO5l0TxHu7fLcNnif4pWx3f0APh90u_Jr_ma1f8HCjOcTF_wMmPkr5pDTfYQ4gDA=="
+        },
+        {
+          "domain": "callplaybook.com",
+          "title": "callplaybook.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQG5-yDPfV7tf4UcDB6aiHQTcW3wsQUL2mkj951YEhkZkAZKAczi9KdASU_4SZ9Amjv284KXrPGgHvA9_3KjSQnJ6nwHVteLNeC0lHWQzDxpE0ZQPpeGK623GSnFmEQzIp2u7oQnN2VQmPxe4hF5tE9bQyX4IDTQwwo1Z3AGko1Y1hW3QQ6vo7QyebFs5Ns_-rBPF_4tQBHwqhk7Tw=="
+        },
+        {
+          "domain": "topuniversities.com",
+          "title": "topuniversities.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQE7mBjWFHePjzeveq2ULfUiZpxdxjqzF3HHam7udhD4UXhPChUfIBoRE0xKLAJfZRpv0JmjYpggAcIB55kCEmtuaHmPmkYHO8Ke6VOJpjmWw3hebaOxLf_A9_2JiL8H6nh0Nd56XXVTT7_ICNkZ0xjJq6CT421m0bAtCa-WnUOxMMATxEE1W5KJ5S8NTMsMogPLE_PeRDP6V1tdLW7lBHyM9RQV7zZNH4zI_Xf8qsT5DO07I8Fw-R6Pyx1OTL4_TSkNvYaMaR23s9glxQ=="
+        },
+        {
+          "domain": "nih.gov",
+          "title": "nih.gov",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQF_-XJxibE7LBm5FJLYy4OZ-4saTX4hW2PEuSaEMGhkqDxszQwdh29pzdv5E7lTkbYZ4efcyS5kgBjQ_iUITHOagf-cvVwVQsfkHKpc_wb6xXiWV5U-u9_B6HefAXxyA5rqRc76_RDWjtFQ114="
+        },
+        {
+          "domain": "wsc-sports.com",
+          "title": "wsc-sports.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEVAu2kPH4pX6fPFYnPBHVLlT67sblnfyywW1ntDKUI5NU9yzBnbKz2-9dd2Bi3SldHybL2q8BXX3uS2oHIIicRH-p6pxQgRK8er3xSrYIKjiaTQ6QqeIXXHuIbq34VnWkaUKwlBwY9t-ED7Ae7klxCS0lVDFr5fM55uXA74DmPZOMtVEGcyUcF8fVye2mPbwrIVVXKBZjvrzeSRbv5U0h46vUiMGLQ8X39U774bgh6wHo="
+        },
+        {
+          "domain": "athletica.ai",
+          "title": "athletica.ai",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQH5lmj3X30FYyRJuLPBdquvs_lzRfvd6S1k2TFsoqo61RG1UqsCccqOMIkcVfsPQyS7U1Qob-dRlyvkSMtKL28sQjTfSPafvuFzvjKrIpN1crnK-q0SK91aexTXiUGDpf0QCZ0Dn2uYgqVM3A52MkCf-lM07SNGXSeteQJw6w=="
+        },
+        {
+          "domain": "sparkemtech.co.uk",
+          "title": "sparkemtech.co.uk",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGQfa8guyMf5eLY0uSqmR-gzFBrtqgiLq5xg8YHhADqs3riStU4aFgEXmaBh_6gQGTEpgTAl4k0bcPPtlNstyciQVI8S-NJJLTbSaQIyEnj7RbSU7tkiGHsePi_aG_N7iMQXxXxkZ11ui3Kc0Cf1CRW1jJMlSSR_YZZS7p-Fvd-vGNg5sXlc4lHdwlA"
+        },
+        {
+          "domain": "aivancity.ai",
+          "title": "aivancity.ai",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGtJgMHg9p9C2ReCdiFdLvdGRIXfyIUnjR4EggrbR1HuXQMWOQvCrK0JPtARmGELQ0_LEsZ2Jfi_V1O0LcK4wAXR7g3CHZTCfHNl8wEwWqTikcv98dFszkVI2pTuEPPjTN4v-F7r5iuJycTDyt4eU_q-lbstJ1RaTsINVZQdlSmstaSMAmY2QR9-ol-N7fpc0Im-yU="
+        },
+        {
+          "domain": "humango.ai",
+          "title": "humango.ai",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHROIRjEVTL86_ayycA4NObGffHhQAA1HZrIAPLPTaaCLIFrAORlYOsfNeVLcoYXHSGIUSwfr1YSzmGLIwuPbDehKcVpChfh1EQZqH1OQ=="
+        },
+        {
+          "domain": "athletica.ai",
+          "title": "athletica.ai",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEub0UrlAH1AAurZtYpGkW6cPGeyYsv8fXA9_o_9ob-E_eRTe932gzvLUeyL3-EU_p08RPoYbfE6II69_yuD9Yhd_dJinHpahwolVlMb-BK"
+        },
+        {
+          "domain": "metabrainlabs.com",
+          "title": "metabrainlabs.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQH6917dE_6IDfeSVNnDDmSzdQCJTVvUlT_cLWjQxx3FRwMwafTIQuoLwFXCta8V6_hxfCRfO5UuThbyuXPM5DulV7KolSGesKx_4rXXb7tSCxw-QLMWZAPypGVdlEwNW3-njTjpr8-mX6YESJOrYg=="
+        },
+        {
+          "domain": "shellypalmer.com",
+          "title": "shellypalmer.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGYRQus8R78iNLCbdMF7ErUNSVphmm1c-btPCQonUqY4jSc5so5Yawm0SHOQC3FSJGCAda823j-im3v3AFFc-AvAppGfSWnvZu1j03qQp67zSekrmjU6mKS5fuf65CcZDk="
+        },
+        {
+          "domain": "servenomaster.com",
+          "title": "servenomaster.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFYdrcFoOxKn8hZX3CLMH7zgSSGXvLOwjo-IvWkdT29c_wXm9IqasV1m_5oWPGu_otPfNUn0u8axW_Rxwp0tyulNkPChtx1QrSbq1EwK-vPzeDKpoSKxOmFVqyotuaCviMwnYp9TY-teB8xngna4qAnL3laUFLR0-uqzmJK"
+        },
+        {
+          "domain": "goalbadger.app",
+          "title": "goalbadger.app",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFOyBuE1SRkGXzSRfG__vYU2W9SX-_Drl1k0idASHPHjQ3wsf0sJPZUMRmIxafXVIATZFPwSExwrdIki5VSyCN77vaVFQGjLIaN6rtNevJCb-D7E9LdeCVxnA0="
+        },
+        {
+          "domain": "medium.com",
+          "title": "medium.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFAFewm7CWtySo6-1UY0n6eJjcf6YVZ2SWcnw1Ia1QV_58BBFoeNysVXXsmqi5peGFkqC6_mCXYC0JgCk4c6oWYvaNc2dOAuZj_6ARhqdLDYVy9x6RsI0UTjkjWLokMmtKwpokEcslia9UZzTIc5GCqAp08yOiXCdty6df7xrFrAyfAbGDFcULNuRz3-sBNfTfq9RO5OXgaZsn3GoW49CJOZ_SVUg=="
+        },
+        {
+          "domain": "tability.io",
+          "title": "tability.io",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQG3EQhdldjHe4vkvI834Cug3YHIrDlPIbVvHwU5PfTGhiqRqLNUlWL6JmxLFTicSJJZ-0nHmAOT2SjkxcDE1FLEX7kxXET4sdIqXsphxWVshyLxWAslrox0lSYK-RKlAXEV3Z-_ouaFmnZu8UrjbKappvhoQ-89s2o6BFSF6Cr7VjPNGWPmk8QzYb5U5xr35VnMfFfHMZI="
+        }
+      ],
+      "provider_web_search_queries": [
+        "AI accountability system for athletes and goal tracking",
+        "AI in sports performance tracking",
+        "athlete goal setting AI systems",
+        "AI personal coaching for athletes"
+      ],
+      "answer_excerpt": "When searching for \"AI accountability system for athletes and goal tracking,\" a searcher would be directed to various pages and sources highlighting the intersection of artificial intelligence, sports science, and personal development. These sources generally fall into categories such as:\n\n**1. AI-Powered Sports Analytics and Performance Platforms:**\nThese pages focus on how AI systems analyze vast amounts of data—from wearable sensors (GPS trackers, heart-rate monitors), video feeds, and game statistics—to provide insights into athlete performance, identify strengths and weaknesses, optimize training routines, and even perform biomechanical analysis. Examples include:\n*   Articles discussing how AI and sports analytics are transforming the sports industry by providing real-time data for coaches and personalized feedback for athletes.\n*   Platforms that ingest data from various sources t",
+      "evidence_ref": "grounded_response_sha256:2415f6cbc22c24f282f0e38dce017eb4396430bf4696c39178c6b30ef9f30466",
+      "truth_boundary": "Grounded search observation only; not literal Google SERP rank or Search Console performance."
+    },
+    {
+      "observation_id": "spry_obs_f3011f2f9422",
+      "target_id": "si_b8046d5445805792",
+      "query": "accountability partner vs traditional coaching for operators",
+      "status": "OBSERVED",
+      "observed_at": "2026-08-28T17:29:17.499Z",
+      "observation_kind": "grounded_search_observation",
+      "is_literal_serp_rank": false,
+      "truth_source": "google_genai_grounded_search",
+      "model": "gemini-2.5-flash",
+      "expected_owned_url": "https://spryexecutiveos.com/billionaire-high-performance-coach-vs-coaching/",
+      "own_domain_referenced": false,
+      "own_urls_referenced": [],
+      "referenced_domains": [
+        "commitaction.com",
+        "medium.com",
+        "mentorloop.com",
+        "tandemcoach.co",
+        "waynepernell.com"
+      ],
+      "references": [
+        {
+          "domain": "commitaction.com",
+          "title": "commitaction.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFKW4emH_uGjPQ8BTVjHmHaftPfJ-CxE2uj6_7gU4lAZ_VDQQdq-mT6nvlFt-f1Cpy-9_30bvSffdk0fRqwcPpRUaiOMOuYLaEnKFGBo8X25QXS2aj8MXYtxTnXWdtkjVT7ZzVVAPOArNANMIsjur3qAIFbl_QMOGyA1rHFC57nkp3j1GjG4A=="
+        },
+        {
+          "domain": "waynepernell.com",
+          "title": "waynepernell.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQH1o3Ta4-c8c-LFFCQiodFWprn536jerAHywcRjwLnJFaRU6PcYyhRMOnTEaHI_rLo6yUgg4gRddQNO9myCxMSaLwZevphUIRVcAZaT99JOEyfCYlp1VHdQ28z4ey88LMIrirIo6rl4Nu1yd-ptuh2rO23we5TSlpLx6sA="
+        },
+        {
+          "domain": "mentorloop.com",
+          "title": "mentorloop.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFRQNSuxqM4Wze-L2tfOsnDvU_qWYsxpzHvgRPF7vOehIchbLeNKxlYUEXS27zO2nRMjiRkA4OxGY3JKgHhSgi1QCLqUcdPzRYVjf0DjmrncO37aUIzlbJMcNLjOiI3YBTEy34D-iSFLMrUiNgBQ7o="
+        },
+        {
+          "domain": "medium.com",
+          "title": "medium.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFw52Z9fiLJE7wYJqS9x_H1SZgxjLoOq_7oZGogm26wMNpi5cIsw7SSIViTWCVKjIwSrG_3pMmkpQVG_Hps5ZjUe0GIPoQwobsU-8jkt4i9PM8mWkIrhBXh6H-sT3cjCvngkJrGiO53IWnAcN9LcIKmRuzvcepYK8Xk8viK-RVecJyxK_Zzo32R0YaGddisc6FXVp_OTSlfjE-NR87GyKkw8saN5meuvOsYX0-o1rPXmAP8oK5dgI2iui4="
+        },
+        {
+          "domain": "tandemcoach.co",
+          "title": "tandemcoach.co",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEXtj2LA6-vjr9xPgvnWT6C9XjhPSUWkA7QvLCV6IfEYoNNb7hx-ZQ_6WFjRl54IEUIQZf-23xAMQGQu8mHZHUlslXdzhD2eJ0mHU0yu6lVq1l1gvgqmLrM00-WnCs1HX6-eIMKLkc5DczL"
+        }
+      ],
+      "provider_web_search_queries": [
+        "accountability partner vs traditional coaching for operators"
+      ],
+      "answer_excerpt": "A search for \"accountability partner vs traditional coaching for operators\" would direct a user to various pages and sources primarily focusing on distinguishing these two approaches to personal and professional development, often geared towards entrepreneurs, leaders, and those seeking to improve productivity and achieve goals.\n\nThe types of pages and sources a searcher would be pointed to include:\n\n*   **Professional Coaching Websites and Blogs:** Several results are from websites offering coaching services, such as \"Commit Action\" and \"DynamicLeader\" (associated with Dr. Wayne Pernell). These pages often feature blog posts or articles that explain the differences between accountability partners and coaches, highlighting the benefits of professional coaching as a structured and results-driven investment. They emphasize how coaches offer expertise in behavioral psychology, structured fr",
+      "evidence_ref": "grounded_response_sha256:0c734c505c13cbb605c94025efc3e9395346a39ab1426eb030f02448b3ae725d",
+      "truth_boundary": "Grounded search observation only; not literal Google SERP rank or Search Console performance."
+    },
+    {
+      "observation_id": "spry_obs_1dc8a1db6865",
+      "target_id": "si_1f30f917fe2e1b8b",
+      "query": "AI accountability system for consistency strugglers and performance routines",
+      "status": "OBSERVED",
+      "observed_at": "2026-08-28T17:29:26.290Z",
+      "observation_kind": "grounded_search_observation",
+      "is_literal_serp_rank": false,
+      "truth_source": "google_genai_grounded_search",
+      "model": "gemini-2.5-flash",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
+      "own_domain_referenced": false,
+      "own_urls_referenced": [],
+      "referenced_domains": [
+        "assemblymag.com",
+        "beehiiv.com",
+        "danmartell.com",
+        "entrepreneur.com",
+        "factor.ai",
+        "mydailycadence.com",
+        "opexsociety.org",
+        "techclass.com",
+        "vitaliacoach.online"
+      ],
+      "references": [
+        {
+          "domain": "danmartell.com",
+          "title": "danmartell.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGMexKdkAhYxvOb80VIr6_errouGHLmPpO7smuSTF5MUyTS_Cjk306IP1DLObFQZMjYjeula-Cv9SaVTDE3Sk8nfR1WU5TPmavyvUPwBbpzR8OyYWUS49zID5v7KEcv77oiNwetL96V1XqSjwioLFmuh4kVZt-h0Zi21Bt48WmTo-vpKAtIy1dsmjJd"
+        },
+        {
+          "domain": "entrepreneur.com",
+          "title": "entrepreneur.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFrsBegypxFv5VMAi-bkzvJpnjcxqQLVUTW6u7TN--TEutGY7mUpx96ubthf_In8fkfVfHI4Adu4id9G1346qtQzrZeqk-VvnCHlnAVD_iXZOLqn3CYxcwjrwbUoIak-2jAKNDWUy-nJbF7MHvy3AgynhfHFhvtTX2Rc2WEKj1UqyxBBQB870Stv4g9mO3J9-QxdXUaQSp_VniBuoA="
+        },
+        {
+          "domain": "beehiiv.com",
+          "title": "beehiiv.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHmhyGKMvpu0G8p5aDYYQGu38SGn_PHQZpuc_7m8Qs7rZ1unk5vz14nRnuZhU_sShd10EKF-s4HVaHg26UWbPhoKRGOf5gcdwtSn5LjF4cVjwJfjJPSqZP10UvV81HKrioVqhQYbepOXF1JyIYrsSy9RoypZKeVeFF-5lXw7MKa8BmlcsCtui8PK4YCgLG6_ImyxWF8viAKA_a5Xzzy94RJCfrN"
+        },
+        {
+          "domain": "techclass.com",
+          "title": "techclass.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGK6ba5hJqcmD7Iu6IERSbhunvIJRIZeH9Gx5AFO-Rf2v-aNOJ0rDvKTOO4Nroscj-V5peEAthTbotVUWQkxnkxnsxMeztc6NC7SU4O_SZtNeYBtM3FK7UVGd2P7bJRgVwdSGcX8Zpc60raChLFsEWGrn-QTHTo51H2ifwTRuVQXxwD-Oqb7bo9Y0DMsJHxHJ0i1Kzq_vfaveVGD0ozYCFFQDzBsFebXoEw5bIsFtBbavLAIFF0Y1M="
+        },
+        {
+          "domain": "assemblymag.com",
+          "title": "assemblymag.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEa35HcrDiryehiDvLDV7PoRZDxpJFF42BxLtW5lBAbTF2YjubbE48NlVkdalvTen4HmHnGmdsQarW7j4-E1WSfcVob9PpXWJUAT1WacQDVC9oAWNJqbvhOQqF_zAi25EGATdXD76ovBPxJLYlX0RSmVB74boyEqaCfZ4lgnh1FPzax9vzEC4WAv2RGfHSR-aW5qw=="
+        },
+        {
+          "domain": "opexsociety.org",
+          "title": "opexsociety.org",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEmBJjkjF5CsgPr0jM6HlXvHh0gzxWqwSA7tzuCa0Jg2bLVJTUi7KPUm767utjbqfTEF1YJQBRhUfi7s_EF1zUryDmzw10JLJBfoTGpPRDGFfoGCc_4Ib7RYQvAfo3qd23hHsxXZn9RxKF_Mwqk0yztx-G6z19D6CLOi2llHCEBDfrHTk8Df31sJ2DURiblqEe1kJF1"
+        },
+        {
+          "domain": "vitaliacoach.online",
+          "title": "vitaliacoach.online",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHeh6FhXYDUgqmVoPrEb39K6JdkG3-p9kgpLzzCC7rojwTZAaUqtatB6_osmukPkswZqADCkCVuTnAMB848rCmFwciMoBcrrQtwLJ54Hd10dycJffQz-OrqajeeBjrY7ZH03Ik3EvW2k7-flpjeOseja-Q="
+        },
+        {
+          "domain": "mydailycadence.com",
+          "title": "mydailycadence.com",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQF3fCTJMiiZ7nOfjBwaQTOKQNowpc1dml_NfOnWZZHv-H_p_mbSyeihY5s3gkXISs_gs1HxzHumLMLWIirJuhmgO2m7kEduAJWif9HUA3p1b0uhCkaUjbnTnqcJWkU76Zvf_ZHpBFC9Bz5-f-8Y0U230kOndq6yMNIbTN0vZrMtZjg="
+        },
+        {
+          "domain": "factor.ai",
+          "title": "factor.ai",
+          "uri": "https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGXL1SlA3ZzJVk7_467wsp_Ug4I5IDABoESSskYfy2twipajJ9Zvc99un0GimmQTRohbWzqCCQNyNjq-dvONj2nQuZatL3JcJCrR77CFKF5P0pdbcWXh3wQJHSsyHHpggsaav13oegU01oQzInonet6oDGAV1AHSQxN71-Xfb-WIqpe-0xk8vLnbOS-IuRH75rdeNjA8I5cBnCkkSkYDQ=="
+        }
+      ],
+      "provider_web_search_queries": [
+        "AI accountability system for consistency strugglers and performance routines",
+        "AI systems for improving consistency and performance"
+      ],
+      "answer_excerpt": "A search for \"AI accountability system for consistency strugglers and performance routines\" would point a searcher to several types of pages and sources:\n\n*   **Blog Posts and Articles on Personal and Professional Development:** Many results are articles or blog posts from productivity experts, coaches, and business leaders discussing how AI tools can serve as personal accountability partners. These sources often focus on building consistent habits, improving daily routines, achieving long-term goals, and overcoming struggles with motivation and follow-through in personal and professional contexts. Examples include guides on using AI for goal setting, scheduling, and habit formation.\n*   **Articles on AI in Business Operations and Manufacturing:** Several pages would be articles or analyses focusing on the application of AI in operational settings, such as manufacturing and continuous im",
+      "evidence_ref": "grounded_response_sha256:2ef10cb2aea6ef2c65b4c15e68e83265ba635f481bbb3fe5a6ce476544bc811e",
+      "truth_boundary": "Grounded search observation only; not literal Google SERP rank or Search Console performance."
+    }
+  ]
 }

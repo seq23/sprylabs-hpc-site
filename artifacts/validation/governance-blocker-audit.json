@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-08-27T18:00:29.736Z",
+  "generated_at": "2026-08-28T17:29:28.371Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 171,
+  "admitted_hard_fail_count": 173,
   "reviewed_count": 8,
-  "unreviewed_count": 163,
+  "unreviewed_count": 165,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 129,
+    "REVIEW_REQUIRED": 130,
     "EXISTING_REPAIR_AVAILABLE": 6,
-    "TRUE_BLOCKER": 26,
+    "TRUE_BLOCKER": 27,
     "REVIEW_WARNING_BOUNDARY": 10
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 129,
+    "REVIEW_REQUIRED": 130,
     "EXISTING_REPAIR_AVAILABLE": 6,
-    "TRUE_BLOCKER": 26,
+    "TRUE_BLOCKER": 27,
     "REVIEW_WARNING_BOUNDARY": 2
   },
   "migration_status_counts": {
-    "UNREVIEWED": 163,
+    "UNREVIEWED": 165,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -2608,6 +2608,36 @@
         "MX-176"
       ],
       "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-117",
+      "name": "validate:admission-level-stability",
+      "command": "npm run validate:admission-level-stability",
+      "owning_lane": "content-admission",
+      "risk_prevented": "A build stage silently re-levelling pages that are already in data/content/page_admission_registry.json. admission_level decides which lane contract validate_programmatic_admission.py enforces on a page, so re-levelling at build time either fails the release on a corpus that was never written against those thresholds, or - in the demotion direction, which is the live risk now that 1,466 records carry 'full' - removes published pages from the substantive checks while the build still passes.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-179"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-CANONICAL-NO-REDIRECT",
+      "name": "validate:canonical-no-redirect",
+      "command": "npm run validate:canonical-no-redirect",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-180"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
       "migration_status": "UNREVIEWED",
       "decision": null,
       "evidence": []

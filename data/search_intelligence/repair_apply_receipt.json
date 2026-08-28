@@ -1,45 +1,145 @@
 {
   "schema_version": "1.1",
-  "generated_at": "2026-08-27T17:08:11.777Z",
+  "generated_at": "2026-08-28T17:28:25.954Z",
   "mode": "WRITE",
   "repairs": [
     {
-      "repair_id": "repair_8099f050f264327c",
-      "target_id": "si_11a7e9cb5b23839c",
-      "query": "accountability partner vs traditional coaching for creators",
+      "repair_id": "repair_d60fc492ba31c3d2",
+      "target_id": "si_32f3803b2df5ecc9",
+      "query": "accountability partner vs traditional coaching for athletes",
       "owned_route": "/billionaire-high-performance-coach-vs-coaching/",
       "owned_file": "billionaire-high-performance-coach-vs-coaching/index.html",
       "content_owner": "legacy_eligible",
-      "repair_type": "answer_first_query_alignment",
+      "repair_type": "answer_and_comparison_clarity",
       "basis": [
         {
           "code": "GSC_NO_ROW_FOR_TARGET",
           "basis": "google_search_console",
           "detail": "No Search Console row for this query in the collected window."
+        },
+        {
+          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
+          "basis": "grounded_search_observation",
+          "detail": "Grounded answer referenced 4 other domain(s) and not an owned domain."
         }
       ],
       "evidence_used": [
-        "google_search_console"
+        "google_search_console",
+        "grounded_search_observation"
       ],
       "baseline_gsc_metrics": null,
-      "baseline_grounded_own_domain_referenced": null,
-      "baseline_competitor_domains": [],
-      "priority": 8,
+      "baseline_grounded_own_domain_referenced": false,
+      "baseline_competitor_domains": [
+        "commitaction.com",
+        "medium.com",
+        "waynepernell.com",
+        "youth.inc"
+      ],
+      "priority": 33,
       "current_title": "the structured AI accountability system Vs Coaching | Spry Executive OS",
       "current_description": "",
-      "competitor_domains": [],
+      "competitor_domains": [
+        "commitaction.com",
+        "medium.com",
+        "waynepernell.com",
+        "youth.inc"
+      ],
       "state": "PREPARED_NOT_APPLIED",
       "new_url": false,
       "publishes": false,
       "mutates_publishing_cadence": false,
       "agent_lane_excluded": true,
       "status": "APPLIED",
-      "applied_at": "2026-08-27T17:08:11.776Z",
+      "applied_at": "2026-08-28T17:28:25.952Z",
       "before_sha256": "a7ab4f44598b00ab9e82348d686d664659dd650ca27b6a8b2d741df920f3574f",
-      "after_sha256": "a4971711369538a05d310dd1d33a26df8c9af086013c458df109d8ce9800ce48",
+      "after_sha256": "cb6c1a64c5a4bb358749c21e9d72ea3c8a8d02161792f3e826f5c4d69344b348",
       "rollback": {
         "type": "content_hash",
         "restore_sha256": "a7ab4f44598b00ab9e82348d686d664659dd650ca27b6a8b2d741df920f3574f"
+      },
+      "validation_required": true
+    },
+    {
+      "repair_id": "repair_a921abdc92986e6c",
+      "target_id": "si_3d069f4e467d790e",
+      "query": "accountability partner vs traditional coaching for body goal users",
+      "owned_route": "/billionaire-high-performance-coach-vs-coaching/",
+      "owned_file": "billionaire-high-performance-coach-vs-coaching/index.html",
+      "content_owner": "legacy_eligible",
+      "repair_type": "answer_and_comparison_clarity",
+      "basis": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        },
+        {
+          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
+          "basis": "grounded_search_observation",
+          "detail": "Grounded answer referenced 18 other domain(s) and not an owned domain."
+        }
+      ],
+      "evidence_used": [
+        "google_search_console",
+        "grounded_search_observation"
+      ],
+      "baseline_gsc_metrics": null,
+      "baseline_grounded_own_domain_referenced": false,
+      "baseline_competitor_domains": [
+        "advancedkinetics.com",
+        "backtobasicshealthsolutions.com",
+        "beckinstitute.org",
+        "betterup.com",
+        "club4fitness.com",
+        "commitaction.com",
+        "duke.edu",
+        "etageathletic.com",
+        "fitnessellipsis.com",
+        "healthline.com",
+        "healthylifestylesecrets.com",
+        "moovphysiotherapy.ca",
+        "oceancommunityymca.org",
+        "onepeloton.com",
+        "unlimitr.com",
+        "waynepernell.com",
+        "weightlosscentersofnashville.com",
+        "welling.ai"
+      ],
+      "priority": 33,
+      "current_title": "the structured AI accountability system Vs Coaching | Spry Executive OS",
+      "current_description": "",
+      "competitor_domains": [
+        "advancedkinetics.com",
+        "backtobasicshealthsolutions.com",
+        "beckinstitute.org",
+        "betterup.com",
+        "club4fitness.com",
+        "commitaction.com",
+        "duke.edu",
+        "etageathletic.com",
+        "fitnessellipsis.com",
+        "healthline.com",
+        "healthylifestylesecrets.com",
+        "moovphysiotherapy.ca",
+        "oceancommunityymca.org",
+        "onepeloton.com",
+        "unlimitr.com",
+        "waynepernell.com",
+        "weightlosscentersofnashville.com",
+        "welling.ai"
+      ],
+      "state": "PREPARED_NOT_APPLIED",
+      "new_url": false,
+      "publishes": false,
+      "mutates_publishing_cadence": false,
+      "agent_lane_excluded": true,
+      "status": "APPLIED",
+      "applied_at": "2026-08-28T17:28:25.953Z",
+      "before_sha256": "cb6c1a64c5a4bb358749c21e9d72ea3c8a8d02161792f3e826f5c4d69344b348",
+      "after_sha256": "daf89b58ef6ed595cb9d047cf15c164009b0350bb4c5f1a142c1c15c3a413c78",
+      "rollback": {
+        "type": "content_hash",
+        "restore_sha256": "cb6c1a64c5a4bb358749c21e9d72ea3c8a8d02161792f3e826f5c4d69344b348"
       },
       "validation_required": true
     }
