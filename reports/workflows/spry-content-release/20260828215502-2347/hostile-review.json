@@ -1,0 +1,83 @@
+{
+  "schema_version": "1.4",
+  "workflow_id": "spry-content-release",
+  "run_id": "20260828215502-2347",
+  "generated_at": "2026-08-28T21:56:40.996Z",
+  "status": "PASS_WITH_WARNING",
+  "changed_file_count": 667,
+  "raw_finding_count": 111,
+  "aggregated_finding_count": 1,
+  "input_count": 729,
+  "output_count": 4220,
+  "finding_summary": {
+    "counts": {
+      "SAFE_NOISE": 0,
+      "WARNING": 1,
+      "SELF_HEALABLE": 0,
+      "ITEM_SKIP": 0,
+      "TRUE_BLOCKER": 0,
+      "INTERNAL_ERROR": 0
+    },
+    "blocking_count": 0,
+    "warning_count": 1,
+    "safe_noise_count": 0,
+    "self_healable_count": 0,
+    "item_skip_count": 0
+  },
+  "findings": [
+    {
+      "id": "aggregate:undeclared_generated_output",
+      "kind": "undeclared_generated_output",
+      "message": "111 generated output(s) were outside declared workflow patterns",
+      "file": null,
+      "material": false,
+      "repairable": false,
+      "item_scoped": false,
+      "evidence": [
+        {
+          "occurrence_count": 111,
+          "sample_files": [
+            "admin/index.html",
+            "case-studies/athlete-after-injury-routine-reset/index.html",
+            "case-studies/career-switcher-certification-plan/index.html",
+            "case-studies/consultant-client-delivery-chaos/index.html",
+            "case-studies/creative-with-too-many-projects/index.html",
+            "case-studies/executive-new-seat-prioritization/index.html",
+            "case-studies/founder-restarting-after-missed-days/index.html",
+            "case-studies/founder-travel-week-continuity/index.html"
+          ]
+        }
+      ],
+      "classification": "WARNING",
+      "occurrence_count": 111,
+      "sample_files": [
+        "admin/index.html",
+        "case-studies/athlete-after-injury-routine-reset/index.html",
+        "case-studies/career-switcher-certification-plan/index.html",
+        "case-studies/consultant-client-delivery-chaos/index.html",
+        "case-studies/creative-with-too-many-projects/index.html",
+        "case-studies/executive-new-seat-prioritization/index.html",
+        "case-studies/founder-restarting-after-missed-days/index.html",
+        "case-studies/founder-travel-week-continuity/index.html"
+      ]
+    }
+  ],
+  "errors": [],
+  "warnings": [
+    "111 generated output(s) were outside declared workflow patterns"
+  ],
+  "safe_noise": [],
+  "info": [
+    "programmatic candidate manifest retains 1400 admitted release atom(s) for downstream validation"
+  ],
+  "governance_fixture_count": 15,
+  "governance_blocker_audit": {
+    "admitted_hard_fail_count": 173,
+    "suggested_review_counts": {
+      "REVIEW_REQUIRED": 130,
+      "EXISTING_REPAIR_AVAILABLE": 6,
+      "TRUE_BLOCKER": 27,
+      "REVIEW_WARNING_BOUNDARY": 10
+    }
+  }
+}
