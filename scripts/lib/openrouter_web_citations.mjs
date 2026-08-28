@@ -1,9 +1,4 @@
 /**
-// OpenRouter bills the web plugin per REQUEST on the parallel engine with 10
-// results included - measured at $0.00127/call on this account against ~$0.04
-// on the default engine's per-result billing. Identical url_citation schema.
-const WEB_ENGINE = process.env.OPENROUTER_WEB_ENGINE || 'parallel';
-const WEB_MODE = process.env.OPENROUTER_WEB_MODE || 'turbo';
  * Read the pages an OpenRouter web-plugin answer was actually built from.
  *
  * Shared by scripts/llm_citation_probe.mjs and
@@ -16,10 +11,16 @@ const WEB_MODE = process.env.OPENROUTER_WEB_MODE || 'turbo';
  *
  * Verified request shape:
  *   POST https://openrouter.ai/api/v1/chat/completions
- *   {"model":"openai/gpt-4o-mini","plugins":[{"id":"web","max_results":10}],"messages":[...]}
+ *   {"model":"openai/gpt-4o-mini","plugins":[{"id":"web","engine":"parallel","mode":"turbo","max_results":10}],"messages":[...]}
  * Verified response shape: choices[0].message.annotations[] entries of type
  * "url_citation", each carrying url_citation.url (and usually .title).
  */
+
+// OpenRouter bills the web plugin per REQUEST on the parallel engine with 10
+// results included - measured at $0.00127/call on this account against ~$0.04
+// on the default engine's per-result billing. Identical url_citation schema.
+export const WEB_ENGINE = process.env.OPENROUTER_WEB_ENGINE || 'parallel';
+export const WEB_MODE = process.env.OPENROUTER_WEB_MODE || 'turbo';
 export const WEB_PLUGIN = (maxResults = 10) => [{ id: 'web', engine: WEB_ENGINE, mode: WEB_MODE, max_results: Number(maxResults) || 10 }];
 
 export const hostOf = (value) => {

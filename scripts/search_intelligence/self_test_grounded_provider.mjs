@@ -13,12 +13,7 @@
  */
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { citations, citationUrls, citationRefs, answerText, WEB_PLUGIN } from '../lib/openrouter_web_citations.mjs';
-// OpenRouter bills the web plugin per REQUEST on the parallel engine with 10
-// results included - measured at $0.00127/call on this account against ~$0.04
-// on the default engine's per-result billing. Identical url_citation schema.
-const WEB_ENGINE = process.env.OPENROUTER_WEB_ENGINE || 'parallel';
-const WEB_MODE = process.env.OPENROUTER_WEB_MODE || 'turbo';
+import { citations, citationUrls, citationRefs, answerText, WEB_PLUGIN, WEB_ENGINE, WEB_MODE } from '../lib/openrouter_web_citations.mjs';
 
 const FIXTURE = {
   id: 'gen-fixture',
@@ -70,6 +65,17 @@ check('an empty or errored payload yields no citations, never a fabricated one',
 });
 check('the web plugin is declared with a result count', () => {
   assert.deepEqual(WEB_PLUGIN(10), [{ id: 'web', engine: WEB_ENGINE, mode: WEB_MODE, max_results: 10 }]);
+  assert.equal(WEB_PLUGIN()[0].max_results, 10, 'the default must still request results');
+});
+check('the plugin defaults to the per-request engine, not per-result billing', () => {
+  // Asserted as literals on purpose. OpenRouter's DEFAULT web engine bills per
+  // RESULT (~$0.04/query measured on this account); 'parallel'/'turbo' bills
+  // per REQUEST with 10 results included ($0.00127/call measured). Flipping
+  // these back is a ~31x cost regression that nothing else in CI would catch,
+  // so the cheap engine is pinned here rather than merely defaulted in the lib.
+  const [plugin] = WEB_PLUGIN(10);
+  assert.equal(plugin.engine, 'parallel');
+  assert.equal(plugin.mode, 'turbo');
 });
 
 const contract = JSON.parse(fs.readFileSync('data/search_intelligence/search_intelligence_contract.json', 'utf8'));
