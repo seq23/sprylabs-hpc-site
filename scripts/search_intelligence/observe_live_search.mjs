@@ -2,6 +2,11 @@
 import fs from 'node:fs';
 import { readJson, writeJson, stamp, sha256, OK, DEGRADED, UNAVAILABLE } from './lib/core.mjs';
 import { citationRefs, answerText } from '../lib/openrouter_web_citations.mjs';
+// OpenRouter bills the web plugin per REQUEST on the parallel engine with 10
+// results included - measured at $0.00127/call on this account against ~$0.04
+// on the default engine's per-result billing. Identical url_citation schema.
+const WEB_ENGINE = process.env.OPENROUTER_WEB_ENGINE || 'parallel';
+const WEB_MODE = process.env.OPENROUTER_WEB_MODE || 'turbo';
 
 const contract = readJson('data/search_intelligence/search_intelligence_contract.json', {});
 const cfg = contract.providers?.grounded_search || {};
@@ -19,7 +24,7 @@ const importPath = process.env.SEARCH_OBSERVATIONS_JSON || 'data/search_intellig
 // choices[0].message.annotations[].url_citation.url.
 const apiKey = process.env[cfg.credential_env || 'OPENROUTER_API_KEY'];
 const model = process.env[cfg.model_env || 'SEARCH_INTELLIGENCE_GROUNDING_MODEL'] || cfg.default_model || 'openai/gpt-4o-mini';
-const WEB_PLUGIN = cfg.request_shape?.plugins || [{id:'web',max_results:10}];
+const WEB_PLUGIN = cfg.request_shape?.plugins || [{id:'web', engine: WEB_ENGINE, mode: WEB_MODE,max_results:10}];
 const budget = Math.max(0, Math.min(Number(process.env[cfg.budget_env || 'SEARCH_INTELLIGENCE_DAILY_CALL_BUDGET'] || cfg.default_daily_call_budget || 24), targets.length));
 const ownDomains = new Set(contract.public_domains || []);
 

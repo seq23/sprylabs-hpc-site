@@ -14,6 +14,11 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { citations, citationUrls, citationRefs, answerText, WEB_PLUGIN } from '../lib/openrouter_web_citations.mjs';
+// OpenRouter bills the web plugin per REQUEST on the parallel engine with 10
+// results included - measured at $0.00127/call on this account against ~$0.04
+// on the default engine's per-result billing. Identical url_citation schema.
+const WEB_ENGINE = process.env.OPENROUTER_WEB_ENGINE || 'parallel';
+const WEB_MODE = process.env.OPENROUTER_WEB_MODE || 'turbo';
 
 const FIXTURE = {
   id: 'gen-fixture',
@@ -64,7 +69,7 @@ check('an empty or errored payload yields no citations, never a fabricated one',
   assert.deepEqual(citationUrls({ error: { message: 'RESOURCE_EXHAUSTED' } }), []);
 });
 check('the web plugin is declared with a result count', () => {
-  assert.deepEqual(WEB_PLUGIN(10), [{ id: 'web', max_results: 10 }]);
+  assert.deepEqual(WEB_PLUGIN(10), [{ id: 'web', engine: WEB_ENGINE, mode: WEB_MODE, max_results: 10 }]);
 });
 
 const contract = JSON.parse(fs.readFileSync('data/search_intelligence/search_intelligence_contract.json', 'utf8'));
