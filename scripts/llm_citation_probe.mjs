@@ -8,23 +8,28 @@
  * observed whether these pages are cited. Every statement about AEO progress up
  * to now has been inference from proxies.
  *
- * Gemini's free tier answers with Google Search grounding, and the response
- * carries the sources it actually grounded on. That is a citation observation:
- * the query, the engine, the domains it cited, and whether any of them are ours.
- * It costs nothing.
+ * Grounded mode asks OpenRouter's web plugin, and the response carries the pages
+ * the answer was actually built from as message.annotations[].url_citation. That
+ * is a citation observation: the query, the engine, the domains it cited, and
+ * whether any of them are ours. Google GenAI grounding was tried first and is
+ * hard-blocked on this project's key - see the PROVIDER comment below.
  *
  * What this does not claim: one engine is not all engines, grounding metadata is
  * not identical to what a user sees in an AI Overview, and absence on a given
  * day is weak evidence. Runs are recorded individually with timestamps so a
  * trend can be read later rather than a single run being treated as a verdict.
  *
- * Without an API key it exits 0 and records that it was skipped. A measurement
- * tool that fails the build when it cannot measure teaches people to remove it.
+ * Without an API key it exits 0 and records the named skip in the observations
+ * file. A measurement tool that fails the build when it has no credential
+ * teaches people to remove it. It does exit non-zero when it had a credential,
+ * made calls, and the provider answered none of them - that is a broken
+ * measurement, not an absent one, and it must not pass quietly.
  *
  * Usage: node llm_citation_probe.mjs [--queries file] [--limit N] [--dry-run]
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { WEB_PLUGIN as webPlugin, citationUrls } from './lib/openrouter_web_citations.mjs';
 
 const ROOT = process.cwd();
 const argv = process.argv.slice(2);
@@ -62,10 +67,9 @@ const hostOf = (u) => { try { return new URL(u).hostname.toLowerCase().replace(/
 //   knowledge (default) - ask without tools and see whether the model names us
 //     unprompted. This measures whether we exist in the model's answer at all.
 //     It is free.
-//   grounded - ask with Google Search grounding and read the sources the answer
-//     was actually built from. This is a real citation observation, and it is
-//     the stronger signal, but grounding is not free-tier eligible: it returns
-//     quota errors on this key today.
+//   grounded - ask with live web retrieval and read the sources the answer was
+//     actually built from. This is a real citation observation and the stronger
+//     signal. It is billed per search, so it is run against a bounded query list.
 //
 // Default is knowledge, because a probe that cannot run costs more than a weaker
 // probe that does.
@@ -103,13 +107,22 @@ if (!queries.length) { console.error('citation probe: no queries found'); proces
 // live search, which is the stronger measurement when its quota allows.
 const orKey = process.env.OPENROUTER_API_KEY || '';
 const key = process.env.GEMINI_API_KEY || process.env.GOOGLE_GEMINI_API_KEY || '';
-// Pick the provider that can actually do the job asked for. Gemini grounds via
-// Google Search; OpenRouter grounds via the ":online" suffix, which returns the
-// pages the answer was built from as url_citation annotations. Preferring a
-// provider we have no key for is how grounded mode silently skipped every run.
-const PROVIDER = arg('--provider', GROUNDED
-  ? (key ? 'gemini' : (orKey ? 'openrouter' : 'gemini'))
-  : (orKey ? 'openrouter' : 'gemini'));
+// Grounded mode is pinned to OpenRouter. This is not a preference.
+//
+// Gemini grounded search is hard-blocked on this project's key: a plain
+// generateContent call returns 200, and the identical call carrying
+// tools:[{google_search:{}}] returns 429 RESOURCE_EXHAUSTED. Reproduced across
+// three models, persistently - it is not a transient quota blip and no retry
+// schedule clears it. The previous routing preferred Gemini whenever
+// GEMINI_API_KEY was set, so every grounded run went to the one provider that
+// cannot ground, errored, and recorded a 0% citation rate that looked like a
+// measurement of the portfolio rather than a measurement of the credential.
+//
+// OpenRouter's web plugin answers and returns the pages the answer was actually
+// built from as message.annotations[].url_citation. That is the observation this
+// probe exists to take, so grounded mode goes there and nowhere else. Knowledge
+// mode still uses whichever provider has a key, because it needs no retrieval.
+const PROVIDER = arg('--provider', GROUNDED ? 'openrouter' : (orKey ? 'openrouter' : 'gemini'));
 // Three small models rather than one, because a single model's idiosyncrasies
 // are not a measurement.
 //
@@ -136,30 +149,27 @@ async function withTimeout(fn) {
   finally { clearTimeout(t); }
 }
 
-// ":online" runs the model against live web results. The pages it actually used
-// come back as url_citation annotations, which is the retrieval observation the
-// knowledge-mode call cannot produce - that one only shows whether the model
+// The web plugin runs the model against live web results. The pages it actually
+// used come back as url_citation annotations, which is the retrieval observation
+// the knowledge-mode call cannot produce - that one only shows whether the model
 // memorised us during training, which is not a citation.
-const onlineModel = (model) => (model.endsWith(':online') ? model : `${model}:online`);
+//
+// Declared as an explicit plugin rather than the ":online" model suffix so the
+// result count is stated in the request and the model id stays readable in the
+// recorded observation.
+const WEB_PLUGIN = webPlugin(process.env.PROBE_WEB_MAX_RESULTS || 10);
 
-function openRouterCitations(data) {
-  const message = data?.choices?.[0]?.message || {};
-  const urls = [];
-  for (const annotation of message.annotations || []) {
-    const url = annotation?.url_citation?.url;
-    if (url) urls.push(url);
-  }
-  return [...new Set(urls)];
-}
+const openRouterCitations = citationUrls;
 
 async function askOpenRouter(query, model, grounded = false) {
-  const requestModel = grounded ? onlineModel(model) : model;
+  const requestModel = model.replace(/:online$/, '');
   const res = await withTimeout((signal) => fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
     signal,
     headers: { 'content-type': 'application/json', authorization: `Bearer ${orKey}` },
     body: JSON.stringify({
       model: requestModel, temperature: 0, max_tokens: 400,
+      ...(grounded ? { plugins: WEB_PLUGIN } : {}),
       messages: [{ role: 'user', content: query }],
     }),
   }));
@@ -173,8 +183,19 @@ const now = new Date().toISOString();
 
 const haveKey = PROVIDER === 'openrouter' ? Boolean(orKey) : Boolean(key);
 if (!haveKey || DRY) {
-  const reason = DRY ? 'dry_run' : 'no_api_key';
-  console.log(`citation probe: skipped (${reason}); mode=${MODE}; ${queries.length} queries ready, owned domains: ${OWNED.join(', ')}`);
+  // Named stop, recorded rather than only printed. A skipped run used to leave
+  // no trace at all, so a file full of stale numbers looked like the current
+  // state of the world.
+  const reason = DRY ? 'dry_run'
+    : GROUNDED ? 'grounded mode is pinned to OpenRouter and OPENROUTER_API_KEY is not set'
+    : `no credential for provider ${PROVIDER}`;
+  const skipDoc = fs.existsSync(path.join(ROOT, OUT))
+    ? JSON.parse(fs.readFileSync(path.join(ROOT, OUT), 'utf8'))
+    : { schema_version: '1.0', runs: [] };
+  skipDoc.last_skip = { at: now, provider: PROVIDER, mode: MODE, reason, queries_ready: queries.length };
+  fs.mkdirSync(path.join(ROOT, path.dirname(OUT)), { recursive: true });
+  fs.writeFileSync(path.join(ROOT, OUT), JSON.stringify(skipDoc, null, 2) + '\n');
+  console.log(`citation probe: SKIPPED (named) - ${reason}; mode=${MODE}; ${queries.length} queries ready, owned domains: ${OWNED.join(', ')}`);
   process.exit(0);
 }
 
@@ -186,7 +207,7 @@ const observations = [];
 // - and the thing being measured is which pages the retrieval layer returns,
 // which does not vary much by model. One model keeps a portfolio-wide run in
 // cents. Override with OPENROUTER_GROUNDED_MODELS.
-const GROUNDED_MODELS = (process.env.OPENROUTER_GROUNDED_MODELS || OR_MODELS[0] || 'mistralai/mistral-nemo')
+const GROUNDED_MODELS = (process.env.OPENROUTER_GROUNDED_MODELS || config.openrouter_grounded_model || 'openai/gpt-4o-mini')
   .split(',').map((m) => m.trim()).filter(Boolean);
 const engines = PROVIDER === 'openrouter' ? (GROUNDED ? GROUNDED_MODELS : OR_MODELS) : [model];
 for (const q of queries) {
@@ -228,15 +249,30 @@ prior.runs.push({ run_at: now, provider: PROVIDER, engines, mode: MODE, queries:
 
 const cited = observations.filter((o) => o.self_cited).length;
 const errored = observations.filter((o) => o.status === 'provider_error').length;
+// A rate may only exist when the provider answered.
+//
+// This used to divide by every observation including the ones where the call
+// errored, so a run in which the provider refused every request recorded
+// "self_cited_rate_pct: 0" - a number that reads as "nobody cites us" and
+// actually means "nothing was measured". The denominator is now the answered
+// observations, and with none the rate is null and the run is marked
+// NOT_MEASURED rather than zero.
+const answered = observations.filter((o) => o.status === 'observed').length;
 prior.latest_summary = {
   run_at: now, provider: PROVIDER, engines, mode: MODE,
-  queries: queries.length, observations: observations.length, self_cited: cited, errored,
+  queries: queries.length, observations: observations.length,
+  answered, self_cited: cited, errored,
+  measurement_state: answered ? 'MEASURED' : 'NOT_MEASURED',
   _mode_note: GROUNDED
     ? 'grounded: counted when the answer was built from one of our pages'
     : 'knowledge: counted when the model named us unprompted, with no retrieval. Weaker than a citation and must not be reported as one.',
-  self_cited_rate_pct: observations.length ? Number(((100 * cited) / observations.length).toFixed(1)) : 0,
+  _rate_basis: 'self_cited / answered observations. null when the provider answered nothing - an unmeasured run is not a zero.',
+  self_cited_rate_pct: answered ? Number(((100 * cited) / answered).toFixed(1)) : null,
 };
 
 fs.mkdirSync(path.join(ROOT, path.dirname(OUT)), { recursive: true });
 fs.writeFileSync(path.join(ROOT, OUT), JSON.stringify(prior, null, 2) + '\n');
-console.log(`citation probe [${PROVIDER}/${MODE}]: ${cited}/${observations.length} observations named one of our domains (${prior.latest_summary.self_cited_rate_pct}%); ${errored} provider error(s). Recorded in ${OUT}`);
+console.log(answered
+  ? `citation probe [${PROVIDER}/${MODE}]: ${cited}/${answered} answered observations named one of our domains (${prior.latest_summary.self_cited_rate_pct}%); ${errored} provider error(s). Recorded in ${OUT}`
+  : `citation probe [${PROVIDER}/${MODE}]: NOT_MEASURED - the provider answered none of ${observations.length} attempt(s) (${errored} error(s)); no rate recorded. See ${OUT}`);
+process.exit(answered ? 0 : 1);

@@ -51,6 +51,10 @@ const REPAIRS = {
     why: 'The page-seo contract inside this audit fails on record markers and required headings that the agent acceptance manifest expects; plan-exact/apply-exact are what write them. Proven: a page carrying 24 such failures went to 0 after one apply.' },
   'VAL-BHPC-PAGE-SEO': { command: 'npm run agent:bhpc:plan-exact && npm run agent:bhpc:apply-exact',
     why: 'Same contract, incremental mode - same writer.' },
+  'validate:sitemap-coverage': { command: 'npm run build:aplayer-phase-expansion',
+    why: 'The generator is the sole writer of sitemap-bhpc.xml, sitemap-spry.xml and the sitemap index this check reads; a page present in the registry but missing from a sitemap is fixed by rebuilding them, not by editing XML.' },
+  'validate:llms-full-coverage': { command: 'npm run build:aplayer-phase-expansion',
+    why: 'Same writer: llms.txt and llms-full.txt are written from the citable-page registry by that generator.' },
   'validate:ui-test-parity': { command: 'npm run repair:citation-contract-surfaces',
     why: 'repair_ui_test_parity.py runs inside this chain and writes the parity manifest the check reads.' },
 };
