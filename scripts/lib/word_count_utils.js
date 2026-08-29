@@ -24,21 +24,47 @@ function countWords(html) {
   return words ? words.length : 0;
 }
 
+// The long-form article families this guidance applies to. Deliberately NOT the
+// whole site: answers/, glossary/ and the programmatic families have their own,
+// lower floors declared in data/content/programmatic_lane_contracts.json, and
+// holding them to a 1,200-word article target would be measuring the wrong thing.
+//
+// The walk is recursive now. It used to be a flat readdirSync of each directory,
+// which silently skipped every nested page - insights/ alone was 158 of its 175
+// files - so the count printed as "pages checked" was not even the whole of the
+// three families it named.
 function listTargetFiles(baseDir = ROOT) {
   const files = [];
+  const walk = (dir) => {
+    let entries;
+    try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch { return; }
+    for (const e of entries) {
+      if (e.name.startsWith('.')) continue;
+      const full = path.join(dir, e.name);
+      if (e.isDirectory()) { walk(full); continue; }
+      if (!e.name.endsWith('.html')) continue;
+      if (e.name === 'index.html' || e.name === 'README.html') continue;
+      files.push(full);
+    }
+  };
   for (const dir of TARGET_DIRS) {
     const abs = path.join(baseDir, dir);
     if (!fs.existsSync(abs)) continue;
-    for (const f of fs.readdirSync(abs)) {
-      if (f.endsWith('.html') && f !== 'index.html' && f !== 'README.html') {
-        files.push(path.join(abs, f));
-      }
-    }
+    walk(abs);
   }
   for (const f of fs.readdirSync(baseDir)) {
     if (/^synthesis-.*\.html$/.test(f)) files.push(path.join(baseDir, f));
   }
   return files.sort();
+}
+
+// Rule 0: a word-count scan that examined nothing is a broken scan. Both callers
+// are advisory about the COUNTS they find; neither may be advisory about having
+// found no files at all.
+function assertTargetFilesExamined(label, count) {
+  if (Number(count) > 0) return;
+  console.error(`[${label}] FAIL: examined zero article pages under ${TARGET_DIRS.join(', ')}. A scan that inspects nothing must not report a clean result.`);
+  process.exit(1);
 }
 
 function classifyWordCount(words) {
@@ -58,5 +84,6 @@ module.exports = {
   stripHtml,
   countWords,
   listTargetFiles,
+  assertTargetFilesExamined,
   classifyWordCount,
 };

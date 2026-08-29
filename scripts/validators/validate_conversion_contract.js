@@ -77,14 +77,19 @@ function walk(dir) {
 }
 walk(".");
 
-let sawPublicEndpoint = false;
-for (const file of htmlFiles) {
-  const text = fs.readFileSync(file, "utf8");
-  if (text.includes("https://aplayermode.com")) sawPublicEndpoint = true;
+// This is an existence check, not a per-page check: it asks whether the public
+// conversion endpoint is reachable from the site at all. It used to end with
+// "CONVERSION CONTRACT PASS: N html files scanned", which reads as N pages
+// enforced when the assertion is a single global OR satisfied by any one file
+// anywhere in the tree. Per-page CTA coverage is validate_cta_presence's job;
+// this one now says what it actually measured.
+if (htmlFiles.length === 0) {
+  throw new Error("conversion contract scanned zero HTML files; a scan that inspects nothing must not pass");
 }
+const referencing = htmlFiles.filter((file) => fs.readFileSync(file, "utf8").includes("https://aplayermode.com"));
 
-if (!sawPublicEndpoint) {
+if (referencing.length === 0) {
   throw new Error("no HTML page references https://aplayermode.com");
 }
 
-console.log(`CONVERSION CONTRACT PASS: ${htmlFiles.length} html files scanned`);
+console.log(`CONVERSION CONTRACT PASS: the public endpoint https://aplayermode.com is referenced by ${referencing.length} of ${htmlFiles.length} scanned html file(s) (existence check; per-page CTA coverage is validate_cta_presence)`);

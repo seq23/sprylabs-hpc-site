@@ -106,9 +106,18 @@ function defaultPageCap(root = process.cwd()) {
   if (Number.isFinite(override) && override > 0) return override;
   const policy = readJson(root, 'data/cadence/policy.json', null);
   const cap = Number(policy?.new_pages_per_week);
-  // 2 is cadence_gate.js's own DEFAULT_POLICY.new_pages_per_week; matching it
-  // here keeps the two in step when the policy file is absent.
-  return Number.isFinite(cap) && cap > 0 ? cap : 2;
+  // No numeric fallback, on purpose. The previous fallback was a literal 2 copied
+  // from cadence_gate.js's DEFAULT_POLICY, and when the policy raised the cap to 6
+  // neither copy moved: a rate restated in a second place is a rate that goes
+  // stale, and both sides then agreed only because both were wrong. The gate reads
+  // this same file, so if it is unreadable here the two cannot be shown to agree,
+  // and this lane must stop by name rather than generate against a guessed budget
+  // the gate will refuse anyway. DEMAND_PAGE_CAP above overrides a policy that
+  // exists; it is not a substitute for one.
+  if (!Number.isFinite(cap) || cap <= 0) {
+    throw new Error('demand lane STOP missing_cadence_policy: data/cadence/policy.json has no usable new_pages_per_week. That file is the one budget this lane and scripts/cadence_gate.js both spend against.');
+  }
+  return cap;
 }
 
 export function selectDemandCandidates({

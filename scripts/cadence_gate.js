@@ -45,19 +45,40 @@ const policyPath = (() => {
   return i >= 0 ? args[i + 1] : 'data/cadence/policy.json';
 })();
 
-const DEFAULT_POLICY = {
-  refresh_window_days: 91,      // the 13-week threshold
-  high_value_window_days: 30,
-  stale_tolerance_pct: 20,
-  new_pages_per_week: 2,
-  refresh_capacity_per_week: 25,
-  require_lastmod: true,
-};
+// Shape only. Every key here is REQUIRED in the policy file, not a usable
+// default: a missing or incomplete policy is a named stop, never a silent
+// fallback.
+//
+// This used to be a working default set carrying new_pages_per_week: 2, and
+// scripts/programmatic/demand_backed_atoms.mjs copied that 2 into its own
+// fallback with a comment saying the copy "keeps the two in step when the policy
+// file is absent". When data/cadence/policy.json raised the cap to 6 on
+// 2026-08-29, neither copy moved - the invariant held only because both were
+// stale together. A silent fallback to a stale cap is worse than no fallback: it
+// enforces a number the declared policy has already replaced, and nothing says
+// so. One place to read the rate, and an error when it cannot be read.
+const REQUIRED_POLICY_KEYS = [
+  'refresh_window_days',
+  'high_value_window_days',
+  'stale_tolerance_pct',
+  'new_pages_per_week',
+  'refresh_capacity_per_week',
+  'require_lastmod',
+];
 
 function loadPolicy() {
   const f = path.join(ROOT, policyPath);
-  if (!fs.existsSync(f)) return { ...DEFAULT_POLICY, _source: 'defaults' };
-  return { ...DEFAULT_POLICY, ...JSON.parse(fs.readFileSync(f, 'utf8')), _source: policyPath };
+  if (!fs.existsSync(f)) {
+    console.error(`CADENCE GATE STOP missing_policy: ${policyPath} does not exist. It is the single source of truth for the publishing cap and the refresh window, and there is deliberately no built-in fallback. Restore the file, or pass --policy <path>.`);
+    process.exit(2);
+  }
+  const loaded = JSON.parse(fs.readFileSync(f, 'utf8'));
+  const missing = REQUIRED_POLICY_KEYS.filter((k) => loaded[k] === undefined || loaded[k] === null);
+  if (missing.length) {
+    console.error(`CADENCE GATE STOP incomplete_policy: ${policyPath} is missing required key(s): ${missing.join(', ')}. Every gate threshold must be declared in the policy, not inherited from code.`);
+    process.exit(2);
+  }
+  return { ...loaded, _source: policyPath };
 }
 
 function sitemapUrls() {

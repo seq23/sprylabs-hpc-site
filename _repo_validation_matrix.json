@@ -1857,9 +1857,29 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-183",
+      "validation_id": "VAL-PAGE-SURFACE-COVERAGE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:page-surface-coverage",
+      "order": 183,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-184",
+      "validation_id": "VAL-PYTHON-DEPENDENCY-CONTRACT-WRITE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:python-dependency-contract:write",
+      "order": 184,
+      "severity": "INFO",
+      "release_effect": false,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 185,
+  "entry_count": 187,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2209,6 +2229,18 @@
         {
           "id": "VAL-CITATION-SCHEMA-SERIALIZATION",
           "command": "npm run validate:citation-schema-serialization"
+        },
+        {
+          "id": "VAL-PAGE-SURFACE-COVERAGE",
+          "command": "npm run validate:page-surface-coverage"
+        },
+        {
+          "id": "VAL-PYTHON-DEPENDENCY-CONTRACT",
+          "command": "npm run validate:python-dependency-contract"
+        },
+        {
+          "id": "VAL-030",
+          "command": "npm run validate:reopened-baseline"
         }
       ]
     },
@@ -2431,7 +2463,6 @@
     "MX-022": "release-time or generator command, not a per-push check",
     "MX-023": "runs a profile itself; adding it to one would recurse",
     "MX-024": "NEEDS TRIAGE: requires CANDIDATE_ZIP; only meaningful against a packaged release artifact",
-    "MX-030": "NEEDS TRIAGE: fails on the current tree - real finding, not yet triaged",
     "MX-049": "NEEDS TRIAGE: requires VALIDATION_PAGE_SCOPE_FILE; incremental-only by design",
     "MX-052": "release-time or generator command, not a per-push check",
     "MX-053": "release-time or generator command, not a per-push check",
@@ -2466,15 +2497,15 @@
     "MX-136": "runs a profile itself; adding it to one would recurse",
     "MX-137": "runs a profile itself; adding it to one would recurse",
     "MX-138": "runs a profile itself; adding it to one would recurse",
-    "MX-142": "writes to the tree; a validator profile must stay read-only",
-    "MX-151": "NEEDS TRIAGE: fails on the current tree - real finding, not yet triaged",
+    "MX-151": "post-release freeze-state check, not a per-push check. It runs inside the release lane: scripts/authority_scale/run_guarded_release.mjs calls prepare-drift-scope, then authority:scale:freeze, then this validator, so the registry is re-snapshotted before it is checked. Between releases it reports drift by design - every commit that lands on main after a release run makes the frozen registry older than the tree. Verified 2026-08-29: the freeze command IS invoked (run_guarded_release.mjs line 10); the earlier reason -- fails on the current tree, real finding, not yet triaged -- was wrong and read as an unresolved defect.",
     "MX-AGENT-LIVE": "needs a live deployment; runs after deploy, not before",
     "MX-ARTIFACT-PACKAGING-PARITY": "writes to the tree; a validator profile must stay read-only",
     "MX-VAL-FSA-ALL": "NEEDS TRIAGE: aggregate of the FSA checks; its members run individually",
     "MX-VAL-FSA-RELEASE": "release-time or generator command, not a per-push check",
     "MX-VAL-FSA-SCORE": "release-time or generator command, not a per-push check",
     "MX-VAL-FSA-SELFHEAL": "release-time or generator command, not a per-push check",
-    "MX-177": "network measurement that writes an observation file; runs on the daily-citation-intelligence schedule, not per push"
+    "MX-177": "network measurement that writes an observation file; runs on the daily-citation-intelligence schedule, not per push",
+    "MX-184": "regeneration command, not a check: it rewrites artifacts/validation/python-dependency-contract.json. The read-only VAL-PYTHON-DEPENDENCY-CONTRACT is the armed profile step and fails if this has not been run after a Python dependency change."
   },
   "profile_exclusions_policy": "Admitted entries that are deliberately not profile steps, each with the reason. validate_validation_registry warns only about entries missing from this map, so an unreviewed orphan is visible while a reasoned exclusion is not noise. Entries marked NEEDS TRIAGE are real failures or real environment gaps that should be fixed and then armed - they are not permanent exclusions."
 }

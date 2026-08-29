@@ -69,8 +69,20 @@ if(fs.existsSync(importPath)){
   for(const t of rotation.batch){attempted++;try{observations.push(await observe(t))}catch(e){failures++;observations.push({target_id:t.target_id,query:t.query,status:'FAILED',failure_reason:String(e.message||e),observation_kind:'grounded_search_observation',is_literal_serp_rank:false,own_domain_referenced:null,referenced_domains:[]})}}
   state=failures===0?OK:observations.some(x=>x.status==='OBSERVED')?DEGRADED:UNAVAILABLE; note=failures?`${failures}/${attempted} grounded observation calls failed.`:null;
 }else note=`No grounded-search credential (${cfg.credential_env||'OPENROUTER_API_KEY'}) or provider export was available. UNTESTED, not disproven: this records that no call was made, and must never be read as evidence about whether these pages are cited.`;
-writeJson('data/search_intelligence/live_search_observations.json',{schema_version:'1.1',generated_at:stamp(),provider_state:state,overall_status:state,status_is_healthy:state===OK,observation_kind:'grounded_search_observation',is_literal_serp_rank:false,budget:{eligible_targets:targets.length,call_budget:budget,calls_attempted:attempted,call_failures:failures},rotation:{cursor_path:CURSOR_PATH,window_start:rotation.start,window_size:rotation.batch.length,next_index:rotation.next,target_ids:rotation.batch.map(t=>t.target_id)},unavailable_note:state===OK?null:note,observations});
-// Only advance the cursor when this run actually consumed its window, so a run
-// that made no calls does not silently skip 24 targets.
-if(attempted>0){writeJson(CURSOR_PATH,{schema_version:'1.0',generated_at:stamp(),eligible_targets:targets.length,window_start:rotation.start,window_size:rotation.batch.length,next_index:rotation.next});}
-console.log(`[search:observe] ${state} observations=${observations.length} attempted=${attempted} window=${rotation.start}..${(rotation.start+rotation.batch.length-1)%(targets.length||1)}/${targets.length} next=${attempted>0?rotation.next:rotation.start}`);
+writeJson('data/search_intelligence/live_search_observations.json',{schema_version:'1.1',generated_at:stamp(),provider_state:state,overall_status:state,status_is_healthy:state===OK,observation_kind:'grounded_search_observation',is_literal_serp_rank:false,budget:{eligible_targets:targets.length,call_budget:budget,calls_attempted:attempted,call_failures:failures},rotation:{cursor_path:CURSOR_PATH,window_start:rotation.start,window_size:rotation.batch.length,next_index:(attempted>0&&observations.filter((x)=>x&&x.status!=='FAILED').length>0)?rotation.next:rotation.start,observed:observations.filter((x)=>x&&x.status!=='FAILED').length,target_ids:rotation.batch.map(t=>t.target_id)},unavailable_note:state===OK?null:note,observations});
+// Advance the cursor only when this run actually OBSERVED something.
+//
+// The guard used to be `attempted > 0`, and `attempted` increments before the
+// call, so a window in which every call failed still advanced. Measured on this
+// tree: calls_attempted=24, call_failures=24, provider_http_402
+// in_flight_budget_exhausted - 24 targets rotated out having produced zero
+// observations, and next_index moved 0 -> 24. With a dead provider credential
+// that repeats every day: the cursor marches through all 120 targets in five
+// runs, observes nothing, wraps, and the rotation ledger shows steady progress
+// the whole time. Attempting is not observing. A window that produced no
+// evidence is not consumed; it is retried, and the run says so by name.
+const observedCount=observations.filter((x)=>x&&x.status!=='FAILED').length;
+const consumedWindow=attempted>0&&observedCount>0;
+if(consumedWindow){writeJson(CURSOR_PATH,{schema_version:'1.0',generated_at:stamp(),eligible_targets:targets.length,window_start:rotation.start,window_size:rotation.batch.length,next_index:rotation.next});}
+else if(attempted>0){console.log(`[search:observe] STOP window_not_consumed: all ${attempted} call(s) in this window failed, so the rotation cursor stays at ${rotation.start} and these targets are retried next run rather than rotating out unobserved. First failure: ${String((observations.find((x)=>x&&x.status==='FAILED')||{}).failure_reason||'unknown').slice(0,200)}`);}
+console.log(`[search:observe] ${state} observations=${observations.length} observed=${observedCount} attempted=${attempted} window=${rotation.start}..${(rotation.start+rotation.batch.length-1)%(targets.length||1)}/${targets.length} next=${consumedWindow?rotation.next:rotation.start}`);
