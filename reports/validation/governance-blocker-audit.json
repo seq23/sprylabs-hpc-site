@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-08-29T13:29:08.292Z",
+  "generated_at": "2026-08-29T15:40:39.990Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 175,
+  "admitted_hard_fail_count": 172,
   "reviewed_count": 8,
-  "unreviewed_count": 167,
+  "unreviewed_count": 164,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 131,
+    "REVIEW_REQUIRED": 129,
     "EXISTING_REPAIR_AVAILABLE": 6,
-    "TRUE_BLOCKER": 27,
+    "TRUE_BLOCKER": 26,
     "REVIEW_WARNING_BOUNDARY": 11
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 131,
+    "REVIEW_REQUIRED": 129,
     "EXISTING_REPAIR_AVAILABLE": 6,
-    "TRUE_BLOCKER": 27,
+    "TRUE_BLOCKER": 26,
     "REVIEW_WARNING_BOUNDARY": 3
   },
   "migration_status_counts": {
-    "UNREVIEWED": 167,
+    "UNREVIEWED": 164,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -121,36 +121,6 @@
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-007"
-      ],
-      "suggested_review": "REVIEW_REQUIRED",
-      "migration_status": "UNREVIEWED",
-      "decision": null,
-      "evidence": []
-    },
-    {
-      "validation_id": "VAL-010",
-      "name": "postdeploy:click-audit:all",
-      "command": "npm run postdeploy:click-audit:all",
-      "owning_lane": "deployed-runtime",
-      "risk_prevented": "Prevents unproven or inconsistent deployed-runtime behavior from entering the release lifecycle.",
-      "current_severity": "HARD_FAIL",
-      "matrix_ids": [
-        "MX-010"
-      ],
-      "suggested_review": "REVIEW_REQUIRED",
-      "migration_status": "UNREVIEWED",
-      "decision": null,
-      "evidence": []
-    },
-    {
-      "validation_id": "VAL-011",
-      "name": "postdeploy:public-click-audit",
-      "command": "npm run postdeploy:public-click-audit",
-      "owning_lane": "deployed-runtime",
-      "risk_prevented": "Prevents unproven or inconsistent deployed-runtime behavior from entering the release lifecycle.",
-      "current_severity": "HARD_FAIL",
-      "matrix_ids": [
-        "MX-011"
       ],
       "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",
@@ -1582,21 +1552,6 @@
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-WF-SIM-02"
-      ],
-      "suggested_review": "TRUE_BLOCKER",
-      "migration_status": "UNREVIEWED",
-      "decision": null,
-      "evidence": []
-    },
-    {
-      "validation_id": "VAL-WF-SIM-03",
-      "name": "postdeploy-public-audit",
-      "command": ".github/workflows/postdeploy-public-audit.yml",
-      "owning_lane": "ci",
-      "risk_prevented": "Prevents the simplified public GitHub Actions surface from bypassing canonical validation, self-healing, and artifact handoff.",
-      "current_severity": "HARD_FAIL",
-      "matrix_ids": [
-        "MX-WF-SIM-03"
       ],
       "suggested_review": "TRUE_BLOCKER",
       "migration_status": "UNREVIEWED",

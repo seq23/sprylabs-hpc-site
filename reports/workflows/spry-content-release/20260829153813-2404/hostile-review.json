@@ -1,0 +1,83 @@
+{
+  "schema_version": "1.4",
+  "workflow_id": "spry-content-release",
+  "run_id": "20260829153813-2404",
+  "generated_at": "2026-08-29T15:40:40.107Z",
+  "status": "PASS_WITH_WARNING",
+  "changed_file_count": 639,
+  "raw_finding_count": 17,
+  "aggregated_finding_count": 1,
+  "input_count": 748,
+  "output_count": 4236,
+  "finding_summary": {
+    "counts": {
+      "SAFE_NOISE": 0,
+      "WARNING": 1,
+      "SELF_HEALABLE": 0,
+      "ITEM_SKIP": 0,
+      "TRUE_BLOCKER": 0,
+      "INTERNAL_ERROR": 0
+    },
+    "blocking_count": 0,
+    "warning_count": 1,
+    "safe_noise_count": 0,
+    "self_healable_count": 0,
+    "item_skip_count": 0
+  },
+  "findings": [
+    {
+      "id": "aggregate:undeclared_generated_output",
+      "kind": "undeclared_generated_output",
+      "message": "17 generated output(s) were outside declared workflow patterns",
+      "file": null,
+      "material": false,
+      "repairable": false,
+      "item_scoped": false,
+      "evidence": [
+        {
+          "occurrence_count": 17,
+          "sample_files": [
+            "adhd-time-blindness-strategies/index.html",
+            "admin/index.html",
+            "agent/bhpc/ai-prompt-to-act-as-a-creativity-coach-and-make-tasks-fun-with-who-what-why.html",
+            "agent/bhpc/chatgpt-prompt-to-assess-sustainable-vs-burnout-habits-based-on-ali-abdaal-s-energy-management.html",
+            "agent/bhpc/chatgpt-prompt-to-reframe-tasks-with-curiosity-or-experimentation-for-better-engagement.html",
+            "agent/bhpc/how-can-i-transform-a-tedious-task-into-something-enjoyable-using-chatgpt.html",
+            "agent/bhpc/how-to-use-chatgpt-for-a-weekly-accountability-check-in-on-life-goals-and-marks-of-a-well-done-d.html",
+            "agent/bhpc/how-would-ali-abdaal-approach-creating-systems-to-remove-the-need-for-willpower-with-ai.html"
+          ]
+        }
+      ],
+      "classification": "WARNING",
+      "occurrence_count": 17,
+      "sample_files": [
+        "adhd-time-blindness-strategies/index.html",
+        "admin/index.html",
+        "agent/bhpc/ai-prompt-to-act-as-a-creativity-coach-and-make-tasks-fun-with-who-what-why.html",
+        "agent/bhpc/chatgpt-prompt-to-assess-sustainable-vs-burnout-habits-based-on-ali-abdaal-s-energy-management.html",
+        "agent/bhpc/chatgpt-prompt-to-reframe-tasks-with-curiosity-or-experimentation-for-better-engagement.html",
+        "agent/bhpc/how-can-i-transform-a-tedious-task-into-something-enjoyable-using-chatgpt.html",
+        "agent/bhpc/how-to-use-chatgpt-for-a-weekly-accountability-check-in-on-life-goals-and-marks-of-a-well-done-d.html",
+        "agent/bhpc/how-would-ali-abdaal-approach-creating-systems-to-remove-the-need-for-willpower-with-ai.html"
+      ]
+    }
+  ],
+  "errors": [],
+  "warnings": [
+    "17 generated output(s) were outside declared workflow patterns"
+  ],
+  "safe_noise": [],
+  "info": [
+    "programmatic candidate manifest retains 1402 admitted release atom(s) for downstream validation"
+  ],
+  "governance_fixture_count": 15,
+  "governance_blocker_audit": {
+    "admitted_hard_fail_count": 172,
+    "suggested_review_counts": {
+      "REVIEW_REQUIRED": 129,
+      "EXISTING_REPAIR_AVAILABLE": 6,
+      "TRUE_BLOCKER": 26,
+      "REVIEW_WARNING_BOUNDARY": 11
+    }
+  }
+}

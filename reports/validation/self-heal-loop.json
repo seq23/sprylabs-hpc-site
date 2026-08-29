@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-29T15:40:37.626Z",
+  "profile": "content-quality",
+  "mode": "repair",
+  "max_attempts": 2,
+  "status": "CLEAN",
+  "unresolved": [],
+  "attempts": [
+    {
+      "attempt": 1,
+      "failed_before": [
+        "validate:citation-contract"
+      ],
+      "actions": [
+        {
+          "step": "validate:citation-contract",
+          "action": "npm run repair:citation-contract-surfaces",
+          "ran": true,
+          "repair_exit": 0,
+          "why": "repair_active_citation_contract.py and its siblings are the only writers of the citation contract surfaces this check reads."
+        }
+      ]
+    }
+  ]
+}

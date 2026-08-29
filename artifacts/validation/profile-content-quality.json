@@ -1,0 +1,77 @@
+{
+  "profile": "content-quality",
+  "started_at": "2026-08-29T15:40:17.915Z",
+  "steps": [
+    {
+      "id": "validate:programmatic-registry",
+      "command": "npm run validate:programmatic-registry",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-QUERY-OWNER-UNIQUENESS",
+      "command": "npm run validate:query-owner-uniqueness",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-VISIBLE-CONTENT-ARTIFACTS",
+      "command": "npm run validate:visible-content-artifacts",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:citation-contract",
+      "command": "npm run validate:citation-contract",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-117",
+      "command": "npm run validate:admission-level-stability",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:release-atom-contract",
+      "command": "node scripts/validation/validate_release_atom_contract.mjs",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:no-keyword-swap-pages",
+      "command": "node scripts/validation/validate_no_keyword_swap_pages.mjs",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:claim-safety",
+      "command": "node scripts/validation/validate_claim_safety.mjs",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:demand-backed-pages",
+      "command": "npm run validate:demand-backed-pages",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:sitemap-coverage",
+      "command": "node scripts/validation/validate_sitemap_coverage.mjs",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:llms-full-coverage",
+      "command": "node scripts/validation/validate_llms_full_coverage.mjs",
+      "exit_code": 0,
+      "status": "PASS"
+    }
+  ],
+  "status": "PASS",
+  "failure_count": 0,
+  "failures": [],
+  "stopped_early_at": null,
+  "finished_at": "2026-08-29T15:40:37.617Z"
+}
