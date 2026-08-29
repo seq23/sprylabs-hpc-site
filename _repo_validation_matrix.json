@@ -1847,9 +1847,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-182",
+      "validation_id": "VAL-CITATION-SCHEMA-SERIALIZATION",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:citation-schema-serialization",
+      "order": 182,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 184,
+  "entry_count": 185,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2195,6 +2205,10 @@
         {
           "id": "VAL-SITEMAP-LEDGER-FINAL",
           "command": "npm run validate:lastmod-ledger-final"
+        },
+        {
+          "id": "VAL-CITATION-SCHEMA-SERIALIZATION",
+          "command": "npm run validate:citation-schema-serialization"
         }
       ]
     },
@@ -2321,6 +2335,10 @@
         {
           "id": "validate:no-silent-zero-work",
           "command": "npm run validate:no-silent-zero-work"
+        },
+        {
+          "id": "VAL-CITATION-SCHEMA-SERIALIZATION",
+          "command": "npm run validate:citation-schema-serialization"
         }
       ]
     },
@@ -2383,6 +2401,10 @@
         {
           "id": "VAL-SITEMAP-LEDGER-FINAL",
           "command": "npm run validate:lastmod-ledger-final"
+        },
+        {
+          "id": "VAL-CITATION-SCHEMA-SERIALIZATION",
+          "command": "npm run validate:citation-schema-serialization"
         }
       ]
     }

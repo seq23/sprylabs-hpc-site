@@ -92,7 +92,7 @@ function atlasOrder(atlas) {
 }
 
 /**
- * @returns {{candidates: Array, refused: Array, stats: Object}}
+ * @returns {{candidates: Array, refused: Array, covered: Array, stats: Object}}
  */
 // The per-run page cap is the cadence policy's new_pages_per_week, read from the
 // same data/cadence/policy.json that scripts/cadence_gate.js enforces against.
@@ -117,7 +117,39 @@ export function selectDemandCandidates({
   hasPath,          // (relPath) => boolean, an existing .html in the tree
   hasQuery,         // (normalizedQuery) => boolean, a query already owned by a page
   slugify,
-  servingDomain,    // the domain this generator writes pages for
+  // The directory this lane writes a page into, per target domain. This is the
+  // link that was missing.
+  //
+  // The parameter this replaces was `servingDomain`: one hardcoded host, and
+  // every measured query attributed to the other one was refused with "target
+  // domain X is served by a different generator". That sentence was never true
+  // of this repo. One Cloudflare Pages deployment answers both hosts, and which
+  // host answers a given URL is decided by scripts/lib/dual_domain_policy.cjs
+  // hostFor() from the route alone - not by which script wrote the file.
+  // hostFor already maps /answers/demand/* to spryexecutiveos.com, so the pages
+  // this lane refused to write "for spryexecutiveos.com" were exactly the pages
+  // it was already writing: its own output was being served there while it
+  // stamped billionairehighperformancecoach.com on the registry row and put the
+  // URL in the wrong sitemap. There was no second generator to hand the work to.
+  //
+  // So the domain is an output decision now, not a gate. The caller supplies a
+  // directory per domain and asserts each one against hostFor rather than
+  // trusting it; a target domain with no directory here is still refused by
+  // name, because writing a page no host answers is worse than not writing it.
+  laneDirectories,  // Map<domain, relDir>, verified by the caller against hostFor
+  defaultDomain,    // domain for a record that names none
+  // Canonical URLs already recorded as published in data/cadence/known_urls.json.
+  // A candidate already in that set is a re-render of a live URL, not a new one,
+  // so it must not consume the new-URL budget - otherwise the lane could never
+  // hold more pages than one release is allowed to add, and a backlog could
+  // never drain however often the release ran.
+  isPublished = () => false,
+  canonicalUrlFor = () => null,
+  // (normalizedQuery) => {path, canonical_url} | null. Naming the page that
+  // already answers a query is the difference between a report that says
+  // "60,557 measured units produce nothing" and one that says which live pages
+  // they land on.
+  ownerOfQuery = () => null,
   limit = defaultPageCap(root),
 } = {}) {
   const map = readJson(root, MAP_PATH, null);
@@ -162,7 +194,17 @@ export function selectDemandCandidates({
   const refuse = map.refuse || [];
   const candidates = [];
   const refused = [];
+  // Demand that already has a page is COVERED, not refused. It used to be
+  // counted as a refusal, and worse, the check ran after a domain gate that
+  // fired first - so 26 measured queries carrying 60,340 units were reported as
+  // "target domain spryexecutiveos.com is served by a different generator", with
+  // demand_value_refused as the headline number. Every one of them already had a
+  // live, authored page on spryexecutiveos.com. The demand was not unserved; the
+  // report could not see the pages serving it. Coverage is its own section now
+  // and names the owning page, so this cannot be misread again.
+  const covered = [];
   const usedPairs = new Set();
+  let newUrlCount = 0;
   const stats = {
     records_considered: records.length,
     ranked_through_atlas: records.filter((r) => r.in_atlas).length,
@@ -183,16 +225,28 @@ export function selectDemandCandidates({
     if (!row.publishable) { say('the query atlas marks this query as not publishable'); continue; }
     if (row.target_domain && redirectOnly.has(row.target_domain)) { say(`demand is attributed to ${row.target_domain}, a redirect-only host that serves no pages`); continue; }
     if (row.target_domain && servingDomains.size && !servingDomains.has(row.target_domain)) { say(`target domain ${row.target_domain} is not a serving domain`); continue; }
-    if (row.target_domain && row.target_domain !== servingDomain) { say(`target domain ${row.target_domain} is served by a different generator than ${servingDomain}`); continue; }
+
+    const domain = row.target_domain || defaultDomain;
+    const laneDir = laneDirectories.get(domain);
+    if (!laneDir) { say(`this lane has no output directory whose route is answered by ${domain} under scripts/lib/dual_domain_policy.cjs, so a page written for it would carry a canonical the serving host does not confirm`); continue; }
 
     const refusal = refuse.find((r) => normalizeQuery(q).includes(normalizeQuery(r.match)));
     if (refusal) { say(refusal.reason); continue; }
 
-    if (hasQuery(normalizeQuery(q))) { say('a page in the registry already owns this query'); continue; }
+    const cover = (how, page) => covered.push({
+      query: q, demand_value: row.demand_value, evidence_tier: row.evidence_tier,
+      rank_band: row.rank_band, target_domain: domain, covered_by: page || null, how,
+    });
+    if (hasQuery(normalizeQuery(q))) {
+      const owner = ownerOfQuery(normalizeQuery(q));
+      cover('a live page in the citation registry already answers this query', owner && (owner.canonical_url || owner.path));
+      continue;
+    }
     const slug = slugify(q.replace(/\?$/, ''));
     if (!slug) { say('the query does not reduce to a usable slug'); continue; }
-    const relPath = `answers/demand/${slug}.html`;
-    if (hasPath(relPath) || hasPath(`${slug}.html`) || hasPath(`${slug}/index.html`)) { say('an exact-slug page already exists for this query'); continue; }
+    const relPath = `${laneDir}/${slug}.html`;
+    const slugHit = [relPath, `${slug}.html`, `${slug}/index.html`].find((cand) => hasPath(cand));
+    if (slugHit) { cover('a page already exists at the exact slug this query reduces to', slugHit); continue; }
 
     const matches = matchAxes(q, map.phrases || []);
     if (!matches.length) { say('no authored material in phase4_material_library.json matches any phrase in this query'); continue; }
@@ -221,7 +275,21 @@ export function selectDemandCandidates({
     const pairKey = `${primary.axis}|${primary.key}||${secondary.axis}|${secondary.key}`;
     if (usedPairs.has(pairKey)) { say(`the ${primary.key} x ${secondary.key} pair already composed a page this run; a second page from the same two authored entries would differ only in its title`); continue; }
 
-    if (candidates.length >= limit) { say(`per-run cap of ${limit} demand-backed pages already reached`); continue; }
+    // The budget is spent on NEW URLs only. A candidate whose canonical URL is
+    // already in the cadence ledger is a page this repo has published and a
+    // release has accepted; re-composing it gives a crawler nothing new to
+    // discover, so charging it against the cap would mean the lane's total size
+    // could never exceed what one release is allowed to add and the backlog
+    // could never drain however often the release ran. This is also exactly what
+    // the cadence gate counts - `newUrls.length > new_pages_per_week`, measured
+    // against the same data/cadence/known_urls.json - so producer and guard now
+    // count the same thing as well as read the same number.
+    const canonicalUrl = canonicalUrlFor(relPath, domain);
+    const alreadyLive = Boolean(canonicalUrl) && isPublished(canonicalUrl);
+    if (!alreadyLive) {
+      if (newUrlCount >= limit) { say(`per-run cap of ${limit} NEW demand-backed URL(s) already reached; this query stays queued and composes on a later release, once the cadence ledger has accepted this batch`); continue; }
+      newUrlCount += 1;
+    }
 
     usedPairs.add(pairKey);
     candidates.push({
@@ -237,7 +305,9 @@ export function selectDemandCandidates({
       rank_band: row.rank_band,
       rank_score: row.rank_score,
       ranked_through_atlas: row.in_atlas,
-      target_domain: row.target_domain || servingDomain,
+      target_domain: domain,
+      canonical_url: canonicalUrl,
+      already_published: alreadyLive,
       // framework_selection in the material library is keyed by dimension,
       // state, outcome, objection or workflow. When a query matched only a tool
       // and a reader (say "ai tools for coaches"), neither axis can choose a
@@ -257,9 +327,15 @@ export function selectDemandCandidates({
 
   stats.composed = candidates.length;
   stats.refused = refused.length;
+  stats.covered_by_existing_pages = covered.length;
+  stats.demand_value_covered = covered.reduce((n, c) => n + (c.demand_value || 0), 0);
+  stats.new_urls_this_run = newUrlCount;
+  stats.new_url_budget = limit;
+  stats.republished_existing_urls = candidates.length - newUrlCount;
+  stats.by_target_domain = candidates.reduce((acc, c) => { acc[c.target_domain] = (acc[c.target_domain] || 0) + 1; return acc; }, {});
   stats.demand_value_composed = candidates.reduce((n, c) => n + c.demand_value, 0);
   stats.demand_value_refused = refused.reduce((n, r) => n + (r.demand_value || 0), 0);
-  return { candidates, refused, stats };
+  return { candidates, refused, covered, stats };
 }
 
 export function pluralOf(kind) {

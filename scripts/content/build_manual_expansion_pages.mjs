@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 const requireCjs = createRequire(import.meta.url);
 const { routeFor: sharedRouteFor } = requireCjs('../lib/dual_domain_policy.cjs');
+const { serializeSchema, mainEntityOfPage } = requireCjs('../lib/citation_page_schema.cjs');
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const SPEC_PATH = path.join(ROOT, 'data/content/manual_expansion_pages.json');
@@ -249,7 +250,7 @@ function renderPage(page) {
   const faq = faqItems(page);
   const procedure = howToSteps(page);
   const schemaGraph = [
-    {'@type':'WebPage','@id':`${canonical}#webpage`,url:canonical,name:page.h1,description:page.definition,mainEntityOfPage:canonical,dateModified:page.reviewed_at,author:{'@type':'Organization',name:'Spry Labs'},publisher:{'@type':'Organization',name:'Spry Labs',url:`https://${page.domain}/`}},
+    {'@type':'WebPage','@id':`${canonical}#webpage`,url:canonical,name:page.h1,description:page.definition,mainEntityOfPage:mainEntityOfPage(canonical),dateModified:page.reviewed_at,author:{'@type':'Organization',name:'Spry Labs'},publisher:{'@type':'Organization',name:'Spry Labs',url:`https://${page.domain}/`}},
     {'@type':'DefinedTerm','@id':`${canonical}#framework`,name:page.framework,description:page.definition,inDefinedTermSet:'Spry Executive OS'},
     {'@type':'BreadcrumbList','@id':`${canonical}#breadcrumb`,itemListElement:[{'@type':'ListItem',position:1,name:'Home',item:`https://${page.domain}/`},{'@type':'ListItem',position:2,name:page.h1,item:canonical}]},
     {'@type':'Product','@id':`${canonical}#product`,name:'Billionaire High Performance Coach',url:`https://${page.domain}/download.html`,brand:{'@type':'Organization',name:'Spry Labs'},description:'A structured executive operating system for using ChatGPT as an accountability and decision partner.'},
@@ -265,7 +266,7 @@ function renderPage(page) {
       url:canonical,
       headline:page.h1,
       description:page.definition,
-      mainEntityOfPage:canonical,
+      mainEntityOfPage:mainEntityOfPage(canonical),
       datePublished:page.published_at || page.reviewed_at,
       dateModified:page.reviewed_at,
       author:{'@type':'Person',name:'S.L. Taylor',url:`https://${page.domain}/author`},
@@ -315,7 +316,7 @@ ${renderPriorityCitation(page)}
 </article></main>
 <footer class="footer" data-content-contract="cta-block"><div class="container"><p><a href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach" rel="noopener noreferrer">Get Instant Access</a> to the complete Billionaire High Performance Coach system, or <a href="https://aplayermode.com" rel="noopener noreferrer">explore A Player Mode</a>.</p><p>Educational and organizational content from Spry Labs. Results vary. Consequential decisions remain under human authority.</p></div></footer>
 ${renderPriorityCitationSchema(page, canonical)}
-<script id="CITATION_PAGE_SCHEMA" type="application/ld+json">${JSON.stringify(schema).replace(/</g,'\\u003c')}</script>
+<script id="CITATION_PAGE_SCHEMA" type="application/ld+json">${serializeSchema(schema)}</script>
 </body></html>`;
 }
 
@@ -344,7 +345,7 @@ function updateFaqSchema(html, page) {
   const faqNode = nodes.find((n) => n && n['@type'] === 'FAQPage');
   if (!faqNode) return {html, ok: false};
   faqNode.mainEntity = faqItems(page).map((item) => ({'@type':'Question',name:item.q,acceptedAnswer:{'@type':'Answer',text:item.a}}));
-  return {html: html.replace(re, (_x, open, _old, close) => `${open}${JSON.stringify(obj)}${close}`), ok: true};
+  return {html: html.replace(re, (_x, open, _old, close) => `${open}${serializeSchema(obj)}${close}`), ok: true};
 }
 if (process.argv.includes('--sections-only')) {
   let touched = 0;

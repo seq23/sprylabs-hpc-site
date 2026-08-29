@@ -54,9 +54,11 @@ VENDOR = SCRIPTS / "_vendor"
 if VENDOR.is_dir():
     sys.path.insert(0, str(VENDOR))
 sys.path.insert(0, str(SCRIPTS / "citation"))
+sys.path.insert(0, str(SCRIPTS / "lib"))
 
 from bs4 import BeautifulSoup  # noqa: E402
 from extraction_contract import visible_faq_pairs  # noqa: E402
+from citation_page_schema import serialize_schema  # noqa: E402
 
 ROOT = SCRIPTS.parent
 
@@ -414,10 +416,14 @@ def render_block(pairs) -> str:
     )
 
 
-def py_json(value):
-    """json.dumps with Python's default separators, matching the neighbouring
-    schema blocks the Python writers produce so a diff shows only the change."""
-    return json.dumps(value, ensure_ascii=False)
+# The one serializer for this block. What was here before was json.dumps with
+# Python's DEFAULT separators, documented as "matching the neighbouring schema
+# blocks the Python writers produce" - and the Python writer next to it,
+# scripts/citation/apply_citation_program.py, passes separators=(',',':') and is
+# compact. So it matched nothing: this pass rewrote a page's schema spaced, the
+# postbuild rewrote it compact, and a clean build:all left ~2,200 pages modified
+# with no editorial change in any of them.
+py_json = serialize_schema
 
 
 def faq_node(canonical: str, pairs) -> dict:

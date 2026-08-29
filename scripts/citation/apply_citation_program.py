@@ -11,6 +11,7 @@ if VENDOR_DIR.is_dir():
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "lib"))
 from route_policy import route_for  # noqa: E402
+from citation_page_schema import serialize_schema, main_entity_of_page  # noqa: E402
 
 from bs4 import BeautifulSoup, Comment, NavigableString, Tag
 from extraction_contract import extract_article_steps, extract_scope_procedure_candidates, extract_scope_steps, validate_extraction
@@ -470,7 +471,7 @@ def add_schema(soup: BeautifulSoup, path: str, spec: dict):
     author_url=_absolute_url(canonical,author_link.get('href')) if author_link else None
     premium=bool(MANUAL_PAGES.get(path,{}).get('premium_geo'))
     page_type='Article' if premium or (author_name and published) else 'WebPage'
-    page_entity={'@type':page_type,'@id':canonical+'#webpage','url':canonical,'name':name,'headline':name,'description':desc,'mainEntityOfPage':{'@id':canonical}}
+    page_entity={'@type':page_type,'@id':canonical+'#webpage','url':canonical,'name':name,'headline':name,'description':desc,'mainEntityOfPage':main_entity_of_page(canonical)}
     if published: page_entity['datePublished']=published
     if modified: page_entity['dateModified']=modified
     if image: page_entity['image']={'@type':'ImageObject','url':image}
@@ -505,7 +506,9 @@ def add_schema(soup: BeautifulSoup, path: str, spec: dict):
     if path in {'author.html','sequoia-taylor.html'}:
         graph.append({'@type':'Person','@id':_absolute_url(canonical,'/author#person'),'name':'S.L. Taylor','url':_absolute_url(canonical,'/author'),'worksFor':{'@type':'Organization','name':'Spry Labs'}})
     script=soup.new_tag('script', id='CITATION_PAGE_SCHEMA', type='application/ld+json')
-    script.string=json.dumps({'@context':'https://schema.org','@graph':graph},ensure_ascii=False,separators=(',',':'))
+    # One serializer. This pass was already compact; routing it through the
+    # shared module is what stops it drifting apart from the other writers again.
+    script.string=serialize_schema({'@context':'https://schema.org','@graph':graph})
     (soup.body or soup).append(script)
 
 def ensure_supplemental_geo_schema(soup: BeautifulSoup, path: str, spec: dict):

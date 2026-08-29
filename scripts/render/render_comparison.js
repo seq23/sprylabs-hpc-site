@@ -1,5 +1,6 @@
 'use strict';
 const { contractShell, esc } = require('./content_contract');
+const { serializeSchema } = require('../lib/citation_page_schema.cjs');
 
 function renderComparison(c = {}) {
   const competitorName = c.name || 'coaching platforms';
@@ -26,7 +27,7 @@ function renderComparison(c = {}) {
   // the same row, so an unscoped repair pass is a no-op rather than churn.
   const registryFramework = `${title} Comparison Matrix`;
   const registryDefinition = `${registryFramework} is a named Billionaire High Performance Coach and Spry Executive OS framework for ${title.toLowerCase()} through observable signals, decision criteria, and practical next actions.`;
-  const citationPageSchema = `<script id="CITATION_PAGE_SCHEMA" type="application/ld+json">${JSON.stringify({
+  const citationPageSchema = `<script id="CITATION_PAGE_SCHEMA" type="application/ld+json">${serializeSchema({
     '@context': 'https://schema.org',
     '@type': 'WebPage',
     name: title,

@@ -11,6 +11,16 @@ const excluded = new Set([
   'data/content/manual_redirects.json',
   '_redirects',
   'docs/REDIRECT_MIGRATION_HISTORY.md',
+  // A derived index keyed by SOURCE FILE, not by route. Its `source_file` values
+  // are repo-relative paths like answers/demand/x.html, and this rewriter turned
+  // one into the retired route's target - "/answers/phase4/demand/x" - which is
+  // not a path in the tree. scripts/self_test_sitemap_lastmod.mjs then ran
+  // `git log -- /answers/phase4/demand/x` and died on "Invalid path '/answers'",
+  // failing validate:search-measurement-truthfulness with no bad date behind it.
+  // The ledger is regenerated from the sitemap by scripts/sitemap_content_lastmod.mjs
+  // on every build, so a retired URL leaves it that way rather than by textual
+  // substitution; rewriting it here can only corrupt the field.
+  'data/sitemap/lastmod_ledger.json',
 ]);
 const textExtensions = new Set(['.html', '.xml', '.txt', '.json', '.md', '.js', '.mjs', '.cjs']);
 const skipDirs = new Set(['.git', '.pages-output', 'node_modules', 'artifacts', 'coverage', 'reports', '.build', 'test-results', 'playwright-report']);

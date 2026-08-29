@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-29T15:38:38.461Z",
+  "generated_at": "2026-08-29T19:01:06.085Z",
   "input": {
     "demand": "data/demand/measured_demand.json",
     "atlas": "data/authority_scale/query_atlas.json",
@@ -11,17 +11,25 @@
     "records_considered": 101,
     "ranked_through_atlas": 71,
     "atlas_present": true,
-    "composed": 2,
-    "refused": 99,
-    "demand_value_composed": 285,
-    "demand_value_refused": 65625
+    "composed": 7,
+    "refused": 62,
+    "covered_by_existing_pages": 32,
+    "demand_value_covered": 64852,
+    "new_urls_this_run": 6,
+    "new_url_budget": 6,
+    "republished_existing_urls": 2,
+    "by_target_domain": {
+      "billionairehighperformancecoach.com": 8
+    },
+    "demand_value_composed": 420,
+    "demand_value_refused": 634
   },
   "composed": [
     {
       "query": "ai coaching tools",
       "normalized_query": "ai coaching tools",
       "slug": "ai-coaching-tools",
-      "path": "answers/demand/ai-coaching-tools.html",
+      "path": "answers/phase4/demand/ai-coaching-tools.html",
       "demand_value": 209,
       "demand_basis": "own_impressions_over_the_measured_gsc_window",
       "evidence_tier": "T1",
@@ -31,6 +39,8 @@
       "rank_score": 104.5,
       "ranked_through_atlas": true,
       "target_domain": "billionairehighperformancecoach.com",
+      "canonical_url": "https://billionairehighperformancecoach.com/answers/phase4/demand/ai-coaching-tools",
+      "already_published": true,
       "framework_selector_dimension": "prompt structure",
       "primary": {
         "axis": "tool",
@@ -54,7 +64,7 @@
       "query": "ai coach for founders and consultants",
       "normalized_query": "ai coach for founders and consultants",
       "slug": "ai-coach-for-founders-and-consultants",
-      "path": "answers/demand/ai-coach-for-founders-and-consultants.html",
+      "path": "answers/phase4/demand/ai-coach-for-founders-and-consultants.html",
       "demand_value": 76,
       "demand_basis": "own_impressions_over_the_measured_gsc_window",
       "evidence_tier": "T1",
@@ -64,6 +74,8 @@
       "rank_score": 38,
       "ranked_through_atlas": true,
       "target_domain": "billionairehighperformancecoach.com",
+      "canonical_url": "https://billionairehighperformancecoach.com/answers/phase4/demand/ai-coach-for-founders-and-consultants",
+      "already_published": true,
       "framework_selector_dimension": "prompt structure",
       "primary": {
         "axis": "tool",
@@ -84,6 +96,475 @@
       "offset": 1,
       "framework": "Three-Chat Architecture — AI prompt pack for founder",
       "page_query": "AI Coach for Founders and Consultants"
+    },
+    {
+      "query": "ai tools for coaches",
+      "normalized_query": "ai tools for coaches",
+      "slug": "ai-tools-for-coaches",
+      "path": "answers/phase4/demand/ai-tools-for-coaches.html",
+      "demand_value": 69,
+      "demand_basis": "own_impressions_over_the_measured_gsc_window",
+      "evidence_tier": "T1",
+      "source_type": "gsc_search_analytics",
+      "observed_date": null,
+      "rank_band": "own_impressions_only",
+      "rank_score": 34.5,
+      "ranked_through_atlas": true,
+      "target_domain": "billionairehighperformancecoach.com",
+      "canonical_url": "https://billionairehighperformancecoach.com/answers/phase4/demand/ai-tools-for-coaches",
+      "already_published": false,
+      "framework_selector_dimension": "prompt structure",
+      "primary": {
+        "axis": "tool",
+        "key": "AI prompt pack",
+        "why": "An AI tool sold for coaching work is the prompt-pack category; the authored entry says what a pack does and does not do."
+      },
+      "secondary": {
+        "axis": "audience",
+        "key": "coach",
+        "why": "A query about tools FOR coaches is read by a coach; 'coach' is an authored audience.",
+        "source": "matched in the query"
+      },
+      "matched_phrases": [
+        "ai tools",
+        "for coaches"
+      ],
+      "offset": 2,
+      "framework": "Ambiguity Stop Rule — AI prompt pack for coach",
+      "page_query": "AI Tools for Coaches"
+    },
+    {
+      "query": "ai tools for team coaching",
+      "normalized_query": "ai tools for team coaching",
+      "slug": "ai-tools-for-team-coaching",
+      "path": "answers/phase4/demand/ai-tools-for-team-coaching.html",
+      "demand_value": 44,
+      "demand_basis": "own_impressions_over_the_measured_gsc_window",
+      "evidence_tier": "T1",
+      "source_type": "gsc_search_analytics",
+      "observed_date": null,
+      "rank_band": "own_impressions_only",
+      "rank_score": 22,
+      "ranked_through_atlas": true,
+      "target_domain": "billionairehighperformancecoach.com",
+      "canonical_url": "https://billionairehighperformancecoach.com/answers/phase4/demand/ai-tools-for-team-coaching",
+      "already_published": false,
+      "framework_selector_dimension": "prompt structure",
+      "primary": {
+        "axis": "tool",
+        "key": "AI prompt pack",
+        "why": "An AI tool sold for coaching work is the prompt-pack category; the authored entry says what a pack does and does not do."
+      },
+      "secondary": {
+        "axis": "audience",
+        "key": "team lead",
+        "why": "Coaching a team is read from the team lead's side, which is the authored audience.",
+        "source": "matched in the query"
+      },
+      "matched_phrases": [
+        "ai tools",
+        "team coaching"
+      ],
+      "offset": 3,
+      "framework": "Executive Review Mode — AI prompt pack for team lead",
+      "page_query": "AI Tools for Team Coaching"
+    },
+    {
+      "query": "ai coaching tool for managers",
+      "normalized_query": "ai coaching tool for managers",
+      "slug": "ai-coaching-tool-for-managers",
+      "path": "answers/phase4/demand/ai-coaching-tool-for-managers.html",
+      "demand_value": 13,
+      "demand_basis": "own_impressions_over_the_measured_gsc_window",
+      "evidence_tier": "T1",
+      "source_type": "gsc_search_analytics",
+      "observed_date": null,
+      "rank_band": "own_impressions_only",
+      "rank_score": 6.5,
+      "ranked_through_atlas": true,
+      "target_domain": "billionairehighperformancecoach.com",
+      "canonical_url": "https://billionairehighperformancecoach.com/answers/phase4/demand/ai-coaching-tool-for-managers",
+      "already_published": false,
+      "framework_selector_dimension": "prompt structure",
+      "primary": {
+        "axis": "tool",
+        "key": "AI prompt pack",
+        "why": "Same category."
+      },
+      "secondary": {
+        "axis": "audience",
+        "key": "manager",
+        "why": "Exact authored audience.",
+        "source": "matched in the query"
+      },
+      "matched_phrases": [
+        "ai coaching",
+        "managers"
+      ],
+      "offset": 4,
+      "framework": "Prompt Pack Installation Flow — AI prompt pack for manager",
+      "page_query": "AI Coaching Tool for Managers"
+    },
+    {
+      "query": "human coaching",
+      "normalized_query": "human coaching",
+      "slug": "human-coaching",
+      "path": "answers/phase4/demand/human-coaching.html",
+      "demand_value": 5,
+      "demand_basis": "own_impressions_over_the_measured_gsc_window",
+      "evidence_tier": "T1",
+      "source_type": "gsc_search_analytics",
+      "observed_date": null,
+      "rank_band": "own_impressions_only",
+      "rank_score": 2.5,
+      "ranked_through_atlas": true,
+      "target_domain": "billionairehighperformancecoach.com",
+      "canonical_url": "https://billionairehighperformancecoach.com/answers/phase4/demand/human-coaching",
+      "already_published": false,
+      "framework_selector_dimension": "accountability",
+      "primary": {
+        "axis": "tool",
+        "key": "human executive coach",
+        "why": "The authored entry for a person doing the coaching."
+      },
+      "secondary": {
+        "axis": "dimension",
+        "key": "accountability",
+        "why": "The authored entry's own distinguishing point is a person who meets you fortnightly against something that runs daily, which is the accountability dimension.",
+        "source": "authored default_secondary for this primary"
+      },
+      "matched_phrases": [
+        "human coaching"
+      ],
+      "offset": 5,
+      "framework": "Execution Evidence Ledger — human executive coach for accountability",
+      "page_query": "Human Coaching"
+    },
+    {
+      "query": "ai coach for high achievers",
+      "normalized_query": "ai coach for high achievers",
+      "slug": "ai-coach-for-high-achievers",
+      "path": "answers/phase4/demand/ai-coach-for-high-achievers.html",
+      "demand_value": 4,
+      "demand_basis": "own_impressions_over_the_measured_gsc_window",
+      "evidence_tier": "T1",
+      "source_type": "gsc_search_analytics",
+      "observed_date": null,
+      "rank_band": "own_impressions_only",
+      "rank_score": 2,
+      "ranked_through_atlas": true,
+      "target_domain": "billionairehighperformancecoach.com",
+      "canonical_url": "https://billionairehighperformancecoach.com/answers/phase4/demand/ai-coach-for-high-achievers",
+      "already_published": false,
+      "framework_selector_dimension": "prompt structure",
+      "primary": {
+        "axis": "tool",
+        "key": "AI prompt pack",
+        "why": "Same category."
+      },
+      "secondary": {
+        "axis": "audience",
+        "key": "high performer",
+        "why": "Authored audience for the same reader.",
+        "source": "matched in the query"
+      },
+      "matched_phrases": [
+        "ai coach",
+        "high achievers"
+      ],
+      "offset": 6,
+      "framework": "Ambiguity Stop Rule — AI prompt pack for high performer",
+      "page_query": "AI Coach for High Achievers"
+    }
+  ],
+  "covered_by_existing_pages": [
+    {
+      "query": "ai business coach",
+      "demand_value": 110,
+      "evidence_tier": "T2b",
+      "rank_band": "measured_search_volume",
+      "target_domain": "billionairehighperformancecoach.com",
+      "covered_by": "ai-business-coach/index.html",
+      "how": "a page already exists at the exact slug this query reduces to"
+    },
+    {
+      "query": "ai accountability partner",
+      "demand_value": 70,
+      "evidence_tier": "T2b",
+      "rank_band": "measured_search_volume",
+      "target_domain": "spryexecutiveos.com",
+      "covered_by": "https://spryexecutiveos.com/ai-accountability-partner/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "ai executive coach",
+      "demand_value": 2,
+      "evidence_tier": "T1",
+      "rank_band": "own_impressions_only",
+      "target_domain": "billionairehighperformancecoach.com",
+      "covered_by": "https://spryexecutiveos.com/ai-executive-coach/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "How to Stop Overthinking",
+      "demand_value": 14800,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "spryexecutiveos.com",
+      "covered_by": "https://spryexecutiveos.com/how-to-stop-overthinking/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "How Long Does It Take to Form a Habit?",
+      "demand_value": 6600,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "spryexecutiveos.com",
+      "covered_by": "https://spryexecutiveos.com/how-long-does-it-take-to-form-a-habit/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "ADHD Productivity System",
+      "demand_value": 5500,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "spryexecutiveos.com",
+      "covered_by": "https://spryexecutiveos.com/adhd-productivity-system/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "Decision Fatigue: What It Is and How to Reduce It",
+      "demand_value": 5400,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "spryexecutiveos.com",
+      "covered_by": "https://spryexecutiveos.com/decision-fatigue/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "How to Recover From Burnout",
+      "demand_value": 4400,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "spryexecutiveos.com",
+      "covered_by": "https://spryexecutiveos.com/how-to-recover-from-burnout/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "Task Paralysis: What It Is and How to Break the Loop",
+      "demand_value": 4400,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "spryexecutiveos.com",
+      "covered_by": "https://spryexecutiveos.com/task-paralysis/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "Executive Dysfunction and ADHD",
+      "demand_value": 3600,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "spryexecutiveos.com",
+      "covered_by": "https://spryexecutiveos.com/executive-dysfunction-adhd/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "How to Stop Being Lazy",
+      "demand_value": 2900,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "spryexecutiveos.com",
+      "covered_by": "https://spryexecutiveos.com/how-to-stop-being-lazy/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "How to Be a Better Husband",
+      "demand_value": 1900,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "billionairehighperformancecoach.com",
+      "covered_by": "https://billionairehighperformancecoach.com/how-to-be-a-better-husband/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "How to Focus With ADHD",
+      "demand_value": 1900,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "spryexecutiveos.com",
+      "covered_by": "https://spryexecutiveos.com/how-to-focus-with-adhd/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "How to Be Productive Without Overplanning",
+      "demand_value": 1300,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "spryexecutiveos.com",
+      "covered_by": "https://spryexecutiveos.com/how-to-be-productive/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "How to Fix Brain Fog",
+      "demand_value": 1300,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "spryexecutiveos.com",
+      "covered_by": "https://spryexecutiveos.com/how-to-fix-brain-fog/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "How to Stay Motivated at Work",
+      "demand_value": 1300,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "spryexecutiveos.com",
+      "covered_by": "https://spryexecutiveos.com/how-to-stay-motivated-at-work/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "Personal Development Plan Template",
+      "demand_value": 1300,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "billionairehighperformancecoach.com",
+      "covered_by": "https://billionairehighperformancecoach.com/personal-development-plan-template/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "How to Get Your Life Together",
+      "demand_value": 1200,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "spryexecutiveos.com",
+      "covered_by": "https://spryexecutiveos.com/how-to-get-your-life-together/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "Best Planner for ADHD in 2026",
+      "demand_value": 1000,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "spryexecutiveos.com",
+      "covered_by": "https://spryexecutiveos.com/best-planner-for-adhd/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "How to Build Discipline",
+      "demand_value": 1000,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "spryexecutiveos.com",
+      "covered_by": "https://spryexecutiveos.com/how-to-build-discipline/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "How to Be a Better Man",
+      "demand_value": 720,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "billionairehighperformancecoach.com",
+      "covered_by": "https://billionairehighperformancecoach.com/how-to-be-a-better-man/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "How to Stay Consistent",
+      "demand_value": 720,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "spryexecutiveos.com",
+      "covered_by": "https://spryexecutiveos.com/how-to-stay-consistent/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "How to Stay Consistent With Goals",
+      "demand_value": 720,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "spryexecutiveos.com",
+      "covered_by": "https://spryexecutiveos.com/how-to-stay-consistent-with-goals/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "ADHD Time Management Tools",
+      "demand_value": 480,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "spryexecutiveos.com",
+      "covered_by": "https://spryexecutiveos.com/adhd-time-management-tools/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "How to Be a Better Leader",
+      "demand_value": 480,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "billionairehighperformancecoach.com",
+      "covered_by": "https://billionairehighperformancecoach.com/how-to-be-a-better-leader/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "90-Day Plan Template",
+      "demand_value": 390,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "spryexecutiveos.com",
+      "covered_by": "https://spryexecutiveos.com/90-day-plan-template/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "How to Stop Overthinking at Night",
+      "demand_value": 320,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "spryexecutiveos.com",
+      "covered_by": "https://spryexecutiveos.com/how-to-stop-overthinking-at-night/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "Quarterly Planning Template",
+      "demand_value": 320,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "spryexecutiveos.com",
+      "covered_by": "https://spryexecutiveos.com/quarterly-planning-template/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "Sunday Reset Checklist",
+      "demand_value": 320,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "spryexecutiveos.com",
+      "covered_by": "https://spryexecutiveos.com/sunday-reset-checklist/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "How to Plan Your Day",
+      "demand_value": 260,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "spryexecutiveos.com",
+      "covered_by": "https://spryexecutiveos.com/how-to-plan-your-day/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "How to Plan Your Week",
+      "demand_value": 110,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "spryexecutiveos.com",
+      "covered_by": "https://spryexecutiveos.com/how-to-plan-your-week/",
+      "how": "a live page in the citation registry already answers this query"
+    },
+    {
+      "query": "adhd time blindness strategies",
+      "demand_value": 30,
+      "evidence_tier": "T2b",
+      "rank_band": "unscored",
+      "target_domain": "spryexecutiveos.com",
+      "covered_by": "https://spryexecutiveos.com/adhd-time-blindness-strategies/",
+      "how": "a live page in the citation registry already answers this query"
     }
   ],
   "refused": [
@@ -92,21 +573,7 @@
       "demand_value": 170,
       "evidence_tier": "T2b",
       "rank_band": "measured_search_volume",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
-    },
-    {
-      "query": "ai business coach",
-      "demand_value": 110,
-      "evidence_tier": "T2b",
-      "rank_band": "measured_search_volume",
-      "reason": "an exact-slug page already exists for this query"
-    },
-    {
-      "query": "ai accountability partner",
-      "demand_value": 70,
-      "evidence_tier": "T2b",
-      "rank_band": "measured_search_volume",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
+      "reason": "no authored material in phase4_material_library.json matches any phrase in this query"
     },
     {
       "query": "ai coach vs movement investigation",
@@ -114,20 +581,6 @@
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
       "reason": "the AI prompt pack x prompt structure pair already composed a page this run; a second page from the same two authored entries would differ only in its title"
-    },
-    {
-      "query": "ai tools for coaches",
-      "demand_value": 69,
-      "evidence_tier": "T1",
-      "rank_band": "own_impressions_only",
-      "reason": "per-run cap of 2 demand-backed pages already reached"
-    },
-    {
-      "query": "ai tools for team coaching",
-      "demand_value": 44,
-      "evidence_tier": "T1",
-      "rank_band": "own_impressions_only",
-      "reason": "per-run cap of 2 demand-backed pages already reached"
     },
     {
       "query": "best ai coach",
@@ -148,7 +601,7 @@
       "demand_value": 22,
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
+      "reason": "no authored material in phase4_material_library.json matches any phrase in this query"
     },
     {
       "query": "human-like ai coach",
@@ -170,13 +623,6 @@
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
       "reason": "the AI prompt pack x prompt structure pair already composed a page this run; a second page from the same two authored entries would differ only in its title"
-    },
-    {
-      "query": "ai coaching tool for managers",
-      "demand_value": 13,
-      "evidence_tier": "T1",
-      "rank_band": "own_impressions_only",
-      "reason": "per-run cap of 2 demand-backed pages already reached"
     },
     {
       "query": "best ai coaching",
@@ -211,7 +657,7 @@
       "demand_value": 7,
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
-      "reason": "per-run cap of 2 demand-backed pages already reached"
+      "reason": "the AI prompt pack x coach pair already composed a page this run; a second page from the same two authored entries would differ only in its title"
     },
     {
       "query": "compare humantelligence",
@@ -260,77 +706,56 @@
       "demand_value": 5,
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
-    },
-    {
-      "query": "human coaching",
-      "demand_value": 5,
-      "evidence_tier": "T1",
-      "rank_band": "own_impressions_only",
-      "reason": "per-run cap of 2 demand-backed pages already reached"
+      "reason": "only one axis matched (dimension: execution review) and no authored second axis is declared for it"
     },
     {
       "query": "top 5 ai tools every coach should use 2025",
       "demand_value": 5,
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
-      "reason": "per-run cap of 2 demand-backed pages already reached"
-    },
-    {
-      "query": "ai coach for high achievers",
-      "demand_value": 4,
-      "evidence_tier": "T1",
-      "rank_band": "own_impressions_only",
-      "reason": "per-run cap of 2 demand-backed pages already reached"
-    },
-    {
-      "query": "ai influence coach for workflow planning",
-      "demand_value": 4,
-      "evidence_tier": "T1",
-      "rank_band": "own_impressions_only",
-      "reason": "per-run cap of 2 demand-backed pages already reached"
+      "reason": "the AI prompt pack x coach pair already composed a page this run; a second page from the same two authored entries would differ only in its title"
     },
     {
       "query": "ai speech coach vs human coach",
       "demand_value": 4,
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
-      "reason": "per-run cap of 2 demand-backed pages already reached"
+      "reason": "the human executive coach x accountability pair already composed a page this run; a second page from the same two authored entries would differ only in its title"
     },
     {
       "query": "human coach",
       "demand_value": 4,
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
-      "reason": "per-run cap of 2 demand-backed pages already reached"
+      "reason": "the human executive coach x accountability pair already composed a page this run; a second page from the same two authored entries would differ only in its title"
     },
     {
       "query": "life coach alternative",
       "demand_value": 4,
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
+      "reason": "the human executive coach x accountability pair already composed a page this run; a second page from the same two authored entries would differ only in its title"
     },
     {
       "query": "yes causing ai coach for high achievers",
       "demand_value": 4,
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
-      "reason": "per-run cap of 2 demand-backed pages already reached"
+      "reason": "the AI prompt pack x high performer pair already composed a page this run; a second page from the same two authored entries would differ only in its title"
     },
     {
       "query": "ai chief of staff tool",
       "demand_value": 3,
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
+      "reason": "only one axis matched (dimension: chief-of-staff support) and no authored second axis is declared for it"
     },
     {
       "query": "ai coach for workflow planning",
       "demand_value": 3,
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
-      "reason": "per-run cap of 2 demand-backed pages already reached"
+      "reason": "per-run cap of 6 NEW demand-backed URL(s) already reached; this query stays queued and composes on a later release, once the cadence ledger has accepted this batch"
     },
     {
       "query": "ai coach matching",
@@ -358,14 +783,14 @@
       "demand_value": 3,
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
-      "reason": "per-run cap of 2 demand-backed pages already reached"
+      "reason": "per-run cap of 6 NEW demand-backed URL(s) already reached; this query stays queued and composes on a later release, once the cadence ledger has accepted this batch"
     },
     {
       "query": "ai manual coach",
       "demand_value": 3,
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
-      "reason": "per-run cap of 2 demand-backed pages already reached"
+      "reason": "the human executive coach x accountability pair already composed a page this run; a second page from the same two authored entries would differ only in its title"
     },
     {
       "query": "mnimum viable day",
@@ -403,13 +828,6 @@
       "reason": "the AI prompt pack x prompt structure pair already composed a page this run; a second page from the same two authored entries would differ only in its title"
     },
     {
-      "query": "ai executive coach",
-      "demand_value": 2,
-      "evidence_tier": "T1",
-      "rank_band": "own_impressions_only",
-      "reason": "a page in the registry already owns this query"
-    },
-    {
       "query": "ai for team coaching",
       "demand_value": 2,
       "evidence_tier": "T1",
@@ -421,7 +839,7 @@
       "demand_value": 2,
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
-      "reason": "per-run cap of 2 demand-backed pages already reached"
+      "reason": "the human executive coach x accountability pair already composed a page this run; a second page from the same two authored entries would differ only in its title"
     },
     {
       "query": "best ai coaching apps",
@@ -435,70 +853,70 @@
       "demand_value": 2,
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
-      "reason": "per-run cap of 2 demand-backed pages already reached"
+      "reason": "the human executive coach x accountability pair already composed a page this run; a second page from the same two authored entries would differ only in its title"
     },
     {
       "query": "cycle reset",
       "demand_value": 2,
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
+      "reason": "no authored material in phase4_material_library.json matches any phrase in this query"
     },
     {
       "query": "execution routines",
       "demand_value": 2,
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
+      "reason": "only one axis matched (dimension: execution review) and no authored second axis is declared for it"
     },
     {
       "query": "executive dysfunction tools",
       "demand_value": 2,
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
+      "reason": "only one axis matched (audience: executive) and no authored second axis is declared for it"
     },
     {
       "query": "executive os demo",
       "demand_value": 2,
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
+      "reason": "navigational product query - it belongs on the product page, not on a new reference surface"
     },
     {
       "query": "human coach vs ai leadership platform for fixing trust issues",
       "demand_value": 2,
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
-      "reason": "per-run cap of 2 demand-backed pages already reached"
+      "reason": "the human executive coach x accountability pair already composed a page this run; a second page from the same two authored entries would differ only in its title"
     },
     {
       "query": "adhd activation",
       "demand_value": 1,
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
+      "reason": "no authored material in phase4_material_library.json matches any phrase in this query"
     },
     {
       "query": "ai accountability coach",
       "demand_value": 1,
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
+      "reason": "the AI prompt pack x prompt structure pair already composed a page this run; a second page from the same two authored entries would differ only in its title"
     },
     {
       "query": "ai-driven manager coaching tools",
       "demand_value": 1,
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
-      "reason": "per-run cap of 2 demand-backed pages already reached"
+      "reason": "per-run cap of 6 NEW demand-backed URL(s) already reached; this query stays queued and composes on a later release, once the cadence ledger has accepted this batch"
     },
     {
       "query": "ai for chiefs of staff",
       "demand_value": 1,
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
+      "reason": "only one axis matched (dimension: chief-of-staff support) and no authored second axis is declared for it"
     },
     {
       "query": "ai-powered coaching solutions",
@@ -547,231 +965,28 @@
       "demand_value": 1,
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
-      "reason": "per-run cap of 2 demand-backed pages already reached"
+      "reason": "the human executive coach x accountability pair already composed a page this run; a second page from the same two authored entries would differ only in its title"
     },
     {
       "query": "coaching intelligence platform",
       "demand_value": 1,
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
-      "reason": "per-run cap of 2 demand-backed pages already reached"
+      "reason": "the human executive coach x accountability pair already composed a page this run; a second page from the same two authored entries would differ only in its title"
     },
     {
       "query": "human matched executive coaching",
       "demand_value": 1,
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
+      "reason": "the human executive coach x accountability pair already composed a page this run; a second page from the same two authored entries would differ only in its title"
     },
     {
       "query": "reset model",
       "demand_value": 1,
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
-    },
-    {
-      "query": "How to Stop Overthinking",
-      "demand_value": 14800,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
-    },
-    {
-      "query": "How Long Does It Take to Form a Habit?",
-      "demand_value": 6600,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
-    },
-    {
-      "query": "ADHD Productivity System",
-      "demand_value": 5500,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
-    },
-    {
-      "query": "Decision Fatigue: What It Is and How to Reduce It",
-      "demand_value": 5400,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
-    },
-    {
-      "query": "How to Recover From Burnout",
-      "demand_value": 4400,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
-    },
-    {
-      "query": "Task Paralysis: What It Is and How to Break the Loop",
-      "demand_value": 4400,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
-    },
-    {
-      "query": "Executive Dysfunction and ADHD",
-      "demand_value": 3600,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
-    },
-    {
-      "query": "How to Stop Being Lazy",
-      "demand_value": 2900,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
-    },
-    {
-      "query": "How to Be a Better Husband",
-      "demand_value": 1900,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "a page in the registry already owns this query"
-    },
-    {
-      "query": "How to Focus With ADHD",
-      "demand_value": 1900,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
-    },
-    {
-      "query": "How to Be Productive Without Overplanning",
-      "demand_value": 1300,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
-    },
-    {
-      "query": "How to Fix Brain Fog",
-      "demand_value": 1300,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
-    },
-    {
-      "query": "How to Stay Motivated at Work",
-      "demand_value": 1300,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
-    },
-    {
-      "query": "Personal Development Plan Template",
-      "demand_value": 1300,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "a page in the registry already owns this query"
-    },
-    {
-      "query": "How to Get Your Life Together",
-      "demand_value": 1200,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
-    },
-    {
-      "query": "Best Planner for ADHD in 2026",
-      "demand_value": 1000,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
-    },
-    {
-      "query": "How to Build Discipline",
-      "demand_value": 1000,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
-    },
-    {
-      "query": "How to Be a Better Man",
-      "demand_value": 720,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "a page in the registry already owns this query"
-    },
-    {
-      "query": "How to Stay Consistent",
-      "demand_value": 720,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
-    },
-    {
-      "query": "How to Stay Consistent With Goals",
-      "demand_value": 720,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
-    },
-    {
-      "query": "ADHD Time Management Tools",
-      "demand_value": 480,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
-    },
-    {
-      "query": "How to Be a Better Leader",
-      "demand_value": 480,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "a page in the registry already owns this query"
-    },
-    {
-      "query": "90-Day Plan Template",
-      "demand_value": 390,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
-    },
-    {
-      "query": "How to Stop Overthinking at Night",
-      "demand_value": 320,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
-    },
-    {
-      "query": "Quarterly Planning Template",
-      "demand_value": 320,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
-    },
-    {
-      "query": "Sunday Reset Checklist",
-      "demand_value": 320,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
-    },
-    {
-      "query": "How to Plan Your Day",
-      "demand_value": 260,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
-    },
-    {
-      "query": "How to Plan Your Week",
-      "demand_value": 110,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
-    },
-    {
-      "query": "adhd time blindness strategies",
-      "demand_value": 30,
-      "evidence_tier": "T2b",
-      "rank_band": "unscored",
-      "reason": "target domain spryexecutiveos.com is served by a different generator than billionairehighperformancecoach.com"
+      "reason": "no authored material in phase4_material_library.json matches any phrase in this query"
     },
     {
       "query": "how much does an executive coach cost",
@@ -779,6 +994,11 @@
       "evidence_tier": "T3",
       "rank_band": "unscored",
       "reason": "no measured demand value on the record"
+    },
+    {
+      "query": "ai influence coach for workflow planning",
+      "demand_value": 4,
+      "reason": "composed page is 0.741 similar to a page an existing family already wrote from the same authored material (limit 0.72); the material carries one page, not two"
     }
   ]
 }

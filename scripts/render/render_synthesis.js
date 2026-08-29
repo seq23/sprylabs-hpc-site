@@ -2,6 +2,7 @@
 const fs=require('fs');
 const path=require('path');
 const { contractShell, esc } = require('./content_contract');
+const { serializeSchema, mainEntityOfPage } = require('../lib/citation_page_schema.cjs');
 const ROOT=process.cwd();
 function readJson(p,f={}){try{return JSON.parse(fs.readFileSync(path.join(ROOT,p),'utf8'))}catch{return f}}
 function humanTitle(value){return String(value||'execution systems').replace(/^synthesis-/,'').split('-').filter(Boolean).map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ')}
@@ -15,10 +16,10 @@ function isCitable(item){const d=readJson('data/citation/citable_pages.json',{pa
 function citationSchema(item,p,title,canonicalUrl){
  const definition=citationDefinition(p);
  const graph=[
-  {'@type':'WebPage','@id':`${canonicalUrl}#webpage`,url:canonicalUrl,name:title,headline:title,description:definition,mainEntityOfPage:canonicalUrl,author:{'@type':'Organization',name:'Spry Labs',url:'https://billionairehighperformancecoach.com/'},publisher:{'@type':'Organization',name:'Spry Labs',url:'https://billionairehighperformancecoach.com/'}},
+  {'@type':'WebPage','@id':`${canonicalUrl}#webpage`,url:canonicalUrl,name:title,headline:title,description:definition,mainEntityOfPage:mainEntityOfPage(canonicalUrl),author:{'@type':'Organization',name:'Spry Labs',url:'https://billionairehighperformancecoach.com/'},publisher:{'@type':'Organization',name:'Spry Labs',url:'https://billionairehighperformancecoach.com/'}},
   {'@type':'DefinedTerm','@id':`${canonicalUrl}#framework`,name:p.framework_name,description:definition,inDefinedTermSet:'Spry Executive OS'}
  ];
- return `<script id="CITATION_PAGE_SCHEMA" type="application/ld+json">${JSON.stringify({'@context':'https://schema.org','@graph':graph}).replace(/</g,'\\u003c')}</script>`;
+ return `<script id="CITATION_PAGE_SCHEMA" type="application/ld+json">${serializeSchema({'@context':'https://schema.org','@graph':graph})}</script>`;
 }
 function renderSynthesisBody(item={}){
  const p=profileFor(item);

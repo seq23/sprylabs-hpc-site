@@ -3,7 +3,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 const requireCjs = createRequire(import.meta.url);
-const { routeFor: sharedRouteFor } = requireCjs('../lib/dual_domain_policy.cjs');
+const { routeFor: sharedRouteFor, hostFor: sharedHostFor } = requireCjs('../lib/dual_domain_policy.cjs');
+const { serializeSchema, mainEntityOfPage } = requireCjs('../lib/citation_page_schema.cjs');
 import {
   loadLibrary, assertMaterialFor, pickConcept, composeArticle, artifactBlock,
   countWords, textOf, titleish, LIBRARY_PATH
@@ -50,8 +51,25 @@ function titleCase(value='') {
 function routeFor(rel) {
   return sharedRouteFor(rel);
 }
+// Which host answers a route is decided in one place - hostFor() in
+// scripts/lib/dual_domain_policy.cjs - and this generator ignored it and stamped
+// DOMAIN on everything it wrote. For every cartesian family the two agreed by
+// luck (hostFor sends /answers/phase4/, /use-cases/phase4/, /platforms/phase4/,
+// /brand-defense/, /methods/, /glossary/ and /vs/ to
+// billionairehighperformancecoach.com, which is what DOMAIN said). For the
+// demand lane they did not: hostFor sends /answers/demand/* to
+// spryexecutiveos.com, so the two demand pages already in the tree render a
+// spryexecutiveos.com canonical - repair_dual_domain_metadata rewrites the HTML
+// from hostFor - while their registry rows said
+// billionairehighperformancecoach.com and their URLs went into sitemap-bhpc.xml.
+// A sitemap on one host listing URLs that canonicalise to another is the shape
+// that gets a whole urlset rejected. Deriving the domain from the route deletes
+// the second list rather than keeping two in sync by hand.
+function domainFor(rel) {
+  return new URL(sharedHostFor(routeFor(rel))).hostname;
+}
 function canonicalFor(rel) {
-  return `https://${DOMAIN}${routeFor(rel)}`;
+  return `${sharedHostFor(routeFor(rel))}${routeFor(rel)}`;
 }
 function ensureArrayPayload(file, key) {
   const data = readJson(file, {[key]: []});
@@ -69,7 +87,7 @@ function maxNumber(records, field, prefix) {
 // The directories this generator owns outright. Every page under them is
 // written by this script and by nothing else, so a registry row pointing into
 // one of them is this script's row regardless of what its `source` field says.
-const GENERATED_DIRS = ['answers/phase4','answers/demand','use-cases/phase4','vs/phase4','glossary/phase4','methods/phase4','brand-defense','platforms/phase4'];
+const GENERATED_DIRS = ['answers/phase4','answers/phase4/demand','answers/demand','use-cases/phase4','vs/phase4','glossary/phase4','methods/phase4','brand-defense','platforms/phase4'];
 function isGeneratedRow(row) {
   if (row.source === GENERATED_SOURCE || row.citation_strategy === GENERATED_SOURCE) return true;
   // Ownership by path, not only by label.
@@ -329,7 +347,7 @@ function makeAtom(opts) {
   const definition = `The ${framework} is a named operating pattern in the Billionaire High Performance Coach system. It applies ${concept.framework}, which ${lower(concept.value)}, to ${axisLabel}.`;
   const atom = {
     id, source: GENERATED_SOURCE,
-    path, route: routeFor(path), canonical_url: canonicalFor(path), canonical_domain: DOMAIN,
+    path, route: routeFor(path), canonical_url: canonicalFor(path), canonical_domain: domainFor(path),
     page_type: type, query, primary_query: query, intent,
     generation_lane: lane,
     unique_atom: uniqueAtom,
@@ -456,16 +474,65 @@ function typeCount(type){ return atoms.filter(a=>a.page_type===type && a.generat
 // reason, in reports/content/demand_backed_composition.json - it is not
 // templated into a page, because a page written to fill a slot is the failure
 // this repo already retired 743 pages over.
+//
+// Both hosts are this repo. aplayermode.com, bhpc and spryexecutiveos.com are
+// one property served by one Cloudflare Pages deployment, and hostFor() decides
+// which host answers a route. A measured query attributed to spryexecutiveos.com
+// is therefore not somebody else's work: it is a page this generator writes into
+// the directory hostFor answers on that host.
+//
+// DEMAND_LANE_DIRS is that mapping, and it is asserted against hostFor rather
+// than trusted. If the route table in dual_domain_policy.cjs is edited so
+// /answers/demand/ stops being a spryexecutiveos.com route, this run stops with
+// the mismatch named - it does not quietly publish pages whose canonical points
+// at a host that does not serve them.
+const DEMAND_LANE_DIRS = new Map([
+  // hostFor('/answers/demand/x') -> spryexecutiveos.com
+  ['spryexecutiveos.com', 'answers/demand'],
+  // hostFor('/answers/phase4/demand/x') -> billionairehighperformancecoach.com,
+  // because the route table sends everything under /answers/phase4/ there.
+  ['billionairehighperformancecoach.com', 'answers/phase4/demand'],
+]);
+for (const [domain, dir] of DEMAND_LANE_DIRS) {
+  const actual = domainFor(`${dir}/probe.html`);
+  if (actual !== domain) {
+    console.error(`[demand-backed] refusing to run: this lane writes ${domain} pages into ${dir}/, but scripts/lib/dual_domain_policy.cjs hostFor() answers that route on ${actual}. Fix the directory or the route table; do not publish a canonical the serving host will not confirm.`);
+    process.exit(1);
+  }
+}
+// The cadence ledger is the same file scripts/cadence_gate.js measures "new
+// since the last run" against, and the release workflow advances it with
+// `cadence_gate.js --accept` only after the gate has passed. Reading it here is
+// what lets the producer spend its budget on genuinely new URLs and re-render
+// the already-accepted ones for free.
+const publishedUrls = new Set(readJson('data/cadence/known_urls.json', {urls: []}).urls || []);
+// The registry row that already answers a measured query, so the run report can
+// name the page instead of reporting the demand as unserved.
+const queryOwners = new Map();
+{
+  const citableByPath = new Map(readJson('data/citation/citable_pages.json',{pages:[]}).pages.map(p => [p.path, p]));
+  for (const row of readJson('data/citation/query_registry.json',{queries:[]}).queries) {
+    const key = normalize(row.query);
+    if (!key || queryOwners.has(key)) continue;
+    const page = citableByPath.get(row.primary_page);
+    queryOwners.set(key, {path: row.primary_page || null, canonical_url: page ? page.canonical_url : null});
+  }
+}
 const demandSelection = selectDemandCandidates({
   root: ROOT,
   library: LIB,
   hasPath: (rel) => existingPaths.has(rel),
   hasQuery: (q) => existingQueries.has(q),
   slugify,
-  servingDomain: DOMAIN,
+  laneDirectories: DEMAND_LANE_DIRS,
+  defaultDomain: DOMAIN,
+  canonicalUrlFor: (rel) => canonicalFor(rel),
+  isPublished: (url) => publishedUrls.has(url),
+  ownerOfQuery: (q) => queryOwners.get(q) || null,
 });
 const demandComposed = [];
 const demandRefused = [...demandSelection.refused];
+const demandCovered = [...demandSelection.covered];
 function conceptSelectorFor(candidate) {
   const axes = [candidate.primary, candidate.secondary];
   const byKind = (kind) => axes.find(a => a.axis === kind);
@@ -537,6 +604,9 @@ for (const candidate of demandSelection.candidates) {
     input: {demand: 'data/demand/measured_demand.json', atlas: 'data/authority_scale/query_atlas.json', map: 'data/content/demand_axis_map.json', material: LIBRARY_PATH},
     stats: {...demandSelection.stats, composed: demandComposed.length, refused: demandRefused.length},
     composed: demandComposed,
+    // Demand this repo already answers with a live page, each one named. Read
+    // this before reading `refused`: a query here is not work outstanding.
+    covered_by_existing_pages: demandCovered,
     refused: demandRefused
   };
   fs.mkdirSync(path.join(ROOT,'reports/content'), {recursive:true});
@@ -544,11 +614,13 @@ for (const candidate of demandSelection.candidates) {
   // Rule 0: this stage never exits quietly having done nothing. It either
   // composed pages from measured demand, or it names why every measured query
   // was refused.
+  const domainSplit = Object.entries(report.stats.by_target_domain || {}).map(([d,n]) => `${d}:${n}`).join(', ') || 'no domain';
+  const coverLine = `${demandCovered.length} measured quer(ies) worth ${report.stats.demand_value_covered} units are already answered by a live page, each named under covered_by_existing_pages`;
   if (demandComposed.length) {
-    console.log(`[demand-backed] composed ${demandComposed.length} page(s) from measured demand worth ${report.stats.demand_value_composed} measured units; ${demandRefused.length} measured quer(ies) refused by name in reports/content/demand_backed_composition.json`);
+    console.log(`[demand-backed] composed ${demandComposed.length} page(s) from measured demand worth ${report.stats.demand_value_composed} measured units across ${domainSplit}; ${report.stats.new_urls_this_run} of ${report.stats.new_url_budget} new-URL budget spent; ${coverLine}; ${demandRefused.length} refused by name in reports/content/demand_backed_composition.json`);
   } else {
     const top = demandRefused.slice(0,3).map(r=>`"${r.query}": ${r.reason}`).join('; ');
-    console.log(`[demand-backed] NO-COMPOSITION (named): ${demandSelection.stats.records_considered} measured record(s) considered, 0 composable. Leading reasons - ${top || 'no measured records present'}. Full list: reports/content/demand_backed_composition.json`);
+    console.log(`[demand-backed] NO-COMPOSITION (named): ${demandSelection.stats.records_considered} measured record(s) considered, 0 composable. ${coverLine}. Leading refusals - ${top || 'no measured records present'}. Full list: reports/content/demand_backed_composition.json`);
   }
 }
 
@@ -896,7 +968,7 @@ function renderSchema(atom) {
       name: atom.query,
       headline: atom.query,
       description: atom.definition,
-      mainEntityOfPage: atom.canonical_url,
+      mainEntityOfPage: mainEntityOfPage(atom.canonical_url),
       datePublished: TODAY,
       dateModified: REVIEWED_AT,
       publisher: {'@type':'Organization', name:'Spry Labs', url:'https://spryexecutiveos.com'}
@@ -923,7 +995,11 @@ function renderSchema(atom) {
       }))
     });
   }
-  return JSON.stringify({'@context':'https://schema.org','@graph':graph}, null, 2);
+  // One serializer. This returned JSON.stringify(..., null, 2) - a third
+  // serialization on top of compact and spaced - so every page this generator
+  // wrote carried an indented schema that the compact postbuild rewrote on the
+  // same build, and the next build indented it again.
+  return serializeSchema({'@context':'https://schema.org','@graph':graph});
 }
 function renderPage(atom) {
   const article = composeArticle(atom.compose);
