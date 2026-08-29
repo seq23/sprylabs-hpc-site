@@ -16,11 +16,12 @@
   "ui_test_parity": "npm run validate:ui-test-parity",
   "postpush": "npm run release:postpush",
   "live_proof": "NOT_APPLICABLE",
-  "populated_click_audit_lanes": ["public"],
+  "populated_click_audit_lanes": [],
+  "click_audit_lanes_reason": "Postdeploy click-audit lanes were removed on 2026-08-29 by owner decision; local real-browser proof is the browser-surface authority.",
   "fixture_registry": "NOT_APPLICABLE",
   "cleanup": "NOT_APPLICABLE",
   "post_cleanup_integrity": "NOT_APPLICABLE",
   "report": "npm run release:report",
   "evidence_root": "~/repo-validation-evidence/sprylabs-hpc-site/<run-id>/",
-  "completion_requirements": ["container prepush", "local browser proof", "CI", "deployment verification", "public deployed click audit"]
+  "completion_requirements": ["container prepush", "local browser proof", "CI", "deployment verification"]
 }

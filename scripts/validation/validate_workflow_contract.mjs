@@ -7,7 +7,6 @@ const workflowDir = '.github/workflows';
 const expectedWorkflows = [
   'daily-citation-intelligence.yml',
   'deploy-distribution.yml',
-  'postdeploy-public-audit.yml',
   'spry-content-release.yml',
   'spry-full-rebuild.yml',
   'validate-repo.yml',
@@ -17,6 +16,9 @@ const expectedWorkflows = [
 ].sort();
 const retiredWorkflows = [
   'citation-velocity-5k.yml',
+  // Removed 2026-08-29 by owner decision: the postdeploy public click audit is
+  // no longer part of the CI topology. Local real-browser proof remains.
+  'postdeploy-public-audit.yml',
   'content-authority-pipeline.yml',
   'daily-insight.yml',
   'execution-strict.yml',
@@ -183,11 +185,6 @@ for (const name of actualWorkflows) {
   if (name === 'admin-command.yml') {
     has(text, 'node scripts/admin/run_admin_command.mjs', name);
     has(text, 'npm run validate:full-safe-autonomy', name);
-  }
-  if (name === 'postdeploy-public-audit.yml') {
-    has(text, 'npm run postdeploy:public-click-audit', name);
-    has(text, 'npx playwright install --with-deps chromium', name, 'Playwright browser install');
-    if (!/permissions:\s*\n\s{2}contents:\s*read/m.test(text)) errors.push(`${name}: postdeploy audit workflow must be read-only`);
   }
   if (name === 'search-intelligence.yml') {
     if (!text.includes('npm run workflow:search-intelligence') && !text.includes('bash .github/scripts/run_search_intelligence_cycle.sh')) errors.push(`${name}: missing separate search-intelligence runner`);

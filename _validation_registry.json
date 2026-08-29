@@ -279,7 +279,7 @@
     },
     {
       "validation_id": "VAL-009",
-      "status": "NOT_APPLICABLE",
+      "status": "RETIRED",
       "name": "postdeploy:authenticated-click-audit",
       "check_type": "release-stage",
       "owning_lane": "deployed-runtime",
@@ -300,16 +300,15 @@
       "maintenance_owner": "repo",
       "overlap_analysis": [],
       "retirement_offset": null,
-      "decision": "Not applicable: Public static site has no authenticated routes.",
-      "decision_date": "2026-06-18",
-      "matrix_ids": [
-        "MX-009"
-      ],
-      "not_applicable_reason": "Public static site has no authenticated routes."
+      "decision": "Owner ordered removal of the postdeploy public click-audit lane; the workflow, its npm entrypoints, and the not-applicable click-audit stubs were deleted. Local real-browser proof (release:local-visual-proof over tests/public-routes.spec.mjs) remains the browser-surface authority.",
+      "decision_date": "2026-08-29",
+      "matrix_ids": [],
+      "not_applicable_reason": "Public static site has no authenticated routes.",
+      "retirement_date": "2026-08-29"
     },
     {
       "validation_id": "VAL-010",
-      "status": "ADMITTED",
+      "status": "RETIRED",
       "name": "postdeploy:click-audit:all",
       "check_type": "release-stage",
       "owning_lane": "deployed-runtime",
@@ -330,16 +329,15 @@
       "maintenance_owner": "repo",
       "overlap_analysis": [],
       "retirement_offset": null,
-      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
-      "decision_date": "2026-06-18",
-      "matrix_ids": [
-        "MX-010"
-      ],
-      "not_applicable_reason": null
+      "decision": "Owner ordered removal of the postdeploy public click-audit lane; the workflow, its npm entrypoints, and the not-applicable click-audit stubs were deleted. Local real-browser proof (release:local-visual-proof over tests/public-routes.spec.mjs) remains the browser-surface authority.",
+      "decision_date": "2026-08-29",
+      "matrix_ids": [],
+      "not_applicable_reason": null,
+      "retirement_date": "2026-08-29"
     },
     {
       "validation_id": "VAL-011",
-      "status": "ADMITTED",
+      "status": "RETIRED",
       "name": "postdeploy:public-click-audit",
       "check_type": "release-stage",
       "owning_lane": "deployed-runtime",
@@ -360,16 +358,15 @@
       "maintenance_owner": "repo",
       "overlap_analysis": [],
       "retirement_offset": null,
-      "decision": "Admitted under the v2.1 validation simplification and registry overhaul.",
-      "decision_date": "2026-06-18",
-      "matrix_ids": [
-        "MX-011"
-      ],
-      "not_applicable_reason": null
+      "decision": "Owner ordered removal of the postdeploy public click-audit lane; the workflow, its npm entrypoints, and the not-applicable click-audit stubs were deleted. Local real-browser proof (release:local-visual-proof over tests/public-routes.spec.mjs) remains the browser-surface authority.",
+      "decision_date": "2026-08-29",
+      "matrix_ids": [],
+      "not_applicable_reason": null,
+      "retirement_date": "2026-08-29"
     },
     {
       "validation_id": "VAL-012",
-      "status": "NOT_APPLICABLE",
+      "status": "RETIRED",
       "name": "postdeploy:role-click-audit",
       "check_type": "release-stage",
       "owning_lane": "deployed-runtime",
@@ -390,12 +387,11 @@
       "maintenance_owner": "repo",
       "overlap_analysis": [],
       "retirement_offset": null,
-      "decision": "Not applicable: Public static site has no roles.",
-      "decision_date": "2026-06-18",
-      "matrix_ids": [
-        "MX-012"
-      ],
-      "not_applicable_reason": "Public static site has no roles."
+      "decision": "Owner ordered removal of the postdeploy public click-audit lane; the workflow, its npm entrypoints, and the not-applicable click-audit stubs were deleted. Local real-browser proof (release:local-visual-proof over tests/public-routes.spec.mjs) remains the browser-surface authority.",
+      "decision_date": "2026-08-29",
+      "matrix_ids": [],
+      "not_applicable_reason": "Public static site has no roles.",
+      "retirement_date": "2026-08-29"
     },
     {
       "validation_id": "VAL-013",
@@ -3595,7 +3591,7 @@
     },
     {
       "validation_id": "VAL-WF-SIM-03",
-      "status": "ADMITTED",
+      "status": "RETIRED",
       "name": "postdeploy-public-audit",
       "check_type": "workflow",
       "owning_lane": "ci",
@@ -3617,12 +3613,11 @@
       "maintenance_owner": "repo",
       "overlap_analysis": [],
       "retirement_offset": null,
-      "decision": "Admitted simplified workflow surface aligned with Velocity six-workflow topology.",
-      "decision_date": "2026-07-04",
-      "matrix_ids": [
-        "MX-WF-SIM-03"
-      ],
-      "not_applicable_reason": null
+      "decision": "Owner ordered removal of the postdeploy public click-audit lane; the workflow, its npm entrypoints, and the not-applicable click-audit stubs were deleted. Local real-browser proof (release:local-visual-proof over tests/public-routes.spec.mjs) remains the browser-surface authority.",
+      "decision_date": "2026-08-29",
+      "matrix_ids": [],
+      "not_applicable_reason": null,
+      "retirement_date": "2026-08-29"
     },
     {
       "validation_id": "VAL-WF-SIM-04",

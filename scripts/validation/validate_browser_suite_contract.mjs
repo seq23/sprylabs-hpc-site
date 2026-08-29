@@ -109,53 +109,6 @@ if (fs.existsSync('playwright.config.mjs')) {
 }
 
 /*
- * Postdeploy Playwright runtime contract
- *
- * npm ci is the authority for the Playwright package version.
- *
- * The workflow may install Chromium binaries with:
- *   npx playwright install --with-deps chromium
- *
- * It must NOT run npm install for playwright or @playwright/test afterward,
- * because doing so can create two Playwright Test runtime instances and cause:
- *
- *   "Playwright Test did not expect test() to be called here."
- */
-const postdeployWorkflowPath =
-  '.github/workflows/postdeploy-public-audit.yml';
-
-if (!fs.existsSync(postdeployWorkflowPath)) {
-  errors.push(
-    `postdeploy public audit workflow missing: ${postdeployWorkflowPath}`
-  );
-} else {
-  const workflow = fs.readFileSync(postdeployWorkflowPath, 'utf8');
-
-  if (!/npm\s+ci\s+--ignore-scripts/.test(workflow)) {
-    errors.push(
-      'postdeploy public audit must install repo dependencies with npm ci --ignore-scripts'
-    );
-  }
-
-  const forbiddenPlaywrightPackageInstall =
-    /npm\s+install[^\n]*(?:@playwright\/test|(?:^|[\s"'=])playwright)(?:@[\w.-]+)?/im;
-
-  if (forbiddenPlaywrightPackageInstall.test(workflow)) {
-    errors.push(
-      'postdeploy public audit must not npm install playwright or @playwright/test after npm ci; package.json/package-lock.json are the Playwright version authority'
-    );
-  }
-
-  if (
-    !/npx\s+playwright\s+install\s+--with-deps\s+chromium/.test(workflow)
-  ) {
-    errors.push(
-      'postdeploy public audit must install the Chromium browser runtime with npx playwright install --with-deps chromium'
-    );
-  }
-}
-
-/*
  * Dependency consistency contract.
  *
  * @playwright/test is the repo-owned test runner and its corresponding
@@ -227,10 +180,11 @@ writeSummary('validate-browser-suite-contract', {
   representative_dimension_count: coveredDimensions.size,
   required_representative_dimensions: requiredDimensions,
   playwright_runtime_contract: {
-    workflow: postdeployWorkflowPath,
+    // The postdeploy public click-audit workflow was removed on 2026-08-29 by
+    // owner decision. npm ci remains the Playwright version authority for the
+    // local real-browser proof, which is now the only browser lane.
+    workflow: null,
     package_install_authority: 'npm-ci',
-    browser_install_command:
-      'npx playwright install --with-deps chromium',
     independent_playwright_package_install_allowed: false,
   },
   errors,

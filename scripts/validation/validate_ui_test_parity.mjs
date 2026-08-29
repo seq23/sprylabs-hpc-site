@@ -27,13 +27,13 @@ if (priority.length < PRIORITY_FLOOR) errors.push(`priority citation acceptance 
 //    sentence definitions"
 //     - an audit row's layout brief for an editor. Same leak as the operator
 //       critique that reached live page copy; this file was just another place
-//       it surfaced, and here it broke the Postdeploy Public Audit instead,
-//       because tests/public-routes.spec.mjs asserts the deployed page's
-//       citation-definition opening contains this string and no real page says
-//       "with H3s for".
+//       it surfaced, and here it broke the browser proof instead, because
+//       tests/public-routes.spec.mjs asserts the page's citation-definition
+//       opening contains this string and no real page says "with H3s for".
 //
-// The postdeploy audit is the only check that fetches deployed pages, so it is
-// the last place a fault should first be noticed. Catch the shape here.
+// The real-browser proof is the last place a fault should first be noticed -
+// and since the postdeploy public audit was removed on 2026-08-29 there is no
+// deployed-page check behind it at all. Catch the shape here.
 const LAYOUT_BRIEF = /\bwith\s+(?:numbered\s+)?h[1-6]s?\b|\beach\s+with\s+[\d\u2013-]+\s*(?:to\s*\d+\s*)?sentences?\b/i;
 const BRAND_SUFFIX = /\s+[\u2014|-]\s+(?:Spry Executive OS|Billionaire High Performance Coach)\b/i;
 const MAX_FRAMEWORK_WORDS = 12;

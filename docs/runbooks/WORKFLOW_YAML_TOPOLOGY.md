@@ -14,8 +14,7 @@ Every workflow maps to exactly one lane:
 5. citation-expansion
 6. daily-citation-intelligence
 7. deploy
-8. postdeploy-audit
-9. release-verify
+8. release-verify
 
 ## Runtime mutation law
 
