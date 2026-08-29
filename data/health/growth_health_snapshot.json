@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-29T15:40:40.780Z",
-  "status": "PASS",
+  "generated_at": "2026-08-29T16:21:48.746Z",
+  "status": "ATTENTION",
   "goal": {
     "target": 100000,
     "time_horizon_days": 90,
@@ -24,7 +24,12 @@
   "zero_dollar": {
     "owned_pages": 0,
     "latest_applied": 0,
-    "latest_skipped": 5
+    "latest_skipped": 5,
+    "latest_planned": 5,
+    "state": "STALLED",
+    "alarm": true,
+    "stop_code": "ALL_CANDIDATES_FIXTURE_ONLY",
+    "stop_reason": "All 5 candidate(s) came from fixture signals, which are proof-only and may not mutate public content. No enabled non-fixture source produced records. Supply data/signals/manual_import.json, or enable a credentialed source in data/signals/source_registry.json. This lane cannot do work until a real signal source exists."
   },
   "authority": {
     "route_count": 2219,
@@ -32,12 +37,15 @@
     "system_core": 1
   },
   "exceptions": {
-    "total": 245
+    "total": 250
   },
   "outcomes": {
     "observed_llm_mentions": null,
     "indexed_urls": null,
     "download_referrals": null,
     "gumroad_sales": null
-  }
+  },
+  "attention": [
+    "zero_dollar:ALL_CANDIDATES_FIXTURE_ONLY"
+  ]
 }

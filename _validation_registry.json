@@ -5998,8 +5998,47 @@
         "MX-CITATION-SIGNAL-JOIN"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-NO-SILENT-ZERO-WORK",
+      "status": "ADMITTED",
+      "name": "validate:no-silent-zero-work",
+      "check_type": "contract",
+      "owning_lane": "citation-intelligence",
+      "risk_prevented": "Prevents any lane from exiting 0 while having produced no work. Guards the exact defects found in this audit: the zero-dollar citation plan discarding 100% of its candidates behind a permanently-disabled fixture gate while printing PASS; the apply stage hardcoding status PASS with release_units_applied=0; the strategy gap-fill lane queueing 10 candidates a day that no consumer ever turns into files; the answer-surface scorer reading a file nothing writes while the real citation probe wrote elsewhere; the admin dashboard rendering a stalled zero identically to a healthy day; the search-intelligence lane re-observing the same 24 of 120 targets forever; and validate_fanout_warning hardcoding status PASS with 3110 findings.",
+      "existing_coverage_gap": "No validator could tell 'this lane did no work' apart from 'this lane had no work to do'. validate_daily_proof_packet checked field presence and arithmetic but never asserted that a PASS implied work; validate_safe_harbor_autopublish only inspected units that were applied, so applying zero units vacuously passed.",
+      "scope": [
+        "scripts/citation_intelligence",
+        "scripts/answer_surface",
+        "scripts/content/fill_strategy_release_gap.mjs",
+        "scripts/admin/build_admin_status.mjs",
+        "scripts/search_intelligence/observe_live_search.mjs",
+        "scripts/validate_fanout_warning.js",
+        "scripts/social/collect_social.js"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:no-silent-zero-work",
+      "implementation_path": "scripts/validators/validate_no_silent_zero_work.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "artifacts/validation/no-silent-zero-work.json",
+      "negative_fixture": "artifacts/validation/no-silent-zero-work.json",
+      "evidence_output": "artifacts/validation/no-silent-zero-work.json",
+      "runtime_budget_seconds": 30,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "VAL-DAILY-PROOF-PACKET checks the proof packet's shape and arithmetic; this checks whether the work it reports actually happened.",
+        "VAL-SAFE-HARBOR-AUTOPUBLISH inspects applied units for unsafe claims; it passes vacuously when zero units are applied, which is precisely the state this catches."
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted after the zero-dollar citation lane was found to have applied zero candidates for 8+ weeks while reporting PASS, and four further lanes were reproduced with the same shape.",
+      "decision_date": "2026-08-29",
+      "matrix_ids": [
+        "MX-NO-SILENT-ZERO-WORK"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 186,
+  "record_count": 190,
   "generated_at": "2026-08-08T23:30:00Z"
 }

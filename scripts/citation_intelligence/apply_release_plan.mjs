@@ -12,4 +12,12 @@ for(const item of plan.selected||[]){const p=item.source_file;let html=null;if(i
 applied.push({...item,decision:'PUBLISHED',sha256:crypto.createHash('sha256').update(html).digest('hex')});}
 ownership.generated_at=new Date().toISOString();ownership.route_count=ownership.routes.length;ownership.summary=ownership.routes.reduce((a,r)=>(a[r.owner]=(a[r.owner]||0)+1,a),{});routeManifest.route_count=routeManifest.routes.length;routeManifest.generated_at=new Date().toISOString();writeJson('data/content_ownership_registry.json',ownership);writeJson('data/routes/public_route_manifest.json',routeManifest);
 ledger.entries.push(...applied.map(x=>({timestamp:new Date().toISOString(),action_id:x.action_id,route:x.route_owner,decision:'PUBLISHED',owner:'zero_dollar'})),...skipped.map(x=>({timestamp:new Date().toISOString(),action_id:x.action_id||x.candidate_id,route:x.route_owner,decision:x.decision||x.safe_harbor||'SKIPPED',reason:x.reason||x.safe_harbor_reason||''})) );writeJson('data/governance/safe_harbor_audit_ledger.json',ledger);
-const result={schema_version:'2.0',repo:'seq23/sprylabs-hpc-site',generated_at:new Date().toISOString(),mode:'FULL_SAFE_AUTONOMY_GAP_FILL',status:'PASS',release_units_applied:applied.length,release_units_skipped:skipped.length,public_mutation:applied.length>0,applied,skipped};writeJson('artifacts/validation/release-plan-application.json',result);writeJson('reports/release-plan-application.json',result);console.log(`[release:content:intelligence] PASS applied=${applied.length} skipped=${skipped.length}`);
+// Rule 0: status was hardcoded 'PASS' regardless of whether anything was applied.
+// A plan that selected units but applied none is a stop, not a pass.
+const planned=(plan.selected||[]).length;
+const stop_reason=planned>0&&applied.length===0
+  ?{code:'SELECTED_BUT_NONE_APPLIED',message:`The plan selected ${planned} unit(s) but none were applied. Every selected unit was dropped at apply time; see the skipped decisions for the named reason.`}
+  :(planned===0&&plan.stop_reason?plan.stop_reason:null);
+const result={schema_version:'2.0',repo:'seq23/sprylabs-hpc-site',generated_at:new Date().toISOString(),mode:'FULL_SAFE_AUTONOMY_GAP_FILL',status:stop_reason?'STOPPED':'PASS',stop_reason,release_units_planned:planned,release_units_applied:applied.length,release_units_skipped:skipped.length,public_mutation:applied.length>0,applied,skipped};writeJson('artifacts/validation/release-plan-application.json',result);writeJson('reports/release-plan-application.json',result);
+if(stop_reason){console.error(`[release:content:intelligence] STOP ${stop_reason.code}: ${stop_reason.message}`);process.exit(1);}
+console.log(`[release:content:intelligence] PASS applied=${applied.length} skipped=${skipped.length}`);

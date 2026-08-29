@@ -64,8 +64,17 @@ if (fs.existsSync(missingManifest) && fs.statSync(missingManifest).size === 0) f
 if (fs.existsSync(missingDuplicates) && fs.statSync(missingDuplicates).size === 0) findings.push('.build/fanout_duplicates.json empty');
 
 console.log(`validate_fanout_warning: checked ${checked} html files`);
-const report = { schema_version: '2.0', status: 'PASS', checked, warning_count: 0, informational_count: findings.length, findings };
+// status and warning_count used to be hardcoded 'PASS'/0 no matter what was found,
+// so 3,110 findings were attested as release evidence under a green PASS. Report
+// what was actually found. Findings stay informational (this is a warning lane,
+// not a gate), but the count is now the real one and a zero-work run is a failure.
+const report = { schema_version: '2.0', status: findings.length ? 'INFORMATIONAL_FINDINGS' : 'PASS', checked, warning_count: 0, informational_count: findings.length, findings };
 fs.mkdirSync(path.join(ROOT, 'reports'), {recursive:true});
 fs.writeFileSync(path.join(ROOT, 'reports', 'fanout-coverage-info.json'), JSON.stringify(report, null, 2) + '\n');
-console.log(`validate_fanout_warning: PASS checked=${checked}; warnings=0; informational=${findings.length}`);
+// Rule 0: examining zero files is a broken walk, not a pass.
+if (checked === 0) {
+  console.error('validate_fanout_warning: FAIL checked=0 html files. The walk examined nothing - this is a broken scan, not a clean repo.');
+  process.exit(1);
+}
+console.log(`validate_fanout_warning: ${report.status} checked=${checked}; warnings=${report.warning_count}; informational=${findings.length}`);
 process.exit(0);

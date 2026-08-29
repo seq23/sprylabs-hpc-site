@@ -1827,9 +1827,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-NO-SILENT-ZERO-WORK",
+      "validation_id": "VAL-NO-SILENT-ZERO-WORK",
+      "lane": "citation-intelligence",
+      "command": "npm run validate:no-silent-zero-work",
+      "order": 183,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 182,
+  "entry_count": 183,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2167,6 +2177,10 @@
         {
           "id": "VAL-CITATION-SIGNAL-JOIN",
           "command": "npm run validate:citation-signal-join"
+        },
+        {
+          "id": "validate:no-silent-zero-work",
+          "command": "npm run validate:no-silent-zero-work"
         }
       ]
     },
@@ -2289,6 +2303,10 @@
         {
           "id": "VAL-BHPC-PAGE-SEO-FULL",
           "command": "npm run validate:page-seo:full"
+        },
+        {
+          "id": "validate:no-silent-zero-work",
+          "command": "npm run validate:no-silent-zero-work"
         }
       ]
     },
@@ -2343,6 +2361,10 @@
         {
           "id": "validate:llms-full-coverage",
           "command": "node scripts/validation/validate_llms_full_coverage.mjs"
+        },
+        {
+          "id": "validate:no-silent-zero-work",
+          "command": "npm run validate:no-silent-zero-work"
         }
       ]
     }

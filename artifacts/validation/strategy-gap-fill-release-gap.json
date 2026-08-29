@@ -1,8 +1,16 @@
 {
-  "status": "PASS",
+  "status": "STOPPED",
+  "stop_reason": {
+    "code": "QUEUE_HAS_NO_CONSUMER",
+    "message": "Queued 10 candidate(s) into data/strategy/strategy_gap_fill_release_queue.json, but 0 of 288 backlog target_path files exist on disk. No stage turns a queued row into a page: the queue's only reader validates row flags and writes nothing. Until a consumer exists that creates target_path files, this lane is selecting work that can never be delivered.",
+    "backlog_candidates": 288,
+    "materialized_target_paths": 0
+  },
   "daily_target_units": 15,
   "ready_before": 0,
   "shortfall": 15,
   "max_new_pages_per_day": 10,
-  "added_count": 10
+  "added_count": 10,
+  "backlog_candidates": 288,
+  "materialized_target_paths": 0
 }
