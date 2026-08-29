@@ -1,58 +1,58 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-08-29T01:29:10.810Z",
-  "provider_state": "DEGRADED",
-  "overall_status": "DEGRADED",
-  "data_state": "RAW_COUNT_UNKNOWN",
-  "status_is_healthy": false,
-  "raw_row_count": null,
-  "raw_impressions": null,
-  "raw_clicks": null,
+  "generated_at": "2026-08-29T13:29:06.487Z",
+  "provider_state": "OK",
+  "overall_status": "OK",
+  "data_state": "HEALTHY",
+  "status_is_healthy": true,
+  "raw_row_count": 28,
+  "raw_impressions": 174,
+  "raw_clicks": 1,
   "row_count": 0,
   "target_query_filter": {
     "target_query_count": 120,
-    "rows_in": null,
+    "rows_in": 28,
     "rows_matched": 0,
-    "rows_discarded": null,
-    "discard_ratio": null,
+    "rows_discarded": 28,
+    "discard_ratio": 1,
     "targets_with_rows": 0,
-    "filter_discarded_every_row": false
+    "filter_discarded_every_row": true
   },
   "exports": [
     {
       "path": "data/search_intelligence/provider_inputs/gsc_bhpc.json",
       "site_url": "sc-domain:billionairehighperformancecoach.com",
-      "start_date": "2026-07-30",
-      "end_date": "2026-08-26",
-      "collected_at": "2026-08-28",
-      "raw_row_count": null,
-      "raw_distinct_query_count": null,
-      "raw_impressions": null,
-      "raw_clicks": null,
+      "start_date": "2026-07-31",
+      "end_date": "2026-08-27",
+      "collected_at": "2026-08-29",
+      "raw_row_count": 17,
+      "raw_distinct_query_count": 15,
+      "raw_impressions": 148,
+      "raw_clicks": 1,
       "row_count": 0,
-      "rows_discarded_by_target_filter": null,
-      "discarded_impressions": null,
-      "discarded_clicks": null,
-      "data_state": "RAW_COUNT_UNKNOWN"
+      "rows_discarded_by_target_filter": 17,
+      "discarded_impressions": 148,
+      "discarded_clicks": 1,
+      "data_state": "HEALTHY"
     },
     {
       "path": "data/search_intelligence/provider_inputs/gsc_spry.json",
       "site_url": "sc-domain:spryexecutiveos.com",
-      "start_date": "2026-07-30",
-      "end_date": "2026-08-26",
-      "collected_at": "2026-08-28",
-      "raw_row_count": null,
-      "raw_distinct_query_count": null,
-      "raw_impressions": null,
-      "raw_clicks": null,
+      "start_date": "2026-07-31",
+      "end_date": "2026-08-27",
+      "collected_at": "2026-08-29",
+      "raw_row_count": 11,
+      "raw_distinct_query_count": 11,
+      "raw_impressions": 26,
+      "raw_clicks": 0,
       "row_count": 0,
-      "rows_discarded_by_target_filter": null,
-      "discarded_impressions": null,
-      "discarded_clicks": null,
-      "data_state": "RAW_COUNT_UNKNOWN"
+      "rows_discarded_by_target_filter": 11,
+      "discarded_impressions": 26,
+      "discarded_clicks": 0,
+      "data_state": "HEALTHY"
     }
   ],
-  "unavailable_note": "At least one export does not record raw_row_count, so an empty provider response cannot be distinguished from a fully filtered one. Re-run scripts/search_intelligence/gsc_search_analytics.py to produce a countable export.",
+  "unavailable_note": null,
   "per_target": [
     {
       "target_id": "si_32f3803b2df5ecc9",
@@ -105,7 +105,7 @@
     {
       "target_id": "si_71602c84cba6b752",
       "query": "AI accountability system for athletes and nutrition discipline",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/synthesis-accountability-and-consistency",
+      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
       "truth_source": "google_search_console",
       "truth_state": "NO_GSC_ROW",
       "query_metrics": null
@@ -185,7 +185,7 @@
     {
       "target_id": "si_a2a38b367c9e5ea9",
       "query": "AI accountability system for body goal users and nutrition discipline",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/synthesis-accountability-and-consistency",
+      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
       "truth_source": "google_search_console",
       "truth_state": "NO_GSC_ROW",
       "query_metrics": null
@@ -265,7 +265,7 @@
     {
       "target_id": "si_dac4bef6f4dc2289",
       "query": "AI accountability system for consistency strugglers and nutrition discipline",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/synthesis-accountability-and-consistency",
+      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
       "truth_source": "google_search_console",
       "truth_state": "NO_GSC_ROW",
       "query_metrics": null
