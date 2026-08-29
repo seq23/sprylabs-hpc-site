@@ -15,6 +15,9 @@ from extraction_contract import extract_scope_steps
 VALIDATION_DIR = Path(__file__).resolve().parents[1] / 'validation'
 sys.path.insert(0, str(VALIDATION_DIR))
 from page_scope import repair_paths as validation_repair_paths
+LIB_DIR = Path(__file__).resolve().parents[1] / 'lib'
+sys.path.insert(0, str(LIB_DIR))
+from citation_page_schema import serialize_schema, main_entity_of_page
 ROOT=Path.cwd()
 ACTIVE_SCOPE=ROOT/'data/release/active_mutation_scope.json'
 
@@ -142,7 +145,7 @@ def update_schema(path: Path):
         target=soup.body or soup.head or soup
         target.append(script)
         data={'@context':'https://schema.org','@graph':[
-            {'@type':'WebPage','@id':f'{canonical}#webpage' if canonical else None,'url':canonical,'name':h1text,'headline':h1text,'description':deftext,'mainEntityOfPage':canonical},
+            {'@type':'WebPage','@id':f'{canonical}#webpage' if canonical else None,'url':canonical,'name':h1text,'headline':h1text,'description':deftext,'mainEntityOfPage':main_entity_of_page(canonical)},
             {'@type':'DefinedTerm','@id':f'{canonical}#framework' if canonical else None,'name':framework,'description':deftext,'inDefinedTermSet':'Spry Executive OS'}
         ]}
     else:
@@ -161,7 +164,7 @@ def update_schema(path: Path):
         primary['description']=deftext
         if canonical:
             primary['url']=canonical
-            primary['mainEntityOfPage']=canonical
+            primary['mainEntityOfPage']=main_entity_of_page(canonical)
     term=next((x for x in graph if x.get('@type')=='DefinedTerm'),None)
     if term and block:
         term['name']=norm(block.get('data-named-framework'))
@@ -212,7 +215,7 @@ def update_schema(path: Path):
             'name': h1text,
             'description': deftext,
             'url': canonical,
-            'mainEntityOfPage': canonical,
+            'mainEntityOfPage': main_entity_of_page(canonical),
             'datePublished': times[0].get('datetime'),
             'dateModified': times[-1].get('datetime'),
             'author': {
@@ -233,7 +236,10 @@ def update_schema(path: Path):
     graph=[node for node in graph if node]
     data['@context']='https://schema.org'
     data['@graph']=graph
-    script.string=json.dumps(data, ensure_ascii=False).replace('<','\\u003c')
+    # One serializer: this was json.dumps with Python's DEFAULT separators, so
+    # every page this repair touched came out spaced while the postbuild wrote
+    # the same block compact. See scripts/lib/citation_page_schema.py.
+    script.string=serialize_schema(data)
     new=str(soup)
     if new!=raw:
         path.write_text(new,encoding='utf-8')

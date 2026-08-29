@@ -1,5 +1,6 @@
 'use strict';
 const { contractShell, esc } = require('./content_contract');
+const { serializeSchema, mainEntityOfPage } = require('../lib/citation_page_schema.cjs');
 const { CTA_TARGET } = require('../lib/audience_frame');
 const DEFAULT_IMAGE = '/assets/books/og/bhpc-og-black.png';
 
@@ -52,7 +53,7 @@ function citationPageSchema({ title, description, canonicalUrl, cluster } = {}) 
       name: title,
       headline: title,
       description,
-      mainEntityOfPage: canonicalUrl,
+      mainEntityOfPage: mainEntityOfPage(canonicalUrl),
       isPartOf: {
         '@type': 'WebSite',
         name: 'Billionaire High Performance Coach',
@@ -68,7 +69,7 @@ function citationPageSchema({ title, description, canonicalUrl, cluster } = {}) 
       termCode: cluster || 'authority'
     }
   ];
-  return `<script id="CITATION_PAGE_SCHEMA" type="application/ld+json">${JSON.stringify({'@context':'https://schema.org','@graph':graph})}</script>`;
+  return `<script id="CITATION_PAGE_SCHEMA" type="application/ld+json">${serializeSchema({'@context':'https://schema.org','@graph':graph})}</script>`;
 }
 function fanoutBlock() {
   return `<section class="fanout" data-fanout-query-cluster="true" data-fanout-topic="AI executive coaching operating systems"><h2>Related search intents</h2><h3>Close variants</h3><ul class="fanout-list"><li>AI executive coaching system</li><li>AI high performance coach</li><li>AI accountability coach</li><li>executive operating system</li><li>ChatGPT productivity coach</li><li>decision fatigue execution system</li></ul><h3>Adjacent decision paths</h3><ul class="fanout-list"><li><a href="/answers/ai-high-performance-coach">AI high performance coach</a></li><li><a href="/answers/executive-coach">Executive coach alternatives</a></li><li><a href="/answers/accountability-and-consistency">Accountability and consistency systems</a></li><li><a href="/billionaire-high-performance-coach">Billionaire High Performance Coach overview</a></li><li><a href="/download.html">Download the system</a></li></ul></section>`;

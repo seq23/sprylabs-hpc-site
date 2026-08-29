@@ -24,6 +24,7 @@ import { createRequire } from 'node:module';
 const requireCjs = createRequire(import.meta.url);
 const ROOT = process.cwd();
 const { routeFor, hostFor } = requireCjs(path.join(ROOT, 'scripts/lib/dual_domain_policy.cjs'));
+const { serializeSchema, mainEntityOfPage, SCHEMA_SCRIPT_RE } = requireCjs(path.join(ROOT, 'scripts/lib/citation_page_schema.cjs'));
 
 const MAX_LINKS_PER_HUB = 70;
 // Raised from 6. The property in this portfolio that measurably earns AI
@@ -137,13 +138,10 @@ function topicOf(rel, h1) {
 // identically every time - it was pure serialization - but it made build:all
 // non-idempotent, which in turn made every "did this page change?" check on
 // this repo untrustworthy.
-function compactJson(value) {
-  if (Array.isArray(value)) return '[' + value.map(compactJson).join(',') + ']';
-  if (value && typeof value === 'object') {
-    return '{' + Object.entries(value).map(([k, v]) => `${JSON.stringify(k)}:${compactJson(v)}`).join(',') + '}';
-  }
-  return JSON.stringify(value);
-}
+// This hand-rolled compact serializer is now the shared one in
+// scripts/lib/citation_page_schema.cjs, so all fourteen writers of this block
+// agree by construction rather than by three separate comments promising to.
+const compactJson = serializeSchema;
 
 // ------------------------------------------------------------- page model
 // Every publicly served page, not only the citable ones: the synthesis pages,
@@ -305,7 +303,7 @@ function renderHub(hub) {
   const definition = hub.intro || hub.description;
   const graph = [
     { '@type': 'CollectionPage', '@id': canonical + '#webpage', url: canonical, name: hub.h1, description: definition,
-      mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
+      mainEntityOfPage: mainEntityOfPage(canonical),
       isPartOf: { '@type': 'WebSite', '@id': hub.host + '/#website', url: hub.host + '/' },
       publisher: { '@type': 'Organization', name: 'Spry Labs', url: 'https://billionairehighperformancecoach.com/' } },
     breadcrumbJsonLd(canonical, hub.host, hub.parents, hub.h1),
@@ -392,32 +390,29 @@ function reconcileSchemaCanonical(html, canonical) {
   return html.slice(0, m.index) + m[1] + body + m[3] + html.slice(m.index + m[0].length);
 }
 
+// This used to splice the breadcrumb into the block as text: find the
+// BreadcrumbList object by brace matching and swap the substring, or append
+// `', ' + serialized` before the closing bracket. Both forms wrote the new node
+// compact into whatever the surrounding body already was, so a page whose graph
+// was written spaced ended up compact in one node and spaced everywhere else -
+// a serialization no writer produces and none of them can reproduce, which is
+// what the string splice could never avoid.
+//
+// Parsing and re-serializing costs one JSON round trip per page and is exact.
+// Replacing the node in place in the array keeps graph order, which is what the
+// brace matching was protecting: appending instead would move the node to the
+// end and rewrite hundreds of pages to say what they already said.
 function replaceBreadcrumbJsonLd(html, node) {
-  const scriptRe = /(<script id="CITATION_PAGE_SCHEMA"[^>]*>)([\s\S]*?)(<\/script>)/i;
-  const m = html.match(scriptRe);
+  const m = SCHEMA_SCRIPT_RE.exec(html);
   if (!m) return html;
-  let body = m[2];
-  const serialized = compactJson(node);
-  const start = body.search(/\{"@type":\s?"BreadcrumbList"/);
-  if (start >= 0) {
-    let depth = 0, end = -1, inStr = false, escNext = false;
-    for (let i = start; i < body.length; i++) {
-      const c = body[i];
-      if (escNext) { escNext = false; continue; }
-      if (c === '\\') { escNext = true; continue; }
-      if (c === '"') { inStr = !inStr; continue; }
-      if (inStr) continue;
-      if (c === '{') depth++;
-      else if (c === '}') { depth--; if (depth === 0) { end = i + 1; break; } }
-    }
-    if (end < 0) return html;
-    body = body.slice(0, start) + serialized + body.slice(end);
-  } else {
-    const close = body.lastIndexOf(']');
-    if (close < 0) return html;
-    body = body.slice(0, close) + ', ' + serialized + body.slice(close);
-  }
-  return html.slice(0, m.index) + m[1] + body + m[3] + html.slice(m.index + m[0].length);
+  let data;
+  try { data = JSON.parse(m[2]); } catch { return html; }
+  const graph = Array.isArray(data['@graph']) ? data['@graph'].slice() : null;
+  if (!graph) return html;
+  const at = graph.findIndex((n) => n && n['@type'] === 'BreadcrumbList');
+  if (at >= 0) graph[at] = node; else graph.push(node);
+  data['@graph'] = graph;
+  return html.slice(0, m.index) + m[1] + serializeSchema(data) + m[3] + html.slice(m.index + m[0].length);
 }
 
 let pagesTouched = 0;

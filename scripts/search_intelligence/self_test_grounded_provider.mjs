@@ -23,7 +23,7 @@ const FIXTURE = {
       role: 'assistant',
       content: 'Several AI coaching tools are commonly compared...',
       annotations: [
-        { type: 'url_citation', url_citation: { url: 'https://billionairehighperformancecoach.com/answers/demand/ai-coaching-tools.html', title: 'AI Coaching Tools' } },
+        { type: 'url_citation', url_citation: { url: 'https://billionairehighperformancecoach.com/answers/phase4/demand/ai-coaching-tools', title: 'AI Coaching Tools' } },
         { type: 'url_citation', url_citation: { url: 'https://www.example.com/roundup', title: 'A roundup' } },
         { type: 'url_citation', url_citation: { url: 'https://www.example.com/roundup', title: 'A roundup (duplicate)' } },
         { type: 'file', file: { name: 'not-a-citation.pdf' } },
@@ -41,7 +41,7 @@ const check = (name, fn) => {
 
 check('url_citation annotations are read, in order', () => {
   assert.deepEqual(citationUrls(FIXTURE), [
-    'https://billionairehighperformancecoach.com/answers/demand/ai-coaching-tools.html',
+    'https://billionairehighperformancecoach.com/answers/phase4/demand/ai-coaching-tools',
     'https://www.example.com/roundup'
   ]);
 });

@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "generated_at": "2026-08-27",
-  "redirect_count": 756,
+  "redirect_count": 758,
   "redirects": [
     {
       "source_path": "help-me-get-my-life-together/index.html",
@@ -3782,6 +3782,18 @@
       "source_path": "insights/topics/chatgpt-prompts-and-setup-9/index.html",
       "target": "/insights/topics/chatgpt-prompts-and-setup/",
       "domain": "spryexecutiveos.com"
+    },
+    {
+      "source_path": "answers/demand/ai-coaching-tools.html",
+      "target": "/answers/phase4/demand/ai-coaching-tools",
+      "domain": "spryexecutiveos.com",
+      "_why": "The demand lane used to write every page into answers/demand/ regardless of which host the measured demand belonged to. hostFor() answers /answers/demand/* on spryexecutiveos.com, so this page rendered a spryexecutiveos.com canonical while its registry row and sitemap entry said billionairehighperformancecoach.com - the URL and the page disagreed about which host owned it. The lane now picks its directory from the route contract, so a query measured on billionairehighperformancecoach.com is written under answers/phase4/demand/, which hostFor answers on that host. This 301 carries the one-day-old URL to where the page now lives instead of leaving it 404."
+    },
+    {
+      "source_path": "answers/demand/ai-coach-for-founders-and-consultants.html",
+      "target": "/answers/phase4/demand/ai-coach-for-founders-and-consultants",
+      "domain": "spryexecutiveos.com",
+      "_why": "Same move as answers/demand/ai-coaching-tools.html: measured on billionairehighperformancecoach.com, so the page now lives under the route hostFor answers on that host."
     }
   ]
 }

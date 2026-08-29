@@ -1,24 +1,85 @@
 {
   "schema_version": "1.0",
-  "status": "PASS",
+  "status": "FAIL",
   "ledger": "data/sitemap/lastmod_ledger.json",
-  "pages_examined": 2223,
+  "pages_examined": 4456,
   "committed_ledger_vs_committed_tree": {
     "ran": true,
-    "pages_examined": 2223,
-    "mismatched": 0,
-    "examples": []
+    "pages_examined": 2228,
+    "mismatched": 16,
+    "examples": [
+      {
+        "file": "ai-workflow-for-founders.html",
+        "ledger": "7f5fbf1e9b78597759809e97",
+        "head": "21c7aef7b4e615e86f5a8901",
+        "lastmod": "2026-08-29"
+      },
+      {
+        "file": "how-do-you-use-chatgpt-as-an-executive-coach.html",
+        "ledger": "6c1f2c2fccc4665a6f7f3f3a",
+        "head": "42bf8458b07c71d98036cad3",
+        "lastmod": "2026-08-29"
+      },
+      {
+        "file": "a-practical-way-to-build-consistency-without-streak-pressure.html",
+        "ledger": "460a36794785baf8c8fe835a",
+        "head": "1daad07f0f8175c92cd458a0",
+        "lastmod": "2026-08-29"
+      },
+      {
+        "file": "agent/bhpc/ai-prompt-to-act-as-a-creativity-coach-and-make-tasks-fun-with-who-what-why.html",
+        "ledger": "344036eb2f024233f3ae71a5",
+        "head": "51b13820c056a71a4ae47441",
+        "lastmod": "2026-08-29"
+      },
+      {
+        "file": "agent/bhpc/chatgpt-prompt-to-reframe-tasks-with-curiosity-or-experimentation-for-better-engagement.html",
+        "ledger": "dd9ecd0a7af5f0aed0f9bcd2",
+        "head": "f55cc1a15c6587d75eeee2fe",
+        "lastmod": "2026-08-29"
+      },
+      {
+        "file": "agent/bhpc/how-can-i-transform-a-tedious-task-into-something-enjoyable-using-chatgpt.html",
+        "ledger": "c3cd926ef53f4aec9b4d9ba0",
+        "head": "a6f0060bb7ab6d0f51b6427c",
+        "lastmod": "2026-08-29"
+      },
+      {
+        "file": "agent/bhpc/what-productivity-strategies-have-i-tried-that-felt-good-long-term-vs-led-to-burnout-chatgpt-aud.html",
+        "ledger": "5744ddca47207a87ff510191",
+        "head": "d3e960dc687552cb78d98d04",
+        "lastmod": "2026-08-29"
+      },
+      {
+        "file": "insights/best-chatgpt-prompts-for-executive-coaching-and-leadership-development.html",
+        "ledger": "657cedbf38dd4c766cef50b7",
+        "head": "e7567f1a8f6c550015ab78dd",
+        "lastmod": "2026-08-29"
+      },
+      {
+        "file": "insights/best-chatgpt-prompts-for-executive-functioning-and-planning.html",
+        "ledger": "79074d6029ab9b5577a16c20",
+        "head": "ad7a055c45d7e97785cd0ca1",
+        "lastmod": "2026-08-29"
+      },
+      {
+        "file": "insights/chatgpt-accountability-partner-prompt-for-goals.html",
+        "ledger": "ecb975f6a25b859ee4026f6e",
+        "head": "bb2cbbce89c1a52071dc608f",
+        "lastmod": "2026-08-29"
+      }
+    ]
   },
   "rederived_ledger_vs_working_tree": {
-    "ran": false,
-    "pages_examined": 0,
+    "ran": true,
+    "pages_examined": 2228,
     "mismatched": 0,
     "examples": []
   },
   "sitemap_coverage": {
-    "reference": "the tree at HEAD",
-    "sitemap_urls": 2223,
-    "resolvable": 2223,
+    "reference": "the working tree",
+    "sitemap_urls": 2228,
+    "resolvable": 2228,
     "missing_from_ledger": 0,
     "lastmod_disagreements": 0,
     "examples": []
@@ -28,8 +89,8 @@
     "modes_checked": 8,
     "offenders": []
   },
-  "notes": [
-    "arm B skipped: the ledger on disk is the one committed at HEAD (nothing re-derived in this run)"
-  ],
-  "errors": []
+  "notes": [],
+  "errors": [
+    "16 of 2228 committed page(s) do not match the ledger committed alongside them. The ledger was derived before a stage that rewrote these pages. Re-derive with `npm run sitemap:lastmod:content` AFTER the last stage that mutates page HTML, and commit the result with the pages."
+  ]
 }
