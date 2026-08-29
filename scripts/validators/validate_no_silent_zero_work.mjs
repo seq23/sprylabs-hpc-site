@@ -21,9 +21,33 @@ function load(rel) {
 function named(stop) {
   return !!(stop && typeof stop === 'object' && String(stop.code || '').trim() && String(stop.message || '').trim());
 }
+// Every lane artifact this validator governs, declared by name. A missing file
+// used to be skipped in silence, so deleting a lane's artifact - or a lane
+// failing to write one - removed that lane from the guard while the guard still
+// reported PASS on the lanes that remained. The aggregate "checks === 0" bail at
+// the bottom only caught the case where ALL of them vanished; six of seven
+// disappearing still passed. Each of these is tracked in git, so absence is a
+// real signal, never a fresh-checkout artefact.
+const REQUIRED_LANE_ARTIFACTS = [
+  'artifacts/validation/release-plan-application.json',
+  'artifacts/validation/daily-citation-release-plan.json',
+  'artifacts/validation/strategy-gap-fill-release-gap.json',
+  'reports/answer_surface_scorecard.json',
+  'data/admin/zero_dollar_status.json',
+  'data/search_intelligence/live_search_observations.json',
+  'reports/fanout-coverage-info.json',
+];
+const seen = new Set();
+
 function check(rel, fn) {
+  seen.add(rel);
   const doc = load(rel);
-  if (doc === null) return;
+  if (doc === null) {
+    if (REQUIRED_LANE_ARTIFACTS.includes(rel)) {
+      errors.push(`${rel}: declared lane artifact is missing. A lane that produces no evidence cannot be shown to have done work, and skipping it silently is how a guard shrinks to nothing while still reporting PASS.`);
+    }
+    return;
+  }
   checks++;
   try { fn(doc, rel); } catch (e) { errors.push(`${rel}: check threw ${e.message}`); }
 }
@@ -90,6 +114,23 @@ check('data/search_intelligence/live_search_observations.json', (d, rel) => {
   const size = Number(d.budget?.call_budget || 0);
   if (eligible > size && !d.rotation) errors.push(`${rel}: ${eligible} eligible targets but only ${size} observed per run and no rotation block. Without a persisted cursor the same ${size} targets are observed forever and the remaining ${eligible - size} are unreachable.`);
   if (d.rotation && !String(d.rotation.cursor_path || '').trim()) errors.push(`${rel}: rotation block without a cursor_path.`);
+  // Attempting is not observing. A window in which every call failed must not
+  // consume the rotation slot: if it does, a dead provider credential walks the
+  // cursor through the whole target set producing nothing, while the ledger
+  // shows steady progress. Measured when this was written: attempted=24,
+  // failures=24, provider_http_402, and next_index had moved 0 -> 24.
+  const attempted = Number(d.budget?.calls_attempted || 0);
+  const failed = Number(d.budget?.call_failures || 0);
+  if (attempted > 0 && failed === attempted) {
+    const start = Number(d.rotation?.window_start ?? -1);
+    const next = Number(d.rotation?.next_index ?? -1);
+    if (start >= 0 && next !== start) {
+      errors.push(`${rel}: all ${attempted} observation call(s) failed, yet the rotation cursor moved ${start} -> ${next}. A window that produced no evidence must be retried, not rotated out; otherwise a dead credential silently walks the entire target set while the ledger reports progress.`);
+    }
+    if (!String(d.unavailable_note || '').trim()) {
+      errors.push(`${rel}: all ${attempted} observation call(s) failed with no unavailable_note naming why.`);
+    }
+  }
 });
 
 // 7. Fanout warnings must report the count they actually found.
@@ -100,13 +141,20 @@ check('reports/fanout-coverage-info.json', (d, rel) => {
   if (Number(d.checked || 0) === 0) errors.push(`${rel}: checked=0 files. Examining nothing is a broken scan, not a pass.`);
 });
 
+// The declared list and the checks actually wired up must not drift apart: a lane
+// added to REQUIRED_LANE_ARTIFACTS but never given a check() call would look
+// guarded and be inspected by nothing.
+for (const rel of REQUIRED_LANE_ARTIFACTS) {
+  if (!seen.has(rel)) errors.push(`${rel}: declared as a required lane artifact but no check() in this file inspects it.`);
+}
+
 // Rule 0 applies to this validator too: it must never pass on an empty loop.
 if (checks === 0) {
   console.error('[validate:no-silent-zero-work] FAIL: examined zero lane artifacts. Expected at least one tracked lane artifact to check; a validator that inspects nothing must not pass.');
   process.exit(1);
 }
 
-const report = { schema_version: '1.0', validator: 'no-silent-zero-work', status: errors.length ? 'FAIL' : 'PASS', lanes_checked: checks, errors };
+const report = { schema_version: '1.0', validator: 'no-silent-zero-work', status: errors.length ? 'FAIL' : 'PASS', lanes_checked: checks, lanes_required: REQUIRED_LANE_ARTIFACTS.length, errors };
 fs.mkdirSync(path.join(ROOT, 'artifacts/validation'), { recursive: true });
 fs.writeFileSync(path.join(ROOT, 'artifacts/validation/no-silent-zero-work.json'), JSON.stringify(report, null, 2) + '\n');
 
@@ -115,4 +163,4 @@ if (errors.length) {
   for (const e of errors) console.error(`  - ${e}`);
   process.exit(1);
 }
-console.log(`[validate:no-silent-zero-work] PASS: ${checks} lane artifact(s) checked; every zero carries a named stop reason.`);
+console.log(`[validate:no-silent-zero-work] PASS: ${checks} lane artifact(s) checked (${REQUIRED_LANE_ARTIFACTS.length} required, all present); every zero carries a named stop reason.`);

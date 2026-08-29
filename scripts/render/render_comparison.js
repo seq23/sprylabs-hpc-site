@@ -23,8 +23,11 @@ function renderComparison(c = {}) {
   // makes the page correct at birth, so the rebuild and the contract agree
   // without depending on which routes happen to be in scope.
   //
-  // Shape and wording match what repair_citation_contract_surfaces.py writes for
-  // the same row, so an unscoped repair pass is a no-op rather than churn.
+  // Shape and wording come from the shared serializer, so an unscoped repair
+  // pass is a no-op rather than churn. (This used to name
+  // repair_citation_contract_surfaces.py as the reference shape; that script had
+  // no live caller and was a second, divergent CITATION_PAGE_SCHEMA writer, so it
+  // was deleted on 2026-08-29 in favour of the one serializer.)
   const registryFramework = `${title} Comparison Matrix`;
   const registryDefinition = `${registryFramework} is a named Billionaire High Performance Coach and Spry Executive OS framework for ${title.toLowerCase()} through observable signals, decision criteria, and practical next actions.`;
   const citationPageSchema = `<script id="CITATION_PAGE_SCHEMA" type="application/ld+json">${serializeSchema({
@@ -92,8 +95,8 @@ function renderComparison(c = {}) {
   // completeStructuredData returns early when the caller's structuredData
   // already contains a citation schema, which would drop the geo, Product,
   // SoftwareApplication and FAQPage schemas these pages currently carry in
-  // <head>. The body is also where repair_citation_contract_surfaces.py appends
-  // it, and every validator looks the script up by id across the document.
+  // <head>. The body is where the schema is appended, and every validator looks
+  // the script up by id across the document rather than by position.
   return contractShell({ title, description, canonicalUrl, headHtml, pageType: 'comparison', answer: 'BHPC is positioned as a self-run execution OS, not a conventional coaching platform.', ctaReason: 'Download the system when you want the execution prompts and operating structure.', bodyHtml: `${bodyHtml}${citationPageSchema}` });
 }
 module.exports = { renderComparison };

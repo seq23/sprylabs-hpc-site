@@ -69,6 +69,7 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
+        if: steps.runtime.outputs.run == 'true'
       # Reports whether adding volume is still being absorbed. Advisory: it refuses
       # to hold publishing on pre-2026-08-26 data, because that window measures a
       # site whose sitemaps were never submitted and whose unknown URLs returned 200.
@@ -95,8 +96,20 @@ jobs:
         run: npm run ownership:build && npm run admin:build
       # The gate runs before anything is committed, so a release that published
       # faster than the cap allows fails here and its pages never land.
+      #
+      # Guarded on the runtime state like every other working step. Without the
+      # guard a PAUSED run - one that deliberately published nothing - still ran
+      # the gate, and a gate that blocked turned a correct, deliberate no-publish
+      # day into a red workflow with no bad release behind it. A throttled run
+      # reports a named stop; it does not fail.
       - name: Cadence gate
+        if: steps.runtime.outputs.run == 'true'
         run: npm run cadence:gate
+
+      - name: Named stop when autopublishing is paused
+        if: steps.runtime.outputs.run != 'true'
+        run: |
+          echo "spry-content-release STOP autopublishing_paused: data/admin/runtime_control.json has autopublishing=paused or emergency_stop=true, so this run published nothing and the cadence gate and ledger were deliberately not touched. Resume with the Admin Command workflow (resume_autopublishing)."
 
       # A read-only gate with no advancer is a ratchet. Nothing else in this
       # repository writes data/cadence/known_urls.json - checking deliberately
@@ -109,8 +122,9 @@ jobs:
       # Reachable only after the gate above exited zero, so the cap still binds:
       # an over-cap release fails at that step and never reaches this one.
       - name: Record the released URL set as the new cadence baseline
+        if: steps.runtime.outputs.run == 'true'
         run: |
-          node scripts/cadence_gate.js --accept --reason "Spry content release run ${{ github.run_id }} on $(date -u +%F): the cadence gate cleared before this step, so the released URL set is inside the declared weekly cap."
+          node scripts/cadence_gate.js --accept --reason "Spry content release run ${{ github.run_id }} on $(date -u +%F): the cadence gate cleared at the step before this one, so the URL set this run released was inside the cap in force at that moment. This records what was released; it is not a claim about any other window."
 
       - name: Commit validated Spry content release
         if: steps.runtime.outputs.run == 'true'

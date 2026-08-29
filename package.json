@@ -338,7 +338,9 @@
     "sitemap:lastmod:self-test": "node scripts/self_test_sitemap_lastmod.mjs",
     "validate:lastmod-ledger-final": "node scripts/validation/validate_lastmod_ledger_final.mjs",
     "validate:search-measurement-truthfulness": "npm run search:export-counts:self-test && npm run search:truth:self-test && npm run distribution:inspection:self-test && npm run distribution:gsc-outcome:self-test && npm run sitemap:lastmod:self-test && npm run sitemap:lastmod:check",
-    "validate:no-silent-zero-work": "node scripts/validators/validate_no_silent_zero_work.mjs"
+    "validate:no-silent-zero-work": "node scripts/validators/validate_no_silent_zero_work.mjs",
+    "validate:page-surface-coverage": "node scripts/validators/validate_page_surface_coverage.mjs",
+    "validate:python-dependency-contract:write": "node scripts/validation/python_runtime.mjs run scripts/validation/validate_python_dependency_contract.py --write"
   },
   "engines": {
     "node": ">=24.0.0"

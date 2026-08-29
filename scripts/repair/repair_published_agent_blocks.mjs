@@ -99,7 +99,15 @@ let definitionCalloutsFixed = 0, auditBlocksRemoved = 0, auditRowsRemoved = 0;
 let directiveBlocksCleaned = 0, auditTablesRebuilt = 0;
 let operatorSummariesRemoved = 0, sourceBlocksRewritten = 0, taxonomyNotesRemoved = 0;
 
+// How many pages this repair actually LOOKED at, as distinct from how many it
+// changed. The log used to print only the change counters, so "files=0" meant
+// either "nothing needed repairing" or "the walk found no pages at all" - a
+// repair whose reach had collapsed and a repair with nothing to do were the same
+// line. The scanned count below separates them, and a zero is a hard failure.
+let filesScanned = 0;
+
 for (const file of walk(ROOT)) {
+  filesScanned += 1;
   const before = fs.readFileSync(file, 'utf8');
   let html = before;
 
@@ -291,4 +299,9 @@ for (const file of walk(ROOT)) {
   }
 }
 
-console.log(`[repair:published-agent-blocks] files=${filesChanged} instruction_paragraphs_removed=${instructionRemoved} placeholder_blocks_removed=${placeholderRemoved} headings_fixed=${headingsFixed} definition_callouts_fixed=${definitionCalloutsFixed} audit_blocks_removed=${auditBlocksRemoved} audit_rows_removed=${auditRowsRemoved} directive_blocks_cleaned=${directiveBlocksCleaned} audit_tables_rebuilt=${auditTablesRebuilt} operator_summaries_removed=${operatorSummariesRemoved} source_blocks_rewritten=${sourceBlocksRewritten} taxonomy_notes_removed=${taxonomyNotesRemoved} (${APPLY ? 'APPLIED' : 'dry run'})`);
+if (filesScanned === 0) {
+  console.error('[repair:published-agent-blocks] FAIL: the page walk returned zero files, so this repair examined nothing. A repair that inspects no pages has not been shown to have nothing to do.');
+  process.exit(1);
+}
+
+console.log(`[repair:published-agent-blocks] scanned=${filesScanned} files=${filesChanged} instruction_paragraphs_removed=${instructionRemoved} placeholder_blocks_removed=${placeholderRemoved} headings_fixed=${headingsFixed} definition_callouts_fixed=${definitionCalloutsFixed} audit_blocks_removed=${auditBlocksRemoved} audit_rows_removed=${auditRowsRemoved} directive_blocks_cleaned=${directiveBlocksCleaned} audit_tables_rebuilt=${auditTablesRebuilt} operator_summaries_removed=${operatorSummariesRemoved} source_blocks_rewritten=${sourceBlocksRewritten} taxonomy_notes_removed=${taxonomyNotesRemoved} (${APPLY ? 'APPLIED' : 'dry run'})`);

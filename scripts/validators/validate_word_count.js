@@ -8,11 +8,13 @@ const {
   SAFE_PUBLISH_MIN,
   countWords,
   listTargetFiles,
+  assertTargetFilesExamined,
 } = require('../lib/word_count_utils');
 
 const underEffectiveMin = [];
 const underSafeMin = [];
 const files = listTargetFiles();
+assertTargetFilesExamined('validate_word_count', files.length);
 for (const file of files) {
   const words = countWords(fs.readFileSync(file, 'utf8'));
   const rel = path.relative(ROOT, file);

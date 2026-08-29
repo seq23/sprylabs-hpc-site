@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "status": "PASS",
-  "python_files_scanned": 27,
+  "python_files_scanned": 41,
   "requirements": {
     "beautifulsoup4": {
       "name": "beautifulsoup4",
@@ -24,17 +24,16 @@
         "scripts/citation/extraction_contract.py",
         "scripts/citation/repair_active_citation_contract.py",
         "scripts/citation/repair_agent_recommendations.py",
-        "scripts/citation/repair_citation_contract_surfaces.py",
         "scripts/citation/repair_extraction_contracts.py",
         "scripts/citation/repair_manual_expansion_parity.py",
         "scripts/citation/repair_priority_citation_pages.py",
         "scripts/citation/repair_schema_parity.py",
+        "scripts/content/build_visible_faq_sections.py",
         "scripts/validation/extraction_surface_guard.py",
         "scripts/validation/self_test_extraction_contract.py",
         "scripts/validation/trace_extraction_pipeline.py",
         "scripts/validation/validate_agent_recommendations.py",
         "scripts/validation/validate_citation_contract.py",
-        "scripts/validation/validate_extraction_contract_final_state.py",
         "scripts/validation/validate_manual_expansion.py",
         "scripts/validation/validate_priority_citation_pages.py",
         "scripts/validation/validate_programmatic_admission.py",
@@ -48,6 +47,30 @@
       ]
     }
   },
+  "credential_gated_imports": [
+    {
+      "module": "google",
+      "reason": "google-auth, installed by the workflow step that supplies GSC_SERVICE_ACCOUNT_JSON",
+      "files": [
+        "scripts/cadence/gsc_surfacing.py",
+        "scripts/distribution/gsc_inspect_urls.py",
+        "scripts/distribution/gsc_submit_sitemaps.py",
+        "scripts/queries/ingest_gsc_evidence.py",
+        "scripts/search_intelligence/gsc_search_analytics.py"
+      ]
+    },
+    {
+      "module": "googleapiclient",
+      "reason": "google-api-python-client, installed by the workflow step that supplies GSC_SERVICE_ACCOUNT_JSON",
+      "files": [
+        "scripts/cadence/gsc_surfacing.py",
+        "scripts/distribution/gsc_inspect_urls.py",
+        "scripts/distribution/gsc_submit_sitemaps.py",
+        "scripts/queries/ingest_gsc_evidence.py",
+        "scripts/search_intelligence/gsc_search_analytics.py"
+      ]
+    }
+  ],
   "unknown_imports": [],
   "errors": []
 }
