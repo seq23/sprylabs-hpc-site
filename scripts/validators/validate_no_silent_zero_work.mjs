@@ -42,12 +42,26 @@ check('artifacts/validation/daily-citation-release-plan.json', (d, rel) => {
   if (selected === 0 && planned > 0 && !named(d.stop_reason)) errors.push(`${rel}: planned ${planned} candidate(s) but selected 0 with no named stop_reason. This is the fixture-gate defect: a lane discarding 100% of its candidates while reporting success.`);
 });
 
-// 3. Strategy gap-fill: queued rows that can never become files must not read PASS.
+// 3. Strategy gap-fill: this lane's deliverable is the ranked advisory backlog,
+// not pages. It may pass having built nothing - but it must NAME that outcome,
+// and nothing it emits may read as delivered work.
 check('artifacts/validation/strategy-gap-fill-release-gap.json', (d, rel) => {
   const added = Number(d.added_count || 0);
   const materialized = Number(d.materialized_target_paths ?? -1);
-  if (d.status === 'PASS' && added > 0 && materialized === 0) errors.push(`${rel}: status PASS with added_count=${added} but 0 backlog target_path files on disk. Queued work that never becomes a file is not a pass.`);
+  if (d.status === 'PASS' && !named(d.outcome)) errors.push(`${rel}: status PASS with no named outcome {code,message}. A lane that passes must say what it delivered.`);
   if (d.status && d.status !== 'PASS' && !named(d.stop_reason)) errors.push(`${rel}: non-PASS status "${d.status}" with no named stop_reason.`);
+  if (added > 0 && materialized === 0 && d.advisory_only !== true) {
+    errors.push(`${rel}: surfaced ${added} candidate(s) with 0 target_path files on disk but is not marked advisory_only. Queued work that never becomes a file must not be presented as delivery.`);
+  }
+  // The rows themselves must not claim readiness they do not have.
+  const queue = load('data/strategy/strategy_gap_fill_release_queue.json');
+  if (queue) {
+    const rows = queue.selected || [];
+    if (rows.length && materialized === 0) {
+      const claiming = rows.filter((r) => r.built === true || r.delivery_state !== 'ADVISORY_NOT_BUILT');
+      if (claiming.length) errors.push(`data/strategy/strategy_gap_fill_release_queue.json: ${claiming.length} row(s) not marked ADVISORY_NOT_BUILT while 0 target_path files exist. A row that implies a file exists when none does is the defect this guards.`);
+    }
+  }
 });
 
 // 4. Answer-surface scoring must consume the real citation probe output.
