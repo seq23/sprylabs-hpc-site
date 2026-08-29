@@ -34,19 +34,29 @@ const activeRunDate=allEntries.map(e=>String(e.run_date||'')).filter(Boolean).so
 // newest-run-only behaviour.
 const BACKLOG_CARRY_LIMIT=Number(process.env.BHPC_BACKLOG_CARRY_LIMIT||120);
 
+// The completion test has to ask the same question the trace asks, or the plan
+// and the trace disagree about what is done. It used to check only the record
+// marker and the required strings, and ignore required_block_types entirely -
+// so an entry whose blocks were still missing was declared satisfied, dropped
+// from the backlog carry, and then traced as
+// SKIPPED:outside_active_implementation_plan rather than FAIL. The work was
+// counted as done while producing nothing, and became invisible in the same
+// step. how-tracks-work.html is the evidence: an artifact flagged its six
+// broken spryexecutiveos.com/*.html related-links on 2026-06-27 and named the
+// replacements, the entry has been "satisfied" ever since, and the six broken
+// links were still on the page two months and nine runs later.
 function acceptanceSatisfied(entry){
   const rel=String(entry.implementation_path||'').replace(/^\/+/,'');
   if(!rel) return false;
-  for(const base of ['']){
-    const abs=path.join(ROOT,base,rel);
-    if(!fs.existsSync(abs)) continue;
-    const html=fs.readFileSync(abs,'utf8');
-    const marker=String(entry.record_id||entry.id||'');
-    if(marker && !html.includes(marker)) return false;
-    const required=Array.isArray(entry.required_strings)?entry.required_strings:[];
-    return required.every(needle=>html.includes(String(needle)));
-  }
-  return false; // no rendered target means the work is certainly not done
+  const abs=path.join(ROOT,rel);
+  if(!fs.existsSync(abs)) return false; // no rendered target means the work is certainly not done
+  const html=fs.readFileSync(abs,'utf8');
+  const marker=String(entry.record_id||entry.id||'');
+  if(marker && !html.includes(marker)) return false;
+  const required=Array.isArray(entry.required_strings)?entry.required_strings:[];
+  if(!required.every(needle=>html.includes(String(needle)))) return false;
+  const blocks=Array.isArray(entry.required_block_types)?entry.required_block_types:[];
+  return blocks.every(type=>html.includes(`data-bhpc-agent-block="${type}"`)||html.includes(`data-content-block="${type}"`));
 }
 
 const newestEntries=allEntries.filter(e=>String(e.run_date||'')===activeRunDate);
