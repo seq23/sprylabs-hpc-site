@@ -44,7 +44,32 @@ def active_mutation_routes():
     routes={normalize_route(route) for route in payload.get('routes',[]) if normalize_route(route)}
     if not routes and mode in {'required','exact','scoped'}:
         raise RuntimeError(f'mutation scope is empty: {ACTIVE_SCOPE}')
-    return routes
+    return routes | contract_violation_routes()
+
+def contract_violation_routes():
+    """Routes this repair must be allowed to reach even when they are out of scope.
+
+    The mutation scope stops a release from gratuitously rewriting frozen pages. It
+    was also, until now, stopping this repair from restoring a CITATION_PAGE_SCHEMA
+    block that validate_citation_contract.py hard-fails on - which made those pages
+    unrepairable by construction and hung heal_until_clean.mjs at UNRESOLVED for
+    three days (production run 33259007622: changed=18, skipped_outside_scope=2183,
+    then FAIL on three pages none of the 18 included).
+
+    Restoring a block the contract requires is not drift, so these routes are unioned
+    into the allowed set. Nothing else is: a page that is merely out of scope and
+    otherwise valid stays frozen. The scope file is written by
+    scripts/citation/build_contract_violation_scope.mjs from the same citable-page
+    registry and the same schema condition the validator reads.
+    """
+    scope_file=ROOT/'data/release/citation_contract_violation_scope.json'
+    if not scope_file.exists():
+        return set()
+    try:
+        payload=json.loads(scope_file.read_text(encoding='utf-8'))
+    except (json.JSONDecodeError, OSError):
+        return set()
+    return {normalize_route(route) for route in payload.get('routes',[]) if normalize_route(route)}
 
 def norm(v): return ' '.join((v or '').split())
 def schema_types(graph):

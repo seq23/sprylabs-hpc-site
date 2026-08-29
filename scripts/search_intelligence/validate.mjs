@@ -62,6 +62,31 @@ for(const t of targets.targets||[]){
   if(t.ownership==='paid_agent')errors.push(`target query mapped to paid-agent surface:${t.target_id}`);
   if(!t.owned_file || !fs.existsSync(path.join(PUBLIC,t.owned_file)))errors.push(`target query missing existing owned file:${t.target_id}`);
 }
-const out={schema_version:'1.1',generated_at:stamp(),status:errors.length?'FAIL':'PASS',target_count:(targets.targets||[]).length,repair_candidate_count:(repairs.candidates||[]).length,protected_agent_execution_boundary:'ENFORCED',errors};
+// A repair the ledger records as APPLIED must still be on the page. This check did not
+// exist, so the lane could report a repair applied, lose the block to a later
+// regeneration, and stay green over a page it had "repaired" and silently lost -
+// reproduced by stripping every block from a governed page and watching both
+// apply_repairs.mjs (receipts=0) and this validator report success.
+const ledger=readJson('data/search_intelligence/repair_ledger.json',{repairs:[]});
+const appliedRepairs=(ledger.repairs||[]).filter(x=>x.status==='APPLIED');
+let verifiedBlocks=0;
+for(const rec of appliedRepairs){
+  const rel=rec.owned_file||rec.source_file;
+  if(!rel){errors.push(`ledger repair ${rec.repair_id} records no owned_file to verify`);continue}
+  const abs=path.join(PUBLIC,rel);
+  const alt=path.join(ROOT,rel);
+  const target=fs.existsSync(abs)?abs:(fs.existsSync(alt)?alt:null);
+  if(!target){errors.push(`ledger repair ${rec.repair_id} targets a page that no longer exists:${rel}`);continue}
+  verifiedBlocks++;
+  if(!fs.readFileSync(target,'utf8').includes(`data-search-intelligence-repair="${rec.repair_id}"`)){
+    errors.push(`ledger records repair ${rec.repair_id} as APPLIED but its block is absent from ${rel}; re-run npm run search:repair:apply`);
+  }
+}
+// Zero examined must never read as success. An empty ledger with candidates waiting is
+// a lane that has not run, not a lane that is healthy.
+if(appliedRepairs.length===0&&(repairs.candidates||[]).length>0){
+  errors.push(`${(repairs.candidates||[]).length} repair candidate(s) exist but the ledger records none applied; the repair lane has not run`);
+}
+const out={schema_version:'1.2',generated_at:stamp(),status:errors.length?'FAIL':'PASS',target_count:(targets.targets||[]).length,repair_candidate_count:(repairs.candidates||[]).length,applied_repairs_verified_present:verifiedBlocks,protected_agent_execution_boundary:'ENFORCED',errors};
 writeJson('artifacts/validation/search-intelligence.json',out);
 console.log(JSON.stringify(out,null,2));process.exit(errors.length?1:0);

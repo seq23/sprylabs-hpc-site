@@ -31,7 +31,7 @@
       "publishes": false,
       "mutates_publishing_cadence": false,
       "agent_lane_excluded": true,
-      "status": "APPLIED",
+      "status": "SUPERSEDED",
       "applied_at": "2026-08-27T17:08:11.776Z",
       "before_sha256": "a7ab4f44598b00ab9e82348d686d664659dd650ca27b6a8b2d741df920f3574f",
       "after_sha256": "a4971711369538a05d310dd1d33a26df8c9af086013c458df109d8ce9800ce48",
@@ -39,7 +39,9 @@
         "type": "content_hash",
         "restore_sha256": "a7ab4f44598b00ab9e82348d686d664659dd650ca27b6a8b2d741df920f3574f"
       },
-      "validation_required": true
+      "validation_required": true,
+      "superseded_at": "2026-08-29T16:17:16.557Z",
+      "superseded_reason": "block absent from the page and no current repair candidate proposes it"
     },
     {
       "repair_id": "repair_d60fc492ba31c3d2",
@@ -246,6 +248,74 @@
       "rollback": {
         "type": "content_hash",
         "restore_sha256": "ab494e8f724f8a44b1dbba3f7227ab46767479468575495854c76a7ff5087e29"
+      },
+      "validation_required": true
+    },
+    {
+      "repair_id": "repair_cba9990eadccb102",
+      "target_id": "si_227a512b7e5e794b",
+      "query": "accountability partner vs traditional coaching for busy parents",
+      "owned_route": "/billionaire-high-performance-coach-vs-coaching/",
+      "owned_file": "billionaire-high-performance-coach-vs-coaching/index.html",
+      "content_owner": "legacy_eligible",
+      "repair_type": "answer_and_comparison_clarity",
+      "basis": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        },
+        {
+          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
+          "basis": "grounded_search_observation",
+          "detail": "Grounded answer referenced 10 other domain(s) and not an owned domain."
+        }
+      ],
+      "evidence_used": [
+        "google_search_console",
+        "grounded_search_observation"
+      ],
+      "baseline_gsc_metrics": null,
+      "baseline_grounded_own_domain_referenced": false,
+      "baseline_competitor_domains": [
+        "atlasradd.com",
+        "bridges2understanding.com",
+        "businesscoachtoronto.ca",
+        "finestreak.com",
+        "giodella.com",
+        "gkliggans.com",
+        "ilty.co",
+        "melissanokeslifecoach.com",
+        "theparentingpassport.com",
+        "yourunbusylife.com"
+      ],
+      "priority": 33,
+      "current_title": "the structured AI accountability system Vs Coaching | Spry Executive OS",
+      "current_description": "",
+      "competitor_domains": [
+        "atlasradd.com",
+        "bridges2understanding.com",
+        "businesscoachtoronto.ca",
+        "finestreak.com",
+        "giodella.com",
+        "gkliggans.com",
+        "ilty.co",
+        "melissanokeslifecoach.com",
+        "theparentingpassport.com",
+        "yourunbusylife.com"
+      ],
+      "state": "PREPARED_NOT_APPLIED",
+      "new_url": false,
+      "publishes": false,
+      "mutates_publishing_cadence": false,
+      "agent_lane_excluded": true,
+      "status": "APPLIED",
+      "applied_at": "2026-08-29T16:17:16.556Z",
+      "before_sha256": "daf89b58ef6ed595cb9d047cf15c164009b0350bb4c5f1a142c1c15c3a413c78",
+      "after_sha256": "8807e9e4d49726f4c5d527826279cb6938bd34a014cd8334af6a1a38dfaef756",
+      "rollback": {
+        "type": "content_hash",
+        "restore_sha256": "daf89b58ef6ed595cb9d047cf15c164009b0350bb4c5f1a142c1c15c3a413c78"
       },
       "validation_required": true
     }

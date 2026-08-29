@@ -5863,6 +5863,36 @@
       "not_applicable_reason": null
     },
     {
+      "validation_id": "VAL-CITATION-REPAIR-REACH",
+      "status": "ADMITTED",
+      "name": "validate:citation-repair-reach",
+      "check_type": "invariant",
+      "owning_lane": "citation-contract",
+      "risk_prevented": "A citation-contract repair that cannot reach the pages its own validator judges. repair_schema_parity.py honoured data/release/active_mutation_scope.json (~17 routes) while validate_citation_contract.py judged all 2219 ACTIVE citable pages, so a page that lost CITATION_PAGE_SCHEMA outside the release scope was unrepairable by construction: heal_until_clean.mjs re-ran the same repair every attempt, changed nothing relevant, and exited UNRESOLVED. Production run 33259007622 shows 'changed=18; scoped=True; skipped_outside_scope=2183' followed by FAIL on three pages none of the 18 included, and the Spry Content Release lane stayed red on it.",
+      "existing_coverage_gap": "Nothing compared the repair's reachable set against the validator's judged set. Both halves behaved exactly as written, so every existing check passed while the loop could not converge. This also guards normalizer drift between the JS scope builder and the Python repair, which would silently re-open the same gap.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:citation-repair-reach",
+      "implementation_path": "scripts/validation/validate_citation_repair_reach.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "data/release/citation_contract_violation_scope.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted with the scoped-repair fix; proven negatively by removing the violation-scope union from repair_schema_parity.py and observing this validator fail on the exact unreachable page.",
+      "decision_date": "2026-08-29",
+      "matrix_ids": [
+        "MX-CITATION-REPAIR-REACH"
+      ],
+      "not_applicable_reason": null
+    },
+    {
       "validation_id": "VAL-DEMAND-BACKED-PAGES",
       "status": "ADMITTED",
       "name": "validate:demand-backed-pages",
