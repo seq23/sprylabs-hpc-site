@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "status": "PASS",
+  "ledger": "data/sitemap/lastmod_ledger.json",
+  "pages_examined": 2223,
+  "committed_ledger_vs_committed_tree": {
+    "ran": true,
+    "pages_examined": 2223,
+    "mismatched": 0,
+    "examples": []
+  },
+  "rederived_ledger_vs_working_tree": {
+    "ran": false,
+    "pages_examined": 0,
+    "mismatched": 0,
+    "examples": []
+  },
+  "sitemap_coverage": {
+    "reference": "the tree at HEAD",
+    "sitemap_urls": 2223,
+    "resolvable": 2223,
+    "missing_from_ledger": 0,
+    "lastmod_disagreements": 0,
+    "examples": []
+  },
+  "lane_derivation_ordering": {
+    "ran": true,
+    "modes_checked": 8,
+    "offenders": []
+  },
+  "notes": [
+    "arm B skipped: the ledger on disk is the one committed at HEAD (nothing re-derived in this run)"
+  ],
+  "errors": []
+}

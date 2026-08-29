@@ -6037,8 +6037,46 @@
         "MX-NO-SILENT-ZERO-WORK"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-SITEMAP-LEDGER-FINAL",
+      "status": "ADMITTED",
+      "name": "validate:lastmod-ledger-final",
+      "check_type": "contract",
+      "owning_lane": "content-release",
+      "risk_prevented": "Prevents a sitemap lastmod ledger being committed that does not describe the tree it ships with. The ledger was derived part-way through a release, later stages rewrote the pages it had just hashed, and it was committed alongside them: at 6aac79a2e the committed ledger contradicted 1,900 of 2,223 committed pages. Nothing failed where the bad ledger was produced; it surfaced days later as an 8-URL sample mismatch inside sitemap:lastmod:self-test, on branches that had cut from main and inherited the failure as if it were their own. This asserts the committed ledger against every committed page, refuses a freshly derived ledger that already disagrees with the tree, and statically requires every content-release mode to derive the ledger as its final stage.",
+      "existing_coverage_gap": "sitemap:lastmod:check deliberately treats 'the page changed since the ledger was written' as a soft note, because failing the prepush profile on every build that touched a page would make the gate permanently red. sitemap:lastmod:self-test samples 8 URLs and only those whose evidence is git_last_visible_content_change, so 1,900 stale records could reduce to one reported filename. Neither compares the committed ledger to the committed tree, and nothing at all constrained WHERE in a release the ledger was derived.",
+      "scope": [
+        "data/sitemap/lastmod_ledger.json",
+        "scripts/sitemap_content_lastmod.mjs",
+        "scripts/lib/sitemap_ledger.mjs",
+        "data/workflows/workflow_topology.json",
+        "sitemap-bhpc.xml",
+        "sitemap-spry.xml"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:lastmod-ledger-final",
+      "implementation_path": "scripts/validation/validate_lastmod_ledger_final.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "artifacts/validation/lastmod-ledger-final.json",
+      "negative_fixture": "artifacts/validation/lastmod-ledger-final-negative.json",
+      "evidence_output": "artifacts/validation/lastmod-ledger-final.json",
+      "runtime_budget_seconds": 90,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "VAL-SEARCH-MEASUREMENT-TRUTHFULNESS runs sitemap:lastmod:check and the self-test; both judge whether a published date is a lie, and both are deliberately soft about a ledger merely being behind. This judges whether the ledger describes the tree it was committed with, which is the condition that makes it become a lie later.",
+        "VAL-SITEMAP-COVERAGE checks which URLs are present in a sitemap; it says nothing about whether their lastmod was derived from those pages."
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted after the ledger at 6aac79a2e was reproduced as stale for 1,900 of 2,223 URLs, having been derived before the release stages that rewrote those pages and committed with them; re-deriving by hand had already cleared the same symptom twice in one day without touching the ordering that produced it.",
+      "decision_date": "2026-08-29",
+      "matrix_ids": [
+        "MX-SITEMAP-LEDGER-FINAL"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 190,
+  "record_count": 191,
   "generated_at": "2026-08-08T23:30:00Z"
 }
