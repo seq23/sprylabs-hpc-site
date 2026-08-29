@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0",
+  "status": "FAIL",
+  "ledger": "data/sitemap/lastmod_ledger.json",
+  "pages_examined": 4446,
+  "committed_ledger_vs_committed_tree": {
+    "ran": true,
+    "pages_examined": 2223,
+    "mismatched": 0,
+    "examples": []
+  },
+  "rederived_ledger_vs_working_tree": {
+    "ran": true,
+    "pages_examined": 2223,
+    "mismatched": 1,
+    "examples": [
+      {
+        "file": "index.html",
+        "ledger": "fc77067bf5a9ffb0675d52f9",
+        "disk": "5ff06966d646c1d2167e7dc8"
+      }
+    ]
+  },
+  "sitemap_coverage": {
+    "reference": "the working tree",
+    "sitemap_urls": 2223,
+    "resolvable": 2223,
+    "missing_from_ledger": 0,
+    "lastmod_disagreements": 0,
+    "examples": []
+  },
+  "lane_derivation_ordering": {
+    "ran": true,
+    "modes_checked": 8,
+    "offenders": []
+  },
+  "notes": [],
+  "errors": [
+    "the ledger was re-derived in this run yet already disagrees with the working tree on 1 of 2223 page(s). A stage that mutates page HTML ran after the derivation; move the derivation after it."
+  ]
+}

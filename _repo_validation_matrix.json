@@ -1837,9 +1837,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-SITEMAP-LEDGER-FINAL",
+      "validation_id": "VAL-SITEMAP-LEDGER-FINAL",
+      "lane": "content-release",
+      "command": "npm run validate:lastmod-ledger-final",
+      "order": 184,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 183,
+  "entry_count": 184,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2181,6 +2191,10 @@
         {
           "id": "validate:no-silent-zero-work",
           "command": "npm run validate:no-silent-zero-work"
+        },
+        {
+          "id": "VAL-SITEMAP-LEDGER-FINAL",
+          "command": "npm run validate:lastmod-ledger-final"
         }
       ]
     },
@@ -2365,6 +2379,10 @@
         {
           "id": "validate:no-silent-zero-work",
           "command": "npm run validate:no-silent-zero-work"
+        },
+        {
+          "id": "VAL-SITEMAP-LEDGER-FINAL",
+          "command": "npm run validate:lastmod-ledger-final"
         }
       ]
     }

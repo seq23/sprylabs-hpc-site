@@ -557,6 +557,15 @@
               "run",
               "release:agent-intake"
             ]
+          },
+          {
+            "label": "sitemap:lastmod:content",
+            "command": [
+              "npm",
+              "run",
+              "sitemap:lastmod:content"
+            ],
+            "note": "The ledger is derived here and nowhere earlier. Every stage above can rewrite page HTML; a ledger derived before them records the hash of a page that no longer exists and is committed alongside the pages it no longer describes - 1,900 of 2,223 URLs at 6aac79a2e. Nothing may be appended after this stage: VAL-SITEMAP-LEDGER-FINAL fails the build if anything is."
           }
         ],
         "daily-insight": [
@@ -590,6 +599,15 @@
               "run",
               "release:content-finalize"
             ]
+          },
+          {
+            "label": "sitemap:lastmod:content",
+            "command": [
+              "npm",
+              "run",
+              "sitemap:lastmod:content"
+            ],
+            "note": "The ledger is derived here and nowhere earlier. Every stage above can rewrite page HTML; a ledger derived before them records the hash of a page that no longer exists and is committed alongside the pages it no longer describes - 1,900 of 2,223 URLs at 6aac79a2e. Nothing may be appended after this stage: VAL-SITEMAP-LEDGER-FINAL fails the build if anything is."
           }
         ],
         "signal-intake": [
@@ -672,6 +690,15 @@
               "run",
               "release:content-finalize"
             ]
+          },
+          {
+            "label": "sitemap:lastmod:content",
+            "command": [
+              "npm",
+              "run",
+              "sitemap:lastmod:content"
+            ],
+            "note": "The ledger is derived here and nowhere earlier. Every stage above can rewrite page HTML; a ledger derived before them records the hash of a page that no longer exists and is committed alongside the pages it no longer describes - 1,900 of 2,223 URLs at 6aac79a2e. Nothing may be appended after this stage: VAL-SITEMAP-LEDGER-FINAL fails the build if anything is."
           }
         ],
         "synthesis": [
@@ -706,6 +733,15 @@
               "run",
               "release:content-finalize"
             ]
+          },
+          {
+            "label": "sitemap:lastmod:content",
+            "command": [
+              "npm",
+              "run",
+              "sitemap:lastmod:content"
+            ],
+            "note": "The ledger is derived here and nowhere earlier. Every stage above can rewrite page HTML; a ledger derived before them records the hash of a page that no longer exists and is committed alongside the pages it no longer describes - 1,900 of 2,223 URLs at 6aac79a2e. Nothing may be appended after this stage: VAL-SITEMAP-LEDGER-FINAL fails the build if anything is."
           }
         ],
         "whitepaper": [
@@ -724,6 +760,15 @@
               "run",
               "release:content-finalize"
             ]
+          },
+          {
+            "label": "sitemap:lastmod:content",
+            "command": [
+              "npm",
+              "run",
+              "sitemap:lastmod:content"
+            ],
+            "note": "The ledger is derived here and nowhere earlier. Every stage above can rewrite page HTML; a ledger derived before them records the hash of a page that no longer exists and is committed alongside the pages it no longer describes - 1,900 of 2,223 URLs at 6aac79a2e. Nothing may be appended after this stage: VAL-SITEMAP-LEDGER-FINAL fails the build if anything is."
           }
         ],
         "citation-expansion": [
@@ -742,6 +787,15 @@
               "run",
               "release:content-finalize"
             ]
+          },
+          {
+            "label": "sitemap:lastmod:content",
+            "command": [
+              "npm",
+              "run",
+              "sitemap:lastmod:content"
+            ],
+            "note": "The ledger is derived here and nowhere earlier. Every stage above can rewrite page HTML; a ledger derived before them records the hash of a page that no longer exists and is committed alongside the pages it no longer describes - 1,900 of 2,223 URLs at 6aac79a2e. Nothing may be appended after this stage: VAL-SITEMAP-LEDGER-FINAL fails the build if anything is."
           }
         ],
         "strict": [
@@ -760,6 +814,15 @@
               "run",
               "release:content-finalize"
             ]
+          },
+          {
+            "label": "sitemap:lastmod:content",
+            "command": [
+              "npm",
+              "run",
+              "sitemap:lastmod:content"
+            ],
+            "note": "The ledger is derived here and nowhere earlier. Every stage above can rewrite page HTML; a ledger derived before them records the hash of a page that no longer exists and is committed alongside the pages it no longer describes - 1,900 of 2,223 URLs at 6aac79a2e. Nothing may be appended after this stage: VAL-SITEMAP-LEDGER-FINAL fails the build if anything is."
           }
         ],
         "full-content-cycle": [
@@ -839,6 +902,15 @@
               "--max=2"
             ],
             "note": "The real bounded repair -> revalidate -> retry loop. It was wired to nothing; what ran instead was a straight-line repair->validate with no retry. A quality failure now gets repaired, revalidated and retried, and an unrepairable one stops the run by name rather than passing."
+          },
+          {
+            "label": "sitemap:lastmod:content",
+            "command": [
+              "npm",
+              "run",
+              "sitemap:lastmod:content"
+            ],
+            "note": "The ledger is derived here and nowhere earlier. Every stage above can rewrite page HTML; a ledger derived before them records the hash of a page that no longer exists and is committed alongside the pages it no longer describes - 1,900 of 2,223 URLs at 6aac79a2e. Nothing may be appended after this stage: VAL-SITEMAP-LEDGER-FINAL fails the build if anything is."
           }
         ]
       }

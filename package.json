@@ -214,7 +214,7 @@
     "validate:strategy-gap-fill": "node scripts/validators/validate_strategy_gap_fill_contract.mjs",
     "validate:batch-g-continuity": "npm run strategy:gap-fill:backlog && npm run strategy:gap-fill:release-gap && npm run self-heal:generated-content && npm run validate:strategy-gap-fill && npm run validate:generated-content-finalization && npm run validate:batch-f-continuity",
     "workflow:spry-content-release": "node scripts/authority_scale/run_guarded_release.mjs",
-    "workflow:spry-full-rebuild": "npm run strategy:gap-fill:backlog && npm run strategy:gap-fill:release-gap && npm run build:all && npm run release:content-finalize && npm run validate:full-audit",
+    "workflow:spry-full-rebuild": "npm run strategy:gap-fill:backlog && npm run strategy:gap-fill:release-gap && npm run build:all && npm run release:content-finalize && npm run validate:full-audit && npm run sitemap:lastmod:content && npm run validate:lastmod-ledger-final",
     "validate:bhpc-agent-source-coverage": "node scripts/validators/validate_bhpc_agent_source_coverage.mjs",
     "agent:bhpc:self-test-route-resolution": "node scripts/agent_intake/self_test_bhpc_route_resolution.mjs",
     "validate:bhpc-agent-recommendation-driven-output": "node scripts/validators/validate_bhpc_agent_recommendation_driven_output.mjs",
@@ -335,6 +335,7 @@
     "distribution:inspection:self-test": "node scripts/distribution/self_test_inspection_persistence.mjs",
     "distribution:gsc-outcome:self-test": "node scripts/distribution/self_test_gsc_ingest_outcome.mjs",
     "sitemap:lastmod:self-test": "node scripts/self_test_sitemap_lastmod.mjs",
+    "validate:lastmod-ledger-final": "node scripts/validation/validate_lastmod_ledger_final.mjs",
     "validate:search-measurement-truthfulness": "npm run search:export-counts:self-test && npm run search:truth:self-test && npm run distribution:inspection:self-test && npm run distribution:gsc-outcome:self-test && npm run sitemap:lastmod:self-test && npm run sitemap:lastmod:check",
     "validate:no-silent-zero-work": "node scripts/validators/validate_no_silent_zero_work.mjs"
   },

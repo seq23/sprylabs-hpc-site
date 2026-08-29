@@ -35,53 +35,16 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import crypto from 'node:crypto';
 import { execFileSync } from 'node:child_process';
+// One shared definition of page identity, shared with the guard that asserts the
+// committed ledger still describes the tree. Two copies of this normaliser would
+// make a divergence between them indistinguishable from a stale ledger.
+import { ROOT, DATE_RE as DATE, LEDGER_PATH as LEDGER, visibleText, contentHash, parseSitemaps, fileForLoc } from './lib/sitemap_ledger.mjs';
 
-const ROOT = process.cwd();
-const LEDGER = process.env.SITEMAP_LASTMOD_LEDGER || 'data/sitemap/lastmod_ledger.json';
-const DATE = /^\d{4}-\d{2}-\d{2}$/;
+export { visibleText };
 const TODAY = process.env.SITEMAP_LASTMOD_TODAY || new Date().toISOString().slice(0, 10);
 const MAX_HISTORY = 60;
 const CHECK = process.argv.includes('--check');
-
-// ---------------------------------------------------------------- content hash
-
-/** The visible text of a page. Markup, scripts and styles are excluded on
- *  purpose: a reserialization is not a content change. */
-export function visibleText(html) {
-  return String(html || '')
-    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, ' ')
-    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, ' ')
-    .replace(/<!--[\s\S]*?-->/g, ' ')
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/&[a-z0-9#]+;/gi, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-const contentHash = (html) => crypto.createHash('sha256').update(visibleText(html)).digest('hex').slice(0, 24);
-
-// ------------------------------------------------------------------- sitemaps
-
-function sitemapFiles(dir = ROOT, out = []) {
-  for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
-    if (/^(node_modules|\.git|\.build|\.pages-output|dist)$/.test(e.name)) continue;
-    const full = path.join(dir, e.name);
-    if (e.isDirectory()) sitemapFiles(full, out);
-    else if (/^sitemap.*\.xml$/i.test(e.name)) out.push(full);
-  }
-  return out;
-}
-
-function fileForLoc(loc) {
-  const rel = String(loc).replace(/^https?:\/\/[^/]+\/?/, '').replace(/[?#].*$/, '').replace(/\/$/, '');
-  const candidates = rel ? [`${rel}/index.html`, `${rel}.html`, rel] : ['index.html'];
-  for (const c of candidates) {
-    const p = path.join(ROOT, c);
-    if (fs.existsSync(p) && fs.statSync(p).isFile()) return c;
-  }
-  return '';
-}
 
 // ------------------------------------------------------- git content-change date
 
@@ -169,14 +132,7 @@ function seedDates(files) {
 
 // ------------------------------------------------------------------------ run
 
-const parsed = sitemapFiles().map((sm) => {
-  const text = fs.readFileSync(sm, 'utf8');
-  const entries = [...text.matchAll(/<url>([\s\S]*?)<\/url>/g)].map((m) => ({
-    loc: (m[1].match(/<loc>(.*?)<\/loc>/) || [])[1] || '',
-    lastmod: (m[1].match(/<lastmod>(\d{4}-\d{2}-\d{2})/) || [])[1] || null,
-  })).filter((e) => e.loc);
-  return { file: sm, rel: path.relative(ROOT, sm), text, entries };
-});
+const parsed = parseSitemaps();
 
 const ledgerPath = path.join(ROOT, LEDGER);
 const priorLedger = (() => { try { return JSON.parse(fs.readFileSync(ledgerPath, 'utf8')); } catch { return { urls: [] }; } })();
