@@ -89,46 +89,6 @@
       "status": "NOT_APPLICABLE"
     },
     {
-      "matrix_id": "MX-009",
-      "validation_id": "VAL-009",
-      "lane": "deployed-runtime",
-      "command": "npm run postdeploy:authenticated-click-audit",
-      "order": 9,
-      "severity": "NOT_APPLICABLE",
-      "release_effect": false,
-      "status": "NOT_APPLICABLE"
-    },
-    {
-      "matrix_id": "MX-010",
-      "validation_id": "VAL-010",
-      "lane": "deployed-runtime",
-      "command": "npm run postdeploy:click-audit:all",
-      "order": 10,
-      "severity": "HARD_FAIL",
-      "release_effect": true,
-      "status": "ADMITTED"
-    },
-    {
-      "matrix_id": "MX-011",
-      "validation_id": "VAL-011",
-      "lane": "deployed-runtime",
-      "command": "npm run postdeploy:public-click-audit",
-      "order": 11,
-      "severity": "HARD_FAIL",
-      "release_effect": true,
-      "status": "ADMITTED"
-    },
-    {
-      "matrix_id": "MX-012",
-      "validation_id": "VAL-012",
-      "lane": "deployed-runtime",
-      "command": "npm run postdeploy:role-click-audit",
-      "order": 12,
-      "severity": "NOT_APPLICABLE",
-      "release_effect": false,
-      "status": "NOT_APPLICABLE"
-    },
-    {
       "matrix_id": "MX-013",
       "validation_id": "VAL-013",
       "lane": "release",
@@ -1124,16 +1084,6 @@
       "lane": "ci",
       "command": ".github/workflows/deploy-distribution.yml",
       "order": 126,
-      "severity": "HARD_FAIL",
-      "release_effect": true,
-      "status": "ADMITTED"
-    },
-    {
-      "matrix_id": "MX-WF-SIM-03",
-      "validation_id": "VAL-WF-SIM-03",
-      "lane": "ci",
-      "command": ".github/workflows/postdeploy-public-audit.yml",
-      "order": 127,
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"

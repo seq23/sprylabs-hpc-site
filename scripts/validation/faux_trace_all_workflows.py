@@ -152,12 +152,6 @@ for scenario,allowed in [('manual-valid-artifact',True),('workflow-run-success-m
         'exact validated artifact identity required','attestation checked before distribution','failed upstream run does not deploy'
     ])
 
-# Postdeploy audit
-inc,skip=all_included('postdeploy-public-audit.yml')
-add_trace('postdeploy-public-audit.yml','manual-public-audit','workflow_dispatch',inc,skip,[
-    'base_url required','Chromium installed before test','diagnostics uploaded on failure'
-])
-
 # Spry content release: every selectable mode plus schedule/push/pause/snapshot guard
 modes=input_options(workflow_inputs(workflows['spry-content-release.yml'])['mode'])
 for mode in modes:

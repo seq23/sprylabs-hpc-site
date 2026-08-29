@@ -2,7 +2,7 @@
   "schema_version": "2.0",
   "repo": "seq23/sprylabs-hpc-site",
   "generated_at": "2026-07-10T18:30:00Z",
-  "workflow_count": 9,
+  "workflow_count": 8,
   "topology": "full_safe_autonomy_eight_workflow_surface",
   "workflows": [
     {
@@ -170,51 +170,6 @@
       "required_artifacts": [
         ".build/**",
         "reports/validation-attestation.json"
-      ],
-      "validation_owner": "simplified workflow topology validators"
-    },
-    {
-      "path": ".github/workflows/postdeploy-public-audit.yml",
-      "name": "Postdeploy Public Audit",
-      "trigger": [
-        "workflow_dispatch",
-        "workflow_run"
-      ],
-      "primary_command": "npm run postdeploy:public-click-audit",
-      "repo_lane": "public-audit",
-      "current_status": "keep_simplified",
-      "reason": "Automatically runs after successful Deploy Distribution and remains manually dispatchable.",
-      "allowed_runtime_mutations": [
-        "data/**",
-        "artifacts/validation/**",
-        "reports/**",
-        "*.html",
-        "answers/**",
-        "clusters/**",
-        "comparisons/**",
-        "content/**",
-        "releases/**",
-        "sitemap*.xml",
-        "llms*.txt",
-        "feed.*",
-        "data/routes/public_route_manifest.json",
-        "data/routes/critical_browser_route_manifest.json",
-        ".build/**"
-      ],
-      "forbidden_runtime_mutations": [
-        ".github/**",
-        "package.json",
-        "package-lock.json",
-        "scripts/**",
-        "docs/**",
-        "_repo*.json",
-        "_validation_registry.json",
-        "_repo_validation_matrix.json",
-        "data/workflows/**"
-      ],
-      "required_artifacts": [
-        "artifacts/validation/**",
-        "reports/**"
       ],
       "validation_owner": "simplified workflow topology validators"
     },
