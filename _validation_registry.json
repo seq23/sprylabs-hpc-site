@@ -5962,6 +5962,42 @@
         "MX-SEARCH-MEASUREMENT-TRUTHFULNESS"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-CITATION-SIGNAL-JOIN",
+      "status": "ADMITTED",
+      "name": "validate:citation-signal-join",
+      "check_type": "contract",
+      "owning_lane": "intake-scoring",
+      "risk_prevented": "Prevents competition_opportunity - a weighted, declared scoring input - from silently measuring nothing while looking like it works. The citation lookup was keyed on a scalar `query` that a cluster record does not have (it carries a nested queries[]), so all 120 clusters recorded \"this query has not been probed\" while 83 grounded observations sat unused, and the engine correctly dropped the component and redistributed its weight, which made a 100% failure indistinguishable from normal operation. Also prevents \"a grounded answer cited nobody of ours\" being scored as maximum open ground for a brand or navigational query (\"sprylabs\", \"spry reddit\"), and requires the run to disclose how much of the component was actually measured.",
+      "existing_coverage_gap": "validate:scoring-contract checks the shape and range of a score. Nothing checked whether the citation signal reached any scored item at all, whether a navigational query could be scored as open ground, or whether a component that measured nothing said so.",
+      "scope": [
+        "scripts/scoring/score_cluster.js",
+        "scripts/intake/score_queries.js",
+        "data/intake/query_scores.json",
+        "data/intake/query_clusters.json",
+        "data/signals/llm_citation_observations.json"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:citation-signal-join",
+      "implementation_path": "scripts/validation/validate_citation_signal_join.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "artifacts/validation/citation-signal-join.json",
+      "negative_fixture": "artifacts/validation/citation-signal-join-gate.json",
+      "evidence_output": "artifacts/validation/citation-signal-join.json",
+      "runtime_budget_seconds": 60,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "VAL-SCORING-CONTRACT covers score shape; this covers whether the measured citation input reaches the score at all and whether it is honest about it."
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted after query_scores.json showed 0 of 120 clusters with a competition_opportunity reading while data/signals/llm_citation_observations.json held 83 grounded observations, and the scored population and the probed population were found to have zero overlap.",
+      "decision_date": "2026-08-29",
+      "matrix_ids": [
+        "MX-CITATION-SIGNAL-JOIN"
+      ],
+      "not_applicable_reason": null
     }
   ],
   "record_count": 186,

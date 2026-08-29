@@ -1,0 +1,25 @@
+{
+  "checked_at": "2026-08-29T16:53:11.551Z",
+  "status": "PASS",
+  "scored_clusters": 120,
+  "clusters": 120,
+  "coverage": {
+    "declared_weight": 0,
+    "scored_clusters": 120,
+    "clusters_with_a_measured_reading": 0,
+    "distinct_cluster_queries": 9179,
+    "probe_query_source": "data/queries/evidence/evidence_queries.json",
+    "distinct_probe_source_queries": 71,
+    "probe_source_queries_that_are_cluster_queries": 0,
+    "distinct_probed_queries": 25,
+    "probed_queries_that_are_cluster_queries": 0,
+    "signal_source": "data/signals/llm_citation_observations.json, written by scripts/llm_citation_probe.mjs",
+    "status": "NEVER_MEASURABLE_AS_WIRED",
+    "why": "The probe's query source (data/queries/evidence/evidence_queries.json) holds queries with MEASURED Search Console demand; the scorer scores phrasings mined from social sources with no demand evidence. The two sets share no query at all, so competition_opportunity cannot be measured for any cluster however the join is keyed.",
+    "disposition": "SWITCHED_OFF_SEE_weights.json__competition_opportunity_note"
+  },
+  "errors": [],
+  "notes": [
+    "competition_opportunity is SWITCHED OFF: The probe's query source (data/queries/evidence/evidence_queries.json) holds queries with MEASURED Search Console demand; the scorer scores phrasings mined from social sources with no demand evidence. The two sets share no query at all, so competition_opportunity cannot be measured for any cluster however the join is keyed."
+  ]
+}

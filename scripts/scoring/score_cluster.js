@@ -120,18 +120,70 @@ function buildCitationSignal() {
   return index;
 }
 
+// A cluster carries no scalar `query`. It carries a nested `queries[]` (and a
+// `query_sample[]`), which is how scripts/intake/build_backlog.js has always
+// read it. Keying the citation lookup on item.query therefore looked up the
+// empty string for all 120 clusters, and every one of them recorded
+// "this query has not been probed" while 83 real grounded observations sat in
+// the file.
+function queriesForItem(item) {
+  const out = [];
+  if (Array.isArray(item.queries)) {
+    for (const q of item.queries) { const v = typeof q === "string" ? q : (q && q.query); if (v) out.push(v); }
+  }
+  if (Array.isArray(item.query_sample)) for (const q of item.query_sample) if (q) out.push(q);
+  for (const v of [item.query, item.title, item.name, item.cluster]) if (v) out.push(v);
+  return [...new Set(out)];
+}
+
+// "Not cited" is NOT "open ground". A grounded answer that cited nobody of ours
+// says who held the citation slots; it does not say the query describes ground
+// this property can contest. The probe's own list carries brand and competitor
+// monitoring rows - "sprylabs", "spry reddit", "compare humantelligence",
+// "nua coach alternative" - and "phone vortex meaning", which returned
+// dictionary sites. Awarding those a maximum competition_opportunity of 90
+// would be a false blue-ocean signal, so the gate refuses them before any score
+// is given. billionairehighperformancecoach.com, spryexecutiveos.com and
+// aplayermode.com are three domains of ONE property, so all three are brand
+// tokens here.
+const BRAND_TOKENS = /\b(spry|sprylabs|spryexecutiveos|aplayermode|a player mode|bhpc|billionairehighperformancecoach)\b/i;
+function blueOceanEligibility(query) {
+  const q = String(query || "").trim();
+  if (!q) return { eligible: false, reason: "EMPTY_QUERY" };
+  if (BRAND_TOKENS.test(q)) {
+    return { eligible: false, reason: "BRAND_OR_PERSON_NAME_NAVIGATIONAL", note: "Navigational query for this property's own name. Whoever the engine cited for it is not competitive ground." };
+  }
+  if (q.split(/\s+/).length < 2) {
+    return { eligible: false, reason: "NO_SERVICE_OR_LOCATION_ANCHOR", note: "A single-token query gives the engine nothing to anchor retrieval to, so its citation set does not describe this property's ground." };
+  }
+  return { eligible: true, reason: "ANCHORED_QUERY" };
+}
+
 let memoizedSignal = null;
 function competitionOpportunityFor(item, signal) {
   // Callers that score a single item pass no context; they still get the
   // measured signal rather than a silent "unmeasured".
   if (!signal) signal = (memoizedSignal ||= buildCitationSignal());
   if (!signal || !signal.size) return { value: null, basis: "no grounded citation observation recorded for any query" };
-  const key = normalizeQuery(item.query || item.title || item.name || item.cluster || "");
-  const hit = signal.get(key);
-  if (!hit) return { value: null, basis: "this query has not been probed, so competition is unmeasured" };
-  return hit.self_cited
-    ? { value: 30, basis: `measured: a grounded answer engine answered this query and cited one of our pages (${hit.observed_at})` }
-    : { value: 90, basis: `measured: a grounded answer engine answered this query and cited nobody of ours (${hit.observed_at})` };
+  const candidates = queriesForItem(item);
+  if (!candidates.length) return { value: null, basis: "this cluster carries no query text, so nothing could be looked up" };
+  const hits = [];
+  for (const q of candidates) {
+    const hit = signal.get(normalizeQuery(q));
+    if (hit) hits.push({ query: q, ...hit });
+  }
+  if (!hits.length) return { value: null, basis: "none of this cluster's queries has been probed, so competition is unmeasured" };
+  // Holding ground anywhere in the cluster outranks an open reading elsewhere in
+  // it: a page that already surfaces is a position to defend, not an opening.
+  const held = hits.find((h) => h.self_cited);
+  if (held) return { value: 30, basis: `measured: a grounded answer engine answered "${held.query}" and cited one of our pages (${held.observed_at})` };
+  const eligible = hits.map((h) => ({ h, gate: blueOceanEligibility(h.query) })).filter((x) => x.gate.eligible);
+  if (!eligible.length) {
+    const first = blueOceanEligibility(hits[0].query);
+    return { value: null, basis: `refused as open ground: every probed query for this cluster is ${first.reason}. "Not cited" is not "open ground".` };
+  }
+  const top = eligible[0];
+  return { value: 90, basis: `measured: a grounded answer engine answered "${top.h.query}" and cited nobody of ours (${top.h.observed_at})` };
 }
 
 function scoreCluster(item, context = {}) {
@@ -175,7 +227,10 @@ function scoreCluster(item, context = {}) {
     [extractability, weights.extractability || 0.15],
     [fanout, weights.fanout || 0.10],
     [freshness, weights.freshness || 0.05],
-    [competitionOpportunity, weights.competition_opportunity || 0.05]
+    // `|| 0.05` meant a deliberately declared weight of 0 sprang straight back
+    // to 0.05, because 0 is falsy. A weight set to zero on purpose has to stay
+    // zero, or turning a component off does nothing and says nothing.
+    [competitionOpportunity, weights.competition_opportunity ?? 0.05]
   ].filter(([value]) => typeof value === "number" && Number.isFinite(value));
   const weightUsed = components.reduce((sum, [, w]) => sum + w, 0) || 1;
   const weighted = components.reduce((sum, [value, w]) => sum + value * w, 0) / weightUsed;
@@ -205,7 +260,7 @@ function scoreCluster(item, context = {}) {
 
   return {
     id: item.id || item.cluster_id || item.slug || text.slice(0, 48).replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""),
-    query: item.query || item.title || item.name || item.cluster || "",
+    query: queriesForItem(item)[0] || "",
     target_page: item.target_page || item.page || null,
     score: total,
     approved: total >= ((weights.thresholds || {}).approved_min_total || 75),
@@ -238,4 +293,8 @@ function scoreItems(items) {
   return items.map(item => scoreCluster(item, context));
 }
 
-module.exports = { scoreCluster, scoreItems };
+module.exports = {
+  queriesForItem,
+  competitionOpportunityFor,
+  blueOceanEligibility,
+  buildCitationSignal, scoreCluster, scoreItems };
