@@ -106,16 +106,24 @@ for (const rel of sample) {
 // will actually select from. This reads active_mutation_routes() out of the repair
 // itself rather than re-reading the scope file this validator just wrote - checking our
 // own output would be self-fulfilling and could never fail.
-const allowed = probe.allowed === null ? null : new Set((probe.allowed || []).map(normalizeRoute));
-if (allowed !== null) {
-  for (const v of result.violations) {
-    if (!allowed.has(normalizeRoute(v.route))) {
-      errors.push(
-        `${v.path}: violates the citation contract (${v.violation}) but its route ${v.route} is not in ` +
-          "repair_schema_parity.py's allowed route set, so the repair cannot reach it and the self-heal " +
-          'loop cannot converge',
-      );
-    }
+// The probe forces a synthetic restrictive scope, so `allowed` is never null here. If it
+// is, the scoped code path did not run and this assertion would pass over an unchecked
+// set - fail rather than report a proof that was never performed.
+if (probe.allowed === null || probe.probe_mode !== 'synthetic_restrictive_scope') {
+  console.error(
+    '[validate:citation-repair-reach] FAIL: route probe did not exercise the scoped path ' +
+      `(probe_mode=${probe.probe_mode ?? 'absent'}); the reachability assertion never ran`,
+  );
+  process.exit(1);
+}
+const allowed = new Set((probe.allowed || []).map(normalizeRoute));
+for (const v of result.violations) {
+  if (!allowed.has(normalizeRoute(v.route))) {
+    errors.push(
+      `${v.path}: violates the citation contract (${v.violation}) but its route ${v.route} is not in ` +
+        "repair_schema_parity.py's allowed route set under an active mutation scope, so the repair " +
+        'cannot reach it and the self-heal loop cannot converge',
+    );
   }
 }
 

@@ -40,17 +40,33 @@ const ROOT = process.cwd();
 // ---- 1. Safe-harbor claim rewrite over what the release plan applied (unchanged behaviour).
 const app = readJson('artifacts/validation/release-plan-application.json', { applied: [] });
 const rewrites = readJson('data/governance/safe_harbor_rewrite_ledger.json', { schema_version: '1.0', entries: [] });
+// rewriteUnsafe() substitutes into published prose, so a bad substitution ships. It used
+// to glue words together ("treatment" -> "supportsment") and unsafeClaim() returned false
+// on the result, so the corruption passed every downstream check. The stem regex is fixed,
+// but a rewriter that edits live pages should not be trusted on that alone: refuse to write
+// unless the rewrite actually clears the matcher AND introduces no glued token.
+const GLUED = /\bsupports(?!\b)[a-z]/i;
 let claimRepairs = 0;
+const claimStops = [];
 for (const x of app.applied || []) {
   if (!fs.existsSync(x.source_file)) continue;
   const before = fs.readFileSync(x.source_file, 'utf8');
   if (!unsafeClaim(before)) continue;
   const after = rewriteUnsafe(before);
-  if (after !== before) {
-    fs.writeFileSync(x.source_file, after);
-    rewrites.entries.push({ timestamp: now(), route: x.route_owner, source_file: x.source_file, decision: 'REWRITTEN_AND_AUTOPUBLISHED' });
-    claimRepairs += 1;
+  if (after === before) {
+    claimStops.push({ source_file: x.source_file, reason: 'matcher flagged the page but the rewriter changed nothing' });
+    continue;
   }
+  if (unsafeClaim(after) || GLUED.test(after)) {
+    claimStops.push({
+      source_file: x.source_file,
+      reason: unsafeClaim(after) ? 'rewrite did not clear the claim matcher' : 'rewrite produced a corrupted token',
+    });
+    continue;
+  }
+  fs.writeFileSync(x.source_file, after);
+  rewrites.entries.push({ timestamp: now(), route: x.route_owner, source_file: x.source_file, decision: 'REWRITTEN_AND_AUTOPUBLISHED' });
+  claimRepairs += 1;
 }
 writeJson('data/governance/safe_harbor_rewrite_ledger.json', rewrites);
 
@@ -91,6 +107,7 @@ const report = {
   validator: 'citation-os-self-heal',
   examined_pages: before.examined,
   claim_rewrites: claimRepairs,
+  claim_rewrites_refused: claimStops,
   schema_violations_found: before.violations.length,
   schema_violations_repaired: schemaRepairs,
   unresolved: after.violations,
@@ -109,5 +126,6 @@ if (after.violations.length) {
 }
 console.log(
   `[citation:self-heal] PASS examined=${before.examined}; claim_rewrites=${claimRepairs}; ` +
+    `claim_rewrites_refused=${claimStops.length}; ` +
     `schema_violations_found=${before.violations.length}; schema_violations_repaired=${schemaRepairs}`,
 );

@@ -13,7 +13,11 @@ export function unsafeClaim(text=''){const t=String(text).toLowerCase();return [
 export function rewriteUnsafe(text=''){return String(text)
  .replace(/guaranteed (success|wealth|billionaire|outcome|result)/gi,'structured support')
  .replace(/clinically proven|scientifically proven/gi,'designed as a practical framework')
- .replace(/cures?|treats?|diagnoses?/gi,'supports');}
+ // Unanchored alternation corrupted every longer word sharing these stems:
+ // "treatment" -> "supportsment", "treating" -> "supportsing", and unsafeClaim()
+ // returns false on the wreckage, so nothing downstream caught it. Word boundaries
+ // plus explicit noun/participle forms keep the substitution grammatical.
+ .replace(/\b(?:cures?|curing|treats?|treating|treatments?|diagnoses|diagnosis|diagnose[sd]?|diagnosing)\b/gi,'supports');}
 export function decide({owner='legacy_eligible',action='repair',text='',duplicate=false,route=''}){
  if(owner==='paid_agent'||owner==='system_core') return {decision:'SKIPPED_PROTECTED_OWNER',reason:`${owner} route is owner-locked`,route};
  if(duplicate) return {decision:'SKIPPED_DUPLICATE_INTENT',reason:'semantic intent already has a canonical owner',route};

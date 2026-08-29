@@ -20,6 +20,7 @@ Usage: python3 scripts/citation/route_probe.py <path> [<path> ...]
 """
 import json
 import sys
+import tempfile
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -32,10 +33,33 @@ def main() -> int:
     if not paths:
         print('route_probe: no paths given', file=sys.stderr)
         return 1
-    allowed = active_mutation_routes()
+    # Probe under a SYNTHETIC restrictive mutation scope, never the ambient one.
+    #
+    # active_mutation_routes() returns None when no scope file exists, which is the
+    # normal state outside a release run. Reading the ambient value would make the
+    # guard's reachability assertion skip itself in exactly the environment it runs in
+    # (container-prepush), passing vacuously - the same shape of hole as a check
+    # satisfied by stale evidence. Pointing the module at a scope containing one
+    # unrelated route forces the scoped code path every time, so the assertion
+    # exercises the contract-violation union on every run.
+    import repair_schema_parity as rsp
+    with tempfile.TemporaryDirectory() as tmp:
+        fake = Path(tmp) / 'active_mutation_scope.json'
+        fake.write_text(json.dumps({
+            'schema_version': '1.0',
+            'note': 'synthetic scope written by route_probe.py to force the scoped path',
+            'routes': ['/__route_probe_synthetic_scope__/'],
+        }), encoding='utf-8')
+        original = rsp.ACTIVE_SCOPE
+        rsp.ACTIVE_SCOPE = fake
+        try:
+            allowed = rsp.active_mutation_routes()
+        finally:
+            rsp.ACTIVE_SCOPE = original
     print(json.dumps({
         'routes': {p: route_from_path(p) for p in paths},
         'allowed': None if allowed is None else sorted(allowed),
+        'probe_mode': 'synthetic_restrictive_scope',
     }))
     return 0
 
