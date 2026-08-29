@@ -49,6 +49,13 @@ const obs=readJson('data/search_intelligence/live_search_observations.json',{});
 if(obs.provider_state!=='OK'&&obs.status_is_healthy===true)errors.push('unavailable grounded provider marked healthy');
 const g=readJson('data/search_intelligence/gsc_truth.json',{});
 if(g.provider_state!=='OK'&&g.status_is_healthy===true)errors.push('unavailable GSC marked healthy');
+// Health has to be backed by rows the provider actually returned. The previous
+// rule only asked whether the two export files existed, so an all-zero dataset
+// reported OK. raw_row_count is the pre-filter count: zero means Google returned
+// nothing, and nothing is not health.
+if(g.status_is_healthy===true&&!(Number(g.raw_row_count)>0))errors.push(`GSC marked healthy with raw_row_count=${g.raw_row_count===undefined?'absent':String(g.raw_row_count)}`);
+if(Object.keys(g).length&&g.data_state===undefined)errors.push('gsc_truth.json carries no data_state; regenerate with npm run search:truth');
+if(Number(g.raw_row_count)>0&&Number(g.row_count)===0&&g.target_query_filter?.filter_discarded_every_row!==true)errors.push('target-query filter discarded every returned row but the discard is not recorded');
 const targetIds=new Set((targets.targets||[]).map(x=>x.target_id));
 if(targetIds.size!==(targets.targets||[]).length)errors.push('duplicate target ids');
 for(const t of targets.targets||[]){

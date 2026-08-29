@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import datetime as dt
 import json
 import sys
 from pathlib import Path
@@ -40,10 +41,20 @@ def main():
             "languageCode": "en-US"
         }
         resp = service.urlInspection().index().inspect(body=body).execute()
-        results.append(resp)
+        # The API response does not echo the URL that was inspected, so a bare
+        # list of responses cannot be attributed back to its URLs. Pairing them
+        # here is what makes the verdicts persistable at all.
+        results.append({"url": url, "inspection": resp})
 
+    payload = {
+        "provider": "google_search_console_url_inspection",
+        "site_url": site_url,
+        "collected_at": dt.date.today().isoformat(),
+        "requested_url_count": len(urls),
+        "results": results,
+    }
     with open(output_json, "w", encoding="utf-8") as f:
-        json.dump(results, f, indent=2)
+        json.dump(payload, f, indent=2)
 
     print(f"Wrote {len(results)} inspection results to {output_json}")
 

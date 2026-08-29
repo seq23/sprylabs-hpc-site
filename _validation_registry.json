@@ -5899,6 +5899,44 @@
         "MX-181"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-SEARCH-MEASUREMENT-TRUTHFULNESS",
+      "status": "ADMITTED",
+      "name": "validate:search-measurement-truthfulness",
+      "check_type": "self-test",
+      "owning_lane": "search-intelligence",
+      "risk_prevented": "Prevents the search-measurement lane from reporting zeros while calling itself healthy: an all-zero GSC dataset marked OK, a target-query filter that discards every returned row in silence, URL Inspection verdicts discarded after being paid for, an ingest failure swallowed by `|| true`, and a sitemap lastmod that is either stale or stamped with build time.",
+      "existing_coverage_gap": "validate:search-intelligence only checked that provider_state and status_is_healthy agreed; it could not tell an empty provider response from a fully filtered one, and nothing at all guarded lastmod derivation or workflow outcome recording.",
+      "scope": [
+        "scripts/search_intelligence",
+        "scripts/distribution",
+        "data/search_intelligence",
+        "data/sitemap",
+        ".github/workflows/deploy-distribution.yml",
+        "sitemap-bhpc.xml",
+        "sitemap-spry.xml"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:search-measurement-truthfulness",
+      "implementation_path": "scripts/self_test_sitemap_lastmod.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "artifacts/validation/sitemap-lastmod-self-test.json",
+      "negative_fixture": "artifacts/validation/gsc-ingest-outcome-self-test.json",
+      "evidence_output": "artifacts/validation/search-gsc-truth-health-self-test.json",
+      "runtime_budget_seconds": 180,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "VAL-SEARCH-INTELLIGENCE covers the search lane contract and agent boundary; this covers whether the numbers that lane reports are real."
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted after the GSC lane reported row_count 0 on both properties with status_is_healthy true while Search Console was serving 895 impressions across 69 queries.",
+      "decision_date": "2026-08-28",
+      "matrix_ids": [
+        "MX-SEARCH-MEASUREMENT-TRUTHFULNESS"
+      ],
+      "not_applicable_reason": null
     }
   ],
   "record_count": 186,

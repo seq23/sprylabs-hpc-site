@@ -1847,6 +1847,16 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-SEARCH-MEASUREMENT-TRUTHFULNESS",
+      "validation_id": "VAL-SEARCH-MEASUREMENT-TRUTHFULNESS",
+      "lane": "search-intelligence",
+      "command": "npm run validate:search-measurement-truthfulness",
+      "order": 182,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
   "entry_count": 184,
@@ -2071,6 +2081,10 @@
         {
           "id": "validation:inventory",
           "command": "npm run validation:inventory"
+        },
+        {
+          "id": "validate:search-measurement-truthfulness",
+          "command": "npm run validate:search-measurement-truthfulness"
         },
         {
           "id": "validate:warnings",

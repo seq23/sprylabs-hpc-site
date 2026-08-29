@@ -329,7 +329,16 @@
     "cadence:template-share": "node scripts/template_share.js",
     "validate:demand-backed-pages": "node scripts/validation/validate_demand_backed_pages.mjs",
     "validate:canonical-no-redirect": "node scripts/validation/validate_canonical_no_redirect.mjs",
-    "search:grounded-provider:self-test": "node scripts/search_intelligence/self_test_grounded_provider.mjs"
+    "search:grounded-provider:self-test": "node scripts/search_intelligence/self_test_grounded_provider.mjs",
+    "sitemap:lastmod:content": "node scripts/sitemap_content_lastmod.mjs",
+    "sitemap:lastmod:check": "node scripts/sitemap_content_lastmod.mjs --check",
+    "distribution:inspection:persist": "node scripts/distribution/persist_inspection_results.mjs data/search_intelligence/url_inspection_ledger.json .build/inspection-results-spry.json .build/inspection-results-bhpc.json",
+    "search:truth:self-test": "node scripts/search_intelligence/self_test_gsc_truth_health.mjs",
+    "search:export-counts:self-test": "node scripts/validation/python_runtime.mjs run scripts/search_intelligence/self_test_gsc_export_counts.py",
+    "distribution:inspection:self-test": "node scripts/distribution/self_test_inspection_persistence.mjs",
+    "distribution:gsc-outcome:self-test": "node scripts/distribution/self_test_gsc_ingest_outcome.mjs",
+    "sitemap:lastmod:self-test": "node scripts/self_test_sitemap_lastmod.mjs",
+    "validate:search-measurement-truthfulness": "npm run search:export-counts:self-test && npm run search:truth:self-test && npm run distribution:inspection:self-test && npm run distribution:gsc-outcome:self-test && npm run sitemap:lastmod:self-test && npm run sitemap:lastmod:check"
   },
   "engines": {
     "node": ">=24.0.0"
