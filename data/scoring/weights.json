@@ -1,12 +1,12 @@
 {
   "source_frequency": 0.15,
-  "conversion_proximity": 0.20,
+  "conversion_proximity": 0.2,
   "coverage_gap": 0.15,
   "authority_graph": 0.15,
   "extractability": 0.15,
-  "fanout": 0.10,
+  "fanout": 0.1,
   "freshness": 0.05,
-  "competition_opportunity": 0.05,
+  "competition_opportunity": 0,
   "penalties": {
     "cannibalization_high": 30,
     "thin_signal": 20,
@@ -18,5 +18,6 @@
     "conversion_min": 60,
     "extractability_min": 70,
     "high_cannibalization_max": 79
-  }
+  },
+  "_competition_opportunity_note": "Zero on purpose, and this is the record of why. competition_opportunity is measured by scripts/llm_citation_probe.mjs, whose query source is data/queries/evidence/evidence_queries.json - 71 queries with MEASURED Google Search Console demand (impressions, average position). The scorer scores data/intake/query_clusters.json - 9,179 phrasings mined from social sources with no demand evidence at all. The two sets share 0 exact matches and 0 near matches down to 0.82 similarity: they are disjoint by construction, not by a keying bug. Probing the mined phrasings instead would spend provider budget measuring queries nobody is known to have searched for, which is the opposite of this repo's demand-backed rule. So the component cannot be measured as wired, and a weighted input that cannot be measured is a number that decides page priority while resting on nothing. It is switched off rather than left silently redistributing. Raise it again only together with a probe source that intersects the scored population; validate:citation-signal-join hard-fails if the weight is non-zero and the two sets do not intersect."
 }

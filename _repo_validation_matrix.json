@@ -1817,9 +1817,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-CITATION-SIGNAL-JOIN",
+      "validation_id": "VAL-CITATION-SIGNAL-JOIN",
+      "lane": "intake-scoring",
+      "command": "npm run validate:citation-signal-join",
+      "order": 182,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 185,
+  "entry_count": 182,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2153,6 +2163,10 @@
         {
           "id": "VAL-CITATION-REPAIR-REACH",
           "command": "npm run validate:citation-repair-reach"
+        },
+        {
+          "id": "VAL-CITATION-SIGNAL-JOIN",
+          "command": "npm run validate:citation-signal-join"
         }
       ]
     },
