@@ -1267,25 +1267,49 @@ def update_discovery(pages,queries,frameworks):
     # forever, which is how the .html forms stayed in the sitemap after they
     # started 301-ing; a sitemap that advertises redirects is what Bing files
     # under "URLs redirecting" and drops.
+    # lastmod is evidence, not build time. Stamping TODAY on every URL on every
+    # postbuild is what left both child sitemaps asserting that 2,218 pages had
+    # changed on the same day - a signal Google reads, and a false one. The date
+    # comes from the derived ledger (data/sitemap/lastmod_ledger.json, keyed on the
+    # page's visible-content hash); failing that, from whatever the sitemap already
+    # said; and only for a URL appearing here for the very first time does TODAY
+    # apply, because for a genuinely new page today IS the truth.
+    ledger_lastmod={}
+    ledger_path=ROOT/"data/sitemap/lastmod_ledger.json"
+    if ledger_path.exists():
+        try:
+            ledger_lastmod={e["url"]:e["lastmod"] for e in json.loads(ledger_path.read_text(encoding="utf-8")).get("urls",[]) if e.get("lastmod")}
+        except Exception:
+            ledger_lastmod={}
     for name,domain in [("sitemap-spry.xml","spryexecutiveos.com"),("sitemap-bhpc.xml","billionairehighperformancecoach.com")]:
         fp=ROOT/name
         if not fp.exists(): continue
+        existing=dict(re.findall(r'<loc>(.*?)</loc><lastmod>(\d{4}-\d{2}-\d{2})</lastmod>',fp.read_text(encoding="utf-8")))
         urls={p["canonical_url"] for p in active if p["canonical_domain"].lower()==domain}
         if domain=="spryexecutiveos.com":
             urls.add("https://spryexecutiveos.com/knowledge-map/")
-        xml='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+"\n".join(f'  <url><loc>{u}</loc><lastmod>{TODAY}</lastmod></url>' for u in sorted(urls))+"\n</urlset>\n"
+        def lastmod_for(u):
+            return ledger_lastmod.get(u) or existing.get(u) or TODAY
+        xml='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+"\n".join(f'  <url><loc>{u}</loc><lastmod>{lastmod_for(u)}</lastmod></url>' for u in sorted(urls))+"\n</urlset>\n"
         fp.write_text(xml,encoding="utf-8")
     # One Pages deployment answers both hosts, so /sitemap.xml is served on both.
     # It has to be a host-neutral sitemap index: a urlset here would hand one
     # host a file full of the other host's URLs, which is rejected wholesale.
+    # The index's lastmod is the newest date inside each child sitemap, not the
+    # build time: it tells a crawler when that child last actually changed.
+    def _child_newest(child):
+        cp=ROOT/child
+        if not cp.exists(): return TODAY
+        dates=re.findall(r'<lastmod>(\d{4}-\d{2}-\d{2})</lastmod>',cp.read_text(encoding="utf-8"))
+        return max(dates) if dates else TODAY
     root_map=ROOT/"sitemap.xml"
     if root_map.exists():
         existing=root_map.read_text(encoding="utf-8")
         comments="\n".join(line for line in existing.splitlines() if "priority-coverage" in line)
         lines=['<?xml version="1.0" encoding="UTF-8"?>',
                '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-               f'  <sitemap><loc>https://billionairehighperformancecoach.com/sitemap-bhpc.xml</loc><lastmod>{TODAY}</lastmod></sitemap>',
-               f'  <sitemap><loc>https://spryexecutiveos.com/sitemap-spry.xml</loc><lastmod>{TODAY}</lastmod></sitemap>']
+               f'  <sitemap><loc>https://billionairehighperformancecoach.com/sitemap-bhpc.xml</loc><lastmod>{_child_newest("sitemap-bhpc.xml")}</lastmod></sitemap>',
+               f'  <sitemap><loc>https://spryexecutiveos.com/sitemap-spry.xml</loc><lastmod>{_child_newest("sitemap-spry.xml")}</lastmod></sitemap>']
         if comments: lines.append(comments)
         lines.append('</sitemapindex>')
         root_map.write_text("\n".join(lines)+"\n",encoding="utf-8")

@@ -1043,10 +1043,21 @@ function updateSitemapsAndLlms() {
   const citable = readJson('data/citation/citable_pages.json',{pages:[]}).pages.filter(p=>p.status === 'ACTIVE');
   const bhpc = citable.filter(p=>p.canonical_domain === DOMAIN).map(p=>p.canonical_url).sort();
   const spry = citable.filter(p=>p.canonical_domain !== DOMAIN).map(p=>p.canonical_url).sort();
-  const xml = urls => `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(u=>`  <url><loc>${u}</loc><lastmod>${TODAY}</lastmod></url>`).join('\n')}\n</urlset>\n`;
+  // lastmod is evidence, not build time. Stamping TODAY across the whole urlset
+  // asserts that every page changed on this run, which is false and is the exact
+  // date-bump pattern the cadence gate exists to catch. Prefer the derived ledger
+  // (keyed on visible-content hash), then whatever the sitemap already said, and
+  // fall back to TODAY only for a URL appearing for the first time - where today
+  // is the honest answer.
+  const ledgerLastmod = new Map((readJson('data/sitemap/lastmod_ledger.json',{urls:[]}).urls||[]).filter(e=>e.lastmod).map(e=>[e.url,e.lastmod]));
+  const existingLastmod = (file) => { const m = new Map(); try { for (const [,loc,d] of fs.readFileSync(file,'utf8').matchAll(/<loc>(.*?)<\/loc><lastmod>(\d{4}-\d{2}-\d{2})<\/lastmod>/g)) m.set(loc,d); } catch {} return m; };
+  const lastmodFor = (u, prior) => ledgerLastmod.get(u) || prior.get(u) || TODAY;
+  const xml = (urls, prior) => `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(u=>`  <url><loc>${u}</loc><lastmod>${lastmodFor(u, prior)}</lastmod></url>`).join('\n')}\n</urlset>\n`;
+  // The index's lastmod is the newest date inside each child, not the build time.
+  const newestIn = (file) => { try { const d=[...fs.readFileSync(file,'utf8').matchAll(/<lastmod>(\d{4}-\d{2}-\d{2})<\/lastmod>/g)].map(m=>m[1]); return d.length?d.sort().at(-1):TODAY; } catch { return TODAY; } };
   const spryWithKnowledgeMap = Array.from(new Set([...spry, 'https://spryexecutiveos.com/knowledge-map/'])).sort();
-  fs.writeFileSync('sitemap-bhpc.xml', xml(bhpc));
-  fs.writeFileSync('sitemap-spry.xml', xml(spryWithKnowledgeMap));
+  fs.writeFileSync('sitemap-bhpc.xml', xml(bhpc, existingLastmod('sitemap-bhpc.xml')));
+  fs.writeFileSync('sitemap-spry.xml', xml(spryWithKnowledgeMap, existingLastmod('sitemap-spry.xml')));
   // One Pages deployment answers both hosts, so /sitemap.xml is served on both.
   // It used to be a copy of the spry urlset, which meant anything that
   // auto-discovered /sitemap.xml on billionairehighperformancecoach.com was
@@ -1064,8 +1075,8 @@ function updateSitemapsAndLlms() {
   const sitemapIndex = [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    `  <sitemap><loc>https://billionairehighperformancecoach.com/sitemap-bhpc.xml</loc><lastmod>${TODAY}</lastmod></sitemap>`,
-    `  <sitemap><loc>https://spryexecutiveos.com/sitemap-spry.xml</loc><lastmod>${TODAY}</lastmod></sitemap>`,
+    `  <sitemap><loc>https://billionairehighperformancecoach.com/sitemap-bhpc.xml</loc><lastmod>${newestIn('sitemap-bhpc.xml')}</lastmod></sitemap>`,
+    `  <sitemap><loc>https://spryexecutiveos.com/sitemap-spry.xml</loc><lastmod>${newestIn('sitemap-spry.xml')}</lastmod></sitemap>`,
     priorityCoverageComments,
     '</sitemapindex>',
     ''

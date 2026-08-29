@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-29T01:43:14.343Z",
+  "status": "PASS",
+  "case_count": 5,
+  "results": [
+    {
+      "case": "HEALTHY: provider returned rows and a target matched",
+      "old_rule_healthy": true,
+      "data_state": "HEALTHY",
+      "provider_state": "OK",
+      "status_is_healthy": true,
+      "raw_row_count": 69,
+      "row_count": 1,
+      "filter_discarded_every_row": false
+    },
+    {
+      "case": "NO_DATA_RETURNED: provider answered with zero rows (the reported-zeros defect)",
+      "old_rule_healthy": true,
+      "data_state": "NO_DATA_RETURNED",
+      "provider_state": "DEGRADED",
+      "status_is_healthy": false,
+      "raw_row_count": 0,
+      "row_count": 0,
+      "filter_discarded_every_row": false
+    },
+    {
+      "case": "PROVIDER_UNAVAILABLE: no export produced at all",
+      "old_rule_healthy": false,
+      "data_state": "PROVIDER_UNAVAILABLE",
+      "provider_state": "UNAVAILABLE",
+      "status_is_healthy": false,
+      "raw_row_count": null,
+      "row_count": 0,
+      "filter_discarded_every_row": false
+    },
+    {
+      "case": "RAW_COUNT_UNKNOWN: legacy export with no raw_row_count cannot be called healthy",
+      "old_rule_healthy": true,
+      "data_state": "RAW_COUNT_UNKNOWN",
+      "provider_state": "DEGRADED",
+      "status_is_healthy": false,
+      "raw_row_count": null,
+      "row_count": 0,
+      "filter_discarded_every_row": false
+    },
+    {
+      "case": "Full discard is visible: 69 raw rows in, 0 survive the target filter",
+      "old_rule_healthy": true,
+      "data_state": "HEALTHY",
+      "provider_state": "OK",
+      "status_is_healthy": true,
+      "raw_row_count": 69,
+      "row_count": 0,
+      "filter_discarded_every_row": true
+    }
+  ],
+  "errors": []
+}

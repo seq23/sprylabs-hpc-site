@@ -1,9 +1,23 @@
 {
-  "schema_version": "1.1",
-  "generated_at": "2026-08-28T17:29:26.587Z",
-  "provider_state": "OK",
-  "overall_status": "OK",
-  "status_is_healthy": true,
+  "schema_version": "1.2",
+  "generated_at": "2026-08-29T01:29:10.810Z",
+  "provider_state": "DEGRADED",
+  "overall_status": "DEGRADED",
+  "data_state": "RAW_COUNT_UNKNOWN",
+  "status_is_healthy": false,
+  "raw_row_count": null,
+  "raw_impressions": null,
+  "raw_clicks": null,
+  "row_count": 0,
+  "target_query_filter": {
+    "target_query_count": 120,
+    "rows_in": null,
+    "rows_matched": 0,
+    "rows_discarded": null,
+    "discard_ratio": null,
+    "targets_with_rows": 0,
+    "filter_discarded_every_row": false
+  },
   "exports": [
     {
       "path": "data/search_intelligence/provider_inputs/gsc_bhpc.json",
@@ -11,7 +25,15 @@
       "start_date": "2026-07-30",
       "end_date": "2026-08-26",
       "collected_at": "2026-08-28",
-      "row_count": 0
+      "raw_row_count": null,
+      "raw_distinct_query_count": null,
+      "raw_impressions": null,
+      "raw_clicks": null,
+      "row_count": 0,
+      "rows_discarded_by_target_filter": null,
+      "discarded_impressions": null,
+      "discarded_clicks": null,
+      "data_state": "RAW_COUNT_UNKNOWN"
     },
     {
       "path": "data/search_intelligence/provider_inputs/gsc_spry.json",
@@ -19,10 +41,18 @@
       "start_date": "2026-07-30",
       "end_date": "2026-08-26",
       "collected_at": "2026-08-28",
-      "row_count": 0
+      "raw_row_count": null,
+      "raw_distinct_query_count": null,
+      "raw_impressions": null,
+      "raw_clicks": null,
+      "row_count": 0,
+      "rows_discarded_by_target_filter": null,
+      "discarded_impressions": null,
+      "discarded_clicks": null,
+      "data_state": "RAW_COUNT_UNKNOWN"
     }
   ],
-  "unavailable_note": null,
+  "unavailable_note": "At least one export does not record raw_row_count, so an empty provider response cannot be distinguished from a fully filtered one. Re-run scripts/search_intelligence/gsc_search_analytics.py to produce a countable export.",
   "per_target": [
     {
       "target_id": "si_32f3803b2df5ecc9",

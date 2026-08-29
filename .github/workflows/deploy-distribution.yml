@@ -92,7 +92,16 @@ jobs:
           GSC_SITE_URL_SPRY: ${{ secrets.GSC_SITE_URL_SPRY }}
           GSC_SITE_URL_BHPC: ${{ secrets.GSC_SITE_URL_BHPC }}
         run: |
-          if [ ! -f "$RUNNER_TEMP/.gsc-service-account.json" ]; then echo "GSC skipped: service account not configured"; exit 0; fi
+          mkdir -p .build/gsc
+          if [ ! -f "$RUNNER_TEMP/.gsc-service-account.json" ]; then
+            # A named skip, written down. Previously this produced a log line and
+            # nothing else, so "never configured" and "ran fine" looked the same
+            # from outside the run.
+            node scripts/distribution/record_step_outcome.mjs .build/gsc/queries-ingest-outcome.json \
+              queries:ingest skipped_no_credential 0 "GSC_SERVICE_ACCOUNT_JSON secret is not configured"
+            echo "GSC skipped: service account not configured"
+            exit 0
+          fi
           # The Search Console client is not in the base image. The submit and inspect
           # scripts below and the ingestion both import it, so without this the whole
           # step would fail on 'No module named google' the moment credentials were
@@ -103,7 +112,30 @@ jobs:
           # query atlas is gated on modelled demand while measured demand sits unread
           # in Search Console. Evidence-only: it does not admit, publish, or change
           # cadence.
-          GSC_SERVICE_ACCOUNT_JSON="$RUNNER_TEMP/.gsc-service-account.json" GSC_SITE_URL="$GSC_SITE_URL_SPRY" npm run queries:ingest || true
+          #
+          # This used to end in `|| true`. That is the one script that produces real
+          # GSC numbers, and `|| true` discarded its exit status entirely - a crash
+          # and a clean run were indistinguishable in the log and in the outcome. It
+          # now records a named outcome and the run is failed at the end of the job
+          # if the ingest crashed. A missing credential is a legitimate skip and is
+          # named as one; a crash is not.
+          if [ -z "${GSC_SITE_URL_SPRY:-}" ]; then
+            node scripts/distribution/record_step_outcome.mjs .build/gsc/queries-ingest-outcome.json \
+              queries:ingest skipped_no_credential 0 "GSC_SITE_URL_SPRY is not configured"
+          else
+            set +e
+            GSC_SERVICE_ACCOUNT_JSON="$RUNNER_TEMP/.gsc-service-account.json" GSC_SITE_URL="$GSC_SITE_URL_SPRY" \
+              npm run queries:ingest 2>&1 | tee .build/gsc/queries-ingest.log
+            ingest_status=${PIPESTATUS[0]}
+            set -e
+            if [ "$ingest_status" -eq 0 ]; then
+              node scripts/distribution/record_step_outcome.mjs .build/gsc/queries-ingest-outcome.json \
+                queries:ingest ran 0 "" .build/gsc/queries-ingest.log
+            else
+              node scripts/distribution/record_step_outcome.mjs .build/gsc/queries-ingest-outcome.json \
+                queries:ingest failed "$ingest_status" "scripts/queries/ingest_gsc_evidence.py exited non-zero" .build/gsc/queries-ingest.log
+            fi
+          fi
           if [ -n "${GSC_SITE_URL_SPRY:-}" ]; then
             grep '^https://spryexecutiveos.com/' .build/indexnow-priority.txt > .build/gsc-priority-spry.txt || true
             python3 scripts/distribution/gsc_submit_sitemaps.py "$RUNNER_TEMP/.gsc-service-account.json" "$GSC_SITE_URL_SPRY" https://spryexecutiveos.com/sitemap-spry.xml
@@ -114,3 +146,26 @@ jobs:
             python3 scripts/distribution/gsc_submit_sitemaps.py "$RUNNER_TEMP/.gsc-service-account.json" "$GSC_SITE_URL_BHPC" https://billionairehighperformancecoach.com/sitemap-bhpc.xml
             python3 scripts/distribution/gsc_inspect_urls.py "$RUNNER_TEMP/.gsc-service-account.json" "$GSC_SITE_URL_BHPC" .build/gsc-priority-bhpc.txt .build/inspection-results-bhpc.json
           fi
+          # The inspection calls above are already paid for on every run, and their
+          # verdicts used to die with the runner: .build/ is gitignored and nothing
+          # uploaded it. Reduce them to a small stable verdict ledger and carry it in
+          # the run artifact. This workflow is contents: read by contract, so it
+          # publishes evidence rather than committing it.
+          cp data/search_intelligence/url_inspection_ledger.json .build/gsc/url-inspection-ledger.json 2>/dev/null || true
+          node scripts/distribution/persist_inspection_results.mjs \
+            .build/gsc/url-inspection-ledger.json \
+            .build/inspection-results-spry.json .build/inspection-results-bhpc.json
+
+      - name: Publish Search Console measurement evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gsc-measurement-evidence-${{ steps.artifact.outputs.commit_sha }}
+          path: |
+            .build/gsc/
+            .build/inspection-results-*.json
+          if-no-files-found: warn
+          retention-days: 90
+
+      - name: Fail the run if Search Console ingestion crashed
+        run: node scripts/distribution/assert_step_outcome.mjs .build/gsc/queries-ingest-outcome.json
