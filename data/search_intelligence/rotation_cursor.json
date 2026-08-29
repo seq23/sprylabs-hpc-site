@@ -1,9 +1,8 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-29T13:29:06.204Z",
+  "generated_at": "2026-08-29T22:27:45.592Z",
   "eligible_targets": 120,
-  "window_start": 0,
+  "window_start": 24,
   "window_size": 24,
-  "next_index": 0,
-  "_corrected": "2026-08-29: rolled back from 24 to 0. The 2026-08-29T13:29 run attempted 24 grounded calls and every one failed with provider_http_402 in_flight_budget_exhausted, so it observed nothing - but the cursor advanced anyway and rotated those 24 targets out unobserved. observe_live_search.mjs now advances only when at least one observation succeeded; this rolls the ledger back to the window that was never actually consumed."
+  "next_index": 48
 }

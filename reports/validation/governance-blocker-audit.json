@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-08-29T15:40:39.990Z",
+  "generated_at": "2026-08-29T22:27:47.854Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 172,
+  "admitted_hard_fail_count": 178,
   "reviewed_count": 8,
-  "unreviewed_count": 164,
+  "unreviewed_count": 170,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 129,
-    "EXISTING_REPAIR_AVAILABLE": 6,
+    "REVIEW_REQUIRED": 132,
+    "EXISTING_REPAIR_AVAILABLE": 7,
     "TRUE_BLOCKER": 26,
-    "REVIEW_WARNING_BOUNDARY": 11
+    "REVIEW_WARNING_BOUNDARY": 13
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 129,
-    "EXISTING_REPAIR_AVAILABLE": 6,
+    "REVIEW_REQUIRED": 132,
+    "EXISTING_REPAIR_AVAILABLE": 7,
     "TRUE_BLOCKER": 26,
-    "REVIEW_WARNING_BOUNDARY": 3
+    "REVIEW_WARNING_BOUNDARY": 5
   },
   "migration_status_counts": {
-    "UNREVIEWED": 164,
+    "UNREVIEWED": 170,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -2598,6 +2598,21 @@
       "evidence": []
     },
     {
+      "validation_id": "VAL-CITATION-REPAIR-REACH",
+      "name": "validate:citation-repair-reach",
+      "command": "npm run validate:citation-repair-reach",
+      "owning_lane": "citation-contract",
+      "risk_prevented": "A citation-contract repair that cannot reach the pages its own validator judges. repair_schema_parity.py honoured data/release/active_mutation_scope.json (~17 routes) while validate_citation_contract.py judged all 2219 ACTIVE citable pages, so a page that lost CITATION_PAGE_SCHEMA outside the release scope was unrepairable by construction: heal_until_clean.mjs re-ran the same repair every attempt, changed nothing relevant, and exited UNRESOLVED. Production run 33259007622 shows 'changed=18; scoped=True; skipped_outside_scope=2183' followed by FAIL on three pages none of the 18 included, and the Spry Content Release lane stayed red on it.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-CITATION-REPAIR-REACH"
+      ],
+      "suggested_review": "EXISTING_REPAIR_AVAILABLE",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
       "validation_id": "VAL-DEMAND-BACKED-PAGES",
       "name": "validate:demand-backed-pages",
       "command": "npm run validate:demand-backed-pages",
@@ -2621,6 +2636,81 @@
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-SEARCH-MEASUREMENT-TRUTHFULNESS"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-CITATION-SIGNAL-JOIN",
+      "name": "validate:citation-signal-join",
+      "command": "npm run validate:citation-signal-join",
+      "owning_lane": "intake-scoring",
+      "risk_prevented": "Prevents competition_opportunity - a weighted, declared scoring input - from silently measuring nothing while looking like it works. The citation lookup was keyed on a scalar `query` that a cluster record does not have (it carries a nested queries[]), so all 120 clusters recorded \"this query has not been probed\" while 83 grounded observations sat unused, and the engine correctly dropped the component and redistributed its weight, which made a 100% failure indistinguishable from normal operation. Also prevents \"a grounded answer cited nobody of ours\" being scored as maximum open ground for a brand or navigational query (\"sprylabs\", \"spry reddit\"), and requires the run to disclose how much of the component was actually measured.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-CITATION-SIGNAL-JOIN"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-NO-SILENT-ZERO-WORK",
+      "name": "validate:no-silent-zero-work",
+      "command": "npm run validate:no-silent-zero-work",
+      "owning_lane": "citation-intelligence",
+      "risk_prevented": "Prevents any lane from exiting 0 while having produced no work. Guards the exact defects found in this audit: the zero-dollar citation plan discarding 100% of its candidates behind a permanently-disabled fixture gate while printing PASS; the apply stage hardcoding status PASS with release_units_applied=0; the strategy gap-fill lane queueing 10 candidates a day that no consumer ever turns into files; the answer-surface scorer reading a file nothing writes while the real citation probe wrote elsewhere; the admin dashboard rendering a stalled zero identically to a healthy day; the search-intelligence lane re-observing the same 24 of 120 targets forever; and validate_fanout_warning hardcoding status PASS with 3110 findings.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-NO-SILENT-ZERO-WORK"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-SITEMAP-LEDGER-FINAL",
+      "name": "validate:lastmod-ledger-final",
+      "command": "npm run validate:lastmod-ledger-final",
+      "owning_lane": "content-release",
+      "risk_prevented": "Prevents a sitemap lastmod ledger being committed that does not describe the tree it ships with. The ledger was derived part-way through a release, later stages rewrote the pages it had just hashed, and it was committed alongside them: at 6aac79a2e the committed ledger contradicted 1,900 of 2,223 committed pages. Nothing failed where the bad ledger was produced; it surfaced days later as an 8-URL sample mismatch inside sitemap:lastmod:self-test, on branches that had cut from main and inherited the failure as if it were their own. This asserts the committed ledger against every committed page, refuses a freshly derived ledger that already disagrees with the tree, and statically requires every content-release mode to derive the ledger as its final stage.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-SITEMAP-LEDGER-FINAL"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-CITATION-SCHEMA-SERIALIZATION",
+      "name": "validate:citation-schema-serialization",
+      "command": "npm run validate:citation-schema-serialization",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-182"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-PAGE-SURFACE-COVERAGE",
+      "name": "validate:page-surface-coverage",
+      "command": "npm run validate:page-surface-coverage",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-183"
       ],
       "suggested_review": "REVIEW_WARNING_BOUNDARY",
       "migration_status": "UNREVIEWED",
