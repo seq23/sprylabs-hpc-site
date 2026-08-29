@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {readCapturedScope} from './page_scope.mjs';
+import {normalizeBhpcInternalLinkHref} from '../lib/bhpc_internal_links.mjs';
 
 const ROOT = process.cwd();
 const mode = process.argv.includes('--full') || process.env.VALIDATION_CACHE_MODE === 'full' ? 'full' : 'incremental';
@@ -121,16 +122,26 @@ for (const abs of files) {
     if (heading && !stripTags(html).toLowerCase().includes(heading.toLowerCase())) failures.push({path: rel, code: 'MISSING_REQUIRED_HEADING', detail: heading});
     for (const link of entry.required_internal_links || []) {
       if (!link?.to_url) continue;
-      let pathname = '';
-      try { pathname = new URL(link.to_url, 'https://billionairehighperformancecoach.com').pathname; } catch { pathname = String(link.to_url); }
+      // Compare the route the applier actually renders, not the raw to_url. An
+      // artifact writes its target with the .html extension
+      // (".../a-practical-way-....html"); every internal link on this site is
+      // published at the extensionless route the same normalizer produces, which
+      // is why the acceptance entry already carries normalized_internal_href.
+      // Checking the raw pathname asked for an href no page has ever contained,
+      // so a link that was rendered correctly still failed the contract. The
+      // check still fails when the link is genuinely absent - it just looks for
+      // the form the site serves.
+      let rawPathname = '';
+      try { rawPathname = new URL(link.to_url, 'https://billionairehighperformancecoach.com').pathname; } catch { rawPathname = String(link.to_url); }
       // A link action whose to_url resolves to this same page is a self-link. The
       // apply step cannot render it as a related-page link, so requiring its anchor
       // text here can never be satisfied. Skip it and record it as a data warning
       // against the emitting record rather than blocking every downstream deploy.
-      if (pathname.replace(/^\/+/, '') === rel) {
-        warnings.push({path: rel, code: 'SELF_REFERENTIAL_LINK_ACTION', detail: pathname, record_id: entry.record_id});
+      if (rawPathname.replace(/^\/+/, '') === rel) {
+        warnings.push({path: rel, code: 'SELF_REFERENTIAL_LINK_ACTION', detail: rawPathname, record_id: entry.record_id});
         continue;
       }
+      const pathname = link.normalized_internal_href || normalizeBhpcInternalLinkHref(link.to_url) || rawPathname;
       if (!html.includes(`href="${pathname}"`) && !html.includes(`href='${pathname}'`)) failures.push({path: rel, code: 'MISSING_REQUIRED_LINK', detail: pathname});
       // Link presence is an invariant; exact anchor wording is a recommendation.
       if (link.anchor_text && !stripTags(html).toLowerCase().includes(String(link.anchor_text).toLowerCase())) warnings.push({path: rel, code: 'ANCHOR_TEXT_MISMATCH', detail: link.anchor_text, record_id: entry.record_id});
