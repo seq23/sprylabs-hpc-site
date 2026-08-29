@@ -197,6 +197,11 @@ const needSeed = [...resolved.entries()].filter(([loc]) => !priorByUrl.get(loc)?
 const seeded = needSeed.length ? seedDates([...new Set(needSeed)]) : new Map();
 
 const stats = { seeded_from_git: 0, unchanged: 0, content_changed: 0, kept_existing_no_evidence: 0, unresolvable_file: unresolvable.length };
+// URLs whose visible content is byte-for-byte what the ledger recorded. Only for
+// these can a sitemap/ledger mismatch mean the sitemap is publishing a false date;
+// for the rest it means the ledger is due a regeneration, which is a different
+// condition with a different remedy.
+const stableUrls = new Set();
 const urls = [];
 for (const [loc, existing] of allLocs) {
   const file = resolved.get(loc);
@@ -211,6 +216,7 @@ for (const [loc, existing] of allLocs) {
   const was = priorByUrl.get(loc);
   if (was && was.content_sha256 === hash) {
     stats.unchanged += 1;
+    stableUrls.add(loc);
     urls.push(was);
     continue;
   }
@@ -278,22 +284,43 @@ const ledgerText = JSON.stringify(ledger, null, 2) + '\n';
 const ledgerChanged = !fs.existsSync(ledgerPath) || fs.readFileSync(ledgerPath, 'utf8') !== ledgerText;
 
 if (CHECK) {
-  // Drift means a sitemap is publishing a lastmod that the evidence does not
-  // support - stale, or bumped. The ledger merely gaining rows for URLs a build
-  // just created is not drift: those pages really are new, and their date really
-  // is today. Failing on that would make the gate fire on every legitimate
-  // publish, and a gate that is permanently red is a gate nobody reads.
-  const drift = [...rewrites.map((r) => r.rel), ...(indexAfter ? ['sitemap.xml'] : [])];
-  const newLedgerRows = urls.filter((u) => !priorByUrl.has(u.url)).length;
-  console.log(JSON.stringify({
-    status: drift.length ? 'DRIFT' : 'PASS',
-    drift,
-    ledger_rows_added: newLedgerRows,
-    ledger_would_change: ledgerChanged,
+  // What this gate protects is the truthfulness of a published date. Two very
+  // different things can make a sitemap disagree with the ledger:
+  //
+  //  - The page has not changed, but the sitemap advertises a different date.
+  //    That is the defect: either a stale pin (2026-06-21 across 2,218 URLs) or a
+  //    bump to today. The sitemap is asserting something the evidence contradicts,
+  //    so it fails.
+  //
+  //  - The page's visible content HAS changed since the ledger was written, so the
+  //    published date is merely behind. Nothing false has been published; the
+  //    ledger needs re-deriving. Reported, and not a hard failure - this repo's
+  //    build rewrites page content, and failing the prepush profile every time a
+  //    build touched a page would make the gate permanently red and therefore
+  //    ignored.
+  const contradictions = [];
+  for (const sm of parsed) {
+    for (const e of sm.entries) {
+      if (!stableUrls.has(e.loc)) continue;
+      const want = lastmodFor.get(e.loc);
+      if (want && e.lastmod !== want) contradictions.push({ sitemap: sm.rel, loc: e.loc, published: e.lastmod, evidence: want });
+    }
+  }
+  const regenerationNeeded = stats.content_changed + stats.seeded_from_git;
+  const report = {
+    status: contradictions.length ? 'DRIFT' : 'PASS',
+    contradiction_count: contradictions.length,
+    contradictions: contradictions.slice(0, 20),
+    urls_checked_against_evidence: stableUrls.size,
+    ledger_regeneration_needed: regenerationNeeded,
+    regeneration_note: regenerationNeeded
+      ? `${regenerationNeeded} URL(s) have content the ledger has not recorded yet; run \`npm run sitemap:lastmod:content\` to re-derive. Their published dates understate freshness but assert nothing false.`
+      : null,
     stats,
     ledger_summary: { url_count: ledger.url_count, distinct_lastmod_count: ledger.distinct_lastmod_count, oldest: ledger.oldest_lastmod, newest: ledger.newest_lastmod },
-  }, null, 2));
-  process.exit(drift.length ? 1 : 0);
+  };
+  console.log(JSON.stringify(report, null, 2));
+  process.exit(contradictions.length ? 1 : 0);
 }
 
 fs.mkdirSync(path.dirname(ledgerPath), { recursive: true });
