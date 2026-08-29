@@ -1,0 +1,169 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-29T01:26:47.049Z",
+  "by": "scripts/intake/audit_query_provenance.js",
+  "question": "Which queries in this intake corpus did anybody actually type?",
+  "answer": "None that this repo can show. Every row in the intake corpus is a template expansion or a hardcoded seed string. No retained artifact - no URL, thread id, SERP capture or Search Console row - backs any query in it.",
+  "truth_boundary": "This audit says where a string came from. It says nothing about whether the string is a good page target; a generated query can still be a sensible one to write about. What it may not be is counted as demand.",
+  "observed_definition": "A row is OBSERVED only when a retained artifact shows the string came from outside this repo: a captured URL, a thread or result id, a provider response, or a Search Console row.",
+  "evidence_fields_checked": [
+    "url",
+    "source_url",
+    "thread_url",
+    "permalink",
+    "post_id",
+    "thread_id",
+    "result_id",
+    "impressions",
+    "clicks",
+    "observed_url",
+    "captured_at",
+    "response_id"
+  ],
+  "observed_artifact_required_per_source": {
+    "reddit": "a thread URL or post id per query, retained",
+    "youtube": "a video id or search response, retained",
+    "tiktok": "a post id or search response, retained",
+    "x_twitter": "a post id or search response, retained",
+    "quora": "a question URL, retained",
+    "forums": "a thread URL, retained",
+    "google_paa": "a SERP capture containing the People-Also-Ask block, retained",
+    "competitor_pages": "the competitor URL the query was extracted from, retained",
+    "llm_citation_checks": "a probe observation with cited URLs, retained",
+    "authority_scale_max_fanout": "not applicable - fanout is synthetic by definition",
+    "existing_repo": "the repo route the string was read from"
+  },
+  "per_file": {
+    "data/intake/query_universe.json": {
+      "generator": "scripts/intake/build_query_universe.js - 4-deep cartesian loop over product_role x audience x use_case x source_type, filled into one of 10 string templates",
+      "total": 9404,
+      "observed": 0,
+      "generated": 9404,
+      "by_source_type": {
+        "reddit": {
+          "rows": 1046,
+          "with_retained_evidence": 0
+        },
+        "youtube": {
+          "rows": 982,
+          "with_retained_evidence": 0
+        },
+        "tiktok": {
+          "rows": 1062,
+          "with_retained_evidence": 0
+        },
+        "x_twitter": {
+          "rows": 1121,
+          "with_retained_evidence": 0
+        },
+        "quora": {
+          "rows": 1173,
+          "with_retained_evidence": 0
+        },
+        "forums": {
+          "rows": 1126,
+          "with_retained_evidence": 0
+        },
+        "google_paa": {
+          "rows": 1048,
+          "with_retained_evidence": 0
+        },
+        "competitor_pages": {
+          "rows": 959,
+          "with_retained_evidence": 0
+        },
+        "llm_citation_checks": {
+          "rows": 887,
+          "with_retained_evidence": 0
+        }
+      }
+    },
+    "data/intake/query_corpus.json": {
+      "generator": "scripts/intake/collect_queries.js - the universe above plus data/intake/source_ingestion/*",
+      "total": 14417,
+      "observed": 0,
+      "generated": 14417,
+      "by_source_type": {
+        "reddit": {
+          "rows": 1051,
+          "with_retained_evidence": 0
+        },
+        "youtube": {
+          "rows": 982,
+          "with_retained_evidence": 0
+        },
+        "tiktok": {
+          "rows": 1062,
+          "with_retained_evidence": 0
+        },
+        "x_twitter": {
+          "rows": 1121,
+          "with_retained_evidence": 0
+        },
+        "quora": {
+          "rows": 1173,
+          "with_retained_evidence": 0
+        },
+        "forums": {
+          "rows": 1126,
+          "with_retained_evidence": 0
+        },
+        "google_paa": {
+          "rows": 1053,
+          "with_retained_evidence": 0
+        },
+        "competitor_pages": {
+          "rows": 959,
+          "with_retained_evidence": 0
+        },
+        "llm_citation_checks": {
+          "rows": 887,
+          "with_retained_evidence": 0
+        },
+        "authority_scale_max_fanout": {
+          "rows": 5000,
+          "with_retained_evidence": 0
+        },
+        "existing_repo": {
+          "rows": 3,
+          "with_retained_evidence": 0
+        }
+      }
+    },
+    "data/intake/source_ingestion/reddit.json": {
+      "generator": "scripts/intake/adapters/reddit.js - a hardcoded 5-element string array; no network call, no retained thread",
+      "total": 5,
+      "observed": 0,
+      "generated": 5,
+      "by_source_type": {
+        "reddit": {
+          "rows": 5,
+          "with_retained_evidence": 0
+        }
+      }
+    },
+    "data/intake/source_ingestion/serp.json": {
+      "generator": "scripts/intake/adapters/serp.js - a hardcoded 5-element string array; no network call, no retained SERP",
+      "total": 5,
+      "observed": 0,
+      "generated": 5,
+      "by_source_type": {
+        "google_paa": {
+          "rows": 5,
+          "with_retained_evidence": 0
+        }
+      }
+    }
+  },
+  "search_console": {
+    "provider_state": "OK",
+    "targets": 120,
+    "targets_with_rows": 0,
+    "note": "Search Console returns no rows for any target. It cannot be a discovery source for this repo until the properties accumulate impressions."
+  },
+  "what_was_not_done": "No query in this corpus was scored by openness or lead intent, and no probe budget was spent on it. Scoring a generated corpus produces a ranked generated corpus - more convincing, no more true.",
+  "what_would_close_the_gap": [
+    "A real collector for any one enabled source in config/source_expansion_policy.json that retains the artifact it read the query from.",
+    "Search Console impressions on either property, which arrive on their own once pages are indexed and would be observed by definition."
+  ]
+}
