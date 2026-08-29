@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-08-28T21:56:40.868Z",
+  "generated_at": "2026-08-29T03:41:10.066Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 173,
+  "admitted_hard_fail_count": 175,
   "reviewed_count": 8,
-  "unreviewed_count": 165,
+  "unreviewed_count": 167,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 130,
+    "REVIEW_REQUIRED": 131,
     "EXISTING_REPAIR_AVAILABLE": 6,
     "TRUE_BLOCKER": 27,
-    "REVIEW_WARNING_BOUNDARY": 10
+    "REVIEW_WARNING_BOUNDARY": 11
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 130,
+    "REVIEW_REQUIRED": 131,
     "EXISTING_REPAIR_AVAILABLE": 6,
     "TRUE_BLOCKER": 27,
-    "REVIEW_WARNING_BOUNDARY": 2
+    "REVIEW_WARNING_BOUNDARY": 3
   },
   "migration_status_counts": {
-    "UNREVIEWED": 165,
+    "UNREVIEWED": 167,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -2638,6 +2638,36 @@
         "MX-180"
       ],
       "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-DEMAND-BACKED-PAGES",
+      "name": "validate:demand-backed-pages",
+      "command": "npm run validate:demand-backed-pages",
+      "owning_lane": "content-admission",
+      "risk_prevented": "A page published with no measured demand behind it, a sitemap URL that does not render, and a page admitted at 'baseline' - the level that skips word count, unique artifact, worked example, source floor and unique_atom strength in validate_programmatic_admission.py. The validator existed and was in no profile, so nothing ran it.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-181"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-SEARCH-MEASUREMENT-TRUTHFULNESS",
+      "name": "validate:search-measurement-truthfulness",
+      "command": "npm run validate:search-measurement-truthfulness",
+      "owning_lane": "search-intelligence",
+      "risk_prevented": "Prevents the search-measurement lane from reporting zeros while calling itself healthy: an all-zero GSC dataset marked OK, a target-query filter that discards every returned row in silence, URL Inspection verdicts discarded after being paid for, an ingest failure swallowed by `|| true`, and a sitemap lastmod that is either stale or stamped with build time.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-SEARCH-MEASUREMENT-TRUTHFULNESS"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
       "migration_status": "UNREVIEWED",
       "decision": null,
       "evidence": []

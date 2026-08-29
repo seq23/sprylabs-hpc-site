@@ -1,29 +1,29 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-27T01:08:35.338Z",
+  "generated_at": "2026-08-29T03:41:09.128Z",
   "status": "PASS",
   "workflows": [
     {
       "workflow_id": "spry-content-release",
       "workflow_file": ".github/workflows/spry-content-release.yml",
       "workflow_command": "npm run workflow:spry-content-release",
-      "input_pattern_count": 12,
+      "input_pattern_count": 18,
       "output_pattern_count": 13,
-      "matched_input_count": 728,
-      "matched_output_count": 4963,
+      "matched_input_count": 744,
+      "matched_output_count": 4225,
       "sample_inputs": [
+        "data/authority_scale/query_atlas.json",
         "data/citation_velocity/atom_axes.json",
         "data/citation_velocity/daily_runs.json",
         "data/citation_velocity/generated_ledger.json",
         "data/citation_velocity/latest_batch.json",
         "data/citation_velocity/velocity_5k_plan.json",
+        "data/content/demand_axis_map.json",
+        "data/demand/measured_demand.json",
+        "data/demand/pre_gate_page_baseline.json",
+        "data/queries/evidence/evidence_queries.json",
         "data/reddit/archive/2026-03-19-generated.json",
-        "data/reddit/archive/2026-03-19-publish.json",
-        "data/reddit/archive/2026-03-20-generated.json",
-        "data/reddit/archive/2026-03-20-publish.json",
-        "data/reddit/archive/2026-03-21-generated.json",
-        "data/reddit/archive/2026-03-21-publish.json",
-        "data/reddit/archive/2026-03-22-generated.json"
+        "data/reddit/archive/2026-03-19-publish.json"
       ],
       "sample_outputs": [
         "answers/accountability-and-consistency.html",
@@ -36,8 +36,8 @@
         "answers/can-chatgpt-act-like-an-executive-coach-to-prioritize-my-most-important-task-today.html",
         "answers/chatgpt-vs-executive-coach.html",
         "answers/chief-of-staff-and-life-operations.html",
-        "answers/do-you-need-a-life-coach-or-a-system.html",
-        "answers/executive-coach.html"
+        "answers/demand/ai-coach-for-founders-and-consultants.html",
+        "answers/demand/ai-coaching-tools.html"
       ]
     },
     {
@@ -46,8 +46,8 @@
       "workflow_command": "npm run workflow:spry-full-rebuild",
       "input_pattern_count": 7,
       "output_pattern_count": 14,
-      "matched_input_count": 4729,
-      "matched_output_count": 5126,
+      "matched_input_count": 4008,
+      "matched_output_count": 4388,
       "sample_inputs": [
         "content/bank/ai-coaching-workflow-banks.json",
         "content/bank/checklist-banks.json",
@@ -83,8 +83,8 @@
       "workflow_command": "npm run workflow:search-intelligence",
       "input_pattern_count": 4,
       "output_pattern_count": 6,
-      "matched_input_count": 15,
-      "matched_output_count": 13,
+      "matched_input_count": 17,
+      "matched_output_count": 15,
       "sample_inputs": [
         "data/content_ownership_registry.json",
         "data/intake/query_universe.json",
@@ -93,11 +93,11 @@
         "data/search_intelligence/gsc_truth.json",
         "data/search_intelligence/live_search_observations.json",
         "data/search_intelligence/provider_inputs/.gitkeep",
+        "data/search_intelligence/provider_inputs/gsc_bhpc.json",
+        "data/search_intelligence/provider_inputs/gsc_spry.json",
         "data/search_intelligence/repair_apply_receipt.json",
         "data/search_intelligence/repair_candidates.json",
-        "data/search_intelligence/repair_ledger.json",
-        "data/search_intelligence/retest_snapshots.json",
-        "data/search_intelligence/search_diagnosis.json"
+        "data/search_intelligence/repair_ledger.json"
       ],
       "sample_outputs": [
         "data/search_intelligence/before_after_evidence.json",
@@ -105,13 +105,13 @@
         "data/search_intelligence/gsc_truth.json",
         "data/search_intelligence/live_search_observations.json",
         "data/search_intelligence/provider_inputs/.gitkeep",
+        "data/search_intelligence/provider_inputs/gsc_bhpc.json",
+        "data/search_intelligence/provider_inputs/gsc_spry.json",
         "data/search_intelligence/repair_apply_receipt.json",
         "data/search_intelligence/repair_candidates.json",
         "data/search_intelligence/repair_ledger.json",
         "data/search_intelligence/retest_snapshots.json",
-        "data/search_intelligence/search_diagnosis.json",
-        "data/search_intelligence/search_intelligence_contract.json",
-        "data/search_intelligence/status.json"
+        "data/search_intelligence/search_diagnosis.json"
       ]
     }
   ],

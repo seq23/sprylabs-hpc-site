@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-27T01:08:36.202083+00:00",
+  "generated_at": "2026-08-29T03:41:09.925439+00:00",
   "status": "PASS",
   "workflow_count": 9,
   "scenario_count": 33,
@@ -369,7 +369,9 @@
         "Normalize downloaded validation artifact",
         "Restore optional Google Search Console credentials",
         "Verify attestation and deploy IndexNow distribution",
-        "Submit per-domain Search Console sitemaps and inspect priority URLs when configured"
+        "Submit per-domain Search Console sitemaps and inspect priority URLs when configured",
+        "Publish Search Console measurement evidence",
+        "Fail the run if Search Console ingestion crashed"
       ],
       "skipped_steps": [],
       "assertions": [
@@ -393,7 +395,9 @@
         "Normalize downloaded validation artifact",
         "Restore optional Google Search Console credentials",
         "Verify attestation and deploy IndexNow distribution",
-        "Submit per-domain Search Console sitemaps and inspect priority URLs when configured"
+        "Submit per-domain Search Console sitemaps and inspect priority URLs when configured",
+        "Publish Search Console measurement evidence",
+        "Fail the run if Search Console ingestion crashed"
       ],
       "skipped_steps": [],
       "assertions": [
@@ -418,7 +422,9 @@
         "Normalize downloaded validation artifact",
         "Restore optional Google Search Console credentials",
         "Verify attestation and deploy IndexNow distribution",
-        "Submit per-domain Search Console sitemaps and inspect priority URLs when configured"
+        "Submit per-domain Search Console sitemaps and inspect priority URLs when configured",
+        "Publish Search Console measurement evidence",
+        "Fail the run if Search Console ingestion crashed"
       ],
       "assertions": [
         "exact validated artifact identity required",
@@ -464,6 +470,8 @@
         "Resolve release mode",
         "Run governed Spry content release",
         "Rebuild ownership and admin snapshots",
+        "Cadence gate",
+        "Record the released URL set as the new cadence baseline",
         "Commit validated Spry content release",
         "actions/upload-artifact@v7"
       ],
@@ -491,6 +499,8 @@
         "Resolve release mode",
         "Run governed Spry content release",
         "Rebuild ownership and admin snapshots",
+        "Cadence gate",
+        "Record the released URL set as the new cadence baseline",
         "Commit validated Spry content release",
         "actions/upload-artifact@v7"
       ],
@@ -518,6 +528,8 @@
         "Resolve release mode",
         "Run governed Spry content release",
         "Rebuild ownership and admin snapshots",
+        "Cadence gate",
+        "Record the released URL set as the new cadence baseline",
         "Commit validated Spry content release",
         "actions/upload-artifact@v7"
       ],
@@ -545,6 +557,8 @@
         "Resolve release mode",
         "Run governed Spry content release",
         "Rebuild ownership and admin snapshots",
+        "Cadence gate",
+        "Record the released URL set as the new cadence baseline",
         "Commit validated Spry content release",
         "actions/upload-artifact@v7"
       ],
@@ -572,6 +586,8 @@
         "Resolve release mode",
         "Run governed Spry content release",
         "Rebuild ownership and admin snapshots",
+        "Cadence gate",
+        "Record the released URL set as the new cadence baseline",
         "Commit validated Spry content release",
         "actions/upload-artifact@v7"
       ],
@@ -599,6 +615,8 @@
         "Resolve release mode",
         "Run governed Spry content release",
         "Rebuild ownership and admin snapshots",
+        "Cadence gate",
+        "Record the released URL set as the new cadence baseline",
         "Commit validated Spry content release",
         "actions/upload-artifact@v7"
       ],
@@ -626,6 +644,8 @@
         "Resolve release mode",
         "Run governed Spry content release",
         "Rebuild ownership and admin snapshots",
+        "Cadence gate",
+        "Record the released URL set as the new cadence baseline",
         "Commit validated Spry content release",
         "actions/upload-artifact@v7"
       ],
@@ -653,6 +673,8 @@
         "Resolve release mode",
         "Run governed Spry content release",
         "Rebuild ownership and admin snapshots",
+        "Cadence gate",
+        "Record the released URL set as the new cadence baseline",
         "Commit validated Spry content release",
         "actions/upload-artifact@v7"
       ],
@@ -680,6 +702,8 @@
         "Resolve release mode",
         "Run governed Spry content release",
         "Rebuild ownership and admin snapshots",
+        "Cadence gate",
+        "Record the released URL set as the new cadence baseline",
         "Commit validated Spry content release",
         "actions/upload-artifact@v7"
       ],
@@ -709,6 +733,8 @@
         "Resolve release mode",
         "Run governed Spry content release",
         "Rebuild ownership and admin snapshots",
+        "Cadence gate",
+        "Record the released URL set as the new cadence baseline",
         "Commit validated Spry content release"
       ],
       "assertions": [
@@ -733,6 +759,8 @@
         "Resolve release mode",
         "Run governed Spry content release",
         "Rebuild ownership and admin snapshots",
+        "Cadence gate",
+        "Record the released URL set as the new cadence baseline",
         "Commit validated Spry content release",
         "actions/upload-artifact@v7"
       ],
@@ -762,6 +790,8 @@
         "Resolve release mode",
         "Run governed Spry content release",
         "Rebuild ownership and admin snapshots",
+        "Cadence gate",
+        "Record the released URL set as the new cadence baseline",
         "Commit validated Spry content release"
       ],
       "assertions": [

@@ -1,6 +1,6 @@
 {
   "profile": "container-prepush",
-  "started_at": "2026-08-27T01:06:51.129Z",
+  "started_at": "2026-08-29T03:40:11.359Z",
   "steps": [
     {
       "id": "VAL-ORCHESTRATION-CONTRACT",
@@ -165,6 +165,12 @@
       "status": "PASS"
     },
     {
+      "id": "VAL-117",
+      "command": "npm run validate:admission-level-stability",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
       "id": "validate:content-release",
       "command": "npm run validate:content-release",
       "exit_code": 0,
@@ -321,6 +327,12 @@
       "status": "PASS"
     },
     {
+      "id": "validate:search-measurement-truthfulness",
+      "command": "npm run validate:search-measurement-truthfulness",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
       "id": "validate:warnings",
       "command": "npm run validate:warnings",
       "exit_code": 0,
@@ -389,6 +401,12 @@
     {
       "id": "validate:query-atlas",
       "command": "npm run validate:query-atlas",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:atlas-units",
+      "command": "npm run validate:atlas-units",
       "exit_code": 0,
       "status": "PASS"
     },
@@ -463,11 +481,17 @@
       "command": "npm run validate:operator-doc-currency",
       "exit_code": 0,
       "status": "PASS"
+    },
+    {
+      "id": "VAL-CANONICAL-NO-REDIRECT",
+      "command": "npm run validate:canonical-no-redirect",
+      "exit_code": 0,
+      "status": "PASS"
     }
   ],
   "status": "PASS",
   "failure_count": 0,
   "failures": [],
   "stopped_early_at": null,
-  "finished_at": "2026-08-27T01:11:01.559Z"
+  "finished_at": "2026-08-29T03:44:34.845Z"
 }
