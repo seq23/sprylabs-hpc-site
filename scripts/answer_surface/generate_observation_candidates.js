@@ -14,8 +14,15 @@ if (!seeds) {
   const items = [];
   for (const item of (meta.items || [])) items.push({ vertical: 'bhpc', cluster: item.cluster || item.intent || 'query-metadata', query: item.query || item.title || item.slug });
   for (const c of clusters) items.push({ vertical: 'bhpc', cluster: c.id || c.slug, query: c.name || c.description || c.id });
-  for (const q of (coverage.covered_queries || [])) items.push({ vertical: 'bhpc', cluster: 'coverage', query: q });
-  seeds = { generated_at: new Date().toISOString(), queries: items.filter(i => i.query) };
+  // covered_queries rows are cluster records, not query strings. Pushing the row
+  // itself produced 36 candidates whose query serialized to "[object Object]",
+  // which can never be observed or joined against a probe result.
+  for (const q of (coverage.covered_queries || [])) {
+    const clusterId = typeof q === 'string' ? q : String(q.cluster_id || q.cluster || '').trim();
+    if (!clusterId) continue;
+    items.push({ vertical: 'bhpc', cluster: clusterId, query: clusterId.replace(/[-_]+/g, ' ') });
+  }
+  seeds = { generated_at: new Date().toISOString(), queries: items.filter(i => typeof i.query === 'string' && i.query.trim()) };
   fs.writeFileSync(seedPath, JSON.stringify(seeds, null, 2) + '\n');
 }
 const candidates = (seeds.queries || seeds.items || []).map((item, index) => ({
@@ -25,6 +32,6 @@ const candidates = (seeds.queries || seeds.items || []).map((item, index) => ({
   query: item.query || item.question || item.title,
   expected_domains: ['billionairehighperformancecoach.com', 'spryexecutiveos.com', 'aplayermode.com'],
   status: 'pending_manual_or_api_observation'
-})).filter(i => i.query);
+})).filter(i => typeof i.query === 'string' && i.query.trim());
 fs.writeFileSync(path.join(outDir, 'observation_candidates.json'), JSON.stringify({ generated_at: new Date().toISOString(), count: candidates.length, observations: candidates }, null, 2) + '\n');
 console.log(`answer:observe candidates: ${candidates.length}`);

@@ -40,8 +40,26 @@ async function main(){
      health.push({source_key:source.source_key,platform:source.platform,status:'warning_only_failed',error:String(e.message||e),count:0});
    }
  }
- const payload={generated_at:new Date().toISOString(),policy:registry.policy,pipeline_role:registry.pipeline_role||'query_discovery_only',records:results,health,source_mode:activeSources.length?'active_sources':'offline_safe_no_active_sources'};
+ // Rule 0: the registry declares its sources as bare strings ("reddit","forums",
+ // ...), but this collector only ever matched objects with a .platform of
+ // "youtube" or "manual". Every source therefore failed the filter, activeSources
+ // was always empty, and the lane wrote an empty run file and printed a
+ // success-shaped line every day - 95 of 96 committed run files hold zero records.
+ // Name the contract mismatch instead of encoding it as "offline_safe".
+ const SUPPORTED_PLATFORMS=['youtube','manual'];
+ const declared=rawSources.map(s=>typeof s==='string'?s:(s&&s.platform)||'(unnamed)');
+ const stop_reason=rawSources.length>0&&activeSources.length===0?{
+   code:'NO_SOURCE_MATCHES_COLLECTOR_CONTRACT',
+   message:`data/social/source_registry.json declares ${rawSources.length} source(s) [${declared.join(', ')}] but none matched this collector, which only implements platforms [${SUPPORTED_PLATFORMS.join(', ')}] and requires object-shaped entries with a .platform field. The registry lists bare strings, so every source is filtered out and this lane can only ever collect zero records. Either give the registry object-shaped entries on a supported platform, or implement a collector for the declared sources.`,
+   declared_sources:declared,
+   supported_platforms:SUPPORTED_PLATFORMS
+ }:null;
+ const payload={generated_at:new Date().toISOString(),policy:registry.policy,pipeline_role:registry.pipeline_role||'query_discovery_only',records:results,health,stop_reason,source_mode:activeSources.length?'active_sources':'no_active_sources'};
  fs.writeFileSync(path.join(OUT_DIR,`${today}.json`),JSON.stringify(payload,null,2));
+ if(stop_reason){
+   console.error(`social:collect STOP ${stop_reason.code}: ${stop_reason.message}`);
+   process.exit(1);
+ }
  console.log(`social:collect wrote ${results.length} high-intent social records`);
  if(health.some(h=>h.status==='warning_only_failed')) console.warn('social:collect warning-only fetch failures present');
 }

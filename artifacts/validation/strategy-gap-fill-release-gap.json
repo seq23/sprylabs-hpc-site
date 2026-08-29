@@ -1,8 +1,22 @@
 {
   "status": "PASS",
+  "outcome": {
+    "code": "ADVISORY_BACKLOG_PUBLISHED",
+    "message": "Published a ranked advisory backlog: 288 candidate(s) reconciled against the tree, 0 already covered, 288 still open, top 10 surfaced. No pages were built and none were claimed: this lane's deliverable is the advisory, not the pages. Building them is a separate decision - quota-filling this backlog with template pages is what produced the 2,412 duplicate stubs removed in 51531683a.",
+    "backlog_candidates": 288,
+    "covered_candidates": 0,
+    "open_candidates": 288,
+    "built_by_this_lane": 0
+  },
+  "lane_product": "ranked_advisory_backlog",
+  "advisory_only": true,
   "daily_target_units": 15,
   "ready_before": 0,
   "shortfall": 15,
   "max_new_pages_per_day": 10,
-  "added_count": 10
+  "added_count": 10,
+  "backlog_candidates": 288,
+  "covered_candidates": 0,
+  "open_candidates": 288,
+  "materialized_target_paths": 0
 }

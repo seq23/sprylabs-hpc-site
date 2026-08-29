@@ -1,9 +1,16 @@
 {
   "schema_version": "2.0",
   "repo": "seq23/sprylabs-hpc-site",
-  "generated_at": "2026-08-29T13:39:59.023Z",
+  "generated_at": "2026-08-29T16:21:07.163Z",
   "mode": "FULL_SAFE_AUTONOMY_GAP_FILL",
   "external_telemetry_present": false,
+  "stop_reason": {
+    "code": "ALL_CANDIDATES_FIXTURE_ONLY",
+    "message": "All 5 candidate(s) came from fixture signals, which are proof-only and may not mutate public content. No enabled non-fixture source produced records. Supply data/signals/manual_import.json, or enable a credentialed source in data/signals/source_registry.json. This lane cannot do work until a real signal source exists.",
+    "decision_histogram": {
+      "SKIPPED_FIXTURE_ONLY": 5
+    }
+  },
   "selected": [],
   "skipped": [
     {
@@ -147,6 +154,9 @@
     "selected_units": 0,
     "skipped_units": 5,
     "blocked_units": 0,
+    "blocked_units_reasons": {
+      "SKIPPED_FIXTURE_ONLY": 5
+    },
     "public_mutation": "SAFE_HARBOR_AUTOPUBLISH"
   }
 }
