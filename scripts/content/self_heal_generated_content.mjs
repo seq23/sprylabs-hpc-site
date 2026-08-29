@@ -63,4 +63,16 @@ const report = {schema_version:'1.0', validator:'bhpc-generated-content-self-hea
 fs.mkdirSync(path.join(ROOT,'artifacts/validation'), {recursive:true});
 fs.writeFileSync(path.join(ROOT,'artifacts/validation/generated-content-self-heal.json'), JSON.stringify(report,null,2)+'\n');
 if (errors.length) { console.error(JSON.stringify(report,null,2)); process.exit(1); }
-console.log(`[bhpc-generated-content-self-heal] PASS: checked_gap_fill_rows=${selected.length}`);
+// A self-heal that rewrites published HTML must say so on the console. This
+// reported only the gap-fill row count while silently splitting long paragraphs
+// in live pages, so an operator reading the log could not tell the run had
+// mutated the site at all. The count was already in the JSON artifact; the
+// console line is what anybody actually reads.
+if (!fs.existsSync(queuePath)) {
+  console.error(`[bhpc-generated-content-self-heal] STOP: missing ${path.relative(ROOT, queuePath)} - this run examined no gap-fill rows, so PASS would be a false statement`);
+  process.exit(1);
+}
+const repairedNames = paragraph_repairs.length
+  ? ` (${paragraph_repairs.slice(0, 5).join(', ')}${paragraph_repairs.length > 5 ? `, +${paragraph_repairs.length - 5} more` : ''})`
+  : '';
+console.log(`[bhpc-generated-content-self-heal] PASS: checked_gap_fill_rows=${selected.length}; long_paragraph_pages_rewritten=${paragraph_repairs.length}${repairedNames}`);
