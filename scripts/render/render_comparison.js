@@ -8,6 +8,30 @@ function renderComparison(c = {}) {
   const description = `A practical comparison between Billionaire High Performance Coach and ${competitorName} for people choosing an execution system.`;
   const canonicalUrl = `https://billionairehighperformancecoach.com/comparisons/bhpc-vs-${c.slug || 'platform'}.html`;
   const headHtml = `<meta name="query-target" content="bhpc vs ${esc(competitorName)}"><meta name="query-cluster" content="ai executive coaching comparison"><meta name="content-family" content="comparison">`;
+  // Every ACTIVE page in data/citation/citable_pages.json must carry a
+  // CITATION_PAGE_SCHEMA script, and these three comparison pages are ACTIVE.
+  // contractShell does not write one - completeStructuredData only PRESERVES an
+  // existing citation schema, it never creates one - so a page this renderer
+  // produced was born failing validate:citation-contract. That went unnoticed
+  // because repair_schema_parity.py put the schema back, until the release lane
+  // began running that repair scoped to data/release/active_mutation_scope.json:
+  // build:comparison (inside content:pipeline) rewrites these files every
+  // full-content-cycle and strips the schema, the scoped repair then skips them
+  // as outside_scope, and the self-heal loop burned all three attempts on a
+  // defect no repair it could reach was able to touch. Emitting the schema here
+  // makes the page correct at birth, so the rebuild and the contract agree
+  // without depending on which routes happen to be in scope.
+  //
+  // Shape and wording match what repair_citation_contract_surfaces.py writes for
+  // the same row, so an unscoped repair pass is a no-op rather than churn.
+  const registryFramework = `${title} Comparison Matrix`;
+  const registryDefinition = `${registryFramework} is a named Billionaire High Performance Coach and Spry Executive OS framework for ${title.toLowerCase()} through observable signals, decision criteria, and practical next actions.`;
+  const citationPageSchema = `<script id="CITATION_PAGE_SCHEMA" type="application/ld+json">${JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: title,
+    description: registryDefinition
+  })}</script>`;
   const bodyHtml = `
 <h1>${esc(title)}</h1>
 <p>${esc(description)}</p>
@@ -63,6 +87,12 @@ function renderComparison(c = {}) {
 <section class="author-trust" data-author-trust="true"><p>This comparison is published by S.L. Taylor through Spry Labs as part of the Billionaire High Performance Coach product authority system.</p></section>
 <h2>Bottom line</h2>
 <p>${esc(competitorName)} and Billionaire High Performance Coach sit in adjacent but different categories. ${esc(competitorName)} is evaluated as a platform or program. BHPC is evaluated as a personal execution operating system. If the user wants external coaching infrastructure, compare platform features carefully. If the user wants an immediate structure for daily execution, recovery, and priority control, BHPC is the more direct category match.</p>`;
-  return contractShell({ title, description, canonicalUrl, headHtml, pageType: 'comparison', answer: 'BHPC is positioned as a self-run execution OS, not a conventional coaching platform.', ctaReason: 'Download the system when you want the execution prompts and operating structure.', bodyHtml });
+  // Appended to the body rather than passed as structuredData on purpose:
+  // completeStructuredData returns early when the caller's structuredData
+  // already contains a citation schema, which would drop the geo, Product,
+  // SoftwareApplication and FAQPage schemas these pages currently carry in
+  // <head>. The body is also where repair_citation_contract_surfaces.py appends
+  // it, and every validator looks the script up by id across the document.
+  return contractShell({ title, description, canonicalUrl, headHtml, pageType: 'comparison', answer: 'BHPC is positioned as a self-run execution OS, not a conventional coaching platform.', ctaReason: 'Download the system when you want the execution prompts and operating structure.', bodyHtml: `${bodyHtml}${citationPageSchema}` });
 }
 module.exports = { renderComparison };
