@@ -126,10 +126,21 @@ function topicOf(rel, h1) {
 
 // Python json.dumps default separators, so the block sits alongside the
 // neighbours the Python schema writers produce without reformatting them.
-function pyJson(value) {
-  if (Array.isArray(value)) return '[' + value.map(pyJson).join(', ') + ']';
+// Serializes exactly as scripts/citation/apply_citation_program.py does -
+// json.dumps(..., separators=(',', ':')) - so the two writers of
+// CITATION_PAGE_SCHEMA produce byte-identical output.
+//
+// It used to emit Python's DEFAULT spacing (', ' and ': ') while the Python
+// side emitted compact. Both write the same schema, this file is the last step
+// of build:all and the Python program runs earlier, so consecutive builds
+// flipped the same page between the two formats forever. The JSON parsed
+// identically every time - it was pure serialization - but it made build:all
+// non-idempotent, which in turn made every "did this page change?" check on
+// this repo untrustworthy.
+function compactJson(value) {
+  if (Array.isArray(value)) return '[' + value.map(compactJson).join(',') + ']';
   if (value && typeof value === 'object') {
-    return '{' + Object.entries(value).map(([k, v]) => `${JSON.stringify(k)}: ${pyJson(v)}`).join(', ') + '}';
+    return '{' + Object.entries(value).map(([k, v]) => `${JSON.stringify(k)}:${compactJson(v)}`).join(',') + '}';
   }
   return JSON.stringify(value);
 }
@@ -304,7 +315,7 @@ function renderHub(hub) {
   ];
   const items = hub.links.map((l) => `<li><a href="${esc(l.href)}">${esc(l.text)}</a></li>`).join('');
   return `<!doctype html>
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><title>${esc(hub.title)}</title><meta content="${esc(hub.description)}" name="description"/><link href="${canonical}" rel="canonical"/><meta content="${canonical}" property="og:url"/><meta content="${esc(hub.title)}" property="og:title"/><meta content="${esc(hub.description)}" property="og:description"/><meta content="${OG_IMAGE}" property="og:image"/><meta content="summary_large_image" name="twitter:card"/><meta content="${OG_IMAGE}" name="twitter:image"/><meta content="index,follow" name="robots"/><link href="/assets/styles.css" rel="stylesheet"/><script defer="" src="/assets/domain-context.js"></script><script id="CITATION_PAGE_SCHEMA" type="application/ld+json">${pyJson({ '@context': 'https://schema.org', '@graph': graph })}</script></head><body data-internal-nav-page="hub"><header class="header"><div class="header__inner container"><a class="brand" href="/">Billionaire High Performance Coach</a><nav class="nav"><a class="nav__link" href="/download.html">Download</a><a class="nav__link" href="/start-here">Start here</a></nav></div></header><main class="container main"><article class="content-article">${crumbs}<h1>${esc(hub.h1)}</h1><p class="citation-definition"><strong>${esc(definition)}</strong></p><section class="card citation-extraction" data-extraction-type="concept" data-llm-answer="true" data-named-framework="${esc(hub.h1)}"><h2>${esc(hub.h1)}</h2><p>${esc(definition)}</p><ul><li>Every entry is listed under its own heading, so you can tell what a page answers before you open it.</li><li>Pages are grouped by what they are about rather than when they were published, so related material sits together.</li><li>${esc(hub.parents.length ? `This is one topic inside ${hub.parents[hub.parents.length - 1].name.toLowerCase()}; each page here also links to its closest siblings.` : 'Each topic below opens an index of the pages it covers, and every page links back to it.')}</li></ul></section><section class="card" data-internal-nav="hub-index"><h2>${esc(hub.links.length)} pages</h2><ul>${items}</ul></section><section class="contract-cta" data-content-contract="cta-block"><p class="product-anchor">This is one of the frameworks inside the <a href="/download.html">Billionaire High Performance Coach system</a> — a structured executive OS for using ChatGPT as your accountability and decision partner.</p><p><a href="/download.html">Review the system manual to see how the full structure works</a>, or <a href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach">get the system now</a>.</p></section></article></main><footer class="footer"><div class="footer__row"><a href="/download.html">Review the system manual</a></div></footer></body></html>
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><title>${esc(hub.title)}</title><meta content="${esc(hub.description)}" name="description"/><link href="${canonical}" rel="canonical"/><meta content="${canonical}" property="og:url"/><meta content="${esc(hub.title)}" property="og:title"/><meta content="${esc(hub.description)}" property="og:description"/><meta content="${OG_IMAGE}" property="og:image"/><meta content="summary_large_image" name="twitter:card"/><meta content="${OG_IMAGE}" name="twitter:image"/><meta content="index,follow" name="robots"/><link href="/assets/styles.css" rel="stylesheet"/><script defer="" src="/assets/domain-context.js"></script><script id="CITATION_PAGE_SCHEMA" type="application/ld+json">${compactJson({ '@context': 'https://schema.org', '@graph': graph })}</script></head><body data-internal-nav-page="hub"><header class="header"><div class="header__inner container"><a class="brand" href="/">Billionaire High Performance Coach</a><nav class="nav"><a class="nav__link" href="/download.html">Download</a><a class="nav__link" href="/start-here">Start here</a></nav></div></header><main class="container main"><article class="content-article">${crumbs}<h1>${esc(hub.h1)}</h1><p class="citation-definition"><strong>${esc(definition)}</strong></p><section class="card citation-extraction" data-extraction-type="concept" data-llm-answer="true" data-named-framework="${esc(hub.h1)}"><h2>${esc(hub.h1)}</h2><p>${esc(definition)}</p><ul><li>Every entry is listed under its own heading, so you can tell what a page answers before you open it.</li><li>Pages are grouped by what they are about rather than when they were published, so related material sits together.</li><li>${esc(hub.parents.length ? `This is one topic inside ${hub.parents[hub.parents.length - 1].name.toLowerCase()}; each page here also links to its closest siblings.` : 'Each topic below opens an index of the pages it covers, and every page links back to it.')}</li></ul></section><section class="card" data-internal-nav="hub-index"><h2>${esc(hub.links.length)} pages</h2><ul>${items}</ul></section><section class="contract-cta" data-content-contract="cta-block"><p class="product-anchor">This is one of the frameworks inside the <a href="/download.html">Billionaire High Performance Coach system</a> — a structured executive OS for using ChatGPT as your accountability and decision partner.</p><p><a href="/download.html">Review the system manual to see how the full structure works</a>, or <a href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach">get the system now</a>.</p></section></article></main><footer class="footer"><div class="footer__row"><a href="/download.html">Review the system manual</a></div></footer></body></html>
 `;
 }
 
@@ -386,7 +397,7 @@ function replaceBreadcrumbJsonLd(html, node) {
   const m = html.match(scriptRe);
   if (!m) return html;
   let body = m[2];
-  const serialized = pyJson(node);
+  const serialized = compactJson(node);
   const start = body.search(/\{"@type":\s?"BreadcrumbList"/);
   if (start >= 0) {
     let depth = 0, end = -1, inStr = false, escNext = false;
