@@ -204,6 +204,39 @@ if AGENT_HTML_REPORT_SPEC_PATH.exists():
     PRIORITY.update(_html_report_payload.get("priority_pages", {}))
     NEW_PAGES.update(_html_report_payload.get("new_pages", {}))
 
+# The curated spec is the authority for a page's NAME, and it is loaded FIRST,
+# so every generated spec above used to overwrite it wholesale. That is how a raw
+# search query reached data-named-framework and took Spry Content Release red.
+#
+# The generated specs still contribute body, h1 and type for pages the curated
+# file does not describe - that is what they are for - but they may never win on
+# `framework` or `definition`. Those two are restored here, after every update().
+#
+# This also removes a one-build lag that no amount of authoring could fix:
+# build:all runs this script inside build:postprocess but regenerates
+# agent_repair_specs.generated.json later, in build:agent-accepted-content. This
+# script therefore always read the PREVIOUS run's generated spec, so a corrected
+# name needed two full builds to reach the page. Reading the curated file
+# directly, at the highest precedence, makes one build enough.
+#
+# data/content/manual_expansion_pages.json is merged after PRIORITY and NEW_PAGES
+# further down and still legitimately outranks this; that precedence is unchanged
+# and is asserted by validate:curated-framework-authority.
+if AGENT_SPEC_PATH.exists():
+    _curated_names = {}
+    for _section in ("priority_pages", "new_pages"):
+        for _path, _spec in _agent_payload.get(_section, {}).items():
+            if isinstance(_spec, dict) and str(_spec.get("framework", "")).strip():
+                _curated_names[_path] = _spec
+    for _bucket in (PRIORITY, NEW_PAGES):
+        for _path, _spec in _bucket.items():
+            _curated = _curated_names.get(_path)
+            if not _curated:
+                continue
+            _spec["framework"] = _curated["framework"]
+            if str(_curated.get("definition", "")).strip():
+                _spec["definition"] = _curated["definition"]
+
 
 RELATED = [
     ("/chatgpt-accountability-partner", "Use ChatGPT as an accountability partner"),
