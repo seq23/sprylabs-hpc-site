@@ -1887,9 +1887,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-186",
+      "validation_id": "VAL-SIGNAL-SOURCE-PRODUCERS",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:signal-source-producers",
+      "order": 186,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 188,
+  "entry_count": 189,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2255,6 +2265,10 @@
         {
           "id": "VAL-AMAZON-BOOK-LANDING",
           "command": "npm run validate:amazon-book-landing"
+        },
+        {
+          "id": "VAL-SIGNAL-SOURCE-PRODUCERS",
+          "command": "npm run validate:signal-source-producers"
         }
       ]
     },
