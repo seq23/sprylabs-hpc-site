@@ -1917,9 +1917,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-189",
+      "validation_id": "VAL-CURATED-FRAMEWORK-AUTHORITY",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:curated-framework-authority",
+      "order": 189,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 191,
+  "entry_count": 192,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2297,6 +2307,10 @@
         {
           "id": "VAL-FRAMEWORK-NAME-SHAPE",
           "command": "npm run validate:framework-name-shape"
+        },
+        {
+          "id": "VAL-CURATED-FRAMEWORK-AUTHORITY",
+          "command": "npm run validate:curated-framework-authority"
         }
       ]
     },
