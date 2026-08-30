@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-08-29T22:27:47.854Z",
+  "generated_at": "2026-08-30T13:31:53.238Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 178,
+  "admitted_hard_fail_count": 179,
   "reviewed_count": 8,
-  "unreviewed_count": 170,
+  "unreviewed_count": 171,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 132,
+    "REVIEW_REQUIRED": 133,
     "EXISTING_REPAIR_AVAILABLE": 7,
     "TRUE_BLOCKER": 26,
     "REVIEW_WARNING_BOUNDARY": 13
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 132,
+    "REVIEW_REQUIRED": 133,
     "EXISTING_REPAIR_AVAILABLE": 7,
     "TRUE_BLOCKER": 26,
     "REVIEW_WARNING_BOUNDARY": 5
   },
   "migration_status_counts": {
-    "UNREVIEWED": 170,
+    "UNREVIEWED": 171,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -2713,6 +2713,21 @@
         "MX-183"
       ],
       "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-AMAZON-BOOK-LANDING",
+      "name": "validate:amazon-book-landing",
+      "command": "npm run validate:amazon-book-landing",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-185"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",
       "decision": null,
       "evidence": []

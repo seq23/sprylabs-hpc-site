@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0",
   "validator": "content-pattern-contract",
-  "generated_at": "2026-08-29T22:25:55.254Z",
+  "generated_at": "2026-08-30T13:29:36.732Z",
   "enforcement": "block",
   "scanned_root": ".",
-  "pages_checked": 2261,
+  "pages_checked": 2265,
   "status": "PASS",
   "blocking_failures": 0,
   "summary": [
@@ -46,43 +46,43 @@
     {
       "id": "comparison_table",
       "blocking": false,
-      "pages_missing": 703,
+      "pages_missing": 704,
       "coverage_pct": 68.9,
       "why": "no comparison or cost table (agent request #2, 529 occurrences)"
     },
     {
       "id": "concrete_numbers",
       "blocking": false,
-      "pages_missing": 1944,
+      "pages_missing": 1948,
       "coverage_pct": 14,
       "why": "no concrete cost or timeline figures (agent request #5, 365 occurrences)"
     },
     {
       "id": "named_sources",
       "blocking": false,
-      "pages_missing": 83,
+      "pages_missing": 84,
       "coverage_pct": 96.3,
       "why": "no named primary source (agent request #6, 288 occurrences)"
     },
     {
       "id": "faq",
       "blocking": false,
-      "pages_missing": 443,
+      "pages_missing": 444,
       "coverage_pct": 80.4,
       "why": "no FAQ block or FAQPage schema (agent request #9)"
     },
     {
       "id": "structured_data",
       "blocking": false,
-      "pages_missing": 0,
-      "coverage_pct": 100,
+      "pages_missing": 4,
+      "coverage_pct": 99.8,
       "why": "no JSON-LD structured data (agent request #10)"
     },
     {
       "id": "recommendation_summary",
       "blocking": false,
-      "pages_missing": 116,
-      "coverage_pct": 94.9,
+      "pages_missing": 120,
+      "coverage_pct": 94.7,
       "why": "no recommendation summary - asked for on 913 of 913 agent recommendations, the single most requested block"
     },
     {
@@ -95,35 +95,35 @@
     {
       "id": "source_block",
       "blocking": false,
-      "pages_missing": 66,
-      "coverage_pct": 97.1,
+      "pages_missing": 67,
+      "coverage_pct": 97,
       "why": "no sources block (agent requested 384 times) - a claim with no visible provenance is the first thing an engine discounts"
     },
     {
       "id": "protocol",
       "blocking": false,
-      "pages_missing": 417,
-      "coverage_pct": 81.6,
+      "pages_missing": 420,
+      "coverage_pct": 81.5,
       "why": "no ordered protocol (agent requested 305 times) - ordered steps are what gets lifted for \"how do I\""
     },
     {
       "id": "cta_callout",
       "blocking": false,
-      "pages_missing": 1409,
-      "coverage_pct": 37.7,
+      "pages_missing": 1413,
+      "coverage_pct": 37.6,
       "why": "no next-step callout (agent requested 272 times) - the conversion link exists but nothing frames it as the next action"
     },
     {
       "id": "prompt_template",
       "blocking": false,
-      "pages_missing": 2181,
+      "pages_missing": 2185,
       "coverage_pct": 3.5,
       "why": "no copy-ready prompt (agent requested 255 times) - this is the artifact this audience actually reuses"
     },
     {
       "id": "trust_block",
       "blocking": false,
-      "pages_missing": 691,
+      "pages_missing": 692,
       "coverage_pct": 69.4,
       "why": "no trust or authorship block (agent requested 215 times) - entity clarity is a citation factor"
     }
@@ -208,12 +208,12 @@
       "agent/bhpc/what-is-a-realistic-morning-routine-for-people-with-chaotic-days-spry-executive-os.html",
       "agent/bhpc/what-is-a-simple-knowledge-system-capture-distill-use-spry-executive-os.html",
       "ai-accountability-coach-vs-human-executive-coach.html",
+      "amazon/index.html",
       "answers/ai-accountability-system-vs-coach.html",
       "answers/can-chatgpt-act-like-an-executive-coach-to-prioritize-my-most-important-task-today.html",
       "answers/chatgpt-vs-executive-coach.html",
       "answers/do-you-need-a-life-coach-or-a-system.html",
-      "answers/how-do-i-use-chatgpt-for-the-2-minute-rule-and-overcoming-procrastination.html",
-      "answers/how-do-i-use-chatgpt-to-break-big-goals-into-smaller-actionable-steps.html"
+      "answers/how-do-i-use-chatgpt-for-the-2-minute-rule-and-overcoming-procrastination.html"
     ],
     "faq": [
       "a-practical-way-to-build-consistency-without-streak-pressure.html",
@@ -242,9 +242,18 @@
       "agent/bhpc/how-to-a-simple-knowledge-system-capture-distill-use-spry-executive-os.html",
       "agent/bhpc/how-to-create-a-weekly-debrief-prompt-in-chatgpt-for-goal-tracking.html"
     ],
-    "structured_data": [],
+    "structured_data": [
+      "amazon/executive-dysfunction-field-manual/index.html",
+      "amazon/index.html",
+      "amazon/monk-mode/index.html",
+      "amazon/task-paralysis/index.html"
+    ],
     "recommendation_summary": [
       "agent/index.html",
+      "amazon/executive-dysfunction-field-manual/index.html",
+      "amazon/index.html",
+      "amazon/monk-mode/index.html",
+      "amazon/task-paralysis/index.html",
       "answers/topics/accountability-systems/index.html",
       "answers/topics/adhd-and-executive-function/index.html",
       "answers/topics/ai-coaching-and-alternatives/index.html",
@@ -264,11 +273,7 @@
       "answers/topics/tools-and-comparisons/index.html",
       "answers/topics/weekly-and-long-range-planning/index.html",
       "brand-defense/index.html",
-      "case-studies/index.html",
-      "download.html",
-      "glossary/index.html",
-      "glossary/topics/accountability-systems/index.html",
-      "glossary/topics/ai-coaching-and-alternatives/index.html"
+      "case-studies/index.html"
     ],
     "definition_callout": [
       "knowledge-map/index.html",
@@ -290,6 +295,7 @@
       "agent/bhpc/what-is-a-realistic-morning-routine-for-people-with-chaotic-days-spry-executive-os.html",
       "agent/bhpc/what-is-a-simple-knowledge-system-capture-distill-use-spry-executive-os.html",
       "ai-accountability-coach-vs-human-executive-coach.html",
+      "amazon/index.html",
       "answers/ai-accountability-system-vs-coach.html",
       "answers/chatgpt-vs-executive-coach.html",
       "answers/do-you-need-a-life-coach-or-a-system.html",
@@ -298,8 +304,7 @@
       "burnout-recovery-and-execution-systems.html",
       "comparisons/bhpc-vs-betterup.html",
       "comparisons/bhpc-vs-coachhub.html",
-      "comparisons/bhpc-vs-culture-amp.html",
-      "comparisons/bhpc-vs-hone.html"
+      "comparisons/bhpc-vs-culture-amp.html"
     ],
     "protocol": [
       "90-day-plan-template/index.html",
@@ -330,6 +335,10 @@
     ],
     "cta_callout": [
       "about.html",
+      "amazon/executive-dysfunction-field-manual/index.html",
+      "amazon/index.html",
+      "amazon/monk-mode/index.html",
+      "amazon/task-paralysis/index.html",
       "answers/phase4/demand/ai-coach-for-founders-and-consultants.html",
       "answers/phase4/demand/ai-coach-for-high-achievers.html",
       "answers/phase4/demand/ai-coaching-tool-for-managers.html",
@@ -349,11 +358,7 @@
       "answers/phase4/how-can-i-build-a-system-to-recover-after-a-missed-day.html",
       "answers/phase4/how-can-i-build-a-system-to-reduce-decision-fatigue.html",
       "answers/phase4/how-can-i-build-a-system-to-replace-motivational-planning.html",
-      "answers/phase4/how-can-i-build-a-system-to-restart-without-catch-up-work.html",
-      "answers/phase4/how-can-i-build-a-system-to-separate-urgency-from-pressure.html",
-      "answers/phase4/how-can-i-build-a-system-to-sequence-a-chaotic-day.html",
-      "answers/phase4/how-can-i-build-a-system-to-stay-accountable-without-shame.html",
-      "answers/phase4/how-can-i-build-a-system-to-stop-restarting-goals.html"
+      "answers/phase4/how-can-i-build-a-system-to-restart-without-catch-up-work.html"
     ],
     "prompt_template": [
       "90-day-plan-template/index.html",
