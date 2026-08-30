@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "validator": "signal-source-producers",
+  "status": "PASS",
+  "sources_examined": 9,
+  "adapters_inspected": 8,
+  "enabled_producing_sources": [
+    "manual_import"
+  ],
+  "checks": [
+    "8 non-fixture adapter(s) agree with the registry on producing capability",
+    "no non-fixture record -> NAMED STOP naming the owner, exit 0",
+    "plan consumer honours the same exit code and names the stop",
+    "producing source delivered records but nothing published -> hard failure preserved"
+  ],
+  "errors": [],
+  "checked_at": "2026-08-30T15:29:31.176Z"
+}
