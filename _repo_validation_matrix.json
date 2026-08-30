@@ -1877,9 +1877,19 @@
       "severity": "INFO",
       "release_effect": false,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-185",
+      "validation_id": "VAL-AMAZON-BOOK-LANDING",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:amazon-book-landing",
+      "order": 185,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 187,
+  "entry_count": 188,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2241,6 +2251,10 @@
         {
           "id": "VAL-030",
           "command": "npm run validate:reopened-baseline"
+        },
+        {
+          "id": "VAL-AMAZON-BOOK-LANDING",
+          "command": "npm run validate:amazon-book-landing"
         }
       ]
     },
