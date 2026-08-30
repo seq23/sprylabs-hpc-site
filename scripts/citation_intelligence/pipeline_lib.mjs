@@ -11,6 +11,20 @@ export function candidateFromScore(r){const action=r.risk_level==='high'||['bloc
 function routeFile(route){const clean=String(route||'').replace(/^\//,'');return clean.endsWith('.html')?clean:`${clean.replace(/\/$/,'')}/index.html`;}
 export function planFromCandidates(candidates){const ownership=loadOwnership();const velocityDecision=readJson('data/authority_scale/velocity_decision.json',{recommended_new_url_ceiling_per_day:25});const target=Math.max(1,Number(process.env.ZERO_DOLLAR_DAILY_PAGE_TARGET||velocityDecision.recommended_new_url_ceiling_per_day||25));const selected=[],skipped=[],blocked=[];const seen=new Set();const allowFixture=process.env.ALLOW_FIXTURE_MUTATION==='1';for(const c of [...candidates].sort((a,b)=>(b.score||0)-(a.score||0))){const file=routeFile(c.route_owner);const own=ownership.get(file);const duplicate=seen.has(normalizeSlug(c.query));seen.add(normalizeSlug(c.query));const d=decide({owner:own?.owner||'legacy_eligible',action:c.action,text:`${c.title} ${c.query}`,duplicate,route:c.route_owner});const fixture=JSON.stringify(c.source_basis||[]).toLowerCase().includes('fixture');const row={...c,source_file:file,content_owner:own?.owner||'zero_dollar',safe_harbor:d.decision,safe_harbor_reason:d.reason,action_id:stableId([c.candidate_id,file,c.action])};if(fixture&&!allowFixture){skipped.push({...row,decision:'SKIPPED_FIXTURE_ONLY',safe_harbor_reason:'fixture signals are proof-only and cannot mutate public content'});continue;}if(c.status==='BLOCKED'||c.risk_level==='high'||c.action==='block'){blocked.push({...row,decision:'SKIPPED_UNSUPPORTED_CLAIM'});continue;}if(d.decision.startsWith('SKIPPED')){skipped.push(row);continue;}if(selected.length<target)selected.push({...row,decision:'SAFE_AUTOPUBLISH'});else skipped.push({...row,decision:'SKIPPED_CADENCE_TARGET',safe_harbor_reason:'non-blocking daily target reached'});}const stop_reason=planStopReason({candidates,selected,skipped,blocked,allowFixture});return {schema_version:'2.0',repo:'seq23/sprylabs-hpc-site',generated_at:new Date().toISOString(),mode:'FULL_SAFE_AUTONOMY_GAP_FILL',external_telemetry_present:false,stop_reason,selected,skipped,blocked,summary:{release_units_planned:candidates.length,selected_units:selected.length,skipped_units:skipped.length,blocked_units:blocked.length,blocked_units_reasons:reasonHistogram(skipped.concat(blocked)),public_mutation:'SAFE_HARBOR_AUTOPUBLISH'}};}
 
+
+// Did any enabled, producing, non-fixture source actually contribute a record on
+// this run? Read from the collection ledger the run just wrote, not from the
+// registry: a source can be configured and still have no operator input present,
+// and only the run itself knows which happened.
+export function nonFixtureContribution(){
+  const registry=readJson('data/signals/source_registry.json',{sources:[]});
+  const producing=new Map((registry.sources||[]).filter(s=>s&&s.enabled&&s.producing&&s.adapter!=='fixture').map(s=>[s.id,s]));
+  const collection=readJson('artifacts/validation/firehose-collection.json',{adapters:[]});
+  const rows=(collection.adapters||[]).filter(a=>producing.has(a.source));
+  const records=rows.reduce((n,a)=>n+Number(a.records||0),0);
+  return {configured:[...producing.keys()],observed:rows.map(a=>({source:a.source,records:Number(a.records||0),status:a.status})),records};
+}
+
 // Rule 0 support: a plan that selected nothing must be able to say WHY, by name.
 // Returns null when the lane did real work.
 export function reasonHistogram(rows){const h={};for(const r of rows||[]){const k=r.decision||r.safe_harbor||'SKIPPED';h[k]=(h[k]||0)+1;}return h;}

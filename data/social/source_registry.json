@@ -1,10 +1,44 @@
 {
-  "generated_at": "2026-04-28T00:00:00.000Z",
+  "generated_at": "2026-08-30T00:00:00.000Z",
+  "schema_version": "2.0",
+  "policy": "signals_only_no_firehose",
+  "collector_contract": "Every entry is an object with a .platform. A platform the collector implements must also be listed in its SUPPORTED_PLATFORMS; anything else must carry status \"declared_unimplemented\" and a reason, so the registry can record intent without claiming a live source. validate_social_source_contract.js proves both halves.",
   "sources": [
-    "reddit",
-    "forums",
-    "search_console",
-    "llm_citation_checks"
-  ],
-  "policy": "signals_only_no_firehose"
+    {
+      "source_key": "manual_operator_import",
+      "platform": "manual",
+      "status": "active",
+      "terms_status": "allowed",
+      "input_file": "data/social/manual_import.json",
+      "description": "Operator-provided, source-compliant social demand records. The only collector path here that is both implemented and terms-clean."
+    },
+    {
+      "source_key": "reddit",
+      "platform": "reddit",
+      "status": "declared_unimplemented",
+      "terms_status": "requires_credentials",
+      "reason": "No collector is implemented, and data/signals/source_registry.json governs the same platform as requires_credentials with no unauthorized scraping. Implementing one here would route around that policy."
+    },
+    {
+      "source_key": "forums",
+      "platform": "forums",
+      "status": "declared_unimplemented",
+      "terms_status": "requires_review",
+      "reason": "No collector is implemented, and the sibling signal registry holds public RSS/forum feeds behind a terms review that has not happened."
+    },
+    {
+      "source_key": "search_console",
+      "platform": "search_console",
+      "status": "declared_unimplemented",
+      "terms_status": "requires_credentials",
+      "reason": "Owned Search Console export requires credentials the owner has not supplied to this lane."
+    },
+    {
+      "source_key": "llm_citation_checks",
+      "platform": "llm_citation_checks",
+      "status": "declared_unimplemented",
+      "terms_status": "allowed",
+      "reason": "Citation observation is produced by the citation probe in daily-citation-intelligence.yml, not by this social collector. Listing it here as a live source double-counted another lane's output."
+    }
+  ]
 }

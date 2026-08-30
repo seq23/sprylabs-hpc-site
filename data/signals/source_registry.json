@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.4",
+  "schema_version": "1.5",
   "repo": "seq23/sprylabs-hpc-site",
   "default_mode": "fixture_shadow",
   "sources": [
@@ -9,7 +9,8 @@
       "mode": "fixture",
       "terms_status": "allowed",
       "enabled": true,
-      "description": "Deterministic offline fixture demand signals."
+      "description": "Deterministic offline fixture demand signals.",
+      "producing": false
     },
     {
       "id": "manual_import",
@@ -17,7 +18,8 @@
       "mode": "manual",
       "terms_status": "allowed",
       "enabled": true,
-      "description": "Operator-provided source-compliant demand records."
+      "description": "Operator-provided source-compliant demand records.",
+      "producing": true
     },
     {
       "id": "agent_artifacts",
@@ -25,7 +27,8 @@
       "mode": "export",
       "terms_status": "allowed",
       "enabled": true,
-      "description": "Owned agent artifact manifests and reports."
+      "description": "Boundary declaration only. data/report_fixes/agent_runs and normalized_agent_runs are hash-protected by prove_agent_separation and already absorbed by scripts/agent_intake; this source never emits demand records.",
+      "producing": false
     },
     {
       "id": "forums_rss",
@@ -33,7 +36,8 @@
       "mode": "rss",
       "terms_status": "requires_review",
       "enabled": false,
-      "description": "Public RSS/forum feeds only after terms review."
+      "description": "Public RSS/forum feeds only after terms review.",
+      "producing": true
     },
     {
       "id": "reddit",
@@ -41,7 +45,8 @@
       "mode": "api",
       "terms_status": "requires_credentials",
       "enabled": false,
-      "description": "Reddit API or manual exports only; no unauthorized scraping."
+      "description": "Reddit API or manual exports only; no unauthorized scraping.",
+      "producing": true
     },
     {
       "id": "bluesky",
@@ -49,7 +54,8 @@
       "mode": "firehose",
       "terms_status": "requires_review",
       "enabled": false,
-      "description": "ATProto/firehose only after source authority review."
+      "description": "ATProto/firehose only after source authority review.",
+      "producing": true
     },
     {
       "id": "x",
@@ -57,7 +63,8 @@
       "mode": "api",
       "terms_status": "requires_credentials",
       "enabled": false,
-      "description": "X API filtered stream only with credentials and terms authority."
+      "description": "X API filtered stream only with credentials and terms authority.",
+      "producing": true
     },
     {
       "id": "youtube",
@@ -65,7 +72,8 @@
       "mode": "api",
       "terms_status": "requires_credentials",
       "enabled": false,
-      "description": "YouTube API/search only with credentials and quota authority."
+      "description": "YouTube API/search only with credentials and quota authority.",
+      "producing": true
     },
     {
       "id": "search_console",
@@ -73,7 +81,9 @@
       "mode": "export",
       "terms_status": "requires_credentials",
       "enabled": false,
-      "description": "Owned GSC export/API only."
+      "description": "Owned GSC export/API only.",
+      "producing": true
     }
-  ]
+  ],
+  "producing_contract": "A source with producing=true and enabled=true must be able to emit demand records. validate:signal-source-producers proves each one against its adapter and fails on any that cannot."
 }
