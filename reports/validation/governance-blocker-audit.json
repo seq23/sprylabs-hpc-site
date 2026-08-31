@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-08-30T13:31:53.238Z",
+  "generated_at": "2026-08-31T13:36:15.917Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 179,
+  "admitted_hard_fail_count": 206,
   "reviewed_count": 8,
-  "unreviewed_count": 171,
+  "unreviewed_count": 198,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 133,
+    "REVIEW_REQUIRED": 158,
     "EXISTING_REPAIR_AVAILABLE": 7,
     "TRUE_BLOCKER": 26,
-    "REVIEW_WARNING_BOUNDARY": 13
+    "REVIEW_WARNING_BOUNDARY": 15
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 133,
+    "REVIEW_REQUIRED": 158,
     "EXISTING_REPAIR_AVAILABLE": 7,
     "TRUE_BLOCKER": 26,
-    "REVIEW_WARNING_BOUNDARY": 5
+    "REVIEW_WARNING_BOUNDARY": 7
   },
   "migration_status_counts": {
-    "UNREVIEWED": 171,
+    "UNREVIEWED": 198,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -2726,6 +2726,411 @@
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-185"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-SIGNAL-SOURCE-PRODUCERS",
+      "name": "validate:signal-source-producers",
+      "command": "npm run validate:signal-source-producers",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-186"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-SOCIAL-SOURCE-CONTRACT",
+      "name": "validate:social-source-contract",
+      "command": "npm run validate:social-source-contract",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-187"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-FRAMEWORK-NAME-SHAPE",
+      "name": "validate:framework-name-shape",
+      "command": "npm run validate:framework-name-shape",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-188"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-CURATED-FRAMEWORK-AUTHORITY",
+      "name": "validate:curated-framework-authority",
+      "command": "npm run validate:curated-framework-authority",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-189"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-CURATED-DEFINITION-REGISTRY-REACH",
+      "name": "validate:curated-definition-registry-reach",
+      "command": "npm run validate:curated-definition-registry-reach",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-190"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-FROZEN-OUTPUT-CONTRACT",
+      "name": "validate:frozen-output-contract",
+      "command": "npm run validate:frozen-output-contract",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-191"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-CITATION-SCHEMA-AUTHORITY-REACH",
+      "name": "validate:citation-schema-authority-reach",
+      "command": "npm run validate:citation-schema-authority-reach",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-192"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-BUILD-ALL-INTEGRITY",
+      "name": "validate:build-all-integrity",
+      "command": "npm run validate:build-all-integrity",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-193"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-REDIRECT-MAP-EQUIVALENCE",
+      "name": "validate:redirect-map-equivalence",
+      "command": "npm run validate:redirect-map-equivalence",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-194"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-MAIN-WRITER-VALIDATION-GATE",
+      "name": "validate:main-writer-validation-gate",
+      "command": "npm run validate:main-writer-validation-gate",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-195"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-WF-MAIN-VALIDATION-SENTINEL",
+      "name": "main-validation-sentinel.yml",
+      "command": ".github/workflows/main-validation-sentinel.yml",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "A push made with GITHUB_TOKEN raises no push event, so Validate Repo's `on: push` never fired for any automated writer: all nine github-actions[bot] commits on main have zero Validate Repo runs. b3aec016c landed three minutes after the last green run and left main failing three validators for over two hours with nothing to notice. This lane notices.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-WF-MAIN-VALIDATION-SENTINEL"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-CITATION-SCHEMA-AUTHORITY",
+      "name": "validate:citation-schema-authority",
+      "command": "npm run validate:citation-schema-authority",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-CITATION-SCHEMA-AUTHORITY"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-CITATION-PHASE-MANIFEST",
+      "name": "validate:citation-phase-manifest",
+      "command": "npm run validate:citation-phase-manifest",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-CITATION-PHASE-MANIFEST"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-INTERNAL-LINK-VELOCITY",
+      "name": "validate:internal-link-velocity",
+      "command": "npm run validate:internal-link-velocity",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-INTERNAL-LINK-VELOCITY"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-LLMS-FULL-COVERAGE",
+      "name": "validate:llms-full-coverage",
+      "command": "npm run validate:llms-full-coverage",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-LLMS-FULL-COVERAGE"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-RELEASE-ATOM-CONTRACT",
+      "name": "validate:release-atom-contract",
+      "command": "npm run validate:release-atom-contract",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-RELEASE-ATOM-CONTRACT"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-RELEASE-MIX-POLICY",
+      "name": "validate:release-mix-policy",
+      "command": "npm run validate:release-mix-policy",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-196"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-SITEMAP-COVERAGE",
+      "name": "validate:sitemap-coverage",
+      "command": "npm run validate:sitemap-coverage",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-197"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-PAGE-CONTRACTS",
+      "name": "validate:page-contracts",
+      "command": "npm run validate:page-contracts",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-198"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-VELOCITY-CRITICAL",
+      "name": "validate:velocity-critical",
+      "command": "npm run validate:velocity-critical",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-199"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-SHORT-ANSWER-UNIQUENESS",
+      "name": "validate:short-answer-uniqueness",
+      "command": "npm run validate:short-answer-uniqueness",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-200"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-INSIGHT-SCHEMA",
+      "name": "validate:insight-schema",
+      "command": "npm run validate:insight-schema",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-201"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-PUBLISH-SIGNAL-GATE",
+      "name": "validate:publish-signal-gate",
+      "command": "npm run validate:publish-signal-gate",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-202"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-ATTESTATION-MATCHES-RECEIPT",
+      "name": "validate:attestation-matches-receipt",
+      "command": "npm run validate:attestation-matches-receipt",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-203"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-REPO-WALK-BOUNDARY",
+      "name": "validate:repo-walk-boundary",
+      "command": "npm run validate:repo-walk-boundary",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-204"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-CONTROL-PLANE-IDENTITY",
+      "name": "validate:control-plane-identity",
+      "command": "npm run validate:control-plane-identity",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-CONTROL-PLANE-IDENTITY"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-FEED-DATE-DETERMINISM",
+      "name": "validate:feed-date-determinism",
+      "command": "npm run validate:feed-date-determinism",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-FEED-DATE-DETERMINISM"
       ],
       "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",
