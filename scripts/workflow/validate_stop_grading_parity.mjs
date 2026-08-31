@@ -133,6 +133,35 @@ check('a real tracked profile receipt still grades CLEAN when its steps passed',
 });
 
 // ---------------------------------------------------------------------------
+// 4. release:report is a HARD_FAIL, release_effect stage. It printed
+//    `STRUCTURALLY_CHECKED: 0 proof records` and exited 0 when it aggregated
+//    nothing. Driven in an isolated cwd so the live tree is untouched, and both
+//    directions are asserted: empty proof set red, real proof set green.
+// ---------------------------------------------------------------------------
+check('release:report is red when it aggregates zero proof records', () => {
+  const script = path.join(ROOT, 'scripts/release/report.mjs');
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'release-report-'));
+  try {
+    const empty = spawnSync(process.execPath, [script], {cwd: tmp, encoding: 'utf8'});
+    if (empty.status === 0) return `exited 0 with no summary.json under artifacts/diagnostics. A release report that aggregated no proof has attested to nothing. Output: ${(empty.stdout || '').trim()}`;
+    const doc = JSON.parse(fs.readFileSync(path.join(tmp, 'artifacts/diagnostics/release-report/summary.json'), 'utf8'));
+    if (doc.status === 'STRUCTURALLY_CHECKED') return 'reported STRUCTURALLY_CHECKED over zero proof records';
+    if (doc.stop_reason?.code !== 'NO_PROOF_RECORDS_AGGREGATED') return `expected stop_reason NO_PROOF_RECORDS_AGGREGATED, got ${doc.stop_reason?.code ?? 'none'}`;
+
+    // The inverse: one real passing proof record must still be green, so the fix
+    // cannot have simply made the stage unconditionally red.
+    const proofDir = path.join(tmp, 'artifacts/diagnostics/some-check');
+    fs.mkdirSync(proofDir, {recursive: true});
+    fs.writeFileSync(path.join(proofDir, 'summary.json'), JSON.stringify({check: 'some-check', status: 'PASS'}));
+    const populated = spawnSync(process.execPath, [script], {cwd: tmp, encoding: 'utf8'});
+    if (populated.status !== 0) return `exited ${populated.status} with a real passing proof record present; the fix has turned a working release stage red`;
+    return null;
+  } finally {
+    fs.rmSync(tmp, {recursive: true, force: true});
+  }
+});
+
+// ---------------------------------------------------------------------------
 // Rule 0 applies to this validator too.
 // ---------------------------------------------------------------------------
 if (checks === 0) {
