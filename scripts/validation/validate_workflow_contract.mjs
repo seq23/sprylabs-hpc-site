@@ -37,6 +37,10 @@ const allowedActions = new Set([
   'actions/upload-artifact@',
   'actions/download-artifact@',
   'actions/setup-python@v5',
+  // First-party GitHub action, same family as checkout/setup-node/upload-artifact
+  // above. It was the only one of the five missing, which blocked the build cache
+  // for no stated reason.
+  'actions/cache@',
 ]);
 const pkg = readJson('package.json');
 const packageScripts = pkg.scripts || {};
@@ -66,6 +70,36 @@ const actualWorkflows = fs.readdirSync(workflowDir).filter(name => /\.ya?ml$/.te
 
 function has(text, token, workflow, label = token) {
   if (!text.includes(token)) errors.push(`${workflow}: missing ${label}`);
+}
+
+// The property this file actually needs to protect is "the declared validation
+// profile is executed before the artifact is published" - not "one particular
+// npm script name appears in the YAML". Asserting the name pinned validate-repo
+// to a single serial entrypoint, so any sharded shape failed by construction
+// even when it ran strictly more validation. Follow the call chain instead:
+// npm scripts, `node <file>` entrypoints, and spawnSync('npm', ['run', X])
+// argument arrays, which is how release:ci-validate actually reaches the profile
+// executor (ci_validate -> release:prepush:container -> container_prepush ->
+// validate:profile). Any shape that still reaches the executor passes.
+const PROFILE_EXECUTOR = 'scripts/validation/validate_profile.mjs';
+function reachesProfileExecutor(text, seen = new Set(), depth = 0) {
+  if (depth > 10) return false;
+  if (text.includes(PROFILE_EXECUTOR)) return true;
+  const scripts = new Set();
+  for (const m of text.matchAll(/\bnpm\s+run\s+([\w:.-]+)/g)) scripts.add(m[1]);
+  for (const m of text.matchAll(/['"]run['"]\s*,\s*['"]([\w:.-]+)['"]/g)) scripts.add(m[1]);
+  for (const name of scripts) {
+    if (seen.has(`s:${name}`)) continue;
+    seen.add(`s:${name}`);
+    if (reachesProfileExecutor(String(packageScripts[name] || ''), seen, depth + 1)) return true;
+  }
+  for (const m of text.matchAll(/\bnode\s+([\w./-]+\.(?:js|mjs|cjs))/g)) {
+    const file = m[1];
+    if (seen.has(`f:${file}`) || !fs.existsSync(file)) continue;
+    seen.add(`f:${file}`);
+    if (reachesProfileExecutor(fs.readFileSync(file, 'utf8'), seen, depth + 1)) return true;
+  }
+  return false;
 }
 
 for (const retired of retiredWorkflows) {
@@ -100,8 +134,11 @@ for (const name of actualWorkflows) {
   has(text, 'npm ci --ignore-scripts', name);
   for (const line of lines) {
     const trimmed = line.trim();
-    if (trimmed.startsWith('- uses:')) {
-      const action = trimmed.slice('- uses:'.length).trim();
+    // A step written as `- name: X` / `uses: y@v1` puts `uses:` on its own line,
+    // so keying on '- uses:' let every named step's action through unreviewed -
+    // an allowlist that cannot see half the actions it governs. Match both forms.
+    if (trimmed.startsWith('- uses:') || trimmed.startsWith('uses:')) {
+      const action = trimmed.replace(/^-\s*/, '').slice('uses:'.length).trim();
       // Entries ending in '@' allow any version of that action. Pinning exact
       // versions here meant every routine action upgrade failed the build, which
       // is what stranded the Node 20 -> 24 migration.
@@ -156,7 +193,9 @@ for (const name of actualWorkflows) {
 
   if (name === 'validate-repo.yml') {
     has(text, 'name: Validate Repo', name);
-    has(text, 'npm run release:ci-validate', name);
+    if (!reachesProfileExecutor(text)) {
+      errors.push(`${name}: no command in this workflow reaches ${PROFILE_EXECUTOR}, so the declared validation profile is never executed before the validated artifact is published. Any entrypoint or shard layout is fine; reaching the profile executor is not optional.`);
+    }
     has(text, 'spry-validated-${{ github.sha }}', name, 'exact validated artifact name');
     has(text, 'include-hidden-files: true', name);
     if (!/permissions:\s*\n\s{2}contents:\s*read/m.test(text)) errors.push(`${name}: validation workflow must declare contents: read`);
