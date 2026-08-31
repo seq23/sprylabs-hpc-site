@@ -162,6 +162,43 @@ expect('restored -> PASS', verify(), true);
   expect(`a validator far slower than modelled -> FAIL naming ${victim.results[0].id}`, verify(), false, [victim.results[0].id, 'calibrate']);
 }
 
+// 6b. The specific silent-degradation case: a validator with NO timing entry
+//     that turns out to be expensive. It was packed at the declared default, so
+//     the plan never accounted for it. Unlike ordinary drift this cannot be
+//     runner noise, and it must hard-fail rather than be absorbed.
+//     The condition is CREATED rather than waited for: once the timings are
+//     fully calibrated no validator is untimed, and a case that only fires when
+//     the file is already stale would quietly stop testing anything.
+{
+  const TIMINGS = '.github/validation-shard-timings.json';
+  const before = fs.readFileSync(TIMINGS, 'utf8');
+  const doc = JSON.parse(before);
+  const victimShard = healthy.find((s) => s.results.length);
+  const untimed = victimShard.results[0].id;
+  delete doc.seconds[untimed];
+  fs.writeFileSync(TIMINGS, JSON.stringify(doc, null, 2));
+  const r = clone();
+  const holder = r.find((s) => s.results.some((x) => x.id === untimed));
+  holder.results.find((x) => x.id === untimed).seconds = 90;
+  lay(r);
+  expect(`an untimed validator that costs 90s -> FAIL naming ${untimed}`, verify(), false, [untimed, 'no timing entry']);
+  fs.writeFileSync(TIMINGS, before);
+}
+
+// 6c. Ordinary drift within runner variance must NOT redden the run. A gate that
+//     fails on noise is one people learn to re-run, which is worse than no gate.
+{
+  const r = clone();
+  const victim = r.find((s) => s.results.length);
+  const id = victim.results[0].id;
+  const modelled = JSON.parse(fs.readFileSync('.github/validation-shard-timings.json', 'utf8')).seconds[id];
+  if (typeof modelled === 'number' && modelled > 10) {
+    victim.results[0].seconds = Math.round(modelled * 1.6);
+    lay(r);
+    expect(`${id} at 1.6x its modelled cost -> reported, not failed`, verify(), true);
+  }
+}
+
 // 7. The ordered build job is the other half of the coverage argument. A step it
 //    failed to run must be named, or the union would simply be smaller and still
 //    look internally consistent.
