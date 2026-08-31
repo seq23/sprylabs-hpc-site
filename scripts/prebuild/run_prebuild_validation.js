@@ -1,6 +1,23 @@
 #!/usr/bin/env node
 const fs = require('fs');
 const path = require('path');
+// The shared boundary, not a private list. See scripts/lib/repo_walk.cjs.
+//
+// This file was named as one of the repo's root-recursive writers, and it was
+// not one: it read the repository root with a single flat readdirSync and never
+// descended, so it could not reach a `.claude/worktrees/<id>` checkout. The
+// guard matched it on a recursion pattern it does not actually have.
+//
+// The flat read was a different defect. existingSlugs is what duplicateRisk is
+// measured against - "does a page for this query already exist" - and only 163
+// of this repo's 2,295 pages sit at the root. The other 2,132 live under
+// answers/, use-cases/, vs/, glossary/ and so on, so the duplicate check was
+// blind to 93% of the library and a cluster duplicating an existing answers/
+// page came back duplicateRisk: false. Making the scan see the whole library is
+// what this check was always asking for - and doing it through the shared
+// boundary is what keeps the newly-recursive walk out of another agent's
+// checkout, rather than turning a false positive into a real one.
+const { walkFiles } = require('../lib/repo_walk.cjs');
 const ROOT = process.cwd();
 const clustersPath = path.join(ROOT, 'data/clusters/clusters.json');
 const approvedPath = path.join(ROOT, 'data/clusters/approved_clusters.json');
@@ -10,7 +27,9 @@ function readJson(file, fallback) { try { return fs.existsSync(file) ? JSON.pars
 function writeJson(file, data) { fs.mkdirSync(path.dirname(file), { recursive: true }); fs.writeFileSync(file, JSON.stringify(data, null, 2) + '\n'); }
 function slug(value) { return String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 96); }
 const existingSlugs = new Set();
-for (const file of fs.readdirSync(ROOT)) if (file.endsWith('.html')) existingSlugs.add(file.replace(/\.html$/, ''));
+for (const rel of walkFiles(ROOT, { filter: (p) => p.endsWith('.html') })) {
+  existingSlugs.add(path.basename(rel).replace(/\.html$/, ''));
+}
 const published = readJson(path.join(ROOT, 'data/reddit/published_manifest.json'), { items: [] });
 for (const item of (published.items || [])) if (item.slug) existingSlugs.add(item.slug);
 const badPatterns = [/About Press Copyright/i, /Google LLC/i, /YouTube works Test new features/i, /Terms Privacy Policy/i, /NFL Sunday Ticket/i];

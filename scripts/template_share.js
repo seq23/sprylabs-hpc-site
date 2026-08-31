@@ -20,9 +20,21 @@
  */
 const fs = require('fs');
 const path = require('path');
+// The shared boundary, not a private list. This measure recurses from the repo
+// root and writes its evidence back into the tree. `git worktree add
+// .claude/worktrees/<id>` puts a COMPLETE second checkout of this repo inside
+// the working tree, and its pages are near-identical to this site's - so an
+// unbounded walk both inflates pages_total and feeds a second copy of every
+// page into the shingle sample, which is precisely what makes a shingle look
+// like scaffolding. A worktree left behind therefore moves the reported
+// template share. This runs on every Validate Repo pass
+// (.github/workflows/validate-repo.yml). See scripts/lib/repo_walk.cjs.
+const { isIgnoredDir } = require('./lib/repo_walk.cjs');
 
 const ROOT = process.cwd();
-const SKIP = /(^|\/)(node_modules|\.git|dist|\.pages-output|artifacts|coverage|_site|\.build|\.validation-cache)(\/|$)/;
+// Only the entries the shared boundary does not carry. Everything the boundary
+// already lists has been removed here rather than kept as a second copy.
+const SKIP = /(^|\/)(dist|artifacts|_site)(\/|$)/;
 const SAMPLE = Number(process.env.TEMPLATE_SHARE_SAMPLE || 140);
 const CEILING = Number(process.env.TEMPLATE_SHARE_CEILING || 0.40);
 const EVIDENCE = 'reports/cadence/template-share.json';
@@ -30,7 +42,9 @@ const EVIDENCE = 'reports/cadence/template-share.json';
 function walk(dir, out = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, entry.name);
-    if (SKIP.test(path.relative(ROOT, full))) continue;
+    const rel = path.relative(ROOT, full).split(path.sep).join('/');
+    if (entry.isDirectory() && isIgnoredDir(entry.name, rel)) continue;
+    if (SKIP.test(rel)) continue;
     if (entry.isDirectory()) walk(full, out);
     else if (entry.name.endsWith('.html')) out.push(full);
   }
