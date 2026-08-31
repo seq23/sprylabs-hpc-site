@@ -57,11 +57,25 @@ function independentDate(file) {
   const show = (sha) => { try { return execFileSync('git', ['show', `${sha}:${file}`], { cwd: ROOT, encoding: 'utf8', maxBuffer: 1024 * 1024 * 64 }); } catch { return null; } };
   let cur = show(log[0].sha);
   for (let i = 0; i < log.length - 1; i += 1) {
+    // `git log -- <path>` also lists the commit that DELETED the path, and with
+    // --no-renames a rename appears as delete + add. `git show <sha>:<path>` then
+    // fails with "exists on disk, but not in <sha>", which show() swallows as null.
+    // Treating that null as "the newer commit changed the text" turns a delete /
+    // re-add round trip into a content change that never happened: download.html
+    // came back byte-identical, and this walk still reported 2026-08-25 against a
+    // ledger correctly recording 2026-07-28. The generator does not have this bug
+    // because `git log --diff-filter=AM` never offers it a revision where the file
+    // is absent.
+    //
+    // Absence is not a change. Skip revisions where the file does not exist and
+    // keep comparing against the next older one that does.
     const prev = show(log[i + 1].sha);
-    if (prev === null) return log[i].date;
+    if (prev === null) continue;
     if (h(cur) !== h(prev)) return log[i].date;
     cur = prev;
   }
+  // Every older revision was absent or identical, so the oldest revision that
+  // actually carries this text is where it last moved.
   return log[log.length - 1].date;
 }
 

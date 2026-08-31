@@ -1937,9 +1937,29 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-191",
+      "validation_id": "VAL-FROZEN-OUTPUT-CONTRACT",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:frozen-output-contract",
+      "order": 191,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-192",
+      "validation_id": "VAL-CITATION-SCHEMA-AUTHORITY-REACH",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:citation-schema-authority-reach",
+      "order": 192,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 193,
+  "entry_count": 195,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2325,6 +2345,14 @@
         {
           "id": "VAL-CURATED-DEFINITION-REGISTRY-REACH",
           "command": "npm run validate:curated-definition-registry-reach"
+        },
+        {
+          "id": "VAL-FROZEN-OUTPUT-CONTRACT",
+          "command": "npm run validate:frozen-output-contract"
+        },
+        {
+          "id": "VAL-CITATION-SCHEMA-AUTHORITY-REACH",
+          "command": "npm run validate:citation-schema-authority-reach"
         }
       ]
     },
@@ -2455,6 +2483,14 @@
         {
           "id": "VAL-CITATION-SCHEMA-SERIALIZATION",
           "command": "npm run validate:citation-schema-serialization"
+        },
+        {
+          "id": "VAL-CITATION-SCHEMA-AUTHORITY-REACH",
+          "command": "npm run validate:citation-schema-authority-reach"
+        },
+        {
+          "id": "VAL-FROZEN-OUTPUT-CONTRACT",
+          "command": "npm run validate:frozen-output-contract"
         }
       ]
     },
@@ -2521,6 +2557,14 @@
         {
           "id": "VAL-CITATION-SCHEMA-SERIALIZATION",
           "command": "npm run validate:citation-schema-serialization"
+        },
+        {
+          "id": "VAL-FROZEN-OUTPUT-CONTRACT",
+          "command": "npm run validate:frozen-output-contract"
+        },
+        {
+          "id": "VAL-CITATION-SCHEMA-AUTHORITY-REACH",
+          "command": "npm run validate:citation-schema-authority-reach"
         }
       ]
     }
