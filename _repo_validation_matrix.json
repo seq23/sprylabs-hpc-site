@@ -1927,9 +1927,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-190",
+      "validation_id": "VAL-CURATED-DEFINITION-REGISTRY-REACH",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:curated-definition-registry-reach",
+      "order": 190,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 192,
+  "entry_count": 193,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2311,6 +2321,10 @@
         {
           "id": "VAL-CURATED-FRAMEWORK-AUTHORITY",
           "command": "npm run validate:curated-framework-authority"
+        },
+        {
+          "id": "VAL-CURATED-DEFINITION-REGISTRY-REACH",
+          "command": "npm run validate:curated-definition-registry-reach"
         }
       ]
     },

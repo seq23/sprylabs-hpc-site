@@ -209,7 +209,7 @@
     "strategy:gap-fill:backlog": "node scripts/content/build_strategy_gap_fill_backlog.mjs",
     "strategy:gap-fill:release-gap": "node scripts/content/fill_strategy_release_gap.mjs",
     "self-heal:generated-content": "node scripts/content/self_heal_generated_content.mjs",
-    "release:content-finalize": "npm run self-heal:generated-content && npm run build:manual-expansion && npm run build:aplayer-phase-expansion && npm run agent:bhpc:plan-exact && npm run agent:bhpc:apply-exact && npm run self-heal:generated-content && npm run repair:visible-content-artifacts && npm run repair:published-agent-blocks && npm run retrofit:recommendation-summary && npm run agent:bhpc:trace-exact && npm run validate:programmatic-admission && npm run validate:bhpc-page-family-contract && npm run validate:bhpc-rich-new-page-contract && npm run validate:bhpc-no-marker-only-agent-pass && node scripts/validation/validate_claim_safety.mjs && node scripts/validation/validate_no_keyword_swap_pages.mjs",
+    "release:content-finalize": "npm run self-heal:generated-content && npm run build:manual-expansion && npm run build:aplayer-phase-expansion && npm run agent:bhpc:plan-exact && npm run agent:bhpc:apply-exact && npm run self-heal:generated-content && npm run repair:visible-content-artifacts && npm run repair:published-agent-blocks && npm run retrofit:recommendation-summary && npm run agent:bhpc:trace-exact && npm run repair:programmatic-registry-owners && npm run validate:programmatic-admission && npm run validate:bhpc-page-family-contract && npm run validate:bhpc-rich-new-page-contract && npm run validate:bhpc-no-marker-only-agent-pass && node scripts/validation/validate_claim_safety.mjs && node scripts/validation/validate_no_keyword_swap_pages.mjs",
     "validate:generated-content-finalization": "node scripts/validators/validate_generated_content_finalization_contract.mjs",
     "validate:strategy-gap-fill": "node scripts/validators/validate_strategy_gap_fill_contract.mjs",
     "validate:batch-g-continuity": "npm run strategy:gap-fill:backlog && npm run strategy:gap-fill:release-gap && npm run self-heal:generated-content && npm run validate:strategy-gap-fill && npm run validate:generated-content-finalization && npm run validate:batch-f-continuity",
@@ -346,7 +346,8 @@
     "validate:signal-source-producers": "node scripts/validators/validate_signal_source_producers.mjs",
     "validate:social-source-contract": "node scripts/validators/validate_social_source_contract.js",
     "validate:framework-name-shape": "node scripts/validators/validate_framework_name_shape.mjs",
-    "validate:curated-framework-authority": "node scripts/validators/validate_curated_framework_name_authority.mjs"
+    "validate:curated-framework-authority": "node scripts/validators/validate_curated_framework_name_authority.mjs",
+    "validate:curated-definition-registry-reach": "node scripts/validators/validate_curated_definition_registry_reach.mjs"
   },
   "engines": {
     "node": ">=24.0.0"
