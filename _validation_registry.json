@@ -6347,6 +6347,66 @@
       "not_applicable_reason": null
     },
     {
+      "validation_id": "VAL-FROZEN-OUTPUT-CONTRACT",
+      "status": "ADMITTED",
+      "name": "validate:frozen-output-contract",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:frozen-output-contract",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-frozen-output-contract/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-08-31",
+      "matrix_ids": [
+        "MX-191"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-CITATION-SCHEMA-AUTHORITY-REACH",
+      "status": "ADMITTED",
+      "name": "validate:citation-schema-authority-reach",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:citation-schema-authority-reach",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-citation-schema-authority-reach/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-08-31",
+      "matrix_ids": [
+        "MX-192"
+      ],
+      "not_applicable_reason": null
+    },
+    {
       "validation_id": "VAL-MAIN-WRITER-VALIDATION-GATE",
       "status": "ADMITTED",
       "name": "validate:main-writer-validation-gate",
@@ -6372,7 +6432,7 @@
       "decision": "Atomically admitted by validation:add.",
       "decision_date": "2026-08-31",
       "matrix_ids": [
-        "MX-191"
+        "MX-193"
       ],
       "not_applicable_reason": null
     },
@@ -6409,6 +6469,6 @@
       "not_applicable_reason": null
     }
   ],
-  "record_count": 202,
+  "record_count": 204,
   "generated_at": "2026-08-08T23:30:00Z"
 }

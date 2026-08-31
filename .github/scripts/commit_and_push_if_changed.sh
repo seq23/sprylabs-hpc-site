@@ -132,7 +132,14 @@ while [ "$attempt" -le "$max_push_attempts" ]; do
     echo "Pushed generated changes for ${workflow_id}"
     # main has advanced. Nothing else will ask for validation of what just
     # landed, so ask here, and fail the run if the request cannot be made.
-    request_main_validation
+    #
+    # The exit is explicit rather than left to `set -e`: this is the one place
+    # where a swallowed failure puts an unvalidated commit on main and says
+    # nothing, so it must not depend on a shell option a later edit could drop.
+    if ! request_main_validation; then
+      echo "Refusing to report success for ${workflow_id}: ${message} is on main but no validation could be requested for it." >&2
+      exit 1
+    fi
     exit 0
   else
     push_status=$?

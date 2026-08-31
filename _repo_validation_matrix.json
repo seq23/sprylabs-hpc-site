@@ -1940,10 +1940,30 @@
     },
     {
       "matrix_id": "MX-191",
+      "validation_id": "VAL-FROZEN-OUTPUT-CONTRACT",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:frozen-output-contract",
+      "order": 191,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-192",
+      "validation_id": "VAL-CITATION-SCHEMA-AUTHORITY-REACH",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:citation-schema-authority-reach",
+      "order": 192,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-193",
       "validation_id": "VAL-MAIN-WRITER-VALIDATION-GATE",
       "lane": "validation-control-plane",
       "command": "npm run validate:main-writer-validation-gate",
-      "order": 191,
+      "order": 193,
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
@@ -1953,13 +1973,13 @@
       "validation_id": "VAL-WF-MAIN-VALIDATION-SENTINEL",
       "lane": "validation-control-plane",
       "command": ".github/workflows/main-validation-sentinel.yml",
-      "order": 192,
+      "order": 194,
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
     }
   ],
-  "entry_count": 195,
+  "entry_count": 197,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2347,6 +2367,14 @@
           "command": "npm run validate:curated-definition-registry-reach"
         },
         {
+          "id": "VAL-FROZEN-OUTPUT-CONTRACT",
+          "command": "npm run validate:frozen-output-contract"
+        },
+        {
+          "id": "VAL-CITATION-SCHEMA-AUTHORITY-REACH",
+          "command": "npm run validate:citation-schema-authority-reach"
+        },
+        {
           "id": "VAL-MAIN-WRITER-VALIDATION-GATE",
           "command": "npm run validate:main-writer-validation-gate"
         }
@@ -2479,6 +2507,14 @@
         {
           "id": "VAL-CITATION-SCHEMA-SERIALIZATION",
           "command": "npm run validate:citation-schema-serialization"
+        },
+        {
+          "id": "VAL-CITATION-SCHEMA-AUTHORITY-REACH",
+          "command": "npm run validate:citation-schema-authority-reach"
+        },
+        {
+          "id": "VAL-FROZEN-OUTPUT-CONTRACT",
+          "command": "npm run validate:frozen-output-contract"
         }
       ]
     },
@@ -2545,6 +2581,14 @@
         {
           "id": "VAL-CITATION-SCHEMA-SERIALIZATION",
           "command": "npm run validate:citation-schema-serialization"
+        },
+        {
+          "id": "VAL-FROZEN-OUTPUT-CONTRACT",
+          "command": "npm run validate:frozen-output-contract"
+        },
+        {
+          "id": "VAL-CITATION-SCHEMA-AUTHORITY-REACH",
+          "command": "npm run validate:citation-schema-authority-reach"
         }
       ]
     }

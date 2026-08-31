@@ -3,6 +3,16 @@ import fs from 'node:fs';
 import { createRequire } from 'node:module';
 const requireCjs = createRequire(import.meta.url);
 const { routeFor: sharedRouteFor } = requireCjs('../lib/dual_domain_policy.cjs');
+// This writer rewrites the CITATION_PAGE_SCHEMA block (updateCitationSchema
+// below) and used to re-emit it with JSON.stringify(data, null, 2) - pretty
+// printed, with newlines. Every other writer of that block goes through
+// scripts/lib/citation_page_schema.cjs, which is compact. So this step, which
+// runs in release:content-finalize AFTER build:all has normalised the tree,
+// silently un-normalised every page it touched, and the next build normalised
+// them back. That is the "the frozen store keeps reverting" symptom, and it is
+// why validate:citation-schema-serialization reported answers/phase4/* pages as
+// "pretty-printed with newlines". One serializer, no exceptions.
+const { serializeSchema } = requireCjs('../lib/citation_page_schema.cjs');
 
 const registryPath = 'data/content/page_admission_registry.json';
 const queryPath = 'data/citation/query_registry.json';
@@ -130,7 +140,7 @@ function updateCitationSchema(raw, oldQuery, newQuery) {
     }
   }
   if (!changed) return {raw, changed: false};
-  const json = JSON.stringify(data, null, 2).replace(/</g, '\\u003c');
+  const json = serializeSchema(data);
   return {raw: raw.replace(schemaPattern, `<script${match[1]}>${json}</script>`), changed: true};
 }
 function syncCanonicalCitationSurfacesForQueryRepairs(repairs) {
