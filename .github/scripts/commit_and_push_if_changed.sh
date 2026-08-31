@@ -18,6 +18,57 @@ fetch_remote_main() {
   git fetch origin main
 }
 
+# A push made with GITHUB_TOKEN does not create a push event, so `on: push:
+# branches: [main]` in Validate Repo is structurally unreachable for every
+# automated writer. That is not a theory: all nine github-actions[bot] commits on
+# main have zero Validate Repo runs, while every human commit has one. b3aec016c
+# ("zero-dollar citation intelligence: autonomous gap fill") landed three minutes
+# after the last green run and left main failing three validators for over two
+# hours with nothing to notice it.
+#
+# workflow_dispatch is the documented exception to that recursion guard: the API
+# honours it when called with GITHUB_TOKEN. Every main-writing workflow already
+# routes its push through this one script, so requesting validation here covers
+# all present writers and any future one for free - there is no per-workflow step
+# an author can forget to add.
+#
+# A dispatch that cannot be requested is a hard failure. Returning zero here
+# would restore the exact silence this exists to remove: main advanced, and
+# nothing is coming to check it.
+request_main_validation() {
+  local pushed_sha
+  pushed_sha="$(git rev-parse HEAD)"
+  local token="${GITHUB_TOKEN:-${GH_TOKEN:-}}"
+  local repo="${GITHUB_REPOSITORY:-}"
+  local api="${GITHUB_API_URL:-https://api.github.com}"
+
+  if [ -z "$token" ] || [ -z "$repo" ]; then
+    echo "MAIN-VALIDATION-DISPATCH FAILED for ${workflow_id}: GITHUB_TOKEN and GITHUB_REPOSITORY are required to request validation of ${pushed_sha}, and main has already advanced. Add 'actions: write' permission and GITHUB_TOKEN to the calling workflow." >&2
+    return 1
+  fi
+
+  local body http_status
+  body="$(mktemp)"
+  http_status="$(curl -sS -o "$body" -w '%{http_code}' \
+    -X POST \
+    -H "Accept: application/vnd.github+json" \
+    -H "Authorization: Bearer ${token}" \
+    -H "X-GitHub-Api-Version: 2022-11-28" \
+    "${api}/repos/${repo}/actions/workflows/validate-repo.yml/dispatches" \
+    -d '{"ref":"main"}' || echo 000)"
+
+  if [ "$http_status" = "204" ]; then
+    echo "MAIN-VALIDATION-DISPATCH ok for ${workflow_id}: requested Validate Repo on main covering ${pushed_sha}"
+    rm -f "$body"
+    return 0
+  fi
+
+  echo "MAIN-VALIDATION-DISPATCH FAILED for ${workflow_id}: HTTP ${http_status} requesting Validate Repo for ${pushed_sha}" >&2
+  cat "$body" >&2 || true
+  rm -f "$body"
+  return 1
+}
+
 run_governed_workflow_again() {
   if [ -z "$workflow_argv" ]; then
     echo "WORKFLOW_ARGV is required for safe replay of ${workflow_id}; refusing to guess a recovery command" >&2
@@ -79,6 +130,9 @@ while [ "$attempt" -le "$max_push_attempts" ]; do
   if push_main_once "$push_log"; then
     rm -f "$push_log"
     echo "Pushed generated changes for ${workflow_id}"
+    # main has advanced. Nothing else will ask for validation of what just
+    # landed, so ask here, and fail the run if the request cannot be made.
+    request_main_validation
     exit 0
   else
     push_status=$?

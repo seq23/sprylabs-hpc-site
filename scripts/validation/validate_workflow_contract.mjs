@@ -13,6 +13,7 @@ const expectedWorkflows = [
   'admin-command.yml',
   'admin-operations.yml',
   'search-intelligence.yml',
+  'main-validation-sentinel.yml',
 ].sort();
 const retiredWorkflows = [
   'citation-velocity-5k.yml',
