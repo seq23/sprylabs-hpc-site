@@ -57,6 +57,11 @@ jobs:
       - name: Derive the shard map from the validation matrix
         id: plan
         run: node .github/scripts/validation_shards.mjs plan --shards "$SHARD_COUNT"
+      - name: The coverage gate must fail when coverage is lost
+        # Runs before anything is built, against the profile this very run just
+        # planned. A coverage gate is worth what its failure cases are worth, so
+        # they are exercised on every run rather than trusted.
+        run: node .github/scripts/test_validation_shards.mjs
       - name: Hash the build inputs
         id: key
         # Everything the producers read. A validator-only change leaves this

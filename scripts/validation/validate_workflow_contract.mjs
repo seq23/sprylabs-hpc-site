@@ -83,24 +83,71 @@ function has(text, token, workflow, label = token) {
 // executor (ci_validate -> release:prepush:container -> container_prepush ->
 // validate:profile). Any shape that still reaches the executor passes.
 const PROFILE_EXECUTOR = 'scripts/validation/validate_profile.mjs';
-function reachesProfileExecutor(text, seen = new Set(), depth = 0) {
+const SHARD_EXECUTOR = '.github/scripts/validation_shards.mjs';
+
+// Reachability must follow CODE, not prose. Searching raw text meant a file that
+// merely NAMED the executor in a comment satisfied the guard: validation_shards.mjs
+// says "mirrors scripts/validation/validate_profile.mjs" in two comments, and that
+// alone turned this check green while nothing called the executor. A guard that a
+// comment can satisfy is not a guard, so comments are stripped before matching.
+function stripComments(text) {
+  return text
+    .replace(/\/\*[\s\S]*?\*\//g, ' ')
+    // `//` only when it is not the `://` of a URL, so protocol strings survive.
+    .replace(/(^|[^:])\/\/[^\n]*/g, '$1')
+    // YAML and shell comments; `#` must start a token so `${{ }}` is untouched.
+    .replace(/(^|\s)#[^\n]*/g, '$1');
+}
+
+function reaches(target, text, seen = new Set(), depth = 0) {
   if (depth > 10) return false;
-  if (text.includes(PROFILE_EXECUTOR)) return true;
+  const code = stripComments(text);
+  if (code.includes(target)) return true;
   const scripts = new Set();
-  for (const m of text.matchAll(/\bnpm\s+run\s+([\w:.-]+)/g)) scripts.add(m[1]);
-  for (const m of text.matchAll(/['"]run['"]\s*,\s*['"]([\w:.-]+)['"]/g)) scripts.add(m[1]);
+  for (const m of code.matchAll(/\bnpm\s+run\s+([\w:.-]+)/g)) scripts.add(m[1]);
+  for (const m of code.matchAll(/['"]run['"]\s*,\s*['"]([\w:.-]+)['"]/g)) scripts.add(m[1]);
   for (const name of scripts) {
     if (seen.has(`s:${name}`)) continue;
     seen.add(`s:${name}`);
-    if (reachesProfileExecutor(String(packageScripts[name] || ''), seen, depth + 1)) return true;
+    if (reaches(target, String(packageScripts[name] || ''), seen, depth + 1)) return true;
   }
-  for (const m of text.matchAll(/\bnode\s+([\w./-]+\.(?:js|mjs|cjs))/g)) {
+  for (const m of code.matchAll(/\bnode\s+([\w./-]+\.(?:js|mjs|cjs))/g)) {
     const file = m[1];
     if (seen.has(`f:${file}`) || !fs.existsSync(file)) continue;
     seen.add(`f:${file}`);
-    if (reachesProfileExecutor(fs.readFileSync(file, 'utf8'), seen, depth + 1)) return true;
+    if (reaches(target, fs.readFileSync(file, 'utf8'), seen, depth + 1)) return true;
   }
   return false;
+}
+
+// The property: every validator the profile declares is executed against the
+// built tree before the validated artifact is published, and that coverage is
+// PROVEN rather than assumed. Two shapes satisfy it and the entrypoint name is
+// not part of either.
+//
+//   serial   one process walks the profile in order - validate_profile.mjs is
+//            itself the proof, because it iterates the matrix it just read.
+//   sharded  the profile is split across runners, so execution alone proves
+//            nothing: a shard that silently ran nothing would still exit 0.
+//            The proof is the `verify` pass, which reconciles the union of the
+//            shard receipts against the matrix AND the registry and hard-fails
+//            on a missing, empty, or duplicated shard. Producers and shard runs
+//            are required too - `verify` alone would pass over receipts that no
+//            run produced.
+//
+// A sharded shape is accepted only with all three phases present, so nobody can
+// keep the fast fan-out while dropping the coverage proof that makes it safe.
+function validationProfileFullyExecuted(text) {
+  if (reaches(PROFILE_EXECUTOR, text)) return {ok: true, shape: 'serial'};
+  if (!reaches(SHARD_EXECUTOR, text)) {
+    return {ok: false, reason: `no command in this workflow reaches ${PROFILE_EXECUTOR} or ${SHARD_EXECUTOR}, so the declared validation profile is never executed before the validated artifact is published. Any entrypoint or shard layout is fine; executing the declared profile is not optional.`};
+  }
+  const code = stripComments(text);
+  const missing = ['producers', 'run', 'verify'].filter(phase => !new RegExp(`validation_shards\\.mjs\\s+${phase}\\b`).test(code));
+  if (missing.length) {
+    return {ok: false, reason: `shards the validation profile but never invokes ${missing.map(m => `\`${m}\``).join(', ')}; a sharded run proves coverage only when producers build the tree, shards execute it, and \`verify\` reconciles the union of the receipts against _repo_validation_matrix.json and _validation_registry.json. Without that an empty shard would exit 0 having done nothing.`};
+  }
+  return {ok: true, shape: 'sharded'};
 }
 
 for (const retired of retiredWorkflows) {
@@ -194,9 +241,15 @@ for (const name of actualWorkflows) {
 
   if (name === 'validate-repo.yml') {
     has(text, 'name: Validate Repo', name);
-    if (!reachesProfileExecutor(text)) {
-      errors.push(`${name}: no command in this workflow reaches ${PROFILE_EXECUTOR}, so the declared validation profile is never executed before the validated artifact is published. Any entrypoint or shard layout is fine; reaching the profile executor is not optional.`);
-    }
+    const executed = validationProfileFullyExecuted(text);
+    if (!executed.ok) errors.push(`${name}: ${executed.reason}`);
+    // Whichever shape is used, the run must still end in the two checks the
+    // serial entrypoint bundled alongside the profile: two isolated rebuilds
+    // agreeing, and an attestation over the result that deploy-distribution
+    // later verifies. Sharding moved these between jobs; it must not drop them.
+    has(text, 'validate:clean-rebuild-parity', name, 'clean rebuild parity check');
+    has(text, 'release:create-attestation', name, 'validated artifact attestation');
+    has(text, 'validate:warnings', name, 'warning surface');
     has(text, 'spry-validated-${{ github.sha }}', name, 'exact validated artifact name');
     has(text, 'include-hidden-files: true', name);
     if (!/permissions:\s*\n\s{2}contents:\s*read/m.test(text)) errors.push(`${name}: validation workflow must declare contents: read`);

@@ -28,7 +28,12 @@ const REGISTRY_FILE = '_validation_registry.json';
 const TIMINGS_FILE = '.github/validation-shard-timings.json';
 const PLAN_FILE = 'artifacts/validation/shard-plan.json';
 const RECEIPT_DIR = 'artifacts/validation/shards';
-const DEFAULT_SECONDS = 1.0;
+// How far a validator's real cost may exceed the cost the plan modelled before
+// the timings file counts as stale. Drift is what silently un-balances the
+// shards: an untimed or badly-timed slow validator is packed as if it were free,
+// lands with twenty others, and that shard becomes the long pole. Wall clock
+// degrades and every run is still green, so nothing ever reports it.
+const DRIFT_TOLERANCE_SECONDS = 20;
 
 function die(message, details = []) {
   console.error(message);
@@ -86,9 +91,39 @@ function partition() {
   };
 }
 
+/**
+ * Per-validator modelled cost, plus the default applied to anything not measured.
+ *
+ * A missing timing used to mean a silent 1.0s. That is the failure the whole
+ * coverage argument depends on NOT happening quietly: twenty validators landed
+ * tonight with no entry, every one modelled as ~free, and the bin packer had no
+ * way to know. The default is now DECLARED in the timings file, so choosing it is
+ * a visible decision, and `plan` names every validator that falls back to it.
+ */
 function timings() {
-  if (!fs.existsSync(TIMINGS_FILE)) return {};
-  return readJson(TIMINGS_FILE).seconds || {};
+  if (!fs.existsSync(TIMINGS_FILE)) {
+    die(`[shards] FAIL: ${TIMINGS_FILE} is missing; every validator would be modelled as equal cost and the shards would not balance`);
+  }
+  const file = readJson(TIMINGS_FILE);
+  const fallback = file.untimed_default_seconds;
+  if (typeof fallback !== 'number' || !(fallback > 0)) {
+    die(`[shards] FAIL: ${TIMINGS_FILE} must declare a positive "untimed_default_seconds"; without a documented default a validator with no timing entry is silently modelled as free`);
+  }
+  return {seconds: file.seconds || {}, fallback};
+}
+
+/**
+ * Every validator the matrix declares must have a measured timing, or be
+ * explicitly modelled by the declared default. Returns the untimed ones so the
+ * caller can name them rather than absorbing them.
+ */
+function timingCoverage() {
+  const {validators} = partition();
+  const {seconds, fallback} = timings();
+  const untimed = validators.filter((s) => typeof seconds[s.id] !== 'number').map((s) => s.id);
+  const known = new Set(partition().all.map((s) => s.id));
+  const stale = Object.keys(seconds).filter((id) => !known.has(id));
+  return {untimed, stale, fallback, total: validators.length};
 }
 
 /**
@@ -102,16 +137,17 @@ function planShards(count) {
   if (count > validators.length) {
     die(`[shards] FAIL: ${count} shards requested but the profile declares only ${validators.length} validator steps; an empty shard would exit 0 having done nothing`);
   }
-  const cost = timings();
+  const {seconds: cost, fallback} = timings();
+  const at = (id) => (typeof cost[id] === 'number' ? cost[id] : fallback);
   const ordered = [...validators].sort((a, b) => {
-    const d = (cost[b.id] ?? DEFAULT_SECONDS) - (cost[a.id] ?? DEFAULT_SECONDS);
+    const d = at(b.id) - at(a.id);
     return d !== 0 ? d : a.id.localeCompare(b.id);
   });
   const bins = Array.from({length: count}, (_, index) => ({shard: index, seconds: 0, steps: []}));
   for (const step of ordered) {
     const bin = bins.reduce((lightest, b) => (b.seconds < lightest.seconds ? b : lightest), bins[0]);
     bin.steps.push(step);
-    bin.seconds += cost[step.id] ?? DEFAULT_SECONDS;
+    bin.seconds += at(step.id);
   }
   for (const bin of bins) {
     // Rule 0: a shard that runs nothing must never exit 0.
@@ -136,6 +172,19 @@ function writePlan(bins) {
     producer_count: producers.length,
     declared_validator_count: validators.length,
     declared_validator_ids: validators.map((s) => s.id).sort(),
+    // Recorded so `verify` can compare what was modelled against what actually
+    // happened, and so a plan artifact is self-describing after the fact.
+    timing_coverage: (() => {
+      const c = timingCoverage();
+      return {
+        measured: c.total - c.untimed.length,
+        untimed: c.untimed.length,
+        untimed_ids: c.untimed,
+        untimed_default_seconds: c.fallback,
+        stale_timing_ids: c.stale,
+      };
+    })(),
+    modelled_seconds: Object.fromEntries(bins.flatMap((b) => b.steps.map((s) => [s.id, timings().seconds[s.id] ?? timings().fallback]))),
     shards: bins,
   };
   fs.writeFileSync(PLAN_FILE, `${JSON.stringify(plan, null, 2)}\n`);
@@ -173,6 +222,12 @@ if (command === 'plan') {
   const emitted = bins.map((b) => ({shard: b.shard, name: `shard-${b.shard}`, seconds: b.seconds, steps: b.steps.length}));
   console.log(`[shards:plan] profile=${PROFILE} steps=${plan.profile_step_count} producers=${plan.producer_count} validators=${plan.declared_validator_count} shards=${count} heaviest=${Math.max(...bins.map((b) => b.seconds))}s`);
   for (const bin of bins) console.log(`[shards:plan]   shard-${bin.shard}: ${bin.steps.length} validator(s), ${bin.seconds}s modelled`);
+  // Name them. An untimed validator is modelled at the declared default, which
+  // is a guess; leaving the guess anonymous is how the packing rotted last time.
+  const cov = timingCoverage();
+  console.log(`[shards:plan] timings: ${cov.total - cov.untimed.length}/${cov.total} validators measured, ${cov.untimed.length} at the declared ${cov.fallback}s default`);
+  for (const id of cov.untimed) console.log(`[shards:plan]   UNTIMED ${id} -> modelled ${cov.fallback}s`);
+  for (const id of cov.stale) console.log(`[shards:plan]   STALE timing for a step the profile no longer declares: ${id}`);
   if (process.env.GITHUB_OUTPUT) {
     fs.appendFileSync(process.env.GITHUB_OUTPUT, `matrix=${JSON.stringify(emitted)}\n`);
     fs.appendFileSync(process.env.GITHUB_OUTPUT, `declared=${plan.declared_validator_count}\n`);
@@ -279,9 +334,64 @@ if (command === 'verify') {
     errors,
   }, null, 2)}\n`);
 
+  // Coverage is proven above. This is the second failure mode: coverage intact,
+  // but the model so far from reality that the shards no longer balance. It is
+  // invisible in a green run, so it is asserted rather than eyeballed.
+  const {seconds: modelled, fallback} = timings();
+  const measured = new Map();
+  for (const file of files) {
+    for (const r of readJson(path.join(RECEIPT_DIR, file)).results || []) measured.set(r.id, r.seconds);
+  }
+  const drift = [...measured.entries()]
+    .map(([id, actual]) => ({id, actual, model: typeof modelled[id] === 'number' ? modelled[id] : fallback, timed: typeof modelled[id] === 'number'}))
+    .filter((d) => d.actual - d.model > DRIFT_TOLERANCE_SECONDS)
+    .sort((a, b) => (b.actual - b.model) - (a.actual - a.model));
+  if (drift.length) {
+    errors.push(`${drift.length} validator(s) cost materially more than the shard plan modelled, so the bin packing is balancing on stale numbers - re-derive with \`validation_shards.mjs calibrate\`: ${drift.map((d) => `${d.id} modelled ${d.model}s${d.timed ? '' : ' (untimed default)'} but took ${d.actual}s`).join('; ')}`);
+  }
+
   if (errors.length) die(`[shards:verify] FAIL: ${errors.length} coverage issue(s)`, errors);
   console.log(`[shards:verify] OK: ${executedSet.size} validator(s) executed across ${count} shard(s), equal to the ${declared.length} the matrix declares`);
   process.exit(0);
 }
 
-die(`[shards] FAIL: unknown subcommand ${command ?? '(none)'}; expected plan|producers|run|verify`);
+/**
+ * Re-derive the timings file from the receipts of a real run. This is the loop
+ * that keeps the model honest: `verify` fails when reality drifts from the plan,
+ * and `calibrate` is how that failure is fixed - by measurement, never by hand.
+ * Entries for steps the profile no longer declares are dropped, so the file
+ * cannot accumulate names that no longer exist.
+ */
+if (command === 'calibrate') {
+  const {all} = partition();
+  const known = new Set(all.map((s) => s.id));
+  const previous = fs.existsSync(TIMINGS_FILE) ? readJson(TIMINGS_FILE) : {};
+  const next = {...(previous.seconds || {})};
+  let updated = 0;
+  const sources = [];
+  if (fs.existsSync('artifacts/validation/shard-producers.json')) sources.push('artifacts/validation/shard-producers.json');
+  if (fs.existsSync(RECEIPT_DIR)) {
+    for (const f of fs.readdirSync(RECEIPT_DIR).filter((f) => f.endsWith('.json'))) sources.push(path.join(RECEIPT_DIR, f));
+  }
+  if (!sources.length) die('[shards:calibrate] FAIL: no receipts found; calibration examined zero items');
+  for (const src of sources) {
+    for (const r of readJson(src).results || []) {
+      if (typeof r.seconds === 'number') { next[r.id] = r.seconds; updated += 1; }
+    }
+  }
+  if (!updated) die('[shards:calibrate] FAIL: receipts carried no per-step timings; calibration examined zero items');
+  const dropped = Object.keys(next).filter((id) => !known.has(id));
+  for (const id of dropped) delete next[id];
+  const out = {
+    source_run_id: process.env.GITHUB_RUN_ID || previous.source_run_id || 'local',
+    measured_at: new Date().toISOString(),
+    note: 'Per-step wall clock, re-derived from shard receipts by `validation_shards.mjs calibrate`. Do not hand-edit.',
+    untimed_default_seconds: previous.untimed_default_seconds ?? 2,
+    seconds: Object.fromEntries(Object.entries(next).sort(([a], [b]) => a.localeCompare(b))),
+  };
+  fs.writeFileSync(TIMINGS_FILE, `${JSON.stringify(out, null, 2)}\n`);
+  console.log(`[shards:calibrate] OK: ${updated} step timing(s) recorded, ${dropped.length} stale entr(ies) dropped, ${Object.keys(out.seconds).length} total`);
+  process.exit(0);
+}
+
+die(`[shards] FAIL: unknown subcommand ${command ?? '(none)'}; expected plan|producers|run|verify|calibrate`);
