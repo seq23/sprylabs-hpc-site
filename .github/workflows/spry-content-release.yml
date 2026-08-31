@@ -99,6 +99,70 @@ jobs:
       - name: Rebuild ownership and admin snapshots
         if: steps.runtime.outputs.run == 'true'
         run: npm run ownership:build && npm run admin:build
+
+      # CONVERGE BEFORE COMMITTING.
+      #
+      # This workflow used to commit straight after workflow:spry-content-release
+      # + ownership:build + admin:build. None of those run build:all or the four
+      # ordered repair stages that follow it, so the release published pages the
+      # downstream generators had never seen. The tree it landed on main was not
+      # the generators' fixed point: reproduced on 2d94a44ef, one build:all plus
+      # the four repairs rewrote 1,640 governed extraction surfaces, and a second
+      # pass rewrote 2 more before reaching a fixed point at the third.
+      #
+      # That is what turned main red on 2026-08-31. The extraction-surface guard
+      # is the first thing in the profile that reads those surfaces, so it took
+      # the blame for a tree that three earlier stages had left half-built. The
+      # snapshot was not stale - it was correct, and the tree was wrong.
+      #
+      # The loop is bounded and self-proving rather than a fixed number of passes:
+      # each iteration baselines the tree, runs the ordered stages, and asks the
+      # guard whether they changed anything. A pass that changes nothing IS the
+      # fixed point, and the snapshot left behind is the one that matches the tree
+      # about to be committed. Falling out of the loop without converging fails
+      # the release: publishing a tree the generators still disagree with is the
+      # defect this step exists to stop, so it must never be the quiet outcome.
+      - name: Converge the tree the release is about to commit
+        if: steps.runtime.outputs.run == 'true'
+        run: |
+          set -euo pipefail
+          converged=
+          for pass in 1 2 3 4; do
+            echo "::group::convergence pass $pass"
+            EXTRACTION_SURFACE_REBASELINE=1 npm run validate:extraction-surface-guard:snapshot
+            npm run build:all
+            npm run repair:dual-domain-metadata
+            npm run agent:bhpc:apply-report-contract
+            npm run release:repair-agent-normalization
+            npm run repair:citation-contract-surfaces
+            echo "::endgroup::"
+            if npm run validate:extraction-surface-guard:check; then
+              echo "[converge] fixed point reached after pass $pass"
+              converged=1
+              break
+            fi
+            echo "[converge] pass $pass still changed governed surfaces; running another pass"
+          done
+          if [ -z "$converged" ]; then
+            echo "[converge] FAIL: build:all and the ordered repairs still changed governed extraction surfaces after 4 passes."
+            echo "[converge] The generators are not reaching a fixed point on this tree, so nothing here can be published as final."
+            exit 1
+          fi
+          # Every mode of this lane already ends by deriving the lastmod ledger,
+          # which is what keeps the sitemap describing the tree that ships. The
+          # convergence loop above runs AFTER those modes and rewrites page HTML,
+          # so leaving it here would make the ledger stale by construction - the
+          # exact defect validate:lastmod-ledger-final exists to catch, sneaking
+          # back in one level up where the lane topology still looks clean.
+          #
+          # So the ledger is re-derived here, last, after the final stage that can
+          # mutate a page. It writes the ledger and the sitemap, neither of which
+          # is a governed extraction surface, so it cannot disturb the fixed point
+          # the loop just established.
+          echo "::group::re-derive the lastmod ledger against the converged tree"
+          npm run sitemap:lastmod:content
+          echo "::endgroup::"
+          npm run validate:lastmod-ledger-final
       # The gate runs before anything is committed, so a release that published
       # faster than the cap allows fails here and its pages never land.
       #
@@ -137,7 +201,13 @@ jobs:
           WORKFLOW_ARGV: >-
             npm run workflow:run -- --workflow spry-content-release -- npm run workflow:spry-content-release -- --mode "$RELEASE_MODE" &&
             npm run ownership:build &&
-            npm run admin:build
+            npm run admin:build &&
+            npm run build:all &&
+            npm run repair:dual-domain-metadata &&
+            npm run agent:bhpc:apply-report-contract &&
+            npm run release:repair-agent-normalization &&
+            npm run repair:citation-contract-surfaces &&
+            npm run sitemap:lastmod:content
         run: |
           ./.github/scripts/commit_and_push_if_changed.sh "spry content release" spry-content-release
       - uses: actions/upload-artifact@v7
