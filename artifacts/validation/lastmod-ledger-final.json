@@ -1,83 +1,22 @@
 {
   "schema_version": "1.0",
-  "status": "FAIL",
+  "status": "PASS",
   "ledger": "data/sitemap/lastmod_ledger.json",
-  "pages_examined": 4456,
+  "pages_examined": 2228,
   "committed_ledger_vs_committed_tree": {
-    "ran": true,
-    "pages_examined": 2228,
-    "mismatched": 2220,
-    "examples": [
-      {
-        "file": "index.html",
-        "ledger": "a42446a2bbc16775c77638e6",
-        "head": "b4e4f255009a284e677cb112",
-        "lastmod": "2026-08-31"
-      },
-      {
-        "file": "ai-accountability-coach-for-founders.html",
-        "ledger": "86f4c7aa58b6f62908a9d657",
-        "head": "80e89fe9d5e310e412367bc0",
-        "lastmod": "2026-08-31"
-      },
-      {
-        "file": "ai-accountability-system-for-entrepreneurs.html",
-        "ledger": "74464370df31b54da449a1b0",
-        "head": "990c545e2bc48e8e13da9e19",
-        "lastmod": "2026-08-31"
-      },
-      {
-        "file": "ai-accountability-system-vs-habit-tracker.html",
-        "ledger": "a75b3a0944f0624735236de1",
-        "head": "0590b2a2ce321d5bf8df014a",
-        "lastmod": "2026-08-31"
-      },
-      {
-        "file": "ai-business-coach/index.html",
-        "ledger": "6bb0d25b3e66044d24d39229",
-        "head": "eeff9012cf36398bbea7c6dd",
-        "lastmod": "2026-08-31"
-      },
-      {
-        "file": "ai-coach-for-entrepreneurs/index.html",
-        "ledger": "58c5f76c4da119aa108ec7e9",
-        "head": "a0f3ec7603634afa6041dad6",
-        "lastmod": "2026-08-31"
-      },
-      {
-        "file": "ai-coach-vs-human-coach.html",
-        "ledger": "b7e4a26a8fbd0600b8b94ce5",
-        "head": "607400adc9494530828cdef0",
-        "lastmod": "2026-08-31"
-      },
-      {
-        "file": "ai-coach-vs-human-coach-for-founders.html",
-        "ledger": "d59a7de4e23a02bf2cd9efed",
-        "head": "6a392385ed8c45b8d7f23d30",
-        "lastmod": "2026-08-31"
-      },
-      {
-        "file": "ai-coach-vs-therapist/index.html",
-        "ledger": "8aa6ddeb2d2e282cc59b5f50",
-        "head": "29f1268757e581188401c661",
-        "lastmod": "2026-08-31"
-      },
-      {
-        "file": "ai-daily-planning-prompt-for-busy-founders.html",
-        "ledger": "c31728bada24ff95a196f6f0",
-        "head": "c3fb05468181c7136e2e7959",
-        "lastmod": "2026-08-31"
-      }
-    ]
-  },
-  "rederived_ledger_vs_working_tree": {
     "ran": true,
     "pages_examined": 2228,
     "mismatched": 0,
     "examples": []
   },
+  "rederived_ledger_vs_working_tree": {
+    "ran": false,
+    "pages_examined": 0,
+    "mismatched": 0,
+    "examples": []
+  },
   "sitemap_coverage": {
-    "reference": "the working tree",
+    "reference": "the tree at HEAD",
     "sitemap_urls": 2228,
     "resolvable": 2228,
     "missing_from_ledger": 0,
@@ -89,8 +28,8 @@
     "modes_checked": 8,
     "offenders": []
   },
-  "notes": [],
-  "errors": [
-    "2220 of 2228 committed page(s) do not match the ledger committed alongside them. The ledger was derived before a stage that rewrote these pages. Re-derive with `npm run sitemap:lastmod:content` AFTER the last stage that mutates page HTML, and commit the result with the pages."
-  ]
+  "notes": [
+    "arm B skipped: the ledger on disk is the one committed at HEAD (nothing re-derived in this run)"
+  ],
+  "errors": []
 }
