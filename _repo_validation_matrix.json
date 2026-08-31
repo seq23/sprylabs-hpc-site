@@ -1957,9 +1957,29 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-193",
+      "validation_id": "VAL-BUILD-ALL-INTEGRITY",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:build-all-integrity",
+      "order": 193,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-194",
+      "validation_id": "VAL-REDIRECT-MAP-EQUIVALENCE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:redirect-map-equivalence",
+      "order": 194,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 195,
+  "entry_count": 197,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2353,6 +2373,14 @@
         {
           "id": "VAL-CITATION-SCHEMA-AUTHORITY-REACH",
           "command": "npm run validate:citation-schema-authority-reach"
+        },
+        {
+          "id": "VAL-BUILD-ALL-INTEGRITY",
+          "command": "npm run validate:build-all-integrity"
+        },
+        {
+          "id": "VAL-REDIRECT-MAP-EQUIVALENCE",
+          "command": "npm run validate:redirect-map-equivalence"
         }
       ]
     },
@@ -2491,6 +2519,10 @@
         {
           "id": "VAL-FROZEN-OUTPUT-CONTRACT",
           "command": "npm run validate:frozen-output-contract"
+        },
+        {
+          "id": "VAL-BUILD-ALL-INTEGRITY",
+          "command": "npm run validate:build-all-integrity"
         }
       ]
     },

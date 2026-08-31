@@ -148,7 +148,12 @@ const compactJson = serializeSchema;
 // product.html and templates/ are served, were orphaned, and are exactly the
 // kind of page that never gets found. The deny-list mirrors
 // scripts/assemble_pages_output.js.
-const DENY_TOP = new Set(['.git', '.github', '.build', '.pages-output', '.wrangler',
+// '.claude' holds agent worktrees: `git worktree add .claude/worktrees/<id>` puts a
+// COMPLETE second checkout of this repo inside the working tree. This walker
+// writes, so descending into one corrupts a checkout that is not ours - already
+// measured once at 2,295 rewritten files plus a worktree path written into
+// TRACKED data. .gitignore governs git, not directory walkers.
+const DENY_TOP = new Set(['.git', '.claude', '.github', '.build', '.pages-output', '.wrangler',
   '.validation-cache', '.validation-runtime', 'node_modules', 'scripts', 'data', 'reports',
   'artifacts', 'docs', 'tests', 'fixtures', 'config', 'content', 'functions', 'seo',
   'LICENSES', 'dist', 'admin', 'coverage', 'test-results', 'playwright-report',
