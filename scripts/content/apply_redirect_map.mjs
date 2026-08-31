@@ -309,4 +309,19 @@ function main() {
 
 export { mappings, replaceUrlValue, rewriteText, targetForVariant, variantsAreSeparatorFree };
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main();
+// Both sides are resolved through realpath before comparing. path.resolve alone
+// compares the path as invoked against the module's real path, so ANY symlink on
+// the way in - /tmp -> /private/tmp on macOS, a symlinked checkout, a copied
+// worktree reached through a link - makes them differ, main() never runs, and
+// `npm run redirects:apply` exits 0 having silently done nothing and printed
+// nothing. That is the "runs but inert" failure mode, and it would be invisible:
+// the build would simply stop applying redirects.
+const invokedDirectly = (() => {
+  if (!process.argv[1]) return false;
+  try {
+    return fs.realpathSync(process.argv[1]) === fs.realpathSync(fileURLToPath(import.meta.url));
+  } catch {
+    return false;
+  }
+})();
+if (invokedDirectly) main();
