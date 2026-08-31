@@ -37,3 +37,7 @@ dist/
 # container-prepush profile - ahead of every validator that reads it. The
 # deploy workflow takes .build from the Validate Repo artifact, not from git.
 .build/
+# Runtime build-completion sentinel written by build:all (start/complete).
+# Timestamped per run, so tracking it would break build idempotence; it is
+# evidence about THIS working tree, read by validate:build-all-integrity.
+artifacts/build/
