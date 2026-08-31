@@ -338,6 +338,7 @@
     "distribution:gsc-outcome:self-test": "node scripts/distribution/self_test_gsc_ingest_outcome.mjs",
     "sitemap:lastmod:self-test": "node scripts/self_test_sitemap_lastmod.mjs",
     "validate:lastmod-ledger-final": "node scripts/validation/validate_lastmod_ledger_final.mjs",
+    "validate:main-writer-validation-gate": "bash .github/scripts/test_commit_and_push_if_changed.sh",
     "validate:search-measurement-truthfulness": "npm run search:export-counts:self-test && npm run search:truth:self-test && npm run distribution:inspection:self-test && npm run distribution:gsc-outcome:self-test && npm run sitemap:lastmod:self-test && npm run sitemap:lastmod:check",
     "validate:no-silent-zero-work": "node scripts/validators/validate_no_silent_zero_work.mjs",
     "validate:page-surface-coverage": "node scripts/validators/validate_page_surface_coverage.mjs",

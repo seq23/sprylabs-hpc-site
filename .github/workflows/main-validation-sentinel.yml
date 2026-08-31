@@ -1,0 +1,114 @@
+name: Main Validation Sentinel
+
+# The alarm behind the gate.
+#
+# commit_and_push_if_changed.sh now asks Validate Repo to run for every commit an
+# automated writer lands on main, because a GITHUB_TOKEN push raises no push event
+# and `on: push` therefore never fires for them. That request is the gate. This
+# workflow is what notices when the gate is bypassed, deleted, or fails - and when
+# a run does happen and comes back red.
+#
+# It is on a schedule on purpose. Every other trigger in this repository keys off
+# an event the writing token suppresses; a schedule does not. Nothing an automated
+# writer does can prevent this from running.
+#
+# A red run nobody reads is the same as no run, so the verdict is written into a
+# single reused GitHub issue rather than left in a log.
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_run:
+    workflows: ["Validate Repo"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      grace_minutes:
+        description: "Minutes a new commit on main may go uncovered before this is an alarm"
+        required: false
+        default: "90"
+        type: string
+
+env:
+  NODE_OPTIONS: --max-old-space-size=3072
+
+permissions:
+  contents: read
+  actions: read
+  issues: write
+
+concurrency:
+  group: main-validation-sentinel
+  cancel-in-progress: false
+
+jobs:
+  sentinel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      # This lane needs no dependencies - the coverage check uses only fetch and
+      # node:fs. The install is here because the workflow contract requires every
+      # workflow to install the same way, and carving an exception into a guard
+      # is how guards stop reaching what they govern.
+      - run: npm ci --ignore-scripts
+
+      - name: Is main covered by a green Validate Repo run
+        id: coverage
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          VALIDATION_GRACE_MINUTES: ${{ inputs.grace_minutes || '90' }}
+        run: node .github/scripts/check_main_validation_coverage.mjs
+
+      - name: Raise the alarm where a human will see it
+        if: steps.coverage.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          STATE: ${{ steps.coverage.outputs.state }}
+          HEAD_SHA: ${{ steps.coverage.outputs.head_sha }}
+          DETAIL: ${{ steps.coverage.outputs.detail }}
+        run: |
+          set -euo pipefail
+          title="main is not covered by a green Validate Repo run"
+          body=$(printf '%s\n\n%s\n\n%s\n' \
+            "**State: ${STATE:-unknown}** — main HEAD \`${HEAD_SHA:-unknown}\`" \
+            "${DETAIL:-The coverage check failed without a verdict.}" \
+            "Detected by Main Validation Sentinel run ${GITHUB_RUN_ID}. This issue is reused, not duplicated; it closes itself once main is covered by a green run.")
+          existing=$(gh issue list --state open --label main-validation --limit 1 --json number -q '.[0].number' || true)
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "$body"
+            echo "Updated existing alarm issue #$existing"
+          else
+            gh label create main-validation --description "main validation coverage alarms" --color B60205 2>/dev/null || true
+            gh issue create --title "$title" --label main-validation --body "$body"
+          fi
+          # The step above is the notification. Fail the run too, so the alarm is
+          # also visible in the Actions list and not only in the issue tracker.
+          exit 1
+
+      - name: Close the alarm once main is covered again
+        if: steps.coverage.outcome == 'success' && steps.coverage.outputs.state == 'covered'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          existing=$(gh issue list --state open --label main-validation --limit 1 --json number -q '.[0].number' || true)
+          if [ -n "$existing" ]; then
+            gh issue close "$existing" --comment "main is covered by a green Validate Repo run again (${{ steps.coverage.outputs.head_sha }}). Closed by Main Validation Sentinel run ${GITHUB_RUN_ID}."
+            echo "Closed alarm issue #$existing"
+          else
+            echo "main is covered and no alarm issue is open."
+          fi
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: main-validation-coverage-${{ github.run_id }}
+          if-no-files-found: error
+          path: artifacts/validation/main-validation-coverage.json

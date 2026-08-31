@@ -6372,7 +6372,7 @@
       "decision": "Atomically admitted by validation:add.",
       "decision_date": "2026-08-31",
       "matrix_ids": [
-        "MX-191"
+        "MX-CITATION-SCHEMA-AUTHORITY"
       ],
       "not_applicable_reason": null
     },
@@ -6402,7 +6402,7 @@
       "decision": "Atomically admitted by validation:add.",
       "decision_date": "2026-08-31",
       "matrix_ids": [
-        "MX-192"
+        "MX-CITATION-PHASE-MANIFEST"
       ],
       "not_applicable_reason": null
     },
@@ -6432,7 +6432,7 @@
       "decision": "Atomically admitted by validation:add.",
       "decision_date": "2026-08-31",
       "matrix_ids": [
-        "MX-193"
+        "MX-INTERNAL-LINK-VELOCITY"
       ],
       "not_applicable_reason": null
     },
@@ -6462,7 +6462,69 @@
       "decision": "Atomically admitted by validation:add.",
       "decision_date": "2026-08-31",
       "matrix_ids": [
-        "MX-194"
+        "MX-LLMS-FULL-COVERAGE"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-MAIN-WRITER-VALIDATION-GATE",
+      "status": "ADMITTED",
+      "name": "validate:main-writer-validation-gate",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:main-writer-validation-gate",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-main-writer-validation-gate/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-08-31",
+      "matrix_ids": [
+        "MX-RELEASE-ATOM-CONTRACT"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-WF-MAIN-VALIDATION-SENTINEL",
+      "status": "ADMITTED",
+      "name": "main-validation-sentinel.yml",
+      "check_type": "workflow",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "A push made with GITHUB_TOKEN raises no push event, so Validate Repo's `on: push` never fired for any automated writer: all nine github-actions[bot] commits on main have zero Validate Repo runs. b3aec016c landed three minutes after the last green run and left main failing three validators for over two hours with nothing to notice. This lane notices.",
+      "existing_coverage_gap": "Every existing trigger keys off an event the writing token suppresses. A scheduled sentinel is the only observer an automated writer cannot make silent, and it is independent of whether the dispatch gate in commit_and_push_if_changed.sh is present or working.",
+      "scope": [
+        "github-actions",
+        "main",
+        "validation-coverage"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/main-validation-sentinel.yml",
+      "implementation_path": ".github/workflows/main-validation-sentinel.yml",
+      "environment": "ci",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "GitHub Actions trace plus the reused main-validation issue",
+      "runtime_budget_seconds": 600,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted as the post-push alarm for main. Proven in both directions against real data: uncovered on b3aec016c (0 covering runs, 122 minutes old), covered on dab147a98 (green run 33348287639).",
+      "decision_date": "2026-08-31",
+      "matrix_ids": [
+        "MX-WF-MAIN-VALIDATION-SENTINEL"
       ],
       "not_applicable_reason": null
     },
@@ -6492,7 +6554,7 @@
       "decision": "Atomically admitted by validation:add.",
       "decision_date": "2026-08-31",
       "matrix_ids": [
-        "MX-191"
+        "MX-CITATION-SCHEMA-AUTHORITY"
       ],
       "not_applicable_reason": null
     },
@@ -6522,7 +6584,7 @@
       "decision": "Atomically admitted by validation:add.",
       "decision_date": "2026-08-31",
       "matrix_ids": [
-        "MX-192"
+        "MX-CITATION-PHASE-MANIFEST"
       ],
       "not_applicable_reason": null
     },
@@ -6552,7 +6614,7 @@
       "decision": "Atomically admitted by validation:add.",
       "decision_date": "2026-08-31",
       "matrix_ids": [
-        "MX-193"
+        "MX-INTERNAL-LINK-VELOCITY"
       ],
       "not_applicable_reason": null
     },
@@ -6582,7 +6644,7 @@
       "decision": "Atomically admitted by validation:add.",
       "decision_date": "2026-08-31",
       "matrix_ids": [
-        "MX-194"
+        "MX-LLMS-FULL-COVERAGE"
       ],
       "not_applicable_reason": null
     },
@@ -6612,7 +6674,7 @@
       "decision": "Atomically admitted by validation:add.",
       "decision_date": "2026-08-31",
       "matrix_ids": [
-        "MX-195"
+        "MX-RELEASE-ATOM-CONTRACT"
       ],
       "not_applicable_reason": null
     },
@@ -6887,6 +6949,6 @@
       "not_applicable_reason": null
     }
   ],
-  "record_count": 218,
+  "record_count": 220,
   "generated_at": "2026-08-08T23:30:00Z"
 }
