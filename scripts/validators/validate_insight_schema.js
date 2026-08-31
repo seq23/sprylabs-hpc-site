@@ -21,8 +21,21 @@ function readFrontmatter(md) {
 }
 
 const failures=[];
-if (fs.existsSync(INSIGHTS_DIR)) {
-  const files = fs.readdirSync(INSIGHTS_DIR).filter(f=>f.endsWith('.md'));
+if (!fs.existsSync(INSIGHTS_DIR)) {
+  console.error(`FAIL: ${INSIGHTS_DIR} does not exist; this validator's entire examination set is that directory.`);
+  process.exit(1);
+}
+{
+  // README.md documents the directory; it is not an insight and never carried
+  // frontmatter. Scanning it produced all 5 of this validator's failures while
+  // the 142 real insight sources passed, which is most of why nothing ran it.
+  const files = fs.readdirSync(INSIGHTS_DIR).filter(f=>f.endsWith('.md') && f.toLowerCase()!=='readme.md');
+  // A renamed or emptied content/insights/ would otherwise report "schema valid"
+  // over nothing.
+  if (!files.length) {
+    console.error(`FAIL: ${INSIGHTS_DIR} contains no .md insight sources; expected the markdown these pages are built from. Validating zero insights proves no schema holds.`);
+    process.exit(1);
+  }
   for (const fn of files) {
     const p=path.join(INSIGHTS_DIR,fn);
     const md=fs.readFileSync(p,'utf8');

@@ -34,6 +34,19 @@ const notes = [];
 const registry = read('data/content/page_admission_registry.json');
 const records = registry.records || registry.pages || [];
 
+// Checks 2 and 3 walk `records` and nothing else, and `--seed-baseline` seals
+// whatever is in it. A renamed key falls through to `[]` and the gate then admits
+// every page silently - and would seal an empty baseline as the sealed truth.
+if (!records.length) {
+  console.error('validate:demand-backed-pages FAILED');
+  console.error(
+    '  - data/content/page_admission_registry.json carries no admitted pages under `records` or `pages`; ' +
+    'the demand gate and the admission-level check both run over that list, and --seed-baseline would seal an ' +
+    'empty baseline as the sealed truth, so an empty registry proves nothing'
+  );
+  process.exit(1);
+}
+
 // --- 1. every sitemap URL renders -------------------------------------------
 const sitemapFiles = ['sitemap-bhpc.xml', 'sitemap-spry.xml']
   .concat(exists('sitemaps') ? fs.readdirSync(path.join(ROOT, 'sitemaps')).filter((f) => f.endsWith('.xml')).map((f) => `sitemaps/${f}`) : [])
@@ -70,8 +83,26 @@ if (process.argv.includes('--seed-baseline')) {
   process.exit(0);
 }
 
-const known = exists(BASELINE) ? new Set(read(BASELINE).routes || []) : null;
-if (!known) notes.push(`no pre-gate baseline at ${BASELINE}; run this validator once with --seed-baseline`);
+// Without a baseline every route reads as pre-gate (`isNew` is always false), which
+// structurally disables checks 2 and 3 - the demand gate and the admission-level
+// gate - while the validator still exits 0 on a note. Deleting the baseline file was
+// therefore a way to switch both gates off silently.
+if (!exists(BASELINE)) {
+  console.error('validate:demand-backed-pages FAILED');
+  console.error(
+    `  - the sealed pre-gate baseline ${BASELINE} is missing. Without it no page is ever "new", so the demand-record ` +
+    'check and the admission-level check examine nothing and this validator would pass while gating no page. ' +
+    'Restore the file, or seal a new one deliberately with --seed-baseline.'
+  );
+  process.exit(1);
+}
+const baselineDoc = read(BASELINE);
+if (!Array.isArray(baselineDoc.routes)) {
+  console.error('validate:demand-backed-pages FAILED');
+  console.error(`  - ${BASELINE} has no \`routes\` array, so every page would read as pre-gate and checks 2 and 3 would examine nothing.`);
+  process.exit(1);
+}
+const known = new Set(baselineDoc.routes);
 
 // --- 2 & 3. new pages need demand and a real admission level ----------------
 const demand = exists('data/demand/measured_demand.json') ? read('data/demand/measured_demand.json') : { records: [] };

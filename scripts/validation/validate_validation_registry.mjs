@@ -8,6 +8,13 @@ try{registryDoc=readJson('_validation_registry.json');matrixDoc=readJson('_repo_
 catch(e){fail('[validate:validation-registry] FAIL: malformed control-plane JSON',[e.message]);}
 const registry=registryDoc.records||[]; const matrix=matrixDoc.entries||[]; const profiles=matrixDoc.profiles||{};
 const errors=[]; const strongWarnings=[]; const warnings=[];
+// Every arm of the control plane defaults to empty here, so a truncated or
+// re-keyed _validation_registry.json / _repo_validation_matrix.json made this
+// check iterate nothing and print "control plane safe" - the one report that
+// would have to be true for any other validator's result to mean anything.
+if(!registry.length) errors.push('_validation_registry.json: records is empty or absent; it must list the registered validators being governed. An empty registry proves nothing about the control plane.');
+if(!matrix.length) errors.push('_repo_validation_matrix.json: entries is empty or absent; it must list the matrix placements that give registry records their severity and profile. An empty matrix proves nothing.');
+if(!Object.keys(profiles).length) errors.push('_repo_validation_matrix.json: profiles is empty or absent; it must define the validation profiles that actually run the admitted validators. With no profiles, every reachability result below is vacuous.');
 const coreRequired=['validation_id','status','name','proposed_severity','command','implementation_path'];
 const metadataFields=['check_type','owning_lane','risk_prevented','existing_coverage_gap','scope','environment','proof_tier','positive_fixture','negative_fixture','evidence_output','runtime_budget_seconds','maintenance_owner','overlap_analysis','decision','decision_date','matrix_ids'];
 const allowedStatus=new Set(['PROPOSED','ADMITTED','REJECTED','RETIRED','NOT_APPLICABLE']);

@@ -25,6 +25,11 @@ for(const banned of ['theindustryguides.com','Industry Guides provider databases
 const phaseManifest=readJson('data/citation/citation_phase_manifest.json');
 if(!String(phaseManifest.scope||'').includes('aplayermode.com + billionairehighperformancecoach.com')) errors.push('phase manifest scope must be BHPC / APlayerMode only');
 const inventory=readJson('data/citation/reference_page_inventory.json');
+// `inventory.files || []` meant a renamed or emptied key skipped every sitemap and
+// llms.txt cross-check below without a word, so the phase inventory could stop
+// covering pages and this validator would still report OK.
+if(!Array.isArray(inventory.files)) errors.push('data/citation/reference_page_inventory.json has no `files` array; the sitemap-bhpc and llms.txt cross-checks read that key and would silently check nothing');
+else if(!inventory.files.length) errors.push('data/citation/reference_page_inventory.json lists 0 files; the sitemap-bhpc and llms.txt cross-checks run only over that list, so an empty inventory proves nothing');
 const minimums=contract.phases?.phase_2_coverage?.minimums || phaseManifest.phase_requirements?.phase_2_coverage?.minimums || {};
 const invCounts=inventory.counts || {};
 for(const [key,min] of Object.entries(minimums)){
@@ -60,6 +65,11 @@ for(const phrase of ['GPTBot','ClaudeBot','PerplexityBot','Google-Extended','Bin
 }
 if(!String(author.name||'').trim()||!String(author.role||'').trim()||!String(author.review_role||'').trim()) errors.push('author profile is incomplete');
 if(!String(author.credential_policy||'').includes('No professional')) errors.push('author credential policy missing anti-fabrication boundary');
+// The per-page citation checks (one H1, canonical, extraction block, named author,
+// schema, product bridge) all run inside this loop. An emptied priority_pages list
+// would report "OK: 0 priority pages satisfy the four-layer citation strategy".
+if(!Array.isArray(contract.layers?.reference_pages?.priority_pages)) fail('[validate:citation-strategy] FAIL: data/citation/citation_strategy_contract.json has no layers.reference_pages.priority_pages array; every per-page citation check reads that key, so there is nothing to check.',errors);
+if(!contract.layers.reference_pages.priority_pages.length) errors.push('data/citation/citation_strategy_contract.json lists 0 layers.reference_pages.priority_pages; every per-page citation check runs over that list, so an empty one proves nothing');
 for(const rel of contract.layers.reference_pages.priority_pages){
   const fp=path.join(process.cwd(),rel);
   if(!fs.existsSync(fp)){errors.push(`${rel}: missing priority page`);continue;}
@@ -69,8 +79,19 @@ for(const rel of contract.layers.reference_pages.priority_pages){
   if(!/<link[^>]+rel=["']canonical["']/i.test(html)&&!/<link[^>]+href=["'][^"']+["'][^>]+rel=["']canonical["']/i.test(html)) errors.push(`${rel}: canonical missing`);
   if(!/class=["'][^"']*citation-definition/i.test(html)) errors.push(`${rel}: bold definition missing`);
   if(count(/data-llm-answer=["']true["']/gi)!==1) errors.push(`${rel}: expected one extraction block`);
-  if(!/rel=["']author["']/i.test(html)||!/S\.L\. Taylor/.test(html)) errors.push(`${rel}: visible named author missing`);
-  if(!/<time[^>]+datetime=["']2026-06-20["']/i.test(html)) errors.push(`${rel}: reviewed date missing`);
+  // The property is that a human name is visibly attributed, not that it is one
+  // particular name. This asserted the literal string "S.L. Taylor", which is the
+  // shared byline the per-publication authority bylines are replacing - so the
+  // guard would have failed the rename it should have been indifferent to.
+  const author = html.match(/<a[^>]+rel=["']author["'][^>]*>([\s\S]*?)<\/a>/i);
+  if (!author) errors.push(`${rel}: visible named author missing (no element carrying rel="author")`);
+  else if (author[1].replace(/<[^>]+>/g, '').trim().length < 2) errors.push(`${rel}: rel="author" element carries no visible name`);
+  // Likewise: a reviewed date must exist and be a real ISO date. Pinning the
+  // literal 2026-06-20 meant the guard passed only while the date never changed,
+  // which is the opposite of what a "reviewed date" is for.
+  const reviewed = html.match(/<time[^>]+datetime=["'](\d{4}-\d{2}-\d{2})["']/i);
+  if (!reviewed) errors.push(`${rel}: reviewed date missing (no <time datetime="YYYY-MM-DD">)`);
+  else if (Number.isNaN(Date.parse(reviewed[1]))) errors.push(`${rel}: reviewed date ${reviewed[1]} is not a valid date`);
   if(!/id=["']CITATION_PAGE_SCHEMA["']/i.test(html)) errors.push(`${rel}: citation schema missing`);
   if(!/section class=["'][^"']*sources/i.test(html)) errors.push(`${rel}: source basis missing`);
   if(!/href=["']\/download\.html["']/i.test(html)) errors.push(`${rel}: product bridge missing`);

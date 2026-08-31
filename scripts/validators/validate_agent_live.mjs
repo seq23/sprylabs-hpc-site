@@ -58,6 +58,13 @@ async function fetchLivePage(url, fetchImpl) {
 export async function validateAgentLive({runDate = '', fetchImpl = fetch, quiet = false} = {}) {
   const {date, manifestPath, manifest} = loadAcceptanceManifest(runDate);
   const entries = (manifest.entries || []).filter(entry => entry.acceptance_status === 'REQUIRED');
+  // This is the only proof that accepted agent records reached the deployed site,
+  // and it is entirely driven by this list. A manifest with no REQUIRED entries -
+  // a renamed `entries` key, or a status rename - printed "PASS: all required agent
+  // records are present in deployed HTML" having fetched not one page.
+  if (!entries.length) {
+    throw new Error(`Acceptance manifest ${path.relative(ROOT, manifestPath)} has no entries with acceptance_status "REQUIRED". This validator fetches only those records' pages, so it would report every required record live having requested nothing.`);
+  }
   const failures = [];
   const resolved = [];
   const pages = new Map();
@@ -127,5 +134,10 @@ export async function validateAgentLive({runDate = '', fetchImpl = fetch, quiet 
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  validateAgentLive({runDate: arg('--run-date')}).catch(() => process.exit(1));
+  // The swallowed catch hid the reason for every non-zero exit, including the
+  // empty-manifest failure above; print it so the operator sees what was expected.
+  validateAgentLive({runDate: arg('--run-date')}).catch((error) => {
+    console.error(`[validate:agent-live] FAIL: ${error instanceof Error ? error.message : String(error)}`);
+    process.exit(1);
+  });
 }

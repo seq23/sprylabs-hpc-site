@@ -15,7 +15,13 @@ if(!zip){
   console.log('[validate:reopened-baseline] SKIPPED no_candidate_zip: CANDIDATE_ZIP is not set, so there is no packaged release artifact to reopen. Set CANDIDATE_ZIP to the release ZIP to run this check.');
   process.exit(0);
 }
-const temp=fs.mkdtempSync(path.join(os.tmpdir(),'sprylabs-reopen-')); execFileSync('unzip',['-q',path.resolve(zip),'-d',temp]); const entries=fs.readdirSync(temp); if(entries.length!==1) fail('[validate:reopened-baseline] ZIP must contain one repository wrapper'); const root=path.join(temp,entries[0]); const req=JSON.parse(fs.readFileSync(path.join(root,'_baseline_packaging_contract.json'),'utf8')).required_files; const errors=req.filter(x=>!fs.existsSync(path.join(root,x))).map(x=>`missing ${x}`);
+const temp=fs.mkdtempSync(path.join(os.tmpdir(),'sprylabs-reopen-')); execFileSync('unzip',['-q',path.resolve(zip),'-d',temp]); const entries=fs.readdirSync(temp); if(entries.length!==1) fail('[validate:reopened-baseline] ZIP must contain one repository wrapper'); const root=path.join(temp,entries[0]); const req=JSON.parse(fs.readFileSync(path.join(root,'_baseline_packaging_contract.json'),'utf8')).required_files;
+// The named SKIP above covers "no ZIP was supplied". This is different: a ZIP was
+// reopened, and its packaging contract lists nothing to look for. Every existence
+// check below would then run zero times and the reopened artifact would be
+// declared structurally sound without a single file being confirmed present.
+if(!Array.isArray(req)||!req.length) fail('[validate:reopened-baseline] FAIL: the reopened ZIP\'s _baseline_packaging_contract.json lists no required_files; expected the packaged file manifest. Confirming zero files proves nothing about the release artifact.');
+const errors=req.filter(x=>!fs.existsSync(path.join(root,x))).map(x=>`missing ${x}`);
 if(!errors.length&&process.env.REOPENED_RUN_VALIDATION==='1'){
  let r=spawnSync('npm',['ci','--ignore-scripts'],{cwd:root,stdio:'inherit',env:{...process.env,NODE_OPTIONS:'--max-old-space-size=3072'}}); if(r.status!==0)errors.push('npm ci failed in reopened artifact');
  if(!errors.length){r=spawnSync('npm',['run','release:prepush:container'],{cwd:root,stdio:'inherit',env:{...process.env,NODE_OPTIONS:'--max-old-space-size=3072'}}); if(r.status!==0)errors.push('container prepush failed in reopened artifact');}

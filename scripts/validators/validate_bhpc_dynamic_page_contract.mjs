@@ -1,9 +1,38 @@
 #!/usr/bin/env node
-import {writeJson} from '../agent_intake/bhpc_agent_common.mjs';
+import fs from 'node:fs';
+import path from 'node:path';
+import {ROOT, writeJson} from '../agent_intake/bhpc_agent_common.mjs';
 import {collectBhpcRouteAuthority, validateBhpcRouteAuthorityRecord} from '../lib/bhpc_route_authority.mjs';
+
+// collectBhpcRouteAuthority() reads BOTH of its inputs through a readJson whose
+// `catch` returns an empty default, so a missing or corrupt artifact yielded zero
+// records: validateBhpcRouteAuthorityRecord() then ran zero times and the only
+// output was non-failing warnings, printed as "PASS: admitted=0". The helper is
+// shared with validate_bhpc_page_family_contract.mjs, so absence and corruption
+// are separated from a present-but-empty file here instead.
+const REQUIRED_INPUTS = [
+  ['data/report_fixes/agent_acceptance_manifest.generated.json', 'npm run agent:bhpc:compile-acceptance'],
+  ['artifacts/validation/agent-exact-implementation-plan.json', 'npm run agent:bhpc:plan-exact']
+];
+for (const [rel, produced] of REQUIRED_INPUTS) {
+  const abs = path.join(ROOT, rel);
+  if (!fs.existsSync(abs)) {
+    console.error(`[bhpc-dynamic-page-contract] FAIL: required input ${rel} is missing; produce it with \`${produced}\`. Treating a missing artifact as an empty record set proves nothing.`);
+    process.exit(1);
+  }
+  try { JSON.parse(fs.readFileSync(abs, 'utf8')); } catch (error) {
+    console.error(`[bhpc-dynamic-page-contract] FAIL: required input ${rel} is not valid JSON (${error.message}); regenerate it with \`${produced}\`. Treating a corrupt artifact as an empty record set proves nothing.`);
+    process.exit(1);
+  }
+}
+
 const {records, admitted, blocked} = collectBhpcRouteAuthority();
 const errors = [];
 const warnings = [];
+// Two sets narrow independently: the record set feeds the per-record contract
+// checks, and the admitted subset feeds the page-family coverage check below.
+if (!records.length) errors.push(`empty_route_authority_record_set:expected at least one record across ${REQUIRED_INPUTS.map(x => x[0]).join(' and ')}; a route contract that inspects zero records proves nothing`);
+if (!admitted.length) errors.push('empty_admitted_record_set:every route authority record is blocked; expected at least one admitted route, and page-family coverage over an empty admitted set proves nothing');
 for (const record of records) {
   for (const error of validateBhpcRouteAuthorityRecord(record)) errors.push(error);
   if (record.scope && !['bhpc','aplayer','a-player','a-player-mode'].includes(String(record.scope))) errors.push(`non_bhpc_route_scope:${record.record_id}:${record.scope}`);

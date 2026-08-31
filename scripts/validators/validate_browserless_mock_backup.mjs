@@ -5,7 +5,12 @@ function writeJson(p,payload){fs.mkdirSync(p.split('/').slice(0,-1).join('/')||'
 const fixturePath='data/mocks/browserless-route-audit-fixtures.json';
 const fixture=readJson(fixturePath);
 const errors=[]; const cases=[];
-for (const route of fixture.routes || []) {
+// An empty routes list audits no page yet still wrote a PASS artifact and a
+// PASS report to reports/, so an emptied fixture would publish standing proof
+// that the routes were checked when none was opened. Fail before writing.
+const routes=fixture.routes||[];
+if(!routes.length){console.error(`[validate:browserless-mock-backup] FAIL: ${fixturePath} lists no routes; it must name the route fixtures (id + file) this audit opens. Zero cases writes a PASS artifact proving nothing.`);process.exit(1);}
+for (const route of routes) {
   if (!fs.existsSync(route.file)) { errors.push(`${route.id}: missing ${route.file}`); continue; }
   const html=fs.readFileSync(route.file,'utf8');
   const checks={has_title:/<title>[^<]{8,}<\/title>/i.test(html),has_meta_description:/<meta\s+name=["']description["']/i.test(html),no_raw_json_dump:!/[{]\s*"[a-zA-Z0-9_]+"\s*:/.test(html.slice(0,5000)),no_stack_trace:!/Error:\s|Traceback|at\s+[\w.]+\s*\(/.test(html),no_unresolved_tokens:!/(TODO|FIXME|\{\{[^}]+\}\}|%%[^%]+%%)/.test(html)};

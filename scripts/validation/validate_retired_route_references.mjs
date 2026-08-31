@@ -7,6 +7,11 @@ const ROOT = process.cwd();
 const config = JSON.parse(fs.readFileSync('data/content/manual_redirects.json', 'utf8'));
 const redirects = config.redirects || [];
 const errors = [];
+// Every failure this validator can report is nested inside a loop over
+// `redirects` - target existence, chains, the _redirects mapping, and the
+// whole-tree scan for retired references. An empty list turns the file-tree walk
+// into an expensive no-op that reports OK for "0 retired routes".
+if (!redirects.length) fail('[validate:retired-route-references] FAIL: data/content/manual_redirects.json declares no redirects; expected at least one retired route. Scanning the tree against an empty redirect list proves no retired route is unreferenced.');
 const skipDirs = new Set(['.git', '.pages-output', 'node_modules', 'artifacts', 'coverage', 'reports', '.build', 'test-results', 'playwright-report']);
 const allowedFiles = new Set(['data/content/manual_redirects.json', '_redirects', 'docs/REDIRECT_MIGRATION_HISTORY.md', 'scripts/validation/validate_manual_expansion.py']);
 const scanExtensions = new Set(['.html', '.xml', '.txt', '.json', '.md', '.js', '.mjs', '.cjs']);
