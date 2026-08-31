@@ -204,7 +204,55 @@ fs.rmSync(RECEIPT_DIR, {recursive: true, force: true});
 fs.mkdirSync(RECEIPT_DIR, {recursive: true});
 expect('zero receipts -> FAIL rather than an empty-loop pass', verify(), false, ['examined zero items']);
 
-// 10. Plan-time Rule 0: more shards than validators would create an empty shard.
+// 10. Producer/consumer families must never be separated, at ANY shard count.
+//     A shard unpacks its own copy of the tree, so a check that runs on a
+//     different runner than the snapshot it reads compares against a baseline
+//     that runner wrote itself: it reports green and can never fail. This repo
+//     has already had that exact defect once, when the surface guard's snapshot
+//     ran at profile step 44 and its check at step 58, and sharding is a second
+//     chance to reintroduce it.
+{
+  const ROLE = /[-:_](snapshot|check|verify|baseline|self-test|apply|final)$/i;
+  const fam = (id) => id.replace(ROLE, '').toLowerCase().replace(/[-:_]+/g, '-');
+  let familiesChecked = 0;
+  let bad = 0;
+  for (const n of [1, 2, 3, 4, 8, 16]) {
+    if (n > declared.length) continue;
+    const r = sh(['plan', '--shards', String(n)]);
+    if (r.code !== 0) continue;
+    const p = JSON.parse(fs.readFileSync(PLAN_FILE, 'utf8'));
+    const where = new Map();
+    for (const b of p.shards) for (const s of b.steps) where.set(s.id, `shard-${b.shard}`);
+    for (const id of p.ordered_step_ids || []) where.set(id, 'ordered-build');
+    const groups = new Map();
+    for (const id of where.keys()) {
+      if (!ROLE.test(id)) continue;
+      const k = fam(id);
+      if (!groups.has(k)) groups.set(k, []);
+      groups.get(k).push(id);
+    }
+    for (const [k, ids] of groups) {
+      if (ids.length < 2) continue;
+      familiesChecked += 1;
+      const locs = new Set(ids.map((i) => where.get(i)));
+      if (locs.size > 1) {
+        bad += 1;
+        say(`  FAIL ${n} shard(s): family ${k} split across ${[...locs].join(' and ')}`);
+      }
+    }
+  }
+  // An assertion that examined nothing must not report success.
+  if (!familiesChecked) {
+    failures += 1;
+    say('  FAIL no producer/consumer family was found to check; this assertion examined zero items');
+  } else if (bad) {
+    failures += bad;
+  } else {
+    say(`  ok   ${familiesChecked} producer/consumer family placement(s) checked across 6 shard counts, none separated`);
+  }
+}
+
+// 11. Plan-time Rule 0: more shards than validators would create an empty shard.
 expect(
   'more shards than validators -> refused at plan time',
   sh(['plan', '--shards', String(declared.length + 1)]),
@@ -212,7 +260,7 @@ expect(
   ['exit 0 having done nothing'],
 );
 
-// 11. Every declared validator must be assigned to some shard, at every shard
+// 12. Every declared validator must be assigned to some shard, at every shard
 //    count the workflow might plausibly use.
 for (const n of [1, 4, 8, 16]) {
   if (n > declared.length) continue;

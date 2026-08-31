@@ -65,9 +65,43 @@ function arg(name, fallback) {
 // Without that, VAL-CITATION-REPAIR-REACH and VAL-BUILD-ALL-INTEGRITY were
 // pulled into the build job purely because their names carry "repair" and
 // "build", which also excluded them from the shard coverage count.
+// Narrowed in one direction too: a step whose command is `npm run validate:*`
+// only ever asserts, so it cannot be a producer whatever its name contains.
+// Without that, VAL-CITATION-REPAIR-REACH and VAL-BUILD-ALL-INTEGRITY were
+// pulled into the build job purely because their names carry "repair" and
+// "build", which also excluded them from the shard coverage count.
+//
+// `snapshot` overrides that narrowing. Writing a baseline IS producing, even
+// when the command is spelled `validate:extraction-surface-guard:snapshot`:
+// treating it as an assertion put the step that WRITES the baseline into a
+// shard, which is how run 33394734639 failed. The write and the comparison
+// against it are one operation split across two profile steps.
 const PRODUCER_PATTERN = /\b(?:build|repair|bootstrap|python-runtime|normalization|apply-report-contract|snapshot)\b/i;
-const isProducer = (step) => !/^npm run validate:/.test((step.command || '').trim())
-  && (PRODUCER_PATTERN.test(step.id || '') || PRODUCER_PATTERN.test(step.command || ''));
+const ALWAYS_PRODUCES = /\bsnapshot\b/i;
+const isProducer = (step) => {
+  const text = `${step.id || ''} ${step.command || ''}`;
+  if (ALWAYS_PRODUCES.test(text)) return true;
+  if (/^npm run validate:/.test((step.command || '').trim())) return false;
+  return PRODUCER_PATTERN.test(step.id || '') || PRODUCER_PATTERN.test(step.command || '');
+};
+
+/**
+ * The family a step belongs to: its name with the role suffix removed, so
+ * `...-SURFACE-GUARD-SNAPSHOT` and `...-SURFACE-GUARD-CHECK` share a family, as
+ * do `validate:x:snapshot` and `validate:x:check`.
+ *
+ * Steps in one family are one operation the profile happens to spell as several
+ * steps, and separating them is a CORRECTNESS question rather than a packing
+ * one. The extraction surface guard is the worked example: its snapshot once ran
+ * at step 44 and the check it fed at step 58, so the guard graded its own answer
+ * sheet and could never fail. That was fixed by moving the pair before
+ * build:all - and sharding would reintroduce it in a new form if the two landed
+ * on different runners, because each shard unpacks its own copy of the tree.
+ * The guard would report green while comparing a baseline it had just written.
+ */
+const ROLE_SUFFIX = /[-:_](snapshot|check|verify|baseline|self-test|apply|final)$/i;
+const familyOf = (step) => String(step.id || '').replace(ROLE_SUFFIX, '').toLowerCase().replace(/[-:_]+/g, '-');
+const hasRole = (step) => ROLE_SUFFIX.test(String(step.id || ''));
 
 function resolveSteps() {
   const matrix = readJson(MATRIX_FILE);
@@ -125,8 +159,30 @@ function orderedExceptions(steps) {
 function partition() {
   const steps = resolveSteps();
   const pinned = orderedExceptions(steps);
-  const ordered = steps.filter((s) => isProducer(s) || pinned.has(s.id));
-  const shardable = steps.filter((s) => !isProducer(s) && !pinned.has(s.id));
+
+  // Families are kept whole. If any member of a family produces - or is pinned -
+  // every member joins it in the ordered build job, because a consumer that runs
+  // on a different runner than its producer is comparing against a baseline that
+  // runner wrote itself. This is derived from the profile, not listed: a new
+  // snapshot/check pair is picked up with no change here.
+  const families = new Map();
+  for (const s of steps) {
+    if (!hasRole(s)) continue;
+    const key = familyOf(s);
+    if (!families.has(key)) families.set(key, []);
+    families.get(key).push(s);
+  }
+  const mustOrder = new Set();
+  for (const [, members] of families) {
+    if (members.length < 2) continue;
+    if (members.some((s) => isProducer(s) || pinned.has(s.id))) {
+      for (const s of members) mustOrder.add(s.id);
+    }
+  }
+
+  const inOrdered = (s) => isProducer(s) || pinned.has(s.id) || mustOrder.has(s.id);
+  const ordered = steps.filter(inOrdered);
+  const shardable = steps.filter((s) => !inOrdered(s));
   return {
     all: steps,
     // Matrix order is preserved: `ordered` is a filter of `steps`, never a sort.
@@ -135,6 +191,18 @@ function partition() {
     pinned,
     shardable,
     validators: shardable,
+    // Multi-member families among the shardable steps. These are packed as one
+    // unit so LPT can never separate them, and asserted afterwards so a future
+    // change to the packer cannot quietly start separating them again.
+    units: (() => {
+      const byFamily = new Map();
+      for (const s of shardable) {
+        const key = hasRole(s) ? familyOf(s) : `solo:${s.id}`;
+        if (!byFamily.has(key)) byFamily.set(key, []);
+        byFamily.get(key).push(s);
+      }
+      return [...byFamily.entries()].map(([key, members]) => ({key, members}));
+    })(),
   };
 }
 
@@ -179,22 +247,21 @@ function timingCoverage() {
  * heaviest shard close to total/N.
  */
 function planShards(count) {
-  const {validators} = partition();
+  const {validators, units} = partition();
   if (count < 1) die('[shards] FAIL: --shards must be >= 1');
-  if (count > validators.length) {
-    die(`[shards] FAIL: ${count} shards requested but the profile declares only ${validators.length} validator steps; an empty shard would exit 0 having done nothing`);
+  if (count > units.length) {
+    die(`[shards] FAIL: ${count} shards requested but the profile offers only ${units.length} independently schedulable unit(s) (${validators.length} validator steps, with producer/consumer families packed together); an empty shard would exit 0 having done nothing`);
   }
   const {seconds: cost, fallback} = timings();
   const at = (id) => (typeof cost[id] === 'number' ? cost[id] : fallback);
-  const ordered = [...validators].sort((a, b) => {
-    const d = at(b.id) - at(a.id);
-    return d !== 0 ? d : a.id.localeCompare(b.id);
-  });
+  // Cost and ordering are per UNIT, so a family is placed as one indivisible item.
+  const priced = units.map((u) => ({...u, seconds: u.members.reduce((t, s) => t + at(s.id), 0)}));
+  const ordered = priced.sort((a, b) => (b.seconds - a.seconds) || a.key.localeCompare(b.key));
   const bins = Array.from({length: count}, (_, index) => ({shard: index, seconds: 0, steps: []}));
-  for (const step of ordered) {
+  for (const unit of ordered) {
     const bin = bins.reduce((lightest, b) => (b.seconds < lightest.seconds ? b : lightest), bins[0]);
-    bin.steps.push(step);
-    bin.seconds += at(step.id);
+    bin.steps.push(...unit.members);
+    bin.seconds += unit.seconds;
   }
   for (const bin of bins) {
     // Rule 0: a shard that runs nothing must never exit 0.
@@ -205,6 +272,30 @@ function planShards(count) {
   const assigned = new Set(bins.flatMap((b) => b.steps.map((s) => s.id)));
   const orphans = validators.filter((s) => !assigned.has(s.id)).map((s) => s.id);
   if (orphans.length) die('[shards] FAIL: profile validators assigned to no shard', orphans);
+
+  // Asserted, not merely arranged. Packing by unit is what keeps a family
+  // together; this is what makes a future change to the packer fail loudly
+  // instead of silently separating a snapshot from the check that reads it.
+  const shardOf = new Map();
+  for (const bin of bins) for (const s of bin.steps) shardOf.set(s.id, bin.shard);
+  const split = [];
+  const grouped = new Map();
+  for (const [id, shard] of shardOf) {
+    const step = validators.find((s) => s.id === id);
+    if (!hasRole(step)) continue;
+    const key = familyOf(step);
+    if (!grouped.has(key)) grouped.set(key, new Map());
+    grouped.get(key).set(id, shard);
+  }
+  for (const [key, members] of grouped) {
+    const shards = new Set(members.values());
+    if (shards.size > 1) {
+      split.push(`${key}: ${[...members].map(([id, sh]) => `${id} -> shard ${sh}`).join(', ')}`);
+    }
+  }
+  if (split.length) {
+    die('[shards] FAIL: a producer/consumer family was split across shards. Each shard unpacks its own copy of the tree, so a check separated from the snapshot it reads would compare against a baseline it wrote itself and could never fail', split);
+  }
   return bins;
 }
 
