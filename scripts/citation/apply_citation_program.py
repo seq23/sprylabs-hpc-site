@@ -10,6 +10,7 @@ if VENDOR_DIR.is_dir():
     sys.path.insert(0, str(VENDOR_DIR))
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "lib"))
+from repo_walk import IGNORED_DIRS as REPO_WALK_IGNORED
 from route_policy import route_for  # noqa: E402
 from citation_page_schema import serialize_schema, main_entity_of_page  # noqa: E402
 
@@ -1380,9 +1381,13 @@ def iter_public_html_paths():
     prunes those directories before recursion while preserving the same public
     HTML candidate set.
     """
-    skip_dir_names = {
-        ".git", ".github", "node_modules", "artifacts", "fixtures",
-        ".validation-runtime", ".cache", ".npm", "__pycache__",
+    # The shared boundary, not a private list. `git worktree add
+    # .claude/worktrees/<id>` puts a COMPLETE second checkout of this repo inside
+    # the working tree, and this pass REWRITES the pages it walks - so a private
+    # list missing '.claude' lets it rewrite another checkout's files and count
+    # them as its own work. Local-only entries are unioned on top.
+    skip_dir_names = set(REPO_WALK_IGNORED) | {
+        ".github", "fixtures", ".cache", ".npm",
     }
     skip_rel_prefixes = tuple(prefix.rstrip("/") for prefix in EXCLUDED_PREFIXES)
     for dirpath, dirnames, filenames in os.walk(ROOT):

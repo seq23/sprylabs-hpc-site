@@ -23,16 +23,25 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { isIgnoredDir } from '../lib/repo_walk.mjs';
 
 const APPLY = process.argv.includes('--apply');
 const ROOT = process.cwd();
-const SKIP = /(^|\/)(node_modules|\.git|dist|\.pages-output|artifacts|coverage)(\/|$)/;
+// The shared boundary, not a private list: `git worktree add
+// .claude/worktrees/<id>` puts a COMPLETE second checkout of this repo inside
+// the working tree, and this walker WRITES to the paths it walks. Nineteen
+// hand-written skip lists is the same defect as nineteen copies of any list -
+// only as good as the last person who remembered. See scripts/lib/repo_walk.cjs.
+// (imported at the top of the module; ESM has no require)
+const SKIP = /(^|\/)(dist)(\/|$)/;
 
 const PLACEHOLDER = /^(n\/a|na|none|tbd|todo|-|—)?\s*(\(memory-only surface\))?$/i;
 
 function walk(dir, out = []) {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
     const full = path.join(dir, e.name);
+    const relFromRoot = path.relative(ROOT, full).split(path.sep).join('/');
+    if (e.isDirectory() && isIgnoredDir(e.name, relFromRoot)) continue;
     if (SKIP.test(full.replace(ROOT, ''))) continue;
     if (e.isDirectory()) walk(full, out);
     else if (e.name.endsWith('.html')) out.push(full);
