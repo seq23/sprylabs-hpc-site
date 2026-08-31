@@ -13,6 +13,17 @@ const errors=[],checked=[],skipped=[];
 const activeSpecs=(plan.specs||[]).filter(s=>s.status!=='BLOCKED');
 const activeAcceptanceIds=new Set(activeSpecs.flatMap(s=>s.acceptance_ids||[]).map(String));
 const appliedIds=new Set((apply.applied||[]).flatMap(x=>x.acceptance_ids||[]).map(String));
+// The plan file selects everything this validator looks at. readJson's silent
+// {specs:[]} fallback made a missing, renamed or corrupt plan indistinguishable from
+// a real one: activeAcceptanceIds came back empty, every manifest entry took the
+// 'outside_active_implementation_plan' continue, and the run reported
+// "PASS: checked=0; skipped=974" without opening a page. The plan already declares
+// how many acceptance entries it covers, so hold it to its own number.
+if(!activeSpecs.length){console.error('[bhpc-agent-recommendation-driven-output] FAIL: artifacts/validation/agent-exact-implementation-plan.json carries no unblocked specs; every manifest entry is then skipped as outside the active plan, so a pass here proves nothing.');process.exit(1)}
+if(!activeAcceptanceIds.size){console.error('[bhpc-agent-recommendation-driven-output] FAIL: the active specs in artifacts/validation/agent-exact-implementation-plan.json carry no acceptance_ids; the manifest loop matches on those ids, so every entry would be skipped and nothing checked.');process.exit(1)}
+const declaredRequired=Number(plan.required_acceptance_entry_count);
+if(!Number.isFinite(declaredRequired)){console.error('[bhpc-agent-recommendation-driven-output] FAIL: artifacts/validation/agent-exact-implementation-plan.json has no required_acceptance_entry_count; without it a truncated plan cannot be told apart from a small one.');process.exit(1)}
+if(activeAcceptanceIds.size!==declaredRequired){console.error(`[bhpc-agent-recommendation-driven-output] FAIL: the plan declares required_acceptance_entry_count=${declaredRequired} but its unblocked specs carry ${activeAcceptanceIds.size} acceptance id(s); the plan has been truncated or rewritten and this validator would silently check only the remainder.`);process.exit(1)}
 for(const spec of activeSpecs){
   const rel=spec.implementation_path||'',abs=path.join(ROOT,rel);
   if(!rel||!fs.existsSync(abs)) continue;
@@ -44,6 +55,10 @@ for(const entry of manifest.entries||[]){
   if(!appliedIds.has(String(entry.id)))errors.push(`${entry.record_id}:acceptance_not_applied:${entry.id}`);
   checked.push({record_id:entry.record_id,acceptance_id:entry.id,implementation_path:rel,blocks:entry.required_block_types||[]});
 }
+// Even with a well-formed plan, an emptied or renamed acceptance manifest leaves
+// every per-page assertion below unexecuted. A run that checked no page is not a pass.
+if(!(manifest.entries||[]).length)errors.push('data/report_fixes/agent_acceptance_manifest.generated.json carries no entries; every output check runs over that list');
+if(!checked.length)errors.push(`checked 0 acceptance entries against deployed HTML (manifest entries=${(manifest.entries||[]).length}, skipped=${skipped.length}); the record marker, heading, block, link and applied checks all run inside that loop, so a pass here would prove nothing`);
 const report={schema_version:'1.1',validator:'bhpc-agent-recommendation-driven-output',generated_at:new Date().toISOString(),status:errors.length?'FAIL':'PASS',active_run_date:plan.active_run_date||'',manifest_entry_count:(manifest.entries||[]).length,active_plan_spec_count:activeSpecs.length,checked_count:checked.length,skipped_count:skipped.length,checked,skipped:skipped.slice(0,150),errors};
 writeJson('artifacts/validation/bhpc-agent-recommendation-driven-output.json',report);writeJson('reports/bhpc-agent-recommendation-driven-output.json',report);
 if(errors.length){console.error(`[bhpc-agent-recommendation-driven-output] FAIL: ${errors.length} issue(s)`);for(const e of errors.slice(0,80))console.error(' -',e);process.exit(1)}

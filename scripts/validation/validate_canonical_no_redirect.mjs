@@ -82,6 +82,13 @@ function walk(dir, out = []) {
 }
 
 const files = walk(ROOT);
+// walk() starts at process.cwd(). Run from the wrong directory, or against a
+// tree whose HTML has not been built, it returns nothing and every loop below
+// runs zero times - the run then printed "OK (0 pages)" having read no canonical.
+if (!files.length) {
+  console.error('[validate_canonical_no_redirect] FAIL: walked the working tree and found 0 .html pages; expected at least one shipping page. A canonical/og:url guard that examines no page proves nothing.');
+  process.exit(1);
+}
 const tracked = new Set(files);
 
 const publishedManifestPath = path.join(ROOT, 'data/reddit/published_manifest.json');

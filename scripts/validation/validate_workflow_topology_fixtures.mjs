@@ -9,6 +9,10 @@ ensureRuntime();
 const errors = [];
 const traces = [];
 const contracts = readJson('data/workflows/workflow_contracts.json').governed_workflows || [];
+// Each governed contract is traced individually; with none declared no lane is
+// ever spawned and the run reports "traced 0 governed topology workflow(s)" as a
+// pass, while the all-YAML faux trace below covers a different set entirely.
+if (!contracts.length) fail('[validate:workflow-topology-fixtures] FAIL: data/workflows/workflow_contracts.json declares no governed_workflows; expected at least one governed workflow to trace. Tracing zero workflows proves no topology is correct.');
 const root = process.cwd();
 const fixtureRoot = path.join(root, 'artifacts/validation/workflow-topology-fixtures');
 fs.rmSync(fixtureRoot, {recursive: true, force: true});

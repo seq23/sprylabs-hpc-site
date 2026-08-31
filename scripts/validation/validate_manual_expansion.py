@@ -42,6 +42,14 @@ def fail(path,msg): errors.append(f'{path}: {msg}')
 declared=SPEC.get('page_count')
 if not isinstance(declared,int) or declared!=len(SPEC.get('pages',[])): errors.append('manual spec page_count must equal pages length')
 if ACCEPT.get('page_count')!=len(ACCEPT.get('pages',[])) or ACCEPT.get('page_count')!=declared: errors.append('manual acceptance page_count must equal manual spec count')
+# The two count checks above are only SELF-CONSISTENT: page_count 0 with pages []
+# satisfies both, the per-page loop then runs zero times, and every acceptance
+# assertion in this file is skipped while the run prints OK. Both collections can
+# empty independently, so both get a floor.
+if not SPEC.get('pages'):
+    errors.append('data/content/manual_expansion_pages.json lists no pages; expected at least one manual expansion page. A run that checks zero pages proves nothing.')
+if not ACCEPT.get('pages'):
+    errors.append('data/citation/manual_expansion_acceptance.json lists no pages; expected one acceptance rule per manual expansion page. A run that checks zero pages proves nothing.')
 accept_by_path={x['path']:x for x in ACCEPT.get('pages',[])}
 paths=set(); queries={}; aliases={}; page_text=[]
 for page in SPEC['pages']:

@@ -324,6 +324,15 @@ def main():
     if args.candidate_only:
         manifest=json.loads((ROOT/'data/content/programmatic_candidate_manifest.json').read_text(encoding='utf-8'))
         records=manifest.get('candidates',[])
+        # Every check in this run - per-page quality, query collision, and the
+        # comparison against admitted references - iterates this list. An empty
+        # manifest makes all of them no-ops, and the guard below is what stops a
+        # candidate run reporting "0/0 pages admitted" as a pass. The cross-checks
+        # at the bottom of main() are additionally gated on `records` being
+        # non-empty, so an empty manifest would skip them silently.
+        if not records:
+            print('[validate:programmatic-admission] FAIL: data/content/programmatic_candidate_manifest.json lists no candidates; expected at least one candidate page to inspect. A candidate run that inspects nothing proves no page is admissible.')
+            raise SystemExit(1)
     else:
         # The corpus run inspects records marked admission_level == 'full'. That is
         # 62 of 2,214 admitted pages, because generate_aplayer_phase_expansion.mjs
@@ -340,6 +349,14 @@ def main():
         # payload, so the size of the debt is in front of whoever reads the output
         # instead of buried in a list comprehension.
         records=[x for x in REGISTRY if x.get('status')=='ADMITTED' and x.get('admission_level')=='full']
+        # This filter is the whole corpus the substantive checks see. If it ever
+        # returns nothing - a registry that failed to load its records, or a
+        # regression that stops stamping admission_level 'full' again - every
+        # check below runs zero times and the run prints "0/0 pages admitted" as
+        # a pass. That is the exact failure this filter already caused once.
+        if not records:
+            print('[validate:programmatic-admission] FAIL: data/content/page_admission_registry.json yielded no record with status ADMITTED and admission_level "full"; expected at least one page to inspect. Admitting 0 of 0 pages proves nothing.')
+            raise SystemExit(1)
         admitted_total=sum(1 for x in REGISTRY if x.get('status')=='ADMITTED')
         excluded=admitted_total-len(records)
         if excluded:

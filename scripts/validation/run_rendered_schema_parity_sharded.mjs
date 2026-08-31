@@ -42,8 +42,15 @@ for(const {i,code} of results){
     errors.push(...(d.errors||[]));
   }else errors.push(`shard ${i+1} produced no receipt (exit ${code})`);
 }
+const cacheMode=process.env.VALIDATION_CACHE_MODE||'incremental';
+// A full run covers the whole ACTIVE citable corpus, so an aggregate of 0 pages
+// means every shard opened nothing and the run still printed "OK: 0 pages". An
+// incremental run may legitimately aggregate 0 pages when the captured page
+// scope is empty; scripts/validation/page_scope.py already hard-fails when that
+// scope file is missing or not READY, so that case is not silently unprovable.
+if(cacheMode==='full'&&counts.pages===0)errors.push(`full run aggregated 0 pages across ${shards} shard(s); expected at least one ACTIVE page from data/citation/citable_pages.json, and a parity run that examines no page proves nothing`);
 const status=results.some(x=>x.code!==0)||errors.length?'FAIL':'PASS';
-fs.writeFileSync(`${dir}/summary.json`,JSON.stringify({status,shards,concurrency,mode:process.env.VALIDATION_CACHE_MODE||'incremental',counts,errors},null,2)+'\n');
+fs.writeFileSync(`${dir}/summary.json`,JSON.stringify({status,shards,concurrency,mode:cacheMode,counts,errors},null,2)+'\n');
 if(status==='FAIL'){
   console.error(`[validate:rendered-schema-parity] FAIL: ${errors.length} issue(s)`);
   for(const e of errors.slice(0,100))console.error(' -',e);

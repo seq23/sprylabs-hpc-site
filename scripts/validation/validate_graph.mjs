@@ -2,6 +2,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {readJson,fail,pass,writeSummary} from './common.mjs';
 const pages=readJson('data/citation/citable_pages.json').pages.filter(x=>x.status==='ACTIVE');
+// With no ACTIVE page the loop below runs zero times: no canonical uniqueness and
+// no internal link is ever resolved, and the run still printed "OK: 0 pages".
+if(!pages.length) fail('[validate:graph] FAIL: data/citation/citable_pages.json yielded 0 pages with status ACTIVE; expected at least one ACTIVE page. A canonical/link graph check that examines no page proves nothing.');
 const errors=[]; const canon=new Map(); const active=new Set(pages.map(x=>x.path));
 function resolveActivePage(rel){
  const file=path.join(process.cwd(),rel);

@@ -54,17 +54,50 @@ def projection(path: str, rows: list[dict], fields: tuple[str, ...]) -> list[dic
     return projected
 
 
+def hard_fail(message: str) -> None:
+    print(f'[extraction-surface-guard] FAIL: {message}', file=sys.stderr)
+    raise SystemExit(1)
+
+
 def build_state() -> dict[str, str]:
     citable = json.loads((ROOT / 'data/citation/citable_pages.json').read_text(encoding='utf-8'))
     query_registry = json.loads((ROOT / 'data/citation/query_registry.json').read_text(encoding='utf-8'))
     admission = json.loads((ROOT / 'data/content/page_admission_registry.json').read_text(encoding='utf-8'))
 
+    # Each of the three registries below is hashed independently, and each can
+    # empty on its own. sha() of an empty projection is a perfectly stable
+    # constant, so an emptied registry snapshots and re-checks clean forever.
+    if not citable.get('pages'):
+        hard_fail('data/citation/citable_pages.json lists no pages; expected at least one governed page. '
+                  'Hashing an empty governed set proves nothing.')
+    if not query_registry.get('queries'):
+        hard_fail('data/citation/query_registry.json lists no queries; expected at least one query owner. '
+                  'Hashing an empty registry projection proves nothing.')
+    if not admission.get('records'):
+        hard_fail('data/content/page_admission_registry.json lists no records; expected at least one admitted page. '
+                  'Hashing an empty registry projection proves nothing.')
+
     state: dict[str, str] = {}
+    # `if page.is_file()` used to drop a governed page that is not on disk. That
+    # is the one failure this guard should shout about: a governed HTML surface
+    # can disappear and the run still prints PASS because its hash simply left
+    # the state. A missing governed page is now reported instead of dropped.
+    missing = []
     for row in citable.get('pages', []):
         rel = row.get('path', '')
         page = ROOT / rel
         if page.is_file():
             state[f'html:{rel}'] = sha(html_surface(page))
+        else:
+            missing.append(rel)
+    if missing:
+        hard_fail(f'{len(missing)} governed page(s) named in data/citation/citable_pages.json are not files on disk, '
+                  f'so their extraction surfaces were never hashed: {", ".join(sorted(missing)[:20])}')
+    # A run that hashed no HTML surface at all protects no extraction block and
+    # no citation schema, and `check` would then compare two empty states as PASS.
+    if not any(key.startswith('html:') for key in state):
+        hard_fail('hashed 0 HTML extraction surfaces; expected one per page in data/citation/citable_pages.json. '
+                  'A surface guard that reads no page proves nothing.')
 
     state['registry:citable-pages'] = sha(projection(
         'citable-pages', citable.get('pages', []),

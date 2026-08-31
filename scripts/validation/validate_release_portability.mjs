@@ -86,6 +86,11 @@ const staticServerText = fs.readFileSync('scripts/browser/static_server.mjs', 'u
 if (!staticServerText.includes("'.ico':'image/x-icon'")) errors.push('static server must serve .ico as image/x-icon');
 
 const criticalRoutes = readJson('data/routes/critical_browser_route_manifest.json').routes || [];
+// The resolvable-asset sweep below is only as good as this manifest. The route
+// count asserted further up reads config/validation/browser_suite_contract.json,
+// a different file, so an emptied manifest still satisfies that assertion while
+// every route's local resources go unchecked.
+if (!criticalRoutes.length) errors.push('data/routes/critical_browser_route_manifest.json lists no routes; expected at least one critical browser route to resolve local resources for. Sweeping zero routes proves no browser asset is present.');
 const missingLocalResources = [];
 for (const route of criticalRoutes) {
   const source = route.source_file;

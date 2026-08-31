@@ -25,6 +25,11 @@ for(const banned of ['theindustryguides.com','Industry Guides provider databases
 const phaseManifest=readJson('data/citation/citation_phase_manifest.json');
 if(!String(phaseManifest.scope||'').includes('aplayermode.com + billionairehighperformancecoach.com')) errors.push('phase manifest scope must be BHPC / APlayerMode only');
 const inventory=readJson('data/citation/reference_page_inventory.json');
+// `inventory.files || []` meant a renamed or emptied key skipped every sitemap and
+// llms.txt cross-check below without a word, so the phase inventory could stop
+// covering pages and this validator would still report OK.
+if(!Array.isArray(inventory.files)) errors.push('data/citation/reference_page_inventory.json has no `files` array; the sitemap-bhpc and llms.txt cross-checks read that key and would silently check nothing');
+else if(!inventory.files.length) errors.push('data/citation/reference_page_inventory.json lists 0 files; the sitemap-bhpc and llms.txt cross-checks run only over that list, so an empty inventory proves nothing');
 const minimums=contract.phases?.phase_2_coverage?.minimums || phaseManifest.phase_requirements?.phase_2_coverage?.minimums || {};
 const invCounts=inventory.counts || {};
 for(const [key,min] of Object.entries(minimums)){
@@ -60,6 +65,11 @@ for(const phrase of ['GPTBot','ClaudeBot','PerplexityBot','Google-Extended','Bin
 }
 if(!String(author.name||'').trim()||!String(author.role||'').trim()||!String(author.review_role||'').trim()) errors.push('author profile is incomplete');
 if(!String(author.credential_policy||'').includes('No professional')) errors.push('author credential policy missing anti-fabrication boundary');
+// The per-page citation checks (one H1, canonical, extraction block, named author,
+// schema, product bridge) all run inside this loop. An emptied priority_pages list
+// would report "OK: 0 priority pages satisfy the four-layer citation strategy".
+if(!Array.isArray(contract.layers?.reference_pages?.priority_pages)) fail('[validate:citation-strategy] FAIL: data/citation/citation_strategy_contract.json has no layers.reference_pages.priority_pages array; every per-page citation check reads that key, so there is nothing to check.',errors);
+if(!contract.layers.reference_pages.priority_pages.length) errors.push('data/citation/citation_strategy_contract.json lists 0 layers.reference_pages.priority_pages; every per-page citation check runs over that list, so an empty one proves nothing');
 for(const rel of contract.layers.reference_pages.priority_pages){
   const fp=path.join(process.cwd(),rel);
   if(!fs.existsSync(fp)){errors.push(`${rel}: missing priority page`);continue;}

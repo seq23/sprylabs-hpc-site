@@ -195,6 +195,15 @@ const pages = [];
   }
 })(ROOT);
 pages.sort();
+// Every block and forbidden-pattern check runs inside the per-page loop below, so a
+// walk that finds no .html - a moved publish root, or a SKIP_DIRS entry that swallows
+// it - reported "0 pages checked" and PASS. The Math.max(pages.length, 1) in the
+// coverage maths papers over exactly that case instead of failing on it.
+if (!pages.length) {
+  console.error(`CONTENT PATTERN CONTRACT: 0 published .html pages found under ${path.relative(REPO, ROOT) || '.'} (skipping ${[...SKIP_DIRS].join(', ')}).`);
+  console.error('  The repository root is the published site and must carry pages; every block check runs per page, so a contract validated against zero pages proves nothing.');
+  process.exit(1);
+}
 
 const blockingFailures = [];
 const gaps = {};

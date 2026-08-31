@@ -10,6 +10,12 @@ const contracts = readJson('data/workflows/workflow_contracts.json').governed_wo
 const scripts = pkg.scripts || {};
 const lanes = topology.canonical_lanes || {};
 const canonicalLaneIds = new Set(Object.keys(lanes));
+// Both sides of the topology default to empty, so a topology file that lost
+// its canonical_lanes - or a contracts file that lost governed_workflows -
+// skipped every lane, mode and stage check and still reported OK with 0
+// lane(s) and 0 stage(s).
+if (!canonicalLaneIds.size) errors.push('data/workflows/workflow_topology.json: canonical_lanes is empty or absent; it must define the canonical lanes whose commands, modes and stages are being checked. Zero lanes means zero stages checked.');
+if (!contracts.length) errors.push('data/workflows/workflow_contracts.json: governed_workflows is empty or absent; it must list the governed workflow contracts bound to canonical lanes. An empty list checks no workflow.');
 function scriptBody(name) { return scripts[name] || ''; }
 function hasScript(name) { return Boolean(scripts[name]); }
 function commandToScript(command = '') {

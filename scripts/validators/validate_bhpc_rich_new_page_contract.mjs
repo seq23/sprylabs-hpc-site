@@ -1,9 +1,26 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
-import {ROOT, readJson, writeJson} from '../agent_intake/bhpc_agent_common.mjs';
+import {ROOT, writeJson} from '../agent_intake/bhpc_agent_common.mjs';
 import {requiredBlockTypesForPageFamily} from '../lib/bhpc_agent_block_schema.mjs';
-const plan = readJson('artifacts/validation/agent-exact-implementation-plan.json', {specs: []});
+
+// readJson(rel, {specs: []}) has a bare `catch` that returns the fallback, so a
+// missing or corrupt plan artifact was indistinguishable from a plan with no
+// specs: the loop below ran zero times and the run printed "PASS: checked=0".
+// The helper is shared, so the strict read lives here. A present plan that
+// legitimately carries no spec still passes through.
+const PLAN_PATH = 'artifacts/validation/agent-exact-implementation-plan.json';
+const PLAN_PRODUCER = 'npm run agent:bhpc:plan-exact';
+const planAbs = path.join(ROOT, PLAN_PATH);
+if (!fs.existsSync(planAbs)) {
+  console.error(`[bhpc-rich-new-page-contract] FAIL: required artifact ${PLAN_PATH} is missing; produce it with \`${PLAN_PRODUCER}\`. Treating a missing plan as an empty spec set proves nothing.`);
+  process.exit(1);
+}
+let plan;
+try { plan = JSON.parse(fs.readFileSync(planAbs, 'utf8')); } catch (error) {
+  console.error(`[bhpc-rich-new-page-contract] FAIL: required artifact ${PLAN_PATH} is not valid JSON (${error.message}); regenerate it with \`${PLAN_PRODUCER}\`. Treating a corrupt plan as an empty spec set proves nothing.`);
+  process.exit(1);
+}
 const errors = [];
 const checked = [];
 function unique(values=[]){return [...new Set(values.filter(Boolean).map(String))]}
@@ -62,6 +79,13 @@ for (const spec of plan.specs || []) {
     }
   }
   checked.push({record_id: spec.record_id, operation: spec.operation, page_family: fam, implementation_path: spec.implementation_path, required_blocks: required});
+}
+// A plan that carries specs but checks none of them means every spec was skipped
+// by the `!implementation_path || status === 'BLOCKED'` continue, so no page was
+// opened and no block, marker or extraction assertion ran - yet checked=0 printed
+// as PASS.
+if ((plan.specs || []).length && !checked.length) {
+  errors.push(`no_spec_checked:${PLAN_PATH} carries ${(plan.specs || []).length} spec(s) but every one was skipped as BLOCKED or without an implementation_path; expected at least one spec to check, and a contract that opens no page proves nothing`);
 }
 const report = {schema_version:'1.2', validator:'bhpc-rich-new-page-contract', status:errors.length?'FAIL':'PASS', checked_count:checked.length, checked:checked.slice(0,100), errors};
 writeJson('artifacts/validation/bhpc-rich-new-page-contract.json', report);

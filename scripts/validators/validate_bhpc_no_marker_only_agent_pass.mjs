@@ -9,6 +9,12 @@ const forbidden=[
   /must prove the visible recommendation/i
 ];
 const files=walk(ROOT),offenders=[];
+// walk() starts at process.cwd(), so running from the wrong directory - or a
+// tree whose pages have moved out from under it - yields no .html at all and
+// the scan printed "PASS: scanned=0" having read nothing. This repo publishes
+// its pages as .html under the repo root, so an empty scan means the scan is
+// broken, not that the pages are clean.
+if(!files.length){console.error(`[validate:bhpc-no-marker-only-agent-pass] FAIL: scanned 0 .html file(s) under ${ROOT}; expected the published page tree this repo serves. An empty scan proves no page is free of agent scaffolding.`);process.exit(1)}
 for(const file of files){const html=fs.readFileSync(file,'utf8');const matches=forbidden.filter(r=>r.test(html)).map(r=>r.source);if(matches.length)offenders.push({path:path.relative(ROOT,file).split(path.sep).join('/'),matches})}
 const report={schema_version:'1.1',generated_at:new Date().toISOString(),status:offenders.length?'FAIL':'PASS',scanned_html_files:files.length,offender_count:offenders.length,offenders};
 writeJson('artifacts/validation/bhpc-no-marker-only-agent-pass.json',report);

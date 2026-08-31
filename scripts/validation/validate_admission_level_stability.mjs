@@ -76,6 +76,14 @@ function committedRegistry() {
 function levels(doc, label) {
   const records = doc && Array.isArray(doc.records) ? doc.records : null;
   if (!records) internalError(`${label} has no records array`);
+  // Array.isArray([]) is true, so an EMPTY records array satisfied the check
+  // above, produced an empty map, and drift() then compared nothing and passed.
+  if (!records.length) {
+    internalError(
+      `${label} has an empty records array; expected at least one admission record. ` +
+        'An admission-level comparison over zero records proves nothing.'
+    );
+  }
   const map = new Map();
   for (const row of records) {
     if (!row || !row.path) continue;
@@ -151,6 +159,17 @@ writeSummary('admission-level-stability', {
   drifted_count: drifted.length,
   drifted
 });
+
+// drift() only looks at paths present on BOTH sides. If the two registries share
+// no path, compared_records is 0: no page's recorded admission_level was held to
+// anything, and the run still reported OK.
+if (!shared) {
+  internalError(
+    `no path is present in both ${REF}:${REGISTRY} and the working-tree ${REGISTRY}; ` +
+      'expected at least one shared admission record to compare. A stability guard that compares zero records proves nothing.',
+    [`committed records: ${committed.size}`, `built records: ${built.size}`]
+  );
+}
 
 if (drifted.length) {
   const byDirection = new Map();

@@ -12,6 +12,14 @@ const contracts = onlyId ? [workflowContract(onlyId)] : workflowContracts();
 const errors = [];
 const results = [];
 
+// Every schedule, dispatch, trace-path and commit-identity check runs inside the
+// contract loop. workflowContracts() falls back to [] when governed_workflows is
+// renamed or emptied in data/workflows/workflow_contracts.json, which reported
+// "OK: 0 governed workflow monitor contract(s) valid" while no workflow was governed.
+if (!contracts.length) {
+  fail('[validate:workflow-monitor] FAIL: data/workflows/workflow_contracts.json lists no governed_workflows; every workflow check runs over that list, so a monitor contract validated against zero workflows proves nothing.');
+}
+
 for (const contract of contracts) {
   if (!fs.existsSync(contract.workflow_file)) {
     errors.push(`${contract.id}: workflow file missing`);

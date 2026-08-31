@@ -34,6 +34,14 @@ for (const file of walk(ROOT)) {
     }
   }
 }
+// This validator has no manifest; its subject is whatever walk() finds on disk.
+// A changed working directory, a widened skip list, or a moved page set makes
+// the scan match nothing, and the run prints "PASS: scanned=0" while having
+// opened no HTML file at all.
+if (scanned === 0) {
+  console.error('[validate:bhpc-browser-structural] FAIL: scanned 0 HTML files under the repository root; expected the published .html pages outside templates/, data/, scripts/, docs/, reports/, artifacts/, and fixtures/. A pass over an empty scan proves no page is structurally sound.');
+  process.exit(1);
+}
 const status = errors.length ? 'FAIL' : strong_warnings.length ? 'PASS_WITH_STRONG_WARNING' : 'PASS';
 const report = { schema_version: '1.1', generated_at: new Date().toISOString(), status, scanned_html_files: scanned, semantic_agent_pages: semantic, errors, strong_warnings };
 writeJson('artifacts/validation/bhpc-browser-structural.json', report);

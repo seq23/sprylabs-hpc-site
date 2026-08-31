@@ -55,6 +55,13 @@ def visible_breadcrumbs(soup, canonical):
     return items
 
 all_pages=REG.get('pages',REG if isinstance(REG,list) else [])
+# The registry is the one unconditional source here. If it lists no pages, every
+# narrowing below (scope filter, shard filter, ACTIVE filter, cache short-circuit)
+# is empty by construction and the shard writes 'status':'PASS' without having
+# opened a single rendered page.
+if not all_pages:
+    print("[validate:rendered-schema-parity] FAIL: data/citation/citable_pages.json lists no pages; expected at least one ACTIVE page. A schema-parity run that examines no page proves nothing.", file=sys.stderr)
+    raise SystemExit(1)
 scope_paths=validation_paths(ROOT)
 if scope_paths is not None:
     all_pages=[rec for rec in all_pages if str(rec.get('path') or rec.get('source_file') or '').lstrip('./') in scope_paths]
@@ -154,6 +161,16 @@ for rec in pages:
         if any(k in blob for k in ('aggregaterating','ratingvalue','ratingcount','reviewcount')): fail(rel,'unsupported rating/review schema present')
     if len(errors)==before_errors:
         cache_store(rel,rec,'rendered-schema-parity',{'counts':page_counts})
+
+# In full mode (scope_paths is None) every shard is handed a slice of the whole
+# ACTIVE corpus, so counting 0 pages means the shard asserted nothing at all -
+# whether it was narrowed away by the ACTIVE filter, the download.html skip, or
+# the `if cached: continue` short-circuit. An incremental run may legitimately
+# examine nothing when the captured page scope is empty; page_scope.validation_paths
+# already raises when that scope file is missing or not READY, so that case is
+# guarded rather than silent.
+if scope_paths is None and counts['pages']==0:
+    errors.append(f"shard {shard_index+1}/{shard_count}: examined 0 pages from data/citation/citable_pages.json in full mode; expected at least one ACTIVE page, and a parity shard that asserts nothing must not report PASS")
 
 out=ROOT/f'artifacts/diagnostics/container-current/validate-rendered-schema-parity/summary-shard-{shard_index}.json' if shard_count>1 else ROOT/'artifacts/diagnostics/container-current/validate-rendered-schema-parity/summary.json'
 out.parent.mkdir(parents=True,exist_ok=True)

@@ -24,6 +24,20 @@ const errors = [];
 // supply, not a broken contract, so it is recorded and surfaced rather than
 // thrown. What still fails is a malformed candidate, which is what this
 // validator can actually judge.
+// The 2,700 floor stays demoted for the reason above. What is restored is a floor on
+// the backlog existing at all: every candidate check - required fields, admission
+// basis, finish flags, gap separation, duplicate paths - runs inside the loop below,
+// and read()'s silent {candidates:[]} fallback turned a deleted or renamed backlog
+// file into "PASS: candidates=0; minimum=2700; shortfall=2700".
+const BACKLOG_PATH = 'data/strategy/strategy_gap_fill_backlog.json';
+if (!fs.existsSync(path.join(ROOT, BACKLOG_PATH))) {
+  console.error(`[bhpc-strategy-gap-fill-contract] FAIL: ${BACKLOG_PATH} is missing; every candidate check in this validator runs over its \`candidates\` array, so there is nothing to judge and a pass would be false.`);
+  process.exit(1);
+}
+if (!Array.isArray(backlog.candidates) || !backlog.candidates.length) {
+  console.error(`[bhpc-strategy-gap-fill-contract] FAIL: ${BACKLOG_PATH} carries no \`candidates\`; a short backlog is reportable, but a backlog with zero entries means the field, admission-basis, finish-flag and gap-separation checks examined nothing.`);
+  process.exit(1);
+}
 const backlogCount = (backlog.candidates || []).length;
 const backlogShortfall = Math.max(0, minimum - backlogCount);
 const paths = new Set();

@@ -28,6 +28,11 @@ const packaging = readJson('_baseline_packaging_contract.json');
 const admissions = readJson('data/content/page_admission_registry.json').records || [];
 
 const mix = plan.default_daily_mix || {};
+// An emptied default_daily_mix sums to zero, so it passes both governed
+// ceiling checks and the per-lane loop iterates nothing: a plan with its mix
+// deleted would report the citation-expansion ceiling honoured by producing
+// nothing at all.
+if (!Object.keys(mix).length) errors.push('data/citation_velocity/velocity_5k_plan.json: default_daily_mix is empty or absent; it must name the per-lane daily batch mix that is checked against the governed citation-expansion ceiling. An empty mix proves nothing.');
 const mixSum = Object.values(mix).reduce((sum, value) => sum + Number(value || 0), 0);
 const expansionCeiling = Number(governor.citation_expansion_mode_batch_ceiling || 0);
 if (!expansionCeiling) errors.push('authority-scale citation expansion ceiling is missing');
@@ -71,7 +76,11 @@ else {
   if (workflow.workflow_command !== 'npm run workflow:spry-content-release') errors.push('workflow command drift');
   if (workflow.schedule_cron !== '17 14 * * *') errors.push('workflow schedule must be daily 14:17 UTC');
   if (workflow.remote_advance_strategy !== 'reset-regenerate-validate-recommit') errors.push('workflow must use reset-regenerate-validate-recommit');
-  for (const file of workflow.required_outputs || []) if (!fs.existsSync(file)) errors.push(`workflow required output missing: ${file}`);
+  // With no required_outputs the contract verifies no artifact at all, so a
+  // release that emitted nothing would still be recorded as having run.
+  const requiredOutputs = workflow.required_outputs || [];
+  if (!requiredOutputs.length) errors.push('data/workflows/workflow_contracts.json: spry-content-release lists no required_outputs; the contract must name the artifacts the release writes. An empty list verifies no artifact.');
+  for (const file of requiredOutputs) if (!fs.existsSync(file)) errors.push(`workflow required output missing: ${file}`);
 }
 
 const workflowText = fs.existsSync('.github/workflows/spry-content-release.yml') ? fs.readFileSync('.github/workflows/spry-content-release.yml','utf8') : '';
