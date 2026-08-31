@@ -26,12 +26,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { gradeSelfHealOutcome } from '../workflow/stop_grading.mjs';
 
 const ROOT = process.cwd();
 const PROFILE = process.argv.find((a) => a.startsWith('--profile='))?.split('=')[1] ?? 'container-prepush';
 const MAX = Number(process.argv.find((a) => a.startsWith('--max='))?.split('=')[1] ?? 3);
 const DRY = process.argv.includes('--dry-run');
-const REPORT = path.join(ROOT, 'reports/validation/self-heal-loop.json');
+const REPORT = path.resolve(ROOT, process.argv.find((a) => a.startsWith('--report='))?.split('=')[1] ?? 'reports/validation/self-heal-loop.json');
 
 // step id -> repair command. Only where the repair writes what the check reads.
 const REPAIRS = {
@@ -70,20 +71,29 @@ const REPAIRS = {
 
 const run = (command) => spawnSync('sh', ['-c', command], { cwd: ROOT, encoding: 'utf8', stdio: 'inherit' }).status ?? 1;
 
-const readFailures = () => {
+// Reads the profile receipt. Returns null - NOT an empty list - when the profile
+// wrote nothing, because "no failures" and "nothing was graded" are different
+// answers and collapsing them is how this loop printed CLEAN over a profile that
+// had crashed before it ran a single step.
+const readReceipt = () => {
   const p = path.join(ROOT, `artifacts/validation/profile-${PROFILE}.json`);
   if (!fs.existsSync(p)) return null;
-  const receipt = JSON.parse(fs.readFileSync(p, 'utf8'));
-  return (receipt.steps || []).filter((s) => s.exit_code !== 0).map((s) => s.id || s.command);
+  try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch { return null; }
 };
 
 const attempts = [];
 let failed = [];
+let grade = null;
 
 for (let attempt = 0; attempt <= MAX; attempt += 1) {
-  run(`npm run validate:profile -- ${PROFILE}`);
-  failed = readFailures() ?? [];
-  console.log(`self-heal: attempt ${attempt} - ${failed.length} failing step(s)${failed.length ? `: ${failed.join(', ')}` : ''}`);
+  const profileExit = run(`npm run validate:profile -- ${PROFILE}`);
+  grade = gradeSelfHealOutcome({ profileExit, receipt: readReceipt(), profile: PROFILE });
+  failed = grade.failed;
+  if (grade.stop) {
+    console.error(`self-heal: ${grade.stop.code} - ${grade.stop.message}`);
+    break;
+  }
+  console.log(`self-heal: attempt ${attempt} - ${failed.length} failing step(s) over ${grade.stepsExamined} graded step(s)${failed.length ? `: ${failed.join(', ')}` : ''}`);
   if (!failed.length || attempt === MAX) break;
 
   const actions = [];
@@ -104,17 +114,26 @@ for (let attempt = 0; attempt <= MAX; attempt += 1) {
   }
 }
 
+// Rule 0: the loop must never report CLEAN having graded nothing. `grade` is the
+// single writer of that decision (scripts/workflow/stop_grading.mjs); this file
+// reports what it decided rather than re-deriving it from failed.length, which
+// is what treated "read no receipt" as "found no failures".
 fs.mkdirSync(path.dirname(REPORT), { recursive: true });
 fs.writeFileSync(REPORT, `${JSON.stringify({
-  schema_version: '1.0',
+  schema_version: '1.1',
   generated_at: new Date().toISOString(),
   profile: PROFILE,
   mode: DRY ? 'dry-run' : 'repair',
   max_attempts: MAX,
-  status: failed.length ? 'UNRESOLVED' : 'CLEAN',
+  status: grade.status,
+  steps_examined: grade.stepsExamined,
+  stop_reason: grade.stop,
   unresolved: failed,
   attempts,
 }, null, 2)}\n`);
 
-console.log(`self-heal: ${failed.length ? `UNRESOLVED (${failed.join(', ')})` : 'CLEAN'} - report at ${path.relative(ROOT, REPORT)}`);
-process.exit(failed.length ? 1 : 0);
+const summary = grade.stop
+  ? `${grade.status} (${grade.stop.code})`
+  : (failed.length ? `UNRESOLVED (${failed.join(', ')})` : `CLEAN over ${grade.stepsExamined} graded step(s)`);
+console.log(`self-heal: ${summary} - report at ${path.relative(ROOT, REPORT)}`);
+process.exit(grade.exitCode);

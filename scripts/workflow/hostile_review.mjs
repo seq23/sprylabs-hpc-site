@@ -11,6 +11,7 @@ import {
   summarizeFindings,
 } from '../validation/governance_findings.mjs';
 import {runGovernanceBlockerAudit} from '../validation/governance_blocker_audit.mjs';
+import {gradeHostileAggregate, stopGradingSelfTest} from './stop_grading.mjs';
 
 const argv = process.argv.slice(2);
 function value(flag) { const index = argv.indexOf(flag); return index >= 0 ? argv[index + 1] : null; }
@@ -104,12 +105,14 @@ function requireGovernanceFixtures() {
   const classifier = runGovernanceFindingSelfTest();
   const aggregation = runAggregationSelfTest();
   const changePatternPrecedence = runChangePatternPrecedenceSelfTest();
+  const stopGrading = stopGradingSelfTest();
   const failures = [
     ...classifier.failures.map(failure => `${failure.name}: expected=${failure.expected}`),
     ...aggregation.failures,
     ...changePatternPrecedence.failures,
+    ...stopGrading.failures,
   ];
-  const fixtureCount = classifier.fixtures + aggregation.fixtures + changePatternPrecedence.fixtures;
+  const fixtureCount = classifier.fixtures + aggregation.fixtures + changePatternPrecedence.fixtures + stopGrading.fixtures;
   if (failures.length) {
     const error = new Error(`governance fixtures failed ${failures.length}/${fixtureCount}`);
     error.details = failures;
@@ -266,6 +269,9 @@ for (const wf of contracts.governed_workflows || []) {
   const id = wf.id;
   const trace = latestTraceFor(id);
   if (!trace) {
+    // Named, and printed. A skip absorbed into a bare PASS is a lane nobody
+    // knows went unreviewed.
+    console.error(`[workflow:hostile-review] UNREVIEWED ${id}: no latest trace under reports/workflows/${id}/latest.json; this lane was not governed by this run.`);
     results.push({workflow_id: id, status: 'SKIP', errors: [], warnings: [], safe_noise: [], info: ['latest trace missing; no historical run available to hostile-review']});
     continue;
   }
@@ -279,13 +285,21 @@ for (const wf of contracts.governed_workflows || []) {
     results.push({workflow_id: id, status: 'INTERNAL_ERROR', errors: [message], warnings: [], safe_noise: [], info: []});
   }
 }
+// Rule 0 for the review itself: `PASS all governed workflows=3` was printed with
+// reviewed_count=0, because SKIP counted as neither pass nor fail and the status
+// only looked at `errors`. A guard that reaches nothing it governs must be red.
+// The inverse also holds: a partial skip is a real condition and stays green, but
+// it is named in the status rather than swallowed. One decision, in stop_grading.
+const grade = gradeHostileAggregate({results, errors});
 const aggregate = {
-  schema_version: '1.3',
+  schema_version: '1.4',
   generated_at: new Date().toISOString(),
-  status: errors.length ? 'FAIL' : results.some(result => result.status === 'PASS_WITH_WARNING') ? 'PASS_WITH_WARNING' : 'PASS',
+  status: grade.status,
+  stop_reason: grade.stop,
+  unreviewed_workflows: grade.skipped,
   workflow_count: results.length,
-  reviewed_count: results.filter(result => ['PASS', 'PASS_WITH_WARNING', 'FAIL', 'INTERNAL_ERROR'].includes(result.status)).length,
-  skipped_count: results.filter(result => result.status === 'SKIP').length,
+  reviewed_count: grade.reviewedCount,
+  skipped_count: grade.skippedCount,
   pass_count: results.filter(result => ['PASS', 'PASS_WITH_WARNING'].includes(result.status)).length,
   fail_count: results.filter(result => ['FAIL', 'INTERNAL_ERROR'].includes(result.status)).length,
   warning_count: results.reduce((sum, result) => sum + (result.warnings?.length || 0), 0),
@@ -303,9 +317,11 @@ const aggregate = {
 };
 writeJson('artifacts/validation/workflow-hostile-review-all.json', aggregate);
 writeJson('reports/workflow-hostile-review-all.json', aggregate);
-if (errors.length) {
-  console.error(`[workflow:hostile-review] FAIL ${aggregate.fail_count}/${aggregate.workflow_count}`);
+if (grade.exitCode !== 0) {
+  console.error(`[workflow:hostile-review] ${grade.status} ${aggregate.fail_count}/${aggregate.workflow_count} reviewed=${grade.reviewedCount}`);
+  if (grade.stop) console.error(` - ${grade.stop.code}: ${grade.stop.message}`);
   for (const error of errors) console.error(` - ${error}`);
   process.exit(1);
 }
-console.log(`[workflow:hostile-review] ${aggregate.status} all governed workflows=${aggregate.workflow_count}; warnings=${aggregate.warning_count}; raw_findings=${aggregate.raw_finding_count}; findings=${aggregate.aggregated_finding_count}; safe_noise=${aggregate.safe_noise_count}; fixtures=${fixtureResult.fixtures}; hard_fail_audit=${blockerAudit.admitted_hard_fail_count}`);
+if (grade.stop) console.log(`[workflow:hostile-review] NAMED STOP ${grade.stop.code}: ${grade.stop.message}`);
+console.log(`[workflow:hostile-review] ${aggregate.status} reviewed=${grade.reviewedCount}/${aggregate.workflow_count}; unreviewed=${grade.skippedCount}; warnings=${aggregate.warning_count}; raw_findings=${aggregate.raw_finding_count}; findings=${aggregate.aggregated_finding_count}; safe_noise=${aggregate.safe_noise_count}; fixtures=${fixtureResult.fixtures}; hard_fail_audit=${blockerAudit.admitted_hard_fail_count}`);

@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-08-30T13:31:53.238Z",
+  "generated_at": "2026-08-31T03:10:51.336Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 179,
+  "admitted_hard_fail_count": 185,
   "reviewed_count": 8,
-  "unreviewed_count": 171,
+  "unreviewed_count": 177,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 133,
-    "EXISTING_REPAIR_AVAILABLE": 7,
+    "REVIEW_REQUIRED": 138,
+    "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 26,
     "REVIEW_WARNING_BOUNDARY": 13
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 133,
-    "EXISTING_REPAIR_AVAILABLE": 7,
+    "REVIEW_REQUIRED": 138,
+    "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 26,
     "REVIEW_WARNING_BOUNDARY": 5
   },
   "migration_status_counts": {
-    "UNREVIEWED": 171,
+    "UNREVIEWED": 177,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -2728,6 +2728,96 @@
         "MX-185"
       ],
       "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-SIGNAL-SOURCE-PRODUCERS",
+      "name": "validate:signal-source-producers",
+      "command": "npm run validate:signal-source-producers",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-186"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-SOCIAL-SOURCE-CONTRACT",
+      "name": "validate:social-source-contract",
+      "command": "npm run validate:social-source-contract",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-187"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-FRAMEWORK-NAME-SHAPE",
+      "name": "validate:framework-name-shape",
+      "command": "npm run validate:framework-name-shape",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-188"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-CURATED-FRAMEWORK-AUTHORITY",
+      "name": "validate:curated-framework-authority",
+      "command": "npm run validate:curated-framework-authority",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-189"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-CURATED-DEFINITION-REGISTRY-REACH",
+      "name": "validate:curated-definition-registry-reach",
+      "command": "npm run validate:curated-definition-registry-reach",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-190"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-STOP-GRADING-PARITY",
+      "name": "validate:stop-grading-parity",
+      "command": "npm run validate:stop-grading-parity",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-191"
+      ],
+      "suggested_review": "EXISTING_REPAIR_AVAILABLE",
       "migration_status": "UNREVIEWED",
       "decision": null,
       "evidence": []
