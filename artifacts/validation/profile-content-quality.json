@@ -1,7 +1,13 @@
 {
   "profile": "content-quality",
-  "started_at": "2026-08-29T15:40:17.915Z",
+  "started_at": "2026-08-31T03:09:39.407Z",
   "steps": [
+    {
+      "id": "VAL-CITATION-REPAIR-REACH",
+      "command": "npm run validate:citation-repair-reach",
+      "exit_code": 0,
+      "status": "PASS"
+    },
     {
       "id": "validate:programmatic-registry",
       "command": "npm run validate:programmatic-registry",
@@ -67,11 +73,41 @@
       "command": "node scripts/validation/validate_llms_full_coverage.mjs",
       "exit_code": 0,
       "status": "PASS"
+    },
+    {
+      "id": "validate:no-silent-zero-work",
+      "command": "npm run validate:no-silent-zero-work",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-SITEMAP-LEDGER-FINAL",
+      "command": "npm run validate:lastmod-ledger-final",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-CITATION-SCHEMA-SERIALIZATION",
+      "command": "npm run validate:citation-schema-serialization",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-FROZEN-OUTPUT-CONTRACT",
+      "command": "npm run validate:frozen-output-contract",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-CITATION-SCHEMA-AUTHORITY-REACH",
+      "command": "npm run validate:citation-schema-authority-reach",
+      "exit_code": 0,
+      "status": "PASS"
     }
   ],
   "status": "PASS",
   "failure_count": 0,
   "failures": [],
   "stopped_early_at": null,
-  "finished_at": "2026-08-29T15:40:37.617Z"
+  "finished_at": "2026-08-31T03:09:59.727Z"
 }

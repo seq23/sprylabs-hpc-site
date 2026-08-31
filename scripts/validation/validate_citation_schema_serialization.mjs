@@ -36,8 +36,14 @@ const ROOT = process.cwd();
 const { SCHEMA_SCRIPT_RE, SERIALIZATION_EXEMPT, serializeSchema, mainEntityOfPageId } =
   requireCjs(path.join(ROOT, 'scripts/lib/citation_page_schema.cjs'));
 
+// '.claude' holds agent worktrees - `git worktree add .claude/worktrees/<id>`
+// puts a COMPLETE second checkout of this repository inside the working tree.
+// Without this entry the walker descended into it and graded another checkout's
+// pages as if they were ours: a clean tree reported 1,486 failures, every one of
+// them under .claude/worktrees/, while all 2,254 pages of this repo conformed.
+// A validator must grade the tree it is validating and nothing nested inside it.
 const SKIP_DIRS = new Set([
-  '.git', '.pages-output', 'node_modules', 'artifacts', 'coverage', '.build',
+  '.git', '.claude', '.pages-output', 'node_modules', 'artifacts', 'coverage', '.build',
   'test-results', 'playwright-report', 'reports', 'logs', 'releases', 'scripts',
 ]);
 
