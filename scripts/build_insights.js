@@ -13,6 +13,9 @@ const TOPICS_DIR = path.join(ROOT, "topics"); // sitemap references; may be gene
 // sitemap.xml is the host-neutral sitemap index; the spry urlset - which is
 // what this generator maintains - lives in sitemap-spry.xml.
 const SITEMAP_PATH = path.join(ROOT, "sitemap-spry.xml");
+// Stable stand-in for a missing post date. Never the clock: see the note at
+// datePublished below.
+const INSIGHT_DATE_FALLBACK = "2026-06-21";
 const LLMS_PATH = path.join(ROOT, "llms.txt");
 const CLUSTERS_PATH = path.join(CONTENT_DIR, "_clusters.json");
 const TEMPLATES_DIR = path.join(ROOT, "templates");
@@ -658,8 +661,14 @@ function buildPostPages(posts, clustersMap) {
         title: post.title,
         description: post.description || "",
         url: canonical,
-        datePublished: post.date || new Date().toISOString().slice(0, 10),
-        dateModified: post.dateModified || post.date || new Date().toISOString().slice(0, 10),
+        // Same date-rollover class as the RSS dates below: an undated post used
+        // to take TODAY into its published schema, so the same commit built on
+        // two sides of midnight emitted different HTML - and
+        // validate:clean-rebuild-parity does compare .html, so it would fail
+        // with no commit behind it. Every post carries a date today, which is
+        // why this never fired; a constant keeps it from firing later.
+        datePublished: post.date || INSIGHT_DATE_FALLBACK,
+        dateModified: post.dateModified || post.date || INSIGHT_DATE_FALLBACK,
       }),
     });
 
@@ -874,9 +883,29 @@ function buildFeeds(posts) {
       .slice(0, 100);
 
     // RSS 2.0
+    // Both dates in this feed used to be wall-clock reads, which made feed.xml
+    // the one published file that differed between two builds of the SAME
+    // commit. Measured: three consecutive build:all runs on a pristine
+    // aa67577ea checkout: builds 2 and 3 differed in exactly one file, and the
+    // only difference in it was
+    //   -<lastBuildDate>Mon, 31 Aug 2026 06:48:18 GMT</lastBuildDate>
+    //   +<lastBuildDate>Mon, 31 Aug 2026 07:06:18 GMT</lastBuildDate>
+    // validate:clean-rebuild-parity never caught it because feed.xml is not in
+    // its compared set (.html plus sitemap*.xml, llms.txt, _redirects and
+    // data/citation/), so this was real non-determinism that no guard could see.
+    //
+    // Both are now derived from the content: an item's own date, and for the
+    // channel the newest item date. A feed with no dated items has nothing to
+    // derive from, so it takes a fixed constant rather than the clock - the same
+    // choice repair_programmatic_registry_owners.mjs makes for generated_at.
+    const FEED_DATE_FALLBACK = "2026-06-21";
+    const isFeedDate = (value) => /^\d{4}-\d{2}-\d{2}$/.test(String(value || ""));
+    const feedDates = feedItems.map((p) => p.date).filter(isFeedDate).sort();
+    const newestFeedDate = feedDates.length ? feedDates[feedDates.length - 1] : FEED_DATE_FALLBACK;
+    const utc = (day) => new Date(`${day}T00:00:00Z`).toUTCString();
     const rssItemsXml = feedItems.map((p) => {
       const url = `${siteUrl}/insights/${p.slug}`;
-      const pubDate = p.date ? new Date(p.date + "T00:00:00Z").toUTCString() : new Date().toUTCString();
+      const pubDate = utc(isFeedDate(p.date) ? p.date : newestFeedDate);
       const desc = htmlEscape(p.description || "");
       const title = htmlEscape(p.title || p.slug);
       return [
@@ -898,7 +927,7 @@ function buildFeeds(posts) {
       `<link>${siteUrl}/insights/</link>`,
       "<description>Daily executive operating system insights.</description>",
       "<language>en</language>",
-      `<lastBuildDate>${new Date().toUTCString()}</lastBuildDate>`,
+      `<lastBuildDate>${utc(newestFeedDate)}</lastBuildDate>`,
       rssItemsXml,
       "</channel>",
       "</rss>",

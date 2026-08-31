@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {ROOT, readJson, writeJson} from './bhpc_agent_common.mjs';
 import {requiredBlockTypesForPageFamily} from '../lib/bhpc_agent_block_schema.mjs';
+import { isIgnoredDir } from '../lib/repo_walk.mjs';
 import {groupBhpcSemanticEntries, renderBhpcRecordEvidence, renderBhpcVisibleSourceEvidence, requiredBlockTypesForBhpcEntry} from '../lib/bhpc_agent_semantic_contract.mjs';
 import {normalizeBhpcInternalLinkHref, normalizeBhpcExternalCtaHref} from '../lib/bhpc_internal_links.mjs';
 import {mergeBhpcExternalCtaLinks} from '../lib/bhpc_conversion_contract.mjs';
@@ -31,8 +32,10 @@ function renderInstructionList(value = '') {
 function walkHtml(dir, out = []) {
   if (!fs.existsSync(dir)) return out;
   for (const entry of fs.readdirSync(dir, {withFileTypes: true})) {
-    if (['.git','.pages-output', 'node_modules'].includes(entry.name)) continue;
     const abs = path.join(dir, entry.name);
+    // Shared boundary rather than a private three-entry list: see
+    // scripts/lib/repo_walk.cjs. This pass writes to the pages it walks.
+    if (entry.isDirectory() && isIgnoredDir(entry.name, path.relative(ROOT, abs).split(path.sep).join('/'))) continue;
     if (entry.isDirectory()) walkHtml(abs, out);
     else if (entry.isFile() && entry.name.endsWith('.html')) out.push(abs);
   }
