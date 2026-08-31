@@ -1977,9 +1977,29 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-195",
+      "validation_id": "VAL-MAIN-WRITER-VALIDATION-GATE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:main-writer-validation-gate",
+      "order": 195,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-WF-MAIN-VALIDATION-SENTINEL",
+      "validation_id": "VAL-WF-MAIN-VALIDATION-SENTINEL",
+      "lane": "validation-control-plane",
+      "command": ".github/workflows/main-validation-sentinel.yml",
+      "order": 196,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 197,
+  "entry_count": 199,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2381,6 +2401,10 @@
         {
           "id": "VAL-REDIRECT-MAP-EQUIVALENCE",
           "command": "npm run validate:redirect-map-equivalence"
+        },
+        {
+          "id": "VAL-MAIN-WRITER-VALIDATION-GATE",
+          "command": "npm run validate:main-writer-validation-gate"
         }
       ]
     },
