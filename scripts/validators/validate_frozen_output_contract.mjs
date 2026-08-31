@@ -125,10 +125,23 @@ if (carrying === 0) {
 }
 
 if (problems.length) {
+  // REMEDY ORDER MATTERS, and getting it wrong makes this worse. freeze()
+  // snapshots whatever is on disk, so re-freezing a tree that authority:scale:restore
+  // has already reverted bakes the defect into the store at scale: a first
+  // attempt at this repair re-froze a reverted tree and produced 1474 blobs
+  // writing mainEntityOfPage as a string. Normalise the pages FIRST.
+  //
+  // schema:repair-parity is the writer that owns this shape, and it must run
+  // UNSCOPED. Inside the release lanes it runs scoped - `scoped=True ...
+  // skipped_outside_scope=2201` - so it repairs the handful of pages in the
+  // active scope and leaves the rest carrying whatever restore() wrote. build:all
+  // does NOT normalise them either; it preserves the existing block.
   fail(
     `${problems.length} frozen blob(s) would fail the page contracts if restored ` +
-      `(${missingBlob} missing, ${hashLies} hash mismatch). Re-freeze with ` +
-      'prepare-drift-scope -> freeze -> clear-scope and commit the store.',
+      `(${missingBlob} missing, ${hashLies} hash mismatch). Fix in this order: ` +
+      'npm run schema:repair-parity (unscoped) to normalise the pages, confirm ' +
+      'npm run validate:citation-schema-serialization passes, then re-freeze with ' +
+      'prepare-drift-scope -> freeze -> clear-scope. Re-freezing a reverted tree stores the defect.',
     problems.slice(0, 15).concat(problems.length > 15 ? [`... and ${problems.length - 15} more`] : []),
   );
 }
