@@ -1,7 +1,7 @@
 {
   "schema_version": "1.4",
   "repo": "seq23/sprylabs-hpc-site",
-  "generated_at": "2026-08-29T13:39:58.460Z",
+  "generated_at": "2026-08-31T01:40:54.953Z",
   "status": "PASS",
   "sources": [
     {
@@ -11,6 +11,7 @@
       "terms_status": "allowed",
       "enabled": true,
       "description": "Deterministic offline fixture demand signals.",
+      "producing": false,
       "status": "PASS",
       "health": "ACTIVE_FIXTURE_OR_MANUAL",
       "records": 5,
@@ -25,6 +26,7 @@
       "terms_status": "allowed",
       "enabled": true,
       "description": "Operator-provided source-compliant demand records.",
+      "producing": true,
       "status": "PASS",
       "health": "ACTIVE_FIXTURE_OR_MANUAL",
       "records": 0,
@@ -38,12 +40,13 @@
       "mode": "export",
       "terms_status": "allowed",
       "enabled": true,
-      "description": "Owned agent artifact manifests and reports.",
+      "description": "Boundary declaration only. data/report_fixes/agent_runs and normalized_agent_runs are hash-protected by prove_agent_separation and already absorbed by scripts/agent_intake; this source never emits demand records.",
+      "producing": false,
       "status": "PASS",
       "health": "ACTIVE_FIXTURE_OR_MANUAL",
       "records": 0,
       "warnings": [
-        "agent artifact root present; no ready manifest consumed in fixture run"
+        "NOT_A_PRODUCING_SOURCE: agent artifacts are hash-protected by prove_agent_separation and already absorbed by scripts/agent_intake; this adapter never emits demand records."
       ]
     },
     {
@@ -53,6 +56,7 @@
       "terms_status": "requires_review",
       "enabled": false,
       "description": "Public RSS/forum feeds only after terms review.",
+      "producing": true,
       "status": "WARN",
       "health": "REQUIRES_TERMS_REVIEW",
       "records": 0,
@@ -67,6 +71,7 @@
       "terms_status": "requires_credentials",
       "enabled": false,
       "description": "Reddit API or manual exports only; no unauthorized scraping.",
+      "producing": true,
       "status": "WARN",
       "health": "REQUIRES_CREDENTIALS",
       "records": 0,
@@ -81,6 +86,7 @@
       "terms_status": "requires_review",
       "enabled": false,
       "description": "ATProto/firehose only after source authority review.",
+      "producing": true,
       "status": "WARN",
       "health": "REQUIRES_TERMS_REVIEW",
       "records": 0,
@@ -95,6 +101,7 @@
       "terms_status": "requires_credentials",
       "enabled": false,
       "description": "X API filtered stream only with credentials and terms authority.",
+      "producing": true,
       "status": "WARN",
       "health": "REQUIRES_CREDENTIALS",
       "records": 0,
@@ -109,6 +116,7 @@
       "terms_status": "requires_credentials",
       "enabled": false,
       "description": "YouTube API/search only with credentials and quota authority.",
+      "producing": true,
       "status": "WARN",
       "health": "REQUIRES_CREDENTIALS",
       "records": 0,
@@ -123,6 +131,7 @@
       "terms_status": "requires_credentials",
       "enabled": false,
       "description": "Owned GSC export/API only.",
+      "producing": true,
       "status": "WARN",
       "health": "REQUIRES_CREDENTIALS",
       "records": 0,
