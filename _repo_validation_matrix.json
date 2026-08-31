@@ -2027,9 +2027,39 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-200",
+      "validation_id": "VAL-SHORT-ANSWER-UNIQUENESS",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:short-answer-uniqueness",
+      "order": 200,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-201",
+      "validation_id": "VAL-INSIGHT-SCHEMA",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:insight-schema",
+      "order": 201,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-202",
+      "validation_id": "VAL-PUBLISH-SIGNAL-GATE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:publish-signal-gate",
+      "order": 202,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 202,
+  "entry_count": 205,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2447,6 +2477,18 @@
         {
           "id": "VAL-PAGE-CONTRACTS",
           "command": "npm run validate:page-contracts"
+        },
+        {
+          "id": "VAL-SHORT-ANSWER-UNIQUENESS",
+          "command": "npm run validate:short-answer-uniqueness"
+        },
+        {
+          "id": "VAL-INSIGHT-SCHEMA",
+          "command": "npm run validate:insight-schema"
+        },
+        {
+          "id": "VAL-PUBLISH-SIGNAL-GATE",
+          "command": "npm run validate:publish-signal-gate"
         }
       ]
     },

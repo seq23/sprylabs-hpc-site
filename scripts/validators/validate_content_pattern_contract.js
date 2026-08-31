@@ -34,6 +34,25 @@ const ROOT = REPO;
 const EVIDENCE = path.join(REPO, 'reports/validation/content-pattern-contract.json');
 const ENFORCEMENT = 'block'; // 'block' | 'report'
 
+// This constant is the entire difference between the repo's only per-page
+// blocking gate and a log line. Flipping it to 'report' disarms every failure
+// below while the run still exits 0, and nothing anywhere noticed. The severity
+// is already declared once, in _validation_registry.json, so bind the two
+// together rather than leaving a second copy of the decision in source: if the
+// registry admits this validator at HARD_FAIL, 'report' is not a legal value.
+{
+  const registry = JSON.parse(fs.readFileSync('_validation_registry.json', 'utf8')).records || [];
+  const record = registry.find(r => r.command === 'npm run validate:content-pattern');
+  if (!record) {
+    console.error('[content-pattern] FAIL: no _validation_registry.json record for `npm run validate:content-pattern`; the enforcement level of this gate is then declared nowhere but in this file.');
+    process.exit(1);
+  }
+  if (record.proposed_severity === 'HARD_FAIL' && ENFORCEMENT !== 'block') {
+    console.error(`[content-pattern] FAIL: _validation_registry.json admits ${record.validation_id} at HARD_FAIL, but ENFORCEMENT in this file is '${ENFORCEMENT}'. A blocking gate cannot be disarmed by editing one source constant.`);
+    process.exit(1);
+  }
+}
+
 // Templates are the source for generated pages, not published surfaces; the
 // admin and agency dashboards are internal tools that answer no search query.
 // The walk starts at the repository root, so every non-published top-level

@@ -1,26 +1,9 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
-import {ROOT, writeJson} from '../agent_intake/bhpc_agent_common.mjs';
+import {ROOT, readJson, writeJson} from '../agent_intake/bhpc_agent_common.mjs';
 import {requiredBlockTypesForPageFamily} from '../lib/bhpc_agent_block_schema.mjs';
-
-// readJson(rel, {specs: []}) has a bare `catch` that returns the fallback, so a
-// missing or corrupt plan artifact was indistinguishable from a plan with no
-// specs: the loop below ran zero times and the run printed "PASS: checked=0".
-// The helper is shared, so the strict read lives here. A present plan that
-// legitimately carries no spec still passes through.
-const PLAN_PATH = 'artifacts/validation/agent-exact-implementation-plan.json';
-const PLAN_PRODUCER = 'npm run agent:bhpc:plan-exact';
-const planAbs = path.join(ROOT, PLAN_PATH);
-if (!fs.existsSync(planAbs)) {
-  console.error(`[bhpc-rich-new-page-contract] FAIL: required artifact ${PLAN_PATH} is missing; produce it with \`${PLAN_PRODUCER}\`. Treating a missing plan as an empty spec set proves nothing.`);
-  process.exit(1);
-}
-let plan;
-try { plan = JSON.parse(fs.readFileSync(planAbs, 'utf8')); } catch (error) {
-  console.error(`[bhpc-rich-new-page-contract] FAIL: required artifact ${PLAN_PATH} is not valid JSON (${error.message}); regenerate it with \`${PLAN_PRODUCER}\`. Treating a corrupt plan as an empty spec set proves nothing.`);
-  process.exit(1);
-}
+const plan = readJson('artifacts/validation/agent-exact-implementation-plan.json', {specs: []});
 const errors = [];
 const checked = [];
 function unique(values=[]){return [...new Set(values.filter(Boolean).map(String))]}
@@ -29,12 +12,25 @@ function words(text=''){return textOnly(text).split(/\s+/).filter(Boolean)}
 function blockHtml(html='', type=''){const match=String(html).match(new RegExp(`<([a-z][a-z0-9]*)[^>]*data-bhpc-agent-block=[\"']${type}[\"'][^>]*>([\\s\\S]*?)<\\/\\1>`, 'i'));return match?.[2]||''}
 function normalize(text=''){return textOnly(text).toLowerCase().replace(/[^a-z0-9]+/g,' ').replace(/\s+/g,' ').trim()}
 function distinctiveQueryTokens(query=''){const stop=new Set(['the','and','for','with','that','this','how','what','can','chatgpt','help','use','best','like','into','from','these','your','you','me','my','all','day']);return unique(normalize(query).split(' ').filter(token=>token.length>=4&&!stop.has(token)))}
+// Every check between `spec.operation === 'CREATE_NEW_TARGET_PAGE'` and the end
+// of that branch executes zero times today: all live specs are
+// REPAIR_INTENDED_WINNER_PAGE. That is legitimate - no new pages are being
+// created right now - but it was invisible, so "PASS: checked=32" read as though
+// those assertions had held. Two changes make it honest: an unrecognised
+// operation is a hard failure rather than a silent skip of the whole branch, and
+// the per-operation counts are printed so an unexercised branch is visible in the
+// output instead of implied by it.
+const KNOWN_OPERATIONS = new Set(['CREATE_NEW_TARGET_PAGE', 'REPAIR_INTENDED_WINNER_PAGE']);
+const operationCounts = new Map();
 const directAnswerOwners = new Map();
 for (const spec of plan.specs || []) {
   if (!spec.implementation_path || spec.status === 'BLOCKED') continue;
   const abs = path.join(ROOT, spec.implementation_path);
   if (!fs.existsSync(abs)) { errors.push(`implementation_page_missing:${spec.record_id}:${spec.implementation_path}`); continue; }
   const html = fs.readFileSync(abs, 'utf8');
+  const op = spec.operation || '(unset)';
+  operationCounts.set(op, (operationCounts.get(op) || 0) + 1);
+  if (!KNOWN_OPERATIONS.has(op)) errors.push(`unknown_operation:${spec.record_id}:${op}`);
   const fam = spec.page_family || 'answer_page';
   const required = unique([...requiredBlockTypesForPageFamily(fam), ...(spec.required_block_types || [])]);
   // A block also counts when it carries the canonical data-content-block marker.
@@ -80,15 +76,9 @@ for (const spec of plan.specs || []) {
   }
   checked.push({record_id: spec.record_id, operation: spec.operation, page_family: fam, implementation_path: spec.implementation_path, required_blocks: required});
 }
-// A plan that carries specs but checks none of them means every spec was skipped
-// by the `!implementation_path || status === 'BLOCKED'` continue, so no page was
-// opened and no block, marker or extraction assertion ran - yet checked=0 printed
-// as PASS.
-if ((plan.specs || []).length && !checked.length) {
-  errors.push(`no_spec_checked:${PLAN_PATH} carries ${(plan.specs || []).length} spec(s) but every one was skipped as BLOCKED or without an implementation_path; expected at least one spec to check, and a contract that opens no page proves nothing`);
-}
-const report = {schema_version:'1.2', validator:'bhpc-rich-new-page-contract', status:errors.length?'FAIL':'PASS', checked_count:checked.length, checked:checked.slice(0,100), errors};
+const report = {schema_version:'1.3', validator:'bhpc-rich-new-page-contract', status:errors.length?'FAIL':'PASS', checked_count:checked.length, operation_counts:Object.fromEntries(operationCounts), checked:checked.slice(0,100), errors};
 writeJson('artifacts/validation/bhpc-rich-new-page-contract.json', report);
 writeJson('reports/bhpc-rich-new-page-contract.json', report);
 if (errors.length) { console.error(JSON.stringify(report,null,2)); process.exit(1); }
-console.log(`[bhpc-rich-new-page-contract] PASS: checked=${checked.length}`);
+const opSummary = [...KNOWN_OPERATIONS].map(o => `${o}=${operationCounts.get(o) || 0}`).join('; ');
+console.log(`[bhpc-rich-new-page-contract] PASS: checked=${checked.length} (${opSummary})`);

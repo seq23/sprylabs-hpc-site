@@ -65,15 +65,20 @@ def valid_conversion_landing_page(path, soup, raw):
     if path=='download.html':
         if 'Discover your own A-player mode' not in text:
             local.append(f"{path}: discovery-page promise missing")
-        if 'Who can use Billionaire High Performance Coach OS' not in text and 'Who can use A-player mode' not in text:
-            local.append(f"{path}: audience recognition section missing")
-        if 'Look inside before you buy' not in text:
-            local.append(f"{path}: inside-system preview missing")
+        # 'Who can use Billionaire High Performance Coach OS?' and
+        # 'Look inside before you buy.' were asserted here AND listed in
+        # data/page_contracts/bhpc_download_contract.json, which
+        # validate_bhpc_page_contracts.mjs enforces. Two files keeping the same
+        # list of strings with no link between them is how they drift: this copy
+        # accepted an 'A-player mode' variant the data contract did not. The data
+        # contract is the single owner; these duplicates are removed rather than
+        # re-synchronised.
     if path=='index.html':
         if 'Your personal executive operating system for the AI you already use' not in text and 'Install A-player mode into your LLM' not in text:
             local.append(f"{path}: homepage hero promise missing")
-        if 'Discover your own A-player mode' not in text:
-            local.append(f"{path}: homepage discovery CTA copy missing")
+        # 'Discover your own A-player mode' is already listed in
+        # data/page_contracts/bhpc_homepage_contract.json and enforced by
+        # validate_bhpc_page_contracts.mjs. Removed here as a proven duplicate.
     # Landing pages are allowed to use richer conversion sections instead of the rigid immediate definition pattern.
     return local
 
