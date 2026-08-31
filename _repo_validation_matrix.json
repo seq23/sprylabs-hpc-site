@@ -2097,6 +2097,14 @@
           "command": "npm run validation:python-runtime:self-test"
         },
         {
+          "id": "VAL-EXTRACTION-SURFACE-GUARD-SNAPSHOT",
+          "command": "npm run validate:extraction-surface-guard:snapshot"
+        },
+        {
+          "id": "VAL-EXTRACTION-SURFACE-GUARD-CHECK",
+          "command": "npm run validate:extraction-surface-guard:check"
+        },
+        {
           "id": "build:all",
           "command": "npm run build:all"
         },
@@ -2253,10 +2261,6 @@
           "command": "npm run repair:extraction-final-state"
         },
         {
-          "id": "VAL-EXTRACTION-SURFACE-GUARD-SNAPSHOT",
-          "command": "npm run validate:extraction-surface-guard:snapshot"
-        },
-        {
           "id": "validate:release-atom-contract",
           "command": "node scripts/validation/validate_release_atom_contract.mjs"
         },
@@ -2307,10 +2311,6 @@
         {
           "id": "VAL-EXTRACTION-PIPELINE-TRACE",
           "command": "npm run trace:extraction-pipeline"
-        },
-        {
-          "id": "VAL-EXTRACTION-SURFACE-GUARD-CHECK",
-          "command": "npm run validate:extraction-surface-guard:check"
         },
         {
           "id": "VAL-BHPC-SEO-EXECUTION",
