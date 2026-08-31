@@ -2137,9 +2137,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-CONTROL-PLANE-IDENTITY",
+      "validation_id": "VAL-CONTROL-PLANE-IDENTITY",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:control-plane-identity",
+      "order": 205,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 213,
+  "entry_count": 214,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2207,7 +2217,7 @@
           "command": "npm run validate:validation-registry"
         },
         {
-          "id": "VAL-VALIDATION-CACHE-CONTROL-PLANE",
+          "id": "VAL-VALIDATION-CACHE-SELF-TEST",
           "command": "npm run validation:cache:self-test"
         },
         {
@@ -2597,6 +2607,10 @@
         {
           "id": "VAL-MAIN-WRITER-VALIDATION-GATE",
           "command": "npm run validate:main-writer-validation-gate"
+        },
+        {
+          "id": "VAL-CONTROL-PLANE-IDENTITY",
+          "command": "npm run validate:control-plane-identity"
         }
       ]
     },
@@ -2629,7 +2643,7 @@
           "command": "npm run validate:validation-registry"
         },
         {
-          "id": "VAL-VALIDATION-CACHE-CONTROL-PLANE",
+          "id": "VAL-VALIDATION-CACHE-SELF-TEST",
           "command": "npm run validation:cache:self-test"
         },
         {

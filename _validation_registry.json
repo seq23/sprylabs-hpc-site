@@ -6372,7 +6372,7 @@
       "decision": "Atomically admitted by validation:add.",
       "decision_date": "2026-08-31",
       "matrix_ids": [
-        "MX-CITATION-SCHEMA-AUTHORITY"
+        "MX-191"
       ],
       "not_applicable_reason": null
     },
@@ -6402,7 +6402,7 @@
       "decision": "Atomically admitted by validation:add.",
       "decision_date": "2026-08-31",
       "matrix_ids": [
-        "MX-CITATION-PHASE-MANIFEST"
+        "MX-192"
       ],
       "not_applicable_reason": null
     },
@@ -6432,7 +6432,7 @@
       "decision": "Atomically admitted by validation:add.",
       "decision_date": "2026-08-31",
       "matrix_ids": [
-        "MX-INTERNAL-LINK-VELOCITY"
+        "MX-193"
       ],
       "not_applicable_reason": null
     },
@@ -6462,7 +6462,7 @@
       "decision": "Atomically admitted by validation:add.",
       "decision_date": "2026-08-31",
       "matrix_ids": [
-        "MX-LLMS-FULL-COVERAGE"
+        "MX-194"
       ],
       "not_applicable_reason": null
     },
@@ -6492,7 +6492,7 @@
       "decision": "Atomically admitted by validation:add.",
       "decision_date": "2026-08-31",
       "matrix_ids": [
-        "MX-RELEASE-ATOM-CONTRACT"
+        "MX-195"
       ],
       "not_applicable_reason": null
     },
@@ -6947,8 +6947,38 @@
         "MX-204"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-CONTROL-PLANE-IDENTITY",
+      "status": "ADMITTED",
+      "name": "validate:control-plane-identity",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:control-plane-identity",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-control-plane-identity/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-08-31",
+      "matrix_ids": [
+        "MX-CONTROL-PLANE-IDENTITY"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 220,
+  "record_count": 221,
   "generated_at": "2026-08-08T23:30:00Z"
 }

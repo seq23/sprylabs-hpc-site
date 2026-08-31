@@ -24,9 +24,32 @@ if(profiles.length&&exclusionReason){
 const reg=JSON.parse(fs.readFileSync('_validation_registry.json','utf8')); const matrix=JSON.parse(fs.readFileSync('_repo_validation_matrix.json','utf8'));
 if(reg.records.some(r=>r.validation_id===id||r.command===command)){console.error('validator id or command already exists');process.exit(1)}
 const scriptName=command.startsWith('npm run ')?command.slice(8):''; const pkg=JSON.parse(fs.readFileSync('package.json','utf8')); if(scriptName&&!pkg.scripts?.[scriptName]){console.error(`command does not resolve: ${command}`);process.exit(1)}
-const n=Math.max(0,...matrix.entries.map(x=>Number(String(x.matrix_id).replace(/\D/g,''))||0))+1; const mx=`MX-${String(n).padStart(3,'0')}`;
+// Matrix ids used to be allocated as max(existing numeric id)+1, computed
+// against whatever tip the branch could see. That is a local maximum, and a local
+// maximum cannot be made concurrency-safe: two branches opened from the same base
+// allocate the SAME id for two DIFFERENT validators and only discover it at merge.
+// It happened twice in two rounds - MX-191 claimed by both VAL-FROZEN-OUTPUT-CONTRACT
+// and VAL-MAIN-WRITER-VALIDATION-GATE, then MX-193 by both VAL-BUILD-ALL-INTEGRITY
+// and the renumbered gate - and a third time on this branch, five collisions at once.
+//
+// The danger is not the collision, it is how it resolves: taking one side wholesale
+// drops a validator, and the registry still validates clean. A guard stops running
+// and nothing looks wrong.
+//
+// So the id is derived from the validator's own name instead of from a count.
+// Two branches allocating for DIFFERENT validators can no longer collide, and two
+// allocating for the SAME validator produce identical ids and merge cleanly. The
+// shape already exists in this file - MX-AGENT-LIVE, MX-VAL-FSA-ALL and
+// MX-ARTIFACT-PACKAGING-PARITY predate this change - and existing numeric ids are
+// untouched, because 213 matrix entries reference them.
+const mx = `MX-${id.startsWith('VAL-') ? id.slice(4) : id}`;
+if (matrix.entries.some((x) => x.matrix_id === mx)) {
+  console.error(`[validation:add] REFUSED: matrix id ${mx} is already taken by ${matrix.entries.find((x) => x.matrix_id === mx).validation_id}. Ids are derived from the validator name, so this means the name is already in use.`);
+  process.exit(1);
+}
 reg.records.push({validation_id:id,status:'ADMITTED',name:scriptName||id,check_type:'validator',owning_lane:'validation-control-plane',risk_prevented:'Declared validator protection.',existing_coverage_gap:'Atomic registration prevents package/registry/matrix drift.',scope:['repository'],proposed_severity:severity,command,implementation_path:'package.json',environment:'container',proof_tier:1,positive_fixture:'fixtures/validation/repo/pass.json',negative_fixture:'fixtures/validation/repo/fail.json',evidence_output:`artifacts/diagnostics/<run-id>/${scriptName.replace(/:/g,'-')}/summary.json`,runtime_budget_seconds:300,maintenance_owner:'repo',overlap_analysis:[],retirement_offset:null,decision:'Atomically admitted by validation:add.',decision_date:new Date().toISOString().slice(0,10),matrix_ids:[mx],not_applicable_reason:null});
-matrix.entries.push({matrix_id:mx,validation_id:id,lane:'validation-control-plane',command,order:n,severity,release_effect:severity==='HARD_FAIL',status:'ADMITTED'});
+const order=Math.max(0,...matrix.entries.map(x=>Number(x.order)||0))+1;
+matrix.entries.push({matrix_id:mx,validation_id:id,lane:'validation-control-plane',command,order,severity,release_effect:severity==='HARD_FAIL',status:'ADMITTED'});
 for(const p of profiles){if(!matrix.profiles?.[p]){console.error(`unknown profile ${p}`);process.exit(1)} matrix.profiles[p].steps.push({id,command});}
 if(exclusionReason){matrix.profile_exclusions=matrix.profile_exclusions||{}; matrix.profile_exclusions[mx]=exclusionReason;}
 reg.record_count=reg.records.length; matrix.entry_count=matrix.entries.length; fs.writeFileSync('_validation_registry.json',JSON.stringify(reg,null,2)+'\n');fs.writeFileSync('_repo_validation_matrix.json',JSON.stringify(matrix,null,2)+'\n');console.log(`[validation:add] PASS: ${id} -> ${command} (${mx}; ${profiles.length?`armed in profile(s): ${profiles.join(', ')}`:`excluded from every profile, reason recorded: ${exclusionReason}`})`);
