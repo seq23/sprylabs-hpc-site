@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import hashlib, json, sys
+import hashlib, json, os, sys
 from pathlib import Path
 
 sys.dont_write_bytecode = True
@@ -121,6 +121,32 @@ def write_json(path: Path, payload: object) -> None:
 
 state = build_state()
 if MODE == 'snapshot':
+    # container-prepush runs `snapshot` at step 44 and `check` at step 58, and
+    # `snapshot` used to overwrite the very baseline `check` then compares the tree
+    # against. So the guard graded its own answer sheet: it could not fail, no
+    # matter how far the governed surfaces had drifted. Reproduced on this tree -
+    # `check` alone against the committed snapshot reported 50 changed surfaces and
+    # exited 1; running `snapshot` first changed the snapshot's sha and `check`
+    # then reported 0 and exited 0. On a pristine main the same masked drift is
+    # 2,214 surfaces, all of it from a bot commit that rewrote 2,137 pages and never
+    # re-derived this file.
+    #
+    # Re-baselining is not a validation step. It is an assertion that the current
+    # surfaces are reviewed and correct, which is a human decision, so it now
+    # requires saying so explicitly. Absent that, `snapshot` reports the drift and
+    # fails instead of quietly absorbing it. A missing snapshot is still written,
+    # because bootstrapping a baseline that does not exist asserts nothing.
+    if SNAP.exists():
+        previous = json.loads(SNAP.read_text(encoding='utf-8'))
+        drifted = [key for key in sorted(set(previous) | set(state)) if previous.get(key) != state.get(key)]
+        if drifted and not os.environ.get('EXTRACTION_SURFACE_REBASELINE'):
+            print(f'[extraction-surface-guard] FAIL: {len(drifted)} governed surface(s) differ from '
+                  f'{SNAP.relative_to(ROOT)}, and overwriting it here would erase the only evidence that they drifted.')
+            for key in drifted[:50]:
+                print(' -', key)
+            print('Re-baselining asserts these surfaces are reviewed and correct. If they are, re-run with '
+                  'EXTRACTION_SURFACE_REBASELINE=1 and commit the snapshot alongside the pages that changed it.')
+            raise SystemExit(1)
     write_json(SNAP, state)
     print(f'[extraction-surface-guard] snapshot {len(state)} governed surfaces')
     raise SystemExit(0)
