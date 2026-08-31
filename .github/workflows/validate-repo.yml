@@ -151,6 +151,11 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v7
+        with:
+          # build:all derives the sitemap lastmod ledger from git history. The
+          # original single job cloned in full; a shallow clone here would build
+          # against a different history than the build job did.
+          fetch-depth: 0
       - uses: actions/setup-node@v7
         with:
           node-version: 24
