@@ -177,7 +177,9 @@ const objections = ['legit','real','a scam','therapy','a course','worth it','saf
 const existingPaths = new Set();
 function collectExistingPaths(dir='.') {
   for (const item of fs.readdirSync(path.join(ROOT,dir), {withFileTypes:true})) {
-    if (['.git','.pages-output', 'node_modules','.build','artifacts'].includes(item.name)) continue;
+    // '.claude' holds agent worktrees - a complete second checkout. Collecting
+    // their paths pollutes this lane's view of what already exists.
+    if (['.git','.claude','.pages-output', 'node_modules','.build','artifacts'].includes(item.name)) continue;
     const rel = path.join(dir,item.name).replace(/^\.\//,'');
     if (item.isDirectory()) collectExistingPaths(rel);
     else if (item.name.endsWith('.html')) existingPaths.add(rel);

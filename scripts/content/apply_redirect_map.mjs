@@ -24,7 +24,12 @@ const excluded = new Set([
   'data/sitemap/lastmod_ledger.json',
 ]);
 const textExtensions = new Set(['.html', '.xml', '.txt', '.json', '.md', '.js', '.mjs', '.cjs']);
-const skipDirs = new Set(['.git', '.pages-output', 'node_modules', 'artifacts', 'coverage', 'reports', '.build', 'test-results', 'playwright-report']);
+// '.claude' holds agent worktrees: `git worktree add .claude/worktrees/<id>` puts a
+// COMPLETE second checkout of this repo inside the working tree. This walker
+// writes, so descending into one corrupts a checkout that is not ours - already
+// measured once at 2,295 rewritten files plus a worktree path written into
+// TRACKED data. .gitignore governs git, not directory walkers.
+const skipDirs = new Set(['.git', '.claude', '.pages-output', 'node_modules', 'artifacts', 'coverage', 'reports', '.build', 'test-results', 'playwright-report']);
 
 function routeFromSource(sourcePath) {
   const normalized = '/' + sourcePath.replace(/^\/+/, '');

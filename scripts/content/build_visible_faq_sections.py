@@ -67,8 +67,11 @@ ROOT = SCRIPTS.parent
 # FAQ. Never write it.
 PROTECTED = {"download.html"}
 NEVER = {"404.html", "admin.html", "admin/index.html", "agency/index.html"}
+# '.claude' holds agent worktrees: a COMPLETE second checkout of this repo inside
+# the working tree. This pass rewrites pages, so descending into one corrupts a
+# checkout that is not ours. .gitignore governs git, not directory walkers.
 DENY_TOP = {
-    ".git", ".github", ".build", ".pages-output", ".wrangler", ".validation-cache",
+    ".git", ".claude", ".github", ".build", ".pages-output", ".wrangler", ".validation-cache",
     ".validation-runtime", "node_modules", "scripts", "data", "reports", "artifacts",
     "docs", "tests", "fixtures", "config", "content", "functions", "seo", "LICENSES",
     "dist", "admin", "coverage", "test-results", "playwright-report", "templates", "_ops",
