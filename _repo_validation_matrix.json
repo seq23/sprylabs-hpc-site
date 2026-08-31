@@ -1947,9 +1947,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-192",
+      "validation_id": "VAL-REDIRECT-MAP-EQUIVALENCE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:redirect-map-equivalence",
+      "order": 192,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 194,
+  "entry_count": 195,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2339,6 +2349,10 @@
         {
           "id": "VAL-BUILD-ALL-INTEGRITY",
           "command": "npm run validate:build-all-integrity"
+        },
+        {
+          "id": "VAL-REDIRECT-MAP-EQUIVALENCE",
+          "command": "npm run validate:redirect-map-equivalence"
         }
       ]
     },
