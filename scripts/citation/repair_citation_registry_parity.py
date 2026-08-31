@@ -19,6 +19,44 @@ def norm(v):
 manual=load('data/content/manual_expansion_pages.json',{'pages':[]}).get('pages',[])
 # Path-level source of truth for pages with exact acceptance contracts.
 updates={}
+# data/citation/agent_page_specs.json is the curated authority for `framework`
+# and `definition`. It reached the published HTML - apply_citation_program.py
+# restores both from it after every spec merge - but it had no path into
+# citable_pages.json outside a full build, and this repair only ever read
+# manual_expansion_pages.json. So a corrected curated name landed on the page
+# while the registry kept the definition derived from the OLD query-shaped
+# name, and validate:citation-contract read the disagreement as
+# "visible definition/registry drift".
+#
+# That is why Daily Citation Intelligence stayed red after the framework-name
+# authority fix merged (run 33343698923):
+#   insights/a-simple-knowledge-system-capture-distill-use.html:
+#     page  <strong> "The Capture-Distill-Use Knowledge Framework is a
+#                     three-stage system for turning raw information into
+#                     reusable decisions, notes, and actions."
+#     registry        "A simple knowledge system: capture -> distill -> use -
+#                     Spry Executive OS vs productivity apps is addressed with
+#                     a direct answer, ..."
+# Validate Repo did not catch it because build:all regenerates the registry;
+# the daily lane does not build, so only it could see the committed drift.
+#
+# Only `framework` and `definition` are taken from the curated spec. Canonical
+# query ownership is maintained by the query registry, and the comment below
+# still holds: this file must not rewrite `query` from a presentation source.
+# Both sections carry curated names. `priority_pages` is where the four pages
+# that took this lane red are curated, so reading only `new_pages` would leave
+# the exact drift this repair exists to close.
+curated_spec=load('data/citation/agent_page_specs.json',{})
+curated={}
+for section in ('new_pages','priority_pages'):
+    block=curated_spec.get(section) or {}
+    if isinstance(block,dict): curated.update(block)
+for path,spec in curated.items():
+    fields={k:spec[k] for k in ('framework','definition') if spec.get(k)}
+    if fields: updates[path]=fields
+# manual_expansion_pages.json is merged last in apply_citation_program.py and
+# legitimately outranks the curated spec. Applying it second reproduces that
+# precedence here rather than inventing a second, conflicting one.
 for p in manual:
     updates[p['path']]={'query':p['h1'],'definition':p['definition'],'framework':p['framework'],'extraction_type':p.get('type','concept')}
 # Agent recommendations may repair page presentation, but they are not
