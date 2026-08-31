@@ -2067,9 +2067,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-204",
+      "validation_id": "VAL-REPO-WALK-BOUNDARY",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:repo-walk-boundary",
+      "order": 204,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 206,
+  "entry_count": 207,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2519,6 +2529,10 @@
         {
           "id": "VAL-REDIRECT-MAP-EQUIVALENCE",
           "command": "npm run validate:redirect-map-equivalence"
+        },
+        {
+          "id": "VAL-REPO-WALK-BOUNDARY",
+          "command": "npm run validate:repo-walk-boundary"
         }
       ]
     },

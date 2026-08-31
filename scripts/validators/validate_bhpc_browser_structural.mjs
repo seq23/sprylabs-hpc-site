@@ -1,10 +1,15 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
+import {isIgnoredDir} from '../lib/repo_walk.mjs';
 const ROOT = process.cwd();
 function walk(dir, out = []) {
   if (!fs.existsSync(dir)) return out;
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    // This walk carried no skip list at all, so it recursed into .git,
+    // node_modules and any agent worktree under .claude/ and counted those
+    // pages as the site's.
+    if (entry.isDirectory() && isIgnoredDir(entry.name)) continue;
     if (['.git','.pages-output', 'node_modules','templates','data','_ops','reports','artifacts','scripts','docs','fixtures'].includes(entry.name)) continue;
     const file = path.join(dir, entry.name);
     if (entry.isDirectory()) walk(file, out);

@@ -57,6 +57,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
+import {IGNORED_DIRS} from '../lib/repo_walk.mjs';
 
 const require = createRequire(import.meta.url);
 const { routeFor, hostFor, FROZEN_HTML_ROUTES } = require('../lib/dual_domain_policy.cjs');
@@ -66,7 +67,11 @@ const LIVE = process.argv.includes('--live');
 
 // Mirrors the walker in scripts/repair/repair_dual_domain_metadata.js so the
 // repair and the guard judge exactly the same set of files.
-const SKIP_DIRS = new Set(['.git', '.pages-output', 'node_modules', '_ops', 'templates', 'docs']);
+// The repo-wide walk boundary, plus the directories this validator specifically
+// has no canonical to check. The boundary is imported, not restated: this list
+// omitted '.claude', so the walk descended into agent worktrees and judged
+// another checkout's pages as though they were this site's.
+const SKIP_DIRS = new Set([...IGNORED_DIRS, '_ops', 'templates', 'docs']);
 
 function walk(dir, out = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {

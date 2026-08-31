@@ -25,14 +25,21 @@
  */
 const fs = require('fs');
 const path = require('path');
+const { IGNORED_DIRS } = require('./repo_walk.cjs');
 
 const ROOT = process.cwd();
 
 // Directories that hold no published page. Everything else under the repo root
 // is part of the site.
+//
+// The first group is the repo-wide walk boundary from scripts/lib/repo_walk.cjs -
+// imported rather than restated, because this list previously omitted '.claude',
+// so every consumer of listSitePages() descended into an agent worktree and
+// counted another checkout's pages as this site's. The second group is specific
+// to this module: real directories of ours that simply hold no published page.
 const NON_PAGE_DIRS = new Set([
-  'node_modules', '.git', '.build', '.wrangler', '.clarity',
-  '.validation-cache', '.validation-runtime', '.github',
+  ...IGNORED_DIRS,
+  '.github',
   'scripts', 'docs', 'config', 'data', 'reports', 'artifacts',
   'fixtures', 'tests', 'templates', 'logs',
 ]);
