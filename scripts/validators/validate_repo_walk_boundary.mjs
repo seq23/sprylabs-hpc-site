@@ -56,26 +56,14 @@ const EXEMPT = new Set([
  * that is paid can never hide a defect, so it must not fail a build.
  */
 const KNOWN_UNMIGRATED = [
-  // Four live root-recursive writers remain, all outside the validation owner's
-  // territory and all named by the build agent as outside its own. Two of them run
-  // inside Validate Repo itself - .github/workflows/validate-repo.yml calls
-  // `npm run cadence:gate` and `npm run cadence:template-share` - so an exposed
-  // walker executes on every validation run.
+  // Three left, and all three are 'exposed: false': they already carry '.claude'
+  // in their own hand-written skip lists, so no walker in this repository can
+  // reach an agent worktree any more. What is left is duplication, not exposure -
+  // each still keeps a private copy of a rule that now has one definition, which
+  // is the condition that produced the incident rather than the incident itself.
   //
-  // 'exposed: true' means the file carries no '.claude' entry at all, so a worktree
-  // left under .claude/ is its to rewrite. That is not a miscount: unmigrated,
-  // apply_citation_program wrote a worktree path into citable_pages.json,
-  // query_registry.json and public_route_manifest.json. These walkers poison
-  // authorities.
-  //
-  // Each reports itself PAID the moment it imports the shared boundary, so the fix
-  // and this bookkeeping never have to land together.
-  { file: 'scripts/apply_fanout.js', owner: 'content lane (npm run fanout:apply)', exposed: true },
-  { file: 'scripts/template_share.js', owner: 'content lane (cadence:template-share - RUNS IN Validate Repo)', exposed: true },
-  { file: 'scripts/cadence_gate.js', owner: 'release lane (cadence:gate - RUNS IN Validate Repo)', exposed: true },
-  { file: 'scripts/prebuild/run_prebuild_validation.js', owner: 'build chain (prebuild:validate; not reachable from build:all)', exposed: true },
-  // Already carry '.claude' privately, so safe today, but each still keeps its own
-  // copy of the rule - the condition that produced the incident.
+  // Every entry reports itself PAID the moment its file imports the shared
+  // boundary, so the fix and this bookkeeping never have to land together.
   { file: 'scripts/content/apply_redirect_map.mjs', owner: 'build chain', exposed: false },
   { file: 'scripts/content/build_visible_faq_sections.py', owner: 'build chain', exposed: false },
   { file: 'scripts/internal/build_navigation_structure.mjs', owner: 'build chain', exposed: false },
@@ -112,15 +100,58 @@ function stripComments(src, ext) {
 const ROOT_SEEDED = /readdirSync\s*\(\s*(?:ROOT|process\.cwd\(\))|\b(?:ROOT|Path\.cwd\(\))\s*\.rglob\s*\(|os\.walk\s*\(\s*(?:ROOT|Path\.cwd\(\))|\bwalk\w*\s*\(\s*(?:ROOT|process\.cwd\(\))/;
 
 /**
- * Actually recursive: a named function that calls itself, an arrow that calls
- * itself, or a language-level recursive walk. Without this, a single flat
- * `fs.readdirSync(ROOT).filter(...)` looked like a root walk -
- * scripts/validators/validate_amazon_book_landing.mjs reads the root once for
- * sitemap files and never descends, so it cannot reach a worktree.
+ * Actually recursive, tied to the directory read itself.
+ *
+ * The first version of this matched `function NAME(` followed by `NAME(` within
+ * 1500 characters, which does not respect function boundaries: any helper called
+ * again later in the file looked recursive. That accused
+ * scripts/prebuild/run_prebuild_validation.js of being a root-recursive walker
+ * because its `readJson` helper is called further down. It performs one flat
+ * readdirSync with no descent and could never reach a worktree, so the accusation
+ * was unfalsifiable - planting a page under .claude/ produced no difference,
+ * because the file never looked in a subdirectory at all.
+ *
+ * A false positive here is not cheap. It sends someone to fix a file that is not
+ * broken, and it inflates this guard's own carried count so the number it reports
+ * stops meaning what it says.
+ *
+ * So: find each function, take its ACTUAL body by matching braces, and require
+ * that the body both reads a directory and calls itself. Python's rglob and
+ * os.walk are recursive by definition.
  */
-const RECURSES = /function\s+(\w+)\s*\([^)]*\)\s*\{[\s\S]{0,1500}?\b\1\s*\(|const\s+(\w+)\s*=\s*(?:function\s*)?\([^)]*\)\s*(?:=>)?\s*\{[\s\S]{0,1200}?\b\2\s*\(|\.rglob\s*\(|os\.walk\s*\(/;
+function bodyOf(src, openIndex) {
+  let depth = 0;
+  for (let i = openIndex; i < src.length; i += 1) {
+    if (src[i] === '{') depth += 1;
+    else if (src[i] === '}') {
+      depth -= 1;
+      if (depth === 0) return src.slice(openIndex, i + 1);
+    }
+  }
+  return '';
+}
 
-const ROOT_RECURSIVE_TEST = (src) => ROOT_SEEDED.test(src) && RECURSES.test(src);
+const READS_DIR = /readdirSync\s*\(|\breaddir\s*\(/;
+
+function hasRecursiveDirWalk(src) {
+  if (/\.rglob\s*\(|os\.walk\s*\(/.test(src)) return true;
+  const defs = [
+    ...src.matchAll(/function\s+(\w+)\s*\([^)]*\)\s*\{/g),
+    ...src.matchAll(/(?:const|let|var)\s+(\w+)\s*=\s*(?:async\s*)?(?:function\s*)?\([^)]*\)\s*(?:=>\s*)?\{/g),
+  ];
+  for (const def of defs) {
+    const name = def[1];
+    const open = src.indexOf('{', def.index + def[0].length - 1);
+    if (open < 0) continue;
+    const body = bodyOf(src, open);
+    if (!body || !READS_DIR.test(body)) continue;
+    // Does this function, the one that reads a directory, call itself?
+    if (new RegExp(`\\b${name}\\s*\\(`).test(body.slice(1))) return true;
+  }
+  return false;
+}
+
+const ROOT_RECURSIVE_TEST = (src) => ROOT_SEEDED.test(src) && hasRecursiveDirWalk(src);
 /**
  * A write whose destination came out of the walk.
  *
