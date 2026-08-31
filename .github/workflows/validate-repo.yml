@@ -1,5 +1,24 @@
 name: Validate Repo
 
+# Sharded replacement for the single 28-minute job. The work is unchanged: the
+# same producers build the same tree, and every validator the container-prepush
+# profile declares still runs against it. What changed is the shape.
+#
+#   plan          derives the shard map from _repo_validation_matrix.json at run
+#                 time, so a validator added or removed by anyone is picked up on
+#                 the next run. No validator list is hard-coded anywhere.
+#   build         runs the producer steps once, in matrix order, and publishes the
+#                 exact tree the shards validate. Restored from cache when the
+#                 build inputs hash is unchanged.
+#   validate      N runners, each executing its slice and writing a receipt of
+#                 exactly which validator ids it executed.
+#   clean-rebuild runs the two-isolated-rebuild parity check concurrently with
+#                 everything above instead of after it.
+#   gate          asserts the union of the receipts equals the set the matrix and
+#                 registry declare, and only then attests.
+#
+# Validators are NOT scoped to changed files. Every run validates everything.
+
 on:
   workflow_dispatch:
   push:
@@ -11,6 +30,15 @@ on:
 
 env:
   NODE_OPTIONS: --max-old-space-size=3072
+  # Measured, not guessed. The shardable validators cost 297s in total, but
+  # validate:retired-route-references alone is 121s of that, so no shard count
+  # can finish the stage faster than that one validator: the modelled heaviest
+  # shard is 150s at 2 shards and 121.1s at 3, 4, 5, 6 and 8 alike. Past 3 the
+  # extra runners buy nothing and cost CI minutes. 4 leaves one shard of headroom
+  # as validators land - the remaining 176s would have to more than double before
+  # any other shard reached the pole - and `verify` fails on timing drift, so
+  # this number is re-checked against reality rather than trusted.
+  SHARD_COUNT: '4'
 
 permissions:
   contents: read
@@ -20,9 +48,45 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  validate:
+  plan:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+      declared: ${{ steps.plan.outputs.declared }}
+      build-key: ${{ steps.key.outputs.key }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Derive the shard map from the validation matrix
+        id: plan
+        run: node .github/scripts/validation_shards.mjs plan --shards "$SHARD_COUNT"
+      - name: The coverage gate must fail when coverage is lost
+        # Runs before anything is built, against the profile this very run just
+        # planned. A coverage gate is worth what its failure cases are worth, so
+        # they are exercised on every run rather than trusted.
+        run: node .github/scripts/test_validation_shards.mjs
+      - name: Hash the build inputs
+        id: key
+        # Everything the producers read. A validator-only change leaves this
+        # unchanged, so the build is restored instead of rerun; any content,
+        # script, data or dependency change moves it and forces a real build.
+        run: bash .github/scripts/build_input_hash.sh
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: spry-shard-plan-${{ github.run_id }}
+          if-no-files-found: error
+          path: artifacts/validation/shard-plan.json
+
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    needs: plan
     steps:
       - uses: actions/checkout@v7
         with:
@@ -34,9 +98,142 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
-      - name: Build and validate exact distribution artifact
+      - uses: actions/cache@v4
+        name: Restore the built tree
+        id: tree
+        with:
+          path: ${{ runner.temp }}/spry-build-tree.tar
+          key: spry-build-tree-v1-${{ needs.plan.outputs.build-key }}
+      - name: Report cache outcome
+        # A cache that never hits is worse than none, so the outcome is printed
+        # on every run and a hit is proved by the restored tar actually existing.
+        run: bash .github/scripts/report_build_cache.sh "${{ steps.tree.outputs.cache-hit }}" "${{ needs.plan.outputs.build-key }}"
+      - name: Run the producer steps
+        if: steps.tree.outputs.cache-hit != 'true'
+        run: node .github/scripts/validation_shards.mjs producers
+      - name: Package the built tree
+        if: steps.tree.outputs.cache-hit != 'true'
+        run: bash .github/scripts/pack_build_tree.sh
+      - uses: actions/upload-artifact@v7
+        with:
+          name: spry-build-tree-${{ github.run_id }}
+          include-hidden-files: true
+          if-no-files-found: error
+          path: ${{ runner.temp }}/spry-build-tree.tar
+      - name: Recover the receipt from the cached tree
+        # On a cache hit the producers never ran this time, but the tree being
+        # restored was built by a run in which they did, and its receipt was
+        # packed alongside it. Recovering it keeps the gate's accounting whole
+        # instead of making a cache hit look like an unaccounted-for build.
+        if: steps.tree.outputs.cache-hit == 'true'
         run: |
-          npm run release:ci-validate
+          tar -xf "$RUNNER_TEMP/spry-build-tree.tar" ./artifacts/validation/shard-producers.json
+          test -s artifacts/validation/shard-producers.json
+      - name: Publish the ordered build job's receipt
+        # The gate reconciles this together with the shard receipts against the
+        # whole profile. Without it the ordered steps would be unaccounted for
+        # and a step this job failed to run would leave a smaller union that
+        # still looked internally consistent.
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: spry-shard-producers-${{ github.run_id }}
+          if-no-files-found: error
+          path: artifacts/validation/shard-producers.json
+
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: [plan, build]
+    strategy:
+      fail-fast: false
+      matrix:
+        include: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    name: validate (${{ matrix.name }})
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Several validators derive truth from git history - the sitemap
+          # lastmod ledger is checked against an independent git walk. A shallow
+          # clone makes those disagree and fails for a reason that is not real.
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - uses: actions/download-artifact@v7
+        with:
+          name: spry-build-tree-${{ github.run_id }}
+          # Outside the repo: validate:release-portability walks the root for
+          # oversized deployable assets and the tree tar is ~292 MiB.
+          path: ${{ runner.temp }}
+      - name: Unpack the built tree
+        run: tar -xf "$RUNNER_TEMP/spry-build-tree.tar"
+      - name: Run this shard
+        run: node .github/scripts/validation_shards.mjs run --shard "${{ matrix.shard }}" --shards "$SHARD_COUNT"
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: spry-shard-receipt-${{ github.run_id }}-${{ matrix.shard }}
+          if-no-files-found: error
+          path: artifacts/validation/shards/shard-${{ matrix.shard }}.json
+
+  clean-rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # build:all derives the sitemap lastmod ledger from git history. The
+          # original single job cloned in full; a shallow clone here would build
+          # against a different history than the build job did.
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Two isolated clean rebuilds must agree
+        run: npm run validate:clean-rebuild-parity
+
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [plan, build, validate, clean-rebuild]
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - uses: actions/download-artifact@v7
+        with:
+          name: spry-build-tree-${{ github.run_id }}
+          path: ${{ runner.temp }}
+      - name: Unpack the built tree
+        run: tar -xf "$RUNNER_TEMP/spry-build-tree.tar"
+      - uses: actions/download-artifact@v7
+        with:
+          pattern: spry-shard-receipt-${{ github.run_id }}-*
+          merge-multiple: true
+          path: artifacts/validation/shards
+      - uses: actions/download-artifact@v7
+        with:
+          name: spry-shard-producers-${{ github.run_id }}
+          path: artifacts/validation
+      - name: Executed validator set must equal the declared validator set
+        # Hard-fails on a missing shard, an empty shard, a validator the matrix
+        # declares that no shard ran, and on any count mismatch against both
+        # _repo_validation_matrix.json and _validation_registry.json.
+        run: node .github/scripts/validation_shards.mjs verify --shards "$SHARD_COUNT"
+      - name: Warnings and attestation
+        run: |
+          npm run validate:warnings
+          npm run release:create-attestation
       - name: Cadence gate
         # Blocks publishing faster than the library can be kept inside the
         # 91-day window where pages stay citable. Warnings (library over

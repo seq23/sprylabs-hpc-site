@@ -56,3 +56,13 @@ artifacts/build/
 # walkers need '.claude' in their skip lists; see the note in
 # scripts/validation/validate_citation_schema_serialization.mjs.
 .claude/
+
+# Per-run outputs of the sharded validation gate. The shard plan, the shard
+# receipts and the coverage reconciliation are derived from
+# _repo_validation_matrix.json on every run and are uploaded as run artifacts;
+# committing them would freeze a snapshot of one run's validator set into the
+# tree the next run reads.
+artifacts/validation/shard-plan.json
+artifacts/validation/shard-coverage.json
+artifacts/validation/shard-producers.json
+artifacts/validation/shards/
