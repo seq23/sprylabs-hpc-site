@@ -2157,9 +2157,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-SURFACE-GUARD-ORDERING",
+      "validation_id": "VAL-SURFACE-GUARD-ORDERING",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:surface-guard-ordering",
+      "order": 207,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 215,
+  "entry_count": 216,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2191,10 +2201,6 @@
           "command": "npm run validate:extraction-surface-guard:snapshot"
         },
         {
-          "id": "VAL-EXTRACTION-SURFACE-GUARD-CHECK",
-          "command": "npm run validate:extraction-surface-guard:check"
-        },
-        {
           "id": "build:all",
           "command": "npm run build:all"
         },
@@ -2213,6 +2219,10 @@
         {
           "id": "repair:citation-contract-surfaces",
           "command": "npm run repair:citation-contract-surfaces"
+        },
+        {
+          "id": "VAL-EXTRACTION-SURFACE-GUARD-CHECK",
+          "command": "npm run validate:extraction-surface-guard:check"
         },
         {
           "id": "VAL-QUERY-OWNER-UNIQUENESS",
@@ -2625,6 +2635,10 @@
         {
           "id": "VAL-FEED-DATE-DETERMINISM",
           "command": "npm run validate:feed-date-determinism"
+        },
+        {
+          "id": "VAL-SURFACE-GUARD-ORDERING",
+          "command": "npm run validate:surface-guard-ordering"
         }
       ]
     },
