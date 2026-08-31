@@ -17,7 +17,11 @@ name: Main Validation Sentinel
 
 on:
   schedule:
-    - cron: "*/30 * * * *"
+    # Every four hours, not every thirty minutes. The alarm below speaks only on a
+    # STATE CHANGE, so a tighter schedule buys nothing but detection latency - and
+    # */30 sent 48 failed runs a day for one known-broken commit, which is how an
+    # alarm teaches you to ignore it.
+    - cron: "17 */4 * * *"
   workflow_run:
     workflows: ["Validate Repo"]
     types: [completed]
@@ -79,17 +83,39 @@ jobs:
           body=$(printf '%s\n\n%s\n\n%s\n' \
             "**State: ${STATE:-unknown}** — main HEAD \`${HEAD_SHA:-unknown}\`" \
             "${DETAIL:-The coverage check failed without a verdict.}" \
-            "Detected by Main Validation Sentinel run ${GITHUB_RUN_ID}. This issue is reused, not duplicated; it closes itself once main is covered by a green run.")
+            "Detected by Main Validation Sentinel run ${GITHUB_RUN_ID}. One alarm per affected commit: while main stays on this HEAD the sentinel keeps checking every four hours and says nothing further. A different uncovered commit raises a fresh alarm, and recovery closes this issue.")
           existing=$(gh issue list --state open --label main-validation --limit 1 --json number -q '.[0].number' || true)
+
+          # ALARM ON CHANGE, NOT ON DURATION.
+          #
+          # This used to comment and fail on every run. At */30 that was 48 failed
+          # runs and 48 emails a day for a single known-broken commit, and an alarm
+          # that repeats while nothing has changed is one you learn to ignore -
+          # which costs more than the alarm is worth. Owner, 2026-08-31: "should
+          # not be scheduled so often or should just be fucking quiet".
+          #
+          # A COMMIT is the unit of news. If the open issue already names this HEAD,
+          # the situation is known and unchanged: say so in the log and exit 0. A
+          # new uncovered commit is new information and speaks at once. Recovery
+          # still closes the issue, so quiet never means forgotten.
+          if [ -n "$existing" ]; then
+            if gh issue view "$existing" --json body,comments \
+                 --jq '.body + " " + ([.comments[].body] | join(" "))' 2>/dev/null \
+                 | grep -q -- "${HEAD_SHA:-__no_head__}"; then
+              echo "Already reported ${HEAD_SHA} on issue #${existing}; staying quiet."
+              exit 0
+            fi
+          fi
+
           if [ -n "$existing" ]; then
             gh issue comment "$existing" --body "$body"
-            echo "Updated existing alarm issue #$existing"
+            echo "New uncovered HEAD reported on issue #$existing"
           else
             gh label create main-validation --description "main validation coverage alarms" --color B60205 2>/dev/null || true
             gh issue create --title "$title" --label main-validation --body "$body"
           fi
-          # The step above is the notification. Fail the run too, so the alarm is
-          # also visible in the Actions list and not only in the issue tracker.
+          # Fail the run so the alarm shows in the Actions list too. Once per
+          # affected commit now, not once per check.
           exit 1
 
       - name: Close the alarm once main is covered again
