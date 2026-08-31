@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import hashlib, json, sys
+import hashlib, json, os, sys
 from pathlib import Path
 
 sys.dont_write_bytecode = True
@@ -54,17 +54,50 @@ def projection(path: str, rows: list[dict], fields: tuple[str, ...]) -> list[dic
     return projected
 
 
+def hard_fail(message: str) -> None:
+    print(f'[extraction-surface-guard] FAIL: {message}', file=sys.stderr)
+    raise SystemExit(1)
+
+
 def build_state() -> dict[str, str]:
     citable = json.loads((ROOT / 'data/citation/citable_pages.json').read_text(encoding='utf-8'))
     query_registry = json.loads((ROOT / 'data/citation/query_registry.json').read_text(encoding='utf-8'))
     admission = json.loads((ROOT / 'data/content/page_admission_registry.json').read_text(encoding='utf-8'))
 
+    # Each of the three registries below is hashed independently, and each can
+    # empty on its own. sha() of an empty projection is a perfectly stable
+    # constant, so an emptied registry snapshots and re-checks clean forever.
+    if not citable.get('pages'):
+        hard_fail('data/citation/citable_pages.json lists no pages; expected at least one governed page. '
+                  'Hashing an empty governed set proves nothing.')
+    if not query_registry.get('queries'):
+        hard_fail('data/citation/query_registry.json lists no queries; expected at least one query owner. '
+                  'Hashing an empty registry projection proves nothing.')
+    if not admission.get('records'):
+        hard_fail('data/content/page_admission_registry.json lists no records; expected at least one admitted page. '
+                  'Hashing an empty registry projection proves nothing.')
+
     state: dict[str, str] = {}
+    # `if page.is_file()` used to drop a governed page that is not on disk. That
+    # is the one failure this guard should shout about: a governed HTML surface
+    # can disappear and the run still prints PASS because its hash simply left
+    # the state. A missing governed page is now reported instead of dropped.
+    missing = []
     for row in citable.get('pages', []):
         rel = row.get('path', '')
         page = ROOT / rel
         if page.is_file():
             state[f'html:{rel}'] = sha(html_surface(page))
+        else:
+            missing.append(rel)
+    if missing:
+        hard_fail(f'{len(missing)} governed page(s) named in data/citation/citable_pages.json are not files on disk, '
+                  f'so their extraction surfaces were never hashed: {", ".join(sorted(missing)[:20])}')
+    # A run that hashed no HTML surface at all protects no extraction block and
+    # no citation schema, and `check` would then compare two empty states as PASS.
+    if not any(key.startswith('html:') for key in state):
+        hard_fail('hashed 0 HTML extraction surfaces; expected one per page in data/citation/citable_pages.json. '
+                  'A surface guard that reads no page proves nothing.')
 
     state['registry:citable-pages'] = sha(projection(
         'citable-pages', citable.get('pages', []),
@@ -88,6 +121,32 @@ def write_json(path: Path, payload: object) -> None:
 
 state = build_state()
 if MODE == 'snapshot':
+    # container-prepush runs `snapshot` at step 44 and `check` at step 58, and
+    # `snapshot` used to overwrite the very baseline `check` then compares the tree
+    # against. So the guard graded its own answer sheet: it could not fail, no
+    # matter how far the governed surfaces had drifted. Reproduced on this tree -
+    # `check` alone against the committed snapshot reported 50 changed surfaces and
+    # exited 1; running `snapshot` first changed the snapshot's sha and `check`
+    # then reported 0 and exited 0. On a pristine main the same masked drift is
+    # 2,214 surfaces, all of it from a bot commit that rewrote 2,137 pages and never
+    # re-derived this file.
+    #
+    # Re-baselining is not a validation step. It is an assertion that the current
+    # surfaces are reviewed and correct, which is a human decision, so it now
+    # requires saying so explicitly. Absent that, `snapshot` reports the drift and
+    # fails instead of quietly absorbing it. A missing snapshot is still written,
+    # because bootstrapping a baseline that does not exist asserts nothing.
+    if SNAP.exists():
+        previous = json.loads(SNAP.read_text(encoding='utf-8'))
+        drifted = [key for key in sorted(set(previous) | set(state)) if previous.get(key) != state.get(key)]
+        if drifted and not os.environ.get('EXTRACTION_SURFACE_REBASELINE'):
+            print(f'[extraction-surface-guard] FAIL: {len(drifted)} governed surface(s) differ from '
+                  f'{SNAP.relative_to(ROOT)}, and overwriting it here would erase the only evidence that they drifted.')
+            for key in drifted[:50]:
+                print(' -', key)
+            print('Re-baselining asserts these surfaces are reviewed and correct. If they are, re-run with '
+                  'EXTRACTION_SURFACE_REBASELINE=1 and commit the snapshot alongside the pages that changed it.')
+            raise SystemExit(1)
     write_json(SNAP, state)
     print(f'[extraction-surface-guard] snapshot {len(state)} governed surfaces')
     raise SystemExit(0)

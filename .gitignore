@@ -37,3 +37,22 @@ dist/
 # container-prepush profile - ahead of every validator that reads it. The
 # deploy workflow takes .build from the Validate Repo artifact, not from git.
 .build/
+# Runtime build-completion sentinel written by build:all (start/complete).
+# Timestamped per run, so tracking it would break build idempotence; it is
+# evidence about THIS working tree, read by validate:build-all-integrity.
+artifacts/build/
+
+# Agent worktrees. `git worktree add .claude/worktrees/<id>` puts a COMPLETE
+# second checkout of this repository inside the working tree. Nothing here is
+# ours to commit, and committing it would nest the repo inside itself.
+#
+# This is a containment measure, not the fix: .gitignore governs git, not the
+# directory walkers. build:all's walkers (repair_dual_domain_metadata.js,
+# build_navigation_structure.mjs and ~18 others, each with its own hand-written
+# skip list) descended into a worktree left here and rewrote 2,295 HTML files
+# belonging to another checkout, then wrote that checkout's paths into TRACKED
+# data - data/report_fixes/agent_acceptance_manifest.generated.json among them,
+# where a real page path was REPLACED by a .claude/worktrees/... one. The
+# walkers need '.claude' in their skip lists; see the note in
+# scripts/validation/validate_citation_schema_serialization.mjs.
+.claude/

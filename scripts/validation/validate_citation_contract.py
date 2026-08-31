@@ -65,15 +65,20 @@ def valid_conversion_landing_page(path, soup, raw):
     if path=='download.html':
         if 'Discover your own A-player mode' not in text:
             local.append(f"{path}: discovery-page promise missing")
-        if 'Who can use Billionaire High Performance Coach OS' not in text and 'Who can use A-player mode' not in text:
-            local.append(f"{path}: audience recognition section missing")
-        if 'Look inside before you buy' not in text:
-            local.append(f"{path}: inside-system preview missing")
+        # 'Who can use Billionaire High Performance Coach OS?' and
+        # 'Look inside before you buy.' were asserted here AND listed in
+        # data/page_contracts/bhpc_download_contract.json, which
+        # validate_bhpc_page_contracts.mjs enforces. Two files keeping the same
+        # list of strings with no link between them is how they drift: this copy
+        # accepted an 'A-player mode' variant the data contract did not. The data
+        # contract is the single owner; these duplicates are removed rather than
+        # re-synchronised.
     if path=='index.html':
         if 'Your personal executive operating system for the AI you already use' not in text and 'Install A-player mode into your LLM' not in text:
             local.append(f"{path}: homepage hero promise missing")
-        if 'Discover your own A-player mode' not in text:
-            local.append(f"{path}: homepage discovery CTA copy missing")
+        # 'Discover your own A-player mode' is already listed in
+        # data/page_contracts/bhpc_homepage_contract.json and enforced by
+        # validate_bhpc_page_contracts.mjs. Removed here as a proven duplicate.
     # Landing pages are allowed to use richer conversion sections instead of the rigid immediate definition pattern.
     return local
 
@@ -96,6 +101,15 @@ pages=load('data/citation/citable_pages.json')['pages']
 queries=load('data/citation/query_registry.json')['queries']
 frameworks=load('data/citation/framework_registry.json')['frameworks']
 active=[p for p in pages if p.get('status')=='ACTIVE']; bypath={p['path']:p for p in active}
+# All three registries are looped over and every check lives inside a loop, so an
+# emptied registry - or a status rename that leaves no page ACTIVE - printed
+# "OK: 0 pages, 0 queries, 0 frameworks" while inspecting no page at all.
+if not active:
+    errors.append("data/citation/citable_pages.json lists no page with status 'ACTIVE'; every page check runs inside that loop, so a contract validated against zero pages proves nothing")
+if not queries:
+    errors.append('data/citation/query_registry.json lists no queries; query ownership and coverage are only checked inside that loop, so an empty registry proves nothing')
+if not frameworks:
+    errors.append('data/citation/framework_registry.json lists no frameworks; framework completeness is only checked inside that loop, so an empty registry proves nothing')
 normalized_pages={}
 for r in active:
     fp=ROOT/r['path']
@@ -179,11 +193,23 @@ for f in frameworks:
 
 llms=(ROOT/'llms.txt').read_text(errors='ignore')
 answers_raw=(ROOT/'answers.json').read_text(errors='ignore')
+# A bare `except: answer_items=[]` could not tell a corrupt or restructured
+# answers.json apart from one that legitimately holds no items: either way the
+# answers.json coverage warnings below silently checked nothing. Split the cases -
+# unreadable is a defect, and an answer feed with no items is one too.
 try:
     answers_payload=json.loads(answers_raw)
-    answer_items=answers_payload.get('items',[]) if isinstance(answers_payload,dict) else []
-except Exception:
-    answer_items=[]
+except Exception as exc:
+    answers_payload=None
+    errors.append(f'answers.json could not be parsed ({exc}); the answers.json query-coverage check reads its `items`, and an unreadable feed silently disables that check')
+answer_items=[]
+if answers_payload is not None:
+    if not isinstance(answers_payload,dict):
+        errors.append(f'answers.json is a {type(answers_payload).__name__}, not an object carrying `items`; the answers.json query-coverage check reads that key and would silently examine nothing')
+    else:
+        answer_items=answers_payload.get('items',[])
+        if not answer_items:
+            errors.append('answers.json carries no `items`; every query is then reported as missing coverage or none is checked at all, so an empty answer feed proves nothing')
 answer_query_norms=set()
 for item in answer_items:
     if not isinstance(item,dict):

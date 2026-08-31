@@ -11,6 +11,17 @@ const strong_warnings = [];
 const paths = new Set();
 const primary = new Map();
 
+// Three collections narrow independently here, and each empties on its own.
+// `record_count !== records.length` is only self-consistent - 0 === 0 passes -
+// so the per-record loop then runs zero times and every field, lane, duplicate
+// and existence assertion is skipped while the run prints OK. The query set and
+// the lane contract carry the same defect: with no lanes, every lane check is
+// unreachable; with no ACTIVE query, every ownership cross-check compares
+// nothing.
+if (!registry.records.length) errors.push('data/content/page_admission_registry.json contains 0 records; expected at least one ADMITTED page. A registry contract that inspects zero records proves nothing.');
+if (!Object.keys(lanes).length) errors.push('data/content/programmatic_lane_contracts.json declares no lanes; expected at least one generation lane. Every per-record lane check would be unreachable.');
+if (!queries.length) errors.push('data/citation/query_registry.json yields 0 queries with release_status ACTIVE; expected at least one active query owner. Ownership cross-checks over an empty set prove nothing.');
+
 if (registry.record_count !== registry.records.length) errors.push('record_count mismatch');
 for (const record of registry.records) {
   for (const field of ['path','route','canonical_domain','generation_lane','admission_level','status','primary_query','intent','framework','unique_atom','artifact_type']) {
@@ -46,6 +57,9 @@ for (const page of paths) {
 }
 
 const manual = JSON.parse(fs.readFileSync('data/content/manual_expansion_pages.json', 'utf8')).pages;
+// The manual reference set is the fourth independently-emptiable collection: an
+// empty pages array skips the full-admission check for every manual page.
+if (!manual.length) errors.push('data/content/manual_expansion_pages.json lists no pages; expected at least one manual reference page to hold to full admission. Checking zero manual pages proves nothing.');
 for (const page of manual) {
   const record = registry.records.find(x => x.path === page.path);
   if (!record || record.admission_level !== 'full' || record.generation_lane !== 'manual') {

@@ -28,7 +28,13 @@ case 'telemetry': ok=d.owned_surfaces_created>=0&&(d.observed_external_citations
 case 'admin': ok=d.allowlisted===true; break;
 default: ok=false; detail='unknown scenario kind';}
 const expectedPass=s.expected.startsWith('PASS'); const matched=ok===expectedPass; return {id:s.id,kind:s.kind,expected:s.expected,observed_ok:ok,matched,detail};}
+// The scenario fixture and the artifact list are the two independent sets this
+// end-to-end check runs against. Either one emptied leaves its loop running zero
+// times, and the run still prints "PASS 0 scenarios" with no artifact checked.
+if(!(fixture.scenarios||[]).length){console.error('[validate:artifact-consistency-e2e] FAIL: fixtures/validation/artifact-consistency/scenarios.json declares no scenarios; expected at least one PASS/FAIL scenario to execute. Passing zero scenarios proves nothing.');process.exit(1);}
+if(!(contract.artifacts||[]).length){console.error('[validate:artifact-consistency-e2e] FAIL: data/contracts/artifact_consistency_contract.json declares no artifacts; expected at least one artifact to check for in the working tree. An empty artifact list checks nothing.');process.exit(1);}
 for(const s of fixture.scenarios){const r=run(s);results.push(r);if(!r.matched)failures.push(`${r.id}: expected ${r.expected}, observed ${r.observed_ok?'PASS':'FAIL'} ${r.detail}`);}
+if(!results.length){console.error('[validate:artifact-consistency-e2e] FAIL: executed 0 scenarios from fixtures/validation/artifact-consistency/scenarios.json; expected one result per declared scenario.');process.exit(1);}
 for(const a of contract.artifacts){if(a.required_in_working_tree&&!fs.existsSync(a.path))failures.push(`working tree missing required artifact ${a.path}`);}
 const planPath='artifacts/validation/daily-citation-release-plan.json'; if(fs.existsSync(planPath)){const p=JSON.parse(fs.readFileSync(planPath,'utf8')); const e=validatePlan(p); if(e.length)failures.push(...e.map(x=>`current plan: ${x}`));}
 fs.mkdirSync('artifacts/validation',{recursive:true}); const out={schema_version:'1.0',status:failures.length?'FAIL':'PASS',scenario_count:results.length,passed:results.filter(x=>x.matched).length,failed:failures.length,results,failures}; fs.writeFileSync('artifacts/validation/artifact-consistency-e2e.json',JSON.stringify(out,null,2)+'\n');

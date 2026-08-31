@@ -5,12 +5,21 @@ const path = require('path');
 const root = process.cwd();
 const { routeFor } = require('../lib/dual_domain_policy.cjs');
 const dataPath = path.join(root, 'data/citation_opportunities/bhpc_priority_queries.json');
+const warnings = [];
+// The priority queries file is the entire subject of this check. Missing it used
+// to print "skipped" and exit 0 - and that branch read `warnings` before it was
+// declared, so it threw a ReferenceError instead. Both the absent file and an
+// empty items array leave every loop below running zero times, which reports
+// citation readiness without having examined a single page.
 if (!fs.existsSync(dataPath)) {
-  console.log('[citation:warn] WARN: data/citation_opportunities/bhpc_priority_queries.json not found; citation readiness skipped');
-  process.exit(warnings.length ? 1 : 0);
+  console.error('[citation:warn] FAIL: data/citation_opportunities/bhpc_priority_queries.json not found; expected the priority query rows this check reads. Skipping the file and exiting 0 proves no page is citation-ready.');
+  process.exit(1);
 }
 const items = JSON.parse(fs.readFileSync(dataPath, 'utf8')).items || [];
-const warnings = [];
+if (!items.length) {
+  console.error('[citation:warn] FAIL: data/citation_opportunities/bhpc_priority_queries.json lists no items; expected at least one priority citation row. Reporting OK over zero rows proves nothing.');
+  process.exit(1);
+}
 function read(rel) {
   const file = path.join(root, rel);
   return fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : '';

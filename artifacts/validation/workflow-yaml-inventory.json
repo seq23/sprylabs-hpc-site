@@ -2,7 +2,7 @@
   "schema_version": "2.0",
   "repo": "seq23/sprylabs-hpc-site",
   "generated_at": "2026-07-10T18:30:00Z",
-  "workflow_count": 8,
+  "workflow_count": 9,
   "topology": "full_safe_autonomy_eight_workflow_surface",
   "workflows": [
     {
@@ -349,6 +349,39 @@
         "reports/**"
       ],
       "validation_owner": "simplified workflow topology validators"
+    },
+    {
+      "path": ".github/workflows/main-validation-sentinel.yml",
+      "name": "Main Validation Sentinel",
+      "trigger": [
+        "schedule",
+        "workflow_run",
+        "workflow_dispatch"
+      ],
+      "primary_command": "node .github/scripts/check_main_validation_coverage.mjs",
+      "repo_lane": "validation-control-plane",
+      "current_status": "keep_admitted",
+      "reason": "A GITHUB_TOKEN push raises no push event, so Validate Repo's `on: push` never fired for any automated writer; all nine github-actions[bot] commits on main have zero Validate Repo runs. This scheduled lane is the only observer an automated writer cannot silence. It reads state and files an issue; it never mutates the repository.",
+      "allowed_runtime_mutations": [
+        "artifacts/validation/main-validation-coverage.json"
+      ],
+      "forbidden_runtime_mutations": [
+        ".github/**",
+        "package.json",
+        "package-lock.json",
+        "scripts/**",
+        "docs/**",
+        "_repo*.json",
+        "_validation_registry.json",
+        "_repo_validation_matrix.json",
+        "data/**",
+        "site/public/**",
+        "dist/**"
+      ],
+      "required_artifacts": [
+        "artifacts/validation/main-validation-coverage.json"
+      ],
+      "validation_owner": "workflow contract, VAL-MAIN-WRITER-VALIDATION-GATE, validation registry"
     }
   ]
 }

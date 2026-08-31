@@ -1,9 +1,22 @@
 const fs = require('fs');
 const path = require('path');
 const { classifyPageFamily, buildFanoutData, renderFanoutBlock } = require('./fanout/shared');
+// The shared boundary, not a private list. This pass REWRITES every .html file
+// the walk reaches and then records those paths in .build/fanout_manifest.json
+// and the tracked data/releases/fanout_query_clusters.bhpc.json. `git worktree
+// add .claude/worktrees/<id>` puts a COMPLETE second checkout of this repo
+// inside the working tree, so an unbounded walk edits another agent's pages and
+// writes that checkout's paths into tracked release data. Reproduced: with a
+// page planted under .claude/worktrees/fake-agent/, the unbounded version
+// rewrote that page and put its path into fanout_query_clusters.bhpc.json.
+// See scripts/lib/repo_walk.cjs.
+const { isIgnoredDir } = require('./lib/repo_walk.cjs');
 
 const ROOT = process.cwd();
-const EXCLUDE_DIRS = new Set(['.pages-output', 'node_modules', '.git', '_ops', 'scripts', 'data', '.github', 'audit', '.build', 'releases', 'docs', 'templates']);
+// Directories this pass has its own reason to skip. The generic ones
+// (node_modules, .git, .build, .pages-output, releases, ...) now come from the
+// shared boundary rather than a second copy of the same list.
+const EXCLUDE_DIRS = new Set(['_ops', 'scripts', 'data', '.github', 'audit', 'docs', 'templates']);
 const manifests = [];
 const missing = [];
 const duplicates = [];
@@ -13,6 +26,7 @@ function walk(dir) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     if (EXCLUDE_DIRS.has(entry.name)) continue;
     const full = path.join(dir, entry.name);
+    if (entry.isDirectory() && isIgnoredDir(entry.name, path.relative(ROOT, full).split(path.sep).join('/'))) continue;
     if (entry.isDirectory()) walk(full);
     else if (entry.isFile() && entry.name.endsWith('.html')) processFile(full);
   }

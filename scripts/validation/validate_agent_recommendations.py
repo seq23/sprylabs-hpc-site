@@ -59,6 +59,15 @@ def universal(path,soup,expected_h1=None):
         if severity=='FAIL': errors.append(paragraph_sentence_message(path, idx, count)); break
         if severity=='WARN': warnings.append(paragraph_sentence_message(path, idx, count))
 
+# Every check below lives inside one of the two loops, so an emptied `fixes` or
+# `opportunities` array printed "OK: 0 fixes, 0 opportunity pages" without opening a
+# single page. An acceptance contract that accepts nothing is a broken contract file,
+# not a clean run.
+if not contract.get('fixes'):
+    errors.append('data/citation/agent_recommendation_acceptance.json carries no `fixes` entries; every per-page check in this validator runs inside that loop, so an empty array proves nothing')
+if not contract.get('opportunities'):
+    errors.append('data/citation/agent_recommendation_acceptance.json carries no `opportunities` entries; the universal page checks run only over that list, so an empty array proves nothing')
+
 for item in contract['fixes']:
     path=item['path']; fp=ROOT/path
     if not fp.exists(): errors.append(f'{path}: file missing'); continue

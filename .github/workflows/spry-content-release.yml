@@ -28,11 +28,16 @@ on:
 env:
   NODE_OPTIONS: --max-old-space-size=3072
   PUSH_RETRY_ATTEMPTS: 5
+  GITHUB_TOKEN: ${{ github.token }}
   REDDIT_ACCESS_TOKEN: ${{ secrets.REDDIT_ACCESS_TOKEN }}
   REDDIT_USER_AGENT: ${{ secrets.REDDIT_USER_AGENT }}
 
 permissions:
   contents: write
+  # Lets the shared push helper request Validate Repo for the commit it just
+  # landed. A GITHUB_TOKEN push raises no push event, so without this the
+  # workflow can change main but nothing can be asked to check it.
+  actions: write
 
 concurrency:
   group: main-automation

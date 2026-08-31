@@ -12,12 +12,25 @@ function words(text=''){return textOnly(text).split(/\s+/).filter(Boolean)}
 function blockHtml(html='', type=''){const match=String(html).match(new RegExp(`<([a-z][a-z0-9]*)[^>]*data-bhpc-agent-block=[\"']${type}[\"'][^>]*>([\\s\\S]*?)<\\/\\1>`, 'i'));return match?.[2]||''}
 function normalize(text=''){return textOnly(text).toLowerCase().replace(/[^a-z0-9]+/g,' ').replace(/\s+/g,' ').trim()}
 function distinctiveQueryTokens(query=''){const stop=new Set(['the','and','for','with','that','this','how','what','can','chatgpt','help','use','best','like','into','from','these','your','you','me','my','all','day']);return unique(normalize(query).split(' ').filter(token=>token.length>=4&&!stop.has(token)))}
+// Every check between `spec.operation === 'CREATE_NEW_TARGET_PAGE'` and the end
+// of that branch executes zero times today: all live specs are
+// REPAIR_INTENDED_WINNER_PAGE. That is legitimate - no new pages are being
+// created right now - but it was invisible, so "PASS: checked=32" read as though
+// those assertions had held. Two changes make it honest: an unrecognised
+// operation is a hard failure rather than a silent skip of the whole branch, and
+// the per-operation counts are printed so an unexercised branch is visible in the
+// output instead of implied by it.
+const KNOWN_OPERATIONS = new Set(['CREATE_NEW_TARGET_PAGE', 'REPAIR_INTENDED_WINNER_PAGE']);
+const operationCounts = new Map();
 const directAnswerOwners = new Map();
 for (const spec of plan.specs || []) {
   if (!spec.implementation_path || spec.status === 'BLOCKED') continue;
   const abs = path.join(ROOT, spec.implementation_path);
   if (!fs.existsSync(abs)) { errors.push(`implementation_page_missing:${spec.record_id}:${spec.implementation_path}`); continue; }
   const html = fs.readFileSync(abs, 'utf8');
+  const op = spec.operation || '(unset)';
+  operationCounts.set(op, (operationCounts.get(op) || 0) + 1);
+  if (!KNOWN_OPERATIONS.has(op)) errors.push(`unknown_operation:${spec.record_id}:${op}`);
   const fam = spec.page_family || 'answer_page';
   const required = unique([...requiredBlockTypesForPageFamily(fam), ...(spec.required_block_types || [])]);
   // A block also counts when it carries the canonical data-content-block marker.
@@ -63,8 +76,9 @@ for (const spec of plan.specs || []) {
   }
   checked.push({record_id: spec.record_id, operation: spec.operation, page_family: fam, implementation_path: spec.implementation_path, required_blocks: required});
 }
-const report = {schema_version:'1.2', validator:'bhpc-rich-new-page-contract', status:errors.length?'FAIL':'PASS', checked_count:checked.length, checked:checked.slice(0,100), errors};
+const report = {schema_version:'1.3', validator:'bhpc-rich-new-page-contract', status:errors.length?'FAIL':'PASS', checked_count:checked.length, operation_counts:Object.fromEntries(operationCounts), checked:checked.slice(0,100), errors};
 writeJson('artifacts/validation/bhpc-rich-new-page-contract.json', report);
 writeJson('reports/bhpc-rich-new-page-contract.json', report);
 if (errors.length) { console.error(JSON.stringify(report,null,2)); process.exit(1); }
-console.log(`[bhpc-rich-new-page-contract] PASS: checked=${checked.length}`);
+const opSummary = [...KNOWN_OPERATIONS].map(o => `${o}=${operationCounts.get(o) || 0}`).join('; ');
+console.log(`[bhpc-rich-new-page-contract] PASS: checked=${checked.length} (${opSummary})`);

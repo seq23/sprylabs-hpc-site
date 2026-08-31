@@ -90,6 +90,12 @@ const tempB=prepareCopy('b');
 try{
   const buildA=runBuild(tempA,'A');
   const buildB=runBuild(tempB,'B');
+  // compare({},{}) returns [], so two builds that emitted NO public output at all
+  // were indistinguishable from two byte-identical builds. Each snapshot is built
+  // independently, so each needs its own floor.
+  if(!Object.keys(buildA).length||!Object.keys(buildB).length){
+    fail(`[validate:clean-rebuild-parity] FAIL: an isolated clean-copy build produced no public/distribution files to compare (A=${Object.keys(buildA).length}, B=${Object.keys(buildB).length}); expected build:all to emit HTML pages, ${[...includeNames].sort().join(', ')} and data/citation artifacts. Comparing two empty snapshots proves nothing.`);
+  }
   const changed=compare(buildA,buildB);
   writeSummary('validate-clean-rebuild-parity',{
     status:changed.length?'FAIL':'PASS',

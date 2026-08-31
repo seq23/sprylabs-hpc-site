@@ -7,7 +7,13 @@ const warnings = [];
 const info = [];
 const checked = [];
 const allowed = new Set(['bhpc','aplayer','a-player','a-player-mode']);
-for (const entry of findAgentManifests()) {
+// findAgentManifests() returns [] the moment data/report_fixes/agent_runs is
+// missing, renamed, or holds no agent_run_manifest.json - so deleting the
+// intake tree turned this continuity check into a PASS over zero runs, which
+// is exactly the state it exists to catch.
+const manifests = findAgentManifests();
+if (!manifests.length) errors.push('data/report_fixes/agent_runs: no agent_run_manifest.json found under any <run-date>/<scope>/ directory; this validator must examine the recorded agent runs and their csv/html/json artifacts. Zero manifests proves no continuity.');
+for (const entry of manifests) {
   const manifest = entry.manifest || {};
   const context = entry.manifestRel;
   if (!allowed.has(entry.scope)) errors.push(`${context}: non_bhpc_scope_not_allowed:${entry.scope}`);

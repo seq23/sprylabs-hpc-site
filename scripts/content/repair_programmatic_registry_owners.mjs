@@ -3,6 +3,32 @@ import fs from 'node:fs';
 import { createRequire } from 'node:module';
 const requireCjs = createRequire(import.meta.url);
 const { routeFor: sharedRouteFor } = requireCjs('../lib/dual_domain_policy.cjs');
+// The one serialization of <script id="CITATION_PAGE_SCHEMA">.
+//
+// This writer rewrites the block (updateCitationSchema below) and used to
+// re-emit it with JSON.stringify(data, null, 2) - pretty printed, with newlines.
+// Every other writer of that block goes through
+// scripts/lib/citation_page_schema.cjs, which is compact. So this step, which
+// runs in release:content-finalize AFTER build:all has normalised the tree,
+// silently un-normalised every page it touched, and the next build normalised
+// them back. That is the "the frozen store keeps reverting" symptom, and it is
+// why validate:citation-schema-serialization reported answers/phase4/* pages as
+// "pretty-printed with newlines". One serializer, no exceptions.
+//
+// Measured on a real page: 3,301 bytes and 0 newlines through the authority
+// against 3,988 bytes and 72 newlines hand-rolled.
+//
+// The blast radius is wider than release:content-finalize alone: this repair is
+// also the mapped self-heal for both validate:programmatic-registry and
+// VAL-QUERY-OWNER-UNIQUENESS (scripts/selfheal/heal_until_clean.mjs), so a
+// self-heal pass could re-introduce the non-conforming shape after every other
+// stage had corrected it.
+//
+// This file hand-rolled BOTH halves - its own copy of the script regex and its
+// own reassembly - so both go through the authority now. replaceSchemaBody is
+// serializeSchema applied in place; re-deriving it here from serializeSchema
+// plus the captured tags would be the same hand-rolling this removes.
+const { SCHEMA_SCRIPT_RE, replaceSchemaBody } = requireCjs('../lib/citation_page_schema.cjs');
 
 const registryPath = 'data/content/page_admission_registry.json';
 const queryPath = 'data/citation/query_registry.json';
@@ -106,8 +132,9 @@ function updateMetaTitle(raw, propertyName, oldQuery, newQuery) {
   });
 }
 function updateCitationSchema(raw, oldQuery, newQuery) {
-  const schemaPattern = /<script\b([^>]*\bid=["']CITATION_PAGE_SCHEMA["'][^>]*)>([\s\S]*?)<\/script>/i;
-  const match = raw.match(schemaPattern);
+  // SCHEMA_SCRIPT_RE, not a local copy: one pattern for finding the block, the
+  // same one the authority writes back through.
+  const match = SCHEMA_SCRIPT_RE.exec(raw);
   if (!match) return {raw, changed: false};
   let data;
   try {
@@ -130,8 +157,10 @@ function updateCitationSchema(raw, oldQuery, newQuery) {
     }
   }
   if (!changed) return {raw, changed: false};
-  const json = JSON.stringify(data, null, 2).replace(/</g, '\\u003c');
-  return {raw: raw.replace(schemaPattern, `<script${match[1]}>${json}</script>`), changed: true};
+  // replaceSchemaBody serialises through serializeSchema and leaves the opening
+  // tag exactly as the page had it, so this repair can only ever emit the one
+  // conforming shape.
+  return {raw: replaceSchemaBody(raw, data), changed: true};
 }
 function syncCanonicalCitationSurfacesForQueryRepairs(repairs) {
   if (!repairs.length) return {citable_updates: 0, html_updates: 0, schema_updates: 0};
