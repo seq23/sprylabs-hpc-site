@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-31T14:03:50.027Z",
+  "generated_at": "2026-08-31T14:29:44.551Z",
   "input": {
     "demand": "data/demand/measured_demand.json",
     "atlas": "data/authority_scale/query_atlas.json",
@@ -11,18 +11,18 @@
     "records_considered": 101,
     "ranked_through_atlas": 71,
     "atlas_present": true,
-    "composed": 7,
-    "refused": 62,
+    "composed": 10,
+    "refused": 59,
     "covered_by_existing_pages": 32,
     "demand_value_covered": 64852,
-    "new_urls_this_run": 6,
+    "new_urls_this_run": 4,
     "new_url_budget": 6,
-    "republished_existing_urls": 2,
+    "republished_existing_urls": 7,
     "by_target_domain": {
-      "billionairehighperformancecoach.com": 8
+      "billionairehighperformancecoach.com": 11
     },
-    "demand_value_composed": 420,
-    "demand_value_refused": 634
+    "demand_value_composed": 427,
+    "demand_value_refused": 627
   },
   "composed": [
     {
@@ -112,7 +112,7 @@
       "ranked_through_atlas": true,
       "target_domain": "billionairehighperformancecoach.com",
       "canonical_url": "https://billionairehighperformancecoach.com/answers/phase4/demand/ai-tools-for-coaches",
-      "already_published": false,
+      "already_published": true,
       "framework_selector_dimension": "prompt structure",
       "primary": {
         "axis": "tool",
@@ -148,7 +148,7 @@
       "ranked_through_atlas": true,
       "target_domain": "billionairehighperformancecoach.com",
       "canonical_url": "https://billionairehighperformancecoach.com/answers/phase4/demand/ai-tools-for-team-coaching",
-      "already_published": false,
+      "already_published": true,
       "framework_selector_dimension": "prompt structure",
       "primary": {
         "axis": "tool",
@@ -184,7 +184,7 @@
       "ranked_through_atlas": true,
       "target_domain": "billionairehighperformancecoach.com",
       "canonical_url": "https://billionairehighperformancecoach.com/answers/phase4/demand/ai-coaching-tool-for-managers",
-      "already_published": false,
+      "already_published": true,
       "framework_selector_dimension": "prompt structure",
       "primary": {
         "axis": "tool",
@@ -220,7 +220,7 @@
       "ranked_through_atlas": true,
       "target_domain": "billionairehighperformancecoach.com",
       "canonical_url": "https://billionairehighperformancecoach.com/answers/phase4/demand/human-coaching",
-      "already_published": false,
+      "already_published": true,
       "framework_selector_dimension": "accountability",
       "primary": {
         "axis": "tool",
@@ -255,7 +255,7 @@
       "ranked_through_atlas": true,
       "target_domain": "billionairehighperformancecoach.com",
       "canonical_url": "https://billionairehighperformancecoach.com/answers/phase4/demand/ai-coach-for-high-achievers",
-      "already_published": false,
+      "already_published": true,
       "framework_selector_dimension": "prompt structure",
       "primary": {
         "axis": "tool",
@@ -275,6 +275,114 @@
       "offset": 6,
       "framework": "Ambiguity Stop Rule — AI prompt pack for high performer",
       "page_query": "AI Coach for High Achievers"
+    },
+    {
+      "query": "ai coach for workflow planning",
+      "normalized_query": "ai coach for workflow planning",
+      "slug": "ai-coach-for-workflow-planning",
+      "path": "answers/phase4/demand/ai-coach-for-workflow-planning.html",
+      "demand_value": 3,
+      "demand_basis": "own_impressions_over_the_measured_gsc_window",
+      "evidence_tier": "T1",
+      "source_type": "gsc_search_analytics",
+      "observed_date": null,
+      "rank_band": "own_impressions_only",
+      "rank_score": 1.5,
+      "ranked_through_atlas": true,
+      "target_domain": "billionairehighperformancecoach.com",
+      "canonical_url": "https://billionairehighperformancecoach.com/answers/phase4/demand/ai-coach-for-workflow-planning",
+      "already_published": false,
+      "framework_selector_dimension": "prompt structure",
+      "primary": {
+        "axis": "tool",
+        "key": "AI prompt pack",
+        "why": "Same category."
+      },
+      "secondary": {
+        "axis": "dimension",
+        "key": "daily planning",
+        "why": "Planning a workflow for the day is the authored daily-planning dimension.",
+        "source": "matched in the query"
+      },
+      "matched_phrases": [
+        "ai coach",
+        "workflow planning"
+      ],
+      "offset": 8,
+      "framework": "Daily Agenda Engine — AI prompt pack for daily planning",
+      "page_query": "AI Coach for Workflow Planning"
+    },
+    {
+      "query": "ai influence coach for high achievers",
+      "normalized_query": "ai influence coach for high achievers",
+      "slug": "ai-influence-coach-for-high-achievers",
+      "path": "answers/phase4/demand/ai-influence-coach-for-high-achievers.html",
+      "demand_value": 3,
+      "demand_basis": "own_impressions_over_the_measured_gsc_window",
+      "evidence_tier": "T1",
+      "source_type": "gsc_search_analytics",
+      "observed_date": null,
+      "rank_band": "own_impressions_only",
+      "rank_score": 1.5,
+      "ranked_through_atlas": true,
+      "target_domain": "billionairehighperformancecoach.com",
+      "canonical_url": "https://billionairehighperformancecoach.com/answers/phase4/demand/ai-influence-coach-for-high-achievers",
+      "already_published": false,
+      "framework_selector_dimension": "accountability",
+      "primary": {
+        "axis": "tool",
+        "key": "human executive coach",
+        "why": "Same."
+      },
+      "secondary": {
+        "axis": "audience",
+        "key": "high performer",
+        "why": "Authored audience for the same reader.",
+        "source": "matched in the query"
+      },
+      "matched_phrases": [
+        "coach",
+        "high achievers"
+      ],
+      "offset": 9,
+      "framework": "Execution Evidence Ledger — human executive coach for high performer",
+      "page_query": "AI Influence Coach for High Achievers"
+    },
+    {
+      "query": "ai-driven manager coaching tools",
+      "normalized_query": "ai driven manager coaching tools",
+      "slug": "ai-driven-manager-coaching-tools",
+      "path": "answers/phase4/demand/ai-driven-manager-coaching-tools.html",
+      "demand_value": 1,
+      "demand_basis": "own_impressions_over_the_measured_gsc_window",
+      "evidence_tier": "T1",
+      "source_type": "gsc_search_analytics",
+      "observed_date": null,
+      "rank_band": "own_impressions_only",
+      "rank_score": 0.5,
+      "ranked_through_atlas": true,
+      "target_domain": "billionairehighperformancecoach.com",
+      "canonical_url": "https://billionairehighperformancecoach.com/answers/phase4/demand/ai-driven-manager-coaching-tools",
+      "already_published": false,
+      "framework_selector_dimension": "accountability",
+      "primary": {
+        "axis": "tool",
+        "key": "human executive coach",
+        "why": "Bare 'coaching' with no AI qualifier left after longer phrases were consumed refers to a person coaching."
+      },
+      "secondary": {
+        "axis": "audience",
+        "key": "manager",
+        "why": "Exact authored audience.",
+        "source": "matched in the query"
+      },
+      "matched_phrases": [
+        "manager",
+        "coaching"
+      ],
+      "offset": 10,
+      "framework": "End-of-Day Evidence Loop — human executive coach for manager",
+      "page_query": "AI-Driven Manager Coaching Tools"
     }
   ],
   "covered_by_existing_pages": [
@@ -751,13 +859,6 @@
       "reason": "only one axis matched (dimension: chief-of-staff support) and no authored second axis is declared for it"
     },
     {
-      "query": "ai coach for workflow planning",
-      "demand_value": 3,
-      "evidence_tier": "T1",
-      "rank_band": "own_impressions_only",
-      "reason": "per-run cap of 6 NEW demand-backed URL(s) already reached; this query stays queued and composes on a later release, once the cadence ledger has accepted this batch"
-    },
-    {
       "query": "ai coach matching",
       "demand_value": 3,
       "evidence_tier": "T1",
@@ -777,13 +878,6 @@
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
       "reason": "the AI prompt pack x prompt structure pair already composed a page this run; a second page from the same two authored entries would differ only in its title"
-    },
-    {
-      "query": "ai influence coach for high achievers",
-      "demand_value": 3,
-      "evidence_tier": "T1",
-      "rank_band": "own_impressions_only",
-      "reason": "per-run cap of 6 NEW demand-backed URL(s) already reached; this query stays queued and composes on a later release, once the cadence ledger has accepted this batch"
     },
     {
       "query": "ai manual coach",
@@ -903,13 +997,6 @@
       "evidence_tier": "T1",
       "rank_band": "own_impressions_only",
       "reason": "the AI prompt pack x prompt structure pair already composed a page this run; a second page from the same two authored entries would differ only in its title"
-    },
-    {
-      "query": "ai-driven manager coaching tools",
-      "demand_value": 1,
-      "evidence_tier": "T1",
-      "rank_band": "own_impressions_only",
-      "reason": "per-run cap of 6 NEW demand-backed URL(s) already reached; this query stays queued and composes on a later release, once the cadence ledger has accepted this batch"
     },
     {
       "query": "ai for chiefs of staff",
