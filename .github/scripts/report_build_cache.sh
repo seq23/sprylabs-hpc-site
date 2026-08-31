@@ -4,6 +4,7 @@
 # run and a claimed hit is checked against the tar actually being on disk.
 set -euo pipefail
 
+TAR="${RUNNER_TEMP:-/tmp}/spry-build-tree.tar"
 hit="${1:-}"
 key="${2:-}"
 
@@ -13,14 +14,14 @@ if [ -z "$key" ]; then
 fi
 
 if [ "$hit" = "true" ]; then
-  if [ ! -s spry-build-tree.tar ]; then
-    echo "[build-cache] FAIL: cache reported a hit for ${key} but spry-build-tree.tar is missing or empty" >&2
+  if [ ! -s "$TAR" ]; then
+    echo "[build-cache] FAIL: cache reported a hit for ${key} but ${TAR} is missing or empty" >&2
     exit 1
   fi
-  echo "[build-cache] HIT key=${key} bytes=$(wc -c < spry-build-tree.tar | tr -d ' ') - producers skipped"
+  echo "[build-cache] HIT key=${key} bytes=$(wc -c < "$TAR" | tr -d ' ') - producers skipped"
 else
-  if [ -s spry-build-tree.tar ]; then
-    echo "[build-cache] FAIL: cache reported a miss for ${key} but a tree tar is already present" >&2
+  if [ -s "$TAR" ]; then
+    echo "[build-cache] FAIL: cache reported a miss for ${key} but a tree tar is already present at ${TAR}" >&2
     exit 1
   fi
   echo "[build-cache] MISS key=${key} - producers will run and populate the cache"

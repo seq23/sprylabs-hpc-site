@@ -4,13 +4,16 @@
 # from the npm cache and checks out for itself.
 set -euo pipefail
 
+# Written outside the workspace: validate:release-portability walks the repo
+# root for oversized deployable assets, and this tar is ~292 MiB.
+TAR="${RUNNER_TEMP:-/tmp}/spry-build-tree.tar"
+
 tar --exclude=./node_modules \
     --exclude=./.git \
-    --exclude=./spry-build-tree.tar \
-    -cf spry-build-tree.tar .
+    -cf "$TAR" .
 
-bytes="$(wc -c < spry-build-tree.tar | tr -d ' ')"
-entries="$(tar -tf spry-build-tree.tar | wc -l | tr -d ' ')"
+bytes="$(wc -c < "$TAR" | tr -d ' ')"
+entries="$(tar -tf "$TAR" | wc -l | tr -d ' ')"
 if [ "$entries" -lt 100 ]; then
   echo "[pack-build-tree] FAIL: packaged ${entries} entries; the shards would validate an empty tree" >&2
   exit 1

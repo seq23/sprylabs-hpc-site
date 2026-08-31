@@ -89,7 +89,7 @@ jobs:
         name: Restore the built tree
         id: tree
         with:
-          path: spry-build-tree.tar
+          path: ${{ runner.temp }}/spry-build-tree.tar
           key: spry-build-tree-v1-${{ needs.plan.outputs.build-key }}
       - name: Report cache outcome
         # A cache that never hits is worse than none, so the outcome is printed
@@ -106,7 +106,7 @@ jobs:
           name: spry-build-tree-${{ github.run_id }}
           include-hidden-files: true
           if-no-files-found: error
-          path: spry-build-tree.tar
+          path: ${{ runner.temp }}/spry-build-tree.tar
 
   validate:
     runs-on: ubuntu-latest
@@ -119,6 +119,11 @@ jobs:
     name: validate (${{ matrix.name }})
     steps:
       - uses: actions/checkout@v7
+        with:
+          # Several validators derive truth from git history - the sitemap
+          # lastmod ledger is checked against an independent git walk. A shallow
+          # clone makes those disagree and fails for a reason that is not real.
+          fetch-depth: 0
       - uses: actions/setup-node@v7
         with:
           node-version: 24
@@ -127,8 +132,11 @@ jobs:
       - uses: actions/download-artifact@v7
         with:
           name: spry-build-tree-${{ github.run_id }}
+          # Outside the repo: validate:release-portability walks the root for
+          # oversized deployable assets and the tree tar is ~292 MiB.
+          path: ${{ runner.temp }}
       - name: Unpack the built tree
-        run: tar -xf spry-build-tree.tar
+        run: tar -xf "$RUNNER_TEMP/spry-build-tree.tar"
       - name: Run this shard
         run: node .github/scripts/validation_shards.mjs run --shard "${{ matrix.shard }}" --shards "$SHARD_COUNT"
       - uses: actions/upload-artifact@v7
@@ -157,6 +165,8 @@ jobs:
     needs: [plan, build, validate, clean-rebuild]
     steps:
       - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v7
         with:
           node-version: 24
@@ -165,8 +175,9 @@ jobs:
       - uses: actions/download-artifact@v7
         with:
           name: spry-build-tree-${{ github.run_id }}
+          path: ${{ runner.temp }}
       - name: Unpack the built tree
-        run: tar -xf spry-build-tree.tar
+        run: tar -xf "$RUNNER_TEMP/spry-build-tree.tar"
       - uses: actions/download-artifact@v7
         with:
           pattern: spry-shard-receipt-${{ github.run_id }}-*
