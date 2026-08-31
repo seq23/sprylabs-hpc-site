@@ -60,7 +60,7 @@
     "citation:warn": "node scripts/validators/validate_citation_readiness_warning.js",
     "citation:all": "npm run citation:build && npm run citation:warn",
     "build:generated-content": "npm run intake && npm run scoring && npm run backlog && npm run fanout:auto && npm run answer:all && npm run backlog:build && node scripts/build_insights.js && npm run build:authority && node scripts/repair/auto_expand_short_pages.js && node scripts/repair/auto_repair_generated_page_ranges.js && node scripts/answer_surface/update_score_history.js && node scripts/answer_surface/build_weakness_backlog.js && npm run build:manual-expansion",
-    "build:all": "npm run build:generated-content && npm run build:postprocess && npm run build:aplayer-phase-expansion && npm run build:agent-accepted-content && npm run repair:dual-domain-metadata && npm run repair:published-agent-blocks && npm run retrofit:recommendation-summary && node scripts/internal/build_navigation_structure.mjs && npm run build:visible-faq && npm run repair:health-boundary",
+    "build:all": "node scripts/internal/record_build_all_state.mjs start && npm run build:generated-content && npm run build:postprocess && npm run build:aplayer-phase-expansion && npm run build:agent-accepted-content && npm run repair:dual-domain-metadata && npm run repair:published-agent-blocks && npm run retrofit:recommendation-summary && node scripts/internal/build_navigation_structure.mjs && npm run build:visible-faq && npm run repair:health-boundary && node scripts/internal/record_build_all_state.mjs complete",
     "validate:repo": "node scripts/validation/validate_repo.mjs && npm run validate:operator-doc-currency && npm run validate:release-portability",
     "validate:operator-doc-currency": "node scripts/validation/validate_operator_doc_currency.mjs docs/runbooks docs/operations",
     "validate:validation-registry": "node scripts/validation/validate_validation_registry.mjs",
@@ -350,7 +350,9 @@
     "validate:framework-name-shape": "node scripts/validators/validate_framework_name_shape.mjs",
     "validate:curated-framework-authority": "node scripts/validators/validate_curated_framework_name_authority.mjs",
     "validate:curated-definition-registry-reach": "node scripts/validators/validate_curated_definition_registry_reach.mjs",
-    "validate:frozen-output-contract": "node scripts/validators/validate_frozen_output_contract.mjs"
+    "validate:frozen-output-contract": "node scripts/validators/validate_frozen_output_contract.mjs",
+    "validate:build-all-integrity": "node scripts/validators/validate_build_all_integrity.mjs",
+    "validate:redirect-map-equivalence": "node scripts/validators/validate_redirect_map_equivalence.mjs"
   },
   "engines": {
     "node": ">=24.0.0"

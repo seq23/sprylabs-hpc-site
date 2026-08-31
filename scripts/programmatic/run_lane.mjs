@@ -18,7 +18,12 @@ const contracts=JSON.parse(fs.readFileSync('data/content/programmatic_lane_contr
 const initialRegistry=JSON.parse(fs.readFileSync('data/content/page_admission_registry.json','utf8'));
 const initialRegistryByPath=new Map((initialRegistry.records||[]).map(record=>[record.path,record]));
 if(!contracts[lane]){console.error(`Unknown programmatic lane: ${lane}`);process.exit(2);}
-const skipDirs=new Set(['.git','.pages-output', 'node_modules','artifacts','coverage','reports','.build','test-results','playwright-report']);
+// '.claude' holds agent worktrees: `git worktree add .claude/worktrees/<id>` puts a
+// COMPLETE second checkout of this repo inside the working tree. This walker
+// writes, so descending into one corrupts a checkout that is not ours - already
+// measured once at 2,295 rewritten files plus a worktree path written into
+// TRACKED data. .gitignore governs git, not directory walkers.
+const skipDirs=new Set(['.git','.claude','.pages-output', 'node_modules','artifacts','coverage','reports','.build','test-results','playwright-report']);
 
 const REJECTION_BACKLOG_PATH='data/programmatic/rejection_backlog.json';
 const MAX_REJECTION_BACKLOG_RECORDS=2500;

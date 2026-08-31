@@ -67,8 +67,11 @@ ROOT = SCRIPTS.parent
 # FAQ. Never write it.
 PROTECTED = {"download.html"}
 NEVER = {"404.html", "admin.html", "admin/index.html", "agency/index.html"}
+# '.claude' holds agent worktrees: a COMPLETE second checkout of this repo inside
+# the working tree. This pass rewrites pages, so descending into one corrupts a
+# checkout that is not ours. .gitignore governs git, not directory walkers.
 DENY_TOP = {
-    ".git", ".github", ".build", ".pages-output", ".wrangler", ".validation-cache",
+    ".git", ".claude", ".github", ".build", ".pages-output", ".wrangler", ".validation-cache",
     ".validation-runtime", "node_modules", "scripts", "data", "reports", "artifacts",
     "docs", "tests", "fixtures", "config", "content", "functions", "seo", "LICENSES",
     "dist", "admin", "coverage", "test-results", "playwright-report", "templates", "_ops",
@@ -516,7 +519,27 @@ def candidates_for(path: Path):
 
 
 def process(rel: str, path: Path, corpus, apply: bool):
-    html = path.read_text(encoding="utf-8")
+    # `pages` is snapshotted by walk() in pass one and re-read here in pass two,
+    # with the whole corpus scan in between. A page that disappears in that gap
+    # used to raise a bare FileNotFoundError naming one absolute path, killing
+    # build:all at its second-to-last stage and leaving a half-built tree - the
+    # 2026-08-30 failure on vs/phase4/...-vs-mastermind-for-execution-review.html.
+    #
+    # The gap is real: build:aplayer-phase-expansion wipes nine generated
+    # directories (vs/phase4 among them) and regenerates them later in the same
+    # run, so any other process reading the tree in that window sees ~1,400
+    # declared routes with no source. Pass one's own reader (candidates_for)
+    # already tolerated this; pass two did not, and that asymmetry is what turned
+    # a transient absence into a hard build failure.
+    #
+    # This script is not the authority for whether those pages should exist -
+    # the generators are. So a vanished page is counted and named here rather
+    # than crashing the build, and validate:build-all-integrity is what
+    # hard-fails when a declared route genuinely has no source.
+    try:
+        html = path.read_text(encoding="utf-8")
+    except FileNotFoundError:
+        return "vanished-between-passes", None
     if 'name="robots"' in html and re.search(r'content="[^"]*noindex', html, re.I):
         return "noindex", None
     already = MARKER in html
@@ -643,8 +666,20 @@ def main():
 
     report = ROOT / "artifacts/validation/visible-faq-sections.json"
     report.parent.mkdir(parents=True, exist_ok=True)
-    report.write_text(json.dumps({"status": "PASS", "counts": counts}, indent=2) + "\n", encoding="utf-8")
+    vanished = counts.get("vanished-between-passes", 0)
+    report.write_text(json.dumps({"status": "PASS", "counts": counts, "vanished_between_passes": vanished}, indent=2) + "\n", encoding="utf-8")
     print("[build:visible-faq] " + " ".join(f"{k}={v}" for k, v in sorted(counts.items())))
+    if vanished:
+        # A named stop, not a silent skip. This is exit 0 on purpose: the pages
+        # are owned by the generators, another build may be regenerating them
+        # right now, and validate:build-all-integrity is the check that hard-fails
+        # if any declared route is still without a source once the tree settles.
+        print(
+            f"[build:visible-faq] NAMED STOP: {vanished} page(s) disappeared between pass one and pass two "
+            "and were not processed. Another build was rewriting the generated directories concurrently. "
+            "Run `npm run validate:build-all-integrity` once the tree settles - it hard-fails on any declared "
+            "route left without a source file."
+        )
 
 
 if __name__ == "__main__":
