@@ -3,23 +3,31 @@ import fs from 'node:fs';
 import { createRequire } from 'node:module';
 const requireCjs = createRequire(import.meta.url);
 const { routeFor: sharedRouteFor } = requireCjs('../lib/dual_domain_policy.cjs');
-// The one serialization of <script id="CITATION_PAGE_SCHEMA">. This file used to
-// hand-roll both the match and the write: its own copy of the script regex, and
-// JSON.stringify(data, null, 2) - pretty-printed, where the authority is
-// compact. Measured on a real page: 3,301 bytes and 0 newlines through
-// serializeSchema against 3,988 bytes and 72 newlines hand-rolled.
+// The one serialization of <script id="CITATION_PAGE_SCHEMA">.
 //
-// That mattered because this repair is reachable from
-// scripts/selfheal/heal_until_clean.mjs (it is the mapped repair for both
-// validate:programmatic-registry and VAL-QUERY-OWNER-UNIQUENESS) and from
-// release:content-finalize, which runs in Spry Full Rebuild directly after
-// build:all. So a self-heal or finalize pass could rewrite pages into the
-// non-conforming shape AFTER every other stage had already normalised them -
-// the same "writer that does not know about the authority" mechanism that
-// produced the 1,474 bad frozen blobs and kept the store reverting.
-// replaceSchemaBody is serializeSchema applied in place; re-deriving it here
-// from serializeSchema plus the captured tags would be the same hand-rolling
-// this change removes, so the authority's own helper is what gets called.
+// This writer rewrites the block (updateCitationSchema below) and used to
+// re-emit it with JSON.stringify(data, null, 2) - pretty printed, with newlines.
+// Every other writer of that block goes through
+// scripts/lib/citation_page_schema.cjs, which is compact. So this step, which
+// runs in release:content-finalize AFTER build:all has normalised the tree,
+// silently un-normalised every page it touched, and the next build normalised
+// them back. That is the "the frozen store keeps reverting" symptom, and it is
+// why validate:citation-schema-serialization reported answers/phase4/* pages as
+// "pretty-printed with newlines". One serializer, no exceptions.
+//
+// Measured on a real page: 3,301 bytes and 0 newlines through the authority
+// against 3,988 bytes and 72 newlines hand-rolled.
+//
+// The blast radius is wider than release:content-finalize alone: this repair is
+// also the mapped self-heal for both validate:programmatic-registry and
+// VAL-QUERY-OWNER-UNIQUENESS (scripts/selfheal/heal_until_clean.mjs), so a
+// self-heal pass could re-introduce the non-conforming shape after every other
+// stage had corrected it.
+//
+// This file hand-rolled BOTH halves - its own copy of the script regex and its
+// own reassembly - so both go through the authority now. replaceSchemaBody is
+// serializeSchema applied in place; re-deriving it here from serializeSchema
+// plus the captured tags would be the same hand-rolling this removes.
 const { SCHEMA_SCRIPT_RE, replaceSchemaBody } = requireCjs('../lib/citation_page_schema.cjs');
 
 const registryPath = 'data/content/page_admission_registry.json';
