@@ -1,0 +1,9 @@
+{
+  "note": "Steps that must run in the ordered build job rather than in a shard, because they are sensitive to WHERE in the profile they run - not merely to having a built tree. Producers are detected automatically and do not belong here; this file is only for steps that would read a different tree if they ran after the producers instead of at their matrix position. Every id must exist in the container-prepush profile, and `verify` still reconciles the union of the build-job receipt and the shard receipts against the full profile, so an entry here can never remove a step from the run - it only moves it.",
+  "ordered_steps": [
+    {
+      "id": "VAL-EXTRACTION-SURFACE-GUARD-CHECK",
+      "reason": "Compares the governed extraction surfaces against the snapshot VAL-EXTRACTION-SURFACE-GUARD-SNAPSHOT writes one step earlier. The matrix places the pair at indices 5 and 6, immediately before build:all at index 7, so the check is meant to see the tree exactly as the snapshot found it. Running it in a shard means running it after every producer, and build:all plus the repair steps legitimately rewrite those surfaces - it reported 168 changed surfaces in run 33393681323 and failed for a reason that was not real. The pair has to stay adjacent."
+    }
+  ]
+}

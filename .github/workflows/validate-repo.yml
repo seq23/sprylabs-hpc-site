@@ -30,7 +30,15 @@ on:
 
 env:
   NODE_OPTIONS: --max-old-space-size=3072
-  SHARD_COUNT: '8'
+  # Measured, not guessed. The shardable validators cost 297s in total, but
+  # validate:retired-route-references alone is 121s of that, so no shard count
+  # can finish the stage faster than that one validator: the modelled heaviest
+  # shard is 150s at 2 shards and 121.1s at 3, 4, 5, 6 and 8 alike. Past 3 the
+  # extra runners buy nothing and cost CI minutes. 4 leaves one shard of headroom
+  # as validators land - the remaining 176s would have to more than double before
+  # any other shard reached the pole - and `verify` fails on timing drift, so
+  # this number is re-checked against reality rather than trusted.
+  SHARD_COUNT: '4'
 
 permissions:
   contents: read
@@ -112,6 +120,26 @@ jobs:
           include-hidden-files: true
           if-no-files-found: error
           path: ${{ runner.temp }}/spry-build-tree.tar
+      - name: Recover the receipt from the cached tree
+        # On a cache hit the producers never ran this time, but the tree being
+        # restored was built by a run in which they did, and its receipt was
+        # packed alongside it. Recovering it keeps the gate's accounting whole
+        # instead of making a cache hit look like an unaccounted-for build.
+        if: steps.tree.outputs.cache-hit == 'true'
+        run: |
+          tar -xf "$RUNNER_TEMP/spry-build-tree.tar" ./artifacts/validation/shard-producers.json
+          test -s artifacts/validation/shard-producers.json
+      - name: Publish the ordered build job's receipt
+        # The gate reconciles this together with the shard receipts against the
+        # whole profile. Without it the ordered steps would be unaccounted for
+        # and a step this job failed to run would leave a smaller union that
+        # still looked internally consistent.
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: spry-shard-producers-${{ github.run_id }}
+          if-no-files-found: error
+          path: artifacts/validation/shard-producers.json
 
   validate:
     runs-on: ubuntu-latest
@@ -193,6 +221,10 @@ jobs:
           pattern: spry-shard-receipt-${{ github.run_id }}-*
           merge-multiple: true
           path: artifacts/validation/shards
+      - uses: actions/download-artifact@v7
+        with:
+          name: spry-shard-producers-${{ github.run_id }}
+          path: artifacts/validation
       - name: Executed validator set must equal the declared validator set
         # Hard-fails on a missing shard, an empty shard, a validator the matrix
         # declares that no shard ran, and on any count mismatch against both

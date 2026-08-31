@@ -76,10 +76,26 @@ const healthy = plan.shards.map((bin) => ({
   results: bin.steps.map((s) => ({id: s.id, command: s.command, exit_code: 0, seconds: 0.1})),
 }));
 
+// The build job's receipt for the ordered steps. `verify` reconciles it together
+// with the shard receipts against the whole profile, so the proofs need a
+// healthy one in place before they can isolate a single deliberate breakage.
+const PRODUCER_RECEIPT = 'artifacts/validation/shard-producers.json';
+const orderedIds = plan.ordered_step_ids || [];
+const healthyProducers = {
+  profile: plan.profile,
+  results: orderedIds.map((id) => ({id, command: `# ${id}`, exit_code: 0, seconds: 0.1})),
+};
+const producerBackup = fs.existsSync(PRODUCER_RECEIPT) ? fs.readFileSync(PRODUCER_RECEIPT, 'utf8') : null;
+const layProducers = (r) => {
+  fs.mkdirSync(path.dirname(PRODUCER_RECEIPT), {recursive: true});
+  fs.writeFileSync(PRODUCER_RECEIPT, JSON.stringify(r, null, 2));
+};
+
 const backup = fs.existsSync(RECEIPT_DIR) ? fs.mkdtempSync(path.join(os.tmpdir(), 'shard-receipts-')) : null;
 if (backup) for (const f of fs.readdirSync(RECEIPT_DIR)) fs.copyFileSync(path.join(RECEIPT_DIR, f), path.join(backup, f));
 
 function lay(receipts) {
+  layProducers(JSON.parse(JSON.stringify(healthyProducers)));
   fs.rmSync(RECEIPT_DIR, {recursive: true, force: true});
   fs.mkdirSync(RECEIPT_DIR, {recursive: true});
   for (const r of receipts) fs.writeFileSync(path.join(RECEIPT_DIR, `shard-${r.shard}.json`), JSON.stringify(r, null, 2));
@@ -146,12 +162,49 @@ expect('restored -> PASS', verify(), true);
   expect(`a validator far slower than modelled -> FAIL naming ${victim.results[0].id}`, verify(), false, [victim.results[0].id, 'calibrate']);
 }
 
-// 7. The gate must hard-fail rather than pass when it examines nothing at all.
+// 7. The ordered build job is the other half of the coverage argument. A step it
+//    failed to run must be named, or the union would simply be smaller and still
+//    look internally consistent.
+if (orderedIds.length) {
+  lay(clone());
+  const dropped = orderedIds[0];
+  layProducers({...healthyProducers, results: healthyProducers.results.filter((r) => r.id !== dropped)});
+  expect(`an ordered build step never run -> FAIL naming ${dropped}`, verify(), false, [dropped]);
+
+  lay(clone());
+  layProducers({...healthyProducers, results: healthyProducers.results.map((r, i) => (i ? r : {...r, exit_code: 1}))});
+  expect(`an ordered build step that failed -> FAIL naming ${orderedIds[0]}`, verify(), false, [orderedIds[0]]);
+
+  lay(clone());
+  fs.rmSync(PRODUCER_RECEIPT, {force: true});
+  expect('no build-job receipt at all -> FAIL rather than verifying only the shards', verify(), false, ['unaccounted for']);
+}
+
+// 8. A pin in the ordering file for a step the profile no longer declares is
+//    doing nothing, and must say so instead of quietly having no effect.
+{
+  const ORDERING = '.github/validation-shard-ordering.json';
+  const before = fs.existsSync(ORDERING) ? fs.readFileSync(ORDERING, 'utf8') : null;
+  if (before) {
+    const doc = JSON.parse(before);
+    doc.ordered_steps = [...doc.ordered_steps, {id: 'VAL-STEP-THAT-DOES-NOT-EXIST', reason: 'deliberate'}];
+    fs.writeFileSync(ORDERING, JSON.stringify(doc, null, 2));
+    expect('a pinned step the profile no longer declares -> refused', sh(['plan', '--shards', String(SHARDS)]), false, ['VAL-STEP-THAT-DOES-NOT-EXIST']);
+    const doc2 = JSON.parse(before);
+    doc2.ordered_steps = doc2.ordered_steps.map((d) => ({id: d.id}));
+    fs.writeFileSync(ORDERING, JSON.stringify(doc2, null, 2));
+    expect('a pin with no stated reason -> refused', sh(['plan', '--shards', String(SHARDS)]), false, ['must carry a reason']);
+    fs.writeFileSync(ORDERING, before);
+  }
+}
+
+// 9. The gate must hard-fail rather than pass when it examines nothing at all.
+lay(clone());
 fs.rmSync(RECEIPT_DIR, {recursive: true, force: true});
 fs.mkdirSync(RECEIPT_DIR, {recursive: true});
 expect('zero receipts -> FAIL rather than an empty-loop pass', verify(), false, ['examined zero items']);
 
-// 8. Plan-time Rule 0: more shards than validators would create an empty shard.
+// 10. Plan-time Rule 0: more shards than validators would create an empty shard.
 expect(
   'more shards than validators -> refused at plan time',
   sh(['plan', '--shards', String(declared.length + 1)]),
@@ -159,7 +212,7 @@ expect(
   ['exit 0 having done nothing'],
 );
 
-// 9. Every declared validator must be assigned to some shard, at every shard
+// 11. Every declared validator must be assigned to some shard, at every shard
 //    count the workflow might plausibly use.
 for (const n of [1, 4, 8, 16]) {
   if (n > declared.length) continue;
@@ -171,7 +224,11 @@ for (const n of [1, 4, 8, 16]) {
   else { failures += 1; say(`  FAIL ${n} shard(s): ${new Set(assigned).size} of ${declared.length} validators assigned`); }
 }
 
-// Leave the tree as it was found.
+// Leave the tree as it was found. This matters in CI: the proofs run in the plan
+// job before anything is built, and a synthetic receipt left behind would be
+// picked up later as if a real run had produced it.
+fs.rmSync(PRODUCER_RECEIPT, {force: true});
+if (producerBackup !== null) fs.writeFileSync(PRODUCER_RECEIPT, producerBackup);
 fs.rmSync(RECEIPT_DIR, {recursive: true, force: true});
 if (backup) {
   fs.mkdirSync(RECEIPT_DIR, {recursive: true});

@@ -26,6 +26,7 @@ const PROFILE = process.env.SHARD_PROFILE || 'container-prepush';
 const MATRIX_FILE = '_repo_validation_matrix.json';
 const REGISTRY_FILE = '_validation_registry.json';
 const TIMINGS_FILE = '.github/validation-shard-timings.json';
+const ORDERING_FILE = '.github/validation-shard-ordering.json';
 const PLAN_FILE = 'artifacts/validation/shard-plan.json';
 const RECEIPT_DIR = 'artifacts/validation/shards';
 // How far a validator's real cost may exceed the cost the plan modelled before
@@ -58,8 +59,15 @@ function arg(name, fallback) {
 // pattern is tested against BOTH id and command, and `snapshot` is added: a step
 // that writes a snapshot must precede the check that reads it. Widening only
 // moves steps INTO the ordered build job, so it can never drop coverage.
+//
+// Narrowed in one direction too: a step whose command is `npm run validate:*`
+// only ever asserts, so it cannot be a producer whatever its name contains.
+// Without that, VAL-CITATION-REPAIR-REACH and VAL-BUILD-ALL-INTEGRITY were
+// pulled into the build job purely because their names carry "repair" and
+// "build", which also excluded them from the shard coverage count.
 const PRODUCER_PATTERN = /\b(?:build|repair|bootstrap|python-runtime|normalization|apply-report-contract|snapshot)\b/i;
-const isProducer = (step) => PRODUCER_PATTERN.test(step.id || '') || PRODUCER_PATTERN.test(step.command || '');
+const isProducer = (step) => !/^npm run validate:/.test((step.command || '').trim())
+  && (PRODUCER_PATTERN.test(step.id || '') || PRODUCER_PATTERN.test(step.command || ''));
 
 function resolveSteps() {
   const matrix = readJson(MATRIX_FILE);
@@ -82,12 +90,51 @@ function resolveSteps() {
   return steps;
 }
 
+/**
+ * Steps the matrix positions deliberately, which therefore cannot be hoisted
+ * into a shard. Declared in a reviewed file with a stated reason per entry
+ * rather than inferred, because "this validator is order-sensitive" is a fact
+ * about the validator that no naming pattern can discover.
+ *
+ * This is NOT a validator list - the shardable set is still derived wholly from
+ * the matrix at run time. It only moves a step from a shard into the ordered
+ * build job, and `verify` reconciles both together against the full profile, so
+ * an entry here can never remove anything from the run.
+ */
+function orderedExceptions(steps) {
+  if (!fs.existsSync(ORDERING_FILE)) return new Set();
+  const declared = readJson(ORDERING_FILE).ordered_steps || [];
+  const known = new Set(steps.map((s) => s.id));
+  const stale = declared.filter((d) => !known.has(d.id)).map((d) => d.id);
+  if (stale.length) {
+    die(`[shards] FAIL: ${ORDERING_FILE} pins step(s) the ${PROFILE} profile no longer declares, so the pin is silently doing nothing`, stale);
+  }
+  const missingReason = declared.filter((d) => !String(d.reason || '').trim()).map((d) => d.id);
+  if (missingReason.length) {
+    die(`[shards] FAIL: every entry in ${ORDERING_FILE} must carry a reason; an unexplained pin is indistinguishable from a mistake`, missingReason);
+  }
+  return new Set(declared.map((d) => d.id));
+}
+
+/**
+ * The profile is a sequence, not two sets. Producers build the tree everything
+ * after them reads, so they run in matrix order in the build job; validators are
+ * free to run anywhere against the finished tree - unless the matrix positions
+ * them deliberately, which is what `ordered` captures.
+ */
 function partition() {
   const steps = resolveSteps();
+  const pinned = orderedExceptions(steps);
+  const ordered = steps.filter((s) => isProducer(s) || pinned.has(s.id));
+  const shardable = steps.filter((s) => !isProducer(s) && !pinned.has(s.id));
   return {
     all: steps,
-    producers: steps.filter(isProducer),
-    validators: steps.filter((s) => !isProducer(s)),
+    // Matrix order is preserved: `ordered` is a filter of `steps`, never a sort.
+    ordered,
+    producers: ordered,
+    pinned,
+    shardable,
+    validators: shardable,
   };
 }
 
@@ -172,6 +219,7 @@ function writePlan(bins) {
     producer_count: producers.length,
     declared_validator_count: validators.length,
     declared_validator_ids: validators.map((s) => s.id).sort(),
+    ordered_step_ids: partition().ordered.map((s) => s.id),
     // Recorded so `verify` can compare what was modelled against what actually
     // happened, and so a plan artifact is self-describing after the fact.
     timing_coverage: (() => {
@@ -350,8 +398,32 @@ if (command === 'verify') {
     errors.push(`${drift.length} validator(s) cost materially more than the shard plan modelled, so the bin packing is balancing on stale numbers - re-derive with \`validation_shards.mjs calibrate\`: ${drift.map((d) => `${d.id} modelled ${d.model}s${d.timed ? '' : ' (untimed default)'} but took ${d.actual}s`).join('; ')}`);
   }
 
+  // The shard receipts account for the shardable steps. The build job accounts
+  // for the rest, and without reconciling it too the ordered prefix could fail
+  // to run a step and nothing here would notice - the union would simply be
+  // smaller and still internally consistent. Coverage is asserted over the whole
+  // profile, not over the part that happens to be sharded.
+  const {all, ordered} = partition();
+  const PRODUCER_RECEIPT = 'artifacts/validation/shard-producers.json';
+  if (!fs.existsSync(PRODUCER_RECEIPT)) {
+    errors.push(`the build job receipt ${PRODUCER_RECEIPT} is absent, so the ${ordered.length} ordered step(s) it runs are unaccounted for`);
+  } else {
+    const producerResults = readJson(PRODUCER_RECEIPT).results || [];
+    const ranOrdered = new Set(producerResults.map((r) => r.id));
+    const failedOrdered = producerResults.filter((r) => r.exit_code !== 0).map((r) => r.id);
+    if (failedOrdered.length) errors.push(`ordered build step(s) failed: ${failedOrdered.join(', ')}`);
+    const missingOrdered = ordered.filter((s) => !ranOrdered.has(s.id)).map((s) => s.id);
+    if (missingOrdered.length) errors.push(`declared by ${MATRIX_FILE} for the ordered build job but never executed: ${missingOrdered.join(', ')}`);
+    const wholeProfile = new Set([...executedSet, ...ranOrdered]);
+    const unaccounted = all.filter((s) => !wholeProfile.has(s.id)).map((s) => s.id);
+    if (unaccounted.length) errors.push(`profile step(s) executed by neither the build job nor any shard: ${unaccounted.join(', ')}`);
+    if (wholeProfile.size !== all.length) {
+      errors.push(`the run executed ${wholeProfile.size} of the ${all.length} step(s) ${PROFILE} declares`);
+    }
+  }
+
   if (errors.length) die(`[shards:verify] FAIL: ${errors.length} coverage issue(s)`, errors);
-  console.log(`[shards:verify] OK: ${executedSet.size} validator(s) executed across ${count} shard(s), equal to the ${declared.length} the matrix declares`);
+  console.log(`[shards:verify] OK: ${executedSet.size} validator(s) across ${count} shard(s) plus ${ordered.length} ordered build step(s) = all ${all.length} step(s) the ${PROFILE} profile declares`);
   process.exit(0);
 }
 
