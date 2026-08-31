@@ -3,6 +3,24 @@ import fs from 'node:fs';
 import { createRequire } from 'node:module';
 const requireCjs = createRequire(import.meta.url);
 const { routeFor: sharedRouteFor } = requireCjs('../lib/dual_domain_policy.cjs');
+// The one serialization of <script id="CITATION_PAGE_SCHEMA">. This file used to
+// hand-roll both the match and the write: its own copy of the script regex, and
+// JSON.stringify(data, null, 2) - pretty-printed, where the authority is
+// compact. Measured on a real page: 3,301 bytes and 0 newlines through
+// serializeSchema against 3,988 bytes and 72 newlines hand-rolled.
+//
+// That mattered because this repair is reachable from
+// scripts/selfheal/heal_until_clean.mjs (it is the mapped repair for both
+// validate:programmatic-registry and VAL-QUERY-OWNER-UNIQUENESS) and from
+// release:content-finalize, which runs in Spry Full Rebuild directly after
+// build:all. So a self-heal or finalize pass could rewrite pages into the
+// non-conforming shape AFTER every other stage had already normalised them -
+// the same "writer that does not know about the authority" mechanism that
+// produced the 1,474 bad frozen blobs and kept the store reverting.
+// replaceSchemaBody is serializeSchema applied in place; re-deriving it here
+// from serializeSchema plus the captured tags would be the same hand-rolling
+// this change removes, so the authority's own helper is what gets called.
+const { SCHEMA_SCRIPT_RE, replaceSchemaBody } = requireCjs('../lib/citation_page_schema.cjs');
 
 const registryPath = 'data/content/page_admission_registry.json';
 const queryPath = 'data/citation/query_registry.json';
@@ -106,8 +124,9 @@ function updateMetaTitle(raw, propertyName, oldQuery, newQuery) {
   });
 }
 function updateCitationSchema(raw, oldQuery, newQuery) {
-  const schemaPattern = /<script\b([^>]*\bid=["']CITATION_PAGE_SCHEMA["'][^>]*)>([\s\S]*?)<\/script>/i;
-  const match = raw.match(schemaPattern);
+  // SCHEMA_SCRIPT_RE, not a local copy: one pattern for finding the block, the
+  // same one the authority writes back through.
+  const match = SCHEMA_SCRIPT_RE.exec(raw);
   if (!match) return {raw, changed: false};
   let data;
   try {
@@ -130,8 +149,10 @@ function updateCitationSchema(raw, oldQuery, newQuery) {
     }
   }
   if (!changed) return {raw, changed: false};
-  const json = JSON.stringify(data, null, 2).replace(/</g, '\\u003c');
-  return {raw: raw.replace(schemaPattern, `<script${match[1]}>${json}</script>`), changed: true};
+  // replaceSchemaBody serialises through serializeSchema and leaves the opening
+  // tag exactly as the page had it, so this repair can only ever emit the one
+  // conforming shape.
+  return {raw: replaceSchemaBody(raw, data), changed: true};
 }
 function syncCanonicalCitationSurfacesForQueryRepairs(repairs) {
   if (!repairs.length) return {citable_updates: 0, html_updates: 0, schema_updates: 0};
