@@ -80,8 +80,13 @@ const KNOWN_BYPASS_DEBT = [
     owner: 'build-chain agent (scripts/content/ is not this validator owner\'s territory)',
     detail:
       'updateCitationSchema() re-serialises the block with JSON.stringify(data, null, 2), '
-      + 'the pretty-printed form the authority exists to eliminate; it is reachable live '
-      + 'from scripts/selfheal/heal_until_clean.mjs',
+      + 'the pretty-printed form the authority exists to eliminate. Reachability is wider than '
+      + 'first recorded: besides scripts/selfheal/heal_until_clean.mjs it is reached from '
+      + 'release:content-finalize, which Spry Full Rebuild runs immediately after build:all - so it '
+      + 'could rewrite pages into the non-conforming shape the moment a full rebuild finished, which '
+      + 'is likely part of why the frozen store kept reverting. Measured divergence: hand-rolled '
+      + '3,904 B with 72 newlines against the authority\'s 3,217 B with 0. Fixed by the build agent on '
+      + 'fix/build-all-declared-route-integrity (PR #37); this entry reports itself paid once that lands.',
   },
 ];
 
@@ -200,6 +205,7 @@ const debtByFile = new Map(KNOWN_BYPASS_DEBT.map((e) => [e.file, e]));
 
 const errors = [];
 const stale = [];
+const resolvedDebt = [];
 const emitters = [];
 const compliant = [];
 const carriedDebt = [];
@@ -223,11 +229,17 @@ for (const rel of files) {
 
   if (IMPORTS_AUTHORITY.test(src)) {
     compliant.push(rel);
-    if (debtByFile.has(rel)) {
-      stale.push(
-        `${rel}: listed in KNOWN_BYPASS_DEBT but now imports the authority. Remove the entry.`,
-      );
-    }
+    // A debt entry whose file now goes through the authority is PAID. That is
+    // the outcome this list exists to drive, so it passes and says so.
+    //
+    // It used to hard-fail as a stale declaration, which was wrong in a way worth
+    // naming: the fix and the bookkeeping live on different branches, so the guard
+    // went red the moment someone else's correct fix merged, and stayed red until
+    // a human edited this file. That is a hand-synchronised list coupling two
+    // components with nothing linking them - the exact defect this validator was
+    // written to catch, reproduced inside the validator. A paid debt can never
+    // hide a bypass, so it cannot justify failing a build.
+    if (debtByFile.has(rel)) resolvedDebt.push(rel);
     continue;
   }
 
@@ -251,11 +263,16 @@ for (const rel of files) {
   );
 }
 
-// Every declared entry must correspond to a file that still exists.
-for (const entry of [...DECLARED_OUT_OF_SCOPE, ...KNOWN_BYPASS_DEBT]) {
+// A declared exclusion naming a file that no longer exists is a real problem:
+// the exclusion could be masking a bypass in whatever replaced it. A debt entry
+// naming a deleted file is merely obsolete bookkeeping.
+for (const entry of DECLARED_OUT_OF_SCOPE) {
   if (!fs.existsSync(entry.file)) {
-    stale.push(`${entry.file}: declared in this guard but no longer exists. Remove the entry.`);
+    stale.push(`${entry.file}: declared out of scope by this guard but no longer exists. Remove the entry, and check what replaced it.`);
   }
+}
+for (const entry of KNOWN_BYPASS_DEBT) {
+  if (!fs.existsSync(entry.file)) resolvedDebt.push(`${entry.file} (no longer present)`);
 }
 
 // The guard must actually reach the writers it governs. If the scan found no
@@ -283,6 +300,7 @@ fs.writeFileSync(
       emitters_found: emitters.length,
       compliant: compliant.sort(),
       carried_bypass_debt: carriedDebt,
+      resolved_bypass_debt: resolvedDebt,
       declared_out_of_scope: DECLARED_OUT_OF_SCOPE.map((e) => ({ file: e.file, reason: e.reason })),
       stale_declarations: stale,
       errors,
@@ -306,6 +324,13 @@ console.log(
   `[validate:citation-schema-authority] PASS: ${files.length} source files scanned, `
   + `${emitters.length} CITATION_PAGE_SCHEMA emitter(s) found, all routed through the authority.`,
 );
+if (resolvedDebt.length) {
+  console.log(
+    `[validate:citation-schema-authority] ${resolvedDebt.length} previously named bypass(es) now go through `
+    + 'the authority. The debt is paid; the KNOWN_BYPASS_DEBT entries below can be deleted at leisure:',
+  );
+  for (const d of resolvedDebt) console.log(`- ${d}`);
+}
 if (carriedDebt.length) {
   console.warn(
     `[validate:citation-schema-authority] ${carriedDebt.length} NAMED pre-existing bypass(es) `
