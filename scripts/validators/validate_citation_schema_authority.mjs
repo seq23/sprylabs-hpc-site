@@ -75,19 +75,15 @@ const DECLARED_OUT_OF_SCOPE = [
  * is stale and the run fails, so the debt cannot outlive its fix.
  */
 const KNOWN_BYPASS_DEBT = [
-  {
-    file: 'scripts/content/repair_programmatic_registry_owners.mjs',
-    owner: 'build-chain agent (scripts/content/ is not this validator owner\'s territory)',
-    detail:
-      'updateCitationSchema() re-serialises the block with JSON.stringify(data, null, 2), '
-      + 'the pretty-printed form the authority exists to eliminate. Reachability is wider than '
-      + 'first recorded: besides scripts/selfheal/heal_until_clean.mjs it is reached from '
-      + 'release:content-finalize, which Spry Full Rebuild runs immediately after build:all - so it '
-      + 'could rewrite pages into the non-conforming shape the moment a full rebuild finished, which '
-      + 'is likely part of why the frozen store kept reverting. Measured divergence: hand-rolled '
-      + '3,904 B with 72 newlines against the authority\'s 3,217 B with 0. Fixed by the build agent on '
-      + 'fix/build-all-declared-route-integrity (PR #37); this entry reports itself paid once that lands.',
-  },
+  // Empty, and that is the finished state: every writer of CITATION_PAGE_SCHEMA in
+  // this repository now goes through scripts/lib/citation_page_schema.*.
+  //
+  // It held one entry - scripts/content/repair_programmatic_registry_owners.mjs,
+  // which re-serialised the block with JSON.stringify(data, null, 2) and was
+  // reachable from both the self-heal loop and release:content-finalize. The build
+  // agent routed it through serializeSchema; this guard observed the debt paid and
+  // stayed green while the entry was still here, which is why removing it now is
+  // bookkeeping rather than a change in behaviour.
 ];
 
 function walk(dir, out = []) {

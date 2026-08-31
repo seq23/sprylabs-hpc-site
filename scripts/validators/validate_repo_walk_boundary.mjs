@@ -56,27 +56,26 @@ const EXEMPT = new Set([
  * that is paid can never hide a defect, so it must not fail a build.
  */
 const KNOWN_UNMIGRATED = [
-  // Ten of these thirteen are EXPOSED: they recurse from the repository root,
-  // write back to a walked path, and carry no '.claude' entry at all, so a worktree
-  // left under .claude/ is theirs to rewrite. The other three already carry
-  // '.claude' privately - the build agent added it after the corruption was
-  // reproduced - so they are safe today, but each still keeps its own copy of the
-  // rule, which is the condition that produced the incident in the first place.
+  // Four live root-recursive writers remain, all outside the validation owner's
+  // territory and all named by the build agent as outside its own. Two of them run
+  // inside Validate Repo itself - .github/workflows/validate-repo.yml calls
+  // `npm run cadence:gate` and `npm run cadence:template-share` - so an exposed
+  // walker executes on every validation run.
   //
-  // All thirteen are outside the validation owner's territory, so they are named
-  // and counted rather than migrated. Each reports itself PAID the moment it
-  // imports the shared boundary, so the fix and this bookkeeping never have to
-  // land in the same commit.
-  { file: 'scripts/apply_fanout.js', owner: 'content lane', exposed: true },
-  { file: 'scripts/cadence_gate.js', owner: 'release lane', exposed: true },
-  { file: 'scripts/citation/apply_citation_program.py', owner: 'build chain', exposed: true },
-  { file: 'scripts/phase34_full_site_normalize.js', owner: 'legacy one-shot', exposed: true },
-  { file: 'scripts/phase35_final_normalize.py', owner: 'legacy one-shot', exposed: true },
-  { file: 'scripts/prebuild/run_prebuild_validation.js', owner: 'build chain', exposed: true },
-  { file: 'scripts/refactor_leaf_pages_v2.js', owner: 'legacy one-shot', exposed: true },
-  { file: 'scripts/repair/repair_published_agent_blocks.mjs', owner: 'build chain', exposed: true },
-  { file: 'scripts/template_share.js', owner: 'content lane', exposed: true },
-  { file: 'scripts/agent_intake/apply_bhpc_agent_exact_implementation.mjs', owner: 'agent-intake lane', exposed: true },
+  // 'exposed: true' means the file carries no '.claude' entry at all, so a worktree
+  // left under .claude/ is its to rewrite. That is not a miscount: unmigrated,
+  // apply_citation_program wrote a worktree path into citable_pages.json,
+  // query_registry.json and public_route_manifest.json. These walkers poison
+  // authorities.
+  //
+  // Each reports itself PAID the moment it imports the shared boundary, so the fix
+  // and this bookkeeping never have to land together.
+  { file: 'scripts/apply_fanout.js', owner: 'content lane (npm run fanout:apply)', exposed: true },
+  { file: 'scripts/template_share.js', owner: 'content lane (cadence:template-share - RUNS IN Validate Repo)', exposed: true },
+  { file: 'scripts/cadence_gate.js', owner: 'release lane (cadence:gate - RUNS IN Validate Repo)', exposed: true },
+  { file: 'scripts/prebuild/run_prebuild_validation.js', owner: 'build chain (prebuild:validate; not reachable from build:all)', exposed: true },
+  // Already carry '.claude' privately, so safe today, but each still keeps its own
+  // copy of the rule - the condition that produced the incident.
   { file: 'scripts/content/apply_redirect_map.mjs', owner: 'build chain', exposed: false },
   { file: 'scripts/content/build_visible_faq_sections.py', owner: 'build chain', exposed: false },
   { file: 'scripts/internal/build_navigation_structure.mjs', owner: 'build chain', exposed: false },
