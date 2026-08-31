@@ -20,7 +20,21 @@ const errors = [];
 const warnings = [];
 const runs = [];
 
-for (const entry of findAgentManifests().filter(shouldCheck)) {
+// Two independent ways to examine nothing and still pass: the intake tree
+// going missing (findAgentManifests() returns []), and a cutoff date that
+// excludes every run - setting BHPC_AGENT_SOURCE_COVERAGE_FROM to a future
+// date silently turned this into "PASS: runs=0" with the coverage rule intact
+// in the report. Both are named failures now.
+const coverageFrom = process.env.BHPC_AGENT_SOURCE_COVERAGE_FROM || '2026-07-04';
+const allManifests = findAgentManifests();
+const checkable = allManifests.filter(shouldCheck);
+if (!allManifests.length) {
+  errors.push('data/report_fixes/agent_runs: no agent_run_manifest.json found under any <run-date>/<scope>/ directory; this validator must examine the recorded agent runs. Zero runs proves no source coverage.');
+} else if (!checkable.length) {
+  errors.push(`coverage cutoff excludes every run: ${allManifests.length} agent run manifest(s) exist under data/report_fixes/agent_runs, but none is READY_FOR_ABSORPTION/ABSORBED on or after BHPC_AGENT_SOURCE_COVERAGE_FROM=${coverageFrom}. A cutoff that admits nothing proves no source coverage.`);
+}
+
+for (const entry of checkable) {
   const scope = safeScope(entry.scope || entry.manifest?.scope || 'bhpc');
   const key = runKey(entry.runDate, scope);
   const normalizedRel = entry.manifest?.normalized_path || `${NORMALIZED_ROOT}/${key}.json`;

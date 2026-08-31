@@ -18,6 +18,16 @@ for p in ROOT.rglob('*.html'):
     fingerprint = re.sub(r'full framework.*','', fingerprint)
     fingerprint = fingerprint.strip()
     entries.append((rel, body, hashlib.md5(fingerprint.encode()).hexdigest()))
+# Rule 0: this scan is a filter (`if not m: continue`) over every .html in the
+# tree. If the Short Answer heading is ever renamed, entries goes empty and the
+# duplicate check prints OK having compared nothing. 174 pages carry the block
+# today, so a collapse to zero means the selector stopped matching, not that the
+# duplication was fixed.
+if not entries:
+    print('FAIL: found 0 page(s) carrying an "<h2>Short Answer</h2>" block; expected the ~174 answer '
+          'surfaces this repo publishes. Comparing zero short answers proves none of them are duplicates.')
+    sys.exit(1)
+
 seen = {}
 failures = []
 def stem(rel):
@@ -38,4 +48,4 @@ if failures:
     print('FAIL')
     for f in failures[:200]: print(f)
     sys.exit(1)
-print('OK')
+print(f'OK: {len(entries)} short answer(s) are unique across differently-named pages')

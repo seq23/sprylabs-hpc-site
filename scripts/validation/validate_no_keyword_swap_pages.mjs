@@ -2,6 +2,10 @@
 import fs from 'node:fs';
 const rows=JSON.parse(fs.readFileSync('data/content/programmatic_candidate_manifest.json','utf8')).candidates.filter(x=>x.source==='aplayer_phase_expansion_2000_baseline');
 const errors=[];
+// The row set is selected by one generator tag. Rename that tag in the manifest and
+// every keyword-swap check below is skipped, reporting "OK: 0 generated pages
+// checked" while the generated pages go unexamined.
+if(!rows.length){console.error("[validate:no-keyword-swap-pages] FAIL: data/content/programmatic_candidate_manifest.json has 0 candidates tagged source='aplayer_phase_expansion_2000_baseline'; the unique_atom check runs only over that tag, so an empty selection proves nothing about the generated pages.");process.exit(1);}
 function norm(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();}
 function tokenSet(s){return new Set(norm(s).split(/\s+/).filter(Boolean).filter(w=>!['the','and','for','with','how','can','use','to','a','an','is','of','in','as','your','my'].includes(w)));}
 for (const r of rows) {

@@ -4,6 +4,10 @@ import {fail, pass, writeSummary} from './common.mjs';
 
 const data = JSON.parse(fs.readFileSync('data/citation/query_registry.json', 'utf8'));
 const active = (data.queries || []).filter(row => row && row.release_status === 'ACTIVE' && row.query && row.primary_page);
+// A registry that loses its queries array - renamed key, truncated write,
+// every row flipped out of ACTIVE - leaves nothing to compare, and the run
+// still announced deterministic canonical ownership over an empty set.
+if (!active.length) fail('[validate:query-owner-uniqueness] FAIL: 0 ACTIVE queries in data/citation/query_registry.json; the registry must list queries carrying release_status ACTIVE with both query and primary_page, and canonical ownership cannot be proved over an empty set.');
 const owners = new Map();
 const errors = [];
 const normalize = value => String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();

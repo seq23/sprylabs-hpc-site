@@ -64,8 +64,17 @@ function assertQuietIngestionSchema(label, graph) {
   }
 }
 
-for (const t of homeContract.must_include) requireText('homepage', index, t);
-for (const t of downloadContract.must_include) requireText('download', download, t);
+// A missing must_include key throws, but an empty one asserts nothing and the
+// page contract still passes - so a homepage or download page gutted down to
+// the shell would ship green with its contract list quietly emptied first.
+if (!Array.isArray(homeContract.must_include) || !homeContract.must_include.length) {
+  errors.push('data/page_contracts/bhpc_homepage_contract.json: must_include is empty or not an array; it must list the strings index.html has to carry. An empty list asserts nothing about the homepage.');
+}
+if (!Array.isArray(downloadContract.must_include) || !downloadContract.must_include.length) {
+  errors.push('data/page_contracts/bhpc_download_contract.json: must_include is empty or not an array; it must list the strings download.html has to carry. An empty list asserts nothing about the download page.');
+}
+for (const t of homeContract.must_include || []) requireText('homepage', index, t);
+for (const t of downloadContract.must_include || []) requireText('download', download, t);
 
 const homeSchema = parseCitationSchema('homepage', index);
 const downloadSchema = parseCitationSchema('download', download);

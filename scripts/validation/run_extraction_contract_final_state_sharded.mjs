@@ -20,4 +20,17 @@ fs.writeFileSync(`${dir}/extraction-contract-final-state.json`,JSON.stringify(re
 const howtoErrors=report.errors.filter(e=>e.declared_type==='howto');const howtoRows=report.rows.filter(r=>r.declared_type==='howto');
 fs.writeFileSync(`${dir}/howto-extraction-audit.json`,JSON.stringify({status:howtoErrors.length?'FAIL':'PASS',rows:howtoRows,errors:howtoErrors},null,2)+'\n');
 if(report.status==='FAIL'){console.error(`[validate:extraction-contract-final-state] FAIL: ${report.errors.length} issue(s)`);for(const e of report.errors.slice(0,100))console.error(' -',e.path,e.error);process.exit(1)}
+// A full-corpus run audits every ACTIVE row of data/citation/citable_pages.json.
+// Auditing none of them means the corpus never reached the shards, and printing
+// PASS over "0 pages" proves nothing about the extraction contract. An
+// incremental run is scoped to changed pages and may genuinely have none, so
+// that case is named instead of failed.
+if(report.audited===0){
+ if(String(process.env.VALIDATION_CACHE_MODE||'').toLowerCase()==='full'){
+  console.error('[validate:extraction-contract-final-state] FAIL: audited 0 pages in full-corpus mode; expected every ACTIVE page listed in data/citation/citable_pages.json. A pass over an empty audit set proves nothing.');
+  process.exit(1);
+ }
+ console.log('[validate:extraction-contract-final-state] SCOPED_EMPTY: the incremental page scope named no pages, so no page carrying CITATION_PAGE_SCHEMA was audited. This is an empty scope, not a proven corpus.');
+ process.exit(0);
+}
 console.log(`[validate:extraction-contract-final-state] PASS: ${report.audited} pages; types=${JSON.stringify(report.types)}; warnings=${report.warnings.length}; shards=${shards}`);

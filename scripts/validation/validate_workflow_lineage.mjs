@@ -7,6 +7,16 @@ import {resolveRuntimePath} from '../lib/runtime_path.mjs';
 const errors = [];
 const files = listFiles();
 const contracts = workflowContracts();
+// workflowContracts() is `payload.governed_workflows || []` in the shared
+// scripts/workflow/lib.mjs, so a renamed, emptied or restructured key yields no
+// contracts, the loop below asserts nothing, and the run prints "OK: 0 governed
+// workflows". The helper is shared with monitor_workflows.mjs and
+// validate_workflow_monitor.mjs, so the floor lives here.
+if (!contracts.length) fail('[validate:workflow-lineage] FAIL: data/workflows/workflow_contracts.json declares no governed_workflows; expected at least one governed workflow contract. A lineage check over zero contracts proves nothing.');
+// Every lineage input/output assertion matches contract globs against this file
+// list. With no files, matchedInputs/matchedOutputs would be empty for reasons
+// that have nothing to do with the contracts.
+if (!files.length) fail('[validate:workflow-lineage] FAIL: listFiles() returned 0 repository files, so no contract could match its lineage inputs or outputs; expected a non-empty repository tree.');
 const seen = new Set();
 const report = [];
 for (const contract of contracts) {

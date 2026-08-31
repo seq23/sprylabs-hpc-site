@@ -1977,9 +1977,179 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-195",
+      "validation_id": "VAL-MAIN-WRITER-VALIDATION-GATE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:main-writer-validation-gate",
+      "order": 195,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-WF-MAIN-VALIDATION-SENTINEL",
+      "validation_id": "VAL-WF-MAIN-VALIDATION-SENTINEL",
+      "lane": "validation-control-plane",
+      "command": ".github/workflows/main-validation-sentinel.yml",
+      "order": 196,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-CITATION-SCHEMA-AUTHORITY",
+      "validation_id": "VAL-CITATION-SCHEMA-AUTHORITY",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:citation-schema-authority",
+      "order": 191,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-CITATION-PHASE-MANIFEST",
+      "validation_id": "VAL-CITATION-PHASE-MANIFEST",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:citation-phase-manifest",
+      "order": 192,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-INTERNAL-LINK-VELOCITY",
+      "validation_id": "VAL-INTERNAL-LINK-VELOCITY",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:internal-link-velocity",
+      "order": 193,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-LLMS-FULL-COVERAGE",
+      "validation_id": "VAL-LLMS-FULL-COVERAGE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:llms-full-coverage",
+      "order": 194,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-RELEASE-ATOM-CONTRACT",
+      "validation_id": "VAL-RELEASE-ATOM-CONTRACT",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:release-atom-contract",
+      "order": 195,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-196",
+      "validation_id": "VAL-RELEASE-MIX-POLICY",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:release-mix-policy",
+      "order": 196,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-197",
+      "validation_id": "VAL-SITEMAP-COVERAGE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:sitemap-coverage",
+      "order": 197,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-198",
+      "validation_id": "VAL-PAGE-CONTRACTS",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:page-contracts",
+      "order": 198,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-199",
+      "validation_id": "VAL-VELOCITY-CRITICAL",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:velocity-critical",
+      "order": 199,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-200",
+      "validation_id": "VAL-SHORT-ANSWER-UNIQUENESS",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:short-answer-uniqueness",
+      "order": 200,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-201",
+      "validation_id": "VAL-INSIGHT-SCHEMA",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:insight-schema",
+      "order": 201,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-202",
+      "validation_id": "VAL-PUBLISH-SIGNAL-GATE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:publish-signal-gate",
+      "order": 202,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-203",
+      "validation_id": "VAL-ATTESTATION-MATCHES-RECEIPT",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:attestation-matches-receipt",
+      "order": 203,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-204",
+      "validation_id": "VAL-REPO-WALK-BOUNDARY",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:repo-walk-boundary",
+      "order": 204,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-CONTROL-PLANE-IDENTITY",
+      "validation_id": "VAL-CONTROL-PLANE-IDENTITY",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:control-plane-identity",
+      "order": 205,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 197,
+  "entry_count": 214,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2005,6 +2175,14 @@
         {
           "id": "VAL-PYTHON-RUNTIME-SELF-TEST",
           "command": "npm run validation:python-runtime:self-test"
+        },
+        {
+          "id": "VAL-EXTRACTION-SURFACE-GUARD-SNAPSHOT",
+          "command": "npm run validate:extraction-surface-guard:snapshot"
+        },
+        {
+          "id": "VAL-EXTRACTION-SURFACE-GUARD-CHECK",
+          "command": "npm run validate:extraction-surface-guard:check"
         },
         {
           "id": "build:all",
@@ -2039,7 +2217,7 @@
           "command": "npm run validate:validation-registry"
         },
         {
-          "id": "VAL-VALIDATION-CACHE-CONTROL-PLANE",
+          "id": "VAL-VALIDATION-CACHE-SELF-TEST",
           "command": "npm run validation:cache:self-test"
         },
         {
@@ -2163,10 +2341,6 @@
           "command": "npm run repair:extraction-final-state"
         },
         {
-          "id": "VAL-EXTRACTION-SURFACE-GUARD-SNAPSHOT",
-          "command": "npm run validate:extraction-surface-guard:snapshot"
-        },
-        {
           "id": "validate:release-atom-contract",
           "command": "node scripts/validation/validate_release_atom_contract.mjs"
         },
@@ -2217,10 +2391,6 @@
         {
           "id": "VAL-EXTRACTION-PIPELINE-TRACE",
           "command": "npm run trace:extraction-pipeline"
-        },
-        {
-          "id": "VAL-EXTRACTION-SURFACE-GUARD-CHECK",
-          "command": "npm run validate:extraction-surface-guard:check"
         },
         {
           "id": "VAL-BHPC-SEO-EXECUTION",
@@ -2375,12 +2545,72 @@
           "command": "npm run validate:citation-schema-authority-reach"
         },
         {
+          "id": "VAL-CITATION-SCHEMA-AUTHORITY",
+          "command": "npm run validate:citation-schema-authority"
+        },
+        {
+          "id": "VAL-CITATION-PHASE-MANIFEST",
+          "command": "npm run validate:citation-phase-manifest"
+        },
+        {
+          "id": "VAL-INTERNAL-LINK-VELOCITY",
+          "command": "npm run validate:internal-link-velocity"
+        },
+        {
+          "id": "VAL-LLMS-FULL-COVERAGE",
+          "command": "npm run validate:llms-full-coverage"
+        },
+        {
+          "id": "VAL-RELEASE-ATOM-CONTRACT",
+          "command": "npm run validate:release-atom-contract"
+        },
+        {
+          "id": "VAL-RELEASE-MIX-POLICY",
+          "command": "npm run validate:release-mix-policy"
+        },
+        {
+          "id": "VAL-SITEMAP-COVERAGE",
+          "command": "npm run validate:sitemap-coverage"
+        },
+        {
+          "id": "VAL-PAGE-CONTRACTS",
+          "command": "npm run validate:page-contracts"
+        },
+        {
+          "id": "VAL-SHORT-ANSWER-UNIQUENESS",
+          "command": "npm run validate:short-answer-uniqueness"
+        },
+        {
+          "id": "VAL-INSIGHT-SCHEMA",
+          "command": "npm run validate:insight-schema"
+        },
+        {
+          "id": "VAL-PUBLISH-SIGNAL-GATE",
+          "command": "npm run validate:publish-signal-gate"
+        },
+        {
+          "id": "VAL-ATTESTATION-MATCHES-RECEIPT",
+          "command": "npm run validate:attestation-matches-receipt"
+        },
+        {
           "id": "VAL-BUILD-ALL-INTEGRITY",
           "command": "npm run validate:build-all-integrity"
         },
         {
           "id": "VAL-REDIRECT-MAP-EQUIVALENCE",
           "command": "npm run validate:redirect-map-equivalence"
+        },
+        {
+          "id": "VAL-REPO-WALK-BOUNDARY",
+          "command": "npm run validate:repo-walk-boundary"
+        },
+        {
+          "id": "VAL-MAIN-WRITER-VALIDATION-GATE",
+          "command": "npm run validate:main-writer-validation-gate"
+        },
+        {
+          "id": "VAL-CONTROL-PLANE-IDENTITY",
+          "command": "npm run validate:control-plane-identity"
         }
       ]
     },
@@ -2413,7 +2643,7 @@
           "command": "npm run validate:validation-registry"
         },
         {
-          "id": "VAL-VALIDATION-CACHE-CONTROL-PLANE",
+          "id": "VAL-VALIDATION-CACHE-SELF-TEST",
           "command": "npm run validation:cache:self-test"
         },
         {
@@ -2665,7 +2895,8 @@
     "MX-VAL-FSA-SCORE": "release-time or generator command, not a per-push check",
     "MX-VAL-FSA-SELFHEAL": "release-time or generator command, not a per-push check",
     "MX-177": "network measurement that writes an observation file; runs on the daily-citation-intelligence schedule, not per push",
-    "MX-184": "regeneration command, not a check: it rewrites artifacts/validation/python-dependency-contract.json. The read-only VAL-PYTHON-DEPENDENCY-CONTRACT is the armed profile step and fails if this has not been run after a Python dependency change."
+    "MX-184": "regeneration command, not a check: it rewrites artifacts/validation/python-dependency-contract.json. The read-only VAL-PYTHON-DEPENDENCY-CONTRACT is the armed profile step and fails if this has not been run after a Python dependency change.",
+    "MX-199": "NAMED STOP: this validator was orphaned (no registry record, no npm script, nothing invoking it) and on its first run it hard-fails with a CONFIRMED defect it was written to catch - duplicate canonicals where both a directory index and a sibling .html claim the same URL (billionaire-high-performance-coach, faq). The pages and routing that produce that duplication are build/content territory, not the validation owner's, so arming it into container-prepush would turn a green lane red for a defect this agent cannot fix. Registered and named here so the debt is visible and countable; arm it into container-prepush in the same change that removes the duplicate canonicals."
   },
   "profile_exclusions_policy": "Admitted entries that are deliberately not profile steps, each with the reason. validate_validation_registry warns only about entries missing from this map, so an unreviewed orphan is visible while a reasoned exclusion is not noise. Entries marked NEEDS TRIAGE are real failures or real environment gaps that should be fixed and then armed - they are not permanent exclusions."
 }

@@ -6465,8 +6465,520 @@
         "MX-194"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-MAIN-WRITER-VALIDATION-GATE",
+      "status": "ADMITTED",
+      "name": "validate:main-writer-validation-gate",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:main-writer-validation-gate",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-main-writer-validation-gate/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-08-31",
+      "matrix_ids": [
+        "MX-195"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-WF-MAIN-VALIDATION-SENTINEL",
+      "status": "ADMITTED",
+      "name": "main-validation-sentinel.yml",
+      "check_type": "workflow",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "A push made with GITHUB_TOKEN raises no push event, so Validate Repo's `on: push` never fired for any automated writer: all nine github-actions[bot] commits on main have zero Validate Repo runs. b3aec016c landed three minutes after the last green run and left main failing three validators for over two hours with nothing to notice. This lane notices.",
+      "existing_coverage_gap": "Every existing trigger keys off an event the writing token suppresses. A scheduled sentinel is the only observer an automated writer cannot make silent, and it is independent of whether the dispatch gate in commit_and_push_if_changed.sh is present or working.",
+      "scope": [
+        "github-actions",
+        "main",
+        "validation-coverage"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/main-validation-sentinel.yml",
+      "implementation_path": ".github/workflows/main-validation-sentinel.yml",
+      "environment": "ci",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "GitHub Actions trace plus the reused main-validation issue",
+      "runtime_budget_seconds": 600,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted as the post-push alarm for main. Proven in both directions against real data: uncovered on b3aec016c (0 covering runs, 122 minutes old), covered on dab147a98 (green run 33348287639).",
+      "decision_date": "2026-08-31",
+      "matrix_ids": [
+        "MX-WF-MAIN-VALIDATION-SENTINEL"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-CITATION-SCHEMA-AUTHORITY",
+      "status": "ADMITTED",
+      "name": "validate:citation-schema-authority",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:citation-schema-authority",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-citation-schema-authority/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-08-31",
+      "matrix_ids": [
+        "MX-CITATION-SCHEMA-AUTHORITY"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-CITATION-PHASE-MANIFEST",
+      "status": "ADMITTED",
+      "name": "validate:citation-phase-manifest",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:citation-phase-manifest",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-citation-phase-manifest/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-08-31",
+      "matrix_ids": [
+        "MX-CITATION-PHASE-MANIFEST"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-INTERNAL-LINK-VELOCITY",
+      "status": "ADMITTED",
+      "name": "validate:internal-link-velocity",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:internal-link-velocity",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-internal-link-velocity/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-08-31",
+      "matrix_ids": [
+        "MX-INTERNAL-LINK-VELOCITY"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-LLMS-FULL-COVERAGE",
+      "status": "ADMITTED",
+      "name": "validate:llms-full-coverage",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:llms-full-coverage",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-llms-full-coverage/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-08-31",
+      "matrix_ids": [
+        "MX-LLMS-FULL-COVERAGE"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-RELEASE-ATOM-CONTRACT",
+      "status": "ADMITTED",
+      "name": "validate:release-atom-contract",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:release-atom-contract",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-release-atom-contract/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-08-31",
+      "matrix_ids": [
+        "MX-RELEASE-ATOM-CONTRACT"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-RELEASE-MIX-POLICY",
+      "status": "ADMITTED",
+      "name": "validate:release-mix-policy",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:release-mix-policy",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-release-mix-policy/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-08-31",
+      "matrix_ids": [
+        "MX-196"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-SITEMAP-COVERAGE",
+      "status": "ADMITTED",
+      "name": "validate:sitemap-coverage",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:sitemap-coverage",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-sitemap-coverage/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-08-31",
+      "matrix_ids": [
+        "MX-197"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-PAGE-CONTRACTS",
+      "status": "ADMITTED",
+      "name": "validate:page-contracts",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:page-contracts",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-page-contracts/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-08-31",
+      "matrix_ids": [
+        "MX-198"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-VELOCITY-CRITICAL",
+      "status": "ADMITTED",
+      "name": "validate:velocity-critical",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:velocity-critical",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-velocity-critical/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-08-31",
+      "matrix_ids": [
+        "MX-199"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-SHORT-ANSWER-UNIQUENESS",
+      "status": "ADMITTED",
+      "name": "validate:short-answer-uniqueness",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:short-answer-uniqueness",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-short-answer-uniqueness/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-08-31",
+      "matrix_ids": [
+        "MX-200"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-INSIGHT-SCHEMA",
+      "status": "ADMITTED",
+      "name": "validate:insight-schema",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:insight-schema",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-insight-schema/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-08-31",
+      "matrix_ids": [
+        "MX-201"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-PUBLISH-SIGNAL-GATE",
+      "status": "ADMITTED",
+      "name": "validate:publish-signal-gate",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:publish-signal-gate",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-publish-signal-gate/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-08-31",
+      "matrix_ids": [
+        "MX-202"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-ATTESTATION-MATCHES-RECEIPT",
+      "status": "ADMITTED",
+      "name": "validate:attestation-matches-receipt",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:attestation-matches-receipt",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-attestation-matches-receipt/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-08-31",
+      "matrix_ids": [
+        "MX-203"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-REPO-WALK-BOUNDARY",
+      "status": "ADMITTED",
+      "name": "validate:repo-walk-boundary",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:repo-walk-boundary",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-repo-walk-boundary/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-08-31",
+      "matrix_ids": [
+        "MX-204"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-CONTROL-PLANE-IDENTITY",
+      "status": "ADMITTED",
+      "name": "validate:control-plane-identity",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:control-plane-identity",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-control-plane-identity/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-08-31",
+      "matrix_ids": [
+        "MX-CONTROL-PLANE-IDENTITY"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 204,
+  "record_count": 221,
   "generated_at": "2026-08-08T23:30:00Z"
 }

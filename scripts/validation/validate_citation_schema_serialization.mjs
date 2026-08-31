@@ -30,6 +30,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
+import {IGNORED_DIRS} from '../lib/repo_walk.mjs';
 
 const requireCjs = createRequire(import.meta.url);
 const ROOT = process.cwd();
@@ -42,10 +43,7 @@ const { SCHEMA_SCRIPT_RE, SERIALIZATION_EXEMPT, serializeSchema, mainEntityOfPag
 // pages as if they were ours: a clean tree reported 1,486 failures, every one of
 // them under .claude/worktrees/, while all 2,254 pages of this repo conformed.
 // A validator must grade the tree it is validating and nothing nested inside it.
-const SKIP_DIRS = new Set([
-  '.git', '.claude', '.pages-output', 'node_modules', 'artifacts', 'coverage', '.build',
-  'test-results', 'playwright-report', 'reports', 'logs', 'releases', 'scripts',
-]);
+const SKIP_DIRS = new Set([...IGNORED_DIRS, 'artifacts', 'test-results', 'playwright-report', 'reports', 'logs', 'releases', 'scripts']);
 
 function walk(dir, out = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {

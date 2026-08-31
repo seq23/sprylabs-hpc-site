@@ -152,6 +152,15 @@ for (const file of docFiles()) {
   }
 }
 
+// docFiles() skips any directory that is absent, so a moved or deleted docs
+// tree yields no files, `checked` stays at zero and the run reports the
+// operator docs current having read none of them. Same outcome if the docs
+// survive but every backticked repo path is stripped out of them.
+if (checked === 0) {
+  console.log('OPERATOR DOC CURRENCY FAIL: examined 0 path reference(s); expected backtick-quoted repo paths in the operator docs under docs/runbooks, docs/operator or docs/operations (falling back to docs/). An empty examination set proves nothing about doc currency.');
+  process.exit(1);
+}
+
 if (errors.length) {
   console.log(`OPERATOR DOC CURRENCY FAIL: ${errors.length} stale reference(s) of ${checked} checked`);
   for (const e of errors) console.log(` - ${e}`);

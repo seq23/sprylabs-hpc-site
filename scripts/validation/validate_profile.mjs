@@ -7,6 +7,11 @@ if(!profile){console.error(`[validate:profile] INTERNAL_ERROR: unknown profile $
 const steps=[]; const seen=new Set();
 function addProfile(n,stack=[]){if(stack.includes(n)){throw new Error(`profile cycle: ${[...stack,n].join(' -> ')}`)} const p=matrix.profiles?.[n]; if(!p) throw new Error(`unknown inherited profile ${n}`); for(const base of p.extends||[]) addProfile(base,[...stack,n]); for(const s of p.steps||[]){const key=s.id||s.command;if(!seen.has(key)){seen.add(key);steps.push(s)}}}
 try{addProfile(name)}catch(e){console.error(`[validate:profile] INTERNAL_ERROR: ${e.message}`);process.exit(2)}
+// Only an UNKNOWN profile used to be an error. A KNOWN profile whose steps had
+// been emptied - or whose inheritance resolved to nothing - ran zero commands
+// and exited 0, so `validate:profile -- container-prepush` could report the
+// repo validated having executed nothing at all.
+if(!steps.length){console.error(`[validate:profile] INTERNAL_ERROR: profile ${name} resolved to 0 steps; _repo_validation_matrix.json profiles.${name}.steps (plus any profile it extends) must name the commands this profile runs. An empty profile exits having validated nothing.`);process.exit(2)}
 const receipt={profile:name,started_at:new Date().toISOString(),steps:[],status:'PASS'};
 
 // A failing step used to stop the profile outright, so one defect hid every

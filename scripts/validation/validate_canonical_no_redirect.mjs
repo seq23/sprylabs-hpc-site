@@ -57,6 +57,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
+import {IGNORED_DIRS} from '../lib/repo_walk.mjs';
 
 const require = createRequire(import.meta.url);
 const { routeFor, hostFor, FROZEN_HTML_ROUTES } = require('../lib/dual_domain_policy.cjs');
@@ -66,7 +67,11 @@ const LIVE = process.argv.includes('--live');
 
 // Mirrors the walker in scripts/repair/repair_dual_domain_metadata.js so the
 // repair and the guard judge exactly the same set of files.
-const SKIP_DIRS = new Set(['.git', '.pages-output', 'node_modules', '_ops', 'templates', 'docs']);
+// The repo-wide walk boundary, plus the directories this validator specifically
+// has no canonical to check. The boundary is imported, not restated: this list
+// omitted '.claude', so the walk descended into agent worktrees and judged
+// another checkout's pages as though they were this site's.
+const SKIP_DIRS = new Set([...IGNORED_DIRS, '_ops', 'templates', 'docs']);
 
 function walk(dir, out = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -82,6 +87,13 @@ function walk(dir, out = []) {
 }
 
 const files = walk(ROOT);
+// walk() starts at process.cwd(). Run from the wrong directory, or against a
+// tree whose HTML has not been built, it returns nothing and every loop below
+// runs zero times - the run then printed "OK (0 pages)" having read no canonical.
+if (!files.length) {
+  console.error('[validate_canonical_no_redirect] FAIL: walked the working tree and found 0 .html pages; expected at least one shipping page. A canonical/og:url guard that examines no page proves nothing.');
+  process.exit(1);
+}
 const tracked = new Set(files);
 
 const publishedManifestPath = path.join(ROOT, 'data/reddit/published_manifest.json');
