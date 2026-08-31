@@ -21,7 +21,15 @@ CREDENTIAL_GATED={
 # --write is the deliberate act that refreshes the committed contract artifact.
 WRITE='--write' in sys.argv
 errors=[]; imports={}; files=[]
-stdlib=set(getattr(sys,'stdlib_module_names',()))
+# sys.stdlib_module_names arrived in Python 3.10. On an older interpreter the
+# getattr fallback yielded an EMPTY set, so every standard-library import - json,
+# os, re, ast - was reported as an "unknown third-party/local import" and this
+# check produced ~40 findings that were all noise. It is a guard that cannot
+# reach what it governs, and it must say so by name rather than emit nonsense.
+if not hasattr(sys,'stdlib_module_names'):
+    print(f'[validate:python-dependency-contract] FAIL: this interpreter is Python {sys.version.split()[0]}, which has no sys.stdlib_module_names (added in 3.10). Without it the standard library cannot be told apart from a third-party import and every finding this check produces is noise. WHO MUST ACT: point scripts/validation/python_runtime.mjs at Python 3.10 or newer.')
+    sys.exit(1)
+stdlib=set(sys.stdlib_module_names)
 local_roots={d.name for d in SCRIPTS.rglob('*') if d.is_dir() and '_vendor' not in d.parts}
 for p in SCRIPTS.rglob('*.py'):
     if '_vendor' in p.parts: continue

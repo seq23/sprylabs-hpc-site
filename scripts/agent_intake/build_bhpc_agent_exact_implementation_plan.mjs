@@ -140,18 +140,55 @@ function preexistingForeignPage(rel){
   }catch{return false}
 }
 
+// A page's NAMED FRAMEWORK and its REQUIRED HEADING are two different things and
+// this plan used to conflate them.
+//
+// `required_heading` comes off an agent-intake row and is a raw search query
+// ("which 20% of my current task list will produce 80% of my revenue impact this
+// month"). Writing it into `framework` sent query text down the whole chain:
+// this file -> data/citation/agent_repair_specs.generated.json ->
+// apply_citation_program.py (which loads the GENERATED spec last, so it beat the
+// hand-authored data/citation/agent_page_specs.json) -> data-named-framework in
+// the HTML -> data/citation/citable_pages.json ->
+// data/content/page_admission_registry.json -> validate:framework-name-shape and
+// validate:programmatic-admission, both of which then failed and took Spry
+// Content Release red.
+//
+// Two lists of framework names existed with no link between them, and the
+// generated one silently won. This is the link: the hand-authored spec file is
+// the curation authority for a name, and this generator defers to it. Where no
+// curated name exists the heading is still used, so nothing else changes.
+//
+// Only `framework` and `definition` defer. The body <h2> keeps `heading`,
+// because the agent run's SEO execution contract requires that exact string on
+// the page.
+const CURATED_SPEC_PATH='data/citation/agent_page_specs.json';
+const curatedSpecs=(()=>{
+  const fp=path.join(ROOT,CURATED_SPEC_PATH);
+  if(!fs.existsSync(fp)) return new Map();
+  const payload=JSON.parse(fs.readFileSync(fp,'utf8'));
+  const out=new Map();
+  for(const section of ['priority_pages','new_pages']){
+    for(const [k,v] of Object.entries(payload[section]||{})){
+      if(v&&typeof v==='object'&&String(v.framework||'').trim()) out.set(k,v);
+    }
+  }
+  return out;
+})();
+
 function pageSpecFor(entries,primaryPath=''){
   const primary=entries.find(e=>e.seo_execution_status==='VALID')||entries[0];
   const blockTypes=unique(entries.flatMap(e=>e.required_block_types||[]));
   const heading=primary.required_heading||primary.query;
+  const curated=curatedSpecs.get(String(primaryPath))||null;
   return {
     h1:primary.query,
-    framework:heading,
+    framework:curated?curated.framework:heading,
     // The site publishes four extraction types (concept, howto, comparison,
     // decision). Choosing only between comparison and concept made the plan
     // demand that an existing how-to page be reshaped into a concept page.
     type:existingExtractionType(primaryPath)||(blockTypes.includes('comparison_table')?'comparison':'concept'),
-    definition:bhpcGeneratedCitationDefinition(primary.query),
+    definition:(curated&&String(curated.definition||'').trim())?curated.definition:bhpcGeneratedCitationDefinition(primary.query),
     body:`<section data-bhpc-agent-record="${primary.record_id}" data-bhpc-agent-semantic="true"><h2>${heading}</h2></section>`,
     agent_acceptance:{
       record_ids:unique(entries.map(e=>e.record_id)),acceptance_ids:unique(entries.map(e=>e.id)),page_family:primary.page_family,route_status:primary.route_status,

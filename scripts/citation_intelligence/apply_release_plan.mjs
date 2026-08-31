@@ -19,5 +19,22 @@ const stop_reason=planned>0&&applied.length===0
   ?{code:'SELECTED_BUT_NONE_APPLIED',message:`The plan selected ${planned} unit(s) but none were applied. Every selected unit was dropped at apply time; see the skipped decisions for the named reason.`}
   :(planned===0&&plan.stop_reason?plan.stop_reason:null);
 const result={schema_version:'2.0',repo:'seq23/sprylabs-hpc-site',generated_at:new Date().toISOString(),mode:'FULL_SAFE_AUTONOMY_GAP_FILL',status:stop_reason?'STOPPED':'PASS',stop_reason,release_units_planned:planned,release_units_applied:applied.length,release_units_skipped:skipped.length,public_mutation:applied.length>0,applied,skipped};writeJson('artifacts/validation/release-plan-application.json',result);writeJson('reports/release-plan-application.json',result);
-if(stop_reason){console.error(`[release:content:intelligence] STOP ${stop_reason.code}: ${stop_reason.message}`);process.exit(1);}
+// The plan decides whether its own stop is a break or a declared stop, and it
+// records that as stop_reason.exit_code. This consumer inherits the plan's stop
+// verbatim (line 20) and used to exit 1 on it regardless - so build_release_plan
+// could print a NAMED STOP and exit 0 for a configuration gap, and this script
+// would take the same stop red twenty seconds later. One decision, two callers.
+//
+// SELECTED_BUT_NONE_APPLIED is raised here, carries no exit_code, and therefore
+// stays a hard failure: a plan that selected units and applied none is a defect,
+// never a configuration gap.
+if(stop_reason){
+  const code=Number.isInteger(stop_reason.exit_code)?stop_reason.exit_code:1;
+  if(code===0){
+    console.log(`[release:content:intelligence] NAMED STOP ${stop_reason.code}: ${stop_reason.message}`);
+    process.exit(0);
+  }
+  console.error(`[release:content:intelligence] STOP ${stop_reason.code}: ${stop_reason.message}`);
+  process.exit(code);
+}
 console.log(`[release:content:intelligence] PASS applied=${applied.length} skipped=${skipped.length}`);

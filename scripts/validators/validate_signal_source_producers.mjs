@@ -98,6 +98,19 @@ if (!producingIds.length) {
   else if (!/WHO MUST ACT/.test(quietRun.stdout || '')) errors.push('the named stop does not say who must act; a stop no human can action is a hidden failure');
   else checks.push('no non-fixture record -> NAMED STOP naming the owner, exit 0');
 
+  // B1b: every consumer of the plan's stop must honour the SAME exit code.
+  // build_release_plan.mjs decides; apply_release_plan.mjs inherits that stop
+  // verbatim and used to exit 1 on it regardless, so the plan printed a NAMED
+  // STOP and exited 0 and the lane went red twenty seconds later anyway.
+  const applyRun = spawnSync(process.execPath, ['scripts/citation_intelligence/apply_release_plan.mjs'], {cwd: ROOT, encoding: 'utf8'});
+  if (applyRun.status !== 0) {
+    errors.push(`release:plan exited 0 on a declared stop but its consumer apply_release_plan.mjs exited ${applyRun.status} on the same stop; the two disagree about whether this is a break.\n${applyRun.stdout}${applyRun.stderr}`);
+  } else if (!/NAMED STOP/.test(applyRun.stdout || '')) {
+    errors.push('apply_release_plan.mjs exited 0 on a declared stop without printing a NAMED STOP; a silent zero is what this rule exists to prevent.');
+  } else {
+    checks.push('plan consumer honours the same exit code and names the stop');
+  }
+
   // B2: something real arrived and still nothing published -> hard failure
   const loud = {...ledger, adapters: (ledger.adapters || []).map((a) => (producingIds.includes(a.source) ? {...a, records: 7, status: 'PASS'} : a))};
   fs.writeFileSync(ledgerPath, `${JSON.stringify(loud, null, 2)}\n`);
