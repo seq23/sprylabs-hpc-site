@@ -148,6 +148,21 @@ jobs:
             echo "[converge] The generators are not reaching a fixed point on this tree, so nothing here can be published as final."
             exit 1
           fi
+          # Every mode of this lane already ends by deriving the lastmod ledger,
+          # which is what keeps the sitemap describing the tree that ships. The
+          # convergence loop above runs AFTER those modes and rewrites page HTML,
+          # so leaving it here would make the ledger stale by construction - the
+          # exact defect validate:lastmod-ledger-final exists to catch, sneaking
+          # back in one level up where the lane topology still looks clean.
+          #
+          # So the ledger is re-derived here, last, after the final stage that can
+          # mutate a page. It writes the ledger and the sitemap, neither of which
+          # is a governed extraction surface, so it cannot disturb the fixed point
+          # the loop just established.
+          echo "::group::re-derive the lastmod ledger against the converged tree"
+          npm run sitemap:lastmod:content
+          echo "::endgroup::"
+          npm run validate:lastmod-ledger-final
       # The gate runs before anything is committed, so a release that published
       # faster than the cap allows fails here and its pages never land.
       #
@@ -191,7 +206,8 @@ jobs:
             npm run repair:dual-domain-metadata &&
             npm run agent:bhpc:apply-report-contract &&
             npm run release:repair-agent-normalization &&
-            npm run repair:citation-contract-surfaces
+            npm run repair:citation-contract-surfaces &&
+            npm run sitemap:lastmod:content
         run: |
           ./.github/scripts/commit_and_push_if_changed.sh "spry content release" spry-content-release
       - uses: actions/upload-artifact@v7
