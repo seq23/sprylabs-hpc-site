@@ -36,6 +36,16 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
+// The shared boundary, not a private list. This gate recurses from the repo
+// root looking for sitemaps and writes back into the tree (reports/cadence and,
+// under --accept, data/cadence/known_urls.json). `git worktree add
+// .claude/worktrees/<id>` puts a COMPLETE second checkout of this repo inside
+// the working tree, so an unbounded walk reads that checkout's sitemap and
+// counts its URLs as this site's - and --accept then writes them into the
+// tracked ledger that "new since last run" is measured against. This gate runs
+// on every Validate Repo pass (.github/workflows/validate-repo.yml).
+// See scripts/lib/repo_walk.cjs.
+const { isIgnoredDir } = require('./lib/repo_walk.cjs');
 
 const ROOT = process.cwd();
 const args = process.argv.slice(2);
@@ -87,8 +97,8 @@ function sitemapUrls() {
     if (depth > 4) return;
     let ents; try { ents = fs.readdirSync(dir, { withFileTypes: true }); } catch { return; }
     for (const e of ents) {
-      if (/^(node_modules|\.git|\.pages-output|coverage)$/.test(e.name)) continue;
       const full = path.join(dir, e.name);
+      if (e.isDirectory() && isIgnoredDir(e.name, path.relative(ROOT, full).split(path.sep).join('/'))) continue;
       if (e.isDirectory()) walk(full, depth + 1);
       else if (/^sitemap.*\.xml$/i.test(e.name)) {
         const xml = fs.readFileSync(full, 'utf8');
