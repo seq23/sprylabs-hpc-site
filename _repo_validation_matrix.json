@@ -2167,9 +2167,39 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-MAIN-WRITER-CONVERGENCE",
+      "validation_id": "VAL-MAIN-WRITER-CONVERGENCE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:main-writer-convergence",
+      "order": 208,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-AGENT-RUN-ABSORPTION-COMPLETENESS",
+      "validation_id": "VAL-AGENT-RUN-ABSORPTION-COMPLETENESS",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:agent-run-absorption-completeness",
+      "order": 209,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-FROZEN-OUTPUT-SHRINK-GUARD",
+      "validation_id": "VAL-FROZEN-OUTPUT-SHRINK-GUARD",
+      "lane": "validation-control-plane",
+      "command": "npm run validation:frozen-shrink:self-test",
+      "order": 210,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 216,
+  "entry_count": 219,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2639,6 +2669,18 @@
         {
           "id": "VAL-SURFACE-GUARD-ORDERING",
           "command": "npm run validate:surface-guard-ordering"
+        },
+        {
+          "id": "VAL-MAIN-WRITER-CONVERGENCE",
+          "command": "npm run validate:main-writer-convergence"
+        },
+        {
+          "id": "VAL-AGENT-RUN-ABSORPTION-COMPLETENESS",
+          "command": "npm run validate:agent-run-absorption-completeness"
+        },
+        {
+          "id": "VAL-FROZEN-OUTPUT-SHRINK-GUARD",
+          "command": "npm run validation:frozen-shrink:self-test"
         }
       ]
     },
@@ -2855,6 +2897,10 @@
         {
           "id": "VAL-CITATION-SCHEMA-AUTHORITY-REACH",
           "command": "npm run validate:citation-schema-authority-reach"
+        },
+        {
+          "id": "VAL-AGENT-RUN-ABSORPTION-COMPLETENESS",
+          "command": "npm run validate:agent-run-absorption-completeness"
         }
       ]
     }

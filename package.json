@@ -369,7 +369,10 @@
     "validate:sitemap-coverage": "node scripts/validation/validate_sitemap_coverage.mjs",
     "validate:page-contracts": "node scripts/validators/validate_page_contracts.js",
     "validate:velocity-critical": "node scripts/validators/validate_velocity_critical.js",
-    "validate:feed-date-determinism": "node scripts/validators/validate_feed_date_determinism.mjs"
+    "validate:feed-date-determinism": "node scripts/validators/validate_feed_date_determinism.mjs",
+    "validate:main-writer-convergence": "node scripts/validators/validate_main_writer_convergence.mjs",
+    "validate:agent-run-absorption-completeness": "node scripts/validators/validate_agent_run_absorption_completeness.mjs",
+    "validation:frozen-shrink:self-test": "node scripts/validation/self_test_frozen_output_shrink_guard.mjs"
   },
   "engines": {
     "node": ">=24.0.0"

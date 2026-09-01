@@ -1,6 +1,6 @@
 {
   "profile": "content-quality",
-  "started_at": "2026-08-31T14:31:26.293Z",
+  "started_at": "2026-09-01T17:31:17.592Z",
   "steps": [
     {
       "id": "VAL-CITATION-REPAIR-REACH",
@@ -83,8 +83,8 @@
     {
       "id": "VAL-SITEMAP-LEDGER-FINAL",
       "command": "npm run validate:lastmod-ledger-final",
-      "exit_code": 0,
-      "status": "PASS"
+      "exit_code": 1,
+      "status": "FAIL"
     },
     {
       "id": "VAL-CITATION-SCHEMA-SERIALIZATION",
@@ -103,11 +103,19 @@
       "command": "npm run validate:citation-schema-authority-reach",
       "exit_code": 0,
       "status": "PASS"
+    },
+    {
+      "id": "VAL-AGENT-RUN-ABSORPTION-COMPLETENESS",
+      "command": "npm run validate:agent-run-absorption-completeness",
+      "exit_code": 0,
+      "status": "PASS"
     }
   ],
-  "status": "PASS",
-  "failure_count": 0,
-  "failures": [],
+  "status": "FAIL",
+  "failure_count": 1,
+  "failures": [
+    "VAL-SITEMAP-LEDGER-FINAL"
+  ],
   "stopped_early_at": null,
-  "finished_at": "2026-08-31T14:31:49.546Z"
+  "finished_at": "2026-09-01T17:31:37.896Z"
 }
