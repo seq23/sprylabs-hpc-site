@@ -107,6 +107,18 @@ for pass in $(seq 1 "$passes"); do
   npm run agent:bhpc:apply-report-contract
   npm run release:repair-agent-normalization
   npm run repair:citation-contract-surfaces
+  # A page-mutating repair that is not in this list is, by definition, not
+  # converged. search:repair:apply writes a search-intelligence repair block
+  # into a page and ledgers it APPLIED, but it ran in neither build:all nor any
+  # stage above - so the very next rebuild stripped the block while the ledger
+  # went on claiming it was applied.
+  #
+  # That is not a theory. repair_568ac268735378bd was re-applied by hand at
+  # 17:48 on 2026-09-01 and committed in 081abdf5a; the spry-content-release run
+  # 40 minutes later rebuilt the tree, erased it again, and VAL-SEARCH-
+  # INTELLIGENCE failed on ea323c742 with the identical message. Re-applying it
+  # by hand fixes exactly one release cycle, which is why it belongs here.
+  npm run search:repair:apply
   echo "::endgroup::"
   if npm run validate:extraction-surface-guard:check; then
     echo "[converge] fixed point reached after pass ${pass}"

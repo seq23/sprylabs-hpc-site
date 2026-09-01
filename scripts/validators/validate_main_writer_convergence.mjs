@@ -70,6 +70,9 @@ const ORDERED_STAGES = [
   'npm run agent:bhpc:apply-report-contract',
   'npm run release:repair-agent-normalization',
   'npm run repair:citation-contract-surfaces',
+  // Page-mutating, ledgered, and formerly in no build or repair stage at all,
+  // so every rebuild erased the block while its ledger still said APPLIED.
+  'npm run search:repair:apply',
 ];
 
 const authorityText = read(AUTHORITY);
