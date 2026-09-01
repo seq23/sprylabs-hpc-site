@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0",
   "validator": "content-pattern-contract",
-  "generated_at": "2026-08-31T13:33:39.771Z",
+  "generated_at": "2026-09-01T13:33:35.101Z",
   "enforcement": "block",
   "scanned_root": ".",
-  "pages_checked": 2265,
+  "pages_checked": 2268,
   "status": "PASS",
   "blocking_failures": 0,
   "summary": [
@@ -47,13 +47,13 @@
       "id": "comparison_table",
       "blocking": false,
       "pages_missing": 704,
-      "coverage_pct": 68.9,
+      "coverage_pct": 69,
       "why": "no comparison or cost table (agent request #2, 529 occurrences)"
     },
     {
       "id": "concrete_numbers",
       "blocking": false,
-      "pages_missing": 1948,
+      "pages_missing": 1951,
       "coverage_pct": 14,
       "why": "no concrete cost or timeline figures (agent request #5, 365 occurrences)"
     },
@@ -102,21 +102,21 @@
     {
       "id": "protocol",
       "blocking": false,
-      "pages_missing": 423,
-      "coverage_pct": 81.3,
+      "pages_missing": 422,
+      "coverage_pct": 81.4,
       "why": "no ordered protocol (agent requested 305 times) - ordered steps are what gets lifted for \"how do I\""
     },
     {
       "id": "cta_callout",
       "blocking": false,
-      "pages_missing": 1413,
+      "pages_missing": 1416,
       "coverage_pct": 37.6,
       "why": "no next-step callout (agent requested 272 times) - the conversion link exists but nothing frames it as the next action"
     },
     {
       "id": "prompt_template",
       "blocking": false,
-      "pages_missing": 2185,
+      "pages_missing": 2188,
       "coverage_pct": 3.5,
       "why": "no copy-ready prompt (agent requested 255 times) - this is the artifact this audience actually reuses"
     },
@@ -124,7 +124,7 @@
       "id": "trust_block",
       "blocking": false,
       "pages_missing": 692,
-      "coverage_pct": 69.4,
+      "coverage_pct": 69.5,
       "why": "no trust or authorship block (agent requested 215 times) - entity clarity is a citation factor"
     }
   ],
@@ -313,7 +313,6 @@
       "adhd-evening-routine/index.html",
       "adhd-morning-routine/index.html",
       "adhd-productivity-system/index.html",
-      "adhd-time-blindness-strategies/index.html",
       "adhd-time-management-tools/index.html",
       "adhd-time-management/index.html",
       "adhd-tips/index.html",
@@ -331,7 +330,8 @@
       "agent/bhpc/what-is-a-realistic-morning-routine-for-people-with-chaotic-days-spry-executive-os.html",
       "agent/bhpc/what-is-a-simple-knowledge-system-capture-distill-use-spry-executive-os.html",
       "agent/index.html",
-      "ai-accountability-coach-vs-human-executive-coach.html"
+      "ai-accountability-coach-vs-human-executive-coach.html",
+      "ai-accountability-partner/index.html"
     ],
     "cta_callout": [
       "about.html",
@@ -341,8 +341,11 @@
       "amazon/task-paralysis/index.html",
       "answers/phase4/demand/ai-coach-for-founders-and-consultants.html",
       "answers/phase4/demand/ai-coach-for-high-achievers.html",
+      "answers/phase4/demand/ai-coach-for-workflow-planning.html",
       "answers/phase4/demand/ai-coaching-tool-for-managers.html",
       "answers/phase4/demand/ai-coaching-tools.html",
+      "answers/phase4/demand/ai-driven-manager-coaching-tools.html",
+      "answers/phase4/demand/ai-influence-coach-for-high-achievers.html",
       "answers/phase4/demand/ai-tools-for-coaches.html",
       "answers/phase4/demand/ai-tools-for-team-coaching.html",
       "answers/phase4/demand/human-coaching.html",
@@ -355,10 +358,7 @@
       "answers/phase4/how-can-i-build-a-system-to-keep-context-inside-an-llm.html",
       "answers/phase4/how-can-i-build-a-system-to-make-a-hard-decision.html",
       "answers/phase4/how-can-i-build-a-system-to-protect-one-priority.html",
-      "answers/phase4/how-can-i-build-a-system-to-recover-after-a-missed-day.html",
-      "answers/phase4/how-can-i-build-a-system-to-reduce-decision-fatigue.html",
-      "answers/phase4/how-can-i-build-a-system-to-replace-motivational-planning.html",
-      "answers/phase4/how-can-i-build-a-system-to-restart-without-catch-up-work.html"
+      "answers/phase4/how-can-i-build-a-system-to-recover-after-a-missed-day.html"
     ],
     "prompt_template": [
       "90-day-plan-template/index.html",

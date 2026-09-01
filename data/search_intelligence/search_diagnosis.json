@@ -1,84 +1,32 @@
 {
   "schema_version": "1.1",
-  "generated_at": "2026-08-31T13:33:23.849Z",
-  "provider_state": "DEGRADED",
-  "overall_status": "DEGRADED",
-  "status_is_healthy": false,
+  "generated_at": "2026-09-01T13:33:17.466Z",
+  "provider_state": "OK",
+  "overall_status": "OK",
+  "status_is_healthy": true,
   "provider_states": {
     "gsc": "OK",
-    "grounded_search": "DEGRADED",
-    "competitor": "DEGRADED"
+    "grounded_search": "OK",
+    "competitor": "OK"
   },
   "diagnosis_count": 120,
   "actionable_count": 120,
-  "evidence_backed_count": 14,
-  "unavailable_note": "One or more provider lanes are degraded or unavailable; repairs require actual evidence.",
+  "evidence_backed_count": 24,
+  "unavailable_note": null,
   "diagnoses": [
     {
-      "target_id": "si_0a4ca46355201966",
-      "query": "AI accountability system for body goal users and habit consistency",
+      "target_id": "si_01a19f2474bb7e8e",
+      "query": "AI accountability system for body goal users and behavior reframing",
       "intent": "solution_seeking",
       "audience": "body_goal_users",
-      "use_case": "habit_consistency",
-      "source_type": "reddit",
-      "expected_owned_url": "https://spryexecutiveos.com/answers/accountability-and-consistency",
-      "owned_route": "/answers/accountability-and-consistency",
-      "owned_file": "answers/accountability-and-consistency.html",
+      "use_case": "behavior_reframing",
+      "source_type": "youtube",
+      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
       "ownership": "legacy_eligible",
-      "route_match_score": 16,
-      "route_match_title": "Accountability without shame: how consistency actually works | Answer Page | Spry Executive OS",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 8 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "accountabilitypartner360.com",
-        "apps.apple.com",
-        "bodybuddy.app",
-        "bodyby.ai",
-        "databody.ai",
-        "github.com",
-        "github.laiyagushi.com",
-        "studio.com"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_1f0a715aa894c401",
-      "query": "behavioral self-regulation system vs traditional coaching for people with many projects",
-      "intent": "commercial_comparison",
-      "audience": "multi_project_people",
-      "use_case": "performance_routines",
-      "source_type": "tiktok",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-planner-for-behavioral-follow-through",
-      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-planner-for-behavioral-follow-through",
-      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-planner-for-behavioral-follow-through.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 21,
-      "route_match_title": "Billionaire High Performance Coach vs planner for behavioral follow-through | Billionaire High Performance Coach | Spry Page",
+      "route_match_score": 14,
+      "route_match_title": "How to Use AI for Executive Coaching and Accountability | Billionaire High Performance Coach | Spry Page",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console",
@@ -102,36 +50,138 @@
       "gsc_query_metrics": null,
       "grounded_own_domain_referenced": false,
       "competitor_domains": [
+        "arxiv.org",
+        "blog.aihavit.com",
+        "doi.org",
+        "freudly.ai",
         "frontiersin.org",
-        "lajollamentalhealth.com",
-        "pkjcoaching.com",
-        "profmindful.com",
-        "ryansultan.com",
-        "scienceworkshealth.com",
-        "solisight.com",
-        "thetanel.co.uk",
-        "triagemethod.com"
+        "github.com",
+        "jmir.org",
+        "scotomaville.com",
+        "shapes.inc"
       ],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
     {
-      "target_id": "si_428cc471e01c8ede",
-      "query": "best accountability partner for athletes who need performance routines",
-      "intent": "commercial_comparison",
+      "target_id": "si_0ca0b0a2bebfa8d2",
+      "query": "AI accountability system for athletes and missed-day recovery",
+      "intent": "solution_seeking",
       "audience": "athletes",
-      "use_case": "performance_routines",
-      "source_type": "google_paa",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-planner-for-accountability",
-      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-planner-for-accountability",
-      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-planner-for-accountability.html",
+      "use_case": "missed_day_recovery",
+      "source_type": "tiktok",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery",
+      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery",
+      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery.html",
       "ownership": "legacy_eligible",
-      "route_match_score": 21,
-      "route_match_title": "Billionaire High Performance Coach vs planner for accountability | Billionaire High Performance Coach | Spry Page",
+      "route_match_score": 28,
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for missed-day recovery | Billionaire High Performance Coach",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console",
+        "grounded_search_observation"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        },
+        {
+          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
+          "basis": "grounded_search_observation",
+          "detail": "Grounded answer referenced 5 other domain(s) and not an owned domain."
+        }
+      ],
+      "confidence": "EVIDENCE_BACKED",
+      "actionable": true,
+      "priority": 33,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": false,
+      "competitor_domains": [
+        "athletedata.health",
+        "github.com",
+        "multiversecomputing.com",
+        "orreco.ai",
+        "ultra0.com"
+      ],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_16d254cf0b735007",
+      "query": "accountability partner vs traditional coaching for people with many projects",
+      "intent": "commercial_comparison",
+      "audience": "multi_project_people",
+      "use_case": "delegation",
+      "source_type": "reddit",
+      "expected_owned_url": "https://spryexecutiveos.com/billionaire-high-performance-coach-vs-coaching/",
+      "owned_route": "/billionaire-high-performance-coach-vs-coaching/",
+      "owned_file": "billionaire-high-performance-coach-vs-coaching/index.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 17,
+      "route_match_title": "the structured AI accountability system Vs Coaching | Spry Page | Spry Executive OS",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console",
+        "grounded_search_observation"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        },
+        {
+          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
+          "basis": "grounded_search_observation",
+          "detail": "Grounded answer referenced 9 other domain(s) and not an owned domain."
+        }
+      ],
+      "confidence": "EVIDENCE_BACKED",
+      "actionable": true,
+      "priority": 33,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": false,
+      "competitor_domains": [
+        "atlasradd.com",
+        "blog.rivva.app",
+        "businesscoachtoronto.ca",
+        "coaches.life",
+        "dontsnooze.io",
+        "giodella.com",
+        "gkliggans.com",
+        "habithuddle.com",
+        "ilty.co"
+      ],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_17d4233a039a0359",
+      "query": "AI accountability system for busy parents and weight loss adherence",
+      "intent": "solution_seeking",
+      "audience": "busy_parents",
+      "use_case": "weight_loss_adherence",
+      "source_type": "quora",
+      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 24,
+      "route_match_title": "How to Use AI for Executive Coaching and Accountability | Billionaire High Performance Coach | Spry Page",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console",
@@ -155,31 +205,703 @@
       "gsc_query_metrics": null,
       "grounded_own_domain_referenced": false,
       "competitor_domains": [
-        "604athletics.com",
-        "adriencotton.com",
-        "getmotivated.ai",
-        "habitbox.app",
-        "habithuddle.com",
-        "ilty.co",
-        "jpsiou.com",
-        "nike.com",
-        "scottlaidler.com",
-        "unbroken75.com"
+        "accountabilitypartner360.com",
+        "actibhealth.com",
+        "blog.aihavit.com",
+        "friska.ai",
+        "frontiersin.org",
+        "github.com",
+        "goalwizeai.com",
+        "jmir.org",
+        "livelyxkitchen.com",
+        "pecofy.com"
       ],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
     {
-      "target_id": "si_4efed1b40aeb209a",
-      "query": "AI accountability system for body goal users and decision making",
+      "target_id": "si_2e0494b22586f025",
+      "query": "AI accountability system for entrepreneurs and performance routines",
+      "intent": "solution_seeking",
+      "audience": "entrepreneurs",
+      "use_case": "performance_routines",
+      "source_type": "reddit",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
+      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
+      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 22,
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for behavioral follow-through | Billionaire High Performance Coach",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console",
+        "grounded_search_observation"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        },
+        {
+          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
+          "basis": "grounded_search_observation",
+          "detail": "Grounded answer referenced 8 other domain(s) and not an owned domain."
+        }
+      ],
+      "confidence": "EVIDENCE_BACKED",
+      "actionable": true,
+      "priority": 33,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": false,
+      "competitor_domains": [
+        "aseyi.com",
+        "brainchild360.com",
+        "businessaction.com",
+        "github.com",
+        "gobrightbusiness.com",
+        "pagegoo.com",
+        "redhub.ai",
+        "textlauren.com"
+      ],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_380df4e86a03d148",
+      "query": "AI accountability system for busy parents and career acceleration",
+      "intent": "solution_seeking",
+      "audience": "busy_parents",
+      "use_case": "career_acceleration",
+      "source_type": "quora",
+      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 24,
+      "route_match_title": "How to Use AI for Executive Coaching and Accountability | Billionaire High Performance Coach | Spry Page",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console",
+        "grounded_search_observation"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        },
+        {
+          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
+          "basis": "grounded_search_observation",
+          "detail": "Grounded answer referenced 8 other domain(s) and not an owned domain."
+        }
+      ],
+      "confidence": "EVIDENCE_BACKED",
+      "actionable": true,
+      "priority": 33,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": false,
+      "competitor_domains": [
+        "bcg.com",
+        "behavioristbookclub.com",
+        "brindha-kalyanaraman.webflow.io",
+        "ey.com",
+        "mattbritton.com",
+        "mckinsey.com",
+        "medium.com",
+        "personos.ai"
+      ],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_3bcf09a452ec6f84",
+      "query": "AI accountability system for creators and performance routines",
+      "intent": "solution_seeking",
+      "audience": "creators",
+      "use_case": "performance_routines",
+      "source_type": "tiktok",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
+      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
+      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 22,
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for behavioral follow-through | Billionaire High Performance Coach",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console",
+        "grounded_search_observation"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        },
+        {
+          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
+          "basis": "grounded_search_observation",
+          "detail": "Grounded answer referenced 10 other domain(s) and not an owned domain."
+        }
+      ],
+      "confidence": "EVIDENCE_BACKED",
+      "actionable": true,
+      "priority": 33,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": false,
+      "competitor_domains": [
+        "cognipal.ai",
+        "creataly.com",
+        "creatorscore.io",
+        "creatorvitals.com",
+        "eliteai.tools",
+        "github.com",
+        "khaby.ai",
+        "kitsuneai.co",
+        "musecocreator.com",
+        "suilaai.com"
+      ],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_3be2d769919e35d4",
+      "query": "AI accountability system for athletes and delegation",
+      "intent": "solution_seeking",
+      "audience": "athletes",
+      "use_case": "delegation",
+      "source_type": "tiktok",
+      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 24,
+      "route_match_title": "How to Use AI for Executive Coaching and Accountability | Billionaire High Performance Coach | Spry Page",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console",
+        "grounded_search_observation"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        },
+        {
+          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
+          "basis": "grounded_search_observation",
+          "detail": "Grounded answer referenced 8 other domain(s) and not an owned domain."
+        }
+      ],
+      "confidence": "EVIDENCE_BACKED",
+      "actionable": true,
+      "priority": 33,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": false,
+      "competitor_domains": [
+        "arxiv.org",
+        "doi.org",
+        "frontiersin.org",
+        "github.com",
+        "players.news",
+        "pmc.ncbi.nlm.nih.gov",
+        "sport.nspcc.org.uk",
+        "tiffin.edu"
+      ],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_40328d5f1ec878f9",
+      "query": "AI accountability system for athletes and behavior reframing",
+      "intent": "solution_seeking",
+      "audience": "athletes",
+      "use_case": "behavior_reframing",
+      "source_type": "reddit",
+      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 14,
+      "route_match_title": "How to Use AI for Executive Coaching and Accountability | Billionaire High Performance Coach | Spry Page",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console",
+        "grounded_search_observation"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        },
+        {
+          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
+          "basis": "grounded_search_observation",
+          "detail": "Grounded answer referenced 9 other domain(s) and not an owned domain."
+        }
+      ],
+      "confidence": "EVIDENCE_BACKED",
+      "actionable": true,
+      "priority": 33,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": false,
+      "competitor_domains": [
+        "aiveda.io",
+        "athletemindsethq.com",
+        "doi.org",
+        "drpaulmccarthy.com",
+        "github.laiyagushi.com",
+        "link.springer.com",
+        "medium.com",
+        "playreflect.com",
+        "shapes.inc"
+      ],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_43465940583c8669",
+      "query": "AI accountability system for creators and fitness consistency",
+      "intent": "solution_seeking",
+      "audience": "creators",
+      "use_case": "fitness_consistency",
+      "source_type": "forums",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-chief-of-staff-support",
+      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-chief-of-staff-support",
+      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-chief-of-staff-support.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 18,
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for chief-of-staff support | Billionaire High Performance Coach",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console",
+        "grounded_search_observation"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        },
+        {
+          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
+          "basis": "grounded_search_observation",
+          "detail": "Grounded answer referenced 8 other domain(s) and not an owned domain."
+        }
+      ],
+      "confidence": "EVIDENCE_BACKED",
+      "actionable": true,
+      "priority": 33,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": false,
+      "competitor_domains": [
+        "burning.meme",
+        "creatorscore.io",
+        "github.com",
+        "keepon.ai",
+        "menthra.ai",
+        "musecocreator.com",
+        "yuniq.app",
+        "zoviz.com"
+      ],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_44cfb54349dd64d5",
+      "query": "AI accountability system for athletes and multi-project management",
+      "intent": "solution_seeking",
+      "audience": "athletes",
+      "use_case": "multi_project_management",
+      "source_type": "quora",
+      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 24,
+      "route_match_title": "How to Use AI for Executive Coaching and Accountability | Billionaire High Performance Coach | Spry Page",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console",
+        "grounded_search_observation"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        },
+        {
+          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
+          "basis": "grounded_search_observation",
+          "detail": "Grounded answer referenced 4 other domain(s) and not an owned domain."
+        }
+      ],
+      "confidence": "EVIDENCE_BACKED",
+      "actionable": true,
+      "priority": 33,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": false,
+      "competitor_domains": [
+        "github.com",
+        "github.laiyagushi.com",
+        "linkedin.com",
+        "sportsnest.ai"
+      ],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_4f48e2d431578c28",
+      "query": "AI accountability system for operators and performance routines",
+      "intent": "solution_seeking",
+      "audience": "operators",
+      "use_case": "performance_routines",
+      "source_type": "reddit",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
+      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
+      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 22,
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for behavioral follow-through | Billionaire High Performance Coach",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console",
+        "grounded_search_observation"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        },
+        {
+          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
+          "basis": "grounded_search_observation",
+          "detail": "Grounded answer referenced 9 other domain(s) and not an owned domain."
+        }
+      ],
+      "confidence": "EVIDENCE_BACKED",
+      "actionable": true,
+      "priority": 33,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": false,
+      "competitor_domains": [
+        "agentliability.eu",
+        "aiagentgovernance.org",
+        "aicomply.dev",
+        "airgp.space",
+        "arxiv.org",
+        "cfvasignal.com",
+        "github.com",
+        "omniee.io",
+        "zenodo.org"
+      ],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_58fc6e627be4746e",
+      "query": "AI accountability system for body goal users and goal tracking",
       "intent": "solution_seeking",
       "audience": "body_goal_users",
-      "use_case": "decision_making",
+      "use_case": "goal_tracking",
+      "source_type": "forums",
+      "expected_owned_url": "https://spryexecutiveos.com/insights/how-chatgpt-can-improve-personal-accountability-and-goal-tracking",
+      "owned_route": "/insights/how-chatgpt-can-improve-personal-accountability-and-goal-tracking",
+      "owned_file": "insights/how-chatgpt-can-improve-personal-accountability-and-goal-tracking.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 20,
+      "route_match_title": "How ChatGPT can improve personal accountability and goal tracking — Spry Executive OS | Insight Page",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console",
+        "grounded_search_observation"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        },
+        {
+          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
+          "basis": "grounded_search_observation",
+          "detail": "Grounded answer referenced 7 other domain(s) and not an owned domain."
+        }
+      ],
+      "confidence": "EVIDENCE_BACKED",
+      "actionable": true,
+      "priority": 33,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": false,
+      "competitor_domains": [
+        "apps.apple.com",
+        "blog.aihavit.com",
+        "databody.ai",
+        "doi.org",
+        "github.com",
+        "github.laiyagushi.com",
+        "studio.com"
+      ],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_7c62fff05d1cb9fe",
+      "query": "AI accountability system for decision-fatigue users and fitness consistency",
+      "intent": "solution_seeking",
+      "audience": "decision_fatigue_users",
+      "use_case": "fitness_consistency",
+      "source_type": "google_paa",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-decision-fatigue",
+      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-decision-fatigue",
+      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-decision-fatigue.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 20,
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for decision fatigue | Billionaire High Performance Coach",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console",
+        "grounded_search_observation"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        },
+        {
+          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
+          "basis": "grounded_search_observation",
+          "detail": "Grounded answer referenced 9 other domain(s) and not an owned domain."
+        }
+      ],
+      "confidence": "EVIDENCE_BACKED",
+      "actionable": true,
+      "priority": 33,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": false,
+      "competitor_domains": [
+        "accountabilitypartner360.com",
+        "blog.aihavit.com",
+        "dorsi.ai",
+        "enerzee.app",
+        "fitnudge.app",
+        "github.com",
+        "github.laiyagushi.com",
+        "overlord.app",
+        "vitaverse.ai"
+      ],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_7e356c6936c1d7b4",
+      "query": "AI accountability system for athletes and weekly review",
+      "intent": "solution_seeking",
+      "audience": "athletes",
+      "use_case": "weekly_review",
+      "source_type": "reddit",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/chatgpt-prompts-for-weekly-review-and-planning",
+      "owned_route": "/chatgpt-prompts-for-weekly-review-and-planning",
+      "owned_file": "chatgpt-prompts-for-weekly-review-and-planning.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 16,
+      "route_match_title": "ChatGPT Prompts for Weekly Review and Planning | Billionaire High Performance Coach",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console",
+        "grounded_search_observation"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        },
+        {
+          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
+          "basis": "grounded_search_observation",
+          "detail": "Grounded answer referenced 3 other domain(s) and not an owned domain."
+        }
+      ],
+      "confidence": "EVIDENCE_BACKED",
+      "actionable": true,
+      "priority": 33,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": false,
+      "competitor_domains": [
+        "athenae.io",
+        "github.com",
+        "github.laiyagushi.com"
+      ],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_839405db00d5a42a",
+      "query": "AI accountability system for decision-fatigue users and workout execution",
+      "intent": "solution_seeking",
+      "audience": "decision_fatigue_users",
+      "use_case": "workout_execution",
       "source_type": "youtube",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-decision-fatigue",
+      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-decision-fatigue",
+      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-decision-fatigue.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 20,
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for decision fatigue | Billionaire High Performance Coach",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console",
+        "grounded_search_observation"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        },
+        {
+          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
+          "basis": "grounded_search_observation",
+          "detail": "Grounded answer referenced 9 other domain(s) and not an owned domain."
+        }
+      ],
+      "confidence": "EVIDENCE_BACKED",
+      "actionable": true,
+      "priority": 33,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": false,
+      "competitor_domains": [
+        "accountabilitypartner360.com",
+        "aidonis.ai",
+        "arvo.guru",
+        "dorsi.ai",
+        "enerzee.app",
+        "fitnessgen.app",
+        "flexfit.ai",
+        "github.com",
+        "overlord.app"
+      ],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_8b24330d41a274e1",
+      "query": "accountability partner vs traditional coaching for students and early-career professionals",
+      "intent": "commercial_comparison",
+      "audience": "students_early_career",
+      "use_case": "missed_day_recovery",
+      "source_type": "google_paa",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery",
+      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery",
+      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 29,
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for missed-day recovery | Billionaire High Performance Coach",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console",
+        "grounded_search_observation"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        },
+        {
+          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
+          "basis": "grounded_search_observation",
+          "detail": "Grounded answer referenced 8 other domain(s) and not an owned domain."
+        }
+      ],
+      "confidence": "EVIDENCE_BACKED",
+      "actionable": true,
+      "priority": 33,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": false,
+      "competitor_domains": [
+        "commitaction.com",
+        "feeds.waynepernell.com",
+        "giodella.com",
+        "habithuddle.com",
+        "ilty.co",
+        "mentorloop.com",
+        "mentorpartners.net",
+        "thementors.store"
+      ],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_8cbe2eed91c5800b",
+      "query": "AI accountability system for body goal users and emotional reset",
+      "intent": "solution_seeking",
+      "audience": "body_goal_users",
+      "use_case": "emotional_reset",
+      "source_type": "reddit",
       "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
       "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
       "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
@@ -210,26 +932,77 @@
       "grounded_own_domain_referenced": false,
       "competitor_domains": [
         "blog.aihavit.com",
-        "dev.to",
-        "dl.acm.org",
-        "doi.org",
+        "freudly.ai",
         "frontiersin.org",
         "github.com",
-        "pmc.ncbi.nlm.nih.gov",
-        "theverge.com"
+        "jmir.org",
+        "kinesis-delta.vercel.app",
+        "medium.com",
+        "studio.com"
       ],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
     {
-      "target_id": "si_4f38a7a0e5a55dfc",
-      "query": "AI accountability system for consistency strugglers and self-trust rebuilding",
+      "target_id": "si_9049f7cc0725cffe",
+      "query": "AI accountability system for founders and performance routines",
       "intent": "solution_seeking",
-      "audience": "consistency_strugglers",
+      "audience": "founders",
+      "use_case": "performance_routines",
+      "source_type": "reddit",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
+      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
+      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 22,
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for behavioral follow-through | Billionaire High Performance Coach",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console",
+        "grounded_search_observation"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        },
+        {
+          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
+          "basis": "grounded_search_observation",
+          "detail": "Grounded answer referenced 7 other domain(s) and not an owned domain."
+        }
+      ],
+      "confidence": "EVIDENCE_BACKED",
+      "actionable": true,
+      "priority": 33,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": false,
+      "competitor_domains": [
+        "agentfounder.ai",
+        "exponential.im",
+        "github.com",
+        "theaibreak.substack.com",
+        "trycofounder.com",
+        "trysteward.org",
+        "vikasmalpani.com"
+      ],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_920b554b61e1c432",
+      "query": "AI accountability system for athletes and self-trust rebuilding",
+      "intent": "solution_seeking",
+      "audience": "athletes",
       "use_case": "self_trust_rebuilding",
       "source_type": "youtube",
       "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
@@ -238,110 +1011,6 @@
       "ownership": "legacy_eligible",
       "route_match_score": 24,
       "route_match_title": "How to Use AI for Executive Coaching and Accountability | Billionaire High Performance Coach | Spry Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 6 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "antigravitylab.net",
-        "aws.amazon.com",
-        "github.com",
-        "machinelearningmastery.com",
-        "p.rst.im",
-        "qu3ry.net"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_5c2e9df98fe0af45",
-      "query": "AI accountability system for decision-fatigue users and goal tracking",
-      "intent": "solution_seeking",
-      "audience": "decision_fatigue_users",
-      "use_case": "goal_tracking",
-      "source_type": "reddit",
-      "expected_owned_url": "https://spryexecutiveos.com/insights/how-chatgpt-can-improve-personal-accountability-and-goal-tracking",
-      "owned_route": "/insights/how-chatgpt-can-improve-personal-accountability-and-goal-tracking",
-      "owned_file": "insights/how-chatgpt-can-improve-personal-accountability-and-goal-tracking.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 20,
-      "route_match_title": "How ChatGPT can improve personal accountability and goal tracking — Spry Executive OS | Insight Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 10 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "accountabilitycoach.ai",
-        "feelivate.com",
-        "getspotterai.com",
-        "getzoe.app",
-        "jupitergoals.com",
-        "kognivu.com",
-        "nag.bot",
-        "overlord.app",
-        "pensy.ai",
-        "yuko.ai"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_68b8ba468a1e9abc",
-      "query": "AI accountability system for founders and behavior reframing",
-      "intent": "solution_seeking",
-      "audience": "founders",
-      "use_case": "behavior_reframing",
-      "source_type": "reddit",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
-      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
-      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 18,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for behavioral follow-through | Billionaire High Performance Coach | Spry Page",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console",
@@ -365,28 +1034,79 @@
       "gsc_query_metrics": null,
       "grounded_own_domain_referenced": false,
       "competitor_domains": [
-        "aegisboardroom.com",
-        "ai.nowlej.com",
-        "chaegim.com",
-        "founderspsyche.substack.com",
-        "github.com",
+        "aisel.aisnet.org",
+        "doi.org",
+        "frontiersin.org",
+        "game-nexus.org",
+        "intechopen.com",
         "mdpi.com",
-        "strasysglobal.com",
-        "substack.jurgenappelo.com",
-        "theaibreak.substack.com"
+        "sport.nspcc.org.uk",
+        "sportanddev.org",
+        "stamina.live"
       ],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
     {
-      "target_id": "si_6ac98872d3d35a06",
-      "query": "AI accountability system for busy parents and overplanning",
+      "target_id": "si_d49870451e734665",
+      "query": "AI accountability system for body goal users and chief-of-staff operating rhythm",
       "intent": "solution_seeking",
-      "audience": "busy_parents",
+      "audience": "body_goal_users",
+      "use_case": "chief_of_staff_operating_rhythm",
+      "source_type": "reddit",
+      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 24,
+      "route_match_title": "How to Use AI for Executive Coaching and Accountability | Billionaire High Performance Coach | Spry Page",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console",
+        "grounded_search_observation"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        },
+        {
+          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
+          "basis": "grounded_search_observation",
+          "detail": "Grounded answer referenced 7 other domain(s) and not an owned domain."
+        }
+      ],
+      "confidence": "EVIDENCE_BACKED",
+      "actionable": true,
+      "priority": 33,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": false,
+      "competitor_domains": [
+        "blog.aihavit.com",
+        "bodybuddy.app",
+        "dev.to",
+        "github.com",
+        "github.laiyagushi.com",
+        "research.google",
+        "transform.life"
+      ],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_d7347e6c2ad7641f",
+      "query": "AI accountability system for athletes and overplanning",
+      "intent": "solution_seeking",
+      "audience": "athletes",
       "use_case": "overplanning",
       "source_type": "reddit",
       "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
@@ -395,324 +1115,6 @@
       "ownership": "legacy_eligible",
       "route_match_score": 24,
       "route_match_title": "How to Use AI for Executive Coaching and Accountability | Billionaire High Performance Coach | Spry Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 10 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "agent-mom.com",
-        "aiforbusyhumans.com",
-        "kikko.ai",
-        "l.ohai.ai",
-        "parendipity.ai",
-        "parentos.ai",
-        "peeta.ai",
-        "peggyapp.com",
-        "peppi.io",
-        "thawly.ai"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_94fd33a349222981",
-      "query": "AI accountability system for missed-day recovery users and nutrition discipline",
-      "intent": "solution_seeking",
-      "audience": "missed_day_recovery_users",
-      "use_case": "nutrition_discipline",
-      "source_type": "x_twitter",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/answers/phase4/what-should-a-founder-do-when-working-without-a-chief-of-staff-and-needs-missed-day-recovery-support",
-      "owned_route": "/answers/phase4/what-should-a-founder-do-when-working-without-a-chief-of-staff-and-needs-missed-day-recovery-support",
-      "owned_file": "answers/phase4/what-should-a-founder-do-when-working-without-a-chief-of-staff-and-needs-missed-day-recovery-support.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 26,
-      "route_match_title": "What should a founder do when working without a chief of staff and needs missed-day recovery support? | Billionaire High Performance Coach | Answer Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 7 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "accountabilitypartner360.com",
-        "apps.apple.com",
-        "auralife.io",
-        "docs.maximem.ai",
-        "github.com",
-        "lockin365.com",
-        "overlord.app"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_b873f1bc7fbd3e0f",
-      "query": "AI accountability system for consistency strugglers and delegation",
-      "intent": "solution_seeking",
-      "audience": "consistency_strugglers",
-      "use_case": "delegation",
-      "source_type": "competitor_pages",
-      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 24,
-      "route_match_title": "How to Use AI for Executive Coaching and Accountability | Billionaire High Performance Coach | Spry Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 7 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "ai-accountability-review.com",
-        "arxiv.org",
-        "datatracker.ietf.org",
-        "doi.org",
-        "github.com",
-        "zenn.dev",
-        "zylos.ai"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_c12f036c85ec99f6",
-      "query": "AI accountability system for busy parents and missed-day recovery",
-      "intent": "solution_seeking",
-      "audience": "busy_parents",
-      "use_case": "missed_day_recovery",
-      "source_type": "reddit",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery",
-      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery",
-      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 28,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for missed-day recovery | Billionaire High Performance Coach | Spry Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 10 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "exhale.bot",
-        "getsense.ai",
-        "github.com",
-        "kikko.ai",
-        "mumdad.ai",
-        "parendipity.ai",
-        "parentos.ai",
-        "peeta.ai",
-        "peggyapp.com",
-        "rileyapp.vercel.app"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_e254958e3517f87d",
-      "query": "AI accountability system for missed-day recovery users and behavior reframing",
-      "intent": "solution_seeking",
-      "audience": "missed_day_recovery_users",
-      "use_case": "behavior_reframing",
-      "source_type": "quora",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/answers/phase4/what-should-a-founder-do-when-working-without-a-chief-of-staff-and-needs-missed-day-recovery-support",
-      "owned_route": "/answers/phase4/what-should-a-founder-do-when-working-without-a-chief-of-staff-and-needs-missed-day-recovery-support",
-      "owned_file": "answers/phase4/what-should-a-founder-do-when-working-without-a-chief-of-staff-and-needs-missed-day-recovery-support.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 26,
-      "route_match_title": "What should a founder do when working without a chief of staff and needs missed-day recovery support? | Billionaire High Performance Coach | Answer Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 10 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "accountableai.xyz",
-        "arxiv.org",
-        "buffyai.org",
-        "dev.to",
-        "github.com",
-        "howtothink.ai",
-        "keelify.com",
-        "sellwithboost.com",
-        "textlauren.com",
-        "thekoto.dev"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_eae9b5329349223f",
-      "query": "AI system for body goal users struggling with fitness consistency",
-      "intent": "problem_aware",
-      "audience": "body_goal_users",
-      "use_case": "fitness_consistency",
-      "source_type": "x_twitter",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/use-cases/phase4/a-player-mode-for-a-executive-who-is-trying-to-build-consistency",
-      "owned_route": "/use-cases/phase4/a-player-mode-for-a-executive-who-is-trying-to-build-consistency",
-      "owned_file": "use-cases/phase4/a-player-mode-for-a-executive-who-is-trying-to-build-consistency.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 18,
-      "route_match_title": "A-player mode for a executive who is trying to build consistency | Billionaire High Performance Coach | Spry Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 10 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "aivo.health",
-        "atleia.ai",
-        "bodyby.ai",
-        "bodybyaicoach.com",
-        "bodybyte.ai",
-        "databody.ai",
-        "fitlio.app",
-        "fitnleanai.com",
-        "onefitai.com",
-        "thrini.com"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_fcb2dbe4a447d9bd",
-      "query": "best accountability partner for body goal users who need workout execution",
-      "intent": "commercial_comparison",
-      "audience": "body_goal_users",
-      "use_case": "workout_execution",
-      "source_type": "competitor_pages",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-execution-review",
-      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-execution-review",
-      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-execution-review.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 21,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for execution review | Billionaire High Performance Coach | Spry Page",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console",
@@ -736,72 +1138,141 @@
       "gsc_query_metrics": null,
       "grounded_own_domain_referenced": false,
       "competitor_domains": [
-        "accountabilitypartner360.com",
-        "accountabilitypt.com",
-        "atleia.appstor.io",
-        "bodybuddy.app",
-        "habithuddle.com",
-        "mwm.ai",
-        "studio.com",
-        "zen-labo.com"
+        "echodepthsports.com",
+        "getfit.news",
+        "getfitnews.com",
+        "github.com",
+        "mdpi.com",
+        "nature.com",
+        "sport.nspcc.org.uk",
+        "uphillathlete.com"
       ],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
     {
-      "target_id": "si_01a19f2474bb7e8e",
-      "query": "AI accountability system for body goal users and behavior reframing",
+      "target_id": "si_dac4bef6f4dc2289",
+      "query": "AI accountability system for consistency strugglers and nutrition discipline",
       "intent": "solution_seeking",
-      "audience": "body_goal_users",
-      "use_case": "behavior_reframing",
-      "source_type": "youtube",
+      "audience": "consistency_strugglers",
+      "use_case": "nutrition_discipline",
+      "source_type": "x_twitter",
       "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
       "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
       "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
       "ownership": "legacy_eligible",
-      "route_match_score": 14,
+      "route_match_score": 24,
       "route_match_title": "How to Use AI for Executive Coaching and Accountability | Billionaire High Performance Coach | Spry Page",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
-        "google_search_console"
+        "google_search_console",
+        "grounded_search_observation"
       ],
       "findings": [
         {
           "code": "GSC_NO_ROW_FOR_TARGET",
           "basis": "google_search_console",
           "detail": "No Search Console row for this query in the collected window."
+        },
+        {
+          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
+          "basis": "grounded_search_observation",
+          "detail": "Grounded answer referenced 9 other domain(s) and not an owned domain."
         }
       ],
-      "confidence": "PARTIAL_EVIDENCE",
+      "confidence": "EVIDENCE_BACKED",
       "actionable": true,
-      "priority": 8,
+      "priority": 33,
       "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": null,
-      "competitor_domains": [],
+      "grounded_own_domain_referenced": false,
+      "competitor_domains": [
+        "accountabilitypartner360.com",
+        "bodygangfitness.com",
+        "dietdiscipline.com",
+        "github.com",
+        "nouriagent.com",
+        "nutriaiwellness.com",
+        "nutritioncoachai.com",
+        "nutritracker.io",
+        "pmc.ncbi.nlm.nih.gov"
+      ],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
     {
-      "target_id": "si_0ca0b0a2bebfa8d2",
-      "query": "AI accountability system for athletes and missed-day recovery",
+      "target_id": "si_e7ee975fdc793033",
+      "query": "AI accountability system for consistency strugglers and workout execution",
       "intent": "solution_seeking",
-      "audience": "athletes",
-      "use_case": "missed_day_recovery",
-      "source_type": "tiktok",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery",
-      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery",
-      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery.html",
+      "audience": "consistency_strugglers",
+      "use_case": "workout_execution",
+      "source_type": "reddit",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/whitepapers/state-of-accountability-and-consistency",
+      "owned_route": "/whitepapers/state-of-accountability-and-consistency",
+      "owned_file": "whitepapers/state-of-accountability-and-consistency.html",
       "ownership": "legacy_eligible",
-      "route_match_score": 28,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for missed-day recovery | Billionaire High Performance Coach | Spry Page",
+      "route_match_score": 20,
+      "route_match_title": "State of Accountability And Consistency: Execution Patterns, AI Coaching, and Accountability Demand | Spry Page",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console",
+        "grounded_search_observation"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        },
+        {
+          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
+          "basis": "grounded_search_observation",
+          "detail": "Grounded answer referenced 9 other domain(s) and not an owned domain."
+        }
+      ],
+      "confidence": "EVIDENCE_BACKED",
+      "actionable": true,
+      "priority": 33,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": false,
+      "competitor_domains": [
+        "apps.apple.com",
+        "arvo.guru",
+        "coachguido.com",
+        "github.com",
+        "github.laiyagushi.com",
+        "nutritracker.io",
+        "outsidecontext.com",
+        "saga.coach",
+        "thepromptlayer.com"
+      ],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_0a4ca46355201966",
+      "query": "AI accountability system for body goal users and habit consistency",
+      "intent": "solution_seeking",
+      "audience": "body_goal_users",
+      "use_case": "habit_consistency",
+      "source_type": "reddit",
+      "expected_owned_url": "https://spryexecutiveos.com/answers/accountability-and-consistency",
+      "owned_route": "/answers/accountability-and-consistency",
+      "owned_file": "answers/accountability-and-consistency.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 16,
+      "route_match_title": "Accountability without shame: how consistency actually works | Answer Page | Spry Executive OS",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console"
@@ -821,8 +1292,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -858,8 +1329,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -895,8 +1366,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -912,7 +1383,7 @@
       "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through.html",
       "ownership": "legacy_eligible",
       "route_match_score": 18,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for behavioral follow-through | Billionaire High Performance Coach | Spry Page",
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for behavioral follow-through | Billionaire High Performance Coach",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console"
@@ -932,8 +1403,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -969,8 +1440,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1006,82 +1477,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_16d254cf0b735007",
-      "query": "accountability partner vs traditional coaching for people with many projects",
-      "intent": "commercial_comparison",
-      "audience": "multi_project_people",
-      "use_case": "delegation",
-      "source_type": "reddit",
-      "expected_owned_url": "https://spryexecutiveos.com/billionaire-high-performance-coach-vs-coaching/",
-      "owned_route": "/billionaire-high-performance-coach-vs-coaching/",
-      "owned_file": "billionaire-high-performance-coach-vs-coaching/index.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 17,
-      "route_match_title": "the structured AI accountability system Vs Coaching | Spry Page | Spry Executive OS",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        }
-      ],
-      "confidence": "PARTIAL_EVIDENCE",
-      "actionable": true,
-      "priority": 8,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": null,
-      "competitor_domains": [],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_17d4233a039a0359",
-      "query": "AI accountability system for busy parents and weight loss adherence",
-      "intent": "solution_seeking",
-      "audience": "busy_parents",
-      "use_case": "weight_loss_adherence",
-      "source_type": "quora",
-      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 24,
-      "route_match_title": "How to Use AI for Executive Coaching and Accountability | Billionaire High Performance Coach | Spry Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        }
-      ],
-      "confidence": "PARTIAL_EVIDENCE",
-      "actionable": true,
-      "priority": 8,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": null,
-      "competitor_domains": [],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1117,8 +1514,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1154,8 +1551,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1171,7 +1568,7 @@
       "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-chief-of-staff-support.html",
       "ownership": "legacy_eligible",
       "route_match_score": 18,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for chief-of-staff support | Billionaire High Performance Coach | Spry Page",
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for chief-of-staff support | Billionaire High Performance Coach",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console"
@@ -1191,8 +1588,45 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_1f0a715aa894c401",
+      "query": "behavioral self-regulation system vs traditional coaching for people with many projects",
+      "intent": "commercial_comparison",
+      "audience": "multi_project_people",
+      "use_case": "performance_routines",
+      "source_type": "tiktok",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-planner-for-behavioral-follow-through",
+      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-planner-for-behavioral-follow-through",
+      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-planner-for-behavioral-follow-through.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 21,
+      "route_match_title": "Billionaire High Performance Coach vs planner for behavioral follow-through | Billionaire High Performance Coach",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1208,7 +1642,7 @@
       "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through.html",
       "ownership": "legacy_eligible",
       "route_match_score": 22,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for behavioral follow-through | Billionaire High Performance Coach | Spry Page",
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for behavioral follow-through | Billionaire High Performance Coach",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console"
@@ -1228,8 +1662,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1245,7 +1679,7 @@
       "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-execution-review.html",
       "ownership": "legacy_eligible",
       "route_match_score": 16,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for execution review | Billionaire High Performance Coach | Spry Page",
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for execution review | Billionaire High Performance Coach",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console"
@@ -1265,8 +1699,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1302,8 +1736,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1339,8 +1773,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1376,8 +1810,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1393,7 +1827,7 @@
       "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-chief-of-staff-support.html",
       "ownership": "legacy_eligible",
       "route_match_score": 23,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for chief-of-staff support | Billionaire High Performance Coach | Spry Page",
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for chief-of-staff support | Billionaire High Performance Coach",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console"
@@ -1413,45 +1847,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_2e0494b22586f025",
-      "query": "AI accountability system for entrepreneurs and performance routines",
-      "intent": "solution_seeking",
-      "audience": "entrepreneurs",
-      "use_case": "performance_routines",
-      "source_type": "reddit",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
-      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
-      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 22,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for behavioral follow-through | Billionaire High Performance Coach | Spry Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        }
-      ],
-      "confidence": "PARTIAL_EVIDENCE",
-      "actionable": true,
-      "priority": 8,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": null,
-      "competitor_domains": [],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1487,8 +1884,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1524,119 +1921,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_380df4e86a03d148",
-      "query": "AI accountability system for busy parents and career acceleration",
-      "intent": "solution_seeking",
-      "audience": "busy_parents",
-      "use_case": "career_acceleration",
-      "source_type": "quora",
-      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 24,
-      "route_match_title": "How to Use AI for Executive Coaching and Accountability | Billionaire High Performance Coach | Spry Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        }
-      ],
-      "confidence": "PARTIAL_EVIDENCE",
-      "actionable": true,
-      "priority": 8,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": null,
-      "competitor_domains": [],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_3bcf09a452ec6f84",
-      "query": "AI accountability system for creators and performance routines",
-      "intent": "solution_seeking",
-      "audience": "creators",
-      "use_case": "performance_routines",
-      "source_type": "tiktok",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
-      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
-      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 22,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for behavioral follow-through | Billionaire High Performance Coach | Spry Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        }
-      ],
-      "confidence": "PARTIAL_EVIDENCE",
-      "actionable": true,
-      "priority": 8,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": null,
-      "competitor_domains": [],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_3be2d769919e35d4",
-      "query": "AI accountability system for athletes and delegation",
-      "intent": "solution_seeking",
-      "audience": "athletes",
-      "use_case": "delegation",
-      "source_type": "tiktok",
-      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 24,
-      "route_match_title": "How to Use AI for Executive Coaching and Accountability | Billionaire High Performance Coach | Spry Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        }
-      ],
-      "confidence": "PARTIAL_EVIDENCE",
-      "actionable": true,
-      "priority": 8,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": null,
-      "competitor_domains": [],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1672,8 +1958,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1709,8 +1995,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1746,8 +2032,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1783,45 +2069,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_40328d5f1ec878f9",
-      "query": "AI accountability system for athletes and behavior reframing",
-      "intent": "solution_seeking",
-      "audience": "athletes",
-      "use_case": "behavior_reframing",
-      "source_type": "reddit",
-      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 14,
-      "route_match_title": "How to Use AI for Executive Coaching and Accountability | Billionaire High Performance Coach | Spry Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        }
-      ],
-      "confidence": "PARTIAL_EVIDENCE",
-      "actionable": true,
-      "priority": 8,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": null,
-      "competitor_domains": [],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1857,8 +2106,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1874,7 +2123,7 @@
       "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through.html",
       "ownership": "legacy_eligible",
       "route_match_score": 22,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for behavioral follow-through | Billionaire High Performance Coach | Spry Page",
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for behavioral follow-through | Billionaire High Performance Coach",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console"
@@ -1894,8 +2143,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1931,8 +2180,45 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_428cc471e01c8ede",
+      "query": "best accountability partner for athletes who need performance routines",
+      "intent": "commercial_comparison",
+      "audience": "athletes",
+      "use_case": "performance_routines",
+      "source_type": "google_paa",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-planner-for-accountability",
+      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-planner-for-accountability",
+      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-planner-for-accountability.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 21,
+      "route_match_title": "Billionaire High Performance Coach vs planner for accountability | Billionaire High Performance Coach",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1968,45 +2254,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_43465940583c8669",
-      "query": "AI accountability system for creators and fitness consistency",
-      "intent": "solution_seeking",
-      "audience": "creators",
-      "use_case": "fitness_consistency",
-      "source_type": "forums",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-chief-of-staff-support",
-      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-chief-of-staff-support",
-      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-chief-of-staff-support.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 18,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for chief-of-staff support | Billionaire High Performance Coach | Spry Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        }
-      ],
-      "confidence": "PARTIAL_EVIDENCE",
-      "actionable": true,
-      "priority": 8,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": null,
-      "competitor_domains": [],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2022,7 +2271,7 @@
       "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-planner-for-behavioral-follow-through.html",
       "ownership": "legacy_eligible",
       "route_match_score": 16,
-      "route_match_title": "Billionaire High Performance Coach vs planner for behavioral follow-through | Billionaire High Performance Coach | Spry Page",
+      "route_match_title": "Billionaire High Performance Coach vs planner for behavioral follow-through | Billionaire High Performance Coach",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console"
@@ -2042,45 +2291,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_44cfb54349dd64d5",
-      "query": "AI accountability system for athletes and multi-project management",
-      "intent": "solution_seeking",
-      "audience": "athletes",
-      "use_case": "multi_project_management",
-      "source_type": "quora",
-      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 24,
-      "route_match_title": "How to Use AI for Executive Coaching and Accountability | Billionaire High Performance Coach | Spry Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        }
-      ],
-      "confidence": "PARTIAL_EVIDENCE",
-      "actionable": true,
-      "priority": 8,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": null,
-      "competitor_domains": [],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2116,8 +2328,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2133,7 +2345,7 @@
       "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through.html",
       "ownership": "legacy_eligible",
       "route_match_score": 22,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for behavioral follow-through | Billionaire High Performance Coach | Spry Page",
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for behavioral follow-through | Billionaire High Performance Coach",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console"
@@ -2153,8 +2365,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2190,8 +2402,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2227,8 +2439,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2244,7 +2456,7 @@
       "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery.html",
       "ownership": "legacy_eligible",
       "route_match_score": 29,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for missed-day recovery | Billionaire High Performance Coach | Spry Page",
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for missed-day recovery | Billionaire High Performance Coach",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console"
@@ -2264,8 +2476,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2301,24 +2513,24 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
     {
-      "target_id": "si_4f48e2d431578c28",
-      "query": "AI accountability system for operators and performance routines",
+      "target_id": "si_4efed1b40aeb209a",
+      "query": "AI accountability system for body goal users and decision making",
       "intent": "solution_seeking",
-      "audience": "operators",
-      "use_case": "performance_routines",
-      "source_type": "reddit",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
-      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
-      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through.html",
+      "audience": "body_goal_users",
+      "use_case": "decision_making",
+      "source_type": "youtube",
+      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
       "ownership": "legacy_eligible",
-      "route_match_score": 22,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for behavioral follow-through | Billionaire High Performance Coach | Spry Page",
+      "route_match_score": 24,
+      "route_match_title": "How to Use AI for Executive Coaching and Accountability | Billionaire High Performance Coach | Spry Page",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console"
@@ -2338,8 +2550,45 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_4f38a7a0e5a55dfc",
+      "query": "AI accountability system for consistency strugglers and self-trust rebuilding",
+      "intent": "solution_seeking",
+      "audience": "consistency_strugglers",
+      "use_case": "self_trust_rebuilding",
+      "source_type": "youtube",
+      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 24,
+      "route_match_title": "How to Use AI for Executive Coaching and Accountability | Billionaire High Performance Coach | Spry Page",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2355,7 +2604,7 @@
       "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-planner-for-behavioral-follow-through.html",
       "ownership": "legacy_eligible",
       "route_match_score": 21,
-      "route_match_title": "Billionaire High Performance Coach vs planner for behavioral follow-through | Billionaire High Performance Coach | Spry Page",
+      "route_match_title": "Billionaire High Performance Coach vs planner for behavioral follow-through | Billionaire High Performance Coach",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console"
@@ -2375,8 +2624,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2392,7 +2641,7 @@
       "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery.html",
       "ownership": "legacy_eligible",
       "route_match_score": 28,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for missed-day recovery | Billionaire High Performance Coach | Spry Page",
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for missed-day recovery | Billionaire High Performance Coach",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console"
@@ -2412,18 +2661,55 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
     {
-      "target_id": "si_58fc6e627be4746e",
-      "query": "AI accountability system for body goal users and goal tracking",
+      "target_id": "si_5a2fb0182e6b4f1a",
+      "query": "AI system for people with many projects struggling with performance routines",
+      "intent": "problem_aware",
+      "audience": "multi_project_people",
+      "use_case": "performance_routines",
+      "source_type": "x_twitter",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-planner-for-behavioral-follow-through",
+      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-planner-for-behavioral-follow-through",
+      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-planner-for-behavioral-follow-through.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 16,
+      "route_match_title": "Billionaire High Performance Coach vs planner for behavioral follow-through | Billionaire High Performance Coach",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_5c2e9df98fe0af45",
+      "query": "AI accountability system for decision-fatigue users and goal tracking",
       "intent": "solution_seeking",
-      "audience": "body_goal_users",
+      "audience": "decision_fatigue_users",
       "use_case": "goal_tracking",
-      "source_type": "forums",
+      "source_type": "reddit",
       "expected_owned_url": "https://spryexecutiveos.com/insights/how-chatgpt-can-improve-personal-accountability-and-goal-tracking",
       "owned_route": "/insights/how-chatgpt-can-improve-personal-accountability-and-goal-tracking",
       "owned_file": "insights/how-chatgpt-can-improve-personal-accountability-and-goal-tracking.html",
@@ -2449,45 +2735,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_5a2fb0182e6b4f1a",
-      "query": "AI system for people with many projects struggling with performance routines",
-      "intent": "problem_aware",
-      "audience": "multi_project_people",
-      "use_case": "performance_routines",
-      "source_type": "x_twitter",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-planner-for-behavioral-follow-through",
-      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-planner-for-behavioral-follow-through",
-      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-planner-for-behavioral-follow-through.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 16,
-      "route_match_title": "Billionaire High Performance Coach vs planner for behavioral follow-through | Billionaire High Performance Coach | Spry Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        }
-      ],
-      "confidence": "PARTIAL_EVIDENCE",
-      "actionable": true,
-      "priority": 8,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": null,
-      "competitor_domains": [],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2523,8 +2772,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2560,8 +2809,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2597,8 +2846,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2634,8 +2883,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2651,7 +2900,7 @@
       "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery.html",
       "ownership": "legacy_eligible",
       "route_match_score": 24,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for missed-day recovery | Billionaire High Performance Coach | Spry Page",
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for missed-day recovery | Billionaire High Performance Coach",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console"
@@ -2671,8 +2920,45 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_68b8ba468a1e9abc",
+      "query": "AI accountability system for founders and behavior reframing",
+      "intent": "solution_seeking",
+      "audience": "founders",
+      "use_case": "behavior_reframing",
+      "source_type": "reddit",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
+      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
+      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 18,
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for behavioral follow-through | Billionaire High Performance Coach",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2688,7 +2974,7 @@
       "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through.html",
       "ownership": "legacy_eligible",
       "route_match_score": 22,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for behavioral follow-through | Billionaire High Performance Coach | Spry Page",
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for behavioral follow-through | Billionaire High Performance Coach",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console"
@@ -2708,8 +2994,45 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_6ac98872d3d35a06",
+      "query": "AI accountability system for busy parents and overplanning",
+      "intent": "solution_seeking",
+      "audience": "busy_parents",
+      "use_case": "overplanning",
+      "source_type": "reddit",
+      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 24,
+      "route_match_title": "How to Use AI for Executive Coaching and Accountability | Billionaire High Performance Coach | Spry Page",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2745,8 +3068,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2762,7 +3085,7 @@
       "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through.html",
       "ownership": "legacy_eligible",
       "route_match_score": 22,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for behavioral follow-through | Billionaire High Performance Coach | Spry Page",
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for behavioral follow-through | Billionaire High Performance Coach",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console"
@@ -2782,8 +3105,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2819,8 +3142,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2856,8 +3179,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2893,8 +3216,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2930,8 +3253,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2967,45 +3290,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_7c62fff05d1cb9fe",
-      "query": "AI accountability system for decision-fatigue users and fitness consistency",
-      "intent": "solution_seeking",
-      "audience": "decision_fatigue_users",
-      "use_case": "fitness_consistency",
-      "source_type": "google_paa",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-decision-fatigue",
-      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-decision-fatigue",
-      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-decision-fatigue.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 20,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for decision fatigue | Billionaire High Performance Coach | Spry Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        }
-      ],
-      "confidence": "PARTIAL_EVIDENCE",
-      "actionable": true,
-      "priority": 8,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": null,
-      "competitor_domains": [],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3041,45 +3327,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_7e356c6936c1d7b4",
-      "query": "AI accountability system for athletes and weekly review",
-      "intent": "solution_seeking",
-      "audience": "athletes",
-      "use_case": "weekly_review",
-      "source_type": "reddit",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/chatgpt-prompts-for-weekly-review-and-planning",
-      "owned_route": "/chatgpt-prompts-for-weekly-review-and-planning",
-      "owned_file": "chatgpt-prompts-for-weekly-review-and-planning.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 16,
-      "route_match_title": "ChatGPT Prompts for Weekly Review and Planning | Billionaire High Performance Coach | Spry Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        }
-      ],
-      "confidence": "PARTIAL_EVIDENCE",
-      "actionable": true,
-      "priority": 8,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": null,
-      "competitor_domains": [],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3115,8 +3364,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3152,8 +3401,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3189,45 +3438,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_839405db00d5a42a",
-      "query": "AI accountability system for decision-fatigue users and workout execution",
-      "intent": "solution_seeking",
-      "audience": "decision_fatigue_users",
-      "use_case": "workout_execution",
-      "source_type": "youtube",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-decision-fatigue",
-      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-decision-fatigue",
-      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-decision-fatigue.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 20,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for decision fatigue | Billionaire High Performance Coach | Spry Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        }
-      ],
-      "confidence": "PARTIAL_EVIDENCE",
-      "actionable": true,
-      "priority": 8,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": null,
-      "competitor_domains": [],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3243,7 +3455,7 @@
       "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-execution-review.html",
       "ownership": "legacy_eligible",
       "route_match_score": 21,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for execution review | Billionaire High Performance Coach | Spry Page",
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for execution review | Billionaire High Performance Coach",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console"
@@ -3263,45 +3475,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_8b24330d41a274e1",
-      "query": "accountability partner vs traditional coaching for students and early-career professionals",
-      "intent": "commercial_comparison",
-      "audience": "students_early_career",
-      "use_case": "missed_day_recovery",
-      "source_type": "google_paa",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery",
-      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery",
-      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 29,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for missed-day recovery | Billionaire High Performance Coach | Spry Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        }
-      ],
-      "confidence": "PARTIAL_EVIDENCE",
-      "actionable": true,
-      "priority": 8,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": null,
-      "competitor_domains": [],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3337,45 +3512,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_8cbe2eed91c5800b",
-      "query": "AI accountability system for body goal users and emotional reset",
-      "intent": "solution_seeking",
-      "audience": "body_goal_users",
-      "use_case": "emotional_reset",
-      "source_type": "reddit",
-      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 24,
-      "route_match_title": "How to Use AI for Executive Coaching and Accountability | Billionaire High Performance Coach | Spry Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        }
-      ],
-      "confidence": "PARTIAL_EVIDENCE",
-      "actionable": true,
-      "priority": 8,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": null,
-      "competitor_domains": [],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3411,82 +3549,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_9049f7cc0725cffe",
-      "query": "AI accountability system for founders and performance routines",
-      "intent": "solution_seeking",
-      "audience": "founders",
-      "use_case": "performance_routines",
-      "source_type": "reddit",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
-      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
-      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 22,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for behavioral follow-through | Billionaire High Performance Coach | Spry Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        }
-      ],
-      "confidence": "PARTIAL_EVIDENCE",
-      "actionable": true,
-      "priority": 8,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": null,
-      "competitor_domains": [],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_920b554b61e1c432",
-      "query": "AI accountability system for athletes and self-trust rebuilding",
-      "intent": "solution_seeking",
-      "audience": "athletes",
-      "use_case": "self_trust_rebuilding",
-      "source_type": "youtube",
-      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 24,
-      "route_match_title": "How to Use AI for Executive Coaching and Accountability | Billionaire High Performance Coach | Spry Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        }
-      ],
-      "confidence": "PARTIAL_EVIDENCE",
-      "actionable": true,
-      "priority": 8,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": null,
-      "competitor_domains": [],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3522,8 +3586,45 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_94fd33a349222981",
+      "query": "AI accountability system for missed-day recovery users and nutrition discipline",
+      "intent": "solution_seeking",
+      "audience": "missed_day_recovery_users",
+      "use_case": "nutrition_discipline",
+      "source_type": "x_twitter",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/answers/phase4/what-should-a-founder-do-when-working-without-a-chief-of-staff-and-needs-missed-day-recovery-support",
+      "owned_route": "/answers/phase4/what-should-a-founder-do-when-working-without-a-chief-of-staff-and-needs-missed-day-recovery-support",
+      "owned_file": "answers/phase4/what-should-a-founder-do-when-working-without-a-chief-of-staff-and-needs-missed-day-recovery-support.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 26,
+      "route_match_title": "What should a founder do when working without a chief of staff and needs missed-day recovery support? | Billionaire High Performance Coach",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3559,8 +3660,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3596,8 +3697,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3633,8 +3734,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3670,8 +3771,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3687,7 +3788,7 @@
       "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-chief-of-staff-support.html",
       "ownership": "legacy_eligible",
       "route_match_score": 23,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for chief-of-staff support | Billionaire High Performance Coach | Spry Page",
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for chief-of-staff support | Billionaire High Performance Coach",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console"
@@ -3707,8 +3808,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3744,8 +3845,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3781,8 +3882,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3798,7 +3899,7 @@
       "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-execution-review.html",
       "ownership": "legacy_eligible",
       "route_match_score": 16,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for execution review | Billionaire High Performance Coach | Spry Page",
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for execution review | Billionaire High Performance Coach",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console"
@@ -3818,8 +3919,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3855,129 +3956,18 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
     {
-      "target_id": "si_c3a6ab7a7294fd69",
-      "query": "accountability partner vs traditional coaching for consistency strugglers",
-      "intent": "commercial_comparison",
+      "target_id": "si_b873f1bc7fbd3e0f",
+      "query": "AI accountability system for consistency strugglers and delegation",
+      "intent": "solution_seeking",
       "audience": "consistency_strugglers",
-      "use_case": "decision_making",
-      "source_type": "google_paa",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-decision-fatigue",
-      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-decision-fatigue",
-      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-decision-fatigue.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 21,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for decision fatigue | Billionaire High Performance Coach | Spry Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        }
-      ],
-      "confidence": "PARTIAL_EVIDENCE",
-      "actionable": true,
-      "priority": 8,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": null,
-      "competitor_domains": [],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_ca29e8e84ae01aee",
-      "query": "accountability partner vs traditional coaching for decision-fatigue users",
-      "intent": "commercial_comparison",
-      "audience": "decision_fatigue_users",
-      "use_case": "fitness_consistency",
-      "source_type": "tiktok",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-decision-fatigue",
-      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-decision-fatigue",
-      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-decision-fatigue.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 25,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for decision fatigue | Billionaire High Performance Coach | Spry Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        }
-      ],
-      "confidence": "PARTIAL_EVIDENCE",
-      "actionable": true,
-      "priority": 8,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": null,
-      "competitor_domains": [],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_cdbbffa94f26be67",
-      "query": "AI accountability system for body goal users and calendar control",
-      "intent": "solution_seeking",
-      "audience": "body_goal_users",
-      "use_case": "calendar_control",
-      "source_type": "reddit",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-chief-of-staff-support",
-      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-chief-of-staff-support",
-      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-chief-of-staff-support.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 18,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for chief-of-staff support | Billionaire High Performance Coach | Spry Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        }
-      ],
-      "confidence": "PARTIAL_EVIDENCE",
-      "actionable": true,
-      "priority": 8,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": null,
-      "competitor_domains": [],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_d49870451e734665",
-      "query": "AI accountability system for body goal users and chief-of-staff operating rhythm",
-      "intent": "solution_seeking",
-      "audience": "body_goal_users",
-      "use_case": "chief_of_staff_operating_rhythm",
-      "source_type": "reddit",
+      "use_case": "delegation",
+      "source_type": "competitor_pages",
       "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
       "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
       "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
@@ -4003,8 +3993,156 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_c12f036c85ec99f6",
+      "query": "AI accountability system for busy parents and missed-day recovery",
+      "intent": "solution_seeking",
+      "audience": "busy_parents",
+      "use_case": "missed_day_recovery",
+      "source_type": "reddit",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery",
+      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery",
+      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 28,
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for missed-day recovery | Billionaire High Performance Coach",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_c3a6ab7a7294fd69",
+      "query": "accountability partner vs traditional coaching for consistency strugglers",
+      "intent": "commercial_comparison",
+      "audience": "consistency_strugglers",
+      "use_case": "decision_making",
+      "source_type": "google_paa",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-decision-fatigue",
+      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-decision-fatigue",
+      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-decision-fatigue.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 21,
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for decision fatigue | Billionaire High Performance Coach",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_ca29e8e84ae01aee",
+      "query": "accountability partner vs traditional coaching for decision-fatigue users",
+      "intent": "commercial_comparison",
+      "audience": "decision_fatigue_users",
+      "use_case": "fitness_consistency",
+      "source_type": "tiktok",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-decision-fatigue",
+      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-decision-fatigue",
+      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-decision-fatigue.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 25,
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for decision fatigue | Billionaire High Performance Coach",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_cdbbffa94f26be67",
+      "query": "AI accountability system for body goal users and calendar control",
+      "intent": "solution_seeking",
+      "audience": "body_goal_users",
+      "use_case": "calendar_control",
+      "source_type": "reddit",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-chief-of-staff-support",
+      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-chief-of-staff-support",
+      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-chief-of-staff-support.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 18,
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for chief-of-staff support | Billionaire High Performance Coach",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4040,45 +4178,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_d7347e6c2ad7641f",
-      "query": "AI accountability system for athletes and overplanning",
-      "intent": "solution_seeking",
-      "audience": "athletes",
-      "use_case": "overplanning",
-      "source_type": "reddit",
-      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 24,
-      "route_match_title": "How to Use AI for Executive Coaching and Accountability | Billionaire High Performance Coach | Spry Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        }
-      ],
-      "confidence": "PARTIAL_EVIDENCE",
-      "actionable": true,
-      "priority": 8,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": null,
-      "competitor_domains": [],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4114,45 +4215,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_dac4bef6f4dc2289",
-      "query": "AI accountability system for consistency strugglers and nutrition discipline",
-      "intent": "solution_seeking",
-      "audience": "consistency_strugglers",
-      "use_case": "nutrition_discipline",
-      "source_type": "x_twitter",
-      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 24,
-      "route_match_title": "How to Use AI for Executive Coaching and Accountability | Billionaire High Performance Coach | Spry Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        }
-      ],
-      "confidence": "PARTIAL_EVIDENCE",
-      "actionable": true,
-      "priority": 8,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": null,
-      "competitor_domains": [],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4168,7 +4232,7 @@
       "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through.html",
       "ownership": "legacy_eligible",
       "route_match_score": 22,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for behavioral follow-through | Billionaire High Performance Coach | Spry Page",
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for behavioral follow-through | Billionaire High Performance Coach",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console"
@@ -4188,8 +4252,45 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_e254958e3517f87d",
+      "query": "AI accountability system for missed-day recovery users and behavior reframing",
+      "intent": "solution_seeking",
+      "audience": "missed_day_recovery_users",
+      "use_case": "behavior_reframing",
+      "source_type": "quora",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/answers/phase4/what-should-a-founder-do-when-working-without-a-chief-of-staff-and-needs-missed-day-recovery-support",
+      "owned_route": "/answers/phase4/what-should-a-founder-do-when-working-without-a-chief-of-staff-and-needs-missed-day-recovery-support",
+      "owned_file": "answers/phase4/what-should-a-founder-do-when-working-without-a-chief-of-staff-and-needs-missed-day-recovery-support.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 26,
+      "route_match_title": "What should a founder do when working without a chief of staff and needs missed-day recovery support? | Billionaire High Performance Coach",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4225,45 +4326,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_e7ee975fdc793033",
-      "query": "AI accountability system for consistency strugglers and workout execution",
-      "intent": "solution_seeking",
-      "audience": "consistency_strugglers",
-      "use_case": "workout_execution",
-      "source_type": "reddit",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/whitepapers/state-of-accountability-and-consistency",
-      "owned_route": "/whitepapers/state-of-accountability-and-consistency",
-      "owned_file": "whitepapers/state-of-accountability-and-consistency.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 20,
-      "route_match_title": "State of Accountability And Consistency: Execution Patterns, AI Coaching, and Accountability Demand | Spry Page",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        }
-      ],
-      "confidence": "PARTIAL_EVIDENCE",
-      "actionable": true,
-      "priority": 8,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": null,
-      "competitor_domains": [],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4299,8 +4363,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4336,8 +4400,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4353,7 +4417,7 @@
       "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-execution-review.html",
       "ownership": "legacy_eligible",
       "route_match_score": 16,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for execution review | Billionaire High Performance Coach | Spry Page",
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for execution review | Billionaire High Performance Coach",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console"
@@ -4373,8 +4437,45 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_eae9b5329349223f",
+      "query": "AI system for body goal users struggling with fitness consistency",
+      "intent": "problem_aware",
+      "audience": "body_goal_users",
+      "use_case": "fitness_consistency",
+      "source_type": "x_twitter",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/use-cases/phase4/a-player-mode-for-a-executive-who-is-trying-to-build-consistency",
+      "owned_route": "/use-cases/phase4/a-player-mode-for-a-executive-who-is-trying-to-build-consistency",
+      "owned_file": "use-cases/phase4/a-player-mode-for-a-executive-who-is-trying-to-build-consistency.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 18,
+      "route_match_title": "A-player mode for a executive who is trying to build consistency | Billionaire High Performance Coach",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4410,8 +4511,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4427,7 +4528,7 @@
       "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery.html",
       "ownership": "legacy_eligible",
       "route_match_score": 28,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for missed-day recovery | Billionaire High Performance Coach | Spry Page",
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for missed-day recovery | Billionaire High Performance Coach",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console"
@@ -4447,8 +4548,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4464,7 +4565,7 @@
       "owned_file": "brand-defense/is-billionaire-high-performance-coach-real-for-students.html",
       "ownership": "legacy_eligible",
       "route_match_score": 18,
-      "route_match_title": "Is Billionaire High Performance Coach real for students? | Billionaire High Performance Coach | Spry Page",
+      "route_match_title": "Is Billionaire High Performance Coach real for students? | Billionaire High Performance Coach",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console"
@@ -4484,8 +4585,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4521,8 +4622,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4538,7 +4639,7 @@
       "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-chief-of-staff-support.html",
       "ownership": "legacy_eligible",
       "route_match_score": 18,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for chief-of-staff support | Billionaire High Performance Coach | Spry Page",
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for chief-of-staff support | Billionaire High Performance Coach",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console"
@@ -4558,8 +4659,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4595,8 +4696,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4612,7 +4713,7 @@
       "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through.html",
       "ownership": "legacy_eligible",
       "route_match_score": 22,
-      "route_match_title": "Billionaire High Performance Coach vs accountability app for behavioral follow-through | Billionaire High Performance Coach | Spry Page",
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for behavioral follow-through | Billionaire High Performance Coach",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console"
@@ -4632,8 +4733,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4669,8 +4770,45 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "DEGRADED",
-        "competitor": "DEGRADED"
+        "grounded_search": "OK",
+        "competitor": "OK"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_fcb2dbe4a447d9bd",
+      "query": "best accountability partner for body goal users who need workout execution",
+      "intent": "commercial_comparison",
+      "audience": "body_goal_users",
+      "use_case": "workout_execution",
+      "source_type": "competitor_pages",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-execution-review",
+      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-execution-review",
+      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-execution-review.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 21,
+      "route_match_title": "Billionaire High Performance Coach vs accountability app for execution review | Billionaire High Performance Coach",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "OK",
+        "competitor": "OK"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     }

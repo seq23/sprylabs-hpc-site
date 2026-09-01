@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-08-31T14:31:53.694Z",
+  "generated_at": "2026-09-01T13:36:52.467Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 206,
+  "admitted_hard_fail_count": 207,
   "reviewed_count": 8,
-  "unreviewed_count": 198,
+  "unreviewed_count": 199,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 158,
+    "REVIEW_REQUIRED": 159,
     "EXISTING_REPAIR_AVAILABLE": 7,
     "TRUE_BLOCKER": 26,
     "REVIEW_WARNING_BOUNDARY": 15
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 158,
+    "REVIEW_REQUIRED": 159,
     "EXISTING_REPAIR_AVAILABLE": 7,
     "TRUE_BLOCKER": 26,
     "REVIEW_WARNING_BOUNDARY": 7
   },
   "migration_status_counts": {
-    "UNREVIEWED": 198,
+    "UNREVIEWED": 199,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -3131,6 +3131,21 @@
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-FEED-DATE-DETERMINISM"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-SURFACE-GUARD-ORDERING",
+      "name": "validate:surface-guard-ordering",
+      "command": "npm run validate:surface-guard-ordering",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-SURFACE-GUARD-ORDERING"
       ],
       "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",
