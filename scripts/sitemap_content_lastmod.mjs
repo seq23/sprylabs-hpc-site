@@ -148,11 +148,43 @@ for (const loc of allLocs.keys()) {
   if (f) resolved.set(loc, f); else unresolvable.push(loc);
 }
 
-// Which URLs still need a git-derived seed: no ledger entry at all.
-const needSeed = [...resolved.entries()].filter(([loc]) => !priorByUrl.get(loc)?.lastmod).map(([, f]) => f);
+// Which URLs need a git-derived seed. Two cases:
+//
+//  1. No ledger entry at all - nothing to carry forward.
+//
+//  2. An entry whose evidence is `git_last_visible_content_change`. That record
+//     is not a stored value, it is a CLAIM ABOUT GIT HISTORY, and history keeps
+//     moving underneath it. The unchanged branch below used to replay such a
+//     record verbatim whenever the page hashed the same, so the claim was never
+//     re-checked after the day it was written.
+//
+//     That goes wrong precisely when a page is REVERTED. comparisons/bhpc-vs-
+//     betterup.html oscillated between two visible texts as an unconverged bot
+//     lane rewrote it and a repair put it back:
+//
+//       68c2b7d49  2026-08-31  58fc5c08...   <- ledger recorded 2026-08-31 here
+//       ae39ee266  2026-09-01  9f98bcd6...
+//       776d201e9  2026-09-01  58fc5c08...   <- text restored
+//
+//     After the revert the page hashes exactly what the ledger holds, so it took
+//     the unchanged path and kept 2026-08-31 - while git plainly shows the text
+//     last MOVED on 2026-09-01. self_test_sitemap_lastmod.mjs recomputes the
+//     claim from git and caught the contradiction. A crawler that fetched the
+//     page yesterday gets different bytes today, so 2026-09-01 is the honest
+//     date and the stale claim was under-reporting a real change.
+//
+//     Re-seeding these is evidence-following, not churn: the date only ever
+//     moves to what git proves, never to TODAY, and never backwards.
+const needSeed = [...resolved.entries()]
+  .filter(([loc]) => {
+    const prior = priorByUrl.get(loc);
+    if (!prior?.lastmod) return true;
+    return prior.evidence === 'git_last_visible_content_change';
+  })
+  .map(([, f]) => f);
 const seeded = needSeed.length ? seedDates([...new Set(needSeed)]) : new Map();
 
-const stats = { seeded_from_git: 0, unchanged: 0, content_changed: 0, kept_existing_no_evidence: 0, unresolvable_file: unresolvable.length };
+const stats = { seeded_from_git: 0, unchanged: 0, regressed_claim_corrected: 0, content_changed: 0, kept_existing_no_evidence: 0, unresolvable_file: unresolvable.length };
 // URLs whose visible content is byte-for-byte what the ledger recorded. Only for
 // these can a sitemap/ledger mismatch mean the sitemap is publishing a false date;
 // for the rest it means the ledger is due a regeneration, which is a different
@@ -173,7 +205,16 @@ for (const [loc, existing] of allLocs) {
   if (was && was.content_sha256 === hash) {
     stats.unchanged += 1;
     stableUrls.add(loc);
-    urls.push(was);
+    // A git-evidenced record is a claim about history, so re-check it against
+    // history rather than replaying it. Only ever adopt a NEWER proven date: a
+    // revert moves the page for a crawler even though the text is old.
+    const proven = was.evidence === 'git_last_visible_content_change' ? (seeded.get(file) || null) : null;
+    if (proven && proven > was.lastmod) {
+      stats.regressed_claim_corrected += 1;
+      urls.push({ ...was, lastmod: proven });
+    } else {
+      urls.push(was);
+    }
     continue;
   }
   if (was) {

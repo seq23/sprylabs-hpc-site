@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {ROOT, readJson, writeJson} from './bhpc_agent_common.mjs';
+import {saysPhrase} from '../lib/bhpc_agent_acceptance_satisfaction.mjs';
 
 function decodeHtml(value = '') {
   return String(value || '')
@@ -60,7 +61,14 @@ for (const entry of manifest.entries || []) {
   const exists = Boolean(rel && fs.existsSync(abs));
   const html = exists ? fs.readFileSync(abs, 'utf8') : '';
   const normalizedHtml = normalize(html);
-  const stringResults = (entry.required_strings || []).map(required => ({required, found: normalize(required).split(' ').filter(Boolean).every(token => normalizedHtml.includes(token))}));
+  // Token-wise containment used to live here: every WORD of the requirement had
+  // to appear somewhere on the page, in any order. Any page on the topic passes
+  // that, so the trace reported 119 entries PASS that the plan was still
+  // carrying as outstanding - and nothing linked the two verdicts. Both lanes
+  // now ask scripts/lib/bhpc_agent_acceptance_satisfaction.mjs the same
+  // question, in normalized-phrase form: strictly stronger than token-wise
+  // because word order and adjacency must hold.
+  const stringResults = (entry.required_strings || []).map(required => ({required, found: saysPhrase(html, required)}));
   // Accept either marker, exactly as validate_bhpc_rich_new_page_contract.mjs
   // does and for the reason recorded there: recommendation_summary is written
   // by the retrofit pass, outside the agent section, carrying

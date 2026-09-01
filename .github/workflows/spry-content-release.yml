@@ -122,47 +122,21 @@ jobs:
       # about to be committed. Falling out of the loop without converging fails
       # the release: publishing a tree the generators still disagree with is the
       # defect this step exists to stop, so it must never be the quiet outcome.
+      # The convergence loop that used to be written out inline here now lives
+      # in .github/scripts/converge_tree_before_commit.sh, because #46 fixed it
+      # at this lane and the identical defect came straight back on 2026-09-01
+      # through daily-citation-intelligence.yml, which has no such step. That
+      # script is the single authority and commit_and_push_if_changed.sh calls
+      # it for every main-writing lane.
+      #
+      # This lane still calls it explicitly, and must: the cadence gate and the
+      # cadence-baseline accept step below both read the tree, and they have to
+      # read the converged one rather than whatever the release stages left
+      # behind. The call from the commit helper afterwards re-verifies the fixed
+      # point and costs seconds when it is already reached.
       - name: Converge the tree the release is about to commit
         if: steps.runtime.outputs.run == 'true'
-        run: |
-          set -euo pipefail
-          converged=
-          for pass in 1 2 3 4; do
-            echo "::group::convergence pass $pass"
-            EXTRACTION_SURFACE_REBASELINE=1 npm run validate:extraction-surface-guard:snapshot
-            npm run build:all
-            npm run repair:dual-domain-metadata
-            npm run agent:bhpc:apply-report-contract
-            npm run release:repair-agent-normalization
-            npm run repair:citation-contract-surfaces
-            echo "::endgroup::"
-            if npm run validate:extraction-surface-guard:check; then
-              echo "[converge] fixed point reached after pass $pass"
-              converged=1
-              break
-            fi
-            echo "[converge] pass $pass still changed governed surfaces; running another pass"
-          done
-          if [ -z "$converged" ]; then
-            echo "[converge] FAIL: build:all and the ordered repairs still changed governed extraction surfaces after 4 passes."
-            echo "[converge] The generators are not reaching a fixed point on this tree, so nothing here can be published as final."
-            exit 1
-          fi
-          # Every mode of this lane already ends by deriving the lastmod ledger,
-          # which is what keeps the sitemap describing the tree that ships. The
-          # convergence loop above runs AFTER those modes and rewrites page HTML,
-          # so leaving it here would make the ledger stale by construction - the
-          # exact defect validate:lastmod-ledger-final exists to catch, sneaking
-          # back in one level up where the lane topology still looks clean.
-          #
-          # So the ledger is re-derived here, last, after the final stage that can
-          # mutate a page. It writes the ledger and the sitemap, neither of which
-          # is a governed extraction surface, so it cannot disturb the fixed point
-          # the loop just established.
-          echo "::group::re-derive the lastmod ledger against the converged tree"
-          npm run sitemap:lastmod:content
-          echo "::endgroup::"
-          npm run validate:lastmod-ledger-final
+        run: bash .github/scripts/converge_tree_before_commit.sh spry-content-release
       # The gate runs before anything is committed, so a release that published
       # faster than the cap allows fails here and its pages never land.
       #

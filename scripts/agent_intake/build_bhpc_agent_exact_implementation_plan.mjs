@@ -4,6 +4,7 @@ import path from 'node:path';
 import {ROOT, writeJson, hashFile} from './bhpc_agent_common.mjs';
 import {compileAndWriteBhpcAcceptanceManifest} from './compile_bhpc_agent_acceptance_manifest.mjs';
 import {mergeBhpcExternalCtaLinks} from '../lib/bhpc_conversion_contract.mjs';
+import {evaluateBhpcAcceptance} from '../lib/bhpc_agent_acceptance_satisfaction.mjs';
 import {bhpcGeneratedCitationDefinition} from '../lib/bhpc_public_page_contract.mjs';
 
 const manifest=compileAndWriteBhpcAcceptanceManifest();
@@ -45,18 +46,20 @@ const BACKLOG_CARRY_LIMIT=Number(process.env.BHPC_BACKLOG_CARRY_LIMIT||120);
 // broken spryexecutiveos.com/*.html related-links on 2026-06-27 and named the
 // replacements, the entry has been "satisfied" ever since, and the six broken
 // links were still on the page two months and nine runs later.
+// The test itself now lives in scripts/lib/bhpc_agent_acceptance_satisfaction.mjs
+// and is shared with the trace. It used to be written out here as an exact
+// substring match while the trace used token-wise containment, so the two lanes
+// disagreed about 119 entries: the plan carried them as outstanding forever
+// while the trace reported them PASS. With BHPC_BACKLOG_CARRY_LIMIT at 120 and a
+// residue of 125, that false-negative backlog SATURATED the carry and could
+// crowd out genuinely outstanding work from a recent run. See that module for
+// the measurements behind the normalized-phrase semantics.
 function acceptanceSatisfied(entry){
   const rel=String(entry.implementation_path||'').replace(/^\/+/,'');
   if(!rel) return false;
   const abs=path.join(ROOT,rel);
   if(!fs.existsSync(abs)) return false; // no rendered target means the work is certainly not done
-  const html=fs.readFileSync(abs,'utf8');
-  const marker=String(entry.record_id||entry.id||'');
-  if(marker && !html.includes(marker)) return false;
-  const required=Array.isArray(entry.required_strings)?entry.required_strings:[];
-  if(!required.every(needle=>html.includes(String(needle)))) return false;
-  const blocks=Array.isArray(entry.required_block_types)?entry.required_block_types:[];
-  return blocks.every(type=>html.includes(`data-bhpc-agent-block="${type}"`)||html.includes(`data-content-block="${type}"`));
+  return evaluateBhpcAcceptance(entry,fs.readFileSync(abs,'utf8')).satisfied;
 }
 
 const newestEntries=allEntries.filter(e=>String(e.run_date||'')===activeRunDate);

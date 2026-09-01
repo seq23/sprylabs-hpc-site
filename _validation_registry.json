@@ -7037,8 +7037,98 @@
         "MX-SURFACE-GUARD-ORDERING"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-MAIN-WRITER-CONVERGENCE",
+      "status": "ADMITTED",
+      "name": "validate:main-writer-convergence",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:main-writer-convergence",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-main-writer-convergence/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-01",
+      "matrix_ids": [
+        "MX-MAIN-WRITER-CONVERGENCE"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-AGENT-RUN-ABSORPTION-COMPLETENESS",
+      "status": "ADMITTED",
+      "name": "validate:agent-run-absorption-completeness",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:agent-run-absorption-completeness",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-agent-run-absorption-completeness/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-01",
+      "matrix_ids": [
+        "MX-AGENT-RUN-ABSORPTION-COMPLETENESS"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-FROZEN-OUTPUT-SHRINK-GUARD",
+      "status": "ADMITTED",
+      "name": "validation:frozen-shrink:self-test",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validation:frozen-shrink:self-test",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validation-frozen-shrink-self-test/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-01",
+      "matrix_ids": [
+        "MX-FROZEN-OUTPUT-SHRINK-GUARD"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 223,
+  "record_count": 226,
   "generated_at": "2026-08-08T23:30:00Z"
 }

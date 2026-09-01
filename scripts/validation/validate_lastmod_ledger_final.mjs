@@ -31,6 +31,25 @@
  * Rule 0: examining zero pages is a failure, not a pass. An empty ledger, a
  * ledger whose records carry no source_file, or a tree with no sitemaps would
  * otherwise sail through every loop above.
+ *
+ * TWO SCOPES, because arm A judges a commit and a pre-commit gate has not made
+ * one yet.
+ *
+ *   LASTMOD_LEDGER_SCOPE=committed (default) - the post-commit gate. Every arm
+ *     as described above. This is what Validate Repo runs, and it is unchanged.
+ *
+ *   LASTMOD_LEDGER_SCOPE=pending - the pre-commit gate, used by
+ *     .github/scripts/converge_tree_before_commit.sh. Here HEAD is the commit
+ *     being REPLACED, so arm A read literally would fail every lane that is in
+ *     the middle of repairing a stale ledger - it would block the one commit
+ *     that fixes main. Rather than skip it, arm A is sharpened: a page the
+ *     committed ledger misdescribes is acceptable ONLY if this run is rewriting
+ *     that page, i.e. the commit about to be made repairs it. A page the
+ *     committed ledger misdescribes that this run does NOT touch is a stale
+ *     record this commit would carry forward untouched, and stays a hard error.
+ *     That is strictly stronger than skipping arm A, and it is why this mode is
+ *     not a loosened gate. Pending mode additionally REQUIRES arm B to have run:
+ *     a pre-commit check that did not re-derive the ledger has proved nothing.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -41,6 +60,7 @@ const LANE_FILE = 'data/workflows/workflow_topology.json';
 const LANE = 'spry-content-release';
 const DERIVE_STAGE = 'sitemap:lastmod:content';
 const OUT = process.env.LASTMOD_LEDGER_FINAL_OUT || 'artifacts/validation/lastmod-ledger-final.json';
+const SCOPE = process.env.LASTMOD_LEDGER_SCOPE === 'pending' ? 'pending' : 'committed';
 
 const errors = [];
 const notes = [];
@@ -101,13 +121,43 @@ if (inGitRepo && ledgerTextAtHead) {
       examined += 1;
       if (got !== r.content_sha256) bad.push({ file: r.source_file, ledger: r.content_sha256, head: got, lastmod: r.lastmod });
     }
-    armA = { ran: true, pages_examined: examined, mismatched: bad.length, examples: bad.slice(0, 10) };
-    if (bad.length) {
+    armA = { ran: true, scope: SCOPE, pages_examined: examined, mismatched: bad.length, examples: bad.slice(0, 10) };
+    if (bad.length && SCOPE === 'committed') {
       errors.push(
         `${bad.length} of ${examined} committed page(s) do not match the ledger committed alongside them. `
         + 'The ledger was derived before a stage that rewrote these pages. Re-derive with '
         + '`npm run sitemap:lastmod:content` AFTER the last stage that mutates page HTML, and commit the result with the pages.',
       );
+    } else if (bad.length) {
+      // Pending scope. HEAD is the commit being replaced. A misdescribed page
+      // this run is rewriting will be correct in the commit about to be made;
+      // one it is NOT rewriting is a stale record this commit carries forward.
+      const pending = (() => {
+        try {
+          return new Set(
+            git(['status', '--porcelain', '--untracked-files=all'])
+              .split('\n').filter(Boolean)
+              .map((l) => l.slice(3).replace(/.* -> /, '')),
+          );
+        } catch { return null; }
+      })();
+      if (!pending) {
+        errors.push('pending scope could not read the pending change set, so it could not tell a repaired stale record from one being carried forward');
+      } else {
+        const carried = bad.filter((b) => !pending.has(b.file));
+        armA.repaired_by_this_run = bad.length - carried.length;
+        armA.carried_forward = carried.length;
+        armA.examples = carried.slice(0, 10);
+        if (carried.length) {
+          errors.push(
+            `${carried.length} of ${bad.length} page(s) the committed ledger misdescribes are NOT being rewritten by this run, `
+            + 'so the commit about to be made carries those stale records forward. Re-derive with '
+            + '`npm run sitemap:lastmod:content` AFTER the last stage that mutates page HTML.',
+          );
+        } else {
+          notes.push(`arm A (pending scope): all ${bad.length} page(s) the committed ledger misdescribes are rewritten by this run, so this commit repairs them`);
+        }
+      }
     }
     if (records.length && examined === 0) {
       errors.push('the ledger committed at HEAD names pages that HEAD does not contain; nothing was verified');
@@ -240,6 +290,11 @@ try {
 
 const pagesExamined = armA.pages_examined + armB.pages_examined;
 if (pagesExamined === 0) errors.push('no page was examined against the ledger; this validator refuses to pass on an empty loop (Rule 0)');
+// A pre-commit run that did not re-derive the ledger proved nothing: arm A is
+// deliberately forgiving in this scope, so arm B is the arm doing the work.
+if (SCOPE === 'pending' && !armB.ran) {
+  errors.push('pending scope ran without re-deriving the ledger (arm B did not run), so the only arm that judges the tree about to be committed verified nothing (Rule 0)');
+}
 if (coverage.resolvable === 0) errors.push('no sitemap URL resolved to a page on disk; the coverage check verified nothing (Rule 0)');
 
 // ------------------------------------------------------------------- report
@@ -247,6 +302,7 @@ if (coverage.resolvable === 0) errors.push('no sitemap URL resolved to a page on
 const report = {
   schema_version: '1.0',
   status: errors.length ? 'FAIL' : 'PASS',
+  scope: SCOPE,
   ledger: LEDGER_PATH,
   pages_examined: pagesExamined,
   committed_ledger_vs_committed_tree: armA,
@@ -264,4 +320,4 @@ if (errors.length) {
   for (const e of errors.slice(0, 20)) console.error(` - ${e}`);
   process.exit(1);
 }
-console.log(`[validate:lastmod-ledger-final] PASS: ${pagesExamined} page(s) hashed against the ledger; ${coverage.resolvable} sitemap URL(s) covered; ${laneOrdering.modes_checked} release mode(s) derive the ledger last.`);
+console.log(`[validate:lastmod-ledger-final] PASS (${SCOPE} scope): ${pagesExamined} page(s) hashed against the ledger; ${coverage.resolvable} sitemap URL(s) covered; ${laneOrdering.modes_checked} release mode(s) derive the ledger last.`);

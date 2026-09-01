@@ -84,7 +84,40 @@ regenerate_after_remote_advance() {
   run_governed_workflow_again
 }
 
+# CONVERGE BEFORE COMMITTING, AT THE CHOKE POINT.
+#
+# The convergence loop was originally added inline to spry-content-release.yml
+# by #46. That fixed one lane. On 2026-09-01 the identical defect returned
+# through daily-citation-intelligence.yml, which rewrote 2,018 page HTML files
+# and pushed them with no convergence and no ledger re-derivation - turning
+# Validate Repo, Spry Content Release and the Main Validation Sentinel red at
+# once.
+#
+# The argument this script already makes for validation dispatch applies without
+# change to convergence: every main-writing workflow routes its push through
+# here, so converging here covers all present writers and any future one for
+# free, and there is no per-workflow step an author can forget to add.
+#
+# It runs inside commit_generated_changes so it also covers the replay path -
+# regenerate_after_remote_advance re-runs the lane and comes back through here.
+#
+# A convergence failure must never be swallowed: an unconverged tree is exactly
+# what this exists to stop reaching main.
+converge_before_commit() {
+  local script
+  script="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/converge_tree_before_commit.sh"
+  if [ ! -x "$script" ]; then
+    echo "CONVERGENCE UNAVAILABLE for ${workflow_id}: ${script} is missing or not executable, so the tree about to be committed cannot be proved to be the generators' fixed point." >&2
+    return 1
+  fi
+  bash "$script" "$workflow_id"
+}
+
 commit_generated_changes() {
+  if ! converge_before_commit; then
+    echo "Refusing to commit for ${workflow_id}: the tree did not converge, so publishing it would land pages the downstream generators disagree with." >&2
+    exit 1
+  fi
   git add -A
   if git diff --cached --quiet; then
     echo "No generated changes to commit for ${workflow_id}"
