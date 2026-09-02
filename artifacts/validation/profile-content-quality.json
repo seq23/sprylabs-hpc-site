@@ -1,6 +1,6 @@
 {
   "profile": "content-quality",
-  "started_at": "2026-09-01T18:50:59.366Z",
+  "started_at": "2026-09-02T15:48:05.715Z",
   "steps": [
     {
       "id": "VAL-CITATION-REPAIR-REACH",
@@ -109,11 +109,23 @@
       "command": "npm run validate:agent-run-absorption-completeness",
       "exit_code": 0,
       "status": "PASS"
+    },
+    {
+      "id": "VAL-CLUSTER-SIGNAL-INTEGRITY",
+      "command": "npm run validate:cluster-signal-integrity",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-AUTHORITY-ADMISSION-HONESTY",
+      "command": "npm run validate:authority-admission-honesty",
+      "exit_code": 0,
+      "status": "PASS"
     }
   ],
   "status": "PASS",
   "failure_count": 0,
   "failures": [],
   "stopped_early_at": null,
-  "finished_at": "2026-09-01T18:51:16.734Z"
+  "finished_at": "2026-09-02T15:48:33.902Z"
 }
