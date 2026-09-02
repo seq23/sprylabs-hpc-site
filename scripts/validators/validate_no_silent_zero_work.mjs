@@ -36,6 +36,8 @@ const REQUIRED_LANE_ARTIFACTS = [
   'data/admin/zero_dollar_status.json',
   'data/search_intelligence/live_search_observations.json',
   'reports/fanout-coverage-info.json',
+  'artifacts/validation/authority-promotion-gate.json',
+  'artifacts/validation/authority-admission-gate.json',
 ];
 const seen = new Set();
 
@@ -139,6 +141,35 @@ check('reports/fanout-coverage-info.json', (d, rel) => {
   if (Number(d.informational_count || 0) !== found) errors.push(`${rel}: informational_count=${d.informational_count} but findings array holds ${found}. The reported count must be the real one.`);
   if (d.status === 'PASS' && found > 0) errors.push(`${rel}: status PASS while carrying ${found} finding(s). A hardcoded PASS hides findings that are attested as release evidence.`);
   if (Number(d.checked || 0) === 0) errors.push(`${rel}: checked=0 files. Examining nothing is a broken scan, not a pass.`);
+});
+
+// 8. Authority promotion: this lane SHOULD promote nothing on most days - a
+// cluster earning a whitepaper is rare, and the daily CI failure came from it
+// promoting on a timer instead of on evidence. So zero is the healthy outcome
+// and must stay green. What it may not do is go quiet: "nothing earned it" and
+// "the cluster memory vanished" both promote zero, and only a named stop tells
+// them apart.
+check('artifacts/validation/authority-promotion-gate.json', (d, rel) => {
+  const promoted = Number(d.promoted_count || 0);
+  if (promoted === 0 && !named(d.stop_reason)) errors.push(`${rel}: promoted 0 cluster(s) with no named stop_reason {code,message}. A lane that publishes nothing must say why, or a broken lane is indistinguishable from a quiet one.`);
+  if (promoted > 0 && !named(d.outcome)) errors.push(`${rel}: promoted ${promoted} cluster(s) with no named outcome {code,message}.`);
+  if (Number(d.clusters_tracked || 0) === 0) errors.push(`${rel}: clusters_tracked=0. The promotion gate considered no clusters at all, which is a broken input, not a quiet day.`);
+  // A promotion that did not clear the distinct-evidence floor is the exact
+  // defect that published the retired "State of ..." papers.
+  for (const p of d.promoted || []) {
+    if (!p.cluster_id) errors.push(`${rel}: a promoted entry carries no cluster_id.`);
+  }
+});
+
+// 9. Authority admission: refusing to admit a paper that cannot show demand is
+// correct behaviour, but it leaves a rendered page on disk that nothing owns, so
+// it has to be named rather than silently skipped.
+check('artifacts/validation/authority-admission-gate.json', (d, rel) => {
+  const admitted = Number(d.admitted_count || 0);
+  const refused = Number(d.refused_count || 0);
+  if (refused > 0 && !named(d.stop_reason)) errors.push(`${rel}: refused ${refused} paper(s) with no named stop_reason {code,message}. An unadmitted page still on disk must be visible.`);
+  if (admitted === 0 && refused === 0) errors.push(`${rel}: admitted 0 and refused 0. The admission pass examined no released paper at all, which means it ran over an empty queue while reporting success.`);
+  if (refused > 0 && (d.refused || []).some((r) => !r.path || !r.reason)) errors.push(`${rel}: a refused entry is missing path or reason, so the refusal cannot be acted on.`);
 });
 
 // The declared list and the checks actually wired up must not drift apart: a lane

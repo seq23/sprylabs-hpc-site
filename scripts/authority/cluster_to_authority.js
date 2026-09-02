@@ -6,6 +6,7 @@ const ROOT = process.cwd();
 const MEMORY = path.join(ROOT, 'data/content_clusters/cluster_memory.json');
 const QUEUE = path.join(ROOT, 'data/authority_paper_queue.json');
 const ROUTING = path.join(ROOT, 'data/community/content_routing_log.json');
+const STOP_REPORT = path.join(ROOT, 'artifacts/validation/authority-promotion-gate.json');
 const { CTA_TARGET, AUTHORITY_DOMAIN } = require('../lib/audience_frame');
 function read(file, fallback){ try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch { return fallback; } }
 function write(file, data){ fs.mkdirSync(path.dirname(file), {recursive:true}); fs.writeFileSync(file, JSON.stringify(data, null, 2) + '\n'); }
@@ -27,6 +28,45 @@ function scoreCluster(cluster, routes){
   const saturationBoost = cluster.saturation === 'authority_ready' ? 60 : cluster.saturation === 'saturated' ? 35 : cluster.saturation === 'rising' ? 15 : 0;
   return Math.max(potential, count * 2 + routeCount * 4 + saturationBoost);
 }
+// A score is not evidence on its own. Every whitepaper this lane published from
+// a thin cluster looked "ready" by score while resting on a single observation
+// repeated: "State of Coaching Accountability" was promoted at score 74 from ONE
+// distinct signal seen 18 times, and its sibling from one signal whose text had
+// been truncated mid-word ("...Calendar Cha"). The counting defect that inflated
+// those scores is fixed in scripts/lib/cluster_signal_ledger.js, but a threshold
+// that only ever reads a number will be fooled again by the next inflation bug.
+//
+// So promotion also requires a floor on DISTINCT observations, checked against
+// the ledger rather than the derived count, and a cluster id that is a whole
+// phrase rather than a truncated fragment. A cluster that clears the score but
+// not the evidence floor is refused by name, not silently skipped.
+const MIN_DISTINCT_SIGNALS = 12;
+
+function distinctSignals(cluster){
+  if (Array.isArray(cluster.signal_keys)) return new Set(cluster.signal_keys).size;
+  // No ledger means the count is unverifiable, not that it is zero. Refuse.
+  return null;
+}
+
+// The id is built by slugging observed text and cutting it to a length. A cut
+// landing mid-word yields a fragment that becomes a public page title - that is
+// where "...Calendar Cha" came from. update_content_clusters.js now cuts on a
+// word boundary, so this is a backstop against ids from any other source.
+//
+// It only fires on ids long enough to have BEEN truncated. Without that, a
+// short, entirely legitimate id ending in a small word ("focus-per-day") reads
+// as a fragment and the cluster is refused for no reason. A false refusal is
+// safe - it is reported by name and blocks only a promotion - but it is still
+// wrong, and a guard that cries wolf is one people switch off.
+const TRUNCATION_SUSPECT_LENGTH = 40;
+function looksTruncated(clusterId){
+  const id = String(clusterId || '');
+  if (id.length < TRUNCATION_SUSPECT_LENGTH) return false;
+  const tail = id.split('-').pop() || '';
+  return tail.length > 0 && tail.length <= 3 && /^[a-z]+$/.test(tail)
+    && !['os','ai','vs','how','why','the','and','for','app','job','gap','win','day','way','out','use','set','run','fix','tip','you','all','one','new','now','top','end','key'].includes(tail);
+}
+
 function promote({ minScore = 70, maxItems = 8 } = {}){
   const memory = read(MEMORY, { clusters: [] });
   const routing = read(ROUTING, { routes: [] });
@@ -34,12 +74,27 @@ function promote({ minScore = 70, maxItems = 8 } = {}){
   const existing = new Set((queue.items || []).map(i => i.cluster_id));
   const routes = Array.isArray(routing.routes) ? routing.routes : [];
   const created = [];
+  const refused = [];
   for (const cluster of (memory.clusters || [])) {
     const clusterId = cluster.cluster_id;
     if (!clusterId || existing.has(clusterId)) continue;
     const authority_score = scoreCluster(cluster, routes);
     const isReady = cluster.authority_ready || authority_score >= minScore || Number(cluster.signal_count || 0) >= 25;
     if (!isReady) continue;
+
+    const distinct = distinctSignals(cluster);
+    if (distinct === null) {
+      refused.push({ cluster_id: clusterId, authority_score, reason: 'no signal_keys ledger, so the score cannot be traced to distinct observations' });
+      continue;
+    }
+    if (distinct < MIN_DISTINCT_SIGNALS) {
+      refused.push({ cluster_id: clusterId, authority_score, distinct_signals: distinct, reason: `only ${distinct} distinct observation(s), below the floor of ${MIN_DISTINCT_SIGNALS}; a score alone is not evidence` });
+      continue;
+    }
+    if (looksTruncated(clusterId)) {
+      refused.push({ cluster_id: clusterId, authority_score, reason: 'cluster id ends in a truncated word fragment and would become a mangled public page title' });
+      continue;
+    }
     const cleanSlug = `state-of-${slug(clusterId)}`;
     const audiences = audienceCounts(routes, clusterId);
     const primary_audience = Object.entries(audiences).sort((a,b)=>b[1]-a[1])[0]?.[0] || 'executive';
@@ -66,13 +121,46 @@ function promote({ minScore = 70, maxItems = 8 } = {}){
     created.push(item);
     if (created.length >= maxItems) break;
   }
-  queue.generated_at = new Date().toISOString();
-  queue.policy = { trigger_based_authority: true, min_authority_score: minScore, max_promotions_per_run: maxItems, cta_target: CTA_TARGET };
+  if (created.length) queue.generated_at = new Date().toISOString();
+  else if (!queue.generated_at) queue.generated_at = new Date().toISOString();
+  queue.policy = { trigger_based_authority: true, min_authority_score: minScore, min_distinct_signals: MIN_DISTINCT_SIGNALS, max_promotions_per_run: maxItems, cta_target: CTA_TARGET };
   write(QUEUE, queue);
-  return { queue, created };
+
+  // Rule 0: this lane may legitimately promote nothing - most days it should -
+  // but it may not do that in silence. Promoting zero because no cluster has
+  // earned it is a NAMED STOP and is a green, correct outcome; promoting zero
+  // because the memory file vanished is not, and these two used to be
+  // indistinguishable from the outside. The artifact says which.
+  const considered = (memory.clusters || []).filter((c) => c.cluster_id && !existing.has(c.cluster_id)).length;
+  const stop = created.length
+    ? null
+    : considered === 0
+      ? { code: 'NO_UNQUEUED_CLUSTERS', message: `Every one of the ${(memory.clusters || []).length} tracked cluster(s) is already in the authority queue. Nothing to promote.` }
+      : refused.length
+        ? { code: 'NO_CLUSTER_CLEARED_THE_EVIDENCE_FLOOR', message: `${considered} unqueued cluster(s) considered; ${refused.length} scored high enough but were refused for want of evidence (e.g. ${refused[0].cluster_id}: ${refused[0].reason}). Publishing them is what produced the retired "State of ..." papers.` }
+        : { code: 'NO_CLUSTER_REACHED_THE_SCORE', message: `${considered} unqueued cluster(s) considered, none reached authority score ${minScore}, ${MIN_DISTINCT_SIGNALS} distinct signals, or authority_ready. This is the expected daily outcome.` };
+
+  write(STOP_REPORT, {
+    generated_at: new Date().toISOString(),
+    lane: 'authority-promotion',
+    status: created.length ? 'PASS' : 'NAMED_STOP',
+    clusters_tracked: (memory.clusters || []).length,
+    clusters_considered: considered,
+    promoted_count: created.length,
+    promoted: created.map((c) => ({ cluster_id: c.cluster_id, slug: c.slug, authority_score: c.authority_score })),
+    refused_count: refused.length,
+    refused,
+    min_authority_score: minScore,
+    min_distinct_signals: MIN_DISTINCT_SIGNALS,
+    outcome: created.length ? { code: 'PROMOTED', message: `${created.length} cluster(s) cleared both the score and the distinct-evidence floor.` } : null,
+    stop_reason: stop,
+  });
+
+  return { queue, created, refused, stop };
 }
 if (require.main === module) {
   const result = promote();
-  console.log(`cluster_to_authority: promoted ${result.created.length}; queue size ${result.queue.items.length}`);
+  const detail = result.stop ? ` — STOP ${result.stop.code}: ${result.stop.message}` : '';
+  console.log(`cluster_to_authority: promoted ${result.created.length}; refused ${result.refused.length}; queue size ${result.queue.items.length}${detail}`);
 }
 module.exports = { promote };
