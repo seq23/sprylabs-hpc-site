@@ -93,13 +93,51 @@ function loadDemandQueries(){
   return set;
 }
 
-function upsertReleasedAuthorityAdmission(queue){
-  const registry = readJson('data/content/page_admission_registry.json', {schema_version:'1.0', records:[]});
+// The admissibility rule lives here once, because two callers need the SAME
+// answer at two different moments: main() asks BEFORE rendering, and
+// upsertReleasedAuthorityAdmission asks before writing the registry record.
+//
+// It used to be asked only at the second moment, and that left a hole the shape
+// of the bug it was written to close. `generate()` writes whitepapers/<slug>.html
+// to disk; admission runs afterwards and, on refusal, does `continue`. The HTML
+// stays. So a paper the demand gate correctly refused was still a published page
+// - on disk, in the tree the release lane commits - and now invisible to
+// validate:demand-backed-pages, whose checks 2 and 3 walk the admission registry
+// the refusal just kept it out of.
+//
+// That is strictly worse than the failure it replaced. The old writer admitted
+// the page dishonestly and CI went red every day until someone fixed it. The
+// refusal path publishes the same unbacked page and CI goes green. Refusing to
+// render is the only refusal that actually refuses.
+function admissionGate(){
   const queries = readJson('data/citation/query_registry.json', {queries:[]}).queries || [];
   const queryByPage = new Map(queries.filter(q => q && q.release_status === 'ACTIVE' && q.primary_page).map(q => [q.primary_page, q]));
-  const byPath = new Map((registry.records || []).map(record => [record.path, record]));
   const sealed = loadSealedBaselineRoutes();
   const demandQueries = loadDemandQueries();
+
+  // Returns null if the paper may be admitted, or a refusal record explaining
+  // by name why it may not.
+  function refuse(item){
+    if (!item || !item.slug) return { path: 'whitepapers/<no slug>', reason: 'queue item carries no slug' };
+    const rel = `whitepapers/${item.slug}.html`;
+    const route = `/${rel}`;
+    const q = queryByPage.get(rel);
+    if (sealed.has(route)) return null; // pre-gate, exempt by the sealed baseline
+    if (!q) {
+      return { path: rel, reason: 'no ACTIVE entry in data/citation/query_registry.json; a primary_query invented from the paper title is the page justifying itself' };
+    }
+    if (!demandQueries.has(String(q.query || '').toLowerCase().trim())) {
+      return { path: rel, query: q.query, reason: 'registered query has no record in data/demand/measured_demand.json, so nothing shows anyone searches for it' };
+    }
+    return null;
+  }
+  return { queryByPage, sealed, refuse };
+}
+
+function upsertReleasedAuthorityAdmission(queue, gate, refusedBeforeRender = []){
+  const registry = readJson('data/content/page_admission_registry.json', {schema_version:'1.0', records:[]});
+  const { queryByPage, sealed, refuse } = gate;
+  const byPath = new Map((registry.records || []).map(record => [record.path, record]));
   let upserted = 0;
   const refused = [];
   for (const item of queue.items || []) {
@@ -110,18 +148,8 @@ function upsertReleasedAuthorityAdmission(queue){
     const q = queryByPage.get(rel);
     const isPreGate = sealed.has(route);
 
-    if (!isPreGate) {
-      // Post-baseline page. It must stand on a registered query that measured
-      // demand actually backs; no title fallback, because a title is not demand.
-      if (!q) {
-        refused.push({ path: rel, reason: 'no ACTIVE entry in data/citation/query_registry.json; a primary_query invented from the paper title is the page justifying itself' });
-        continue;
-      }
-      if (!demandQueries.has(String(q.query || '').toLowerCase().trim())) {
-        refused.push({ path: rel, query: q.query, reason: 'registered query has no record in data/demand/measured_demand.json, so nothing shows anyone searches for it' });
-        continue;
-      }
-    }
+    const refusal = refuse(item);
+    if (refusal) { refused.push(refusal); continue; }
 
     const primaryQuery = q?.query;
     if (!primaryQuery) {
@@ -169,27 +197,45 @@ function upsertReleasedAuthorityAdmission(queue){
   writeJson('artifacts/validation/authority-admission-gate.json', {
     generated_at: new Date().toISOString(),
     lane: 'authority-admission',
-    status: refused.length ? 'NAMED_STOP' : 'PASS',
+    status: (refused.length || refusedBeforeRender.length) ? 'NAMED_STOP' : 'PASS',
     admitted_count: upserted,
     refused_count: refused.length,
     refused,
+    // Refused BEFORE generate() ran, so no HTML was written. This is the
+    // preferred refusal: nothing is published that cannot be admitted.
+    refused_before_render_count: refusedBeforeRender.length,
+    refused_before_render: refusedBeforeRender,
     outcome: { code: 'ADMITTED', message: `${upserted} released authority paper(s) admitted against a registered query.` },
-    stop_reason: refused.length
-      ? { code: 'AUTHORITY_PAPER_NOT_DEMAND_BACKED', message: `${refused.length} released paper(s) were not admitted because they carry no demand-backed registered query. They are on disk but unadmitted; retire them or register real demand. Fabricating a primary_query from the title is what made the release red daily.` }
-      : null,
+    stop_reason: refusedBeforeRender.length
+      ? { code: 'AUTHORITY_PAPER_NOT_RENDERED_NOT_DEMAND_BACKED', message: `${refusedBeforeRender.length} promoted paper(s) were not rendered because they carry no demand-backed registered query. Nothing was written to disk, so nothing unadmitted was published. Register real demand for the query, or leave the cluster unpromoted.` }
+      : refused.length
+        ? { code: 'AUTHORITY_PAPER_NOT_DEMAND_BACKED', message: `${refused.length} released paper(s) were not admitted because they carry no demand-backed registered query. They are on disk but unadmitted; retire them or register real demand. Fabricating a primary_query from the title is what made the release red daily.` }
+        : null,
   });
   return { upserted, refused };
 }
 
 function main(){
   const { queue, created } = promote();
+  const gate = admissionGate();
   let rendered = 0;
   let skipped = 0;
   let repaired = 0;
+  const refusedBeforeRender = [];
 
   queue.items = (queue.items || []).map(item => {
     if (!item.slug || !item.cluster_id) return item;
     if (!shouldRender(item)) {
+      skipped += 1;
+      return item;
+    }
+
+    // Do not put on disk what cannot be honestly admitted. A refusal after
+    // rendering leaves the page published and unadmitted, which is the silent
+    // version of the failure this gate exists to make loud.
+    const refusal = gate.refuse(item);
+    if (refusal) {
+      refusedBeforeRender.push(refusal);
       skipped += 1;
       return item;
     }
@@ -211,10 +257,11 @@ function main(){
     calendar_release_is_fallback_only: true
   };
 
-  const { upserted, refused } = upsertReleasedAuthorityAdmission(queue);
+  const { upserted, refused } = upsertReleasedAuthorityAdmission(queue, gate, refusedBeforeRender);
   fs.writeFileSync('data/authority_paper_queue.json', JSON.stringify(queue, null, 2) + '\n');
   const detail = refused.length ? `; REFUSED ${refused.length} (not demand-backed: ${refused.map(r => r.path).join(', ')})` : '';
-  console.log(`authority: promoted ${created.length}; rendered ${rendered}; repaired ${repaired}; skipped ${skipped}; admitted ${upserted}${detail}`);
+  const preDetail = refusedBeforeRender.length ? `; NOT RENDERED ${refusedBeforeRender.length} (${refusedBeforeRender.map(r => r.path).join(', ')})` : '';
+  console.log(`authority: promoted ${created.length}; rendered ${rendered}; repaired ${repaired}; skipped ${skipped}; admitted ${upserted}${detail}${preDetail}`);
 }
 
 if (require.main === module) main();
