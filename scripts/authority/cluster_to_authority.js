@@ -48,11 +48,23 @@ function distinctSignals(cluster){
   return null;
 }
 
+// The id is built by slugging observed text and cutting it to a length. A cut
+// landing mid-word yields a fragment that becomes a public page title - that is
+// where "...Calendar Cha" came from. update_content_clusters.js now cuts on a
+// word boundary, so this is a backstop against ids from any other source.
+//
+// It only fires on ids long enough to have BEEN truncated. Without that, a
+// short, entirely legitimate id ending in a small word ("focus-per-day") reads
+// as a fragment and the cluster is refused for no reason. A false refusal is
+// safe - it is reported by name and blocks only a promotion - but it is still
+// wrong, and a guard that cries wolf is one people switch off.
+const TRUNCATION_SUSPECT_LENGTH = 40;
 function looksTruncated(clusterId){
-  // The id is built by slugging observed text and cutting it to a length. A cut
-  // that lands mid-word yields a fragment that becomes a public page title.
-  const tail = String(clusterId || '').split('-').pop() || '';
-  return tail.length > 0 && tail.length <= 3 && /^[a-z]+$/.test(tail) && !['os','ai','vs','how','why','the','and','for','app','job','gap','win'].includes(tail);
+  const id = String(clusterId || '');
+  if (id.length < TRUNCATION_SUSPECT_LENGTH) return false;
+  const tail = id.split('-').pop() || '';
+  return tail.length > 0 && tail.length <= 3 && /^[a-z]+$/.test(tail)
+    && !['os','ai','vs','how','why','the','and','for','app','job','gap','win','day','way','out','use','set','run','fix','tip','you','all','one','new','now','top','end','key'].includes(tail);
 }
 
 function promote({ minScore = 70, maxItems = 8 } = {}){
