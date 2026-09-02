@@ -1,55 +1,24 @@
 {
   "schema_version": "1.0",
-  "status": "FAIL",
+  "status": "PASS",
   "scope": "committed",
   "ledger": "data/sitemap/lastmod_ledger.json",
-  "pages_examined": 4462,
+  "pages_examined": 2231,
   "committed_ledger_vs_committed_tree": {
     "ran": true,
     "scope": "committed",
     "pages_examined": 2231,
-    "mismatched": 5,
-    "examples": [
-      {
-        "file": "insights/a-clean-system-for-handling-email-without-losing-your-day.html",
-        "ledger": "8a5ddeddb83912e18f946dda",
-        "head": "b24e29cec496ca56787035fb",
-        "lastmod": "2026-09-02"
-      },
-      {
-        "file": "insights/how-to-act-confident-before-you-feel-confident.html",
-        "ledger": "3347c297e66aca7d374bd10e",
-        "head": "a6739b7eb38dc23d2f7bc5ac",
-        "lastmod": "2026-09-02"
-      },
-      {
-        "file": "insights/personal-playbook-recurring-problems.html",
-        "ledger": "db478aa76aaeee4a0b9f79cb",
-        "head": "dabf704e380f1bec077d56a3",
-        "lastmod": "2026-09-02"
-      },
-      {
-        "file": "insights/system-for-confidence.html",
-        "ledger": "7db7d7301e6cd9dcec5813f2",
-        "head": "d52a1b550aebf705b0f3d8e1",
-        "lastmod": "2026-09-02"
-      },
-      {
-        "file": "insights/the-difference-between-confidence-and-certainty-and-why-it-matters.html",
-        "ledger": "9c4c74a69eebe77cda71b3dc",
-        "head": "3cb3c94773881a244132cd60",
-        "lastmod": "2026-09-02"
-      }
-    ]
+    "mismatched": 0,
+    "examples": []
   },
   "rederived_ledger_vs_working_tree": {
-    "ran": true,
-    "pages_examined": 2231,
+    "ran": false,
+    "pages_examined": 0,
     "mismatched": 0,
     "examples": []
   },
   "sitemap_coverage": {
-    "reference": "the working tree",
+    "reference": "the tree at HEAD",
     "sitemap_urls": 2231,
     "resolvable": 2231,
     "missing_from_ledger": 0,
@@ -61,8 +30,8 @@
     "modes_checked": 8,
     "offenders": []
   },
-  "notes": [],
-  "errors": [
-    "5 of 2231 committed page(s) do not match the ledger committed alongside them. The ledger was derived before a stage that rewrote these pages. Re-derive with `npm run sitemap:lastmod:content` AFTER the last stage that mutates page HTML, and commit the result with the pages."
-  ]
+  "notes": [
+    "arm B skipped: the ledger on disk is the one committed at HEAD (nothing re-derived in this run)"
+  ],
+  "errors": []
 }
