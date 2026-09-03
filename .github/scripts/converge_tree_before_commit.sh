@@ -88,14 +88,46 @@ echo "[converge] ${governed_count} governed surface path(s) pending out of ${pen
 # cadence gate and the accept step see the converged tree, and once again from
 # commit_and_push_if_changed.sh, which is the choke point that covers every
 # other writer. A second full convergence would cost another build:all for
-# nothing. So re-entry runs the two checks that DEFINE the fixed point - the
-# surface guard and the pending-scope ledger - and skips the loop only when both
-# actually pass. That is a verified skip, not a cached one: if anything moved the
-# tree since the first call, the guard fails here and the loop runs.
-if npm run validate:extraction-surface-guard:check >/dev/null 2>&1 \
+# nothing, so re-entry may skip the loop - but only on a proof that holds.
+#
+# THE GUARD CHECK ALONE IS NOT THAT PROOF. It compares the tree against the
+# snapshot rebaselined at the start of the last pass, so it answers "has the tree
+# moved since then", not "would the generators move it now". Those are the same
+# question only while the generators' INPUTS are also unchanged, and steps
+# between the two calls change inputs without touching a governed surface:
+# authority:scale:freeze rewrites the frozen output registry, clear-scope empties
+# the active mutation scope, ownership:build and admin:build rewrite the
+# registries under data/.
+#
+# Reproduced on 326908929. The release lane converged, froze, rebuilt ownership
+# and admin, and this fast path then reported already_converged on a verified
+# guard pass. The tree it let through was committed - and Validate Repo, running
+# the identical producer sequence on a fresh checkout, moved 50 governed
+# surfaces and went red. The skip was wrong and the guard could not see it.
+#
+# So the skip now additionally requires that NOTHING in the repository has been
+# written since the convergence that claimed the fixed point. That marker is the
+# only thing that makes "the inputs have not moved either" a fact rather than an
+# assumption. It can only cause more convergence than before, never less.
+MARKER='.validation-runtime/converged.marker'
+unchanged_since_convergence() {
+  [ -f "$MARKER" ] || return 1
+  [ -z "$(find . \
+      -path ./node_modules -prune -o \
+      -path ./.git -prune -o \
+      -path ./.validation-runtime -prune -o \
+      -newer "$MARKER" -type f -print -quit)" ]
+}
+
+if unchanged_since_convergence \
+   && npm run validate:extraction-surface-guard:check >/dev/null 2>&1 \
    && LASTMOD_LEDGER_SCOPE=pending npm run validate:lastmod-ledger-final >/dev/null 2>&1; then
-  echo "[converge] STOP already_converged (${caller}): the surface guard and the pending-scope lastmod ledger both pass against this tree, so it is already the generators' fixed point. Re-running build:all would change nothing."
+  echo "[converge] STOP already_converged (${caller}): nothing has been written to the repository since the convergence that established the fixed point, and the surface guard and the pending-scope lastmod ledger both pass against this tree. Re-running build:all would change nothing."
   exit 0
+fi
+
+if [ -f "$MARKER" ]; then
+  echo "[converge] re-entry is NOT a skip (${caller}): the repository has been written to since the last convergence, so the generators' inputs have moved and the fixed point has to be re-established."
 fi
 
 converged=
@@ -141,3 +173,9 @@ echo "::group::re-derive the lastmod ledger against the converged tree"
 npm run sitemap:lastmod:content
 echo "::endgroup::"
 LASTMOD_LEDGER_SCOPE=pending npm run validate:lastmod-ledger-final
+
+# Stamped LAST, after every write this script makes. A later call may skip the
+# loop only while nothing in the repository is newer than this file; see the
+# re-entry test above for why the guard check alone could not carry that claim.
+mkdir -p "$(dirname "$MARKER")"
+: > "$MARKER"
