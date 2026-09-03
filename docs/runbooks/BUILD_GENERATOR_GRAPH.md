@@ -68,9 +68,10 @@ after pass N" in its logs means N repeats of this entire chain.
   `build_navigation_structure.mjs` reads `data/citation/citable_pages.json`
   (written earlier in the chain) and then walks the page tree with
   `fs.readdirSync` over the content directories, reading and rewriting each
-  page's HTML in place (`scripts/internal/build_navigation_structure.mjs:174-366,431-555`).
+  page's HTML in place (`scripts/internal/build_navigation_structure.mjs`,
+  lines 174-366 and 431-555).
   `build_visible_faq_sections.py` does the same with `ROOT.rglob("*.html")`
-  over the entire tree (`scripts/content/build_visible_faq_sections.py:501`).
+  over the entire tree (`scripts/content/build_visible_faq_sections.py`, line 501).
   Neither is scoped to "pages touched by this run" — each reads and can
   rewrite every page on disk, every time. This is the exact mechanism behind
   the FROZEN_OUTPUT_MATERIAL_SHRINK defect: a byte count taken between step 3
