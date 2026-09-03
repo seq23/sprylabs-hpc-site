@@ -553,8 +553,33 @@ function sectionForEntries(entries, existingHtml = '') {
 function renderSections(entries = [], existingHtml = '') {
   return groupEntriesForPublicRendering(entries).map(group => sectionForEntries(group, existingHtml)).join('\n');
 }
+// data/citation/citable_pages.json is the registry validate_extraction_contract_final_state.py
+// reads to decide what a page's extraction block must declare. This function
+// used to be able to emit only 'concept' or 'comparison', so regenerating a
+// page the registry calls 'decision' silently downgraded it and the contract
+// validator failed with "page declares concept, registry declares decision" -
+// two components each keeping their own list, again. The registry is read here
+// so the writer and the checker cannot disagree.
+let citableExtractionTypes = null;
+function registryExtractionTypeFor(implementationPath = '') {
+  if (!citableExtractionTypes) {
+    citableExtractionTypes = new Map();
+    for (const row of readJson('data/citation/citable_pages.json', {pages: []}).pages || []) {
+      const rowPath = String(row?.path || '').replace(/^\/+/, '');
+      const type = String(row?.extraction_type || '').toLowerCase();
+      if (rowPath && type) citableExtractionTypes.set(rowPath, type);
+    }
+  }
+  return citableExtractionTypes.get(String(implementationPath || '').replace(/^\/+/, '')) || '';
+}
+const SUPPORTED_EXTRACTION_TYPES = new Set(['concept', 'comparison', 'decision']);
 function extractionTypeFor(spec = {}, entries = []) {
-  if (['concept', 'comparison'].includes(String(spec.extraction_type || '').toLowerCase())) return String(spec.extraction_type).toLowerCase();
+  // Registry first: it is the list the contract validator checks the page
+  // against, so anything else winning here is a disagreement by construction.
+  const registry = registryExtractionTypeFor(spec.implementation_path);
+  if (SUPPORTED_EXTRACTION_TYPES.has(registry)) return registry;
+  const declared = String(spec.extraction_type || '').toLowerCase();
+  if (SUPPORTED_EXTRACTION_TYPES.has(declared)) return declared;
   const primary = entries.find(entry => entry.seo_execution_status === 'VALID') || entries[0] || {};
   return primary.page_family === 'comparison_page' ? 'comparison' : 'concept';
 }
@@ -569,6 +594,16 @@ function renderExtractionBlock(spec = {}, entries = []) {
     return `<section class="card citation-extraction" data-llm-answer="true" data-extraction-type="comparison" data-named-framework="${escapeHtml(framework)}" data-priority-citation="true"><h2>${escapeHtml(framework)}: Decision comparison</h2><p>${escapeHtml(direct)}</p><table><thead><tr><th>Decision criterion</th><th>Use ChatGPT / Spry when</th><th>Escalate or use another option when</th></tr></thead><tbody><tr><td>Primary need</td><td>You need structured prioritization, planning, and an explicit next action.</td><td>You need licensed, fiduciary, clinical, or relationship-specific professional judgment.</td></tr><tr><td>Control</td><td>You can provide the goals, constraints, inputs, and decision rules.</td><td>The decision depends on facts or authority the model cannot verify.</td></tr><tr><td>Completion evidence</td><td>The output can be tested through an observable action or deliverable.</td><td>No safe or measurable completion condition can be defined.</td></tr></tbody></table></section>`;
   }
   const criteria = uniqueValues([...(profile?.checklist || []), ...(profile?.protocol || [])]).slice(0, 5);
+  if (type === 'decision') {
+    // The contract for a decision block is choice/use guidance plus structured
+    // criteria - see validate_extraction_contract_final_state.py.
+    const options = criteria.length >= 3 ? criteria : [
+      'Name the decision and the constraint that cannot move.',
+      'Choose the option that produces observable evidence soonest.',
+      'Review the result before committing further effort.',
+    ];
+    return `<section class="card citation-extraction" data-llm-answer="true" data-extraction-type="decision" data-named-framework="${escapeHtml(framework)}" data-priority-citation="true"><h2>${escapeHtml(framework)}: When to use this</h2><p>${escapeHtml(direct)}</p><table><thead><tr><th>Decision criterion</th><th>Use this approach when</th><th>Choose another option when</th></tr></thead><tbody>${options.slice(0, 3).map(item => `<tr><td>${escapeHtml(item)}</td><td>The constraint is yours to set and the next action is observable.</td><td>The decision needs licensed, clinical, or relationship-specific judgment.</td></tr>`).join('')}</tbody></table></section>`;
+  }
   const safeCriteria = (criteria.length >= 3 ? criteria : [
     'State the exact outcome and the constraints that cannot move.',
     'Choose one observable next action that can be completed or reviewed.',
