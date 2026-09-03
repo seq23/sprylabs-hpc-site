@@ -566,3 +566,147 @@ export function digestManifest(entry) {
     },
   };
 }
+
+// ---------------------------------------------------------------------------
+// Raw evidence vs derived output.
+//
+// These two have opposite lifecycles and used to sit in one hash-pinned tier,
+// which meant the guard could only be right about one of them:
+//
+//   RAW agent evidence (bhpc.csv / bhpc.html / bhpc.json, and the fields the
+//   external agent declared in its own manifest) is a record of fact. It is
+//   what the agent actually sent. A byte change there is a defect - tampering,
+//   corruption, or a rewrite that destroys the audit trail. Pinning it by hash
+//   asserts something TRUE of it.
+//
+//   DERIVED absorber output (normalized_agent_runs/*.json, and the fields this
+//   absorber writes back into the manifest) is a function of raw evidence plus
+//   the current normalization contract. It is SUPPOSED to change when the
+//   contract changes. Pinning it by hash asserts something that is not true of
+//   it, so every legitimate contract bump fired the guard - and a guard that
+//   fires on legitimate work trains its reader to re-pin reflexively.
+//
+// So derived output is not hash-pinned. It is asserted REPRODUCIBLE: re-derived
+// from raw through the very builders below - the ones the absorber itself calls,
+// so there is no second copy of the rule to drift - and compared field for
+// field. That never false-fires on a contract change, and it catches what a hash
+// pin cannot: a hand-edited or stale derivative that no longer matches the raw
+// evidence it claims to come from. A hash pin passes that the moment someone
+// re-pins it; re-derivation fails it every time.
+// ---------------------------------------------------------------------------
+
+// Bumped when the MEANING of a normalized record changes, which is what makes
+// an already-ABSORBED run re-normalize instead of standing on a stale file.
+// 1.5: classifyRow now resolves intended_winner_path from the intended winner
+// URL in preference to a hand-typed repo_file_path, and records the overridden
+// declared path. Without this bump the 13 runs already marked ABSORBED would
+// keep the routing the defect produced, and the fix would change nothing.
+export const NORMALIZATION_CONTRACT_VERSION = '1.5-intended-winner-url-precedence';
+export const NORMALIZED_SCHEMA_VERSION = '1.4';
+
+// Wall-clock stamps. They differ on every run by design, so they are excluded
+// from the reproducibility comparison rather than being a reason to abandon it.
+export const NORMALIZED_VOLATILE_FIELDS = ['generated_at'];
+export const MANIFEST_VOLATILE_FIELDS = ['absorbed_at'];
+
+// The manifest is the one file that is half raw and half derived: the agent
+// declares source/run_date/csv_path/html_path, and the absorber writes the rest
+// back over the top of it. Splitting by FILE would have handed one half of a
+// half-raw file the wrong lifecycle either way, so the split is by FIELD. These
+// are the absorber-written ones; everything else in the manifest is the agent's
+// own declaration and stays hash-pinned.
+export const MANIFEST_ABSORBER_WRITTEN_FIELDS = [
+  'scope',
+  'status',
+  'absorbed_at',
+  'absorbed_record_count',
+  'normalized_path',
+  'social_run_path',
+  'exact_implementation_policy',
+  'json_path',
+];
+
+export function agentDeclaredManifestFields(manifest = {}) {
+  const written = new Set(MANIFEST_ABSORBER_WRITTEN_FIELDS);
+  return Object.fromEntries(Object.entries(manifest || {}).filter(([key]) => !written.has(key)));
+}
+
+// Key-order-independent, and it drops undefined-valued keys the way
+// JSON.stringify does. Without that a re-derived record carrying an explicit
+// `undefined` would compare unequal to the byte-identical JSON on disk, which
+// is a false difference: the file it would be serialized to is the same file.
+export function canonicalJson(value) {
+  if (Array.isArray(value)) return `[${value.map(item => canonicalJson(item === undefined ? null : item)).join(',')}]`;
+  if (value && typeof value === 'object') {
+    return `{${Object.keys(value).sort().filter(key => value[key] !== undefined).map(key => `${JSON.stringify(key)}:${canonicalJson(value[key])}`).join(',')}}`;
+  }
+  return JSON.stringify(value === undefined ? null : value);
+}
+
+export function canonicalSha256(value) {
+  return crypto.createHash('sha256').update(canonicalJson(value)).digest('hex');
+}
+
+export function withoutFields(value, fields = []) {
+  const copy = {...(value || {})};
+  for (const field of fields) delete copy[field];
+  return copy;
+}
+
+// Whether the absorber would regenerate this run's derived output under the
+// current exact-implementation policy. LIVE runs are the ones re-derivation can
+// assert; runs before the cutover are deliberately never re-normalized, so their
+// derived output is genuinely frozen and a hash pin is TRUE of it. The frozen
+// set is read from the policy rather than hand-listed, so a tier cannot quietly
+// be used to opt a live run out of re-derivation.
+export function policyRenormalizesRun(entry, policy = loadExactPolicy()) {
+  if (manifestAllowedByExactPolicy(entry, policy)) return true;
+  if (entry.manifest?.status !== 'ABSORBED') return false;
+  if (policy.retroactive_processing === false && entry.runDate && policy.effective_from && entry.runDate < policy.effective_from) return false;
+  return true;
+}
+
+// The single definition of a normalized record. The absorber writes it; the
+// reproducibility validator re-derives it. One function, so the validator can
+// never be asserting a shape the producer stopped producing.
+export function buildNormalizedRecord({entry, digest, scope, generatedAt}) {
+  return {
+    schema_version: NORMALIZED_SCHEMA_VERSION,
+    normalization_contract_version: NORMALIZATION_CONTRACT_VERSION,
+    source: entry.manifest.source || 'twin_agent',
+    run_date: entry.runDate,
+    scope,
+    generated_at: generatedAt,
+    exact_implementation_policy: EXACT_POLICY_PATH,
+    artifact_shape: digest.artifact_shape,
+    csv_path: digest.csvRel || null,
+    html_path: digest.htmlRel || null,
+    json_path: digest.jsonRel || null,
+    csv_sha256: digest.csv_sha256,
+    html_sha256: digest.html_sha256,
+    json_sha256: digest.json_sha256,
+    json_scoreboard: digest.json_scoreboard,
+    record_count: digest.rows.length,
+    page_spec_count: digest.page_specs.length,
+    seo_execution_count: digest.json_seo_execution_count || 0,
+    site_health: digest.site_health,
+    records: digest.rows,
+    page_specs: digest.page_specs,
+  };
+}
+
+// The single definition of the absorber's manifest overlay, for the same reason.
+export function buildAbsorbedManifest({entry, digest, scope, normalizedRel, socialRel, absorbedAt}) {
+  const manifest = {
+    ...entry.manifest,
+    scope,
+    status: 'ABSORBED',
+    absorbed_at: absorbedAt,
+    absorbed_record_count: digest.rows.length,
+    normalized_path: normalizedRel,
+    social_run_path: socialRel,
+    exact_implementation_policy: EXACT_POLICY_PATH,
+  };
+  if (digest.jsonRel) manifest.json_path = digest.jsonRel;
+  return manifest;
+}

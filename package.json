@@ -228,7 +228,7 @@
     "validate:workflow-write-scopes": "node scripts/validators/validate_workflow_write_scopes.mjs",
     "release:zero-dollar-autonomous": "npm run authority:scale:fanout && npm run authority:yield:build && npm run ownership:build && npm run strategy:gate && npm run firehose:collect && npm run firehose:normalize && npm run firehose:health && npm run signals:cluster && npm run signals:score && npm run signals:candidates && npm run release:plan && npm run authority:scale:prepare-scope && npm run authority:scale:restore && npm run repair:citation-contract-surfaces && npm run release:content:intelligence && npm run repair:citation-contract-surfaces && npm run citation:self-heal && npm run validate:citation-contract && npm run validate:citation-repair-reach && npm run release:daily-proof && npm run admin:build && npm run authority:scale:prepare-drift-scope && npm run authority:scale:freeze && npm run authority:scale:clear-scope && npm run validate:authority-scale",
     "workflow:zero-dollar-autonomous": "npm run release:zero-dollar-autonomous",
-    "validate:full-safe-autonomy": "npm run validate:ownership && npm run safe-harbor:validate && npm run validate:workflow-write-scopes && npm run validate:knowledge-map-route",
+    "validate:full-safe-autonomy": "npm run validate:ownership && npm run validate:derived-absorber-reproducibility && npm run safe-harbor:validate && npm run validate:workflow-write-scopes && npm run validate:knowledge-map-route",
     "validate:admin-github-bridge": "node scripts/validators/validate_admin_github_bridge.mjs",
     "schema:repair-parity": "node scripts/validation/python_runtime.mjs run scripts/citation/repair_schema_parity.py",
     "validate:artifact-consistency-e2e": "node scripts/validators/validate_artifact_consistency_e2e.mjs",
@@ -376,7 +376,9 @@
     "validation:frozen-shrink:self-test": "node scripts/validation/self_test_frozen_output_shrink_guard.mjs",
     "validate:cluster-signal-integrity": "node scripts/validators/validate_cluster_signal_integrity.mjs",
     "validate:authority-admission-honesty": "node scripts/validators/validate_authority_admission_honesty.mjs",
-    "validate:agent-artifact-absorption-trigger": "node scripts/validators/validate_agent_artifact_absorption_trigger.mjs"
+    "validate:agent-artifact-absorption-trigger": "node scripts/validators/validate_agent_artifact_absorption_trigger.mjs",
+    "protected-baseline:rebaseline": "node scripts/validation/rebaseline_protected_evidence.mjs",
+    "validate:derived-absorber-reproducibility": "node scripts/validators/validate_derived_absorber_reproducibility.mjs"
   },
   "engines": {
     "node": ">=24.0.0"

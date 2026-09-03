@@ -2237,9 +2237,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-DERIVED-ABSORBER-REPRODUCIBILITY",
+      "validation_id": "VAL-DERIVED-ABSORBER-REPRODUCIBILITY",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:derived-absorber-reproducibility",
+      "order": 215,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 223,
+  "entry_count": 224,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2737,6 +2747,10 @@
         {
           "id": "AGENT-BHPC-ACCEPTANCE-VISIBILITY",
           "command": "npm run agent:bhpc:self-test-acceptance-visibility"
+        },
+        {
+          "id": "VAL-DERIVED-ABSORBER-REPRODUCIBILITY",
+          "command": "npm run validate:derived-absorber-reproducibility"
         }
       ]
     },
