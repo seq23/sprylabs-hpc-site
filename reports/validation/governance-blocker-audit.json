@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-09-03T07:14:28.083Z",
+  "generated_at": "2026-09-03T12:54:27.041Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 219,
+  "admitted_hard_fail_count": 222,
   "reviewed_count": 8,
-  "unreviewed_count": 211,
+  "unreviewed_count": 214,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 170,
+    "REVIEW_REQUIRED": 173,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 26,
     "REVIEW_WARNING_BOUNDARY": 15
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 170,
+    "REVIEW_REQUIRED": 173,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 26,
     "REVIEW_WARNING_BOUNDARY": 7
   },
   "migration_status_counts": {
-    "UNREVIEWED": 211,
+    "UNREVIEWED": 214,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -3328,6 +3328,51 @@
         "MX-AUTHORITY-PAPER-DISK-REGISTRY-PARITY"
       ],
       "suggested_review": "EXISTING_REPAIR_AVAILABLE",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-CONVERGENCE-REENTRY-SOUNDNESS",
+      "name": "validate:convergence-reentry-soundness",
+      "command": "npm run validate:convergence-reentry-soundness",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-CONVERGENCE-REENTRY-SOUNDNESS"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-LASTMOD-DERIVATION-RECEIPT",
+      "name": "validate:lastmod-derivation-receipt",
+      "command": "npm run validate:lastmod-derivation-receipt",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-LASTMOD-DERIVATION-RECEIPT"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-NAMED-STOP-EXIT-CODE",
+      "name": "validate:named-stop-exit-code",
+      "command": "npm run validate:named-stop-exit-code",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-NAMED-STOP-EXIT-CODE"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",
       "decision": null,
       "evidence": []

@@ -1,0 +1,33 @@
+{
+  "schema_version": "1.0",
+  "validator": "validate:health-boundary-reach",
+  "generated_at": "2026-09-03T12:49:12.951Z",
+  "gate": "validate:programmatic-admission",
+  "producer": "repair:health-boundary",
+  "lanes_examined": 3,
+  "lanes": [
+    {
+      "lane": "release:agent-intake",
+      "gate_step_index": 44,
+      "producer_step_index": 43,
+      "compliant": true
+    },
+    {
+      "lane": "release:batch-f-agent-continuity",
+      "gate_step_index": 45,
+      "producer_step_index": 44,
+      "compliant": true
+    },
+    {
+      "lane": "release:content-finalize",
+      "gate_step_index": 12,
+      "producer_step_index": 11,
+      "compliant": true
+    }
+  ],
+  "health_adjacent_pages_examined": 494,
+  "pages_missing_boundary": 0,
+  "pages_missing_boundary_paths": [],
+  "status": "PASS",
+  "failures": []
+}

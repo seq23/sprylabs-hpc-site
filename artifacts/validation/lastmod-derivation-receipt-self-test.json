@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0",
+  "self_test": "lastmod-derivation-receipt",
+  "generated_at": "2026-09-03T12:49:16.319Z",
+  "assertions_executed": 9,
+  "assertions": [
+    {
+      "assertion": "the receipt is written even when the derivation changed nothing",
+      "passed": true,
+      "detail": "expected a receipt at artifacts/validation/lastmod-derivation-receipt.json"
+    },
+    {
+      "assertion": "a receipt matching the ledger on disk is accepted",
+      "passed": true,
+      "detail": "the predicate refused a receipt whose hash matches the ledger it was written for"
+    },
+    {
+      "assertion": "a receipt that does not match the ledger on disk is refused",
+      "passed": true,
+      "detail": "a stale receipt was accepted, so it could stand in for a derivation that never happened"
+    },
+    {
+      "assertion": "a receipt is refused when there is no ledger text to compare",
+      "passed": true,
+      "detail": "the predicate accepted a receipt with nothing to compare it against"
+    },
+    {
+      "assertion": "the recorded hash is the hash of the ledger text",
+      "passed": true,
+      "detail": "the receipt records a hash that is not the ledger it describes"
+    },
+    {
+      "assertion": "a malformed receipt is refused",
+      "passed": true,
+      "detail": "an unparseable receipt was treated as proof of a derivation"
+    },
+    {
+      "assertion": "the derivation writes the receipt outside the ledger-changed branch",
+      "passed": true,
+      "detail": "writeLedgerDerivationReceipt must run on every derivation; guarding it on ledgerChanged reinstates the defect exactly"
+    },
+    {
+      "assertion": "arm B admits a derivation on the receipt",
+      "passed": true,
+      "detail": "the guard must consult ledgerDerivationReceipt; without it the HEAD-difference proxy is back"
+    },
+    {
+      "assertion": "arm B still runs when the receipt is absent but the ledger differs from HEAD",
+      "passed": true,
+      "detail": "the HEAD-difference fallback must stay for callers that derive outside this path"
+    }
+  ],
+  "status": "PASS",
+  "failures": []
+}

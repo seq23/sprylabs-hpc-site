@@ -1,0 +1,46 @@
+{
+  "schema_version": "1.0",
+  "self_test": "convergence-reentry-soundness",
+  "generated_at": "2026-09-03T12:49:16.051Z",
+  "script": ".github/scripts/converge_tree_before_commit.sh",
+  "assertions_executed": 7,
+  "assertions": [
+    {
+      "assertion": "marker with nothing newer permits the skip",
+      "passed": true,
+      "detail": "find reported \"\""
+    },
+    {
+      "assertion": "a write after the marker refuses the skip",
+      "passed": true,
+      "detail": "find reported \"./data-registry.json\"; expected it to name the newer file"
+    },
+    {
+      "assertion": "no marker refuses the skip",
+      "passed": true,
+      "detail": "find reported \"NOMARKER\""
+    },
+    {
+      "assertion": "the skip branch is gated on the freshness predicate",
+      "passed": true,
+      "detail": "the `if` that prints already_converged must call unchanged_since_convergence before the guard and ledger checks"
+    },
+    {
+      "assertion": "the freshness predicate is defined",
+      "passed": true,
+      "detail": "unchanged_since_convergence must compare the tree against $MARKER with find -newer"
+    },
+    {
+      "assertion": "the marker is stamped after the last write the script makes",
+      "passed": true,
+      "detail": "marker stamped at offset 10766, ledger re-derivation at 10467; the stamp must come last or it certifies a tree the script then changes"
+    },
+    {
+      "assertion": "the skip is not reachable without the marker",
+      "passed": true,
+      "detail": "unchanged_since_convergence must refuse when no marker exists"
+    }
+  ],
+  "status": "PASS",
+  "failures": []
+}

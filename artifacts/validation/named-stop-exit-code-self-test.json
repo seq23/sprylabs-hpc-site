@@ -1,0 +1,51 @@
+{
+  "schema_version": "1.0",
+  "self_test": "named-stop-exit-code",
+  "generated_at": "2026-09-03T12:49:16.946Z",
+  "script": ".github/scripts/converge_tree_before_commit.sh",
+  "assertions_executed": 8,
+  "assertions": [
+    {
+      "assertion": "a clean tree stops at no_pending_changes and exits 0",
+      "passed": true,
+      "detail": "exit 0; output \"[converge] STOP no_pending_changes (self-test): the working tree is clean, so there is no tree to converge and nothing will be committed.\\n\""
+    },
+    {
+      "assertion": "41 pending non-governed path(s) stop at no_governed_surface_pending and exit 0",
+      "passed": true,
+      "detail": "exit 0; output \"[converge] STOP no_governed_surface_pending (self-test): 41 pending path(s), none of which is page HTML, a citation/admission registry, or a sitemap.\\n[converge] Nothing the extraction-surface guard hashes or the lastmod ledger describes can have changed, so the committed tree stays at the fixed point it already had.\\n[converge] Pending paths:\\n  - artifacts/validation/a-fairly-long-generated-report-name-0.json\\n  - artifacts/validation/a-fairly-long-generated-report-name-1.json\\n  - artifacts/validation/a-fairly-long-generated-report-name-10.json\\n  - artifacts/validation/a-fairly-long-generated-re\""
+    },
+    {
+      "assertion": "41 pending non-governed path(s) leave no broken-pipe damage in the stop",
+      "passed": true,
+      "detail": "output \"[converge] STOP no_governed_surface_pending (self-test): 41 pending path(s), none of which is page HTML, a citation/admission registry, or a sitemap.\\n[converge] Nothing the extraction-surface guard hashes or the lastmod ledger describes can have changed, so the committed tree stays at the fixed point it already had.\\n[converge] Pending paths:\\n  - artifacts/validation/a-fairly-long-generated-report-name-0.json\\n  - artifacts/validation/a-fairly-long-generated-report-name-1.json\\n  - artifacts/validation/a-fairly-long-generated-report-name-10.json\\n  - artifacts/validation/a-fairly-long-generated-re\""
+    },
+    {
+      "assertion": "41 pending non-governed path(s) report the truncated remainder",
+      "passed": true,
+      "detail": "expected the listing to name the 1 paths it did not print; output \"-fairly-long-generated-report-name-4.json\\n  - artifacts/validation/a-fairly-long-generated-report-name-40.json\\n  - artifacts/validation/a-fairly-long-generated-report-name-5.json\\n  - artifacts/validation/a-fairly-long-generated-report-name-6.json\\n  - artifacts/validation/a-fairly-long-generated-report-name-7.json\\n  - artifacts/validation/a-fairly-long-generated-report-name-8.json\\n  ... and 1 more\\n\""
+    },
+    {
+      "assertion": "2000 pending non-governed path(s) stop at no_governed_surface_pending and exit 0",
+      "passed": true,
+      "detail": "exit 0; output \"[converge] STOP no_governed_surface_pending (self-test): 2000 pending path(s), none of which is page HTML, a citation/admission registry, or a sitemap.\\n[converge] Nothing the extraction-surface guard hashes or the lastmod ledger describes can have changed, so the committed tree stays at the fixed point it already had.\\n[converge] Pending paths:\\n  - artifacts/validation/a-fairly-long-generated-report-name-0.json\\n  - artifacts/validation/a-fairly-long-generated-report-name-1.json\\n  - artifacts/validation/a-fairly-long-generated-report-name-10.json\\n  - artifacts/validation/a-fairly-long-generated-\""
+    },
+    {
+      "assertion": "2000 pending non-governed path(s) leave no broken-pipe damage in the stop",
+      "passed": true,
+      "detail": "output \"[converge] STOP no_governed_surface_pending (self-test): 2000 pending path(s), none of which is page HTML, a citation/admission registry, or a sitemap.\\n[converge] Nothing the extraction-surface guard hashes or the lastmod ledger describes can have changed, so the committed tree stays at the fixed point it already had.\\n[converge] Pending paths:\\n  - artifacts/validation/a-fairly-long-generated-report-name-0.json\\n  - artifacts/validation/a-fairly-long-generated-report-name-1.json\\n  - artifacts/validation/a-fairly-long-generated-report-name-10.json\\n  - artifacts/validation/a-fairly-long-generated-\""
+    },
+    {
+      "assertion": "2000 pending non-governed path(s) report the truncated remainder",
+      "passed": true,
+      "detail": "expected the listing to name the 1960 paths it did not print; output \"ted-report-name-1028.json\\n  - artifacts/validation/a-fairly-long-generated-report-name-1029.json\\n  - artifacts/validation/a-fairly-long-generated-report-name-103.json\\n  - artifacts/validation/a-fairly-long-generated-report-name-1030.json\\n  - artifacts/validation/a-fairly-long-generated-report-name-1031.json\\n  - artifacts/validation/a-fairly-long-generated-report-name-1032.json\\n  ... and 1960 more\\n\""
+    },
+    {
+      "assertion": "a pending .html is not swallowed by the no-governed stop",
+      "passed": true,
+      "detail": "exit 254; output \"[converge] 1 governed surface path(s) pending out of 1 (self-test); converging before commit.\\n::group::convergence pass 1\\nnpm error code ENOENT\\nnpm error syscall open\\nnpm error path /tmp/named-stop-RyuGxl/package.json\\nnpm error errno -2\\nnpm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/tmp/named-stop-RyuGxl/package.json'\\nnpm error enoent This is related to npm not being able to find a file.\\nnpm error enoent\\nnpm error A complete log of this run can be found in: /home/runner/.npm/_logs/2026-09-03T12_49_16_853Z-debug-0.log\\n\""
+    }
+  ],
+  "status": "PASS",
+  "failures": []
+}
