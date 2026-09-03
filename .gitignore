@@ -87,3 +87,8 @@ artifacts/validation/shards/
 # byte-identical to the one at HEAD, which protects every tree that already
 # carries one; this keeps new ones from being created.
 artifacts/validation/lastmod-derivation-receipt.json
+
+# Content-hash build cache for `npm run build:all` (scripts/build/). Keyed by
+# .github/scripts/build_input_hash.sh; safe to delete, it is only ever a speed
+# optimization. See docs/runbooks/BUILD_CACHE.md.
+.build-cache/
