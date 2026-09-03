@@ -7457,8 +7457,38 @@
         "MX-LASTMOD-DERIVATION-RECEIPT"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-NAMED-STOP-EXIT-CODE",
+      "status": "ADMITTED",
+      "name": "validate:named-stop-exit-code",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:named-stop-exit-code",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-named-stop-exit-code/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-03",
+      "matrix_ids": [
+        "MX-NAMED-STOP-EXIT-CODE"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 237,
+  "record_count": 238,
   "generated_at": "2026-08-08T23:30:00Z"
 }

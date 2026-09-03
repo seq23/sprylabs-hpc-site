@@ -2307,9 +2307,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-NAMED-STOP-EXIT-CODE",
+      "validation_id": "VAL-NAMED-STOP-EXIT-CODE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:named-stop-exit-code",
+      "order": 222,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 230,
+  "entry_count": 231,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2831,6 +2841,10 @@
         {
           "id": "VAL-LASTMOD-DERIVATION-RECEIPT",
           "command": "npm run validate:lastmod-derivation-receipt"
+        },
+        {
+          "id": "VAL-NAMED-STOP-EXIT-CODE",
+          "command": "npm run validate:named-stop-exit-code"
         }
       ]
     },
@@ -3091,6 +3105,10 @@
         {
           "id": "VAL-LASTMOD-DERIVATION-RECEIPT",
           "command": "npm run validate:lastmod-derivation-receipt"
+        },
+        {
+          "id": "VAL-NAMED-STOP-EXIT-CODE",
+          "command": "npm run validate:named-stop-exit-code"
         }
       ]
     }

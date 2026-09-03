@@ -75,7 +75,28 @@ if [ -z "$governed" ]; then
   echo "[converge] STOP no_governed_surface_pending (${caller}): ${pending_count} pending path(s), none of which is page HTML, a citation/admission registry, or a sitemap."
   echo "[converge] Nothing the extraction-surface guard hashes or the lastmod ledger describes can have changed, so the committed tree stays at the fixed point it already had."
   echo "[converge] Pending paths:"
-  printf '%s\n' "$pending" | sed 's/^/  - /' | head -40
+  # THE NAMED STOP MUST SURVIVE ITS OWN LOG LINE.
+  #
+  # This was `printf ... | sed ... | head -40`, under `set -Eeuo pipefail`. When
+  # there are more than 40 pending paths, head closes the pipe on line 41, sed
+  # takes SIGPIPE, pipefail makes the whole pipeline exit 141, and `set -e` kills
+  # the script BEFORE the `exit 0` two lines below. A stop that had already
+  # printed its reason and decided to succeed exited 141 instead.
+  #
+  # commit_and_push_if_changed.sh reads that as a convergence failure and prints
+  # "Refusing to commit ... the tree did not converge", which is the opposite of
+  # what happened - the tree converged so completely that nothing but reports was
+  # left pending. Observed on run 33754789536: 152 pending paths, none of them
+  # HTML, `sed: couldn't flush stdout: Broken pipe`, and the release died on a
+  # legitimate no-op.
+  #
+  # Truncating in a guarded command substitution keeps the listing bounded
+  # without putting a short-circuiting reader at the end of a live pipeline.
+  listing="$(printf '%s\n' "$pending" | head -40 || true)"
+  printf '%s\n' "$listing" | sed 's/^/  - /'
+  if [ "$pending_count" -gt 40 ]; then
+    echo "  ... and $((pending_count - 40)) more"
+  fi
   exit 0
 fi
 
