@@ -56,11 +56,28 @@
  *     catch-up run has been and gone without claiming the work. An unrecognised
  *     status fails immediately: absorption cannot reason about it either.
  *
- *  E. A count is not a change. A run that declares records absorbed and holds
- *     REQUIRED acceptance entries must have at least one of those entries
- *     rendered as a real block on a real page on disk. A ledger that says 61
- *     fixes over pages that carry none of them is the sister repo's exact
- *     symptom, and it is the one thing every plumbing validator passes on.
+ *  E. A count is not a change - and neither is a floor. This assertion began as
+ *     "at least one REQUIRED entry rendered", which a run declaring 61 records
+ *     and rendering 1 passes cleanly. Measured the day it was replaced: the
+ *     floor reported 946/946 REQUIRED entries reconciled while 77 of them were
+ *     not satisfied on the document their own record names, and it could not
+ *     see one of them.
+ *
+ *     Coverage is now per record, using the repository's own acceptance
+ *     predicate, evaluated against the READER's document - the file behind
+ *     intended_winner_page - and not implementation_path. Those two disagreed
+ *     for 57 REQUIRED entries of run 2026-07-18: the absorber wrote to a
+ *     root-level twin while the artifact had measured, and the citation points
+ *     at, the /insights/ page. Both files exist, both are self-canonical, both
+ *     are in sitemap-spry.xml. Every earlier check asked implementation_path
+ *     and so reported that work as done; the reader saw nothing.
+ *
+ *  E2. The outstanding set only shrinks. Whatever is not satisfied must be
+ *     NAMED in agent_absorption_reader_coverage_budget.json - a number would
+ *     let one fixed record pay for one newly broken one. A new gap fails; a
+ *     budgeted id that is now satisfied and still listed fails until it is
+ *     removed, so the file cannot become a licence to regress back up to its
+ *     own high-water mark.
  *
  *  F. The count is honest. absorbed_record_count must equal the number of
  *     records in the normalized file it names. A ledger number that does not
@@ -69,11 +86,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { evaluateBhpcAcceptance } from '../lib/bhpc_agent_acceptance_satisfaction.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const DROP_ROOT = 'data/report_fixes/agent_runs';
 const MANIFEST_NAME = 'agent_run_manifest.json';
 const ACCEPTANCE = 'data/report_fixes/agent_acceptance_manifest.generated.json';
+const BUDGET = 'data/report_fixes/agent_absorption_reader_coverage_budget.json';
 const WORKFLOW = '.github/workflows/spry-content-release.yml';
 const TOPOLOGY = 'data/workflows/workflow_topology.json';
 const LANE = 'spry-content-release';
@@ -367,7 +386,36 @@ function pageHtml(rel) {
   return text;
 }
 
+/**
+ * The document a READER actually lands on for this record.
+ *
+ * Not implementation_path. implementation_path is where the absorber decided to
+ * write; intended_winner_page is the URL the external agent measured, the one
+ * the citation points at, and the only one a reader or a crawler ever sees.
+ * Reconciled here they were found to disagree for 57 REQUIRED entries of run
+ * 2026-07-18: both files exist, both are self-canonical, both are in
+ * sitemap-spry.xml, and the fix went live on the twin nobody cites.
+ */
+function isFile(rel) {
+  try { return fs.statSync(path.join(ROOT, rel)).isFile(); } catch { return false; }
+}
+function resolveDocument(candidate) {
+  const clean = String(candidate || '').replace(/^\/+/, '');
+  if (!clean || clean.includes('..')) return '';
+  if (isFile(clean)) return clean;
+  if (clean.endsWith('/') && isFile(`${clean}index.html`)) return `${clean}index.html`;
+  if (isFile(`${clean}.html`)) return `${clean}.html`;
+  if (isFile(`${clean}/index.html`)) return `${clean}/index.html`;
+  return '';
+}
+function readerDocument(entry) {
+  let urlPath = '';
+  try { urlPath = new URL(String(entry.intended_winner_page || '')).pathname; } catch { urlPath = ''; }
+  return resolveDocument(urlPath) || resolveDocument(entry.implementation_path);
+}
+
 const perRun = [];
+const outstandingForReader = [];
 let reconciled = 0;
 for (const run of runs) {
   const status = String(run.manifest.status || '').toUpperCase();
@@ -392,20 +440,42 @@ for (const run of runs) {
     }
   }
 
-  // E. required work must be visible on a real page.
+  // E. required work must be visible on a real page - EVERY entry, not one.
+  //
+  // This assertion used to be a floor: "at least one REQUIRED entry rendered".
+  // A run declaring 61 records could render 1 and pass. Measured on this tree
+  // the day the floor was replaced: the floor reported 946/946 reconciled while
+  // 77 REQUIRED entries were not satisfied on the document their own record
+  // names, and it could not see a single one of them.
+  //
+  // Coverage is now per record, evaluated with the repository's own acceptance
+  // predicate, against the READER's document rather than implementation_path -
+  // see readerDocument(). Anything outstanding must be NAMED in the budget file
+  // and the budget only shrinks.
   const required = entries.filter((e) => String(e.run_date || '') === run.date
     && String(e.scope || 'bhpc') === run.vertical
     && e.acceptance_status === 'REQUIRED');
-  let renderedOnPage = 0;
+  let satisfiedForReader = 0;
   for (const entry of required) {
-    const html = pageHtml(entry.implementation_path);
     reconciled += 1;
     const id = String(entry.record_id || entry.id || '');
-    if (html && id && html.includes(`data-bhpc-agent-record="${id}"`)) renderedOnPage += 1;
+    const doc = readerDocument(entry);
+    const html = doc ? pageHtml(doc) : null;
+    const verdict = html == null
+      ? { satisfied: false, reasons: ['reader_document_missing'] }
+      : evaluateBhpcAcceptance(entry, html);
+    if (verdict.satisfied) { satisfiedForReader += 1; continue; }
+    outstandingForReader.push({
+      record_id: id,
+      run_date: run.date,
+      reader_document: doc,
+      implementation_path: String(entry.implementation_path || ''),
+      reasons: verdict.reasons.join(','),
+    });
   }
-  if (status === 'ABSORBED' && declared > 0 && required.length > 0 && renderedOnPage === 0) {
+  if (status === 'ABSORBED' && declared > 0 && required.length > 0 && satisfiedForReader === 0) {
     errors.push(
-      `${run.rel}: declares ${declared} absorbed record(s) and ${required.length} REQUIRED acceptance entry(ies), yet NOT ONE of them is rendered on its target page. `
+      `${run.rel}: declares ${declared} absorbed record(s) and ${required.length} REQUIRED acceptance entry(ies), yet NOT ONE of them is satisfied on the page a reader reaches. `
       + 'The ledger records fixes the repository does not contain. A count is not a change, and every plumbing validator passes on this.',
     );
   }
@@ -417,7 +487,8 @@ for (const run of runs) {
     declared_records: declared,
     normalized_records: normalizedCount,
     required_entries: required.length,
-    rendered_on_page: renderedOnPage,
+    satisfied_for_reader: satisfiedForReader,
+    outstanding_for_reader: required.length - satisfiedForReader,
   });
 }
 
@@ -425,6 +496,50 @@ for (const run of runs) {
 // silently emptied would otherwise leave every assertion above vacuous.
 if (runs.length && entries.length && reconciled === 0) {
   errors.push('no REQUIRED acceptance entry was reconciled against a page; this validator refuses to pass on an empty loop (Rule 0)');
+}
+
+// ------------------------------------- E2. the outstanding set only shrinks
+//
+// A tolerance expressed as a NUMBER is a hole: swap one fixed record for one
+// newly broken one and the count is unchanged. So the budget names every id.
+// Two directions are asserted, both HARD_FAIL:
+//
+//   - an outstanding id NOT in the budget is a NEW gap, and fails immediately;
+//   - a budgeted id that is now satisfied and still listed is a STALE budget,
+//     and fails until it is removed. Without this the file would silently
+//     become a licence to regress back up to its own high-water mark.
+//
+// So the file can only ever get shorter, and every line in it is a specific
+// named piece of work a human can read - not an opaque allowance.
+const budget = readJson(BUDGET);
+const outstandingIds = new Set(outstandingForReader.map((o) => o.record_id));
+let budgetedIds = new Set();
+if (!budget) {
+  errors.push(
+    `${BUDGET}: unreadable. It is the named, shrinking list of REQUIRED entries known not to be satisfied on the reader's document. `
+    + 'Without it there is no way to tell a known gap from a new one, and this check would have to tolerate everything.',
+  );
+} else {
+  budgetedIds = new Set((budget.outstanding || []).map((o) => String(o.record_id)));
+  if (!budgetedIds.size && outstandingIds.size) {
+    errors.push(`${BUDGET}: declares an empty outstanding list while ${outstandingIds.size} REQUIRED entry(ies) are unsatisfied`);
+  }
+  const appeared = [...outstandingIds].filter((id) => !budgetedIds.has(id));
+  if (appeared.length) {
+    const detail = outstandingForReader.filter((o) => appeared.includes(o.record_id)).slice(0, 5)
+      .map((o) => `${o.record_id} at ${o.reader_document || '(no document)'} [${o.reasons}]`).join('; ');
+    errors.push(
+      `${appeared.length} REQUIRED acceptance entry(ies) are not satisfied on the page a reader reaches, and are NOT named in ${BUDGET}. `
+      + `These are new gaps: the artifact asked for a change, the ledger recorded it, and the reader at the cited URL does not see it. First: ${detail}`,
+    );
+  }
+  const fixed = [...budgetedIds].filter((id) => !outstandingIds.has(id));
+  if (fixed.length) {
+    errors.push(
+      `${BUDGET} lists ${fixed.length} record id(s) as outstanding that are now satisfied. The budget only ever shrinks: remove them, or it becomes `
+      + `a licence to regress back to its own high-water mark. First: ${fixed.slice(0, 5).join(', ')}`,
+    );
+  }
 }
 
 // --------------------------------------------------------------- report
@@ -443,6 +558,11 @@ const report = {
   catch_up_mode_absorbs: lane?.default_mode ? modeAbsorbs(String(lane.default_mode)) : null,
   pending_runs: pending,
   requirements_reconciled: reconciled,
+  required_entries_total: reconciled,
+  satisfied_for_reader: reconciled - outstandingForReader.length,
+  outstanding_for_reader: outstandingForReader.length,
+  outstanding_budgeted: budgetedIds.size,
+  outstanding_records: outstandingForReader,
   per_run: perRun,
   notes,
   errors,
@@ -458,5 +578,6 @@ if (errors.length) {
 console.log(
   `[agent-artifact-absorption-trigger] PASS: ${runs.length} run(s); push paths ${JSON.stringify(report.push_paths)} match every manifest on disk; `
   + `catch-up mode "${report.catch_up_mode}" absorbs on a ${cycleDays}-day cadence (stranded past ${graceDays}d); `
-  + `${pending.length} pending run(s), ${reconciled} REQUIRED entry(ies) reconciled against pages.`,
+  + `${pending.length} pending run(s); ${reconciled - outstandingForReader.length}/${reconciled} REQUIRED entry(ies) satisfied on the reader's own document, `
+  + `${outstandingForReader.length} outstanding and every one of them named in ${BUDGET}.`,
 );
