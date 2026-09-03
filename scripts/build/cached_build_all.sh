@@ -22,8 +22,14 @@
 #
 # WHAT MAKES THIS SAFE.
 #
-# The key comes from .github/scripts/build_input_hash.sh unchanged — the same
-# algorithm already proven in CI, not a new one. A cache entry is only ever
+# The key's exclude list matches .github/scripts/build_input_hash.sh (same
+# algorithm already proven in CI) — but the key itself comes from
+# scripts/build/build_all_cache_key.mjs, not that script directly.
+# build_input_hash.sh hashes `git ls-files -s`, i.e. the git INDEX, which is
+# correct for a fresh CI checkout but blind to an uncommitted, unstaged local
+# edit (CONFIRMED by reproduction: see that script's header comment). Since
+# this wrapper runs against real, possibly-dirty local working trees, its key
+# is computed from working-tree CONTENT instead. A cache entry is only ever
 # written by save_build_cache.mjs, and only after the REAL, UNCACHED
 # `npm run build:all` finished (exit 0) — a crashed or partial build is never
 # saved, so there is no half-built entry to reject; there simply is no entry.
@@ -49,12 +55,13 @@ if [ "${BUILD_ALL_CACHE_DISABLE:-}" = "1" ]; then
   exec npm run build:all:uncached
 fi
 
-hash_line="$(bash .github/scripts/build_input_hash.sh)"
+key_status=0
+hash_line="$(node scripts/build/build_all_cache_key.mjs)" || key_status=$?
 echo "$hash_line"
 key="$(printf '%s\n' "$hash_line" | sed -n 's/.*key=\([0-9a-f]\{1,\}\).*/\1/p' | tail -1)"
 
-if [ -z "$key" ]; then
-  echo "[build-all-cache] could not derive a key from build_input_hash.sh output — running the real build uncached" >&2
+if [ "$key_status" -ne 0 ] || [ -z "$key" ]; then
+  echo "[build-all-cache] could not derive a key from build_all_cache_key.mjs output — running the real build uncached" >&2
   exec npm run build:all:uncached
 fi
 
