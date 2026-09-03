@@ -54,7 +54,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync, spawnSync } from 'node:child_process';
-import { ROOT, LEDGER_PATH, contentHash, parseSitemaps, fileForLoc, ledgerDerivationReceipt } from '../lib/sitemap_ledger.mjs';
+import { ROOT, LEDGER_PATH, LEDGER_RECEIPT_PATH, contentHash, parseSitemaps, fileForLoc, ledgerDerivationReceipt } from '../lib/sitemap_ledger.mjs';
 
 const LANE_FILE = 'data/workflows/workflow_topology.json';
 const LANE = 'spry-content-release';
@@ -208,7 +208,18 @@ if (ledgerOnDisk && ledgerTextOnDisk !== null && rederived) {
   }
   if (examined === 0) errors.push('the ledger was re-derived but describes no readable page; nothing was verified');
 } else {
-  notes.push('arm B skipped: no derivation receipt matches the ledger on disk, and the ledger on disk is the one committed at HEAD, so nothing was re-derived in this run');
+  // Say WHICH of the two reasons applies. A run that inherited a receipt with
+  // its checkout used to be indistinguishable in this report from one that had
+  // no receipt at all, and that ambiguity is what made run 33767079923 read as
+  // a stale ledger rather than as a derivation that had not happened yet.
+  const inherited = ledgerTextOnDisk !== null
+    && fs.existsSync(path.join(ROOT, LEDGER_RECEIPT_PATH))
+    && !derivationReceipt;
+  notes.push(
+    inherited
+      ? 'arm B skipped: the derivation receipt on disk is the one committed at HEAD, so it was written by the run that made that commit and not by this one; the ledger on disk is the committed ledger. Nothing has been re-derived here yet, so there is no freshly derived ledger to judge.'
+      : 'arm B skipped: no derivation receipt matches the ledger on disk, and the ledger on disk is the one committed at HEAD, so nothing was re-derived in this run',
+  );
 }
 
 // --------------------------------------------- coverage: sitemaps vs ledger

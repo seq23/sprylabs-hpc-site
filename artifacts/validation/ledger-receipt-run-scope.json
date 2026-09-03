@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0",
+  "self_test": "ledger-receipt-run-scope",
+  "generated_at": "2026-09-03T15:33:48.897Z",
+  "scratch_repositories": 3,
+  "assertions_executed": 9,
+  "assertions": [
+    {
+      "assertion": "a receipt inherited from the commit is not evidence that this run derived the ledger",
+      "passed": true,
+      "detail": "expected the guard to exit 0 when no derivation ran in this run; got 0: "
+    },
+    {
+      "assertion": "arm B is recorded as skipped, so the pass is explained rather than silent",
+      "passed": true,
+      "detail": "expected rederived_ledger_vs_working_tree.ran === false in the report; got {\"ran\":false,\"pages_examined\":0,\"mismatched\":0,\"examples\":[],\"receipt\":null}"
+    },
+    {
+      "assertion": "the run still examined pages, so exiting 0 is not exiting 0 having done nothing (Rule 0)",
+      "passed": true,
+      "detail": "expected pages_examined > 0; got 2"
+    },
+    {
+      "assertion": "a page rewritten after an in-run derivation is still a hard failure",
+      "passed": true,
+      "detail": "expected the guard to exit non-zero; got 1. Arm B has been weakened."
+    },
+    {
+      "assertion": "the failure is arm B naming the stale page, not some unrelated error",
+      "passed": true,
+      "detail": "expected arm B to have run and found a mismatch; got {\"ran\":true,\"pages_examined\":2,\"mismatched\":1,\"examples\":[{\"file\":\"alpha/index.html\",\"ledger\":\"6e2317529b74ada5fbab48d2\",\"disk\":\"3e0a07a69d93b639d31d709e\"}]}"
+    },
+    {
+      "assertion": "re-deriving a correct ledger leaves it byte-identical, which is what made the old proxy wrong",
+      "passed": true,
+      "detail": "expected an unchanged ledger from a no-op derivation; changed=false, exit=0"
+    },
+    {
+      "assertion": "the no-op derivation still writes a receipt that differs from the committed one, so it is admitted as this run's",
+      "passed": true,
+      "detail": "the no-op derivation left the receipt byte-identical to the committed one, so it is now indistinguishable from an inherited receipt"
+    },
+    {
+      "assertion": "a no-op in-run derivation over an intact tree passes with arm B having run",
+      "passed": true,
+      "detail": "expected exit 0 with arm B run over >0 pages; exit=0, armB={\"ran\":true,\"pages_examined\":2,\"mismatched\":0,\"examples\":[]}"
+    },
+    {
+      "assertion": "ledgerDerivationReceipt compares the receipt on disk against the one committed at HEAD",
+      "passed": true,
+      "detail": "the HEAD comparison is gone from scripts/lib/sitemap_ledger.mjs; a committed receipt would again pass as this run's"
+    }
+  ],
+  "status": "PASS",
+  "failures": []
+}
