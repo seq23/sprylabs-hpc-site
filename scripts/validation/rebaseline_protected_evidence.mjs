@@ -103,7 +103,20 @@ const baseline = {
   rebaselined_at: new Date().toISOString().slice(0, 10),
   rebaseline_reason: allowRawRepin ? `raw_repin_accepted: ${reason}` : (reason || 'append_only_regeneration_no_raw_pin_rewritten'),
   baseline_reason: previous.baseline_reason,
-  note: previous.note,
+  // The note is owned by this generator, not carried forward, because the
+  // previous one described a tier shape that no longer exists. A stale
+  // explanation sitting inside a protected baseline is worse than none: the
+  // next reader believes it.
+  note: [
+    'Tiers are split by LIFECYCLE, because a hash pin can only be right about files that are not supposed to change.',
+    '',
+    'immutable_evidence - RAW agent evidence: everything the external agent dropped in a run folder except the manifest. A record of fact. It must never change, a byte change is a defect, and a hash pin is TRUE of it. Append-only: protected-baseline:rebaseline refuses to rewrite a pin whose bytes changed. Completeness is checked against the tree, not against this list, so a run that arrives unpinned is an error rather than a silence.',
+    'agent_declared_manifest - the RAW half of agent_run_manifest.json. The agent declares source/run_date/csv_path/html_path; the absorber writes the rest back over the top. Splitting by file would give one half the wrong lifecycle either way, so the split is by field: this pins the canonical hash of the declared fields only.',
+    'derived_reproducible - DERIVED absorber output. A function of raw evidence plus the current normalization contract, so it is SUPPOSED to change when the contract changes and a hash pin asserts something untrue of it. Pinning it here fired PROTECTED_BASELINE_DRIFT on four correctly-behaving files every time the contract moved, and the only response available was to re-pin - which teaches the reader to re-pin reflexively. It is asserted reproducible from raw instead, by validate:derived-absorber-reproducibility, which also catches the stale or hand-edited derivative a re-pinned hash would wave through.',
+    'frozen_derived - derived output of runs before the exact-implementation cutover, which the policy never re-normalizes. Nothing regenerates them, so a hash pin IS true of them. validate:ownership refuses to let a live run sit here.',
+    'revenue_surface - download.html, which produced real sales. Drift is an error. Pinned to the normalized form: that is what the freeze accepted and what the repo\'s own repair produces idempotently.',
+    'tooling - maintained scripts that are expected to change. Byte-pinning them bought noise and no safety, so they are checked for existence and non-emptiness instead. The real risk there is deletion or truncation, not modification.',
+  ].join('\n'),
   tiers: {
     immutable_evidence: {
       enforcement: 'error',
