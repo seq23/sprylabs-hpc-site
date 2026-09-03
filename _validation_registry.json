@@ -7630,6 +7630,36 @@
         "MX-WORKFLOW-MANUAL-ONLY-DECLARED"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-RISK-STATEMENT-SUBSTANCE",
+      "status": "ADMITTED",
+      "name": "validate:risk-statement-substance",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents a HARD_FAIL gate being admitted with no recorded reason to exist. validate:validation-registry tests risk_prevented for emptiness only, and scripts/validation/add_validator.mjs hardcoded the non-empty string 'Declared validator protection.' into every record it created, so 55 of 240 records reported complete metadata while stating nothing - including the two extraction surface guard records, the HARD_FAIL pair behind Validate Repo runs 33515334720 (1,628 drifted surfaces) and 33727145801 (230 changed surfaces) and, downstream of the first, Main Validation Sentinel alarm 33533720679. risk_prevented is what a human reads to review a gate and what audit_governance_blockers.mjs reads when proposing a severity migration, so a placeholder there makes the gate unreviewable and its severity unmigratable on evidence. The writer is fixed - validation:add now requires --risk and refuses the placeholder it used to emit - and this holds the remaining 53 as a shrink-only backlog in data/validation/risk_statement_backlog.json: a placeholder outside the list fails, the list growing past its ceiling fails, and a listed id that has since been written properly or has left the registry fails until it is removed and the ceiling lowered, so the list cannot rot into a permanent exemption. It hard-fails rather than passing on an empty set: zero registry records, an absent ids array or a missing ceiling each stop the run.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:risk-statement-substance",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-risk-statement-substance/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-03",
+      "matrix_ids": [
+        "MX-RISK-STATEMENT-SUBSTANCE"
+      ],
+      "not_applicable_reason": null
     }
   ],
   "record_count": 242,
