@@ -244,6 +244,7 @@
     "release:converge-before-freeze": "bash .github/scripts/converge_tree_before_commit.sh freeze",
     "validate:freeze-after-convergence": "node scripts/validation/validate_freeze_after_convergence.mjs",
     "validate:convergence-reentry-soundness": "node scripts/validation/self_test_convergence_reentry.mjs",
+    "validate:lastmod-derivation-receipt": "node scripts/validation/self_test_lastmod_derivation_receipt.mjs",
     "validate:agent-live": "node scripts/validators/validate_agent_live.mjs",
     "build:agent-accepted-content": "npm run agent:bhpc:compile-acceptance && npm run agent:bhpc:plan-exact && npm run agent:bhpc:apply-exact",
     "validate:query-owner-uniqueness": "node scripts/validation/validate_query_owner_uniqueness.mjs",

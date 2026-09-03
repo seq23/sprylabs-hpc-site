@@ -69,3 +69,59 @@ export const LEDGER_PATH = process.env.SITEMAP_LASTMOD_LEDGER || 'data/sitemap/l
 export function readLedger(file = LEDGER_PATH) {
   try { return JSON.parse(fs.readFileSync(path.join(ROOT, file), 'utf8')); } catch { return null; }
 }
+
+/**
+ * THE DERIVATION RECEIPT.
+ *
+ * validate_lastmod_ledger_final.mjs has an arm B - "a ledger re-derived in this
+ * run must fit the tree" - and it used to decide whether a derivation had
+ * happened by asking whether the ledger on disk differs from the one committed
+ * at HEAD. That is a proxy, and it is wrong in exactly one case: when the
+ * re-derivation is a legitimate no-op because the committed ledger is already
+ * correct. The derivation ran, produced the identical bytes, and the proxy
+ * concluded it had not run at all.
+ *
+ * In `pending` scope that is not a missed check, it is a hard failure - the mode
+ * REQUIRES arm B to have run - so a correct no-op turned the release lane red.
+ * Observed on run 33728997404, where the very next command after the derivation
+ * failed with "pending scope ran without re-deriving the ledger (arm B did not
+ * run)".
+ *
+ * So the derivation now records the fact instead of leaving it to be inferred.
+ * The receipt carries the sha256 of the ledger text the derivation left on disk;
+ * a reader trusts it only while that hash still matches the ledger it can see,
+ * which is what keeps a stale receipt from standing in for a derivation that
+ * did not happen.
+ */
+export const LEDGER_RECEIPT_PATH = 'artifacts/validation/lastmod-derivation-receipt.json';
+
+export const ledgerTextHash = (text) =>
+  crypto.createHash('sha256').update(text ?? '', 'utf8').digest('hex');
+
+export function writeLedgerDerivationReceipt(ledgerText, extra = {}) {
+  const receipt = {
+    schema_version: '1.0',
+    receipt: 'lastmod-ledger-derivation',
+    generated_at: new Date().toISOString(),
+    ledger: LEDGER_PATH,
+    ledger_sha256: ledgerTextHash(ledgerText),
+    ...extra,
+  };
+  const file = path.join(ROOT, LEDGER_RECEIPT_PATH);
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, `${JSON.stringify(receipt, null, 2)}\n`);
+  return receipt;
+}
+
+/**
+ * True when the ledger currently on disk is the one a derivation produced.
+ * A receipt whose hash no longer matches describes a ledger that something has
+ * since replaced, and is refused - it proves nothing about what is there now.
+ */
+export function ledgerDerivationReceipt(ledgerTextOnDisk) {
+  let receipt;
+  try { receipt = JSON.parse(fs.readFileSync(path.join(ROOT, LEDGER_RECEIPT_PATH), 'utf8')); } catch { return null; }
+  if (!receipt || typeof receipt.ledger_sha256 !== 'string') return null;
+  if (ledgerTextOnDisk === null || ledgerTextOnDisk === undefined) return null;
+  return receipt.ledger_sha256 === ledgerTextHash(ledgerTextOnDisk) ? receipt : null;
+}
