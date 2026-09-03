@@ -322,7 +322,33 @@ export function classifyRow(row, htmlDigestText = '', context = {}) {
   const actionTier = stringifyField(pick(row, ['action_tier','tier','category']));
   const primaryFixType = stringifyField(pick(row, ['primary_fix_type','gap_type','fix_type','recommended_cluster','cluster','category']));
   const policy = loadExactPolicy();
-  const intendedPath = declaredRepoPath || repoPathFromIntendedWinnerPage(intendedWinnerPage, policy) || '';
+  // The URL the record itself names as the intended winner OUTRANKS a
+  // hand-typed repo_file_path.
+  //
+  // bhpc_agent_route_resolver.mjs already states this law in its own comment -
+  // "an explicit intended public URL is stronger" - and could never apply it,
+  // because this line resolved the conflict before the resolver ever ran. It
+  // handed the resolver a single pre-decided `intended_winner_path`, so the
+  // resolver's rule governed nothing.
+  //
+  // Measured cost on this tree: 57 REQUIRED entries of run 2026-07-18 across
+  // six /insights/ pages. Each artifact row measured an /insights/ URL, cited
+  // it, and then typed a root-level repo path beside it. The absorber wrote the
+  // work to the root-level twin. Both files exist, both are self-canonical,
+  // both are in sitemap-spry.xml - so the ledger said done and the reader at
+  // the cited URL saw nothing. The acceptance compiler had already BLOCKED two
+  // rows for exactly this ambiguity and let the other 57 through, which is the
+  // repository knowing about the defect and catching it twice.
+  //
+  // The URL is the stronger signal for a reason that is not a preference: it is
+  // the address a citation points at, the address in the sitemap, and the only
+  // address a reader or a crawler can reach. A repo path is an internal
+  // convenience nobody outside the repository can see.
+  const winnerUrlPath = repoPathFromIntendedWinnerPage(intendedWinnerPage, policy) || '';
+  const intendedPath = winnerUrlPath || declaredRepoPath || '';
+  const declaredPathOverriddenBy = winnerUrlPath && declaredRepoPath && declaredRepoPath !== winnerUrlPath
+    ? 'intended_winner_page'
+    : '';
   let operation = isNoActionSeo(seo) || explicitMaintain ? 'NO_ACTION_MAINTAIN' : (row.operation || 'CREATE_NEW_TARGET_PAGE');
   let blockedReason = '';
   if (operation !== 'NO_ACTION_MAINTAIN' && patchNeeded && intendedWinnerPage && !allowedHostFromUrl(intendedWinnerPage, policy)) {
@@ -343,6 +369,8 @@ export function classifyRow(row, htmlDigestText = '', context = {}) {
     gap: gap.trim().slice(0, 700),
     intended_winner_page: String(intendedWinnerPage || '').trim(),
     intended_winner_path: intendedPath || '',
+    declared_repo_path: declaredRepoPath || '',
+    declared_repo_path_overridden_by: declaredPathOverriddenBy,
     patch_needed: patchNeeded,
     fix_recommendation: (fixRecommendation || gap || '').trim().slice(0, 1200),
     action_tier: actionTier.trim(),
