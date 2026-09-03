@@ -56,9 +56,15 @@ jobs:
           OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
           CITATION_PROBE_MODE: grounded
         run: node scripts/llm_citation_probe.mjs --limit 25
-      - name: Validate ownership and Safe Harbor
+      # This lane runs the absorber and commits what it writes, so it is the one
+      # lane where derived output is actually produced. validate:ownership no
+      # longer hash-pins derived files - it asserts they are reproducible, and
+      # that assertion lives in the reproducibility validator below. Without it
+      # here, the split would have removed protection from the exact lane that
+      # writes the files: a guard that cannot reach what it governs.
+      - name: Validate ownership, derived reproducibility and Safe Harbor
         if: steps.runtime.outputs.run == 'true'
-        run: npm run validate:ownership && npm run safe-harbor:validate
+        run: npm run validate:ownership && npm run validate:derived-absorber-reproducibility && npm run safe-harbor:validate
       - name: Commit validated changes
         if: steps.runtime.outputs.run == 'true'
         env:
@@ -66,6 +72,7 @@ jobs:
             npm run workflow:zero-dollar-autonomous &&
             node scripts/llm_citation_probe.mjs --limit 25 &&
             npm run validate:ownership &&
+            npm run validate:derived-absorber-reproducibility &&
             npm run safe-harbor:validate
         run: |
           ./.github/scripts/commit_and_push_if_changed.sh "zero-dollar citation intelligence: autonomous gap fill" daily-citation-intelligence

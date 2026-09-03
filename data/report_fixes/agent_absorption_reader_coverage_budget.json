@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.1",
+  "purpose": "The exact, named set of REQUIRED acceptance entries that are NOT satisfied on the document a reader reaches at the record's own intended_winner_page. validate:agent-artifact-absorption-trigger fails on any outstanding id absent from this list, and fails again when an id here becomes satisfied without being removed. It only ever shrinks.",
+  "measured_at": "2026-09-03",
+  "measured_by": "validate:agent-artifact-absorption-trigger (reader-document reconciliation, reader-RENDERED markup)",
+  "acceptance_predicate_note": "Measured with the tightened predicate in scripts/lib/bhpc_agent_acceptance_satisfaction.mjs: every assertion is made against readerRenderedMarkup(), so a record id or a required string sitting in an HTML comment, a JSON provenance payload or a hidden element no longer counts as rendered. The previous 869/946 was measured with a bare html.includes() over the raw file; re-measured honestly against the tightened predicate that same tree was 822/946, because 47 records were carried entirely by the append-only comment ledger and hidden evidence spans. 822 is the real baseline this file shrank from.",
+  "required_entries_total": 946,
+  "outstanding_total": 4,
+  "defect_classes": {
+    "unpublishable_required_string": "The record's query column transcribes a repository FILENAME rather than a question a reader would type - 'what is README - Spry Executive OS', derived from the name of insights/README.html, whose published title is 'How to Use the Spry Executive OS Insights Library'. scripts/lib/bhpc_agent_reader_questions.mjs declines to print it, for the same reason the applier already refuses to publish operator-facing text as reader copy (see its recommendation_summary and definition_callout branches, which shipped internal critique to 28 and 42 live pages before they were stopped). The requirement is deliberately NOT dropped from required_strings: deleting a requirement is not satisfying it. These four stay REQUIRED, stay outstanding, and stay named here. They clear when the artifact rows are re-issued with a real query, or when the page is re-slugged away from README."
+  },
+  "outstanding_by_page": {
+    "insights/README.html": {
+      "count": 4,
+      "record_ids": [
+        "2026-06-27-bhpc-158",
+        "2026-06-27-bhpc-162",
+        "2026-07-04-bhpc-189",
+        "2026-07-04-bhpc-193"
+      ]
+    }
+  },
+  "twin_page_decision": {
+    "decision": "LEAVE_PUBLISHED",
+    "subject": "The six root-level pages that carried run 2026-07-18's work before the routing fix moved it to the /insights/ pages the records cite.",
+    "paths": [
+      "a-realistic-morning-routine-for-people-with-chaotic-days.html",
+      "a-simple-knowledge-system-capture-distill-use.html",
+      "a-simple-system-for-tracking-what-actually-matters.html",
+      "a-practical-way-to-build-consistency-without-streak-pressure.html",
+      "how-to-end-the-day-so-tomorrow-starts-fast.html",
+      "framework-for-choosing-what-to-quit.html"
+    ],
+    "reasoning": [
+      "All six were created on 2026-07-18, the run date of the defective routing, while every /insights/ counterpart dates from March 2026. They are products of the defect, not editorial pages that predate it.",
+      "They are NOT six duplicates. Only two (a-realistic-morning-routine..., a-simple-knowledge-system...) share a topic with the /insights/ page of the same slug. The other four carry a different H1 and a different subject and merely collide on the slug at a different path - e.g. a-simple-system-for-tracking-what-actually-matters.html is titled 'How to create a weekly debrief prompt in ChatGPT for goal tracking'. Retiring them as duplicates would be retiring four pages that are not duplicates.",
+      "Coverage does not need it. With all six left in place the reader-document figure is 942/946. Removing a live page here would be removing a page to tidy a report, which is the one thing this audit must not do.",
+      "Retiring a route in this repository is a formal tree-wide migration - data/content/manual_redirects.json plus an exact _redirects line plus ZERO references anywhere in the tree, enforced by validate:retired-route-references. These six are referenced by data/routes/public_route_manifest.json, data/authority/internal_authority_scores.json, data/citation/citable_pages.json, answers.json, llms.txt, sitemap-spry.xml and several guide pages. That is a content migration plus a full rebuild, not a validation fix, and bundling it here would hold a proven fix behind an unproven one.",
+      "Cross-canonicalising the two genuine duplicates was considered and rejected: scripts/repair/repair_dual_domain_metadata.js rewrites canonical tags on every build, so a hand-set cross-canonical would not survive the next release and would read as fixed while being reverted.",
+      "The recurrence is closed at the cause, not by cleanup. scripts/agent_intake/bhpc_agent_common.mjs now resolves intended_winner_path from the intended winner URL in preference to a hand-typed repo_file_path, so no future record can create a seventh twin; and assertion E of validate:agent-artifact-absorption-trigger reconciles at the reader's document, so if one ever were created the record would read outstanding at the cited URL and fail as a new gap."
+    ]
+  },
+  "outstanding": [
+    {
+      "record_id": "2026-06-27-bhpc-158",
+      "run_date": "2026-06-27",
+      "reader_document": "insights/README.html",
+      "implementation_path": "insights/README.html",
+      "reasons": [
+        "required_string_absent:1"
+      ],
+      "defect_class": "unpublishable_required_string",
+      "unsatisfiable_required_strings": [
+        "what is README \u2014 Spry Executive OS"
+      ]
+    },
+    {
+      "record_id": "2026-06-27-bhpc-162",
+      "run_date": "2026-06-27",
+      "reader_document": "insights/README.html",
+      "implementation_path": "insights/README.html",
+      "reasons": [
+        "required_string_absent:1"
+      ],
+      "defect_class": "unpublishable_required_string",
+      "unsatisfiable_required_strings": [
+        "README \u2014 Spry Executive OS for founders"
+      ]
+    },
+    {
+      "record_id": "2026-07-04-bhpc-189",
+      "run_date": "2026-07-04",
+      "reader_document": "insights/README.html",
+      "implementation_path": "insights/README.html",
+      "reasons": [
+        "required_string_absent:1"
+      ],
+      "defect_class": "unpublishable_required_string",
+      "unsatisfiable_required_strings": [
+        "what is README \u2014 Spry Executive OS"
+      ]
+    },
+    {
+      "record_id": "2026-07-04-bhpc-193",
+      "run_date": "2026-07-04",
+      "reader_document": "insights/README.html",
+      "implementation_path": "insights/README.html",
+      "reasons": [
+        "required_string_absent:1"
+      ],
+      "defect_class": "unpublishable_required_string",
+      "unsatisfiable_required_strings": [
+        "README \u2014 Spry Executive OS for founders"
+      ]
+    }
+  ]
+}

@@ -14,9 +14,19 @@ if (!content) errors.push('bhpc_agent_content_authority_workflow_missing');
 const daily = Object.entries(texts).find(([name]) => name === 'daily-citation-intelligence.yml');
 if (daily) {
   const text = daily[1];
-  if (!/contents:\s*write/.test(text)) errors.push('daily_citation_intelligence_requires_bounded_write_permission');
-  if (!/workflow:zero-dollar-autonomous/.test(text)) errors.push('daily_citation_intelligence_zero_dollar_lane_missing');
-  if (!/validate:ownership/.test(text) || !/safe-harbor:validate/.test(text)) errors.push('daily_citation_intelligence_protection_gates_missing');
+  // Presence checks read the lane with its YAML comments stripped. Naming a
+  // command in a comment is not running it, and this validator passed with the
+  // reproducibility gate deleted precisely because the comment explaining the
+  // gate still matched. The must-NOT-contain checks below keep reading the full
+  // text, where a mention in a comment is still a finding.
+  const executable = text.split('\n').filter(line => !/^\s*#/.test(line)).join('\n');
+  if (!/contents:\s*write/.test(executable)) errors.push('daily_citation_intelligence_requires_bounded_write_permission');
+  if (!/workflow:zero-dollar-autonomous/.test(executable)) errors.push('daily_citation_intelligence_zero_dollar_lane_missing');
+  if (!/validate:ownership/.test(executable) || !/safe-harbor:validate/.test(executable)) errors.push('daily_citation_intelligence_protection_gates_missing');
+  // The absorber runs in this lane, so the lane must also assert that what it
+  // writes re-derives from raw. Dropping this gate would silently return derived
+  // output to being written and committed with nothing checking it.
+  if (!/validate:derived-absorber-reproducibility/.test(executable)) errors.push('daily_citation_intelligence_derived_reproducibility_gate_missing');
   if (/release:agent-intake|agent:bhpc:apply-exact/.test(text)) errors.push('daily_citation_intelligence_calls_bhpc_mutation_lane');
   if (/data\/report_fixes\/agent_runs|data\/report_fixes\/normalized_agent_runs|scripts\/agent_intake/.test(text)) errors.push('daily_citation_intelligence_references_paid_agent_protected_paths');
 }

@@ -7189,6 +7189,186 @@
       "not_applicable_reason": null
     },
     {
+      "validation_id": "VAL-AGENT-ARTIFACT-ABSORPTION-TRIGGER",
+      "status": "ADMITTED",
+      "name": "validate:agent-artifact-absorption-trigger",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:agent-artifact-absorption-trigger",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-agent-artifact-absorption-trigger/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-03",
+      "matrix_ids": [
+        "MX-AGENT-ARTIFACT-ABSORPTION-TRIGGER"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "AGENT-BHPC-ACCEPTANCE-VISIBILITY",
+      "status": "ADMITTED",
+      "name": "agent:bhpc:self-test-acceptance-visibility",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run agent:bhpc:self-test-acceptance-visibility",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/agent-bhpc-self-test-acceptance-visibility/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-03",
+      "matrix_ids": [
+        "MX-AGENT-BHPC-ACCEPTANCE-VISIBILITY"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-DERIVED-ABSORBER-REPRODUCIBILITY",
+      "status": "ADMITTED",
+      "name": "validate:derived-absorber-reproducibility",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:derived-absorber-reproducibility",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-derived-absorber-reproducibility/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-03",
+      "matrix_ids": [
+        "MX-DERIVED-ABSORBER-REPRODUCIBILITY"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-HEALTH-BOUNDARY-REACH",
+      "status": "ADMITTED",
+      "name": "validate:health-boundary-reach",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:health-boundary-reach",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-health-boundary-reach/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-03",
+      "matrix_ids": [
+        "MX-HEALTH-BOUNDARY-REACH"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-FREEZE-AFTER-CONVERGENCE",
+      "status": "ADMITTED",
+      "name": "validate:freeze-after-convergence",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:freeze-after-convergence",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-freeze-after-convergence/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-03",
+      "matrix_ids": [
+        "MX-FREEZE-AFTER-CONVERGENCE"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-RELEASE-CONVERGE-BEFORE-FREEZE",
+      "status": "ADMITTED",
+      "name": "release:converge-before-freeze",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run release:converge-before-freeze",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/release-converge-before-freeze/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-03",
+      "matrix_ids": [
+        "MX-RELEASE-CONVERGE-BEFORE-FREEZE"
+      ],
+      "not_applicable_reason": null
+    },
+    {
       "validation_id": "VAL-AUTHORITY-PAPER-DISK-REGISTRY-PARITY",
       "status": "ADMITTED",
       "name": "validate:authority-paper-disk-registry-parity",
@@ -7212,13 +7392,13 @@
       "overlap_analysis": [],
       "retirement_offset": null,
       "decision": "Atomically admitted by validation:add.",
-      "decision_date": "2026-09-02",
+      "decision_date": "2026-09-03",
       "matrix_ids": [
         "MX-AUTHORITY-PAPER-DISK-REGISTRY-PARITY"
       ],
       "not_applicable_reason": null
     }
   ],
-  "record_count": 229,
+  "record_count": 235,
   "generated_at": "2026-08-08T23:30:00Z"
 }

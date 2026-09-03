@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-09-02T13:36:47.465Z",
+  "generated_at": "2026-09-03T02:59:56.278Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 210,
+  "admitted_hard_fail_count": 212,
   "reviewed_count": 8,
-  "unreviewed_count": 202,
+  "unreviewed_count": 204,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 162,
+    "REVIEW_REQUIRED": 164,
     "EXISTING_REPAIR_AVAILABLE": 7,
     "TRUE_BLOCKER": 26,
     "REVIEW_WARNING_BOUNDARY": 15
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 162,
+    "REVIEW_REQUIRED": 164,
     "EXISTING_REPAIR_AVAILABLE": 7,
     "TRUE_BLOCKER": 26,
     "REVIEW_WARNING_BOUNDARY": 7
   },
   "migration_status_counts": {
-    "UNREVIEWED": 202,
+    "UNREVIEWED": 204,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -3191,6 +3191,36 @@
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-FROZEN-OUTPUT-SHRINK-GUARD"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-CLUSTER-SIGNAL-INTEGRITY",
+      "name": "validate:cluster-signal-integrity",
+      "command": "npm run validate:cluster-signal-integrity",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-CLUSTER-SIGNAL-INTEGRITY"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-AUTHORITY-ADMISSION-HONESTY",
+      "name": "validate:authority-admission-honesty",
+      "command": "npm run validate:authority-admission-honesty",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-AUTHORITY-ADMISSION-HONESTY"
       ],
       "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",

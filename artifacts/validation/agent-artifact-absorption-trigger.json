@@ -1,0 +1,190 @@
+{
+  "schema_version": "1.0",
+  "validator": "agent-artifact-absorption-trigger",
+  "status": "PASS",
+  "drop_root": "data/report_fixes/agent_runs",
+  "runs_discovered": 13,
+  "push_paths": [
+    "data/report_fixes/agent_runs/**/agent_run_manifest.json"
+  ],
+  "schedule_crons": [
+    "17 14 * * *"
+  ],
+  "cycle_days": 1,
+  "stranded_after_days": 2,
+  "catch_up_mode": "full-content-cycle",
+  "catch_up_mode_absorbs": true,
+  "pending_runs": [],
+  "requirements_reconciled": 946,
+  "required_entries_total": 946,
+  "satisfied_for_reader": 942,
+  "outstanding_for_reader": 4,
+  "outstanding_budgeted": 4,
+  "outstanding_records": [
+    {
+      "record_id": "2026-06-27-bhpc-158",
+      "run_date": "2026-06-27",
+      "reader_document": "insights/README.html",
+      "implementation_path": "insights/README.html",
+      "reasons": "required_string_absent:1"
+    },
+    {
+      "record_id": "2026-06-27-bhpc-162",
+      "run_date": "2026-06-27",
+      "reader_document": "insights/README.html",
+      "implementation_path": "insights/README.html",
+      "reasons": "required_string_absent:1"
+    },
+    {
+      "record_id": "2026-07-04-bhpc-189",
+      "run_date": "2026-07-04",
+      "reader_document": "insights/README.html",
+      "implementation_path": "insights/README.html",
+      "reasons": "required_string_absent:1"
+    },
+    {
+      "record_id": "2026-07-04-bhpc-193",
+      "run_date": "2026-07-04",
+      "reader_document": "insights/README.html",
+      "implementation_path": "insights/README.html",
+      "reasons": "required_string_absent:1"
+    }
+  ],
+  "per_run": [
+    {
+      "run_date": "2026-06-23",
+      "vertical": "bhpc",
+      "status": "ABSORBED",
+      "declared_records": 14,
+      "normalized_records": 14,
+      "required_entries": 0,
+      "satisfied_for_reader": 0,
+      "outstanding_for_reader": 0
+    },
+    {
+      "run_date": "2026-06-24",
+      "vertical": "bhpc",
+      "status": "ABSORBED",
+      "declared_records": 3,
+      "normalized_records": 3,
+      "required_entries": 0,
+      "satisfied_for_reader": 0,
+      "outstanding_for_reader": 0
+    },
+    {
+      "run_date": "2026-06-27",
+      "vertical": "bhpc",
+      "status": "ABSORBED",
+      "declared_records": 194,
+      "normalized_records": 194,
+      "required_entries": 192,
+      "satisfied_for_reader": 190,
+      "outstanding_for_reader": 2
+    },
+    {
+      "run_date": "2026-07-04",
+      "vertical": "bhpc",
+      "status": "ABSORBED",
+      "declared_records": 225,
+      "normalized_records": 225,
+      "required_entries": 232,
+      "satisfied_for_reader": 230,
+      "outstanding_for_reader": 2
+    },
+    {
+      "run_date": "2026-07-11",
+      "vertical": "bhpc",
+      "status": "ABSORBED",
+      "declared_records": 72,
+      "normalized_records": 72,
+      "required_entries": 72,
+      "satisfied_for_reader": 72,
+      "outstanding_for_reader": 0
+    },
+    {
+      "run_date": "2026-07-18",
+      "vertical": "bhpc",
+      "status": "ABSORBED",
+      "declared_records": 78,
+      "normalized_records": 78,
+      "required_entries": 76,
+      "satisfied_for_reader": 76,
+      "outstanding_for_reader": 0
+    },
+    {
+      "run_date": "2026-07-25",
+      "vertical": "bhpc",
+      "status": "ABSORBED",
+      "declared_records": 74,
+      "normalized_records": 74,
+      "required_entries": 75,
+      "satisfied_for_reader": 75,
+      "outstanding_for_reader": 0
+    },
+    {
+      "run_date": "2026-07-27",
+      "vertical": "bhpc",
+      "status": "ABSORBED",
+      "declared_records": 7,
+      "normalized_records": 7,
+      "required_entries": 5,
+      "satisfied_for_reader": 5,
+      "outstanding_for_reader": 0
+    },
+    {
+      "run_date": "2026-08-01",
+      "vertical": "bhpc",
+      "status": "ABSORBED",
+      "declared_records": 85,
+      "normalized_records": 85,
+      "required_entries": 87,
+      "satisfied_for_reader": 87,
+      "outstanding_for_reader": 0
+    },
+    {
+      "run_date": "2026-08-08",
+      "vertical": "bhpc",
+      "status": "ABSORBED",
+      "declared_records": 17,
+      "normalized_records": 17,
+      "required_entries": 20,
+      "satisfied_for_reader": 20,
+      "outstanding_for_reader": 0
+    },
+    {
+      "run_date": "2026-08-15",
+      "vertical": "bhpc",
+      "status": "ABSORBED",
+      "declared_records": 59,
+      "normalized_records": 59,
+      "required_entries": 67,
+      "satisfied_for_reader": 67,
+      "outstanding_for_reader": 0
+    },
+    {
+      "run_date": "2026-08-22",
+      "vertical": "bhpc",
+      "status": "ABSORBED",
+      "declared_records": 74,
+      "normalized_records": 74,
+      "required_entries": 70,
+      "satisfied_for_reader": 70,
+      "outstanding_for_reader": 0
+    },
+    {
+      "run_date": "2026-08-29",
+      "vertical": "bhpc",
+      "status": "ABSORBED",
+      "declared_records": 61,
+      "normalized_records": 61,
+      "required_entries": 50,
+      "satisfied_for_reader": 50,
+      "outstanding_for_reader": 0
+    }
+  ],
+  "notes": [
+    "push trigger [\"data/report_fixes/agent_runs/**/agent_run_manifest.json\"] matches all 13 manifest path(s) on disk",
+    "push resolves to mode \"agent-intake\" and it absorbs"
+  ],
+  "errors": []
+}

@@ -7,6 +7,7 @@ import {
 import {resolveBhpcAgentRoute} from './bhpc_agent_route_resolver.mjs';
 import {partitionBhpcInternalLinkActions, deriveBhpcInternalLinkActionsFromText, deriveBhpcInternalLinkActionsFromNavigation, normalizeBhpcInternalLinkHref} from './bhpc_internal_links.mjs';
 import {mergeBhpcExternalCtaLinks} from './bhpc_conversion_contract.mjs';
+import {cleanBhpcReaderHeading, isPublishableBhpcReaderQuestion} from './bhpc_agent_reader_questions.mjs';
 
 function clean(value=''){return String(value??'').replace(/\s+/g,' ').trim()}
 function unique(values=[]){const seen=new Set(),out=[];for(const raw of values){const value=clean(raw);const key=value.toLowerCase();if(value&&!seen.has(key)){seen.add(key);out.push(value)}}return out}
@@ -25,13 +26,7 @@ function actionableInstruction(value='',query=''){
 // layout brief as subject matter - the applier published it as an <h2> and as a
 // "Related reader questions" entry, and the acceptance validator then required
 // that text to stay visible, which is why it survived on live pages.
-export function stripBhpcHeadingLayoutBrief(value=''){
-  return String(value)
-    .replace(/\s+with\s+(?:numbered\s+)?h[1-6]s?\b[\s\S]*$/i,'')
-    .replace(/\s+each\s+with\s+[\d\u2013-]+\s*(?:to\s*\d+\s*)?sentences?\b[\s\S]*$/i,'')
-    .replace(/\s+/g,' ')
-    .trim();
-}
+export const stripBhpcHeadingLayoutBrief = cleanBhpcReaderHeading;
 
 export function deriveBhpcRequiredHeading(fix='',query=''){
   const segments=meaningfulSegments(fix);
@@ -133,7 +128,13 @@ export function buildBhpcAcceptanceEntry(row={},context={}){
     acceptance_status:acceptanceStatus,blocked_reason:blocked?(protectedBuyerPage?'PROTECTED_BUYER_PAGE_CONTRACT:no_visible_agent_or_citation_injection_on_download':(route.blocked_reason||row.seo_execution_errors?.join(';')||'invalid_seo_execution')):'',
     required_heading:heading,
     required_block_types:blockTypes,
-    required_strings:unique([query,heading]).slice(0,8),
+    // The SAME cleaning the applier writes with, from the SAME module, so a
+    // required string is a string something in this repository actually
+    // renders. `unpublishable_required_strings` names the ones the reader
+    // surface deliberately will not print - they stay REQUIRED and stay
+    // outstanding, because dropping a requirement is not satisfying it.
+    required_strings:unique([cleanBhpcReaderHeading(query),heading]).slice(0,8),
+    unpublishable_required_strings:isPublishableBhpcReaderQuestion(query)?[]:unique([cleanBhpcReaderHeading(query)]),
     required_internal_links:internalLinkActions,
     internal_link_source:structuredInternalLinkActions.length?'seo_execution.internal_link_actions':(derivedInternalLinkActions.length?'recommendation_text':(navigationInternalLinkActions.length?'site_navigation_related_section':'none')),
     required_external_cta_links:externalCtaActions,

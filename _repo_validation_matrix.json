@@ -2219,17 +2219,77 @@
       "status": "ADMITTED"
     },
     {
+      "matrix_id": "MX-AGENT-ARTIFACT-ABSORPTION-TRIGGER",
+      "validation_id": "VAL-AGENT-ARTIFACT-ABSORPTION-TRIGGER",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:agent-artifact-absorption-trigger",
+      "order": 213,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-AGENT-BHPC-ACCEPTANCE-VISIBILITY",
+      "validation_id": "AGENT-BHPC-ACCEPTANCE-VISIBILITY",
+      "lane": "validation-control-plane",
+      "command": "npm run agent:bhpc:self-test-acceptance-visibility",
+      "order": 214,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-DERIVED-ABSORBER-REPRODUCIBILITY",
+      "validation_id": "VAL-DERIVED-ABSORBER-REPRODUCIBILITY",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:derived-absorber-reproducibility",
+      "order": 215,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-HEALTH-BOUNDARY-REACH",
+      "validation_id": "VAL-HEALTH-BOUNDARY-REACH",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:health-boundary-reach",
+      "order": 216,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-FREEZE-AFTER-CONVERGENCE",
+      "validation_id": "VAL-FREEZE-AFTER-CONVERGENCE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:freeze-after-convergence",
+      "order": 217,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-RELEASE-CONVERGE-BEFORE-FREEZE",
+      "validation_id": "VAL-RELEASE-CONVERGE-BEFORE-FREEZE",
+      "lane": "validation-control-plane",
+      "command": "npm run release:converge-before-freeze",
+      "order": 218,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
       "matrix_id": "MX-AUTHORITY-PAPER-DISK-REGISTRY-PARITY",
       "validation_id": "VAL-AUTHORITY-PAPER-DISK-REGISTRY-PARITY",
       "lane": "validation-control-plane",
       "command": "npm run validate:authority-paper-disk-registry-parity",
-      "order": 213,
+      "order": 219,
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
     }
   ],
-  "entry_count": 222,
+  "entry_count": 228,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2721,6 +2781,26 @@
           "command": "npm run validate:authority-admission-honesty"
         },
         {
+          "id": "VAL-AGENT-ARTIFACT-ABSORPTION-TRIGGER",
+          "command": "npm run validate:agent-artifact-absorption-trigger"
+        },
+        {
+          "id": "AGENT-BHPC-ACCEPTANCE-VISIBILITY",
+          "command": "npm run agent:bhpc:self-test-acceptance-visibility"
+        },
+        {
+          "id": "VAL-DERIVED-ABSORBER-REPRODUCIBILITY",
+          "command": "npm run validate:derived-absorber-reproducibility"
+        },
+        {
+          "id": "VAL-HEALTH-BOUNDARY-REACH",
+          "command": "npm run validate:health-boundary-reach"
+        },
+        {
+          "id": "VAL-FREEZE-AFTER-CONVERGENCE",
+          "command": "npm run validate:freeze-after-convergence"
+        },
+        {
           "id": "VAL-AUTHORITY-PAPER-DISK-REGISTRY-PARITY",
           "command": "npm run validate:authority-paper-disk-registry-parity"
         }
@@ -2965,6 +3045,14 @@
           "command": "npm run validate:authority-admission-honesty"
         },
         {
+          "id": "VAL-HEALTH-BOUNDARY-REACH",
+          "command": "npm run validate:health-boundary-reach"
+        },
+        {
+          "id": "VAL-FREEZE-AFTER-CONVERGENCE",
+          "command": "npm run validate:freeze-after-convergence"
+        },
+        {
           "id": "VAL-AUTHORITY-PAPER-DISK-REGISTRY-PARITY",
           "command": "npm run validate:authority-paper-disk-registry-parity"
         }
@@ -3036,7 +3124,8 @@
     "MX-VAL-FSA-SELFHEAL": "release-time or generator command, not a per-push check",
     "MX-177": "network measurement that writes an observation file; runs on the daily-citation-intelligence schedule, not per push",
     "MX-184": "regeneration command, not a check: it rewrites artifacts/validation/python-dependency-contract.json. The read-only VAL-PYTHON-DEPENDENCY-CONTRACT is the armed profile step and fails if this has not been run after a Python dependency change.",
-    "MX-199": "NAMED STOP: this validator was orphaned (no registry record, no npm script, nothing invoking it) and on its first run it hard-fails with a CONFIRMED defect it was written to catch - duplicate canonicals where both a directory index and a sibling .html claim the same URL (billionaire-high-performance-coach, faq). The pages and routing that produce that duplication are build/content territory, not the validation owner's, so arming it into container-prepush would turn a green lane red for a defect this agent cannot fix. Registered and named here so the debt is visible and countable; arm it into container-prepush in the same change that removes the duplicate canonicals."
+    "MX-199": "NAMED STOP: this validator was orphaned (no registry record, no npm script, nothing invoking it) and on its first run it hard-fails with a CONFIRMED defect it was written to catch - duplicate canonicals where both a directory index and a sibling .html claim the same URL (billionaire-high-performance-coach, faq). The pages and routing that produce that duplication are build/content territory, not the validation owner's, so arming it into container-prepush would turn a green lane red for a defect this agent cannot fix. Registered and named here so the debt is visible and countable; arm it into container-prepush in the same change that removes the duplicate canonicals.",
+    "MX-RELEASE-CONVERGE-BEFORE-FREEZE": "release-time or generator command, not a per-push check: it runs build:all and the ordered repair stages to a fixed point, which is the release lane's own work and would recurse inside a validation profile. Its ordering is guarded per-push by VAL-FREEZE-AFTER-CONVERGENCE."
   },
   "profile_exclusions_policy": "Admitted entries that are deliberately not profile steps, each with the reason. validate_validation_registry warns only about entries missing from this map, so an unreviewed orphan is visible while a reasoned exclusion is not noise. Entries marked NEEDS TRIAGE are real failures or real environment gaps that should be fixed and then armed - they are not permanent exclusions."
 }
