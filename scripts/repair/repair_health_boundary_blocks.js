@@ -100,59 +100,83 @@ function visibleText(html) {
     .toLowerCase();
 }
 
-const registry = JSON.parse(fs.readFileSync(REGISTRY, 'utf8'));
-const records = registry.records || [];
+/**
+ * The whole loop, as a function, so the reach guard can ask this file - and only
+ * this file - which pages are health-adjacent and which of them carry the block.
+ * A second copy of HEALTH_TERMS living in the guard is the "two components each
+ * keeping their own list with no link" defect this repo keeps paying for, so the
+ * guard imports these instead of restating them.
+ *
+ * @param {{check?: boolean, writeEvidence?: boolean, registryPath?: string}} options
+ */
+function repair(options = {}) {
+  const check = Boolean(options.check);
+  const writeEvidence = options.writeEvidence !== false;
+  const registryPath = options.registryPath || REGISTRY;
 
-const changed = [];
-const alreadyOk = [];
-const skippedNoMain = [];
-let healthPages = 0;
+  const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
+  const records = registry.records || [];
 
-for (const record of records) {
-  const rel = String(record.path || '').replace(/^\/+/, '');
-  if (!rel || PROTECTED.has(rel)) continue;
-  const abs = path.join(ROOT, rel);
-  if (!fs.existsSync(abs) || !abs.endsWith('.html')) continue;
+  const changed = [];
+  const alreadyOk = [];
+  const skippedNoMain = [];
+  let healthPages = 0;
 
-  const html = fs.readFileSync(abs, 'utf8');
-  const text = visibleText(html);
-  const isHealth = Boolean(record.health_adjacent) || HEALTH_TERMS.some((t) => text.includes(t));
-  if (!isHealth) continue;
-  healthPages += 1;
+  for (const record of records) {
+    const rel = String(record.path || '').replace(/^\/+/, '');
+    if (!rel || PROTECTED.has(rel)) continue;
+    const abs = path.join(ROOT, rel);
+    if (!fs.existsSync(abs) || !abs.endsWith('.html')) continue;
 
-  const hasBoundary = html.includes(MARKER) || BOUNDARY_TERMS.some((t) => text.includes(t));
-  const hasProfessional = PROFESSIONAL_TERMS.some((t) => text.includes(t));
-  if (hasBoundary && hasProfessional) { alreadyOk.push(rel); continue; }
+    const html = fs.readFileSync(abs, 'utf8');
+    const text = visibleText(html);
+    const isHealth = Boolean(record.health_adjacent) || HEALTH_TERMS.some((t) => text.includes(t));
+    if (!isHealth) continue;
+    healthPages += 1;
 
-  const idx = html.lastIndexOf('</main>');
-  if (idx === -1) { skippedNoMain.push(rel); continue; }
+    const hasBoundary = html.includes(MARKER) || BOUNDARY_TERMS.some((t) => text.includes(t));
+    const hasProfessional = PROFESSIONAL_TERMS.some((t) => text.includes(t));
+    if (hasBoundary && hasProfessional) { alreadyOk.push(rel); continue; }
 
-  if (!CHECK) {
-    const out = `${html.slice(0, idx + '</main>'.length)}\n${BLOCK}${html.slice(idx + '</main>'.length)}`;
-    fs.writeFileSync(abs, out);
+    const idx = html.lastIndexOf('</main>');
+    if (idx === -1) { skippedNoMain.push(rel); continue; }
+
+    if (!check) {
+      const out = `${html.slice(0, idx + '</main>'.length)}\n${BLOCK}${html.slice(idx + '</main>'.length)}`;
+      fs.writeFileSync(abs, out);
+    }
+    changed.push(rel);
   }
-  changed.push(rel);
+
+  const report = {
+    schema_version: '1.0',
+    repair: 'health-boundary-blocks',
+    mode: check ? 'check' : 'apply',
+    health_adjacent_pages: healthPages,
+    already_compliant: alreadyOk.length,
+    repaired: changed.length,
+    skipped_no_main_element: skippedNoMain.length,
+    skipped_paths: skippedNoMain.slice(0, 50),
+    repaired_paths: changed.slice(0, 200),
+    non_compliant_paths: changed.slice(0, 200),
+  };
+  if (writeEvidence) {
+    fs.mkdirSync(path.dirname(EVIDENCE), { recursive: true });
+    fs.writeFileSync(EVIDENCE, `${JSON.stringify(report, null, 2)}\n`);
+  }
+  return report;
 }
 
-const report = {
-  schema_version: '1.0',
-  repair: 'health-boundary-blocks',
-  mode: CHECK ? 'check' : 'apply',
-  health_adjacent_pages: healthPages,
-  already_compliant: alreadyOk.length,
-  repaired: changed.length,
-  skipped_no_main_element: skippedNoMain.length,
-  skipped_paths: skippedNoMain.slice(0, 50),
-  repaired_paths: changed.slice(0, 200),
-};
-fs.mkdirSync(path.dirname(EVIDENCE), { recursive: true });
-fs.writeFileSync(EVIDENCE, `${JSON.stringify(report, null, 2)}\n`);
+if (require.main === module) {
+  const report = repair({ check: CHECK });
+  console.log(`[repair:health-boundary] ${CHECK ? 'CHECK' : 'PASS'}: ${report.health_adjacent_pages} health-adjacent page(s); `
+    + `${report.already_compliant} already compliant; ${report.repaired} ${CHECK ? 'would be repaired' : 'repaired'}; `
+    + `${report.skipped_no_main_element} skipped (no </main>)`);
 
-console.log(`[repair:health-boundary] ${CHECK ? 'CHECK' : 'PASS'}: ${healthPages} health-adjacent page(s); `
-  + `${alreadyOk.length} already compliant; ${changed.length} ${CHECK ? 'would be repaired' : 'repaired'}; `
-  + `${skippedNoMain.length} skipped (no </main>)`);
-
-if (skippedNoMain.length) {
-  console.log(`  no </main> to anchor to, left for a human: ${skippedNoMain.slice(0, 5).join(', ')}`);
+  if (report.skipped_no_main_element) {
+    console.log(`  no </main> to anchor to, left for a human: ${report.skipped_paths.slice(0, 5).join(', ')}`);
+  }
+  if (CHECK && report.repaired) process.exit(1);
 }
-if (CHECK && changed.length) process.exit(1);
+
+module.exports = { repair, HEALTH_TERMS, BOUNDARY_TERMS, PROFESSIONAL_TERMS, MARKER, BLOCK, PROTECTED, visibleText, REGISTRY };
