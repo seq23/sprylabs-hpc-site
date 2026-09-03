@@ -75,6 +75,20 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts
         if: steps.runtime.outputs.run == 'true'
+      # Converge the tree the release is about to commit (below) calls
+      # `npm run build:all` (scripts/build/cached_build_all.sh) one or more
+      # times through its loop, on every run. Restoring whatever prior runs
+      # already cached here means a pass whose input state repeats is a
+      # near-instant cache hit instead of a full ~2,231-page regeneration; a
+      # miss costs nothing beyond the normal build. See
+      # docs/runbooks/BUILD_CACHE.md.
+      - uses: actions/cache@v4
+        if: steps.runtime.outputs.run == 'true'
+        with:
+          path: .build-cache
+          key: build-all-cache-v1-${{ github.run_id }}
+          restore-keys: |
+            build-all-cache-v1-
       # Reports whether adding volume is still being absorbed. Advisory: it refuses
       # to hold publishing on pre-2026-08-26 data, because that window measures a
       # site whose sitemaps were never submitted and whose unknown URLs returned 200.
