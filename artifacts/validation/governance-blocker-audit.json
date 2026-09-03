@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-09-03T13:36:12.270Z",
+  "generated_at": "2026-09-03T16:32:49.057Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 222,
+  "admitted_hard_fail_count": 223,
   "reviewed_count": 8,
-  "unreviewed_count": 214,
+  "unreviewed_count": 215,
   "suggested_review_counts": {
     "REVIEW_REQUIRED": 173,
     "EXISTING_REPAIR_AVAILABLE": 8,
-    "TRUE_BLOCKER": 26,
+    "TRUE_BLOCKER": 27,
     "REVIEW_WARNING_BOUNDARY": 15
   },
   "unresolved_review_counts": {
     "REVIEW_REQUIRED": 173,
     "EXISTING_REPAIR_AVAILABLE": 8,
-    "TRUE_BLOCKER": 26,
+    "TRUE_BLOCKER": 27,
     "REVIEW_WARNING_BOUNDARY": 7
   },
   "migration_status_counts": {
-    "UNREVIEWED": 214,
+    "UNREVIEWED": 215,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -3358,6 +3358,21 @@
         "MX-LASTMOD-DERIVATION-RECEIPT"
       ],
       "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-LEDGER-RECEIPT-RUN-SCOPE",
+      "name": "validate:ledger-receipt-run-scope",
+      "command": "npm run validate:ledger-receipt-run-scope",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents a lastmod derivation receipt inherited from the commit being read as proof that THIS run derived the ledger. The receipt lives under artifacts/, which the main-writing lanes commit, so from 93977956f (2026-09-03 12:58Z) every checkout began with a receipt already hashing to the ledger beside it. Spry Content Release run 33767079923 never executed sitemap:lastmod:content - full-content-cycle derives the ledger as its last stage and the lane fails at selfheal, the stage before it - yet arm B of validate:lastmod-ledger-final believed a derivation had happened, compared the untouched committed ledger to a working tree the release stages had rewritten, and reported 1590 of 2231 pages stale. Nothing was stale. Self-heal correctly refused to repair it and the scheduled lane paged its owner every day. Both doors are held: ledgerDerivationReceipt refuses a receipt byte-identical to the one at HEAD, which protects every tree that already carries a committed one; .gitignore plus a narrowed staging pathspec in commit_and_push_if_changed.sh stop new ones being committed at all. The staging exclusion is deliberately limited to artifacts/validation/*receipt*.json, because most of that directory IS read across runs - pre-implementation-protected-hashes.json, workflow-yaml-inventory.json, daily-citation-release-plan.json and internal-navigation-structure.json all have readers with no fallback - so a blanket exclusion would freeze inputs and let the release exit 0 having published nothing.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-LEDGER-RECEIPT-RUN-SCOPE"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
       "migration_status": "UNREVIEWED",
       "decision": null,
       "evidence": []
