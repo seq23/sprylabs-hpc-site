@@ -350,6 +350,7 @@
     "validate:main-writer-validation-gate": "bash .github/scripts/test_commit_and_push_if_changed.sh",
     "validate:search-measurement-truthfulness": "npm run search:export-counts:self-test && npm run search:truth:self-test && npm run distribution:inspection:self-test && npm run distribution:gsc-outcome:self-test && npm run sitemap:lastmod:self-test && npm run sitemap:lastmod:check",
     "validate:no-silent-zero-work": "node scripts/validators/validate_no_silent_zero_work.mjs",
+    "validate:build-cache-integrity": "node scripts/validators/validate_build_cache_integrity.mjs",
     "validate:page-surface-coverage": "node scripts/validators/validate_page_surface_coverage.mjs",
     "validate:python-dependency-contract:write": "node scripts/validation/python_runtime.mjs run scripts/validation/validate_python_dependency_contract.py --write",
     "verify:product-urls": "node scripts/validators/verify_product_urls.mjs",

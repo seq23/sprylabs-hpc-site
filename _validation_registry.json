@@ -7526,8 +7526,46 @@
         "MX-NAMED-STOP-EXIT-CODE"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-BUILD-CACHE-INTEGRITY",
+      "status": "ADMITTED",
+      "name": "validate:build-cache-integrity",
+      "check_type": "contract",
+      "owning_lane": "build",
+      "risk_prevented": "Guards scripts/build/ (the content-hash cache wrapping `npm run build:all`, docs/runbooks/BUILD_CACHE.md). Prevents a cache entry existing for a build that never reached exit 0, an entry with a non-empty diff and no payload to restore, a stale payload sitting next to a claimed empty-diff (fixed-point) entry, and the safety invariants in cached_build_all.sh/save_build_cache.mjs/restore_build_cache.mjs being weakened without a validator noticing. This is the exact class of defect that produced FROZEN_OUTPUT_MATERIAL_SHRINK on 2026-09-01: a snapshot taken from a tree build_navigation_structure.mjs and build:visible-faq had not finished writing to yet.",
+      "existing_coverage_gap": "No validator existed for scripts/build/ before this cache was added in this change; the extraction-surface guard and freeze/shrink guards protect the GENERATED tree, not the cache mechanism sitting in front of build:all that decides whether to regenerate it.",
+      "scope": [
+        "scripts/build/cached_build_all.sh",
+        "scripts/build/build_all_cache_key.mjs",
+        "scripts/build/snapshot_tree.mjs",
+        "scripts/build/save_build_cache.mjs",
+        "scripts/build/restore_build_cache.mjs",
+        ".build-cache/"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:build-cache-integrity",
+      "implementation_path": "scripts/validators/validate_build_cache_integrity.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "artifacts/validation/build-cache-integrity.json",
+      "negative_fixture": "artifacts/validation/build-cache-integrity.json",
+      "evidence_output": "artifacts/validation/build-cache-integrity.json",
+      "runtime_budget_seconds": 10,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "VAL-EXTRACTION-SURFACE-GUARD-CHECK verifies the GENERATED tree converged; this verifies the CACHE deciding whether to regenerate it is internally consistent - neither checks the other.",
+        "VAL-BUILD-ALL-INTEGRITY (validate:build-all-integrity) checks build:all's own output contract; this checks the wrapper that decides whether build:all runs at all this time."
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted alongside the build cache itself: a cache that can restore a half-built or failed-build tree is worse than no cache, so the guard shipped in the same change as the mechanism it governs, not after.",
+      "decision_date": "2026-09-03",
+      "matrix_ids": [
+        "MX-BUILD-CACHE-INTEGRITY"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 239,
+  "record_count": 240,
   "generated_at": "2026-08-08T23:30:00Z"
 }
