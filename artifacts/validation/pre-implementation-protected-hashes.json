@@ -1,8 +1,8 @@
 {
   "schema_version": "2.0",
   "generated_at": "2026-08-09T16:46:00Z",
-  "rebaselined_at": "2026-08-26",
-  "baseline_reason": "approved_current_state_after_site_public_layout_migration_and_protected_agent_runtime_proof",
+  "rebaselined_at": "2026-09-03",
+  "baseline_reason": "reader_visible_absorption_coverage_rebaseline: the four DERIVED absorber outputs for runs 2026-06-27 and 2026-07-04 (agent_run_manifest.json and normalized_agent_runs/*.json) are re-pinned because scripts/agent_intake/bhpc_agent_common.mjs now resolves intended_winner_path from the intended winner URL in preference to a hand-typed repo_file_path, and NORMALIZATION_CONTRACT_VERSION was bumped to 1.5 so the already-ABSORBED runs re-normalize under it. Every RAW agent artifact in this tier - bhpc.csv, bhpc.html, bhpc.json - is byte-identical and was NOT re-pinned; the evidence did not change, the conclusion drawn from it did, deliberately, and the result is measured at the reader document by validate:agent-artifact-absorption-trigger. Previous: approved_current_state_after_site_public_layout_migration_and_protected_agent_runtime_proof",
   "note": "Split into tiers because one flat list conflated three intents and therefore protected none of them. Thirty files were byte-pinned; nine were tooling that is supposed to change, so drift warnings were constant - and constant warnings go unread. That is how a real finding was missed: a retrofit had injected content into twelve raw agent-run reports, and the drift it produced looked like all the other noise.\n\nimmutable_evidence - agent-run inputs. These must never change; if an input changes, every conclusion drawn from it is suspect. Drift is an error.\nrevenue_surface - download.html, which produced real sales. Drift is an error. Pinned to the normalized form: that is what the freeze accepted and what the repo's own repair produces idempotently.\ntooling - maintained scripts that are expected to change. Byte-pinning them bought noise and no safety, so they are checked for existence and non-emptiness instead. The real risk there is deletion or truncation, not modification.",
   "tiers": {
     "immutable_evidence": {
@@ -14,17 +14,17 @@
         "data/report_fixes/agent_runs/2026-06-24/bhpc/agent_run_manifest.json": "e4e14d07830f49f704279f4fc59fb2300247bbd4c2a3c0bf8aa5f3e5edd4f2bc",
         "data/report_fixes/agent_runs/2026-06-24/bhpc/bhpc.csv": "8919dbbdc16b9d0dd5c432cf0d0655c03d78d9335bd954556315be0bb04a18d1",
         "data/report_fixes/agent_runs/2026-06-24/bhpc/bhpc.html": "b128d0847f210d20711316d56d64047d41c17390fce3ff2161f0a06f4043b234",
-        "data/report_fixes/agent_runs/2026-06-27/bhpc/agent_run_manifest.json": "9d0ab57e0535782a888ca8dec58863149e058c24e9f8837f47b2348ab33e94f0",
+        "data/report_fixes/agent_runs/2026-06-27/bhpc/agent_run_manifest.json": "484c6112962d72677a268df1e16a5f2a7cc893ffee1bf03476163a3a94aa0d7a",
         "data/report_fixes/agent_runs/2026-06-27/bhpc/bhpc.csv": "e3ed49f28d65be9bed9029a783de3048efcd9fa5930fceae4ffdfdd30fa0a61c",
         "data/report_fixes/agent_runs/2026-06-27/bhpc/bhpc.html": "1eb473d06fdee7ca4819f06076ceaef894535db3bede3e59e86df43fa2c66dbf",
-        "data/report_fixes/agent_runs/2026-07-04/bhpc/agent_run_manifest.json": "fc75e1c2ad51f5290c7e9bdb84eb0e7342c46d5227e76c5bd677f631b689e3a0",
+        "data/report_fixes/agent_runs/2026-07-04/bhpc/agent_run_manifest.json": "9189f0b631b159039526ca88e2e55a43e6345e34acc197e3ddb4e6c648decd21",
         "data/report_fixes/agent_runs/2026-07-04/bhpc/bhpc.csv": "db4ac9f95562f088883ff120c396cfc9266851354947ea7f584a9a899125b683",
         "data/report_fixes/agent_runs/2026-07-04/bhpc/bhpc.html": "892ad3033f3b9cc8be7f336ecedeb7ba3d95c451f376fbb8c971e61cef30fc16",
         "data/report_fixes/agent_runs/2026-07-04/bhpc/bhpc.json": "7d73e1f57c86cb92c346ed8336b876b1cdcfe16e58a3669446fd5e05b72d7914",
         "data/report_fixes/normalized_agent_runs/2026-06-23_bhpc.json": "23dd4e10d50e2a45973aafb0cc2f817b8ddf51914cfe99552de7ea446e497cc8",
         "data/report_fixes/normalized_agent_runs/2026-06-24_bhpc.json": "4b66c93064f928a270ad027802a25b90220b8168b512020df4e4a11f0f122f15",
-        "data/report_fixes/normalized_agent_runs/2026-06-27_bhpc.json": "24eb058ddffbecd4749677742214a4a515e836ff723a8f34c32858d388c04303",
-        "data/report_fixes/normalized_agent_runs/2026-07-04_bhpc.json": "30f6441f90014f34f3f0916a5df5e3eecb1bc3bb45cbf6f683c430387fa234ad"
+        "data/report_fixes/normalized_agent_runs/2026-06-27_bhpc.json": "6c748f84a9aa90ec9c12378d7976a634968e1db12db9c36b518142c63a11f246",
+        "data/report_fixes/normalized_agent_runs/2026-07-04_bhpc.json": "39a15981270b6dad822cb9f16a68c656d6ff7c4ae20d9f16a434d87acc8b9aa9"
       }
     },
     "revenue_surface": {
