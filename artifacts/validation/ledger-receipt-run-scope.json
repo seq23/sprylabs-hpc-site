@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0",
   "self_test": "ledger-receipt-run-scope",
-  "generated_at": "2026-09-03T15:33:48.897Z",
-  "scratch_repositories": 3,
-  "assertions_executed": 9,
+  "generated_at": "2026-09-03T15:43:39.938Z",
+  "scratch_repositories": 4,
+  "assertions_executed": 15,
   "assertions": [
     {
       "assertion": "a receipt inherited from the commit is not evidence that this run derived the ledger",
@@ -49,6 +49,36 @@
       "assertion": "ledgerDerivationReceipt compares the receipt on disk against the one committed at HEAD",
       "passed": true,
       "detail": "the HEAD comparison is gone from scripts/lib/sitemap_ledger.mjs; a committed receipt would again pass as this run's"
+    },
+    {
+      "assertion": "the derivation receipt is not tracked in this repository",
+      "passed": true,
+      "detail": "artifacts/validation/lastmod-derivation-receipt.json is tracked at HEAD. It is evidence about one run; committing it is what made every later checkout start with a receipt it had not written (93977956f)."
+    },
+    {
+      "assertion": "the derivation receipt is covered by .gitignore, so `git add -A` cannot reintroduce it",
+      "passed": true,
+      "detail": "artifacts/validation/lastmod-derivation-receipt.json is not matched by .gitignore, so the next bot release commit re-commits it and the daily failure returns."
+    },
+    {
+      "assertion": "the commit helper does not stage with a bare `git add -A`",
+      "passed": true,
+      "detail": "the commit helper stages with `git add -A -- . ':(exclude)artifacts/validation/*receipt*.json'`, which sweeps every per-run artifact into a main commit"
+    },
+    {
+      "assertion": "the staging command still stages the content a release publishes",
+      "passed": true,
+      "detail": "expected published-page.html to be staged; staged=[\"artifacts/validation/workflow-yaml-inventory.json\",\"published-page.html\"] exit=0. A staging rule that drops published content would make the lane exit 0 having published nothing."
+    },
+    {
+      "assertion": "the staging command still stages validation artifacts that later runs consume",
+      "passed": true,
+      "detail": "workflow-yaml-inventory.json is read with no fallback by validate_workflow_artifacts.mjs and validate_workflow_runtime_mutations.mjs; excluding artifacts/validation wholesale freezes an input. staged=[\"artifacts/validation/workflow-yaml-inventory.json\",\"published-page.html\"]"
+    },
+    {
+      "assertion": "the staging command refuses to stage the per-run derivation receipt",
+      "passed": true,
+      "detail": "expected artifacts/validation/lastmod-derivation-receipt.json not to be staged; staged=[\"artifacts/validation/workflow-yaml-inventory.json\",\"published-page.html\"]"
     }
   ],
   "status": "PASS",

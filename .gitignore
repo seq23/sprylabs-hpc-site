@@ -66,3 +66,24 @@ artifacts/validation/shard-plan.json
 artifacts/validation/shard-coverage.json
 artifacts/validation/shard-producers.json
 artifacts/validation/shards/
+
+# The lastmod derivation receipt, for the same reason and a sharper one.
+#
+# It is an attestation about ONE run: "this process re-derived the ledger, and
+# here is the sha256 of the ledger it left on disk". arm B of
+# validate:lastmod-ledger-final reads it to know, as a fact rather than an
+# inference, that a derivation happened in the run doing the reading.
+#
+# commit_and_push_if_changed.sh committed it to main at 93977956f, and from that
+# commit every checkout began with a receipt already on disk, already hashing to
+# the ledger committed beside it. Spry Content Release run 33767079923 then read
+# a receipt written by a run 36 minutes earlier, concluded it had derived the
+# ledger itself, compared the untouched committed ledger against a working tree
+# its release stages had just rewritten, and reported 1590 of 2231 pages stale.
+# Nothing was stale. The lane went red on schedule, every day.
+#
+# A receipt that survives the run that wrote it is not evidence, it is a claim
+# about someone else's work. ledgerDerivationReceipt() also refuses a receipt
+# byte-identical to the one at HEAD, which protects every tree that already
+# carries one; this keeps new ones from being created.
+artifacts/validation/lastmod-derivation-receipt.json

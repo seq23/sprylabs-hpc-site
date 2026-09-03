@@ -118,7 +118,44 @@ commit_generated_changes() {
     echo "Refusing to commit for ${workflow_id}: the tree did not converge, so publishing it would land pages the downstream generators disagree with." >&2
     exit 1
   fi
-  git add -A
+  # STAGE THE RELEASE, NOT THE RUN'S ATTESTATIONS ABOUT ITSELF.
+  #
+  # This was a bare `git add -A`. It is the single choke point every
+  # main-writing lane funnels through, so whatever a lane happens to leave in
+  # the working tree lands on main - including per-run evidence that the next
+  # run then reads back as if it were its own. That is how
+  # artifacts/validation/lastmod-derivation-receipt.json reached main at
+  # 93977956f and turned Spry Content Release red every scheduled day: run
+  # 33767079923 read a receipt a different run had written and concluded it had
+  # re-derived the sitemap ledger itself.
+  #
+  # THE EXCLUSION IS DELIBERATELY NARROW, and the width was measured rather than
+  # guessed. Most of artifacts/validation/ IS consumed across runs and must keep
+  # being staged - validate_content_ownership_boundaries.mjs reads
+  # pre-implementation-protected-hashes.json with no fallback,
+  # validate_workflow_artifacts.mjs and validate_workflow_runtime_mutations.mjs
+  # read workflow-yaml-inventory.json, trace_traffic_qualified_pipeline.mjs reads
+  # daily-citation-release-plan.json, build_navigation_structure.mjs reads
+  # internal-navigation-structure.json. Excluding the directory wholesale would
+  # freeze inputs that validators read, which is a worse defect than the one
+  # being fixed, and it would let this step publish nothing while exiting 0.
+  #
+  # Receipts are the one shape in there that is never an input. A receipt is an
+  # assertion about the process that wrote it, so a receipt outliving that
+  # process can only mislead the next reader. Nothing consults one across a run
+  # boundary, by construction.
+  git add -A -- . ':(exclude)artifacts/validation/*receipt*.json'
+
+  # SELF-PROVING, because a rule that silently does nothing is how this class of
+  # defect survives. If a receipt is staged anyway - force-added, or the pathspec
+  # edited into uselessness - say so and stop rather than commit it.
+  staged_receipts="$(git diff --cached --name-only -- 'artifacts/validation/*receipt*.json')"
+  if [ -n "$staged_receipts" ]; then
+    echo "Refusing to commit for ${workflow_id}: per-run derivation receipts are staged, and committing one makes every later checkout read it as its own:" >&2
+    echo "$staged_receipts" >&2
+    exit 1
+  fi
+
   if git diff --cached --quiet; then
     echo "No generated changes to commit for ${workflow_id}"
     return 1

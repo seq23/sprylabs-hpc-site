@@ -42,6 +42,16 @@
  *      bytes but a FRESH receipt, and must still be admitted as this run's.
  *   4. The predicate consults HEAD at all, so the check cannot be quietly
  *      removed while the file still parses.
+ *   5. The receipt is not a tracked file and IS covered by .gitignore. Hardening
+ *      the reader protects trees that already carry a committed receipt; only
+ *      the ignore stops new ones being made. A fix that hardens the reader while
+ *      the artifact keeps being committed has closed one door and left the other.
+ *   6. The staging choke point cannot stage a receipt, tested by BEHAVIOUR: the
+ *      real `git add` line is lifted out of commit_and_push_if_changed.sh and run
+ *      in a throwaway repository. A page must still be staged and a consumed
+ *      validation artifact must still be staged - a staging rule that dropped
+ *      published content would let the release exit 0 having published nothing -
+ *      while a receipt must not be.
  *
  * Hard-fails if it executes ZERO assertions, or if any scratch repository could
  * not be built - a harness that examined nothing must not report PASS.
@@ -58,6 +68,7 @@ const GUARD = path.join(ROOT, 'scripts/validation/validate_lastmod_ledger_final.
 const LIB = path.join(ROOT, 'scripts/lib/sitemap_ledger.mjs');
 const TOPOLOGY = path.join(ROOT, 'data/workflows/workflow_topology.json');
 const RECEIPT_REL = 'artifacts/validation/lastmod-derivation-receipt.json';
+const COMMIT_SCRIPT = path.join(ROOT, '.github/scripts/commit_and_push_if_changed.sh');
 
 const assertions = [];
 const failures = [];
@@ -219,6 +230,83 @@ const readReport = (dir) => {
     /HEAD:\$\{LEDGER_RECEIPT_PATH\}/.test(lib) && /atHead === receiptText/.test(lib),
     'the HEAD comparison is gone from scripts/lib/sitemap_ledger.mjs; a committed receipt would again pass as this run\'s',
   );
+}
+
+// ---------------------------------------------------------------- assertion 5
+// The receipt must not be a tracked file. Hardening the reader closes the door
+// for a receipt that gets committed; this closes the door on it being committed
+// at all. Both are needed: the reader protects trees that already carry one
+// (every checkout of history before this change), the ignore protects every
+// tree after it.
+{
+  const tracked = run('git', ['ls-files', '--error-unmatch', RECEIPT_REL], ROOT).status === 0;
+  check(
+    'the derivation receipt is not tracked in this repository',
+    !tracked,
+    `${RECEIPT_REL} is tracked at HEAD. It is evidence about one run; committing it is what made every later checkout start with a receipt it had not written (93977956f).`,
+  );
+  const ignored = run('git', ['check-ignore', '-q', RECEIPT_REL], ROOT).status === 0;
+  check(
+    'the derivation receipt is covered by .gitignore, so `git add -A` cannot reintroduce it',
+    ignored,
+    `${RECEIPT_REL} is not matched by .gitignore, so the next bot release commit re-commits it and the daily failure returns.`,
+  );
+}
+
+// ---------------------------------------------------------------- assertion 6
+// The staging choke point, tested by BEHAVIOUR rather than by reading its prose.
+// The exact `git add` command line is lifted out of the shell script and run in
+// a throwaway repository: a page must still be staged, a validation artifact
+// must not. A prose assertion here would be the "validator that asserts
+// client-facing prose rather than behaviour" this repo keeps finding.
+{
+  const shell = fs.readFileSync(COMMIT_SCRIPT, 'utf8');
+  const m = shell.match(/^\s*(git add [^\n]*)$/m);
+  if (!m) {
+    check('the staging command could be located in the commit helper', false,
+      `no \`git add\` line found in ${path.relative(ROOT, COMMIT_SCRIPT)}; this assertion examined nothing (Rule 0)`);
+  } else {
+    const stagingCommand = m[1].trim();
+    check(
+      'the commit helper does not stage with a bare `git add -A`',
+      !/^git add -A\s*$/.test(stagingCommand),
+      `the commit helper stages with \`${stagingCommand}\`, which sweeps every per-run artifact into a main commit`,
+    );
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ledger-receipt-staging-'));
+    scratches.push(dir);
+    const g = (...a) => run('git', a, dir);
+    g('init', '-q');
+    g('config', 'user.email', 'self-test@example.test');
+    g('config', 'user.name', 'ledger receipt self test');
+    fs.writeFileSync(path.join(dir, 'seed.txt'), 'seed\n');
+    g('add', 'seed.txt'); g('commit', '-qm', 'seed');
+    // Three files, covering both directions of the rule: a published page and a
+    // validation artifact that IS consumed across runs must both still be
+    // staged; only the receipt must not be.
+    fs.mkdirSync(path.join(dir, 'artifacts/validation'), { recursive: true });
+    fs.writeFileSync(path.join(dir, 'published-page.html'), '<html><body><p>published</p></body></html>');
+    fs.writeFileSync(path.join(dir, 'artifacts/validation/workflow-yaml-inventory.json'), '{"workflows":[]}\n');
+    fs.writeFileSync(path.join(dir, RECEIPT_REL), '{"receipt":"lastmod-ledger-derivation"}\n');
+    const staged = run('bash', ['-c', stagingCommand], dir);
+    const names = (run('git', ['diff', '--cached', '--name-only'], dir).stdout || '').split('\n').filter(Boolean);
+    check(
+      'the staging command still stages the content a release publishes',
+      staged.status === 0 && names.includes('published-page.html'),
+      `expected published-page.html to be staged; staged=${JSON.stringify(names)} exit=${staged.status}. `
+      + 'A staging rule that drops published content would make the lane exit 0 having published nothing.',
+    );
+    check(
+      'the staging command still stages validation artifacts that later runs consume',
+      names.includes('artifacts/validation/workflow-yaml-inventory.json'),
+      'workflow-yaml-inventory.json is read with no fallback by validate_workflow_artifacts.mjs and '
+      + `validate_workflow_runtime_mutations.mjs; excluding artifacts/validation wholesale freezes an input. staged=${JSON.stringify(names)}`,
+    );
+    check(
+      'the staging command refuses to stage the per-run derivation receipt',
+      !names.includes(RECEIPT_REL),
+      `expected ${RECEIPT_REL} not to be staged; staged=${JSON.stringify(names)}`,
+    );
+  }
 }
 
 // ------------------------------------------------------------------- Rule 0
