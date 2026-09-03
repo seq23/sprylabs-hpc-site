@@ -54,7 +54,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync, spawnSync } from 'node:child_process';
-import { ROOT, LEDGER_PATH, contentHash, parseSitemaps, fileForLoc } from '../lib/sitemap_ledger.mjs';
+import { ROOT, LEDGER_PATH, contentHash, parseSitemaps, fileForLoc, ledgerDerivationReceipt } from '../lib/sitemap_ledger.mjs';
 
 const LANE_FILE = 'data/workflows/workflow_topology.json';
 const LANE = 'spry-content-release';
@@ -169,8 +169,27 @@ if (inGitRepo && ledgerTextAtHead) {
 
 // ------------------------------- B. a ledger re-derived in this run must fit the tree
 
-let armB = { ran: false, pages_examined: 0, mismatched: 0, examples: [] };
-if (ledgerOnDisk && ledgerTextOnDisk !== null && ledgerTextAtHead !== null && ledgerTextOnDisk !== ledgerTextAtHead) {
+// WHETHER A DERIVATION HAPPENED IS A FACT, NOT AN INFERENCE.
+//
+// This used to be "the ledger on disk differs from the one at HEAD". That proxy
+// is wrong in exactly the case where the derivation is a legitimate no-op: the
+// committed ledger is already correct, `sitemap:lastmod:content` re-derives it
+// to identical bytes, and the proxy concludes nothing was re-derived. In
+// `pending` scope, which REQUIRES arm B, a correct no-op then failed the release
+// lane - observed on run 33728997404, where the derivation reported
+// "ledger_changed": true and the next command said arm B did not run.
+//
+// The derivation now leaves a receipt carrying the sha256 of the ledger it wrote,
+// and that receipt is trusted only while the hash still matches the ledger on
+// disk, so a stale one cannot stand in for a derivation that did not happen. The
+// HEAD-difference remains as a fallback for a tree with no receipt, which is any
+// caller that has not re-derived through this path.
+const derivationReceipt = ledgerDerivationReceipt(ledgerTextOnDisk);
+const rederived = Boolean(derivationReceipt)
+  || (ledgerTextAtHead !== null && ledgerTextOnDisk !== null && ledgerTextOnDisk !== ledgerTextAtHead);
+
+let armB = { ran: false, pages_examined: 0, mismatched: 0, examples: [], receipt: derivationReceipt ? derivationReceipt.generated_at : null };
+if (ledgerOnDisk && ledgerTextOnDisk !== null && rederived) {
   const records = (ledgerOnDisk.urls || []).filter((u) => u.source_file && u.content_sha256);
   const bad = [];
   let examined = 0;
@@ -189,7 +208,7 @@ if (ledgerOnDisk && ledgerTextOnDisk !== null && ledgerTextAtHead !== null && le
   }
   if (examined === 0) errors.push('the ledger was re-derived but describes no readable page; nothing was verified');
 } else {
-  notes.push('arm B skipped: the ledger on disk is the one committed at HEAD (nothing re-derived in this run)');
+  notes.push('arm B skipped: no derivation receipt matches the ledger on disk, and the ledger on disk is the one committed at HEAD, so nothing was re-derived in this run');
 }
 
 // --------------------------------------------- coverage: sitemaps vs ledger
@@ -293,7 +312,7 @@ if (pagesExamined === 0) errors.push('no page was examined against the ledger; t
 // A pre-commit run that did not re-derive the ledger proved nothing: arm A is
 // deliberately forgiving in this scope, so arm B is the arm doing the work.
 if (SCOPE === 'pending' && !armB.ran) {
-  errors.push('pending scope ran without re-deriving the ledger (arm B did not run), so the only arm that judges the tree about to be committed verified nothing (Rule 0)');
+  errors.push('pending scope ran without re-deriving the ledger (arm B did not run: no derivation receipt matches the ledger on disk), so the only arm that judges the tree about to be committed verified nothing (Rule 0)');
 }
 if (coverage.resolvable === 0) errors.push('no sitemap URL resolved to a page on disk; the coverage check verified nothing (Rule 0)');
 

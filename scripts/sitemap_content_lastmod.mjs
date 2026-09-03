@@ -39,7 +39,7 @@ import { execFileSync } from 'node:child_process';
 // One shared definition of page identity, shared with the guard that asserts the
 // committed ledger still describes the tree. Two copies of this normaliser would
 // make a divergence between them indistinguishable from a stale ledger.
-import { ROOT, DATE_RE as DATE, LEDGER_PATH as LEDGER, visibleText, contentHash, parseSitemaps, fileForLoc } from './lib/sitemap_ledger.mjs';
+import { ROOT, DATE_RE as DATE, LEDGER_PATH as LEDGER, visibleText, contentHash, parseSitemaps, fileForLoc, writeLedgerDerivationReceipt } from './lib/sitemap_ledger.mjs';
 
 export { visibleText };
 const TODAY = process.env.SITEMAP_LASTMOD_TODAY || new Date().toISOString().slice(0, 10);
@@ -322,6 +322,11 @@ if (CHECK) {
 
 fs.mkdirSync(path.dirname(ledgerPath), { recursive: true });
 if (ledgerChanged) fs.writeFileSync(ledgerPath, ledgerText);
+// Recorded on EVERY derivation, including the one that changes nothing. A no-op
+// re-derivation is still a derivation, and the guard that requires one has no
+// other way to know it happened. See writeLedgerDerivationReceipt for why the
+// "did the ledger change" proxy it replaces was wrong.
+writeLedgerDerivationReceipt(ledgerText, { ledger_changed: ledgerChanged, stats });
 for (const r of rewrites) fs.writeFileSync(r.file, r.after);
 if (indexAfter) fs.writeFileSync(indexFile, indexAfter);
 
