@@ -7459,6 +7459,42 @@
       "not_applicable_reason": null
     },
     {
+      "validation_id": "VAL-LEDGER-RECEIPT-RUN-SCOPE",
+      "status": "ADMITTED",
+      "name": "validate:ledger-receipt-run-scope",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents a lastmod derivation receipt inherited from the commit being read as proof that THIS run derived the ledger. The receipt lives under artifacts/, which the main-writing lanes commit, so from 93977956f (2026-09-03 12:58Z) every checkout began with a receipt already hashing to the ledger beside it. Spry Content Release run 33767079923 never executed sitemap:lastmod:content - full-content-cycle derives the ledger as its last stage and the lane fails at selfheal, the stage before it - yet arm B of validate:lastmod-ledger-final believed a derivation had happened, compared the untouched committed ledger to a working tree the release stages had rewritten, and reported 1590 of 2231 pages stale. Nothing was stale. Self-heal correctly refused to repair it and the scheduled lane paged its owner every day.",
+      "existing_coverage_gap": "VAL-LASTMOD-DERIVATION-RECEIPT asserts that a receipt is written on every derivation and that a receipt whose hash no longer matches the ledger is refused. It says nothing about WHICH RUN wrote the receipt, and it runs its predicate in a scratch directory that is not a git repository, so the committed-receipt case cannot arise inside it. VAL-SITEMAP-LEDGER-FINAL is the validator that consumes the receipt and so cannot be its own guard.",
+      "scope": [
+        "scripts/lib/sitemap_ledger.mjs",
+        "scripts/sitemap_content_lastmod.mjs",
+        "scripts/validation/validate_lastmod_ledger_final.mjs",
+        "artifacts/validation/lastmod-derivation-receipt.json"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:ledger-receipt-run-scope",
+      "implementation_path": "scripts/validation/self_test_ledger_receipt_run_scope.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "artifacts/validation/ledger-receipt-run-scope.json",
+      "negative_fixture": "artifacts/validation/ledger-receipt-run-scope.json",
+      "evidence_output": "artifacts/validation/ledger-receipt-run-scope.json",
+      "runtime_budget_seconds": 90,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "VAL-LASTMOD-DERIVATION-RECEIPT proves a derivation records itself; this proves the record belongs to the run reading it, and carries the negative arm that a page rewritten after a genuine in-run derivation is still a hard failure, so the recurrence cannot be cleared by disabling arm B.",
+        "VAL-SITEMAP-LEDGER-FINAL is the subject under test here, driven end to end in throwaway git repositories rather than read as source."
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted after Spry Content Release run 33767079923 was reproduced: an inherited receipt made arm B of validate:lastmod-ledger-final report 1590 of 2231 pages stale in a run that had derived nothing, turning the scheduled content lane red every day from 2026-09-03.",
+      "decision_date": "2026-09-03",
+      "matrix_ids": [
+        "MX-LEDGER-RECEIPT-RUN-SCOPE"
+      ],
+      "not_applicable_reason": null
+    },
+    {
       "validation_id": "VAL-NAMED-STOP-EXIT-CODE",
       "status": "ADMITTED",
       "name": "validate:named-stop-exit-code",
@@ -7489,6 +7525,6 @@
       "not_applicable_reason": null
     }
   ],
-  "record_count": 238,
+  "record_count": 239,
   "generated_at": "2026-08-08T23:30:00Z"
 }

@@ -11,6 +11,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { spawnSync } from 'node:child_process';
 
 export const ROOT = process.cwd();
 export const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
@@ -114,14 +115,52 @@ export function writeLedgerDerivationReceipt(ledgerText, extra = {}) {
 }
 
 /**
- * True when the ledger currently on disk is the one a derivation produced.
+ * The receipt is evidence about THIS RUN, and it lives under artifacts/, which
+ * the main-writing lanes commit. So the receipt a derivation writes is pushed to
+ * main, and every later checkout starts with it already on disk, already
+ * matching the ledger committed beside it. Read naively, that receipt says "this
+ * run derived the ledger" to a run that has not derived anything yet.
+ *
+ * That is what turned `Spry Content Release` red every scheduled day from
+ * 2026-09-03. The receipt was first committed at 93977956f (12:58Z). Run
+ * 33767079923 checked it out, never executed `sitemap:lastmod:content` - the
+ * derivation is the LAST stage of full-content-cycle and the lane fails at the
+ * `selfheal` stage before it - and yet arm B of validate:lastmod-ledger-final
+ * believed a derivation had happened. It then measured the untouched committed
+ * ledger against a working tree the release stages had rewritten and reported
+ * 1590 of 2231 pages stale. The ledger was not stale; nothing had re-derived it.
+ *
+ * So a receipt is only this run's if this run WROTE it. A receipt byte-identical
+ * to the one committed at HEAD was written by whatever run produced that commit,
+ * not by this one, and is refused. This does not weaken the no-op case that
+ * `writeLedgerDerivationReceipt` exists for: a real derivation always stamps a
+ * fresh `generated_at`, so even a derivation that leaves the ledger byte-identical
+ * leaves a receipt that differs from the committed one.
+ */
+function receiptTextAtHead() {
+  const res = spawnSync('git', ['show', `HEAD:${LEDGER_RECEIPT_PATH}`], {
+    cwd: ROOT, encoding: 'utf8', maxBuffer: 1024 * 1024 * 16,
+  });
+  return res.status === 0 ? res.stdout : null;
+}
+
+/**
+ * True when the ledger currently on disk is the one a derivation produced
+ * IN THIS RUN.
  * A receipt whose hash no longer matches describes a ledger that something has
  * since replaced, and is refused - it proves nothing about what is there now.
+ * A receipt identical to the committed one describes a previous run, and is
+ * refused for the reason set out above.
  */
 export function ledgerDerivationReceipt(ledgerTextOnDisk) {
+  let receiptText;
+  try { receiptText = fs.readFileSync(path.join(ROOT, LEDGER_RECEIPT_PATH), 'utf8'); } catch { return null; }
   let receipt;
-  try { receipt = JSON.parse(fs.readFileSync(path.join(ROOT, LEDGER_RECEIPT_PATH), 'utf8')); } catch { return null; }
+  try { receipt = JSON.parse(receiptText); } catch { return null; }
   if (!receipt || typeof receipt.ledger_sha256 !== 'string') return null;
   if (ledgerTextOnDisk === null || ledgerTextOnDisk === undefined) return null;
-  return receipt.ledger_sha256 === ledgerTextHash(ledgerTextOnDisk) ? receipt : null;
+  if (receipt.ledger_sha256 !== ledgerTextHash(ledgerTextOnDisk)) return null;
+  const atHead = receiptTextAtHead();
+  if (atHead !== null && atHead === receiptText) return null;   // inherited from the commit, not written here
+  return receipt;
 }
