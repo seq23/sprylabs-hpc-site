@@ -30,6 +30,20 @@ jobs:
       - uses: actions/setup-node@v7
         with: {node-version: 24, cache: npm}
       - run: npm ci --ignore-scripts
+      # This lane's commit_and_push_if_changed.sh call below runs
+      # converge_tree_before_commit.sh, which calls `npm run build:all`
+      # (scripts/build/cached_build_all.sh) directly, one or more times, on
+      # every run. Restoring whatever prior runs already cached here means a
+      # pass whose input state repeats — the common case on a scheduled lane
+      # that mostly touches signals, not generator inputs — is a near-instant
+      # cache hit instead of a full ~2,231-page regeneration. A miss costs
+      # nothing beyond the normal build; see docs/runbooks/BUILD_CACHE.md.
+      - uses: actions/cache@v4
+        with:
+          path: .build-cache
+          key: build-all-cache-v1-${{ github.run_id }}
+          restore-keys: |
+            build-all-cache-v1-
       - name: Check autonomous runtime state
         id: runtime
         run: |
