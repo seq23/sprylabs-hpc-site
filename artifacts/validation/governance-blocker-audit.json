@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-09-03T02:59:56.278Z",
+  "generated_at": "2026-09-03T07:14:28.083Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 212,
+  "admitted_hard_fail_count": 219,
   "reviewed_count": 8,
-  "unreviewed_count": 204,
+  "unreviewed_count": 211,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 164,
-    "EXISTING_REPAIR_AVAILABLE": 7,
+    "REVIEW_REQUIRED": 170,
+    "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 26,
     "REVIEW_WARNING_BOUNDARY": 15
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 164,
-    "EXISTING_REPAIR_AVAILABLE": 7,
+    "REVIEW_REQUIRED": 170,
+    "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 26,
     "REVIEW_WARNING_BOUNDARY": 7
   },
   "migration_status_counts": {
-    "UNREVIEWED": 204,
+    "UNREVIEWED": 211,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -3223,6 +3223,111 @@
         "MX-AUTHORITY-ADMISSION-HONESTY"
       ],
       "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-AGENT-ARTIFACT-ABSORPTION-TRIGGER",
+      "name": "validate:agent-artifact-absorption-trigger",
+      "command": "npm run validate:agent-artifact-absorption-trigger",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-AGENT-ARTIFACT-ABSORPTION-TRIGGER"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "AGENT-BHPC-ACCEPTANCE-VISIBILITY",
+      "name": "agent:bhpc:self-test-acceptance-visibility",
+      "command": "npm run agent:bhpc:self-test-acceptance-visibility",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-AGENT-BHPC-ACCEPTANCE-VISIBILITY"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-DERIVED-ABSORBER-REPRODUCIBILITY",
+      "name": "validate:derived-absorber-reproducibility",
+      "command": "npm run validate:derived-absorber-reproducibility",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-DERIVED-ABSORBER-REPRODUCIBILITY"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-HEALTH-BOUNDARY-REACH",
+      "name": "validate:health-boundary-reach",
+      "command": "npm run validate:health-boundary-reach",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-HEALTH-BOUNDARY-REACH"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-FREEZE-AFTER-CONVERGENCE",
+      "name": "validate:freeze-after-convergence",
+      "command": "npm run validate:freeze-after-convergence",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-FREEZE-AFTER-CONVERGENCE"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-RELEASE-CONVERGE-BEFORE-FREEZE",
+      "name": "release:converge-before-freeze",
+      "command": "npm run release:converge-before-freeze",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-RELEASE-CONVERGE-BEFORE-FREEZE"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-AUTHORITY-PAPER-DISK-REGISTRY-PARITY",
+      "name": "validate:authority-paper-disk-registry-parity",
+      "command": "npm run validate:authority-paper-disk-registry-parity",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Declared validator protection.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-AUTHORITY-PAPER-DISK-REGISTRY-PARITY"
+      ],
+      "suggested_review": "EXISTING_REPAIR_AVAILABLE",
       "migration_status": "UNREVIEWED",
       "decision": null,
       "evidence": []

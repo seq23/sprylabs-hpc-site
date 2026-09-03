@@ -1,76 +1,15 @@
 {
   "schema_version": "1.0",
-  "status": "FAIL",
-  "scope": "committed",
+  "status": "PASS",
+  "scope": "pending",
   "ledger": "data/sitemap/lastmod_ledger.json",
   "pages_examined": 4462,
   "committed_ledger_vs_committed_tree": {
     "ran": true,
-    "scope": "committed",
+    "scope": "pending",
     "pages_examined": 2231,
-    "mismatched": 36,
-    "examples": [
-      {
-        "file": "ai-accountability-system-vs-habit-tracker.html",
-        "ledger": "50f265317225399fbddd442e",
-        "head": "99ab1fce0120732369aba6a8",
-        "lastmod": "2026-09-03"
-      },
-      {
-        "file": "ai-coach-vs-human-coach-for-founders.html",
-        "ledger": "ef92b0f427651a8c828665a6",
-        "head": "5d9fa4008825540f4a6bc228",
-        "lastmod": "2026-09-03"
-      },
-      {
-        "file": "ai-workflow-for-founders.html",
-        "ledger": "2740a04fe205cddb159a9b7d",
-        "head": "f3a3007b763faeb3f42351b6",
-        "lastmod": "2026-09-03"
-      },
-      {
-        "file": "burnout-recovery-and-execution-systems.html",
-        "ledger": "84f53f863d780ae4c503e583",
-        "head": "6f00f5734bc7cf8792923549",
-        "lastmod": "2026-09-03"
-      },
-      {
-        "file": "can-chatgpt-help-with-decision-making.html",
-        "ledger": "c6a263da2b8077c75ec0b07a",
-        "head": "0122b6c6fdf79fd17920d723",
-        "lastmod": "2026-08-31"
-      },
-      {
-        "file": "chatgpt-vs-a-productivity-app.html",
-        "ledger": "fe7c2807cda461d4ea5d5544",
-        "head": "f56742af5309a3233c27fb2f",
-        "lastmod": "2026-09-03"
-      },
-      {
-        "file": "decision-fatigue-and-structured-ai-support.html",
-        "ledger": "8d94d6fcbe6a34e22792fad7",
-        "head": "82dfff983d2e53586bc1febb",
-        "lastmod": "2026-09-03"
-      },
-      {
-        "file": "how-do-you-use-chatgpt-as-an-executive-coach.html",
-        "ledger": "efdd8d906d08272477447553",
-        "head": "4af5f6fbec8e20017abcc452",
-        "lastmod": "2026-09-03"
-      },
-      {
-        "file": "how-to-build-a-performance-system-with-ai.html",
-        "ledger": "b0d1d7585c7faf72f887c8c3",
-        "head": "ca09525e5f7549d417605b33",
-        "lastmod": "2026-09-03"
-      },
-      {
-        "file": "how-to-build-an-accountability-system-with-ai.html",
-        "ledger": "16125c0c038a388b691f0c7b",
-        "head": "b8c75aee3624f1e2fedca505",
-        "lastmod": "2026-08-31"
-      }
-    ]
+    "mismatched": 0,
+    "examples": []
   },
   "rederived_ledger_vs_working_tree": {
     "ran": true,
@@ -92,7 +31,5 @@
     "offenders": []
   },
   "notes": [],
-  "errors": [
-    "36 of 2231 committed page(s) do not match the ledger committed alongside them. The ledger was derived before a stage that rewrote these pages. Re-derive with `npm run sitemap:lastmod:content` AFTER the last stage that mutates page HTML, and commit the result with the pages."
-  ]
+  "errors": []
 }
