@@ -49,6 +49,34 @@
  *
  *   Hard-fails when the convergence authority script is missing, because a lane
  *   can name a script that is not there and still parse clean.
+ *
+ * WHY IT NOW SCANS RUNNER FILES TOO
+ *
+ * The npm walk above is the whole of what this guard used to examine, and it
+ * reported PASS on 8 compliant lanes for a day while `Spry Content Release` was
+ * freezing a half-built tree on every run. The freeze it missed is not in a
+ * package.json chain at all: `workflow:spry-content-release` is
+ * `node scripts/authority_scale/run_guarded_release.mjs`, and that JS runner
+ * calls `npm run authority:scale:freeze` itself. `steps()` records the
+ * `node scripts/...` segment as a raw string and never opens the file, so the
+ * lane simply did not appear in `lanes` - the guard could not reach the thing it
+ * governs, and its PASS line named 8 lanes as if that were all of them.
+ *
+ * Run 33752734110: FROZEN_OUTPUT_MATERIAL_SHRINK, 1,448 pages, 5,059,469 bytes.
+ * The shrink guard caught it. This one should have caught it first.
+ *
+ * So every runner file that invokes the freeze on the live tree must also invoke
+ * the convergence authority earlier in the same file. Validators and self-tests
+ * are excluded BY NAME: scripts/validation/** and scripts/validators/** run the
+ * freeze inside a temporary repository fixture (see
+ * self_test_frozen_output_shrink_guard.mjs), never against the published tree,
+ * so requiring a build:all of them would be meaningless. Comments are stripped
+ * before matching so that prose about the freeze - including this block - is
+ * never mistaken for an invocation.
+ *
+ *   Hard-fails when the file walk returns zero files, or when the scan finds
+ *   zero freeze-invoking runners. Both mean the scan has stopped reaching
+ *   anything, and a guard that examined nothing must not print PASS.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -117,6 +145,109 @@ if (lanes.length === 0) {
   );
 }
 
+/* ------------------------------------------------------------------ *
+ * RUNNER FILES: freeze invocations that never pass through a package  *
+ * script chain. See the header block for why this exists.             *
+ * ------------------------------------------------------------------ */
+
+const RUNNER_ROOTS = ['scripts', '.github'];
+const RUNNER_EXTENSIONS = new Set(['.mjs', '.js', '.cjs', '.sh', '.yml', '.yaml']);
+// Excluded by name, not by accident: these run the freeze against a throwaway
+// repository fixture rather than the published tree.
+const RUNNER_EXCLUDED_DIRS = ['scripts/validation', 'scripts/validators'];
+
+function walkFiles(dir, out = []) {
+  let entries;
+  try { entries = fs.readdirSync(path.join(ROOT, dir), { withFileTypes: true }); } catch { return out; }
+  for (const entry of entries) {
+    const rel = `${dir}/${entry.name}`;
+    if (entry.isDirectory()) {
+      if (entry.name === 'node_modules' || entry.name.startsWith('.git')) continue;
+      walkFiles(rel, out);
+    } else if (RUNNER_EXTENSIONS.has(path.extname(entry.name))) {
+      out.push(rel);
+    }
+  }
+  return out;
+}
+
+/**
+ * Remove comment text so prose about the freeze is never read as a call to it.
+ * Handles `#` (shell, YAML), `//` (JS) and `*`-led block-comment continuation
+ * lines, which is every comment form these runners use.
+ */
+function stripComments(source) {
+  return source
+    .split('\n')
+    .map((line) => {
+      const trimmed = line.trim();
+      if (trimmed.startsWith('#') || trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*')) return '';
+      return line.replace(/\s#\s.*$/, '').replace(/\/\/.*$/, '');
+    })
+    .join('\n');
+}
+
+/**
+ * Flatten quoting and argument punctuation so `run('npm',['run','x'])` and
+ * `npm run x` normalise to the same token sequence.
+ */
+function normalizeInvocations(source) {
+  return stripComments(source).replace(/['"`,[\]()]/g, ' ').replace(/[ \t]+/g, ' ');
+}
+
+const FREEZE_PATTERNS = [
+  new RegExp(`npm run ${FREEZE.replace(/[:.]/g, '\\$&')}(?![A-Za-z0-9:_.-])`),
+  /frozen_outputs\.mjs freeze(?![A-Za-z0-9:_.-])/,
+];
+const CONVERGE_PATTERNS = [
+  /npm run release:converge-before-freeze(?![A-Za-z0-9:_.-])/,
+  new RegExp(AUTHORITY.replace(/[.\\/]/g, '\\$&')),
+];
+
+function firstIndex(text, patterns) {
+  let best = -1;
+  for (const pattern of patterns) {
+    const match = pattern.exec(text);
+    if (match && (best === -1 || match.index < best)) best = match.index;
+  }
+  return best;
+}
+
+const runnerFiles = RUNNER_ROOTS.flatMap((root) => walkFiles(root));
+if (runnerFiles.length === 0) {
+  failures.push(
+    `the runner scan walked ${RUNNER_ROOTS.join(' and ')} and found zero files to read. `
+    + 'The walk is broken, so any freeze invoked outside package.json is unexamined.',
+  );
+}
+
+const runners = [];
+for (const file of runnerFiles) {
+  if (RUNNER_EXCLUDED_DIRS.some((dir) => file === dir || file.startsWith(`${dir}/`))) continue;
+  let text;
+  try { text = normalizeInvocations(fs.readFileSync(path.join(ROOT, file), 'utf8')); } catch { continue; }
+  const freezeAt = firstIndex(text, FREEZE_PATTERNS);
+  if (freezeAt === -1) continue;
+  const convergeAt = firstIndex(text, CONVERGE_PATTERNS);
+  const ok = convergeAt !== -1 && convergeAt < freezeAt;
+  runners.push({ runner: file, freeze_offset: freezeAt, convergence_offset: convergeAt, compliant: ok });
+  if (!ok) {
+    failures.push(
+      convergeAt === -1
+        ? `${file} invokes ${FREEZE} without ever running ${AUTHORITY}; it would accept a half-built tree as the frozen baseline.`
+        : `${file} converges at offset ${convergeAt} but freezes at offset ${freezeAt}; convergence must come first.`,
+    );
+  }
+}
+
+if (runnerFiles.length > 0 && runners.length === 0) {
+  failures.push(
+    `the runner scan read ${runnerFiles.length} file(s) and found no invocation of ${FREEZE} in any of them. `
+    + 'scripts/authority_scale/run_guarded_release.mjs is one, so a zero result means the scan no longer '
+    + 'recognises how the freeze is called and is proving nothing.',
+  );
+}
+
 const report = {
   schema_version: '1.0',
   validator: 'validate:freeze-after-convergence',
@@ -125,6 +256,10 @@ const report = {
   convergence_authority: AUTHORITY,
   lanes_examined: lanes.length,
   lanes,
+  runner_files_walked: runnerFiles.length,
+  runner_excluded_dirs: RUNNER_EXCLUDED_DIRS,
+  runners_examined: runners.length,
+  runners,
   status: failures.length ? 'FAIL' : 'PASS',
   failures,
 };
@@ -138,6 +273,8 @@ if (failures.length) {
 }
 
 console.log(
-  `[validate:freeze-after-convergence] PASS: ${lanes.length} lane(s) run ${FREEZE} and all converge first `
-  + `(${lanes.map((l) => l.lane).join(', ')}).`,
+  `[validate:freeze-after-convergence] PASS: ${lanes.length} npm lane(s) and ${runners.length} runner file(s) `
+  + `invoke ${FREEZE}, and every one of them converges first `
+  + `(${[...lanes.map((l) => l.lane), ...runners.map((r) => r.runner)].join(', ')}); `
+  + `${runnerFiles.length} runner file(s) walked.`,
 );
