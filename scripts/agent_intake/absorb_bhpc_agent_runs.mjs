@@ -3,7 +3,13 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {ROOT, NORMALIZED_ROOT, SOCIAL_RUNS_ROOT, findAgentManifests, writeJson, digestManifest, readJson, manifestAllowedByExactPolicy, loadExactPolicy, runKey, sourceKey, safeScope} from './bhpc_agent_common.mjs';
 
-const NORMALIZATION_CONTRACT_VERSION = '1.4-evidence-provenance-v2';
+// Bumped when the MEANING of a normalized record changes, which is what makes
+// an already-ABSORBED run re-normalize instead of standing on a stale file.
+// 1.5: classifyRow now resolves intended_winner_path from the intended winner
+// URL in preference to a hand-typed repo_file_path, and records the overridden
+// declared path. Without this bump the 13 runs already marked ABSORBED would
+// keep the routing the defect produced, and the fix would change nothing.
+const NORMALIZATION_CONTRACT_VERSION = '1.5-intended-winner-url-precedence';
 
 function socialRecord(row, runDate, digestText, scope) {
   const query = row.query || `${scope} agent signal`;

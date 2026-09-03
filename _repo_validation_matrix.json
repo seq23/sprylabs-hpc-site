@@ -2227,9 +2227,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-AGENT-BHPC-ACCEPTANCE-VISIBILITY",
+      "validation_id": "AGENT-BHPC-ACCEPTANCE-VISIBILITY",
+      "lane": "validation-control-plane",
+      "command": "npm run agent:bhpc:self-test-acceptance-visibility",
+      "order": 214,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 222,
+  "entry_count": 223,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2723,6 +2733,10 @@
         {
           "id": "VAL-AGENT-ARTIFACT-ABSORPTION-TRIGGER",
           "command": "npm run validate:agent-artifact-absorption-trigger"
+        },
+        {
+          "id": "AGENT-BHPC-ACCEPTANCE-VISIBILITY",
+          "command": "npm run agent:bhpc:self-test-acceptance-visibility"
         }
       ]
     },

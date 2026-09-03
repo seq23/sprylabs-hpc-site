@@ -7,6 +7,7 @@ import { isIgnoredDir } from '../lib/repo_walk.mjs';
 import {groupBhpcSemanticEntries, renderBhpcRecordEvidence, renderBhpcVisibleSourceEvidence, requiredBlockTypesForBhpcEntry} from '../lib/bhpc_agent_semantic_contract.mjs';
 import {normalizeBhpcInternalLinkHref, normalizeBhpcExternalCtaHref} from '../lib/bhpc_internal_links.mjs';
 import {mergeBhpcExternalCtaLinks} from '../lib/bhpc_conversion_contract.mjs';
+import {bhpcReaderQuestionCandidates, cleanBhpcReaderHeading} from '../lib/bhpc_agent_reader_questions.mjs';
 import {BHPC_PRODUCT_ANCHOR_SENTENCE, bhpcGeneratedCitationDefinition} from '../lib/bhpc_public_page_contract.mjs';
 import {createRequire} from 'node:module';
 const requireCjs = createRequire(import.meta.url);
@@ -451,11 +452,18 @@ function uniqueValues(values = []) {
 function sourceGroupKey(entry = {}) {
   return String(entry.implementation_path || '').toLowerCase();
 }
+// The list rendered here is NOT built locally any more: it comes from
+// scripts/lib/bhpc_agent_reader_questions.mjs, the same module the acceptance
+// parser reads when it decides required_strings. Built locally, this rendered
+// headings only, while acceptance required headings AND queries - so where a
+// row's derived heading differed from its query, acceptance demanded a string
+// nothing in the repository ever wrote and 20 REQUIRED entries could never
+// clear on any run. See that module for the full account.
 function renderRequiredHeadingVariants(entries = [], existingHtml = '') {
   const primary = entries.find(entry => entry.seo_execution_status === 'VALID') || entries[0] || {};
-  const primaryHeading = String(primary.required_heading || primary.query || '').trim().toLowerCase();
+  const primaryHeading = cleanRequiredHeading(primary.required_heading || primary.query || '').toLowerCase();
   const existing = String(existingHtml || '').toLowerCase();
-  const variants = uniqueValues(entries.map(entry => cleanRequiredHeading(entry.required_heading)))
+  const variants = uniqueValues(bhpcReaderQuestionCandidates(entries))
     .filter(value => value.toLowerCase() !== primaryHeading)
     .filter(value => !existing.includes(value.toLowerCase()) && !existing.includes(escapeHtml(value).toLowerCase()));
   if (!variants.length) return '';
@@ -498,18 +506,10 @@ function citationDefinitionOf(html = '') {
   return text.replace(/\s+/g, ' ').trim();
 }
 
-// A required_heading is transcribed from an audit row, and a few of them carry
-// the shape the page was asked to take rather than the name of the thing:
-// "The 3-Part Email System with H3s for Filter Batch and Triage each with 2-3
-// sentence definitions". Published as an <h2>, that is a reader looking at the
-// brief instead of the page. Keep the subject, drop the layout instruction.
-function cleanRequiredHeading(value = '') {
-  return String(value)
-    .replace(/\s+with\s+(?:numbered\s+)?h[1-6]s?\b[\s\S]*$/i, '')
-    .replace(/\s+each\s+with\s+[\d–-]+\s*(?:to\s*\d+\s*)?sentences?\b[\s\S]*$/i, '')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
+// Was a third private copy of the same regex pair, one of three that had to be
+// edited together and never were. It now delegates to the shared reader-question
+// module, which the acceptance parser reads too.
+const cleanRequiredHeading = cleanBhpcReaderHeading;
 
 function sectionForEntries(entries, existingHtml = '') {
   const primary = entries.find(entry => entry.seo_execution_status === 'VALID') || entries[0];
@@ -586,6 +586,16 @@ function fullHtml(pathValue, entries, spec = {}) {
   // this generator rewrote after the contract change got the redirecting form
   // put back on it.
   const canonical = `https://spryexecutiveos.com${sharedRouteFor(pathValue)}`;
+  // renderBlock('definition_callout') lifts the page's own p.citation-definition
+  // out of the html it is handed, and this path used to hand it nothing - so on
+  // a page this function GENERATES the callout rendered empty, forever, while
+  // the definition it was supposed to lift sat six lines above it in the very
+  // same template. Two components each keeping their own list with no link, in
+  // one function. Measured: 4 REQUIRED entries on
+  // insights/design-an-end-of-day-shutdown-ritual-to-clear-my-mental-task-list.html
+  // failed required_block_absent:definition_callout the moment the page was
+  // regenerated. The paragraph is built once and passed to both.
+  const citationDefinitionParagraph = `<p class="citation-definition"><strong>${escapeHtml(bhpcGeneratedCitationDefinition(title))}</strong></p>`;
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -608,12 +618,12 @@ function fullHtml(pathValue, entries, spec = {}) {
 <body data-bhpc-agent-generated-page="true">
 <main data-bhpc-agent-generated-page="true">
 <h1>${escapeHtml(title)}</h1>
-<p class="citation-definition"><strong>${escapeHtml(bhpcGeneratedCitationDefinition(title))}</strong></p>
+${citationDefinitionParagraph}
 <p>This page turns the intake query into a practical workflow, with the original source provenance retained in machine-readable metadata.</p>
 <p class="product-anchor">This is one of the frameworks inside the <a href="/download.html">Billionaire High Performance Coach system</a> — a structured executive OS for using ChatGPT as your accountability and decision partner.</p>
 <nav class="citation-core-links" aria-label="Core Spry Executive OS pages"><a href="/">Start here</a> · <a href="/strategy">Read the strategy</a></nav>
 ${renderExtractionBlock(spec, entries)}
-${renderSections(entries)}
+${renderSections(entries, citationDefinitionParagraph)}
 <section data-content-contract="cta-block" class="contract-cta"><h2>Next step</h2><p>Use the complete operating system when you want these frameworks installed as a repeatable daily workflow.</p><a href="/download.html" class="btn btn--primary">Review Spry / BHPC</a></section>
 </main>
 </body>
