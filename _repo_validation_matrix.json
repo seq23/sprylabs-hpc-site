@@ -2277,9 +2277,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-AUTHORITY-PAPER-DISK-REGISTRY-PARITY",
+      "validation_id": "VAL-AUTHORITY-PAPER-DISK-REGISTRY-PARITY",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:authority-paper-disk-registry-parity",
+      "order": 219,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 227,
+  "entry_count": 228,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2789,6 +2799,10 @@
         {
           "id": "VAL-FREEZE-AFTER-CONVERGENCE",
           "command": "npm run validate:freeze-after-convergence"
+        },
+        {
+          "id": "VAL-AUTHORITY-PAPER-DISK-REGISTRY-PARITY",
+          "command": "npm run validate:authority-paper-disk-registry-parity"
         }
       ]
     },
@@ -2939,6 +2953,10 @@
         {
           "id": "VAL-AUTHORITY-ADMISSION-HONESTY",
           "command": "npm run validate:authority-admission-honesty"
+        },
+        {
+          "id": "VAL-AUTHORITY-PAPER-DISK-REGISTRY-PARITY",
+          "command": "npm run validate:authority-paper-disk-registry-parity"
         }
       ]
     },
@@ -3033,6 +3051,10 @@
         {
           "id": "VAL-FREEZE-AFTER-CONVERGENCE",
           "command": "npm run validate:freeze-after-convergence"
+        },
+        {
+          "id": "VAL-AUTHORITY-PAPER-DISK-REGISTRY-PARITY",
+          "command": "npm run validate:authority-paper-disk-registry-parity"
         }
       ]
     }
