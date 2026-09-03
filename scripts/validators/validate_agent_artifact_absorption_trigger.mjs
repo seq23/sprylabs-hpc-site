@@ -315,7 +315,12 @@ const cycleDays = cycleDaysFromCrons(triggers?.crons || []);
 // One cycle to be claimed, one more before it is called stranded: a run that
 // lands minutes after tonight's schedule has not missed anything yet.
 const graceDays = cycleDays == null ? null : cycleDays * 2;
-const today = process.env.AGENT_ABSORPTION_TODAY || new Date().toISOString().slice(0, 10);
+// Deliberately no clock override. An earlier draft took `today` from an env
+// var so the window could be proved in both directions, and that knob is the
+// one way this guard could be widened until a stranded artifact fits through
+// it. Both directions are provable without it: flip a week-old manifest back
+// to pending and it fails, drop a manifest dated today and it passes.
+const today = new Date().toISOString().slice(0, 10);
 const ageDays = (runDate) => Math.floor(
   (Date.parse(`${today}T00:00:00Z`) - Date.parse(`${runDate}T00:00:00Z`)) / 86400000,
 );
