@@ -142,6 +142,26 @@ function stripTags(value = '') {
 // Anchor text is lifted from the destination page's own <h1>, falling back to
 // its <title> with the site-name suffix removed. It is never composed from the
 // recommendation text: the anchor has to describe the page a reader lands on.
+// The exact shapes validate_bhpc_browser_structural.mjs refuses to see on a
+// published page. templates/ holds page SKELETONS whose <h1> is the literal
+// string "{{h1}}", so an anchor lifted from one puts an unresolved template
+// token in front of a reader and makes the HOST page read as an unfinished
+// template. Measured: two /insights/ pages failed
+// validate:bhpc-browser-structural with
+// `unresolved_template_or_placeholder` after their related-page block picked up
+// six /templates/* routes. The same exclusion already exists in
+// build_navigation_structure.mjs, repair_dual_domain_metadata.js and
+// validate_money_link_floor.js - this is the fourth component that needed it
+// and did not have it.
+const BHPC_UNRESOLVED_PLACEHOLDER = /\{\{[^}]+\}\}|<%|%>|TODO_PLACEHOLDER/i;
+
+export function isBhpcLinkableRepoPath(repoPath = '') {
+  const rel = String(repoPath || '').replace(/^\/+/, '');
+  if (!rel) return false;
+  if (rel === 'templates' || rel.startsWith('templates/')) return false;
+  return true;
+}
+
 export function bhpcInternalLinkAnchorText(repoPath = '') {
   if (!repoPath) return '';
   let html = '';
@@ -205,9 +225,9 @@ export function deriveBhpcInternalLinkActionsFromNavigation(selfPath = '', {from
     const href = normalizeBhpcInternalLinkHref(rawHref.startsWith('/') ? `https://spryexecutiveos.com${rawHref}` : rawHref);
     if (!href || href === selfHref || seen.has(href)) continue;
     const repoPath = repoPathForBhpcInternalHref(href);
-    if (!repoPath) continue;
+    if (!repoPath || !isBhpcLinkableRepoPath(repoPath)) continue;
     const anchor = text || bhpcInternalLinkAnchorText(repoPath);
-    if (!anchor) continue;
+    if (!anchor || BHPC_UNRESOLVED_PLACEHOLDER.test(anchor)) continue;
     seen.add(href);
     actions.push({
       from_url: fromUrl || '',
