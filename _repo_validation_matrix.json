@@ -2217,9 +2217,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-AGENT-ARTIFACT-ABSORPTION-TRIGGER",
+      "validation_id": "VAL-AGENT-ARTIFACT-ABSORPTION-TRIGGER",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:agent-artifact-absorption-trigger",
+      "order": 213,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 221,
+  "entry_count": 222,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2709,6 +2719,10 @@
         {
           "id": "VAL-AUTHORITY-ADMISSION-HONESTY",
           "command": "npm run validate:authority-admission-honesty"
+        },
+        {
+          "id": "VAL-AGENT-ARTIFACT-ABSORPTION-TRIGGER",
+          "command": "npm run validate:agent-artifact-absorption-trigger"
         }
       ]
     },
