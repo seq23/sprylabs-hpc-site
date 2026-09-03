@@ -2317,9 +2317,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-LEDGER-RECEIPT-RUN-SCOPE",
+      "validation_id": "VAL-LEDGER-RECEIPT-RUN-SCOPE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:ledger-receipt-run-scope",
+      "order": 223,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 231,
+  "entry_count": 232,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2843,6 +2853,10 @@
           "command": "npm run validate:lastmod-derivation-receipt"
         },
         {
+          "id": "VAL-LEDGER-RECEIPT-RUN-SCOPE",
+          "command": "npm run validate:ledger-receipt-run-scope"
+        },
+        {
           "id": "VAL-NAMED-STOP-EXIT-CODE",
           "command": "npm run validate:named-stop-exit-code"
         }
@@ -3105,6 +3119,10 @@
         {
           "id": "VAL-LASTMOD-DERIVATION-RECEIPT",
           "command": "npm run validate:lastmod-derivation-receipt"
+        },
+        {
+          "id": "VAL-LEDGER-RECEIPT-RUN-SCOPE",
+          "command": "npm run validate:ledger-receipt-run-scope"
         },
         {
           "id": "VAL-NAMED-STOP-EXIT-CODE",
