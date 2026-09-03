@@ -560,17 +560,19 @@ function renderSections(entries = [], existingHtml = '') {
 // validator failed with "page declares concept, registry declares decision" -
 // two components each keeping their own list, again. The registry is read here
 // so the writer and the checker cannot disagree.
-let citableExtractionTypes = null;
-function registryExtractionTypeFor(implementationPath = '') {
-  if (!citableExtractionTypes) {
-    citableExtractionTypes = new Map();
+let citablePageRows = null;
+export function bhpcCitableRegistryRow(implementationPath = '') {
+  if (!citablePageRows) {
+    citablePageRows = new Map();
     for (const row of readJson('data/citation/citable_pages.json', {pages: []}).pages || []) {
       const rowPath = String(row?.path || '').replace(/^\/+/, '');
-      const type = String(row?.extraction_type || '').toLowerCase();
-      if (rowPath && type) citableExtractionTypes.set(rowPath, type);
+      if (rowPath) citablePageRows.set(rowPath, row);
     }
   }
-  return citableExtractionTypes.get(String(implementationPath || '').replace(/^\/+/, '')) || '';
+  return citablePageRows.get(String(implementationPath || '').replace(/^\/+/, '')) || null;
+}
+function registryExtractionTypeFor(implementationPath = '') {
+  return String(bhpcCitableRegistryRow(implementationPath)?.extraction_type || '').toLowerCase();
 }
 const SUPPORTED_EXTRACTION_TYPES = new Set(['concept', 'comparison', 'decision']);
 function extractionTypeFor(spec = {}, entries = []) {
@@ -587,8 +589,13 @@ function renderExtractionBlock(spec = {}, entries = []) {
   const primary = entries.find(entry => entry.seo_execution_status === 'VALID') || entries[0] || {};
   const profile = contentProfileFor(primary);
   const type = extractionTypeFor(spec, entries);
-  const title = primary.query || 'Spry Executive OS answer';
-  const framework = primary.required_heading || `${title} Framework`;
+  const registryRow = bhpcCitableRegistryRow(spec.implementation_path);
+  const title = registryRow?.query || primary.query || 'Spry Executive OS answer';
+  // data/citation/citable_pages.json declares the named framework this page must
+  // carry, and validate_citation_contract.py fails on "extraction framework/
+  // registry drift" when the block says anything else. Regenerating a registry
+  // page used to overwrite it with the record's required_heading.
+  const framework = registryRow?.framework || primary.required_heading || `${title} Framework`;
   const direct = profile?.directAnswer || `${title}: define the desired outcome, respect the real constraints, choose one observable next action, and review the result before expanding the plan.`;
   if (type === 'comparison') {
     return `<section class="card citation-extraction" data-llm-answer="true" data-extraction-type="comparison" data-named-framework="${escapeHtml(framework)}" data-priority-citation="true"><h2>${escapeHtml(framework)}: Decision comparison</h2><p>${escapeHtml(direct)}</p><table><thead><tr><th>Decision criterion</th><th>Use ChatGPT / Spry when</th><th>Escalate or use another option when</th></tr></thead><tbody><tr><td>Primary need</td><td>You need structured prioritization, planning, and an explicit next action.</td><td>You need licensed, fiduciary, clinical, or relationship-specific professional judgment.</td></tr><tr><td>Control</td><td>You can provide the goals, constraints, inputs, and decision rules.</td><td>The decision depends on facts or authority the model cannot verify.</td></tr><tr><td>Completion evidence</td><td>The output can be tested through an observable action or deliverable.</td><td>No safe or measurable completion condition can be defined.</td></tr></tbody></table></section>`;
@@ -613,7 +620,11 @@ function renderExtractionBlock(spec = {}, entries = []) {
 }
 function fullHtml(pathValue, entries, spec = {}) {
   const primary = entries[0];
-  const title = primary.query || 'BHPC Agent Semantic Page';
+  const registryRow = bhpcCitableRegistryRow(pathValue);
+  // The registry is the authority for a citable page's H1 and its bold
+  // definition sentence: validate_citation_contract.py compares both literally
+  // and reports "H1/query mismatch" and "visible definition/registry drift".
+  const title = registryRow?.query || primary.query || 'BHPC Agent Semantic Page';
   const description = `${title}: a practical Spry Executive OS guide with clear decision criteria, implementation steps, and next actions.`.slice(0, 155);
   // pathValue is a repo file path. Concatenating it onto the host produced a
   // canonical naming the .html form, which 301s to the clean route - the exact
@@ -630,7 +641,8 @@ function fullHtml(pathValue, entries, spec = {}) {
   // insights/design-an-end-of-day-shutdown-ritual-to-clear-my-mental-task-list.html
   // failed required_block_absent:definition_callout the moment the page was
   // regenerated. The paragraph is built once and passed to both.
-  const citationDefinitionParagraph = `<p class="citation-definition"><strong>${escapeHtml(bhpcGeneratedCitationDefinition(title))}</strong></p>`;
+  const citationDefinition = registryRow?.definition || bhpcGeneratedCitationDefinition(title);
+  const citationDefinitionParagraph = `<p class="citation-definition"><strong>${escapeHtml(citationDefinition)}</strong></p>`;
   return `<!doctype html>
 <html lang="en">
 <head>
