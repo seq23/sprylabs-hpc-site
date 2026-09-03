@@ -1,0 +1,74 @@
+{
+  "schema_version": "1.0",
+  "validator": "validate:freeze-after-convergence",
+  "generated_at": "2026-09-03T12:49:13.266Z",
+  "freeze_step": "authority:scale:freeze",
+  "convergence_authority": ".github/scripts/converge_tree_before_commit.sh",
+  "lanes_examined": 8,
+  "lanes": [
+    {
+      "lane": "release:agent-intake",
+      "freeze_step_index": 99,
+      "convergence_step_index": 95,
+      "compliant": true
+    },
+    {
+      "lane": "release:daily-citation-intelligence",
+      "freeze_step_index": 92,
+      "convergence_step_index": 88,
+      "compliant": true
+    },
+    {
+      "lane": "workflow:daily-citation-intelligence",
+      "freeze_step_index": 93,
+      "convergence_step_index": 89,
+      "compliant": true
+    },
+    {
+      "lane": "release:controlled-citation-intelligence",
+      "freeze_step_index": 93,
+      "convergence_step_index": 89,
+      "compliant": true
+    },
+    {
+      "lane": "release:complete-traffic-qualified-spine",
+      "freeze_step_index": 94,
+      "convergence_step_index": 90,
+      "compliant": true
+    },
+    {
+      "lane": "release:batch-f-agent-continuity",
+      "freeze_step_index": 100,
+      "convergence_step_index": 96,
+      "compliant": true
+    },
+    {
+      "lane": "release:zero-dollar-autonomous",
+      "freeze_step_index": 91,
+      "convergence_step_index": 87,
+      "compliant": true
+    },
+    {
+      "lane": "workflow:zero-dollar-autonomous",
+      "freeze_step_index": 92,
+      "convergence_step_index": 88,
+      "compliant": true
+    }
+  ],
+  "runner_files_walked": 462,
+  "runner_excluded_dirs": [
+    "scripts/validation",
+    "scripts/validators"
+  ],
+  "runners_examined": 1,
+  "runners": [
+    {
+      "runner": "scripts/authority_scale/run_guarded_release.mjs",
+      "freeze_offset": 562,
+      "convergence_offset": 443,
+      "compliant": true
+    }
+  ],
+  "status": "PASS",
+  "failures": []
+}
