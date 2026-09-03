@@ -1,15 +1,13 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
-import {ROOT, NORMALIZED_ROOT, SOCIAL_RUNS_ROOT, findAgentManifests, writeJson, digestManifest, readJson, manifestAllowedByExactPolicy, loadExactPolicy, runKey, sourceKey, safeScope} from './bhpc_agent_common.mjs';
+import {ROOT, NORMALIZED_ROOT, SOCIAL_RUNS_ROOT, findAgentManifests, writeJson, digestManifest, readJson, manifestAllowedByExactPolicy, loadExactPolicy, runKey, sourceKey, safeScope, policyRenormalizesRun, buildNormalizedRecord, buildAbsorbedManifest, NORMALIZATION_CONTRACT_VERSION} from './bhpc_agent_common.mjs';
 
-// Bumped when the MEANING of a normalized record changes, which is what makes
-// an already-ABSORBED run re-normalize instead of standing on a stale file.
-// 1.5: classifyRow now resolves intended_winner_path from the intended winner
-// URL in preference to a hand-typed repo_file_path, and records the overridden
-// declared path. Without this bump the 13 runs already marked ABSORBED would
-// keep the routing the defect produced, and the fix would change nothing.
-const NORMALIZATION_CONTRACT_VERSION = '1.5-intended-winner-url-precedence';
+// NORMALIZATION_CONTRACT_VERSION now lives in bhpc_agent_common.mjs beside the
+// record builder it versions, because validate:derived-absorber-reproducibility
+// re-derives these records and had to be reading the same constant. A validator
+// carrying its own copy of the producer's contract version is the "two
+// components each keeping their own list with no link" defect.
 
 function socialRecord(row, runDate, digestText, scope) {
   const query = row.query || `${scope} agent signal`;
@@ -52,7 +50,9 @@ const allReady = findAgentManifests().filter(entry => {
 });
 function isIncompleteAbsorbedRun(entry) {
   if (entry.manifest?.status !== 'ABSORBED') return false;
-  if (policy.retroactive_processing === false && entry.runDate && policy.effective_from && entry.runDate < policy.effective_from) return false;
+  // Shared with the reproducibility validator, so "which runs this absorber
+  // regenerates" is stated once and both sides read the same answer.
+  if (!policyRenormalizesRun(entry, policy)) return false;
   const scope = safeScope(entry.scope || entry.manifest?.scope || 'bhpc');
   const key = runKey(entry.runDate, scope);
   const normalizedRel = entry.manifest?.normalized_path || `${NORMALIZED_ROOT}/${key}.json`;
@@ -68,29 +68,7 @@ for (const entry of ready) {
   const digest = digestManifest({...entry, scope});
   const key = runKey(entry.runDate, scope);
   const socialKey = sourceKey(entry.runDate, scope);
-  const normalized = {
-    schema_version: '1.4',
-    normalization_contract_version: NORMALIZATION_CONTRACT_VERSION,
-    source: entry.manifest.source || 'twin_agent',
-    run_date: entry.runDate,
-    scope,
-    generated_at: new Date().toISOString(),
-    exact_implementation_policy: 'data/report_fixes/agent_exact_implementation_policy.json',
-    artifact_shape: digest.artifact_shape,
-    csv_path: digest.csvRel || null,
-    html_path: digest.htmlRel || null,
-    json_path: digest.jsonRel || null,
-    csv_sha256: digest.csv_sha256,
-    html_sha256: digest.html_sha256,
-    json_sha256: digest.json_sha256,
-    json_scoreboard: digest.json_scoreboard,
-    record_count: digest.rows.length,
-    page_spec_count: digest.page_specs.length,
-    seo_execution_count: digest.json_seo_execution_count || 0,
-    site_health: digest.site_health,
-    records: digest.rows,
-    page_specs: digest.page_specs,
-  };
+  const normalized = buildNormalizedRecord({entry, digest, scope, generatedAt: new Date().toISOString()});
   const normalizedRel = `${NORMALIZED_ROOT}/${key}.json`;
   writeJson(normalizedRel, normalized);
 
@@ -146,8 +124,7 @@ for (const entry of ready) {
     },
   });
 
-  const manifest = {...entry.manifest, scope, status:'ABSORBED', absorbed_at:new Date().toISOString(), absorbed_record_count:digest.rows.length, normalized_path: normalizedRel, social_run_path: socialRel, exact_implementation_policy:'data/report_fixes/agent_exact_implementation_policy.json'};
-  if (digest.jsonRel) manifest.json_path = digest.jsonRel;
+  const manifest = buildAbsorbedManifest({entry, digest, scope, normalizedRel, socialRel, absorbedAt: new Date().toISOString()});
   writeJson(entry.manifestRel, manifest);
   absorbed.push({run_date: entry.runDate, scope, normalized_path: normalizedRel, social_run_path: socialRel, records: digest.rows.length, page_specs: digest.page_specs.length});
 }
