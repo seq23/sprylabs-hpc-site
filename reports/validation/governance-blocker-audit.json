@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-09-03T16:32:49.057Z",
+  "generated_at": "2026-09-04T13:35:19.362Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 223,
+  "admitted_hard_fail_count": 224,
   "reviewed_count": 8,
-  "unreviewed_count": 215,
+  "unreviewed_count": 216,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 173,
+    "REVIEW_REQUIRED": 174,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 27,
     "REVIEW_WARNING_BOUNDARY": 15
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 173,
+    "REVIEW_REQUIRED": 174,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 27,
     "REVIEW_WARNING_BOUNDARY": 7
   },
   "migration_status_counts": {
-    "UNREVIEWED": 215,
+    "UNREVIEWED": 216,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -3386,6 +3386,21 @@
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-NAMED-STOP-EXIT-CODE"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-BUILD-CACHE-INTEGRITY",
+      "name": "validate:build-cache-integrity",
+      "command": "npm run validate:build-cache-integrity",
+      "owning_lane": "build",
+      "risk_prevented": "Guards scripts/build/ (the content-hash cache wrapping `npm run build:all`, docs/runbooks/BUILD_CACHE.md). Prevents a cache entry existing for a build that never reached exit 0, an entry with a non-empty diff and no payload to restore, a stale payload sitting next to a claimed empty-diff (fixed-point) entry, and the safety invariants in cached_build_all.sh/save_build_cache.mjs/restore_build_cache.mjs being weakened without a validator noticing. This is the exact class of defect that produced FROZEN_OUTPUT_MATERIAL_SHRINK on 2026-09-01: a snapshot taken from a tree build_navigation_structure.mjs and build:visible-faq had not finished writing to yet.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-BUILD-CACHE-INTEGRITY"
       ],
       "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",
