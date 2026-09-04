@@ -2,7 +2,25 @@ name: Admin Command
 on:
   workflow_dispatch:
     inputs:
-      action: {description: "Registered command", required: true, type: string}
+      # A free-text action is what made this workflow's only run red: an audit on
+      # 2026-08-29 dispatched "__parse_probe__", which no handler knows, and the
+      # script threw. A choice input makes an unregistered command undispatchable
+      # rather than merely rejected. The options ARE the commands in
+      # data/admin/command_registry.json, and VAL-ADMIN-COMMAND-VERIFY-LANE fails
+      # if this list and that file ever drift apart.
+      action:
+        description: "Registered command (verify is read-only and changes nothing)"
+        required: true
+        type: choice
+        default: verify
+        options:
+          - verify
+          - pause_autopublishing
+          - resume_autopublishing
+          - set_aggressiveness
+          - suppress_topic
+          - rebuild_admin
+          - emergency_stop
       target_id: {description: "Optional target", required: false, type: string}
       reason: {description: "Optional reason", required: false, type: string}
 env:
@@ -38,7 +56,21 @@ jobs:
           ADMIN_REASON: ${{ inputs.reason }}
         run: node scripts/admin/run_admin_command.mjs
       - run: npm run admin:build && npm run validate:full-safe-autonomy
+      # The read-only lane. `verify` (and its historical alias `__parse_probe__`)
+      # exist so this workflow can be proved reachable without changing main.
+      # They write nothing, so there is nothing to commit, and reaching the push
+      # helper at all would be wrong: it requests a Validate Repo run for a commit
+      # that was never made. The names here are the read_only set of
+      # data/admin/command_registry.json, and VAL-ADMIN-COMMAND-VERIFY-LANE fails
+      # if this condition and that file ever disagree.
+      - name: Read-only command makes no commit
+        if: inputs.action == 'verify' || inputs.action == '__parse_probe__'
+        run: |
+          echo "[admin-command] STOP read_only_no_commit: '${{ inputs.action }}' is a read-only command."
+          echo "It verified the lane end to end - this script, npm run admin:build and npm run validate:full-safe-autonomy all ran and passed."
+          echo "It changed no control state, so there is nothing to commit and main is untouched. This run is green because it did its job, not because it skipped one."
       - name: Commit control state
+        if: inputs.action != 'verify' && inputs.action != '__parse_probe__'
         env:
           ADMIN_ACTION: ${{ inputs.action }}
           ADMIN_TARGET: ${{ inputs.target_id }}

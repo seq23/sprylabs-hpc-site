@@ -2337,9 +2337,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-ADMIN-COMMAND-VERIFY-LANE",
+      "validation_id": "VAL-ADMIN-COMMAND-VERIFY-LANE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:admin-command-verify",
+      "order": 225,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 233,
+  "entry_count": 234,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2873,6 +2883,10 @@
         {
           "id": "VAL-BUILD-CACHE-INTEGRITY",
           "command": "npm run validate:build-cache-integrity"
+        },
+        {
+          "id": "VAL-ADMIN-COMMAND-VERIFY-LANE",
+          "command": "npm run validate:admin-command-verify"
         }
       ]
     },
@@ -3031,6 +3045,10 @@
         {
           "id": "VAL-AUTHORITY-PAPER-DISK-REGISTRY-PARITY",
           "command": "npm run validate:authority-paper-disk-registry-parity"
+        },
+        {
+          "id": "VAL-ADMIN-COMMAND-VERIFY-LANE",
+          "command": "npm run validate:admin-command-verify"
         }
       ]
     },

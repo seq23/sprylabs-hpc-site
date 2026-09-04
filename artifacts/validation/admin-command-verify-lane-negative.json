@@ -1,0 +1,172 @@
+{
+  "schema_version": "1.0",
+  "status": "FAIL",
+  "registered_mutating": [
+    "pause_autopublishing",
+    "resume_autopublishing",
+    "set_aggressiveness",
+    "suppress_topic",
+    "rebuild_admin",
+    "emergency_stop"
+  ],
+  "registered_read_only": [
+    "verify",
+    "__parse_probe__"
+  ],
+  "dropdown_options": [
+    "verify",
+    "pause_autopublishing",
+    "resume_autopublishing",
+    "set_aggressiveness",
+    "suppress_topic",
+    "rebuild_admin",
+    "emergency_stop"
+  ],
+  "assertions_executed": 28,
+  "assertions": [
+    {
+      "assertion": "the command registry declares at least one mutating command",
+      "passed": true,
+      "detail": "data/admin/command_registry.json declares 6; a control plane that can change nothing is not a control plane"
+    },
+    {
+      "assertion": "the command registry declares at least one read-only command",
+      "passed": true,
+      "detail": "data/admin/command_registry.json declares 2; without one there is no green way to probe this workflow, which is the defect this guards"
+    },
+    {
+      "assertion": "scripts/admin/run_admin_command.mjs is readable",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "assertion": "scripts/admin/run_admin_command.mjs still separates its mutating lane",
+      "passed": true,
+      "detail": "the handler-parity check locates handlers after this marker; without it the check would scan the whole file and pass on comments"
+    },
+    {
+      "assertion": "registered command \"pause_autopublishing\" has a handler",
+      "passed": true,
+      "detail": "pause_autopublishing is registered but nothing after the mutating-lane marker in scripts/admin/run_admin_command.mjs dispatches it, so it would be accepted and then do nothing"
+    },
+    {
+      "assertion": "registered command \"resume_autopublishing\" has a handler",
+      "passed": true,
+      "detail": "resume_autopublishing is registered but nothing after the mutating-lane marker in scripts/admin/run_admin_command.mjs dispatches it, so it would be accepted and then do nothing"
+    },
+    {
+      "assertion": "registered command \"set_aggressiveness\" has a handler",
+      "passed": true,
+      "detail": "set_aggressiveness is registered but nothing after the mutating-lane marker in scripts/admin/run_admin_command.mjs dispatches it, so it would be accepted and then do nothing"
+    },
+    {
+      "assertion": "registered command \"suppress_topic\" has a handler",
+      "passed": true,
+      "detail": "suppress_topic is registered but nothing after the mutating-lane marker in scripts/admin/run_admin_command.mjs dispatches it, so it would be accepted and then do nothing"
+    },
+    {
+      "assertion": "registered command \"rebuild_admin\" has a handler",
+      "passed": true,
+      "detail": "rebuild_admin is registered but nothing after the mutating-lane marker in scripts/admin/run_admin_command.mjs dispatches it, so it would be accepted and then do nothing"
+    },
+    {
+      "assertion": "registered command \"emergency_stop\" has a handler",
+      "passed": true,
+      "detail": "emergency_stop is registered but nothing after the mutating-lane marker in scripts/admin/run_admin_command.mjs dispatches it, so it would be accepted and then do nothing"
+    },
+    {
+      "assertion": ".github/workflows/admin-command.yml is readable",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "assertion": "the dispatch input is a choice with options",
+      "passed": true,
+      "detail": "a free-text action is what let \"__parse_probe__\" be dispatched at all; found 7 option(s)"
+    },
+    {
+      "assertion": "every dropdown option is a registered command",
+      "passed": true,
+      "detail": ".github/workflows/admin-command.yml offers , which data/admin/command_registry.json does not register; dispatching one fails exactly as the 2026-08-29 probe did"
+    },
+    {
+      "assertion": "every mutating command is offered by the dropdown",
+      "passed": true,
+      "detail": " can no longer be dispatched, so the control plane has silently lost a control"
+    },
+    {
+      "assertion": "at least one read-only command is offered by the dropdown",
+      "passed": true,
+      "detail": "the dropdown offers no read-only command, so an operator has no green way to probe this workflow"
+    },
+    {
+      "assertion": "the commit step is gated off every read-only command",
+      "passed": false,
+      "detail": "verify, __parse_probe__ would reach commit_and_push_if_changed.sh, which requests a Validate Repo run for a commit that was never made"
+    },
+    {
+      "assertion": "a read-only run prints a named stop instead of committing",
+      "passed": true,
+      "detail": " would end the job with no step explaining why nothing was committed - a stage exiting 0 having said nothing"
+    },
+    {
+      "assertion": "\"verify\" exits 0",
+      "passed": true,
+      "detail": "exit 0; stderr: "
+    },
+    {
+      "assertion": "\"verify\" prints a named stop",
+      "passed": true,
+      "detail": "a green run that does not say what it verified is indistinguishable from one that skipped"
+    },
+    {
+      "assertion": "\"verify\" names what it examined",
+      "passed": true,
+      "detail": "the stop must report the size of the set it checked, or a stub could print the same line"
+    },
+    {
+      "assertion": "\"verify\" writes nothing",
+      "passed": true,
+      "detail": "the read-only command modified the tree, so the workflow would commit for a run that claims to change nothing"
+    },
+    {
+      "assertion": "verify HARD-FAILS against an empty command set",
+      "passed": true,
+      "detail": "verify exited 0 while examining zero commands; a validator that passes on an empty loop is not passing (Rule 0)"
+    },
+    {
+      "assertion": "verify HARD-FAILS when a registered command loses its handler",
+      "passed": true,
+      "detail": "verify exited 0 with \"pause_autopublishing\" registered but undispatchable"
+    },
+    {
+      "assertion": "and says which command lost its handler",
+      "passed": true,
+      "detail": "the failure must name the command, or an operator cannot act on it"
+    },
+    {
+      "assertion": "a mutating command still exits 0",
+      "passed": true,
+      "detail": "exit 0; stderr: "
+    },
+    {
+      "assertion": "a mutating command still changes the control state",
+      "passed": true,
+      "detail": "autopublishing=paused; the read-only lane must not have disarmed the real commands"
+    },
+    {
+      "assertion": "an unregistered command still hard-fails",
+      "passed": true,
+      "detail": "the read-only lane must not have turned the runner into something that accepts anything"
+    },
+    {
+      "assertion": "and it fails by name, not by stack trace",
+      "passed": true,
+      "detail": "the 2026-08-29 probe failed with an unhandled throw; the reason belongs in one readable line"
+    }
+  ],
+  "errors": [
+    "the commit step is gated off every read-only command - verify, __parse_probe__ would reach commit_and_push_if_changed.sh, which requests a Validate Repo run for a commit that was never made"
+  ],
+  "fixture_note": "NEGATIVE FIXTURE. Captured with the commit-step gate removed from .github/workflows/admin-command.yml - the pre-fix shape, in which a read-only verify run reaches commit_and_push_if_changed.sh and requests a Validate Repo run for a commit that was never made. Regenerate by deleting that if: line and rerunning with ADMIN_COMMAND_VERIFY_OUT set to this path."
+}
