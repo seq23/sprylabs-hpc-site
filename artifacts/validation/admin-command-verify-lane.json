@@ -22,7 +22,7 @@
     "rebuild_admin",
     "emergency_stop"
   ],
-  "assertions_executed": 28,
+  "assertions_executed": 29,
   "assertions": [
     {
       "assertion": "the command registry declares at least one mutating command",
@@ -108,6 +108,11 @@
       "assertion": "a read-only run prints a named stop instead of committing",
       "passed": true,
       "detail": " would end the job with no step explaining why nothing was committed - a stage exiting 0 having said nothing"
+    },
+    {
+      "assertion": "the admin surface this guard observes is present",
+      "passed": true,
+      "detail": " missing under /Users/sequoiataylor/GitHub/sprylabs-hpc-site; the behaviour arms cannot observe a control plane that is not there, and a guard examining zero items is not passing (Rule 0)"
     },
     {
       "assertion": "\"verify\" exits 0",

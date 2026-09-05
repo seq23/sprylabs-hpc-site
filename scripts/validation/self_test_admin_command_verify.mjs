@@ -136,7 +136,18 @@ function fingerprint(dir) {
   return out.join('\n');
 }
 
-const probeName = readOnly[0];
+// The behaviour arms below copy the admin surface into a scratch tree. Pointed
+// at a tree where that surface does not exist, they used to die inside
+// fs.copyFileSync with an unhandled ENOENT stack trace. That still exits
+// non-zero, so it never passed on an empty input set - but "fails by name, not
+// by stack trace" is the standard this very file asserts of the runner, and it
+// has to hold for the guard too. A missing surface is now a named assertion.
+const SURFACES = [RUNNER, REGISTRY, CONTROL];
+const missingSurfaces = SURFACES.filter((rel) => !fs.existsSync(path.join(ROOT, rel)));
+check('the admin surface this guard observes is present', missingSurfaces.length === 0,
+  `${missingSurfaces.join(', ')} missing under ${ROOT}; the behaviour arms cannot observe a control plane that is not there, and a guard examining zero items is not passing (Rule 0)`);
+
+const probeName = missingSurfaces.length === 0 ? readOnly[0] : null;
 if (probeName) {
   const dir = scratch();
   const before = fingerprint(dir);
@@ -182,7 +193,7 @@ if (probeName) {
 
 // The mutating lane must still work - a fix that made verify green by breaking
 // the commands would satisfy every check above.
-if (mutating.includes('pause_autopublishing')) {
+if (missingSurfaces.length === 0 && mutating.includes('pause_autopublishing')) {
   const dir = scratch();
   const res = run(dir, 'pause_autopublishing');
   const state = JSON.parse(fs.readFileSync(path.join(dir, CONTROL), 'utf8'));
@@ -192,7 +203,7 @@ if (mutating.includes('pause_autopublishing')) {
   fs.rmSync(dir, { recursive: true, force: true });
 }
 
-{
+if (missingSurfaces.length === 0) {
   const dir = scratch();
   const res = run(dir, 'definitely_not_registered');
   check('an unregistered command still hard-fails', res.status !== 0,
