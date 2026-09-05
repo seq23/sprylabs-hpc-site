@@ -1,0 +1,106 @@
+{
+  "schema_version": "1.0",
+  "status": "PASS",
+  "workflows_walked": 9,
+  "dispatch_options_checked": 20,
+  "manual_only_workflows": [
+    "admin-command.yml",
+    "admin-operations.yml",
+    "spry-full-rebuild.yml"
+  ],
+  "per_workflow": {
+    "admin-command.yml": {
+      "options": [
+        "action=verify",
+        "action=pause_autopublishing",
+        "action=resume_autopublishing",
+        "action=set_aggressiveness",
+        "action=suppress_topic",
+        "action=rebuild_admin",
+        "action=emergency_stop"
+      ],
+      "jobs": 1,
+      "steps": 8,
+      "auto_triggers": []
+    },
+    "admin-operations.yml": {
+      "options": [
+        "operation=refresh_surfaces",
+        "operation=submit_updated_pages",
+        "operation=run_self_healing",
+        "operation=fix_failed_pages",
+        "operation=rerun_distribution"
+      ],
+      "jobs": 1,
+      "steps": 12,
+      "auto_triggers": []
+    },
+    "daily-citation-intelligence.yml": {
+      "options": [],
+      "jobs": 1,
+      "steps": 11,
+      "auto_triggers": [
+        "schedule"
+      ]
+    },
+    "deploy-distribution.yml": {
+      "options": [],
+      "jobs": 1,
+      "steps": 11,
+      "auto_triggers": [
+        "workflow_run"
+      ]
+    },
+    "main-validation-sentinel.yml": {
+      "options": [],
+      "jobs": 1,
+      "steps": 7,
+      "auto_triggers": [
+        "schedule",
+        "workflow_run"
+      ]
+    },
+    "search-intelligence.yml": {
+      "options": [],
+      "jobs": 1,
+      "steps": 9,
+      "auto_triggers": [
+        "schedule"
+      ]
+    },
+    "spry-content-release.yml": {
+      "options": [
+        "mode=full-content-cycle",
+        "mode=agent-intake",
+        "mode=daily-insight",
+        "mode=signal-intake",
+        "mode=synthesis",
+        "mode=whitepaper",
+        "mode=citation-expansion",
+        "mode=strict"
+      ],
+      "jobs": 1,
+      "steps": 16,
+      "auto_triggers": [
+        "schedule",
+        "push"
+      ]
+    },
+    "spry-full-rebuild.yml": {
+      "options": [],
+      "jobs": 1,
+      "steps": 7,
+      "auto_triggers": []
+    },
+    "validate-repo.yml": {
+      "options": [],
+      "jobs": 5,
+      "steps": 41,
+      "auto_triggers": [
+        "push",
+        "pull_request"
+      ]
+    }
+  },
+  "errors": []
+}

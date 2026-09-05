@@ -7600,8 +7600,38 @@
         "MX-ADMIN-COMMAND-VERIFY-LANE"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-WORKFLOW-MANUAL-ONLY-DECLARED",
+      "status": "ADMITTED",
+      "name": "validate:workflow-manual-only-declared",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Admin Operations has never run on main and nothing in the repository could say whether that was deliberate or whether the lane had silently died; 'never ran' looks identical for a workflow nobody needed to dispatch and a workflow everyone forgot. This reconciles every trigger-less workflow against data/workflows/manual_only_workflows.json in both directions, so a manual-only lane must state why it is manual and a declaration that has gone stale fails on the trigger, not on the wording. It also fails a dispatch dropdown that no step gates on and no script reads, which would let every option exit 0 having done nothing the operator asked for.",
+      "existing_coverage_gap": "validate:workflow-contract already resolves npm scripts and node entrypoints for every workflow, so command reachability is deliberately NOT duplicated here. faux_trace_all_workflows.py builds one trace per dispatch option but never asserts the option reaches anything and keeps its own hardcoded copy of the option list. Neither asks whether a workflow with no automatic trigger is intentionally manual, which is the question that had no recorded answer.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:workflow-manual-only-declared",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-workflow-manual-only-declared/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted to answer, in data a validator reads, whether a workflow that has never run on main is intentionally manual or silently dead.",
+      "decision_date": "2026-09-05",
+      "matrix_ids": [
+        "MX-WORKFLOW-MANUAL-ONLY-DECLARED"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 241,
+  "record_count": 242,
   "generated_at": "2026-08-08T23:30:00Z"
 }

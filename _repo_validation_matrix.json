@@ -2347,9 +2347,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-WORKFLOW-MANUAL-ONLY-DECLARED",
+      "validation_id": "VAL-WORKFLOW-MANUAL-ONLY-DECLARED",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:workflow-manual-only-declared",
+      "order": 226,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 234,
+  "entry_count": 235,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2887,6 +2897,10 @@
         {
           "id": "VAL-ADMIN-COMMAND-VERIFY-LANE",
           "command": "npm run validate:admin-command-verify"
+        },
+        {
+          "id": "VAL-WORKFLOW-MANUAL-ONLY-DECLARED",
+          "command": "npm run validate:workflow-manual-only-declared"
         }
       ]
     },
@@ -3049,6 +3063,10 @@
         {
           "id": "VAL-ADMIN-COMMAND-VERIFY-LANE",
           "command": "npm run validate:admin-command-verify"
+        },
+        {
+          "id": "VAL-WORKFLOW-MANUAL-ONLY-DECLARED",
+          "command": "npm run validate:workflow-manual-only-declared"
         }
       ]
     },
