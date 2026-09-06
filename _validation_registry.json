@@ -4499,7 +4499,7 @@
       "name": "validate:extraction-surface-guard:snapshot",
       "check_type": "validator",
       "owning_lane": "validation-control-plane",
-      "risk_prevented": "Declared validator protection.",
+      "risk_prevented": "A page's extractable surface - the text an answer engine actually lifts - can be rewritten by a build without any authored change, and nothing else in the repo records what it used to be. This freezes that surface for every governed page so a later run has something to be compared against; without the snapshot the check below has no baseline and silently passes.",
       "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
       "scope": [
         "repository"
@@ -4529,7 +4529,7 @@
       "name": "validate:extraction-surface-guard:check",
       "check_type": "validator",
       "owning_lane": "validation-control-plane",
-      "risk_prevented": "Declared validator protection.",
+      "risk_prevented": "A build that quietly rewrites what an answer engine extracts is the most expensive silent change this repo can make: the pages still render, the site still deploys, and the thing being cited changes underneath. This refuses any run whose governed surfaces differ from the frozen snapshot unless a human re-baselines deliberately, so a surface change is always somebody's decision.",
       "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
       "scope": [
         "repository"
@@ -7630,8 +7630,38 @@
         "MX-WORKFLOW-MANUAL-ONLY-DECLARED"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-RISK-STATEMENT-SUBSTANCE",
+      "status": "ADMITTED",
+      "name": "validate:risk-statement-substance",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "A HARD_FAIL gate whose risk_prevented is the tool's placeholder cannot be reviewed: nobody reading the registry can tell what it refuses, and audit_governance_blockers.mjs reads that same field when proposing a severity migration. This refuses any new record carrying the placeholder, and ratchets the 53 that predate the rule so the list can only shrink.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:risk-statement-substance",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-risk-statement-substance/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-06",
+      "matrix_ids": [
+        "MX-RISK-STATEMENT-SUBSTANCE"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 242,
+  "record_count": 243,
   "generated_at": "2026-08-08T23:30:00Z"
 }
