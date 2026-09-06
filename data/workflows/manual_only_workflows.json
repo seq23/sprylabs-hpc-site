@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "purpose": "The recorded answer to 'this workflow has never run on main - is it intentionally manual, or silently dead?'. A workflow with no automatic trigger (no schedule, no push, no workflow_run) must be declared here with a reason, and anything declared here must actually have no automatic trigger. VAL-WORKFLOW-MANUAL-ONLY-DECLARED asserts both directions, so the question cannot go unanswered and the answer cannot go stale.",
+  "workflows": {
+    "admin-command.yml": {
+      "decision": "INTENTIONALLY_MANUAL",
+      "reason": "An operator control plane. Every mutating command changes data/admin/runtime_control.json on main, so it must never fire on a timer. It is proved reachable without mutating anything by the read-only 'verify' command (data/admin/command_registry.json), which is the green probe this workflow previously lacked.",
+      "reachability_probe": "dispatch action=verify"
+    },
+    "admin-operations.yml": {
+      "decision": "INTENTIONALLY_MANUAL",
+      "reason": "Five expensive repository-mutating operations (surface refresh, IndexNow submission, self-healing, failed-page repair, distribution rerun) sharing the main-automation concurrency group. They are recovery tools an operator reaches for after a lane has already failed; running them on a timer would fight the scheduled lanes for the same lock and mutate main with no human deciding it was warranted. Never having run on main is the expected state, not a fault.",
+      "reachability_probe": "no read-only operation exists; reachability is asserted statically by VAL-WORKFLOW-MANUAL-ONLY-DECLARED, which proves every dispatch option maps to a step and every command it would run resolves"
+    },
+    "spry-full-rebuild.yml": {
+      "decision": "INTENTIONALLY_MANUAL",
+      "reason": "A full site rebuild. Deliberately dispatch-only so a rebuild of every generated page is always a decision somebody made.",
+      "reachability_probe": "reachability asserted statically by VAL-WORKFLOW-MANUAL-ONLY-DECLARED"
+    }
+  }
+}

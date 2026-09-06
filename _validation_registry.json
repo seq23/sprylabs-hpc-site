@@ -7564,8 +7564,74 @@
         "MX-BUILD-CACHE-INTEGRITY"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-ADMIN-COMMAND-VERIFY-LANE",
+      "status": "ADMITTED",
+      "name": "validate:admin-command-verify",
+      "check_type": "contract",
+      "owning_lane": "admin-control-plane",
+      "risk_prevented": "Keeps the Admin Command workflow provable without turning it red, and keeps its three copies of the command list in agreement. The workflow's only run ever - 33274444603 on 2026-08-29, event=workflow_dispatch - was an audit dispatching action __parse_probe__ with reason 'audit parse probe'. The workflow was healthy; run_admin_command.mjs threw because __parse_probe__ was not a registered command, so confirming the lane worked is what made it fail, and that failure stayed the latest status of an ACTIVE workflow. There was no green way to probe it: every registered command mutated data/admin/runtime_control.json and was committed to main. This asserts that a read-only command exists, is offered by the dispatch dropdown, exits 0 having actually examined the registered commands and the control state, writes nothing, and is gated out of the commit step; and that the mutating commands still work.",
+      "existing_coverage_gap": "Nothing checked that the workflow could be exercised at all. validate:workflow-write-scopes judges permissions, not reachability. The command list now exists in three places - data/admin/command_registry.json, the dispatch branches in scripts/admin/run_admin_command.mjs, and the choice options plus commit gate in .github/workflows/admin-command.yml - and YAML cannot read JSON, so without this guard they are three lists with no link, which is how the original defect was possible.",
+      "scope": [
+        "data/admin/command_registry.json",
+        "scripts/admin/run_admin_command.mjs",
+        ".github/workflows/admin-command.yml",
+        "data/admin/runtime_control.json"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:admin-command-verify",
+      "implementation_path": "scripts/validation/self_test_admin_command_verify.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "artifacts/validation/admin-command-verify-lane.json",
+      "negative_fixture": "artifacts/validation/admin-command-verify-lane-negative.json",
+      "evidence_output": "artifacts/validation/admin-command-verify-lane.json",
+      "runtime_budget_seconds": 60,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [
+        "VAL-WORKFLOW-WRITE-SCOPES checks what a workflow is permitted to write; it says nothing about whether the workflow can be run without changing main.",
+        "The admin-command.yml registry record describes the workflow as a state-control surface; it does not assert that its command list matches the script's or the dropdown's."
+      ],
+      "retirement_offset": null,
+      "decision": "Admitted after run 33274444603 was reproduced as a healthy workflow made permanently red by the only means available for probing it. Carries two negative arms: a registry with no commands must hard-fail (Rule 0), and a registered command whose handler is deleted must hard-fail.",
+      "decision_date": "2026-09-04",
+      "matrix_ids": [
+        "MX-ADMIN-COMMAND-VERIFY-LANE"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-WORKFLOW-MANUAL-ONLY-DECLARED",
+      "status": "ADMITTED",
+      "name": "validate:workflow-manual-only-declared",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Admin Operations has never run on main and nothing in the repository could say whether that was deliberate or whether the lane had silently died; 'never ran' looks identical for a workflow nobody needed to dispatch and a workflow everyone forgot. This reconciles every trigger-less workflow against data/workflows/manual_only_workflows.json in both directions, so a manual-only lane must state why it is manual and a declaration that has gone stale fails on the trigger, not on the wording. It also fails a dispatch dropdown that no step gates on and no script reads, which would let every option exit 0 having done nothing the operator asked for.",
+      "existing_coverage_gap": "validate:workflow-contract already resolves npm scripts and node entrypoints for every workflow, so command reachability is deliberately NOT duplicated here. faux_trace_all_workflows.py builds one trace per dispatch option but never asserts the option reaches anything and keeps its own hardcoded copy of the option list. Neither asks whether a workflow with no automatic trigger is intentionally manual, which is the question that had no recorded answer.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:workflow-manual-only-declared",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-workflow-manual-only-declared/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted to answer, in data a validator reads, whether a workflow that has never run on main is intentionally manual or silently dead.",
+      "decision_date": "2026-09-05",
+      "matrix_ids": [
+        "MX-WORKFLOW-MANUAL-ONLY-DECLARED"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 240,
+  "record_count": 242,
   "generated_at": "2026-08-08T23:30:00Z"
 }

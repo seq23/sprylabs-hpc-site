@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "purpose": "The one list of admin commands. scripts/admin/run_admin_command.mjs dispatches from it, and .github/workflows/admin-command.yml gates its commit step on the read_only set. Neither may keep a private copy: VAL-ADMIN-COMMAND-VERIFY-LANE asserts the two agree.",
+  "mutating": [
+    "pause_autopublishing",
+    "resume_autopublishing",
+    "set_aggressiveness",
+    "suppress_topic",
+    "rebuild_admin",
+    "emergency_stop"
+  ],
+  "read_only": [
+    "verify",
+    "__parse_probe__"
+  ],
+  "read_only_note": "verify proves the workflow is reachable and internally consistent without touching main. __parse_probe__ is the historical name an audit dispatched on 2026-08-29 (run 33274444603); it is kept as an alias so that recorded name resolves instead of throwing."
+}
