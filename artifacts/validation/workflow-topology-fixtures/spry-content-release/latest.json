@@ -13,9 +13,9 @@
     "contract_id": "spry-content-release",
     "lane": "spry-content-release",
     "mode": "full-content-cycle",
-    "component_count": 9
+    "component_count": 10
   },
-  "started_at": "2026-08-29T03:41:09.637Z",
+  "started_at": "2026-09-06T04:32:54.046Z",
   "command": "npm run workflow:spry-content-release -- --mode full-content-cycle",
   "command_exit_code": 0,
   "contract_file": "data/workflows/workflow_contracts.json",
@@ -68,8 +68,8 @@
     {
       "label": "strategy:gap-fill:backlog",
       "command": "npm run strategy:gap-fill:backlog",
-      "started_at": "2026-08-29T03:41:09.638Z",
-      "completed_at": "2026-08-29T03:41:09.638Z",
+      "started_at": "2026-09-06T04:32:54.048Z",
+      "completed_at": "2026-09-06T04:32:54.048Z",
       "exit_code": 0,
       "signal": null,
       "execution": "skipped_trace_only",
@@ -81,8 +81,8 @@
     {
       "label": "strategy:gap-fill:release-gap",
       "command": "npm run strategy:gap-fill:release-gap",
-      "started_at": "2026-08-29T03:41:09.639Z",
-      "completed_at": "2026-08-29T03:41:09.639Z",
+      "started_at": "2026-09-06T04:32:54.048Z",
+      "completed_at": "2026-09-06T04:32:54.048Z",
       "exit_code": 0,
       "signal": null,
       "execution": "skipped_trace_only",
@@ -94,8 +94,8 @@
     {
       "label": "atlas:build",
       "command": "npm run atlas:build",
-      "started_at": "2026-08-29T03:41:09.639Z",
-      "completed_at": "2026-08-29T03:41:09.639Z",
+      "started_at": "2026-09-06T04:32:54.048Z",
+      "completed_at": "2026-09-06T04:32:54.048Z",
       "exit_code": 0,
       "signal": null,
       "execution": "skipped_trace_only",
@@ -107,8 +107,8 @@
     {
       "label": "release:agent-intake:raw",
       "command": "npm run release:agent-intake:raw",
-      "started_at": "2026-08-29T03:41:09.639Z",
-      "completed_at": "2026-08-29T03:41:09.639Z",
+      "started_at": "2026-09-06T04:32:54.048Z",
+      "completed_at": "2026-09-06T04:32:54.048Z",
       "exit_code": 0,
       "signal": null,
       "execution": "skipped_trace_only",
@@ -120,8 +120,8 @@
     {
       "label": "content:pipeline",
       "command": "npm run content:pipeline",
-      "started_at": "2026-08-29T03:41:09.639Z",
-      "completed_at": "2026-08-29T03:41:09.639Z",
+      "started_at": "2026-09-06T04:32:54.048Z",
+      "completed_at": "2026-09-06T04:32:54.048Z",
       "exit_code": 0,
       "signal": null,
       "execution": "skipped_trace_only",
@@ -133,8 +133,8 @@
     {
       "label": "citation:5k:plan",
       "command": "npm run citation:5k:plan",
-      "started_at": "2026-08-29T03:41:09.639Z",
-      "completed_at": "2026-08-29T03:41:09.639Z",
+      "started_at": "2026-09-06T04:32:54.048Z",
+      "completed_at": "2026-09-06T04:32:54.048Z",
       "exit_code": 0,
       "signal": null,
       "execution": "skipped_trace_only",
@@ -146,8 +146,8 @@
     {
       "label": "release:content-finalize",
       "command": "npm run release:content-finalize",
-      "started_at": "2026-08-29T03:41:09.639Z",
-      "completed_at": "2026-08-29T03:41:09.639Z",
+      "started_at": "2026-09-06T04:32:54.048Z",
+      "completed_at": "2026-09-06T04:32:54.048Z",
       "exit_code": 0,
       "signal": null,
       "execution": "skipped_trace_only",
@@ -159,8 +159,8 @@
     {
       "label": "validate:batch-g-continuity",
       "command": "npm run validate:batch-g-continuity",
-      "started_at": "2026-08-29T03:41:09.639Z",
-      "completed_at": "2026-08-29T03:41:09.639Z",
+      "started_at": "2026-09-06T04:32:54.049Z",
+      "completed_at": "2026-09-06T04:32:54.049Z",
       "exit_code": 0,
       "signal": null,
       "execution": "skipped_trace_only",
@@ -172,8 +172,8 @@
     {
       "label": "selfheal",
       "command": "npm run selfheal -- --profile=content-quality --max=2",
-      "started_at": "2026-08-29T03:41:09.639Z",
-      "completed_at": "2026-08-29T03:41:09.639Z",
+      "started_at": "2026-09-06T04:32:54.049Z",
+      "completed_at": "2026-09-06T04:32:54.049Z",
       "exit_code": 0,
       "signal": null,
       "execution": "skipped_trace_only",
@@ -181,7 +181,20 @@
         "input_digest": "spry-content-release:full-content-cycle:selfheal",
         "expected_command": "npm run selfheal -- --profile=content-quality --max=2"
       }
+    },
+    {
+      "label": "sitemap:lastmod:content",
+      "command": "npm run sitemap:lastmod:content",
+      "started_at": "2026-09-06T04:32:54.049Z",
+      "completed_at": "2026-09-06T04:32:54.049Z",
+      "exit_code": 0,
+      "signal": null,
+      "execution": "skipped_trace_only",
+      "fake_data": {
+        "input_digest": "spry-content-release:full-content-cycle:sitemap:lastmod:content",
+        "expected_command": "npm run sitemap:lastmod:content"
+      }
     }
   ],
-  "completed_at": "2026-08-29T03:41:09.639Z"
+  "completed_at": "2026-09-06T04:32:54.049Z"
 }

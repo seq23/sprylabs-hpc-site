@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-09-05T14:31:30.677Z",
+  "generated_at": "2026-09-06T04:32:54.605Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 224,
+  "admitted_hard_fail_count": 227,
   "reviewed_count": 8,
-  "unreviewed_count": 216,
+  "unreviewed_count": 219,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 174,
+    "REVIEW_REQUIRED": 177,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 27,
     "REVIEW_WARNING_BOUNDARY": 15
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 174,
+    "REVIEW_REQUIRED": 177,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 27,
     "REVIEW_WARNING_BOUNDARY": 7
   },
   "migration_status_counts": {
-    "UNREVIEWED": 216,
+    "UNREVIEWED": 219,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -3401,6 +3401,51 @@
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-BUILD-CACHE-INTEGRITY"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-ADMIN-COMMAND-VERIFY-LANE",
+      "name": "validate:admin-command-verify",
+      "command": "npm run validate:admin-command-verify",
+      "owning_lane": "admin-control-plane",
+      "risk_prevented": "Keeps the Admin Command workflow provable without turning it red, and keeps its three copies of the command list in agreement. The workflow's only run ever - 33274444603 on 2026-08-29, event=workflow_dispatch - was an audit dispatching action __parse_probe__ with reason 'audit parse probe'. The workflow was healthy; run_admin_command.mjs threw because __parse_probe__ was not a registered command, so confirming the lane worked is what made it fail, and that failure stayed the latest status of an ACTIVE workflow. There was no green way to probe it: every registered command mutated data/admin/runtime_control.json and was committed to main. This asserts that a read-only command exists, is offered by the dispatch dropdown, exits 0 having actually examined the registered commands and the control state, writes nothing, and is gated out of the commit step; and that the mutating commands still work.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-ADMIN-COMMAND-VERIFY-LANE"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-WORKFLOW-MANUAL-ONLY-DECLARED",
+      "name": "validate:workflow-manual-only-declared",
+      "command": "npm run validate:workflow-manual-only-declared",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Admin Operations has never run on main and nothing in the repository could say whether that was deliberate or whether the lane had silently died; 'never ran' looks identical for a workflow nobody needed to dispatch and a workflow everyone forgot. This reconciles every trigger-less workflow against data/workflows/manual_only_workflows.json in both directions, so a manual-only lane must state why it is manual and a declaration that has gone stale fails on the trigger, not on the wording. It also fails a dispatch dropdown that no step gates on and no script reads, which would let every option exit 0 having done nothing the operator asked for.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-WORKFLOW-MANUAL-ONLY-DECLARED"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-RISK-STATEMENT-SUBSTANCE",
+      "name": "validate:risk-statement-substance",
+      "command": "npm run validate:risk-statement-substance",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Prevents a HARD_FAIL gate being admitted with no recorded reason to exist. validate:validation-registry tests risk_prevented for emptiness only, and scripts/validation/add_validator.mjs hardcoded the non-empty string 'Declared validator protection.' into every record it created, so 55 of 240 records reported complete metadata while stating nothing - including the two extraction surface guard records, the HARD_FAIL pair behind Validate Repo runs 33515334720 (1,628 drifted surfaces) and 33727145801 (230 changed surfaces) and, downstream of the first, Main Validation Sentinel alarm 33533720679. risk_prevented is what a human reads to review a gate and what audit_governance_blockers.mjs reads when proposing a severity migration, so a placeholder there makes the gate unreviewable and its severity unmigratable on evidence. The writer is fixed - validation:add now requires --risk and refuses the placeholder it used to emit - and this holds the remaining 53 as a shrink-only backlog in data/validation/risk_statement_backlog.json: a placeholder outside the list fails, the list growing past its ceiling fails, and a listed id that has since been written properly or has left the registry fails until it is removed and the ceiling lowered, so the list cannot rot into a permanent exemption. It hard-fails rather than passing on an empty set: zero registry records, an absent ids array or a missing ceiling each stop the run.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-RISK-STATEMENT-SUBSTANCE"
       ],
       "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",

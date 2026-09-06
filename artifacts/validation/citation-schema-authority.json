@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "files_scanned": 512,
+  "emitters_found": 10,
+  "compliant": [
+    "scripts/citation/apply_citation_program.py",
+    "scripts/citation/repair_schema_parity.py",
+    "scripts/content/build_manual_expansion_pages.mjs",
+    "scripts/content/build_visible_faq_sections.py",
+    "scripts/content/repair_programmatic_registry_owners.mjs",
+    "scripts/internal/build_navigation_structure.mjs",
+    "scripts/programmatic/generate_aplayer_phase_expansion.mjs",
+    "scripts/validation/validate_citation_schema_authority_reach.mjs",
+    "scripts/validation/validate_citation_schema_serialization.mjs"
+  ],
+  "carried_bypass_debt": [],
+  "resolved_bypass_debt": [],
+  "declared_out_of_scope": [
+    {
+      "file": "scripts/build_insights.js",
+      "reason": "emits an unlabeled <script type=\"application/ld+json\"> Article block, a different block from CITATION_PAGE_SCHEMA; its OWN_TAIL_SCRIPTS regex matches only the attribute-free tag so it cannot write the id-bearing block"
+    }
+  ],
+  "stale_declarations": [],
+  "errors": []
+}

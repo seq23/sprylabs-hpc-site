@@ -1,11 +1,11 @@
 {
   "schema_version": "1.1",
-  "generated_at": "2026-08-29T03:41:09.400Z",
+  "generated_at": "2026-09-06T04:32:53.781Z",
   "status": "PASS",
   "canonical_lane_count": 9,
   "governed_workflow_count": 3,
   "alias_workflow_count": 0,
-  "stage_count": 88,
+  "stage_count": 96,
   "canonical_lanes": {
     "content-authority": {
       "command": "npm run workflow:content-authority",
@@ -140,14 +140,14 @@
         "citation-velocity-5k.yml"
       ],
       "stage_modes": {
-        "agent-intake": 1,
-        "daily-insight": 4,
-        "signal-intake": 10,
-        "synthesis": 4,
-        "whitepaper": 2,
-        "citation-expansion": 2,
-        "strict": 2,
-        "full-content-cycle": 9
+        "agent-intake": 2,
+        "daily-insight": 5,
+        "signal-intake": 11,
+        "synthesis": 5,
+        "whitepaper": 3,
+        "citation-expansion": 3,
+        "strict": 3,
+        "full-content-cycle": 10
       }
     },
     "spry-full-rebuild": {
@@ -176,6 +176,9 @@
   },
   "aliases": [],
   "warnings": [
+    "workflow:citation-velocity-5k: workflow script is neither canonical nor governed alias",
+    "workflow:content-authority:raw: workflow script is neither canonical nor governed alias",
+    "workflow:content-expansion:raw: workflow script is neither canonical nor governed alias",
     "workflow:daily-insight: workflow script is neither canonical nor governed alias",
     "workflow:execution-strict: workflow script is neither canonical nor governed alias",
     "workflow:reddit-daily: workflow script is neither canonical nor governed alias",
@@ -183,11 +186,8 @@
     "workflow:social-signal: workflow script is neither canonical nor governed alias",
     "workflow:synthesis-weekly: workflow script is neither canonical nor governed alias",
     "workflow:whitepaper: workflow script is neither canonical nor governed alias",
-    "workflow:citation-velocity-5k: workflow script is neither canonical nor governed alias",
-    "workflow:content-authority:raw: workflow script is neither canonical nor governed alias",
-    "workflow:content-expansion:raw: workflow script is neither canonical nor governed alias",
     "workflow:zero-dollar-autonomous: workflow script is neither canonical nor governed alias",
-    "workflow:monitor: still present as a direct component command; target=validate-repo/postdeploy-public-audit evidence only"
+    "workflow:monitor: still present as a direct component command; target=validate-repo evidence only"
   ],
   "errors": []
 }

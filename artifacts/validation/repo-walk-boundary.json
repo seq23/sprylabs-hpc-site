@@ -1,0 +1,62 @@
+{
+  "status": "PASS",
+  "files_scanned": 478,
+  "boundary_dirs": [
+    ".claude",
+    ".git",
+    "node_modules",
+    ".build",
+    ".pages-output",
+    ".wrangler",
+    ".clarity",
+    ".validation-cache",
+    ".validation-runtime",
+    "coverage",
+    "test-results",
+    "playwright-report",
+    "releases",
+    "__pycache__",
+    "scripts/_vendor"
+  ],
+  "migrated": [
+    "scripts/agent_intake/apply_bhpc_agent_exact_implementation.mjs",
+    "scripts/apply_fanout.js",
+    "scripts/cadence_gate.js",
+    "scripts/citation/apply_citation_program.py",
+    "scripts/repair/repair_published_agent_blocks.mjs",
+    "scripts/template_share.js",
+    "scripts/validation/validate_citation_schema_serialization.mjs",
+    "scripts/validators/validate_bhpc_browser_structural.mjs",
+    "scripts/validators/validate_bhpc_no_marker_only_agent_pass.mjs"
+  ],
+  "carried_unmigrated": [
+    {
+      "file": "scripts/content/apply_redirect_map.mjs",
+      "owner": "build chain",
+      "exposed": false
+    },
+    {
+      "file": "scripts/content/build_visible_faq_sections.py",
+      "owner": "build chain",
+      "exposed": false
+    },
+    {
+      "file": "scripts/internal/build_navigation_structure.mjs",
+      "owner": "build chain",
+      "exposed": false
+    }
+  ],
+  "carried_exposed_count": 0,
+  "paid": [],
+  "read_only_root_walkers": [
+    "scripts/audit_warnings.js",
+    "scripts/validate_fanout_warning.js",
+    "scripts/validation/validate_operator_doc_currency.mjs",
+    "scripts/validation/validate_retired_route_references.mjs",
+    "scripts/validators/validate_no_patch_artifacts.js",
+    "scripts/validators/validate_short_answer_uniqueness.py",
+    "scripts/validators/validate_url_contract.js",
+    "scripts/validators/validate_velocity_critical.js"
+  ],
+  "errors": []
+}

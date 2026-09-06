@@ -1,24 +1,25 @@
 {
   "schema_version": "1.0",
   "status": "PASS",
-  "scope": "pending",
+  "scope": "committed",
   "ledger": "data/sitemap/lastmod_ledger.json",
-  "pages_examined": 4462,
+  "pages_examined": 2231,
   "committed_ledger_vs_committed_tree": {
     "ran": true,
-    "scope": "pending",
+    "scope": "committed",
     "pages_examined": 2231,
     "mismatched": 0,
     "examples": []
   },
   "rederived_ledger_vs_working_tree": {
-    "ran": true,
-    "pages_examined": 2231,
+    "ran": false,
+    "pages_examined": 0,
     "mismatched": 0,
-    "examples": []
+    "examples": [],
+    "receipt": null
   },
   "sitemap_coverage": {
-    "reference": "the working tree",
+    "reference": "the tree at HEAD",
     "sitemap_urls": 2231,
     "resolvable": 2231,
     "missing_from_ledger": 0,
@@ -30,6 +31,8 @@
     "modes_checked": 8,
     "offenders": []
   },
-  "notes": [],
+  "notes": [
+    "arm B skipped: no derivation receipt matches the ledger on disk, and the ledger on disk is the one committed at HEAD, so nothing was re-derived in this run"
+  ],
   "errors": []
 }

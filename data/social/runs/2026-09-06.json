@@ -1,0 +1,21 @@
+{
+  "generated_at": "2026-09-06T04:36:54.567Z",
+  "policy": "signals_only_no_firehose",
+  "pipeline_role": "query_discovery_only",
+  "records": [],
+  "health": [],
+  "stop_reason": {
+    "code": "NO_SOURCE_MATCHES_COLLECTOR_CONTRACT",
+    "message": "data/social/source_registry.json is out of contract with this collector: 2 registry entr(ies) are not objects with a .platform field: [reddit, forums] | the registry declares no object-shaped source at all, so this collector can never do work.",
+    "declared_sources": [
+      "reddit",
+      "forums"
+    ],
+    "supported_platforms": [
+      "youtube",
+      "manual"
+    ],
+    "exit_code": 1
+  },
+  "source_mode": "no_active_sources"
+}
