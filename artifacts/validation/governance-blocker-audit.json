@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-09-05T14:31:30.677Z",
+  "generated_at": "2026-09-06T13:32:17.058Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 224,
+  "admitted_hard_fail_count": 227,
   "reviewed_count": 8,
-  "unreviewed_count": 216,
+  "unreviewed_count": 219,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 174,
+    "REVIEW_REQUIRED": 177,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 27,
     "REVIEW_WARNING_BOUNDARY": 15
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 174,
+    "REVIEW_REQUIRED": 177,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 27,
     "REVIEW_WARNING_BOUNDARY": 7
   },
   "migration_status_counts": {
-    "UNREVIEWED": 216,
+    "UNREVIEWED": 219,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -2002,7 +2002,7 @@
       "name": "validate:extraction-surface-guard:snapshot",
       "command": "npm run validate:extraction-surface-guard:snapshot",
       "owning_lane": "validation-control-plane",
-      "risk_prevented": "Declared validator protection.",
+      "risk_prevented": "A page's extractable surface - the text an answer engine actually lifts - can be rewritten by a build without any authored change, and nothing else in the repo records what it used to be. This freezes that surface for every governed page so a later run has something to be compared against; without the snapshot the check below has no baseline and silently passes.",
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-127"
@@ -2017,7 +2017,7 @@
       "name": "validate:extraction-surface-guard:check",
       "command": "npm run validate:extraction-surface-guard:check",
       "owning_lane": "validation-control-plane",
-      "risk_prevented": "Declared validator protection.",
+      "risk_prevented": "A build that quietly rewrites what an answer engine extracts is the most expensive silent change this repo can make: the pages still render, the site still deploys, and the thing being cited changes underneath. This refuses any run whose governed surfaces differ from the frozen snapshot unless a human re-baselines deliberately, so a surface change is always somebody's decision.",
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-128"
@@ -3401,6 +3401,51 @@
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-BUILD-CACHE-INTEGRITY"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-ADMIN-COMMAND-VERIFY-LANE",
+      "name": "validate:admin-command-verify",
+      "command": "npm run validate:admin-command-verify",
+      "owning_lane": "admin-control-plane",
+      "risk_prevented": "Keeps the Admin Command workflow provable without turning it red, and keeps its three copies of the command list in agreement. The workflow's only run ever - 33274444603 on 2026-08-29, event=workflow_dispatch - was an audit dispatching action __parse_probe__ with reason 'audit parse probe'. The workflow was healthy; run_admin_command.mjs threw because __parse_probe__ was not a registered command, so confirming the lane worked is what made it fail, and that failure stayed the latest status of an ACTIVE workflow. There was no green way to probe it: every registered command mutated data/admin/runtime_control.json and was committed to main. This asserts that a read-only command exists, is offered by the dispatch dropdown, exits 0 having actually examined the registered commands and the control state, writes nothing, and is gated out of the commit step; and that the mutating commands still work.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-ADMIN-COMMAND-VERIFY-LANE"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-WORKFLOW-MANUAL-ONLY-DECLARED",
+      "name": "validate:workflow-manual-only-declared",
+      "command": "npm run validate:workflow-manual-only-declared",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Admin Operations has never run on main and nothing in the repository could say whether that was deliberate or whether the lane had silently died; 'never ran' looks identical for a workflow nobody needed to dispatch and a workflow everyone forgot. This reconciles every trigger-less workflow against data/workflows/manual_only_workflows.json in both directions, so a manual-only lane must state why it is manual and a declaration that has gone stale fails on the trigger, not on the wording. It also fails a dispatch dropdown that no step gates on and no script reads, which would let every option exit 0 having done nothing the operator asked for.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-WORKFLOW-MANUAL-ONLY-DECLARED"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-RISK-STATEMENT-SUBSTANCE",
+      "name": "validate:risk-statement-substance",
+      "command": "npm run validate:risk-statement-substance",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "A HARD_FAIL gate whose risk_prevented is the tool's placeholder cannot be reviewed: nobody reading the registry can tell what it refuses, and audit_governance_blockers.mjs reads that same field when proposing a severity migration. This refuses any new record carrying the placeholder, and ratchets the 53 that predate the rule so the list can only shrink.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-RISK-STATEMENT-SUBSTANCE"
       ],
       "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",
