@@ -325,6 +325,7 @@
     "validate:repo": "node scripts/validation/validate_repo.mjs && npm run validate:operator-doc-currency && npm run validate:release-portability",
     "validate:repo-walk-boundary": "node scripts/validators/validate_repo_walk_boundary.mjs",
     "validate:retired-route-references": "node scripts/validation/validate_retired_route_references.mjs",
+    "validate:risk-statement-substance": "node scripts/validation/validate_risk_statement_substance.mjs",
     "validate:search-intelligence": "node scripts/search_intelligence/self_test_grounded_provider.mjs && node scripts/search_intelligence/validate.mjs",
     "validate:search-measurement-truthfulness": "npm run search:export-counts:self-test && npm run search:truth:self-test && npm run distribution:inspection:self-test && npm run distribution:gsc-outcome:self-test && npm run sitemap:lastmod:self-test && npm run sitemap:lastmod:check",
     "validate:short-answer-uniqueness": "python3 scripts/validators/validate_short_answer_uniqueness.py",
