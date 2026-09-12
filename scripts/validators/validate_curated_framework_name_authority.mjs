@@ -23,9 +23,22 @@
 // Editing any one of those outputs was reverted by the next build. That is why
 // three earlier attempts failed: each fixed an output, none fixed the link.
 //
-// The generator now defers to the curated spec for `framework` and
-// `definition`. This validator proves the deferral is real and still reaching
-// every surface, rather than a comment over dead code.
+// The generator now defers to the curated spec for `framework`, `definition`
+// and `h1`. This validator proves the deferral is real and still reaching every
+// surface, rather than a comment over dead code.
+//
+// `h1` WAS NOT IN THAT LIST UNTIL 2026-09-12, and it is the same defect one
+// element higher up the page. apply_citation_program.py restored `framework` and
+// `definition` from the curation and left `h1` to the generated spec, so
+// how-do-you-use-chatgpt-as-an-executive-coach.html - curated
+// <h1>How Do You Use ChatGPT as an Executive Coach?</h1> - was rewritten by every
+// build to <h1>challenge my assumptions and call out blind spots in my 30-day
+// execution plan</h1>, an agent recommendation query, as the heading a reader sees
+// AND as schema name/headline, which repair_schema_parity.py reads straight off the
+// first h1. It also meant build:all was not a fixed point: the tree it produced
+// differed from the committed one on every run, which is the
+// `extraction-surface-guard: 6 governed surfaces changed` failure that took
+// Validate Repo red and blocked every PR behind it.
 //
 // PRECEDENCE, deliberately encoded: data/content/manual_expansion_pages.json is
 // merged after PRIORITY and NEW_PAGES in apply_citation_program.py, so a
@@ -65,6 +78,28 @@ const curated = new Map();
 for (const section of ['priority_pages', 'new_pages']) {
   for (const [p, spec] of Object.entries(curatedPayload[section] || {})) {
     if (spec && String(spec.framework || '').trim()) curated.set(p, spec);
+  }
+}
+
+/**
+ * The curated headings, kept separately because the framework map above requires a
+ * framework: an entry that curates ONLY the heading belongs to this guard too.
+ */
+const curatedH1 = new Map();
+for (const section of ['priority_pages', 'new_pages']) {
+  for (const [p, spec] of Object.entries(curatedPayload[section] || {})) {
+    if (spec && String(spec.h1 || '').trim()) curatedH1.set(p, String(spec.h1).trim());
+  }
+}
+
+const generatedH1 = new Map();
+for (const rel of GENERATED) {
+  const payload = readJson(rel);
+  if (!payload) continue;
+  for (const section of ['priority_pages', 'new_pages']) {
+    for (const [p, spec] of Object.entries(payload[section] || {})) {
+      if (spec && String(spec.h1 || '').trim()) generatedH1.set(p, {h1: String(spec.h1).trim(), source: rel});
+    }
   }
 }
 
@@ -133,6 +168,40 @@ for (const [p, spec] of curated) {
       if (norm(actual) !== norm(want)) errors.push(`${p}: the page's data-named-framework is ${JSON.stringify(actual)} but the curated authority says ${JSON.stringify(want)}.`);
     }
   }
+}
+
+/*
+ * THE HEADING ARM. Same authority, same failure, different element. The page's
+ * FIRST h1 is what is checked because that is the one repair_schema_parity.py
+ * reads into schema `name` and `headline`.
+ */
+let h1Inspected = 0;
+let h1SurfaceChecks = 0;
+for (const [p, want] of curatedH1) {
+  if (manualOwned.has(p)) continue;
+  h1Inspected += 1;
+
+  const gen = generatedH1.get(p);
+  if (gen && norm(gen.h1) !== norm(want)) {
+    errors.push(`${p}: ${gen.source} carries the heading ${JSON.stringify(gen.h1)} but the curated authority says ${JSON.stringify(want)}. A generated heading that wins here becomes the h1 a reader sees and the schema name an answer engine quotes.`);
+  }
+
+  const fp = path.join(ROOT, p);
+  if (!fs.existsSync(fp)) continue;
+  const m = fs.readFileSync(fp, 'utf8').match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i);
+  if (!m) continue;
+  h1SurfaceChecks += 1;
+  const actual = unescapeAttr(m[1].replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim();
+  if (norm(actual) !== norm(want)) {
+    errors.push(`${p}: the page's first h1 is ${JSON.stringify(actual)} but the curated authority says ${JSON.stringify(want)}. This is the heading a reader sees, and repair_schema_parity.py copies it into schema name and headline.`);
+  }
+}
+
+// Rule 0 for the heading arm, stated separately: the framework arm passing says
+// nothing about whether any heading was reachable.
+if (curatedH1.size > 0 && h1SurfaceChecks === 0) {
+  console.error(`[curated-framework-authority] FAIL: ${curatedH1.size} curated heading(s) exist but no page HTML carried an h1 to compare, so the heading deferral is unobservable.`);
+  process.exit(1);
 }
 
 // Rule 0: this guard may never pass on an empty loop. If curation is gone, or

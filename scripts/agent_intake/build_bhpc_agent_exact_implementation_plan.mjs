@@ -162,9 +162,23 @@ function preexistingForeignPage(rel){
 // the curation authority for a name, and this generator defers to it. Where no
 // curated name exists the heading is still used, so nothing else changes.
 //
-// Only `framework` and `definition` defer. The body <h2> keeps `heading`,
+// `framework`, `definition` AND `h1` defer. The body <h2> keeps `heading`,
 // because the agent run's SEO execution contract requires that exact string on
 // the page.
+//
+// `h1` WAS NOT DEFERRING, and it is the same defect one element higher up. This
+// generator wrote `h1: primary.query` unconditionally - the same raw agent query
+// that was banned from `framework` - so a curated page heading was overwritten by
+// a search string on every build. It reached the reader directly, as the page's
+// own <h1>, and reached answer engines through repair_schema_parity.py, which
+// copies the first h1 into schema `name` and `headline`. On 2026-09-12
+// how-do-you-use-chatgpt-as-an-executive-coach.html published as "challenge my
+// assumptions and call out blind spots in my 30-day execution plan" in both
+// places, with the curated spec saying the correct heading the whole time.
+//
+// It also broke convergence: build:all rewrote these pages every run, so the tree
+// was never the build's fixed point, and `extraction-surface-guard: 6 governed
+// surfaces changed` took Validate Repo red and blocked every PR behind it.
 const CURATED_SPEC_PATH='data/citation/agent_page_specs.json';
 const curatedSpecs=(()=>{
   const fp=path.join(ROOT,CURATED_SPEC_PATH);
@@ -173,7 +187,9 @@ const curatedSpecs=(()=>{
   const out=new Map();
   for(const section of ['priority_pages','new_pages']){
     for(const [k,v] of Object.entries(payload[section]||{})){
-      if(v&&typeof v==='object'&&String(v.framework||'').trim()) out.set(k,v);
+      // EITHER field makes this the authority for that field. Requiring a framework
+      // meant an entry curating only the heading was skipped, and the query won.
+      if(v&&typeof v==='object'&&(String(v.framework||'').trim()||String(v.h1||'').trim())) out.set(k,v);
     }
   }
   return out;
@@ -185,8 +201,8 @@ function pageSpecFor(entries,primaryPath=''){
   const heading=primary.required_heading||primary.query;
   const curated=curatedSpecs.get(String(primaryPath))||null;
   return {
-    h1:primary.query,
-    framework:curated?curated.framework:heading,
+    h1:(curated&&String(curated.h1||'').trim())?curated.h1:primary.query,
+    framework:(curated&&String(curated.framework||'').trim())?curated.framework:heading,
     // The site publishes four extraction types (concept, howto, comparison,
     // decision). Choosing only between comparison and concept made the plan
     // demand that an existing how-to page be reshaped into a concept page.
