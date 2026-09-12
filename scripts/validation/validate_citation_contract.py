@@ -16,6 +16,39 @@ if str(CITATION_DIR) not in sys.path:
 from extraction_contract import validate_extraction
 
 ROOT=Path.cwd(); errors=[]; infos=[]; warnings=[]
+
+# ─── THE CURATED HEADING OUTRANKS THE QUERY ─────────────────────────────────
+#
+# `h1text != r['query']` demanded that a page's H1 be its SEARCH QUERY verbatim. That is
+# the same rule that produced the defect fixed on 2026-09-12: an agent query published as
+# a page's own heading, and copied from there into schema name and headline by
+# repair_schema_parity.py. A query and a title are different things -
+# "AI execution systems" is a query, "AI Execution Atlas" is what the page is called.
+#
+# data/citation/agent_page_specs.json is the curation authority for a page's NAME; the
+# generator and apply_citation_program.py both defer to it for `framework`, `definition`
+# and `h1`, and validate:curated-framework-authority asserts the page agrees with it. So
+# this check and that one were in DIRECT CONFLICT on arbitration-engine.html and
+# ai-execution-atlas/index.html: one demanded the curated heading, the other the query,
+# and no h1 could satisfy both.
+#
+# The curated heading wins, here as everywhere else. Where no curated heading exists the
+# rule is unchanged, so this is a deferral and not a relaxation.
+_CURATED_H1={}
+try:
+    _spec=json.loads((ROOT/'data/citation/agent_page_specs.json').read_text(encoding='utf-8'))
+    for _section in ('priority_pages','new_pages'):
+        for _p,_v in (_spec.get(_section) or {}).items():
+            if isinstance(_v,dict) and str(_v.get('h1','')).strip():
+                _CURATED_H1[_p]=str(_v['h1']).strip()
+except Exception:
+    _CURATED_H1={}
+
+def _acceptable_h1(path, query):
+    """The headings this page may carry: its curated name if it has one, else its query."""
+    curated=_CURATED_H1.get(path)
+    return {curated} if curated else {str(query or '').strip()}
+
 PRODUCT="This is one of the frameworks inside the Billionaire High Performance Coach system — a structured executive OS for using ChatGPT as your accountability and decision partner."
 LANDING_PAGE_EXCEPTIONS={'index.html','download.html'}
 GUMROAD='https://sprylabs.gumroad.com/l/billionaire-high-performance-coach'
@@ -125,7 +158,10 @@ for r in active:
     h1=soup.find_all('h1')
     if len(h1)!=1: errors.append(f"{r['path']}: expected one H1, found {len(h1)}"); continue
     h1text=' '.join(h1[0].get_text(' ',strip=True).split())
-    if h1text!=r['query']: errors.append(f"{r['path']}: H1/query mismatch")
+    _allowed=_acceptable_h1(r['path'], r['query'])
+    if h1text not in _allowed:
+        _want=next(iter(_allowed))
+        errors.append(f"{r['path']}: H1/query mismatch (page says {h1text!r}, expected {_want!r})")
     nq=norm(h1text)
     if nq in normalized_pages: warnings.append(f"normalized query collision: {h1text!r} on {r['path']} and {normalized_pages[nq]}")
     else: normalized_pages[nq]=r['path']

@@ -1,7 +1,31 @@
 export const BHPC_PRODUCT_ANCHOR_SENTENCE = 'This is one of the frameworks inside the Billionaire High Performance Coach system — a structured executive OS for using ChatGPT as your accountability and decision partner.';
 
-export function bhpcGeneratedCitationDefinition(query = '') {
-  return `${String(query || '').trim()} is addressed with a direct answer, practical decision criteria, and a clear next step.`.slice(0, 520);
+/**
+ * The visible citation definition for a generated page - NAMING ITS FRAMEWORK.
+ *
+ * THE DEFECT. This used to return the query sentence alone. repair_active_citation_contract.py
+ * then prefixed the REGISTRY copy with "<Framework>: " whenever the framework was absent from
+ * the definition's first 60 words, and never touched the visible <p class="citation-definition">.
+ * So every generated page ended with two different definitions:
+ *
+ *   page     "identify unmet needs ... is addressed with a direct answer, ..."
+ *   registry "Unmet Market Need Scan: identify unmet needs ... is addressed with ..."
+ *
+ * which validate:citation-contract reports as BOTH "visible definition/registry drift" AND
+ * "framework not in first 60 opening words" - two findings, one cause. All three pages the
+ * 2026-09-12 artifact created carried it.
+ *
+ * Emitting the prefixed form here makes the repair a NO-OP instead of a divergence: the page and
+ * the registry are the same string by construction, and the framework is in the opening words
+ * because it is the first thing the sentence says.
+ */
+export function bhpcGeneratedCitationDefinition(query = '', framework = '') {
+  const sentence = `${String(query || '').trim()} is addressed with a direct answer, practical decision criteria, and a clear next step.`;
+  const name = String(framework || '').trim();
+  // Same shape repair_active_citation_contract.py produces, and skipped when the name is
+  // already in the opening - prefixing twice would be its own drift.
+  const needsName = name && !sentence.split(/\s+/).slice(0, 60).join(' ').toLowerCase().includes(name.toLowerCase());
+  return (needsName ? `${name}: ${sentence}` : sentence).slice(0, 520);
 }
 
 /**
