@@ -8,6 +8,12 @@ const ROOT=process.cwd();
 const INPUTS=['data/community/scored_signals.json','data/social/routed_candidates.json','data/social/runs'];
 const OUT='data/community/content_routing_log.json';
 const MEMORY='data/content_clusters/cluster_memory.json';
+// THIS SCRIPT IS THE SECOND WRITER OF MEMORY, and it runs last, so it owes the
+// coverage map a projection of the ledger it actually leaves behind. Without it the
+// map described update_content_clusters.js's view and settled one pass late, which
+// validate:cluster-signal-integrity correctly refuses. Same function, no second copy.
+const COVERAGE='data/query_coverage_map.json';
+const { deriveQueryCoverage } = require('../lib/query_coverage_projection');
 function readJson(p,f){try{return JSON.parse(fs.readFileSync(path.join(ROOT,p),'utf8'))}catch{return f}}
 function writeJson(p,o){const f=path.join(ROOT,p); fs.mkdirSync(path.dirname(f),{recursive:true}); fs.writeFileSync(f,JSON.stringify(o,null,2)+'\n')}
 function slug(s){return String(s||'general').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,72)||'general'}
@@ -56,5 +62,7 @@ function main(){const rows=loadSignals(); const routed=[]; const clusters=new Ma
  // timestamp only when the routes actually move.
  const priorLog=readJson(OUT,{routes:[]});
  const routesChanged=JSON.stringify(priorLog.routes||[])!==JSON.stringify(routed);
- writeJson(OUT,{generated_at:routesChanged?new Date().toISOString():(priorLog.generated_at||new Date().toISOString()),policy:{all_signals_get_destination:true,cta_target:CTA_TARGET,authority_domain:AUTHORITY_DOMAIN},routes:routed}); writeJson(MEMORY,{generated_at:existing.generated_at||new Date().toISOString(),count_basis:'distinct_signal_keys',policy:{trigger_based_authority:true,no_firehose:true},clusters:[...prior.values()].sort((a,b)=>(b.authority_potential||0)-(a.authority_potential||0)||String(a.cluster_id).localeCompare(String(b.cluster_id)))}); console.log(`route:signals routed ${routed.length} signals into ${clusters.size} clusters; ${newlyDistinct} newly distinct`);}
+ writeJson(OUT,{generated_at:routesChanged?new Date().toISOString():(priorLog.generated_at||new Date().toISOString()),policy:{all_signals_get_destination:true,cta_target:CTA_TARGET,authority_domain:AUTHORITY_DOMAIN},routes:routed}); const finalClusters=[...prior.values()].sort((a,b)=>(b.authority_potential||0)-(a.authority_potential||0)||String(a.cluster_id).localeCompare(String(b.cluster_id)));
+ writeJson(MEMORY,{generated_at:existing.generated_at||new Date().toISOString(),count_basis:'distinct_signal_keys',policy:{trigger_based_authority:true,no_firehose:true},clusters:finalClusters});
+ writeJson(COVERAGE,deriveQueryCoverage(finalClusters,readJson(COVERAGE,{}))); console.log(`route:signals routed ${routed.length} signals into ${clusters.size} clusters; ${newlyDistinct} newly distinct`);}
 if(require.main===module) main();
