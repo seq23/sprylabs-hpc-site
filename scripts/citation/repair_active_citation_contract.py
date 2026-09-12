@@ -31,6 +31,33 @@ for item in agent.get('fixes',[]) or []:
 for item in agent.get('opportunities',[]) or []:
     if item.get('query'): H1_OVERRIDES[item.get('path')]=item.get('query')
 
+# ─── THE CURATED HEADING OUTRANKS BOTH OF THE ABOVE, AND THE REGISTRY QUERY ──
+#
+# THIS SCRIPT IS THE LAST WRITER OF <h1> IN THE RELEASE, and it forced h1 to the
+# page's SEARCH QUERY: the `opportunities` loop above overwrites with item['query'],
+# and the default at the use site is r['query']. So every earlier fix - the plan
+# builder deferring to curation, apply_citation_program.py restoring it - was undone
+# a few stages later, silently, on every single run.
+#
+# Measured on 2026-09-12: apply_citation_program.py produced
+# "Arbitration Engine: How Founders Prioritize Competing Work" and
+# "AI Execution Atlas", the release committed
+# "The Arbitration Engine: How to Decide What Actually Matters" and
+# "AI execution systems", and validate:curated-framework-authority reported the two
+# for hours while every upstream fix tested green in isolation. A query is not a
+# title: "AI execution systems" is what someone typed into Google, "AI Execution
+# Atlas" is what the page is called, and the first one was also being copied into
+# schema name and headline by repair_schema_parity.py.
+#
+# data/citation/agent_page_specs.json is the curation authority for a page's NAME.
+# Applied LAST so it wins over both loops above, and only where a name was actually
+# curated - everything else keeps the existing behaviour exactly.
+_curated_specs=load_json(ROOT/'data/citation/agent_page_specs.json', {})
+for _section in ('priority_pages','new_pages'):
+    for _path,_spec in (_curated_specs.get(_section) or {}).items():
+        if isinstance(_spec,dict) and str(_spec.get('h1','')).strip():
+            H1_OVERRIDES[_path]=str(_spec['h1']).strip()
+
 changed=[]
 metadata_changed=False
 parsed=0
