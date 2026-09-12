@@ -56,9 +56,32 @@ const APPLIER = 'agent:bhpc:apply-exact';
 const SUPPLIERS = [
   { script: 'retrofit:recommendation-summary',
     supplies: 'the recommendation_summary block, which the applier deliberately never emits' },
-  { script: 'schema:repair-parity',
-    supplies: 'CITATION_PAGE_SCHEMA - repair_schema_parity.py is its only lawful author' },
 ];
+
+/*
+ * `schema:repair-parity` IS NOT ON THAT LIST, and the omission is the finding.
+ *
+ * CITATION_PAGE_SCHEMA has one lawful author and a created page needs it, so it looks
+ * like it belongs here. It does not, because the step is TREE-WIDE and unscoped it
+ * DAMAGES pages it was not asked about. Adding it to the creating chains on 2026-09-12
+ * produced, on two consecutive releases:
+ *
+ *   [validate:citation-contract] FAIL: 15 issue(s)
+ *    - comparisons/bhpc-vs-betterup.html: expected one extraction block, found 0
+ *    - comparisons/bhpc-vs-betterup.html: missing immediate bold citation definition
+ *    - comparisons/bhpc-vs-culture-amp.html: ... and siblings
+ *
+ * The release has always run it as SCHEMA_REPAIR_SCOPE=required, against
+ * data/release/active_mutation_scope.json, and that is why. Scoped it cannot reach a
+ * page outside the run; unscoped it rewrites the whole tree on the current contract and
+ * the comparison pages do not survive it. That is a real defect in repair_schema_parity
+ * and it is recorded here rather than worked around: until it is fixed, this step is
+ * safe only inside a scope, so demanding it from every creating lane would demand an
+ * unsafe thing.
+ *
+ * The symptom that sent me here - "citation schema missing" on three created pages -
+ * had already cleared by other means before either attempt landed.
+ */
 
 /** Lanes that run the applier but are deliberately NOT completion lanes, with the reason. */
 const EXEMPT = new Map([
