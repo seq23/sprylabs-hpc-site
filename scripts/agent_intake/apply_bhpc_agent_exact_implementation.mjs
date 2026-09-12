@@ -663,7 +663,25 @@ function fullHtml(pathValue, entries, spec = {}) {
 <meta name="twitter:image" content="https://billionairehighperformancecoach.com/assets/img/bhpc-hero-square.png">
 </head>
 <body data-bhpc-agent-generated-page="true">
+<!--
+  HEADER, ARTICLE AND FOOTER ARE NOT DECORATION HERE - the demand gate reads them.
+  This template emitted only <body><main>, and validate_programmatic_admission.py asks
+  for an a[href="/download.html"] inside article .product-anchor, a header or .cta-bar
+  CTA and a footer CTA. No agent-created page had ever been judged on that, because
+  they were all admitted at "baseline" - the pre-gate exemption - so the gate skipped
+  them. The moment that lie was corrected (2026-09-12) all three pages the weekly
+  artifact created failed on exactly these three elements. The structure matches the
+  hand-built insight pages: header.site-header, article.article, footer.footer.
+-->
+<header class="site-header">
+<div class="nav-shell">
+<a class="brand" href="/">Spry Labs</a>
+<nav aria-label="Primary" class="nav-links"><a href="/ai-execution-atlas/">AI Execution Atlas</a> <a href="/continuity-collapse-pattern/">White Paper</a> <a href="/faq">FAQ</a></nav>
+<a class="nav-cta" href="/download.html">Get Instant Access</a>
+</div>
+</header>
 <main data-bhpc-agent-generated-page="true">
+<article class="article">
 <h1>${escapeHtml(title)}</h1>
 ${citationDefinitionParagraph}
 <p>This page turns the intake query into a practical workflow, with the original source provenance retained in machine-readable metadata.</p>
@@ -672,7 +690,14 @@ ${citationDefinitionParagraph}
 ${renderExtractionBlock(spec, entries)}
 ${renderSections(entries, citationDefinitionParagraph)}
 <section data-content-contract="cta-block" class="contract-cta"><h2>Next step</h2><p>Use the complete operating system when you want these frameworks installed as a repeatable daily workflow.</p><a href="/download.html" class="btn btn--primary">Review Spry / BHPC</a></section>
+</article>
 </main>
+<footer class="footer">
+<div class="footer__row">
+<p class="footer__checkout"><a href="/download.html">Get Instant Access</a> — review the current package and purchase terms.</p>
+<p class="footer__links"><a href="/how-to-stay-consistent/">How to Stay Consistent</a> · <a href="/continuity-collapse-pattern/">Continuity Collapse Pattern</a> · <a href="/ai-execution-atlas/">AI Execution Atlas</a></p>
+</div>
+</footer>
 </body>
 </html>
 `;
