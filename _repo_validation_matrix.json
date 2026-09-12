@@ -2417,9 +2417,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-ONE-ACCEPTANCE-SATISFACTION-TEST",
+      "validation_id": "VAL-ONE-ACCEPTANCE-SATISFACTION-TEST",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:one-acceptance-test",
+      "order": 233,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 241,
+  "entry_count": 242,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2985,6 +2995,10 @@
         {
           "id": "VAL-AGENT-BLOCK-SUPPLIERS-RUN-FIRST",
           "command": "npm run validate:agent-block-suppliers"
+        },
+        {
+          "id": "VAL-ONE-ACCEPTANCE-SATISFACTION-TEST",
+          "command": "npm run validate:one-acceptance-test"
         }
       ]
     },
@@ -3155,6 +3169,10 @@
         {
           "id": "VAL-AGENT-BLOCK-SUPPLIERS-RUN-FIRST",
           "command": "npm run validate:agent-block-suppliers"
+        },
+        {
+          "id": "VAL-ONE-ACCEPTANCE-SATISFACTION-TEST",
+          "command": "npm run validate:one-acceptance-test"
         }
       ]
     },

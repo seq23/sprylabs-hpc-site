@@ -7812,8 +7812,38 @@
         "MX-AGENT-BLOCK-SUPPLIERS-RUN-FIRST"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-ONE-ACCEPTANCE-SATISFACTION-TEST",
+      "status": "ADMITTED",
+      "name": "validate:one-acceptance-test",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses a lane that answers 'does the page say this required string' with its own containment test instead of scripts/lib/bhpc_agent_acceptance_satisfaction.mjs. That module exists because the plan builder and the trace disagreed over 946 REQUIRED entries - exact substring called 125 outstanding, token-wise called 6, and the plan carried 119 the trace had already passed, saturating BHPC_BACKLOG_CARRY_LIMIT with permanent false negatives. Both were unified onto saysPhrase and validate_page_seo_contract.mjs was left behind on stripTags(html).toLowerCase().includes(heading). On 2026-09-12 that cost a release: ai-coach-vs-human-coach.html carries the curated heading 'AI Coach vs Human Coach: Which Is Better?', records 2026-06-27-bhpc-106 and 2026-07-04-bhpc-137 require 'AI coach vs human coach which is better', and a colon plus a question mark made this one lane report MISSING_REQUIRED_HEADING eleven lines after the trace reported PASS on the same page - Spry Content Release died at release:agent-intake:raw. The gate scans the lane directories rather than a fixed list so a NEW lane is covered on its first run, names each hand-rolled shape it finds, and hard-fails when it examines zero lanes so a field rename cannot make it pass over an empty set.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:one-acceptance-test",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-one-acceptance-test/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-12",
+      "matrix_ids": [
+        "MX-ONE-ACCEPTANCE-SATISFACTION-TEST"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 248,
+  "record_count": 249,
   "generated_at": "2026-08-08T23:30:00Z"
 }
