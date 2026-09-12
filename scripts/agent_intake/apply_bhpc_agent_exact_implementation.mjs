@@ -661,23 +661,6 @@ function fullHtml(pathValue, entries, spec = {}) {
 <meta name="twitter:title" content="${escapeHtml(title)}">
 <meta name="twitter:description" content="${escapeHtml(description)}">
 <meta name="twitter:image" content="https://billionairehighperformancecoach.com/assets/img/bhpc-hero-square.png">
-<!--
-  THE PAGE CARRIES ITS OWN CITATION SCHEMA, rather than waiting for a repair to add it.
-  validate:citation-contract reported "citation schema missing" on all three pages the
-  2026-09-12 artifact created, every run, because the template emitted none and
-  repair_schema_parity.py is the only thing that writes one - a supplier that does not
-  run in every lane that creates a page. Wiring the supplier into one more chain fixes
-  one chain; emitting it here means a created page is never in a state where the
-  contract is false about it. Parity still normalises this on the next pass, which is
-  what it is for.
--->
-<script id="CITATION_PAGE_SCHEMA" type="application/ld+json">${JSON.stringify({
-  '@context': 'https://schema.org',
-  '@graph': [
-    {'@type': 'WebPage', '@id': `${canonical}#webpage`, url: canonical, name: title, headline: title, description, mainEntityOfPage: {'@id': canonical}},
-    {'@type': 'DefinedTerm', '@id': `${canonical}#framework`, name: spec.framework || title, description: citationDefinition || description, inDefinedTermSet: canonical},
-  ],
-})}</script>
 </head>
 <body data-bhpc-agent-generated-page="true">
 <!--

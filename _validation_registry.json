@@ -7872,8 +7872,38 @@
         "MX-NEW-EVIDENCE-PINNED-ON-ABSORB"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-CREATED-PAGE-IS-COMPLETE",
+      "status": "ADMITTED",
+      "name": "validate:created-page-complete",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses a lane that CREATES an agent page and leaves it incomplete. The bhpc applier creates pages, but everything this repo judges a page on - the recommendation_summary block, CITATION_PAGE_SCHEMA, the framework name, the visible definition - is written by a different script afterwards, so a created page was only complete if every supplier happened to run before something looked. That survived a year only because every agent-created page was stamped admission_level baseline, meaning it predates the demand gate, which exempts it from every substantive check in validate_programmatic_admission.py; it was hardcoded by two writers and no agent-created page had ever actually been inspected. When that was corrected on 2026-09-12 every gate those pages had never faced fired at once - CTAs, product anchor, framework name shape, citation schema, definition drift, demand backing - and the weekly Spry Content Release died four separate times, on a different gate each time, with the three new pages never reaching the site. On first run this gate found TEN lanes creating incomplete pages, which is why fixing them one at a time as CI surfaced them kept producing another failure. The fix is that the applier itself completes the page, so every lane inherits it. The gate flattens every npm run chain, requires each supplier to run AFTER the applier (a supplier that runs first cannot supply a page that does not exist yet), and hard-fails when it examines zero creating lanes so a rename cannot make it pass over an empty set.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:created-page-complete",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-created-page-complete/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-12",
+      "matrix_ids": [
+        "MX-CREATED-PAGE-IS-COMPLETE"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 250,
+  "record_count": 251,
   "generated_at": "2026-08-08T23:30:00Z"
 }

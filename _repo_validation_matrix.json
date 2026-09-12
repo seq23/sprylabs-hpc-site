@@ -2437,9 +2437,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-CREATED-PAGE-IS-COMPLETE",
+      "validation_id": "VAL-CREATED-PAGE-IS-COMPLETE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:created-page-complete",
+      "order": 235,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 243,
+  "entry_count": 244,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3013,6 +3023,10 @@
         {
           "id": "VAL-NEW-EVIDENCE-PINNED-ON-ABSORB",
           "command": "npm run validate:new-evidence-pinned"
+        },
+        {
+          "id": "VAL-CREATED-PAGE-IS-COMPLETE",
+          "command": "npm run validate:created-page-complete"
         }
       ]
     },
@@ -3191,6 +3205,10 @@
         {
           "id": "VAL-NEW-EVIDENCE-PINNED-ON-ABSORB",
           "command": "npm run validate:new-evidence-pinned"
+        },
+        {
+          "id": "VAL-CREATED-PAGE-IS-COMPLETE",
+          "command": "npm run validate:created-page-complete"
         }
       ]
     },
