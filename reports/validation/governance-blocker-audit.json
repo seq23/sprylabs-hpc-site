@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-09-12T13:33:18.143Z",
+  "generated_at": "2026-09-12T14:54:37.136Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 231,
+  "admitted_hard_fail_count": 233,
   "reviewed_count": 8,
-  "unreviewed_count": 223,
+  "unreviewed_count": 225,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 178,
+    "REVIEW_REQUIRED": 180,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 28,
     "REVIEW_WARNING_BOUNDARY": 17
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 178,
+    "REVIEW_REQUIRED": 180,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 28,
     "REVIEW_WARNING_BOUNDARY": 9
   },
   "migration_status_counts": {
-    "UNREVIEWED": 223,
+    "UNREVIEWED": 225,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -3508,6 +3508,36 @@
         "MX-PUBLISHED-SURFACE-PAGES-ONLY"
       ],
       "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-AGENT-BLOCK-SUPPLIERS-RUN-FIRST",
+      "name": "validate:agent-block-suppliers",
+      "command": "npm run validate:agent-block-suppliers",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses a release lane that CREATES an agent page and then judges it without running the step that supplies the block it will be judged on. apply_bhpc_agent_exact_implementation.mjs deliberately emits nothing for recommendation_summary - its only source is source_fix_instruction, internal operator-facing audit critique that reached 28 live pages under the heading 'What this page recommends' - so retrofit:recommendation-summary is the ONLY producer. release:agent-intake:raw and validate:agent-run both ran apply-exact then trace-exact with no retrofit between them, while release:content-finalize had the correct order; two chains, each with its own idea of the sequence, nothing linking them. The defect was invisible for a month because the raw lane passes for any page that already exists from a previous cycle's retrofit, and can only fail on a page born minutes earlier in the same run. On 2026-09-12 the weekly bhpc artifact carried three new page opportunities, all three failed the raw trace on missing_blocks=[recommendation_summary], and Spry Content Release died before content-finalize was reached - the three pages were never pushed. The gate flattens every npm run chain, applies the rule only to lanes that reach the applier (a read-only validation batch that judges existing content is legitimate and must not be forced to mutate), and hard-fails when it examines zero such chains so a rename cannot make it pass over an empty set.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-AGENT-BLOCK-SUPPLIERS-RUN-FIRST"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-ONE-ACCEPTANCE-SATISFACTION-TEST",
+      "name": "validate:one-acceptance-test",
+      "command": "npm run validate:one-acceptance-test",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses a lane that answers 'does the page say this required string' with its own containment test instead of scripts/lib/bhpc_agent_acceptance_satisfaction.mjs. That module exists because the plan builder and the trace disagreed over 946 REQUIRED entries - exact substring called 125 outstanding, token-wise called 6, and the plan carried 119 the trace had already passed, saturating BHPC_BACKLOG_CARRY_LIMIT with permanent false negatives. Both were unified onto saysPhrase and validate_page_seo_contract.mjs was left behind on stripTags(html).toLowerCase().includes(heading). On 2026-09-12 that cost a release: ai-coach-vs-human-coach.html carries the curated heading 'AI Coach vs Human Coach: Which Is Better?', records 2026-06-27-bhpc-106 and 2026-07-04-bhpc-137 require 'AI coach vs human coach which is better', and a colon plus a question mark made this one lane report MISSING_REQUIRED_HEADING eleven lines after the trace reported PASS on the same page - Spry Content Release died at release:agent-intake:raw. The gate scans the lane directories rather than a fixed list so a NEW lane is covered on its first run, names each hand-rolled shape it finds, and hard-fails when it examines zero lanes so a field rename cannot make it pass over an empty set.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-ONE-ACCEPTANCE-SATISFACTION-TEST"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",
       "decision": null,
       "evidence": []
