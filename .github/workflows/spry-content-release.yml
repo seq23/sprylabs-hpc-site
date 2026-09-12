@@ -198,6 +198,18 @@ jobs:
             npm run sitemap:lastmod:content
         run: |
           ./.github/scripts/commit_and_push_if_changed.sh "spry content release" spry-content-release
+      # A failing release uploads everything EXCEPT the thing that explains the
+      # failure. validate_citation_contract.py writes its verdict to
+      # artifacts/diagnostics/container-current/, which was not on the path list, and
+      # the pages it names were not uploaded at all - so a failure that reproduces only
+      # on the runner could not be read anywhere but the log summary. On 2026-09-12
+      # that cost hours: comparisons/bhpc-vs-betterup.html is byte-intact in the repo
+      # AND in a faithful local replay of this exact lane, and fails on the runner, and
+      # there was no way to see which of those two trees CI actually had.
+      - name: Keep the pages a failing contract named
+        if: failure() && steps.runtime.outputs.run == 'true'
+        continue-on-error: true
+        run: node scripts/diagnostics/keep_failing_pages.mjs
       - uses: actions/upload-artifact@v7
         if: always()
         with:
@@ -206,4 +218,5 @@ jobs:
           path: |
             reports/workflows/spry-content-release/**
             artifacts/validation/**
+            artifacts/diagnostics/**
             reports/workflow-*.json
