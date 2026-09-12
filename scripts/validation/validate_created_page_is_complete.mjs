@@ -22,10 +22,22 @@
  *
  * ─── THE RULE ──────────────────────────────────────────────────────────────
  *
- * Any lane that runs the APPLIER must also run every SUPPLIER, in the same lane,
- * before anything judges the result. Not "somewhere in the release"; in the lane
- * that creates the page. A supplier one chain away is a page that is green in one
- * lane and red in another, which is precisely how this hid.
+ * A lane that runs the APPLIER *and then JUDGES a page* must run every SUPPLIER in
+ * between. Not "somewhere in the release"; in that lane. A supplier one chain away
+ * is a page that is green in one lane and red in another, which is precisely how
+ * this hid.
+ *
+ * THE "AND THEN JUDGES" CLAUSE IS LOAD-BEARING, and the first draft lacked it. It
+ * demanded completion from all fourteen lanes that reach the applier, so the
+ * applier itself was made to run the suppliers - and that gave a TREE-WIDE schema
+ * parity and retrofit a blast radius across fourteen invocations. It broke
+ * comparisons/bhpc-vs-betterup.html and its siblings ("expected one extraction
+ * block, found 0", "missing immediate bold citation definition") and took the
+ * release red on 2026-09-12. A lane that creates pages and never judges them cannot
+ * be harmed by incompleteness, and forcing repairs into it caused real damage. The
+ * obligation belongs exactly where a page is born and then graded in the same run -
+ * the same scoping VAL-AGENT-BLOCK-SUPPLIERS-RUN-FIRST already uses, for the same
+ * reason.
  *
  * This is the general form of VAL-AGENT-BLOCK-SUPPLIERS-RUN-FIRST, which asserts
  * the same thing for one block type. Add a supplier here whenever a new element
@@ -52,6 +64,19 @@ const SUPPLIERS = [
 const EXEMPT = new Map([
   [APPLIER, 'the applier itself'],
 ]);
+
+/**
+ * The steps that GRADE a page. A lane reaching one of these after the applier is
+ * judging something it just created, and owes it completeness first.
+ */
+const JUDGES = [
+  'agent:bhpc:trace-exact',
+  'validate:citation-contract',
+  'validate:programmatic-admission',
+  'validate:bhpc-rich-new-page-contract',
+  'validate:page-seo',
+  'validate:full-page-audit',
+];
 
 function flatten(name, seen = new Set()) {
   if (seen.has(name)) return [];
@@ -80,24 +105,30 @@ for (const [name, cmd] of Object.entries(scripts)) {
   const chain = flatten(name);
   const applyAt = chain.indexOf(APPLIER);
   if (applyAt < 0) continue;
+  // Only a lane that also GRADES a page is bound by this. See the clause above.
+  const judgeAt = Math.min(...JUDGES.map((j) => {
+    const at = chain.indexOf(j);
+    return at > applyAt ? at : Number.POSITIVE_INFINITY;
+  }));
+  if (!Number.isFinite(judgeAt)) continue;
   lanesExamined += 1;
   for (const s of SUPPLIERS) {
     const at = chain.indexOf(s.script);
     if (at < 0) {
       errors.push(
-        `incomplete_lane: \`${name}\` runs \`${APPLIER}\` and never runs \`${s.script}\`, so a page it creates leaves this `
-        + `lane without ${s.supplies}. A page must be complete in the lane that creates it, not somewhere else in the release.`);
-    } else if (at < applyAt) {
+        `incomplete_lane: \`${name}\` runs \`${APPLIER}\`, grades a page later in the same chain, and never runs `
+        + `\`${s.script}\`, so a page it creates is graded without ${s.supplies}.`);
+    } else if (at < applyAt || at > judgeAt) {
       errors.push(
-        `supplier_runs_before_the_page_exists: in \`${name}\`, \`${s.script}\` runs at step ${at + 1} but \`${APPLIER}\` `
-        + `creates the page at step ${applyAt + 1}. It cannot supply ${s.supplies} to a page that does not exist yet.`);
+        `supplier_out_of_order: in \`${name}\`, \`${s.script}\` runs at step ${at + 1}, the page is created at step `
+        + `${applyAt + 1} and graded at step ${judgeAt + 1}. ${s.supplies} must be supplied between the two.`);
     }
   }
 }
 
 // RULE 0.
 if (lanesExamined === 0) {
-  errors.push(`zero_creating_lanes: no npm script reaches \`${APPLIER}\`, so this check proved nothing.`);
+  errors.push(`zero_creating_lanes: no npm script both reaches \`${APPLIER}\` and grades a page afterwards, so this check proved nothing.`);
 }
 
 if (errors.length) {
@@ -107,5 +138,5 @@ if (errors.length) {
 }
 
 console.log(
-  `[created-page-complete] PASS: ${lanesExamined} lane(s) create agent pages, each running all `
-  + `${SUPPLIERS.length} supplier(s) afterwards (${SUPPLIERS.map((s) => s.script).join(', ')}).`);
+  `[created-page-complete] PASS: ${lanesExamined} lane(s) create an agent page and then grade it, each running all `
+  + `${SUPPLIERS.length} supplier(s) in between (${SUPPLIERS.map((s) => s.script).join(', ')}).`);
