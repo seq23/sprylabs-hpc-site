@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {readCapturedScope} from './page_scope.mjs';
 import {normalizeBhpcInternalLinkHref} from '../lib/bhpc_internal_links.mjs';
+import {saysPhrase} from '../lib/bhpc_agent_acceptance_satisfaction.mjs';
 
 const ROOT = process.cwd();
 const mode = process.argv.includes('--full') || process.env.VALIDATION_CACHE_MODE === 'full' ? 'full' : 'incremental';
@@ -155,8 +156,29 @@ for (const abs of files) {
   for (const entry of acceptance.get(rel) || []) {
     const marker = `data-bhpc-agent-record="${entry.record_id}"`;
     if (!html.includes(marker)) failures.push({path: rel, code: 'MISSING_RECORD_MARKER', detail: entry.record_id});
+    /*
+     * A THIRD LANE USED TO ASK THIS QUESTION ITS OWN WAY. The plan builder and the
+     * trace were unified on scripts/lib/bhpc_agent_acceptance_satisfaction.mjs - see
+     * the measurement in that file's header - and this contract was left behind on
+     * `stripTags(html).toLowerCase().includes(...)`, a raw substring match. So a
+     * page that plainly SAYS the required heading still failed here whenever the
+     * rendered heading differed by punctuation the applier legitimately writes.
+     *
+     * Reproduced 2026-09-12: ai-coach-vs-human-coach.html carries
+     * <h1>AI Coach vs Human Coach: Which Is Better?</h1> - the CURATED heading - and
+     * records 2026-06-27-bhpc-106 and 2026-07-04-bhpc-137 require "AI coach vs human
+     * coach which is better". The page says it. A colon and a question mark made
+     * this lane call it missing, and it took Spry Content Release red at
+     * release:agent-intake:raw immediately after the trace it disagrees with had
+     * reported PASS on the same page.
+     *
+     * saysPhrase is not a loosening: it keeps word order and adjacency and is
+     * strictly stronger than the token-wise test this repo has already rejected. It
+     * is the weakest test that still means "the page says this", and it is now the
+     * ONE test all three lanes use.
+     */
     const heading = stripTags(entry.required_heading || '');
-    if (heading && !stripTags(html).toLowerCase().includes(heading.toLowerCase())) failures.push({path: rel, code: 'MISSING_REQUIRED_HEADING', detail: heading});
+    if (heading && !saysPhrase(html, heading)) failures.push({path: rel, code: 'MISSING_REQUIRED_HEADING', detail: heading});
     for (const link of entry.required_internal_links || []) {
       if (!link?.to_url) continue;
       // Compare the route the applier actually renders, not the raw to_url. An
