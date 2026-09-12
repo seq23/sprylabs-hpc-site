@@ -13,13 +13,13 @@
     ],
     "note": "GSC rows report impressions over the pull window; that is a measurement, not an estimate."
   },
-  "owner_seed_policy": "An owner may add a record with source_type owner_approved_seed and volume null. It must carry approved_by and approved_at.",
+  "owner_seed_policy": "An owner may add a record with source_type owner_approved_seed and volume null. It must carry approved_by and approved_at. Separately, source_type bhpc_agent_discovery records a query the bhpc agent run DISCOVERED rather than measured: volume is null because none was measured, and the record must name the artifact it came from. It is NOT an owner approval and does not claim to be. The count is capped shrink-only by validate:demand-backed-pages so discovery can never quietly become the way pages get published; an owner seed with a real approved_by is still the way to promote one.",
   "domains": [
     "spryexecutiveos.com",
     "billionairehighperformancecoach.com",
     "aplayermode.com"
   ],
-  "record_count": 101,
+  "record_count": 104,
   "total_measured_volume_per_month": 65910,
   "by_tier": {
     "T2b": 32,
@@ -728,8 +728,8 @@
       "evidence_tier": "T1"
     },
     {
-      "query": "ai coaching vs coaching management platform — what's the difference?",
-      "query_normalized": "ai coaching vs coaching management platform — what's the difference?",
+      "query": "ai coaching vs coaching management platform \u2014 what's the difference?",
+      "query_normalized": "ai coaching vs coaching management platform \u2014 what's the difference?",
       "volume": 2,
       "keyword_difficulty": null,
       "source_type": "gsc_search_analytics",
@@ -956,6 +956,48 @@
         "how much does business coaching cost"
       ],
       "note": "No measured volume exists for cost intent in this vertical in any source available to this repo: absent from the 47-row Semrush T2b universe and from all 71 GSC evidence rows. Seeded on query shape, not on measured volume, under owner_seed_policy. The shape inference is cross-vertical - all 65 grounded citation observations are dental, medical, legal and immigration, none from this cluster - and supports only an ordering: bare head terms slot to unbranded sites least often, every modified shape materially more often. volume is null because it is unknown, not because it is zero."
+    },
+    {
+      "query": "identify unmet needs in the market that my competitor hasn't addressed yet",
+      "query_normalized": "identify unmet needs in the market that my competitor hasn't addressed yet",
+      "volume": null,
+      "keyword_difficulty": null,
+      "aliases": [],
+      "source_type": "bhpc_agent_discovery",
+      "evidence_tier": "T4_discovery",
+      "discovery_source": "discovery-engine",
+      "discovery_artifact": "data/report_fixes/agent_runs/2026-09-12/bhpc/bhpc.json",
+      "discovery_rationale": "Executive search query discovered via deep research with clear gap in current catalog. Expected tier: free win.",
+      "target_domain": "spryexecutiveos.com",
+      "observed_date": "2026-09-12"
+    },
+    {
+      "query": "rehearse for the toughest questions investors will ask based on my current metrics",
+      "query_normalized": "rehearse for the toughest questions investors will ask based on my current metrics",
+      "volume": null,
+      "keyword_difficulty": null,
+      "aliases": [],
+      "source_type": "bhpc_agent_discovery",
+      "evidence_tier": "T4_discovery",
+      "discovery_source": "discovery-engine",
+      "discovery_artifact": "data/report_fixes/agent_runs/2026-09-12/bhpc/bhpc.json",
+      "discovery_rationale": "Executive search query discovered via deep research with clear gap in current catalog. Expected tier: free win.",
+      "target_domain": "spryexecutiveos.com",
+      "observed_date": "2026-09-12"
+    },
+    {
+      "query": "start the timer and prompt me to switch sections every 5 minutes",
+      "query_normalized": "start the timer and prompt me to switch sections every 5 minutes",
+      "volume": null,
+      "keyword_difficulty": null,
+      "aliases": [],
+      "source_type": "bhpc_agent_discovery",
+      "evidence_tier": "T4_discovery",
+      "discovery_source": "discovery-engine",
+      "discovery_artifact": "data/report_fixes/agent_runs/2026-09-12/bhpc/bhpc.json",
+      "discovery_rationale": "Executive search query discovered via deep research with clear gap in current catalog. Expected tier: free win.",
+      "target_domain": "spryexecutiveos.com",
+      "observed_date": "2026-09-12"
     }
   ],
   "domain_policy": {
