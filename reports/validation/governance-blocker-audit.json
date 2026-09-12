@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-09-12T17:01:38.512Z",
+  "generated_at": "2026-09-12T18:41:01.976Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 234,
+  "admitted_hard_fail_count": 235,
   "reviewed_count": 8,
-  "unreviewed_count": 226,
+  "unreviewed_count": 227,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 180,
+    "REVIEW_REQUIRED": 181,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 29,
     "REVIEW_WARNING_BOUNDARY": 17
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 180,
+    "REVIEW_REQUIRED": 181,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 29,
     "REVIEW_WARNING_BOUNDARY": 9
   },
   "migration_status_counts": {
-    "UNREVIEWED": 226,
+    "UNREVIEWED": 227,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -3553,6 +3553,21 @@
         "MX-NEW-EVIDENCE-PINNED-ON-ABSORB"
       ],
       "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-CREATED-PAGE-IS-COMPLETE",
+      "name": "validate:created-page-complete",
+      "command": "npm run validate:created-page-complete",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses a lane that CREATES an agent page and leaves it incomplete. The bhpc applier creates pages, but everything this repo judges a page on - the recommendation_summary block, CITATION_PAGE_SCHEMA, the framework name, the visible definition - is written by a different script afterwards, so a created page was only complete if every supplier happened to run before something looked. That survived a year only because every agent-created page was stamped admission_level baseline, meaning it predates the demand gate, which exempts it from every substantive check in validate_programmatic_admission.py; it was hardcoded by two writers and no agent-created page had ever actually been inspected. When that was corrected on 2026-09-12 every gate those pages had never faced fired at once - CTAs, product anchor, framework name shape, citation schema, definition drift, demand backing - and the weekly Spry Content Release died four separate times, on a different gate each time, with the three new pages never reaching the site. On first run this gate found TEN lanes creating incomplete pages, which is why fixing them one at a time as CI surfaced them kept producing another failure. The fix is that the applier itself completes the page, so every lane inherits it. The gate flattens every npm run chain, requires each supplier to run AFTER the applier (a supplier that runs first cannot supply a page that does not exist yet), and hard-fails when it examines zero creating lanes so a rename cannot make it pass over an empty set.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-CREATED-PAGE-IS-COMPLETE"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",
       "decision": null,
       "evidence": []
