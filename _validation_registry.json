@@ -7842,8 +7842,38 @@
         "MX-ONE-ACCEPTANCE-SATISFACTION-TEST"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-NEW-EVIDENCE-PINNED-ON-ABSORB",
+      "status": "ADMITTED",
+      "name": "validate:new-evidence-pinned",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses an absorb lane that takes in a new agent run without pinning its raw evidence. validate:ownership correctly demands that every raw artifact on disk appear in immutable_evidence - raw evidence nothing pins can be rewritten with no trace - and checks completeness against the tree, so an unpinned run is an error rather than a silence. protected-baseline:rebaseline is the tool that pins it and NOTHING INVOKED IT; its own header records that pins were missing for nine of thirteen runs because adding one meant typing four sha256 lines by hand. Every weekly artifact therefore arrived unpinned and took Daily Citation Intelligence red - run 34697045072 on 2026-09-12 failed UNPROTECTED_RAW_EVIDENCE on bhpc.csv, bhpc.html and bhpc.json plus UNPROTECTED_AGENT_DECLARATION on agent_run_manifest.json. agent:bhpc:absorb now runs the pin, which is safe ONLY because the tool is append-only for raw evidence: it adds a newly arrived artifact and refuses to rewrite a pin whose bytes changed. This gate asserts all three facts - the absorber runs the pin, the append-only refusal is still in the tool, and no npm lane passes --allow-raw-repin - and hard-fails when the absorber script cannot be found rather than passing over a lane it cannot reach.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:new-evidence-pinned",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-new-evidence-pinned/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-12",
+      "matrix_ids": [
+        "MX-NEW-EVIDENCE-PINNED-ON-ABSORB"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 249,
+  "record_count": 250,
   "generated_at": "2026-08-08T23:30:00Z"
 }

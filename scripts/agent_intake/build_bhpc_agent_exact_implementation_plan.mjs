@@ -5,7 +5,7 @@ import {ROOT, writeJson, hashFile} from './bhpc_agent_common.mjs';
 import {compileAndWriteBhpcAcceptanceManifest} from './compile_bhpc_agent_acceptance_manifest.mjs';
 import {mergeBhpcExternalCtaLinks} from '../lib/bhpc_conversion_contract.mjs';
 import {evaluateBhpcAcceptance} from '../lib/bhpc_agent_acceptance_satisfaction.mjs';
-import {bhpcGeneratedCitationDefinition} from '../lib/bhpc_public_page_contract.mjs';
+import {bhpcGeneratedCitationDefinition, bhpcGeneratedFrameworkName} from '../lib/bhpc_public_page_contract.mjs';
 
 const manifest=compileAndWriteBhpcAcceptanceManifest();
 function stableGeneratedAt(entries=[]){
@@ -202,7 +202,15 @@ function pageSpecFor(entries,primaryPath=''){
   const curated=curatedSpecs.get(String(primaryPath))||null;
   return {
     h1:(curated&&String(curated.h1||'').trim())?curated.h1:primary.query,
-    framework:(curated&&String(curated.framework||'').trim())?curated.framework:heading,
+    // CURATION FIRST, then a derived NAME, and only then the raw heading. The
+    // middle rung did not exist: a page the artifact CREATES has no curated entry by
+    // definition, so the fallback was always the query and every new page was a
+    // regression against validate:framework-name-shape's shrink-only baseline. The
+    // derivation returns '' rather than a severed phrase, so the last rung still
+    // stands and the shape guard names the page that needs curating.
+    framework:(curated&&String(curated.framework||'').trim())
+      ? curated.framework
+      : (bhpcGeneratedFrameworkName(primary.query) || heading),
     // The site publishes four extraction types (concept, howto, comparison,
     // decision). Choosing only between comparison and concept made the plan
     // demand that an existing how-to page be reshaped into a concept page.
