@@ -10,7 +10,12 @@ import {mergeBhpcExternalCtaLinks} from '../lib/bhpc_conversion_contract.mjs';
 import {bhpcReaderQuestionCandidates, cleanBhpcReaderHeading} from '../lib/bhpc_agent_reader_questions.mjs';
 import {BHPC_PRODUCT_ANCHOR_SENTENCE, bhpcGeneratedCitationDefinition} from '../lib/bhpc_public_page_contract.mjs';
 import {createRequire} from 'node:module';
+// THE ONE AUTHOR OF CITATION_PAGE_SCHEMA. A created page needs the block, and
+// hand-rolling the <script> here is what validate:citation-schema-authority refused
+// - correctly, because a second emitter is a second opinion about a page's schema.
+// Going through renderSchemaScript is the lawful way to have both.
 const requireCjs = createRequire(import.meta.url);
+const {renderSchemaScript, mainEntityOfPage} = requireCjs('../lib/citation_page_schema.cjs');
 const {routeFor: sharedRouteFor} = requireCjs('../lib/dual_domain_policy.cjs');
 
 function ensureDir(file) { fs.mkdirSync(path.dirname(file), {recursive: true}); }
@@ -661,6 +666,13 @@ function fullHtml(pathValue, entries, spec = {}) {
 <meta name="twitter:title" content="${escapeHtml(title)}">
 <meta name="twitter:description" content="${escapeHtml(description)}">
 <meta name="twitter:image" content="https://billionairehighperformancecoach.com/assets/img/bhpc-hero-square.png">
+${renderSchemaScript({
+  '@context': 'https://schema.org',
+  '@graph': [
+    {'@type': 'WebPage', '@id': `${canonical}#webpage`, url: canonical, name: title, headline: title, description, mainEntityOfPage: mainEntityOfPage(canonical)},
+    {'@type': 'DefinedTerm', '@id': `${canonical}#framework`, name: spec.framework || title, description: citationDefinition || description, inDefinedTermSet: canonical},
+  ],
+})}
 </head>
 <body data-bhpc-agent-generated-page="true">
 <!--
