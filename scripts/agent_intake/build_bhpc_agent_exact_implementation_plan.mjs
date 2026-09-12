@@ -200,6 +200,12 @@ function pageSpecFor(entries,primaryPath=''){
   const blockTypes=unique(entries.flatMap(e=>e.required_block_types||[]));
   const heading=primary.required_heading||primary.query;
   const curated=curatedSpecs.get(String(primaryPath))||null;
+  // Resolved BEFORE the literal, because the generated definition names it. A definition
+  // that does not name its framework is re-prefixed in the registry and nowhere else,
+  // and the page and the registry then disagree forever.
+  const frameworkName=(curated&&String(curated.framework||'').trim())
+    ? curated.framework
+    : (bhpcGeneratedFrameworkName(primary.query) || heading);
   return {
     h1:(curated&&String(curated.h1||'').trim())?curated.h1:primary.query,
     // CURATION FIRST, then a derived NAME, and only then the raw heading. The
@@ -208,14 +214,12 @@ function pageSpecFor(entries,primaryPath=''){
     // regression against validate:framework-name-shape's shrink-only baseline. The
     // derivation returns '' rather than a severed phrase, so the last rung still
     // stands and the shape guard names the page that needs curating.
-    framework:(curated&&String(curated.framework||'').trim())
-      ? curated.framework
-      : (bhpcGeneratedFrameworkName(primary.query) || heading),
+    framework:frameworkName,
     // The site publishes four extraction types (concept, howto, comparison,
     // decision). Choosing only between comparison and concept made the plan
     // demand that an existing how-to page be reshaped into a concept page.
     type:existingExtractionType(primaryPath)||(blockTypes.includes('comparison_table')?'comparison':'concept'),
-    definition:(curated&&String(curated.definition||'').trim())?curated.definition:bhpcGeneratedCitationDefinition(primary.query),
+    definition:(curated&&String(curated.definition||'').trim())?curated.definition:bhpcGeneratedCitationDefinition(primary.query, frameworkName),
     body:`<section data-bhpc-agent-record="${primary.record_id}" data-bhpc-agent-semantic="true"><h2>${heading}</h2></section>`,
     agent_acceptance:{
       record_ids:unique(entries.map(e=>e.record_id)),acceptance_ids:unique(entries.map(e=>e.id)),page_family:primary.page_family,route_status:primary.route_status,
