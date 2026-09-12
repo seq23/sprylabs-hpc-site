@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-09-12T14:54:37.136Z",
+  "generated_at": "2026-09-12T16:16:54.275Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 233,
+  "admitted_hard_fail_count": 234,
   "reviewed_count": 8,
-  "unreviewed_count": 225,
+  "unreviewed_count": 226,
   "suggested_review_counts": {
     "REVIEW_REQUIRED": 180,
     "EXISTING_REPAIR_AVAILABLE": 8,
-    "TRUE_BLOCKER": 28,
+    "TRUE_BLOCKER": 29,
     "REVIEW_WARNING_BOUNDARY": 17
   },
   "unresolved_review_counts": {
     "REVIEW_REQUIRED": 180,
     "EXISTING_REPAIR_AVAILABLE": 8,
-    "TRUE_BLOCKER": 28,
+    "TRUE_BLOCKER": 29,
     "REVIEW_WARNING_BOUNDARY": 9
   },
   "migration_status_counts": {
-    "UNREVIEWED": 225,
+    "UNREVIEWED": 226,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -3538,6 +3538,21 @@
         "MX-ONE-ACCEPTANCE-SATISFACTION-TEST"
       ],
       "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-NEW-EVIDENCE-PINNED-ON-ABSORB",
+      "name": "validate:new-evidence-pinned",
+      "command": "npm run validate:new-evidence-pinned",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses an absorb lane that takes in a new agent run without pinning its raw evidence. validate:ownership correctly demands that every raw artifact on disk appear in immutable_evidence - raw evidence nothing pins can be rewritten with no trace - and checks completeness against the tree, so an unpinned run is an error rather than a silence. protected-baseline:rebaseline is the tool that pins it and NOTHING INVOKED IT; its own header records that pins were missing for nine of thirteen runs because adding one meant typing four sha256 lines by hand. Every weekly artifact therefore arrived unpinned and took Daily Citation Intelligence red - run 34697045072 on 2026-09-12 failed UNPROTECTED_RAW_EVIDENCE on bhpc.csv, bhpc.html and bhpc.json plus UNPROTECTED_AGENT_DECLARATION on agent_run_manifest.json. agent:bhpc:absorb now runs the pin, which is safe ONLY because the tool is append-only for raw evidence: it adds a newly arrived artifact and refuses to rewrite a pin whose bytes changed. This gate asserts all three facts - the absorber runs the pin, the append-only refusal is still in the tool, and no npm lane passes --allow-raw-repin - and hard-fails when the absorber script cannot be found rather than passing over a lane it cannot reach.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-NEW-EVIDENCE-PINNED-ON-ABSORB"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
       "migration_status": "UNREVIEWED",
       "decision": null,
       "evidence": []
