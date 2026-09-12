@@ -7782,8 +7782,38 @@
         "MX-PUBLISHED-SURFACE-PAGES-ONLY"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-AGENT-BLOCK-SUPPLIERS-RUN-FIRST",
+      "status": "ADMITTED",
+      "name": "validate:agent-block-suppliers",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses a release lane that CREATES an agent page and then judges it without running the step that supplies the block it will be judged on. apply_bhpc_agent_exact_implementation.mjs deliberately emits nothing for recommendation_summary - its only source is source_fix_instruction, internal operator-facing audit critique that reached 28 live pages under the heading 'What this page recommends' - so retrofit:recommendation-summary is the ONLY producer. release:agent-intake:raw and validate:agent-run both ran apply-exact then trace-exact with no retrofit between them, while release:content-finalize had the correct order; two chains, each with its own idea of the sequence, nothing linking them. The defect was invisible for a month because the raw lane passes for any page that already exists from a previous cycle's retrofit, and can only fail on a page born minutes earlier in the same run. On 2026-09-12 the weekly bhpc artifact carried three new page opportunities, all three failed the raw trace on missing_blocks=[recommendation_summary], and Spry Content Release died before content-finalize was reached - the three pages were never pushed. The gate flattens every npm run chain, applies the rule only to lanes that reach the applier (a read-only validation batch that judges existing content is legitimate and must not be forced to mutate), and hard-fails when it examines zero such chains so a rename cannot make it pass over an empty set.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:agent-block-suppliers",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-agent-block-suppliers/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-12",
+      "matrix_ids": [
+        "MX-AGENT-BLOCK-SUPPLIERS-RUN-FIRST"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 247,
+  "record_count": 248,
   "generated_at": "2026-08-08T23:30:00Z"
 }

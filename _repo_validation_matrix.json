@@ -2407,9 +2407,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-AGENT-BLOCK-SUPPLIERS-RUN-FIRST",
+      "validation_id": "VAL-AGENT-BLOCK-SUPPLIERS-RUN-FIRST",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:agent-block-suppliers",
+      "order": 232,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 240,
+  "entry_count": 241,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2971,6 +2981,10 @@
         {
           "id": "VAL-PUBLISHED-SURFACE-PAGES-ONLY",
           "command": "npm run validate:published-surface-is-pages-only"
+        },
+        {
+          "id": "VAL-AGENT-BLOCK-SUPPLIERS-RUN-FIRST",
+          "command": "npm run validate:agent-block-suppliers"
         }
       ]
     },
@@ -3137,6 +3151,10 @@
         {
           "id": "VAL-WORKFLOW-MANUAL-ONLY-DECLARED",
           "command": "npm run validate:workflow-manual-only-declared"
+        },
+        {
+          "id": "VAL-AGENT-BLOCK-SUPPLIERS-RUN-FIRST",
+          "command": "npm run validate:agent-block-suppliers"
         }
       ]
     },
