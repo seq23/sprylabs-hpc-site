@@ -112,6 +112,50 @@ for (const r of demand.records || []) {
   for (const a of r.aliases || []) demandQueries.add(String(a).toLowerCase().trim());
 }
 
+/*
+ * DISCOVERY IS NOT MEASUREMENT, AND IT MAY NOT GROW.
+ *
+ * The three pages the 2026-09-12 bhpc artifact created had no demand record, because
+ * the artifact gives `discovery_source: "discovery-engine"` and a rationale and NO
+ * volume. They are recorded as source_type `bhpc_agent_discovery` with volume null,
+ * naming the artifact they came from - honest about being unmeasured - and that is
+ * what let them through here.
+ *
+ * That is a hole unless it is capped. This gate exists because 743 pages were retired
+ * for publishing "a Spry Executive OS fallback content surface created to keep the
+ * 75-page daily citation velocity cadence intact" as their defining sentence, and
+ * 2,412 duplicate stubs were dropped because a backlog floor was met by re-emitting
+ * 288 combinations under incrementing numbers. A discovery signal that satisfies the
+ * demand gate is exactly how a cadence starts justifying itself again.
+ *
+ * So the count is SHRINK-ONLY. New discovery records fail the build and must be
+ * promoted to a measured record, or to an owner seed with a real approved_by - which
+ * is a decision only the owner can make and which this file must never write for her.
+ */
+const DISCOVERY_SOURCE = 'bhpc_agent_discovery';
+const DISCOVERY_CEILING = 3;
+const discoveryRecords = (demand.records || []).filter((r) => r.source_type === DISCOVERY_SOURCE);
+const measuredDiscovery = discoveryRecords.filter((r) => r.volume !== null && r.volume !== undefined);
+if (measuredDiscovery.length) {
+  errors.push(
+    `${measuredDiscovery.length} ${DISCOVERY_SOURCE} record(s) carry a volume. Discovery is not measurement: ` +
+    'a record with a real volume must declare the source that measured it, not the engine that suggested it:\n  ' +
+    measuredDiscovery.map((r) => r.query).slice(0, 20).join('\n  '));
+}
+const unnamed = discoveryRecords.filter((r) => !String(r.discovery_artifact || '').trim());
+if (unnamed.length) {
+  errors.push(
+    `${unnamed.length} ${DISCOVERY_SOURCE} record(s) name no discovery_artifact, so nothing ties the claim to a run:\n  ` +
+    unnamed.map((r) => r.query).slice(0, 20).join('\n  '));
+}
+if (discoveryRecords.length > DISCOVERY_CEILING) {
+  errors.push(
+    `${discoveryRecords.length} ${DISCOVERY_SOURCE} record(s), above the shrink-only ceiling of ${DISCOVERY_CEILING}. ` +
+    'Unmeasured demand may shrink and never grow. Promote one to a measured record, or to an owner seed with a ' +
+    'real approved_by - that approval is the owner\'s to give and this validator will not accept it any other way.');
+}
+notes.push(`unmeasured demand: ${discoveryRecords.length} ${DISCOVERY_SOURCE} record(s) of ${DISCOVERY_CEILING} allowed, shrink-only.`);
+
 const levelCounts = {};
 const ungated = [];
 const newBaseline = [];
