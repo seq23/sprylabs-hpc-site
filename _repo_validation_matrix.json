@@ -2427,9 +2427,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-NEW-EVIDENCE-PINNED-ON-ABSORB",
+      "validation_id": "VAL-NEW-EVIDENCE-PINNED-ON-ABSORB",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:new-evidence-pinned",
+      "order": 234,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 242,
+  "entry_count": 243,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2999,6 +3009,10 @@
         {
           "id": "VAL-ONE-ACCEPTANCE-SATISFACTION-TEST",
           "command": "npm run validate:one-acceptance-test"
+        },
+        {
+          "id": "VAL-NEW-EVIDENCE-PINNED-ON-ABSORB",
+          "command": "npm run validate:new-evidence-pinned"
         }
       ]
     },
@@ -3173,6 +3187,10 @@
         {
           "id": "VAL-ONE-ACCEPTANCE-SATISFACTION-TEST",
           "command": "npm run validate:one-acceptance-test"
+        },
+        {
+          "id": "VAL-NEW-EVIDENCE-PINNED-ON-ABSORB",
+          "command": "npm run validate:new-evidence-pinned"
         }
       ]
     },

@@ -181,6 +181,17 @@ NEW_PAGES = {
 
 # Agent recommendation specifications are data-driven so new query pages and exact
 # owner requirements remain reviewable without burying them in executable code.
+# The sealed pre-gate routes, read once. An empty seal is a FAULT, not "nothing is
+# pre-gate": it would make `baseline` derivable for every page, which is the exemption
+# nobody may assert for themselves.
+PRE_GATE_BASELINE = ROOT / "data/demand/pre_gate_page_baseline.json"
+_pre_gate = json.loads(PRE_GATE_BASELINE.read_text(encoding="utf-8"))
+PRE_GATE_ROUTES = set(_pre_gate.get("routes") or [])
+if not PRE_GATE_ROUTES:
+    raise SystemExit(
+        f"{PRE_GATE_BASELINE} lists no routes; deriving admission_level from an empty seal "
+        "would make 'baseline' legal for every page.")
+
 AGENT_SPEC_PATH = ROOT / "data/citation/agent_page_specs.json"
 if AGENT_SPEC_PATH.exists():
     _agent_payload = json.loads(AGENT_SPEC_PATH.read_text(encoding="utf-8"))
@@ -720,7 +731,14 @@ def sync_agent_page_admission_records() -> int:
             "route":route,
             "canonical_domain":re.sub(r"^https?://([^/]+).*$",r"\1",canonical).lower(),
             "generation_lane":"legacy",
-            "admission_level":"baseline",
+            # `baseline` was hardcoded here. It means the page PREDATES the demand gate and
+            # is exempt from every substantive check in validate_programmatic_admission.py,
+            # so a record minted now asserting it skips the gate on a claim about its own
+            # history. All three pages the 2026-09-12 bhpc artifact created were admitted
+            # that way. The seal is the authority; see scripts/lib/admission_level.js for
+            # the same rule on the JS side, and validate:authority-admission-honesty, which
+            # looks up exactly this route string.
+            "admission_level":("baseline" if route in PRE_GATE_ROUTES else "full"),
             "status":"ADMITTED",
             "primary_query":spec.get("h1",path),
             "query_aliases":[],

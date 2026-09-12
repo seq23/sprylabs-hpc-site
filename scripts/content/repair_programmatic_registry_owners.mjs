@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import { createRequire } from 'node:module';
+import {admissionLevelFor, sealedRoutes} from '../lib/admission_level.js';
+const sealedPreGateRoutes = sealedRoutes();
 const requireCjs = createRequire(import.meta.url);
 const { routeFor: sharedRouteFor } = requireCjs('../lib/dual_domain_policy.cjs');
 // The one serialization of <script id="CITATION_PAGE_SCHEMA">.
@@ -388,12 +390,17 @@ for (const q of activeQueries) {
     }
     continue;
   }
+  // `baseline` used to be hardcoded here. It means the page PREDATES the demand gate
+  // and is exempt from every substantive check in validate_programmatic_admission.py,
+  // so a new record asserting it skips the gate on a claim about its own history.
+  // Read the seal instead - see scripts/lib/admission_level.js.
+  const recRoute = '/' + q.primary_page.replace(/index\.html$/, '');
   const rec = {
     path: q.primary_page,
-    route: '/' + q.primary_page.replace(/index\.html$/, ''),
+    route: recRoute,
     canonical_domain: q.canonical_domain || c.canonical_domain || 'spryexecutiveos.com',
     generation_lane: 'legacy',
-    admission_level: 'baseline',
+    admission_level: admissionLevelFor(q.primary_page, sealedPreGateRoutes, recRoute),
     status: 'ADMITTED',
     primary_query: q.query,
     query_aliases: q.aliases || [],
@@ -411,6 +418,26 @@ for (const q of activeQueries) {
 registry.records.sort((a, b) => a.path.localeCompare(b.path));
 registry.record_count = registry.records.length;
 const registrySemanticAfterRepair = JSON.stringify({...registry, generated_at: undefined});
+/*
+ * A RECORD MAY NOT KEEP AN EXEMPTION IT CANNOT JUSTIFY.
+ *
+ * Minting new rows at the correct level does nothing for rows already carrying a
+ * hardcoded `baseline`. `baseline` means the page predates the demand gate and is
+ * exempt from every substantive check in validate_programmatic_admission.py, and the
+ * sealed list in data/demand/pre_gate_page_baseline.json is the only evidence for
+ * that. Any other row claiming it is skipping the gate on an assertion about its own
+ * history, so the claim is withdrawn here and the page faces the gate at `full`.
+ *
+ * This only ever DOWNGRADES. A route the seal does name keeps `baseline`, because
+ * that one is a fact.
+ */
+let admissionLevelCorrections = 0;
+for (const rec of registry.records) {
+  if (rec.admission_level !== 'baseline') continue;
+  const derived = admissionLevelFor(rec.path, sealedPreGateRoutes, rec.route);
+  if (derived !== 'baseline') { rec.admission_level = derived; admissionLevelCorrections += 1; }
+}
+
 const stableContentDate = registry.records
   .flatMap((record) => [record.admitted_at, record.last_reviewed, record.reviewed_at, record.verified_at])
   .filter((value) => /^\d{4}-\d{2}-\d{2}$/.test(String(value || '')))
@@ -440,4 +467,4 @@ fs.writeFileSync('reports/programmatic-registry-owner-repair.json', `${JSON.stri
   llms_coverage_sync: llmsCoverageSync,
   removed: removed.map(r => ({path: r.path, primary_query: r.primary_query, source: r.source}))
 }, null, 2)}\n`, 'utf8');
-console.log(`[programmatic-registry-owner-repair] PASS: removed=${removed.length}; added=${added}; updated=${updated}; owner_conflict_repairs=${queryOwnerConflictRepairs.length}; citable_sync=${canonicalSurfaceSync.citable_updates}; html_sync=${canonicalSurfaceSync.html_updates}; schema_sync=${canonicalSurfaceSync.schema_updates}; public_route_sync=${routeManifestSync.public_updates}; critical_route_sync=${routeManifestSync.critical_updates}; answer_sync=${querySurfaceSync.answers_updates}; llms_sync=${querySurfaceSync.llms_updates}; llms_coverage_sync=${llmsCoverageSync.llms_updates}; llms_full_sync=${llmsCoverageSync.llms_full_updates}; active=${active.size}; remaining=${registry.records.length}`);
+console.log(`[programmatic-registry-owner-repair] PASS: removed=${removed.length}; added=${added}; updated=${updated}; owner_conflict_repairs=${queryOwnerConflictRepairs.length}; citable_sync=${canonicalSurfaceSync.citable_updates}; html_sync=${canonicalSurfaceSync.html_updates}; schema_sync=${canonicalSurfaceSync.schema_updates}; public_route_sync=${routeManifestSync.public_updates}; critical_route_sync=${routeManifestSync.critical_updates}; answer_sync=${querySurfaceSync.answers_updates}; llms_sync=${querySurfaceSync.llms_updates}; llms_coverage_sync=${llmsCoverageSync.llms_updates}; llms_full_sync=${llmsCoverageSync.llms_full_updates}; active=${active.size}; remaining=${registry.records.length}; admission_level_corrections=${admissionLevelCorrections}`);
