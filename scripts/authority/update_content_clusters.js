@@ -44,6 +44,7 @@
 const fs = require('fs');
 const path = require('path');
 const { applySignalKeys } = require('../lib/cluster_signal_ledger');
+const { deriveQueryCoverage } = require('../lib/query_coverage_projection');
 
 const ROOT = process.cwd();
 const MEMORY = path.join(ROOT, 'data/content_clusters/cluster_memory.json');
@@ -237,24 +238,11 @@ function main() {
     clusters,
   });
 
-  const coverage = readJson(COVERAGE, {});
-  const covered = clusters.map((c) => ({
-    cluster_id: c.cluster_id,
-    intent_type: c.intent_type,
-    signal_count: c.signal_count,
-    saturation: c.saturation,
-    canonical_anchor: (coverage.canonical_anchors || [])[0] || '/',
-    conversion_url: CONVERSION_URL,
-  }));
-  const gaps = clusters
-    .filter((c) => c.signal_count >= 5 && !String(c.status || '').includes('covered'))
-    .map((c) => ({ cluster_id: c.cluster_id, reason: 'cluster has repeated demand but no confirmed synthesis/authority coverage' }));
-  writeJson(COVERAGE, {
-    ...coverage,
-    generated_at: coverage.generated_at || new Date().toISOString(),
-    covered_queries: covered,
-    gaps: gaps.slice(0, 50),
-  });
+  // The projection moved to scripts/lib/query_coverage_projection.js because
+  // route_scored_signals.js writes cluster_memory.json AFTER this script does, so
+  // a coverage map derived only here described a ledger that no longer existed by
+  // the end of the run. Both writers now project, and the last one wins correctly.
+  writeJson(COVERAGE, deriveQueryCoverage(clusters, readJson(COVERAGE, {})));
 
   const added = [...seenThisRun.values()].reduce((a, b) => a + b, 0);
   if (pruned.length) {
