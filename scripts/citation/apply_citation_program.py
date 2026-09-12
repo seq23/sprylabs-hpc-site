@@ -209,9 +209,25 @@ if AGENT_HTML_REPORT_SPEC_PATH.exists():
 # so every generated spec above used to overwrite it wholesale. That is how a raw
 # search query reached data-named-framework and took Spry Content Release red.
 #
-# The generated specs still contribute body, h1 and type for pages the curated
-# file does not describe - that is what they are for - but they may never win on
-# `framework` or `definition`. Those two are restored here, after every update().
+# The generated specs still contribute body and type for pages the curated file
+# does not describe - that is what they are for - but they may never win on
+# `framework`, `definition` or `h1`. Those three are restored here, after every
+# update().
+#
+# `h1` WAS MISSING FROM THIS LIST, and it is the most visible of the three: it is
+# the heading a reader sees and the string repair_schema_parity.py reads straight
+# into schema `name` and `headline`. So the same raw-query defect that was fixed
+# for data-named-framework kept happening one element higher up the page. On
+# 2026-09-12 how-do-you-use-chatgpt-as-an-executive-coach.html was published with
+# <h1>How Do You Use ChatGPT as an Executive Coach?</h1> and the build rewrote it
+# to <h1>challenge my assumptions and call out blind spots in my 30-day execution
+# plan</h1> - an agent recommendation query, as the page's own title and as its
+# schema name - while the curated spec said the correct heading all along.
+#
+# That rewrite is also why the tree stopped being a fixed point: build:all
+# produced a page that differed from the committed one on every run, which is the
+# `extraction-surface-guard: 6 governed surfaces changed` failure that took
+# Validate Repo red and blocked every PR behind it.
 #
 # This also removes a one-build lag that no amount of authoring could fix:
 # build:all runs this script inside build:postprocess but regenerates
@@ -227,16 +243,24 @@ if AGENT_SPEC_PATH.exists():
     _curated_names = {}
     for _section in ("priority_pages", "new_pages"):
         for _path, _spec in _agent_payload.get(_section, {}).items():
-            if isinstance(_spec, dict) and str(_spec.get("framework", "")).strip():
+            # EITHER field is enough to make this the authority for that field. The
+            # framework-only condition meant a curated entry that named only the
+            # heading was skipped entirely, and the generated query won by default.
+            if isinstance(_spec, dict) and (
+                str(_spec.get("framework", "")).strip() or str(_spec.get("h1", "")).strip()
+            ):
                 _curated_names[_path] = _spec
     for _bucket in (PRIORITY, NEW_PAGES):
         for _path, _spec in _bucket.items():
             _curated = _curated_names.get(_path)
             if not _curated:
                 continue
-            _spec["framework"] = _curated["framework"]
+            if str(_curated.get("framework", "")).strip():
+                _spec["framework"] = _curated["framework"]
             if str(_curated.get("definition", "")).strip():
                 _spec["definition"] = _curated["definition"]
+            if str(_curated.get("h1", "")).strip():
+                _spec["h1"] = _curated["h1"]
 
 
 RELATED = [
