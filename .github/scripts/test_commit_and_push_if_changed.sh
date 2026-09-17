@@ -67,21 +67,64 @@ exit 0
 GIT
 chmod +x "$tmp/bin/git"
 
-# Stands in for the validation-dispatch request. Records that it was asked and
-# with what, and returns whatever HTTP status the case under test wants.
+# Stands in for every GitHub API call the helper makes, not just the dispatch
+# POST. The helper no longer treats HTTP 204 on the POST as success - it reads
+# the ref and then reads back whether a Validate Repo run exists for the pushed
+# SHA - so a stub that answers only the POST would make the confirm loop spin
+# against unreadable reads and prove nothing. Each endpoint is answered, and the
+# dispatch's EFFECT on run existence is what the cases under test vary.
 cat > "$tmp/bin/curl" <<'CURL'
 #!/usr/bin/env bash
 set -u
-printf '%s\n' "$*" >> "${DISPATCH_LOG:?}"
+args="$*"
+printf '%s\n' "$args" >> "${DISPATCH_LOG:?}"
 out=""
 prev=""
 for arg in "$@"; do
   if [ "$prev" = "-o" ]; then out="$arg"; fi
   prev="$arg"
 done
-if [ -n "$out" ]; then printf '{"message":"stub"}' > "$out"; fi
-printf '%s' "${CURL_HTTP_CODE:-204}"
-exit 0
+emit() {
+  if [ -n "$out" ]; then printf '%s' "$1" > "$out"; fi
+  printf '%s' "$2"
+  exit 0
+}
+
+run_state_file="${RUN_STATE_FILE:-/dev/null}"
+dispatch_count_file="${DISPATCH_COUNT_FILE:-/dev/null}"
+
+case "$args" in
+  *"/dispatches"*)
+    n=0
+    if [ -f "$dispatch_count_file" ]; then n="$(cat "$dispatch_count_file")"; fi
+    n=$((n + 1))
+    printf '%s' "$n" > "$dispatch_count_file" 2>/dev/null || true
+    # What this dispatch does to the world, which is the whole point of the case.
+    case "${STUB_DISPATCH_EFFECT:-covers}" in
+      covers)  printf 'present' > "$run_state_file" 2>/dev/null || true ;;
+      misses)  : ;;
+      misses_then_covers)
+        if [ "$n" -ge "${STUB_DISPATCH_COVERS_ON:-2}" ]; then
+          printf 'present' > "$run_state_file" 2>/dev/null || true
+        fi
+        ;;
+    esac
+    emit '{"message":"stub"}' "${CURL_HTTP_CODE:-204}"
+    ;;
+  *"/commits/main"*)
+    emit "{\"sha\":\"${STUB_REF_SHA:-0000000000000000000000000000000000000000}\"}" "${STUB_REF_HTTP:-200}"
+    ;;
+  *"/actions/runs?head_sha="*)
+    state="absent"
+    if [ -f "$run_state_file" ]; then state="$(cat "$run_state_file")"; fi
+    if [ "$state" = "present" ]; then
+      emit '{"total_count":1,"workflow_runs":[{"id":1,"path":".github/workflows/validate-repo.yml","conclusion":null}]}' "${STUB_RUNS_HTTP:-200}"
+    fi
+    emit '{"total_count":0,"workflow_runs":[]}' "${STUB_RUNS_HTTP:-200}"
+    ;;
+esac
+
+emit '{"message":"stub"}' "${CURL_HTTP_CODE:-204}"
 CURL
 chmod +x "$tmp/bin/curl"
 
@@ -99,9 +142,17 @@ run_case() {
   : > "$case_dir/replay.log"
   : > "$case_dir/dispatch.log"
   printf '0' > "$case_dir/push-count"
+  printf 'absent' > "$case_dir/run-state"
+  printf '0' > "$case_dir/dispatch-count"
 
   set +e
   PATH="$tmp/bin:$PATH" \
+  RUN_STATE_FILE="$case_dir/run-state" \
+  DISPATCH_COUNT_FILE="$case_dir/dispatch-count" \
+  STUB_DISPATCH_EFFECT="${STUB_DISPATCH_EFFECT:-covers}" \
+  REF_SETTLE_DELAY_SECONDS=0 \
+  DISPATCH_CONFIRM_DELAY_SECONDS=0 \
+  DISPATCH_CONFIRM_ATTEMPTS=2 \
   GIT_CALL_LOG="$case_dir/git-calls.log" \
   PUSH_COUNT_FILE="$case_dir/push-count" \
   PUSH_MODE="$mode" \
@@ -153,10 +204,18 @@ run_dispatch_failure_case() {
   : > "$case_dir/replay.log"
   : > "$case_dir/dispatch.log"
   printf '0' > "$case_dir/push-count"
+  printf 'absent' > "$case_dir/run-state"
+  printf '0' > "$case_dir/dispatch-count"
 
   set +e
   env "$@" \
     PATH="$tmp/bin:$PATH" \
+    RUN_STATE_FILE="$case_dir/run-state" \
+    DISPATCH_COUNT_FILE="$case_dir/dispatch-count" \
+    STUB_DISPATCH_EFFECT=covers \
+    REF_SETTLE_DELAY_SECONDS=0 \
+    DISPATCH_CONFIRM_DELAY_SECONDS=0 \
+    DISPATCH_CONFIRM_ATTEMPTS=2 \
     GIT_CALL_LOG="$case_dir/git-calls.log" \
     PUSH_COUNT_FILE="$case_dir/push-count" \
     PUSH_MODE=transient \
@@ -283,6 +342,14 @@ done
 # every check above passing while restoring the original hole.
 if ! grep -q 'actions/workflows/validate-repo.yml/dispatches' "$repo_root/.github/scripts/commit_and_push_if_changed.sh"; then
   echo "writer coordination: the shared push helper no longer requests Validate Repo after pushing to main" >&2
+  exit 1
+fi
+
+# Requesting is not covering. The helper must read back that a run exists for the
+# SHA it pushed; deleting that read restores the 2026-09-14 f7572445d race while
+# every check above still passes.
+if ! grep -q 'actions/runs?head_sha=' "$repo_root/.github/scripts/commit_and_push_if_changed.sh"; then
+  echo "writer coordination: the shared push helper no longer confirms a Validate Repo run exists for the SHA it pushed" >&2
   exit 1
 fi
 
