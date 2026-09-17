@@ -272,6 +272,124 @@ run_missing_replay_case() {
   fi
 }
 
+# THE DISPATCH RACE, which is what the 2026-09-14 miss actually was.
+#
+# A dispatch can be accepted (204) and still produce a run pinned to the PARENT
+# commit, because workflow_dispatch resolves the branch name on GitHub's side and
+# that read can lag the push. f7572445d64a28a061a658ed5cd74f0f071c5f9a is the
+# recorded instance: dispatched five seconds after it landed, 204 returned, run
+# 34857679581 started against bca354ff3, and f7572445d has zero runs to this day.
+#
+# These two cases are the difference between requesting and covering. Under the
+# old helper both of them exited 0 with a clean "MAIN-VALIDATION-DISPATCH ok".
+run_race_case() {
+  local name="$1"
+  local effect="$2"
+  local covers_on="$3"
+  local expected_status="$4"
+  local expected_dispatches="$5"
+
+  local case_dir="$tmp/$name"
+  mkdir -p "$case_dir"
+  : > "$case_dir/git-calls.log"
+  : > "$case_dir/replay.log"
+  : > "$case_dir/dispatch.log"
+  printf '0' > "$case_dir/push-count"
+  printf 'absent' > "$case_dir/run-state"
+  printf '0' > "$case_dir/dispatch-count"
+
+  set +e
+  PATH="$tmp/bin:$PATH" \
+  RUN_STATE_FILE="$case_dir/run-state" \
+  DISPATCH_COUNT_FILE="$case_dir/dispatch-count" \
+  STUB_DISPATCH_EFFECT="$effect" \
+  STUB_DISPATCH_COVERS_ON="$covers_on" \
+  REF_SETTLE_DELAY_SECONDS=0 \
+  DISPATCH_CONFIRM_DELAY_SECONDS=0 \
+  DISPATCH_CONFIRM_ATTEMPTS=2 \
+  DISPATCH_REQUEST_ATTEMPTS=3 \
+  GIT_CALL_LOG="$case_dir/git-calls.log" \
+  PUSH_COUNT_FILE="$case_dir/push-count" \
+  PUSH_MODE=transient \
+  REPLAY_LOG="$case_dir/replay.log" \
+  DISPATCH_LOG="$case_dir/dispatch.log" \
+  CURL_HTTP_CODE=204 \
+  GITHUB_TOKEN=stub-token \
+  GITHUB_REPOSITORY=seq23/sprylabs-hpc-site \
+  WORKFLOW_ARGV='printf "replayed\n" >> "$REPLAY_LOG"' \
+  PUSH_RETRY_ATTEMPTS=3 \
+  PUSH_RETRY_DELAY_SECONDS=0 \
+  "$helper" "test commit" "test-workflow" >"$case_dir/stdout.log" 2>"$case_dir/stderr.log"
+  status=$?
+  set -e
+
+  if [ "$status" -ne "$expected_status" ]; then
+    echo "$name: expected status $expected_status, got $status" >&2
+    cat "$case_dir/stdout.log" "$case_dir/stderr.log" >&2
+    exit 1
+  fi
+  dispatches="$(grep -c 'actions/workflows/validate-repo.yml/dispatches' "$case_dir/dispatch.log" || true)"
+  if [ "$dispatches" -ne "$expected_dispatches" ]; then
+    echo "$name: expected $expected_dispatches dispatch(es), got $dispatches" >&2
+    cat "$case_dir/stdout.log" >&2
+    exit 1
+  fi
+}
+
+# The ref must have visibly moved before the dispatch goes out. A stub whose
+# /commits/main still reports the parent must not be dispatched against silently.
+run_stale_ref_case() {
+  local case_dir="$tmp/stale_ref"
+  mkdir -p "$case_dir"
+  : > "$case_dir/git-calls.log"
+  : > "$case_dir/replay.log"
+  : > "$case_dir/dispatch.log"
+  printf '0' > "$case_dir/push-count"
+  printf 'absent' > "$case_dir/run-state"
+  printf '0' > "$case_dir/dispatch-count"
+
+  set +e
+  PATH="$tmp/bin:$PATH" \
+  RUN_STATE_FILE="$case_dir/run-state" \
+  DISPATCH_COUNT_FILE="$case_dir/dispatch-count" \
+  STUB_DISPATCH_EFFECT=covers \
+  STUB_REF_SHA=1111111111111111111111111111111111111111 \
+  REF_SETTLE_ATTEMPTS=3 \
+  REF_SETTLE_DELAY_SECONDS=0 \
+  DISPATCH_CONFIRM_DELAY_SECONDS=0 \
+  DISPATCH_CONFIRM_ATTEMPTS=2 \
+  GIT_CALL_LOG="$case_dir/git-calls.log" \
+  PUSH_COUNT_FILE="$case_dir/push-count" \
+  PUSH_MODE=transient \
+  REPLAY_LOG="$case_dir/replay.log" \
+  DISPATCH_LOG="$case_dir/dispatch.log" \
+  CURL_HTTP_CODE=204 \
+  GITHUB_TOKEN=stub-token \
+  GITHUB_REPOSITORY=seq23/sprylabs-hpc-site \
+  WORKFLOW_ARGV='printf "replayed\n" >> "$REPLAY_LOG"' \
+  PUSH_RETRY_ATTEMPTS=3 \
+  PUSH_RETRY_DELAY_SECONDS=0 \
+  "$helper" "test commit" "test-workflow" >"$case_dir/stdout.log" 2>"$case_dir/stderr.log"
+  status=$?
+  set -e
+
+  if [ "$status" -ne 0 ]; then
+    echo "stale_ref: expected the helper to recover once a run appears, got $status" >&2
+    cat "$case_dir/stderr.log" >&2
+    exit 1
+  fi
+  # It must have NOTICED, not just barrelled through.
+  if ! grep -q 'ref not settled yet' "$case_dir/stdout.log"; then
+    echo "stale_ref: the helper dispatched without ever checking that main carries the pushed SHA" >&2
+    exit 1
+  fi
+  reads="$(grep -c '/commits/main' "$case_dir/dispatch.log" || true)"
+  if [ "$reads" -lt 3 ]; then
+    echo "stale_ref: expected the helper to re-read main while it lagged, saw $reads read(s)" >&2
+    exit 1
+  fi
+}
+
 run_case remote_advance remote_advance 0 1 2 1
 run_case non_retryable non_retryable 128 0 1 0
 run_case transient transient 0 0 2 1
@@ -280,6 +398,14 @@ run_dispatch_failure_case dispatch_http_error \
   CURL_HTTP_CODE=403 GITHUB_TOKEN=stub-token GITHUB_REPOSITORY=seq23/sprylabs-hpc-site
 run_dispatch_failure_case dispatch_missing_token \
   CURL_HTTP_CODE=204 GITHUB_TOKEN= GH_TOKEN= GITHUB_REPOSITORY=seq23/sprylabs-hpc-site
+
+# Accepted dispatch, no run ever covering the pushed SHA: the f7572445d shape.
+# Re-requested to the bound, then a hard failure rather than a clean "ok".
+run_race_case dispatch_never_covers misses 0 1 3
+# The same race, recovering on the second request. The point is that the helper
+# noticed it had not been covered and asked again, which the old one never did.
+run_race_case dispatch_covers_on_retry misses_then_covers 2 0 2
+run_stale_ref_case
 
 repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 

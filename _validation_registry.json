@@ -7902,8 +7902,38 @@
         "MX-CREATED-PAGE-IS-COMPLETE"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-MAIN-VALIDATION-COVERAGE-EVIDENCE",
+      "status": "ADMITTED",
+      "name": "validate:main-validation-coverage-evidence",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses a Main Validation Sentinel that establishes ABSENCE from a single unreliable read. On 2026-09-17T12:38Z the sentinel read covering_runs: 0 for commit 343552b50681ee62d3271f88a79b3d0460ad1e84 and opened issue #92, when that commit was covered by green Validate Repo run 35110066316 created 2026-09-16T14:39:54Z - a run the five preceding sentinel runs had all read as covered=1 (16:29Z, 20:27Z, 01:01Z, 04:32Z, 08:35Z). Both inputs were immutable and the run predated every read, so the zero was an API read error, not a coverage gap. The cause was proving absence by scanning page one of a paginated branch-indexed listing of 302 runs, once. An alarm that cries wolf on its own flake is the same defect as an alarm nobody reads, and the owner has already said so once about this workflow. The opposite failure is worse and is why the sentinel exists: f7572445d64a28a061a658ed5cd74f0f071c5f9a genuinely sat on main for 23 hours with zero covering runs. This guard holds both edges against a scripted local API - a single flaky zero must not raise an alarm, two agreeing zeros past the 90-minute grace window must still raise one, a red run stays red, the grace window is not widened, no run history at all is a named stop rather than a confident verdict - and asserts the method in the source, because a behavioural suite on an agreeable stub passes just as well against the paginated scan that caused the false alarm. Hard-fails if zero cases execute.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:main-validation-coverage-evidence",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-main-validation-coverage-evidence/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-17",
+      "matrix_ids": [
+        "MX-MAIN-VALIDATION-COVERAGE-EVIDENCE"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 251,
+  "record_count": 252,
   "generated_at": "2026-08-08T23:30:00Z"
 }
