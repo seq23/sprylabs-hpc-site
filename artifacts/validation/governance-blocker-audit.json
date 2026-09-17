@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-09-17T13:37:30.796Z",
+  "generated_at": "2026-09-17T14:37:54.640Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 235,
+  "admitted_hard_fail_count": 236,
   "reviewed_count": 8,
-  "unreviewed_count": 227,
+  "unreviewed_count": 228,
   "suggested_review_counts": {
     "REVIEW_REQUIRED": 181,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 29,
-    "REVIEW_WARNING_BOUNDARY": 17
+    "REVIEW_WARNING_BOUNDARY": 18
   },
   "unresolved_review_counts": {
     "REVIEW_REQUIRED": 181,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 29,
-    "REVIEW_WARNING_BOUNDARY": 9
+    "REVIEW_WARNING_BOUNDARY": 10
   },
   "migration_status_counts": {
-    "UNREVIEWED": 227,
+    "UNREVIEWED": 228,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -3568,6 +3568,21 @@
         "MX-CREATED-PAGE-IS-COMPLETE"
       ],
       "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-MAIN-VALIDATION-COVERAGE-EVIDENCE",
+      "name": "validate:main-validation-coverage-evidence",
+      "command": "npm run validate:main-validation-coverage-evidence",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses a Main Validation Sentinel that establishes ABSENCE from a single unreliable read. On 2026-09-17T12:38Z the sentinel read covering_runs: 0 for commit 343552b50681ee62d3271f88a79b3d0460ad1e84 and opened issue #92, when that commit was covered by green Validate Repo run 35110066316 created 2026-09-16T14:39:54Z - a run the five preceding sentinel runs had all read as covered=1 (16:29Z, 20:27Z, 01:01Z, 04:32Z, 08:35Z). Both inputs were immutable and the run predated every read, so the zero was an API read error, not a coverage gap. The cause was proving absence by scanning page one of a paginated branch-indexed listing of 302 runs, once. An alarm that cries wolf on its own flake is the same defect as an alarm nobody reads, and the owner has already said so once about this workflow. The opposite failure is worse and is why the sentinel exists: f7572445d64a28a061a658ed5cd74f0f071c5f9a genuinely sat on main for 23 hours with zero covering runs. This guard holds both edges against a scripted local API - a single flaky zero must not raise an alarm, two agreeing zeros past the 90-minute grace window must still raise one, a red run stays red, the grace window is not widened, no run history at all is a named stop rather than a confident verdict - and asserts the method in the source, because a behavioural suite on an agreeable stub passes just as well against the paginated scan that caused the false alarm. Hard-fails if zero cases execute.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-MAIN-VALIDATION-COVERAGE-EVIDENCE"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
       "migration_status": "UNREVIEWED",
       "decision": null,
       "evidence": []
