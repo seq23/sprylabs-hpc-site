@@ -20,11 +20,10 @@ fetch_remote_main() {
 
 # A push made with GITHUB_TOKEN does not create a push event, so `on: push:
 # branches: [main]` in Validate Repo is structurally unreachable for every
-# automated writer. That is not a theory: all nine github-actions[bot] commits on
-# main have zero Validate Repo runs, while every human commit has one. b3aec016c
-# ("zero-dollar citation intelligence: autonomous gap fill") landed three minutes
-# after the last green run and left main failing three validators for over two
-# hours with nothing to notice it.
+# automated writer. That is not a theory: b3aec016c ("zero-dollar citation
+# intelligence: autonomous gap fill") landed three minutes after the last green
+# run and left main failing three validators for over two hours with nothing to
+# notice it.
 #
 # workflow_dispatch is the documented exception to that recursion guard: the API
 # honours it when called with GITHUB_TOKEN. Every main-writing workflow already
@@ -32,9 +31,137 @@ fetch_remote_main() {
 # all present writers and any future one for free - there is no per-workflow step
 # an author can forget to add.
 #
-# A dispatch that cannot be requested is a hard failure. Returning zero here
+# REQUESTING IS NOT COVERING, AND THE DIFFERENCE IS A RACE THAT HAS ALREADY FIRED.
+#
+# The request used to be a single POST of {"ref":"main"} that reported success on
+# HTTP 204. But workflow_dispatch resolves a BRANCH NAME to a SHA on GitHub's
+# side, at dispatch time, and that read can still be serving the pre-push tip
+# seconds after the push returns. When it does, the dispatch is honoured, 204 is
+# returned, a Validate Repo run starts - and it validates the PARENT commit. The
+# commit that was just landed is covered by nothing, and this script said "ok".
+#
+# Reproduced in the record on 2026-09-14: f7572445d64a28a061a658ed5cd74f0f071c5f9a
+# was pushed at 14:45:13Z, this function dispatched at 14:45:18Z and got its 204,
+# and run 34857679581 started at 14:45:18Z pinned to bca354ff368897aa583baed1e82eac10802656cc,
+# its parent. An exact head_sha query returns total_count 0 for f7572445d to this
+# day: that commit sat on main for 23 hours validated by nothing, and only escaped
+# an alarm because the next release replaced it before the sentinel next looked.
+#
+# So the unit of success is not the HTTP status of the request. It is the
+# existence of a Validate Repo run whose head_sha IS the commit just pushed -
+# which is exactly, and deliberately, the same predicate the Main Validation
+# Sentinel checks. This function now establishes that predicate rather than
+# hoping for it:
+#
+#   1. wait until the API's own view of main actually reports the pushed SHA,
+#      so the dispatch cannot be resolved against a ref that has not moved;
+#   2. dispatch;
+#   3. wait for a Validate Repo run whose head_sha is the pushed SHA to exist;
+#   4. if none appears, re-dispatch, bounded.
+#
+# The alternative shape - pass the SHA as a workflow input and have Validate Repo
+# check it out - was rejected. The run's head_sha would still be the branch tip,
+# so the run would CLAIM to have validated a commit it did not test, and the
+# sentinel's coverage rule would have to be loosened to accept it. That trades a
+# race for a lie.
+#
+# A dispatch that cannot be confirmed is a hard failure. Returning zero here
 # would restore the exact silence this exists to remove: main advanced, and
 # nothing is coming to check it.
+DISPATCH_CONFIRM_ATTEMPTS="${DISPATCH_CONFIRM_ATTEMPTS:-12}"
+DISPATCH_CONFIRM_DELAY_SECONDS="${DISPATCH_CONFIRM_DELAY_SECONDS:-5}"
+DISPATCH_REQUEST_ATTEMPTS="${DISPATCH_REQUEST_ATTEMPTS:-3}"
+REF_SETTLE_ATTEMPTS="${REF_SETTLE_ATTEMPTS:-12}"
+REF_SETTLE_DELAY_SECONDS="${REF_SETTLE_DELAY_SECONDS:-5}"
+
+gh_api_get() {
+  # Prints the response body; returns non-zero on any non-200 so a failed read is
+  # never mistaken for an answer.
+  local path="$1" token="$2" api="$3"
+  local body status
+  body="$(mktemp)"
+  status="$(curl -sS -o "$body" -w '%{http_code}' \
+    -H "Accept: application/vnd.github+json" \
+    -H "Authorization: Bearer ${token}" \
+    -H "X-GitHub-Api-Version: 2022-11-28" \
+    "${api}${path}" || echo 000)"
+  if [ "$status" != "200" ]; then
+    rm -f "$body"
+    return 1
+  fi
+  cat "$body"
+  rm -f "$body"
+  return 0
+}
+
+# Does a Validate Repo run exist whose head_sha is exactly this commit? Asked by
+# exact-SHA query, which is an indexed lookup rather than a scan of a paginated
+# branch listing - the same correction made in check_main_validation_coverage.mjs
+# and for the same reason.
+validate_run_exists_for_sha() {
+  local sha="$1" token="$2" repo="$3" api="$4"
+  local json
+  json="$(gh_api_get "/repos/${repo}/actions/runs?head_sha=${sha}&per_page=100" "$token" "$api")" || return 2
+  printf '%s' "$json" | node -e '
+    let raw = "";
+    process.stdin.on("data", (d) => (raw += d));
+    process.stdin.on("end", () => {
+      let parsed;
+      try { parsed = JSON.parse(raw); } catch { process.exit(2); }
+      const runs = Array.isArray(parsed.workflow_runs) ? parsed.workflow_runs : null;
+      if (!runs) process.exit(2);
+      const hit = runs.some((r) => r.path === ".github/workflows/validate-repo.yml");
+      process.exit(hit ? 0 : 1);
+    });
+  '
+}
+
+# Wait for GitHub to agree that main is where we just pushed it. This is the step
+# whose absence produced the 2026-09-14 miss.
+wait_for_ref_to_carry_sha() {
+  local sha="$1" token="$2" repo="$3" api="$4"
+  local attempt=1 seen
+  while [ "$attempt" -le "$REF_SETTLE_ATTEMPTS" ]; do
+    seen="$(gh_api_get "/repos/${repo}/commits/main" "$token" "$api" | node -e '
+      let raw = "";
+      process.stdin.on("data", (d) => (raw += d));
+      process.stdin.on("end", () => {
+        try { process.stdout.write(String(JSON.parse(raw).sha || "")); } catch { process.stdout.write(""); }
+      });
+    ' || true)"
+    if [ "$seen" = "$sha" ]; then
+      echo "MAIN-VALIDATION-DISPATCH ref settled: the API reports main at ${sha} after ${attempt} read(s)"
+      return 0
+    fi
+    echo "MAIN-VALIDATION-DISPATCH ref not settled yet (attempt ${attempt}/${REF_SETTLE_ATTEMPTS}): the API still reports main at '${seen:-<unreadable>}', not ${sha}"
+    attempt=$((attempt + 1))
+    [ "$attempt" -le "$REF_SETTLE_ATTEMPTS" ] && sleep "$REF_SETTLE_DELAY_SECONDS"
+  done
+  echo "MAIN-VALIDATION-DISPATCH ref never settled on ${sha}; dispatching anyway and confirming by head_sha below" >&2
+  return 1
+}
+
+post_validation_dispatch() {
+  local token="$1" repo="$2" api="$3" pushed_sha="$4"
+  local body http_status
+  body="$(mktemp)"
+  http_status="$(curl -sS -o "$body" -w '%{http_code}' \
+    -X POST \
+    -H "Accept: application/vnd.github+json" \
+    -H "Authorization: Bearer ${token}" \
+    -H "X-GitHub-Api-Version: 2022-11-28" \
+    "${api}/repos/${repo}/actions/workflows/validate-repo.yml/dispatches" \
+    -d '{"ref":"main"}' || echo 000)"
+  if [ "$http_status" = "204" ]; then
+    rm -f "$body"
+    return 0
+  fi
+  echo "MAIN-VALIDATION-DISPATCH FAILED for ${workflow_id}: HTTP ${http_status} requesting Validate Repo for ${pushed_sha}" >&2
+  cat "$body" >&2 || true
+  rm -f "$body"
+  return 1
+}
+
 request_main_validation() {
   local pushed_sha
   pushed_sha="$(git rev-parse HEAD)"
@@ -47,25 +174,37 @@ request_main_validation() {
     return 1
   fi
 
-  local body http_status
-  body="$(mktemp)"
-  http_status="$(curl -sS -o "$body" -w '%{http_code}' \
-    -X POST \
-    -H "Accept: application/vnd.github+json" \
-    -H "Authorization: Bearer ${token}" \
-    -H "X-GitHub-Api-Version: 2022-11-28" \
-    "${api}/repos/${repo}/actions/workflows/validate-repo.yml/dispatches" \
-    -d '{"ref":"main"}' || echo 000)"
-
-  if [ "$http_status" = "204" ]; then
-    echo "MAIN-VALIDATION-DISPATCH ok for ${workflow_id}: requested Validate Repo on main covering ${pushed_sha}"
-    rm -f "$body"
+  # A run may already cover this SHA - a replay path can come through here twice.
+  # Confirming first costs one read and makes the whole function idempotent.
+  if validate_run_exists_for_sha "$pushed_sha" "$token" "$repo" "$api"; then
+    echo "MAIN-VALIDATION-DISPATCH ok for ${workflow_id}: a Validate Repo run already covers ${pushed_sha}"
     return 0
   fi
 
-  echo "MAIN-VALIDATION-DISPATCH FAILED for ${workflow_id}: HTTP ${http_status} requesting Validate Repo for ${pushed_sha}" >&2
-  cat "$body" >&2 || true
-  rm -f "$body"
+  local request=1
+  while [ "$request" -le "$DISPATCH_REQUEST_ATTEMPTS" ]; do
+    wait_for_ref_to_carry_sha "$pushed_sha" "$token" "$repo" "$api" || true
+
+    if ! post_validation_dispatch "$token" "$repo" "$api" "$pushed_sha"; then
+      return 1
+    fi
+    echo "MAIN-VALIDATION-DISPATCH requested (attempt ${request}/${DISPATCH_REQUEST_ATTEMPTS}) for ${workflow_id}: Validate Repo on main, expecting head_sha ${pushed_sha}"
+
+    local confirm=1
+    while [ "$confirm" -le "$DISPATCH_CONFIRM_ATTEMPTS" ]; do
+      if validate_run_exists_for_sha "$pushed_sha" "$token" "$repo" "$api"; then
+        echo "MAIN-VALIDATION-DISPATCH ok for ${workflow_id}: confirmed a Validate Repo run whose head_sha is ${pushed_sha}"
+        return 0
+      fi
+      confirm=$((confirm + 1))
+      [ "$confirm" -le "$DISPATCH_CONFIRM_ATTEMPTS" ] && sleep "$DISPATCH_CONFIRM_DELAY_SECONDS"
+    done
+
+    echo "MAIN-VALIDATION-DISPATCH unconfirmed for ${workflow_id}: the dispatch was accepted but after ${DISPATCH_CONFIRM_ATTEMPTS} read(s) no Validate Repo run has head_sha ${pushed_sha}. This is the 2026-09-14 f7572445d shape - the dispatch resolved main to an older commit. Re-requesting." >&2
+    request=$((request + 1))
+  done
+
+  echo "MAIN-VALIDATION-DISPATCH FAILED for ${workflow_id}: ${DISPATCH_REQUEST_ATTEMPTS} dispatch(es) were accepted and none produced a Validate Repo run covering ${pushed_sha}. main has advanced and nothing is validating it." >&2
   return 1
 }
 

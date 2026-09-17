@@ -2447,9 +2447,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-MAIN-VALIDATION-COVERAGE-EVIDENCE",
+      "validation_id": "VAL-MAIN-VALIDATION-COVERAGE-EVIDENCE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:main-validation-coverage-evidence",
+      "order": 236,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 244,
+  "entry_count": 245,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3027,6 +3037,10 @@
         {
           "id": "VAL-CREATED-PAGE-IS-COMPLETE",
           "command": "npm run validate:created-page-complete"
+        },
+        {
+          "id": "VAL-MAIN-VALIDATION-COVERAGE-EVIDENCE",
+          "command": "npm run validate:main-validation-coverage-evidence"
         }
       ]
     },

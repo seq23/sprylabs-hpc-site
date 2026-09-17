@@ -296,6 +296,7 @@
     "validate:llms-full-coverage": "node scripts/validation/validate_llms_full_coverage.mjs",
     "validate:main-writer-convergence": "node scripts/validators/validate_main_writer_convergence.mjs",
     "validate:main-writer-validation-gate": "bash .github/scripts/test_commit_and_push_if_changed.sh",
+    "validate:main-validation-coverage-evidence": "node .github/scripts/test_main_validation_coverage.mjs",
     "validate:named-stop-exit-code": "node scripts/validation/self_test_named_stop_exit_code.mjs",
     "validate:no-silent-zero-work": "node scripts/validators/validate_no_silent_zero_work.mjs",
     "validate:operator-doc-currency": "node scripts/validation/validate_operator_doc_currency.mjs docs/runbooks docs/operations",
