@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import fs from 'node:fs';import path from 'node:path';
 import {ROOT,NORMALIZED_ROOT,readJson,writeJson} from '../agent_intake/bhpc_agent_common.mjs';
-import {loadBhpcSeoPolicy} from '../lib/bhpc_seo_execution_contract.mjs';
+import {loadBhpcSeoPolicy,normalizeBhpcSeoExecution} from '../lib/bhpc_seo_execution_contract.mjs';
 const policy=loadBhpcSeoPolicy(),errors=[],rows=[],warnings=[];
 const files=fs.existsSync(path.join(ROOT,NORMALIZED_ROOT))?fs.readdirSync(path.join(ROOT,NORMALIZED_ROOT)).filter(f=>f.endsWith('.json')).sort():[];
 // With no run file the payload defaulted to {}, so `payload.seo_execution_count>0`
@@ -15,7 +15,9 @@ for(const row of payload.records||[]){
   if(row.source_section!=='seo_execution')continue;
   rows.push(row);
   if(row.seo_execution_status!=='VALID')errors.push(`${row.id}:invalid_seo_execution:${(row.seo_execution_errors||[]).join('|')}`);
-  for(const w of row.seo_execution_warnings||[])warnings.push(`${row.id}:${w}`);
+  // Advisory findings are re-derived from the pinned record rather than stored
+  // in it: the normalized run is byte-pinned to its raw evidence.
+  for(const w of (row.seo_execution?normalizeBhpcSeoExecution(row.seo_execution).warnings:[])||[])warnings.push(`${row.id}:${w}`);
   const seo=row.seo_execution||{};
   if(!policy.allowed_page_decisions.includes(seo.page_decision))errors.push(`${row.id}:unsupported_page_decision:${seo.page_decision}`);
   if(!seo.target_url&&!seo.target_filepath)errors.push(`${row.id}:missing_target`);

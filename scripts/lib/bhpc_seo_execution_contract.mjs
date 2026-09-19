@@ -72,11 +72,9 @@ export function normalizeBhpcSeoExecution(value, fallback={}){
     status:clean(value.status||fallback.status||'pending').toLowerCase()
   };
   normalized.hash=hash(normalized);
-  // Recorded after the hash on purpose: the hash is the identity of what the
-  // artifact asked for, and it is pinned in every normalized run already on
-  // disk. Whether this repository recognizes the label is a fact about the
-  // repository, not about the request.
-  normalized.page_type_recognized=pageTypeRecognized;
-  return {status:errors.length?'INVALID':'VALID',seo_execution:normalized,errors,warnings};
+  // The normalized object is pinned byte-for-byte in every run on disk
+  // (validate:derived-absorber-reproducibility re-derives them), so whether
+  // this repository recognizes the label travels beside it, not inside it.
+  return {status:errors.length?'INVALID':'VALID',seo_execution:normalized,errors,warnings,page_type_recognized:pageTypeRecognized};
 }
 export function isNoActionSeo(seo){return seo?.page_decision==='no_action'}

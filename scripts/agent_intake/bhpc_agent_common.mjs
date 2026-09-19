@@ -411,7 +411,6 @@ export function classifyRow(row, htmlDigestText = '', context = {}) {
     source_signature: sourceSignature({...row, seo_execution: seo}, context),
     seo_execution_status: seoNormalized.status,
     seo_execution_errors: seoNormalized.errors,
-    seo_execution_warnings: seoNormalized.warnings || [],
     seo_execution: seo,
     recommended_page_type: seo?.recommended_page_type || compact(pick(row,['recommended_page_type'])),
     page_decision: seo?.page_decision || (operation === 'NO_ACTION_MAINTAIN' ? 'no_action' : ''),
@@ -631,7 +630,13 @@ export function digestManifest(entry) {
 // URL in preference to a hand-typed repo_file_path, and records the overridden
 // declared path. Without this bump the 13 runs already marked ABSORBED would
 // keep the routing the defect produced, and the fix would change nothing.
-export const NORMALIZATION_CONTRACT_VERSION = '1.5-intended-winner-url-precedence';
+// 1.6: an extensionless intended-winner URL resolves to the file Cloudflare
+// Pages serves at it (/download -> download.html) before falling back to
+// <route>/index.html. Run 2026-09-12 row 005 targeted /download and was
+// classified CREATE for download/index.html, a page that does not exist; under
+// this contract it is a REPAIR of download.html, which does. Bumped so the
+// absorber re-derives every live run rather than leaving that record stale.
+export const NORMALIZATION_CONTRACT_VERSION = '1.6-served-route-resolution';
 export const NORMALIZED_SCHEMA_VERSION = '1.4';
 
 // Wall-clock stamps. They differ on every run by design, so they are excluded
