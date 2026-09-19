@@ -2477,9 +2477,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-CITATION-SPEC-COMPLETENESS",
+      "validation_id": "VAL-CITATION-SPEC-COMPLETENESS",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:citation-spec-completeness",
+      "order": 239,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 247,
+  "entry_count": 248,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3069,6 +3079,10 @@
         {
           "id": "VAL-AGENT-DROP-GATE",
           "command": "npm run validate:agent-drop-gate"
+        },
+        {
+          "id": "VAL-CITATION-SPEC-COMPLETENESS",
+          "command": "npm run validate:citation-spec-completeness"
         }
       ]
     },
