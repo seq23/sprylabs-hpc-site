@@ -435,11 +435,31 @@ function renderBlock(entry, type, entries = [], existingHtml = '') {
   }
   if (type === 'protocol') { const items = profile?.protocol || ['Name the execution or decision problem.', 'Choose one constraint that must be respected.', 'Pick the smallest next action that creates evidence.', 'Review the result and route the next action into the system.']; return `<div class="bhpc-agent-block" data-bhpc-agent-block="protocol"><h3>Operating protocol</h3><ol>${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ol></div>`; }
   if (type === 'source_block') return `<aside class="bhpc-agent-block" data-bhpc-agent-block="source_block"><h3>Source and claim discipline</h3><p>Use the intake evidence as provenance, prefer first-party sources for named-method claims, and keep the practical workflow separate from claims the cited source does not actually make.</p></aside>`;
-  if (type === 'cta_callout') { const external=mergeBhpcExternalCtaLinks(entry.required_external_cta_links||[], entry.implementation_path).map(x=>({x,href:normalizeBhpcExternalCtaHref(x?.to_url)})).filter(({href,x})=>href&&x?.anchor_text).map(({x,href})=>`<p><a href="${escapeHtml(href)}" rel="noopener noreferrer">${escapeHtml(x.anchor_text)}</a>.</p>`).join(''); return `<aside class="bhpc-agent-block" data-bhpc-agent-block="cta_callout"><h3>Next step</h3><p><a href="/download.html">Review the complete Spry / BHPC operating system, current inclusions, and purchase terms</a>.</p>${external}</aside>`; }
+  if (type === 'cta_callout') { const external=mergeBhpcExternalCtaLinks((entries.length ? entries : [entry]).flatMap(e => e?.required_external_cta_links || []), entry.implementation_path).map(x=>({x,href:normalizeBhpcExternalCtaHref(x?.to_url)})).filter(({href,x})=>href&&x?.anchor_text).map(({x,href})=>`<p><a href="${escapeHtml(href)}" rel="noopener noreferrer">${escapeHtml(x.anchor_text)}</a>.</p>`).join(''); return `<aside class="bhpc-agent-block" data-bhpc-agent-block="cta_callout"><h3>Next step</h3><p><a href="/download.html">Review the complete Spry / BHPC operating system, current inclusions, and purchase terms</a>.</p>${external}</aside>`; }
   if (type === 'gap_separation') return `<aside class="bhpc-agent-block" data-bhpc-agent-block="gap_separation"><h3>Related guidance</h3><p>This page fills a specific unanswered question and should link back to the closest established framework or product page.</p></aside>`;
   if (type === 'prompt_template') return `<div class="bhpc-agent-block" data-bhpc-agent-block="prompt_template"><h3>Copy-and-use prompt</h3><pre><code>${escapeHtml(promptTemplateFor(entry, entries))}</code></pre></div>`;
   if (type === 'trust_block') return `<aside class="bhpc-agent-block" data-bhpc-agent-block="trust_block"><h3>Scope and limitations</h3><p>This is an educational execution system. It does not provide medical, psychological, legal, or financial advice, and it does not replace licensed professionals.</p><p><a href="/citation-methodology">Read the methodology and sourcing policy</a>.</p></aside>`;
-  if (type === 'internal_link_set') { const links=(entry.required_internal_links||[]).filter(x=>x?.to_url&&x?.anchor_text).map(x=>({x,href:normalizeBhpcInternalLinkHref(x.to_url)})).filter(({href})=>href).map(({x,href})=>`<li><a href="${escapeHtml(href)}">${escapeHtml(x.anchor_text)}</a></li>`).join(''); return links?`<nav class="bhpc-agent-block" data-bhpc-agent-block="internal_link_set"><h3>Related pages</h3><ul>${links}</ul></nav>`:''; }
+  if (type === 'internal_link_set') {
+    // The UNION of every entry's required links on this page, not the
+    // representative's alone. Each run carries its own slice of the backlog,
+    // and every entry on the page is judged by validate:bhpc-agent-
+    // recommendation-driven-output against this one block. Rendering one
+    // entry's list meant the newest run's links replaced the older run's:
+    // on 2026-09-19 run 026 took over insights/how-to-delegate-without-
+    // losing-quality.html and the /download link run 2026-09-12-023 requires
+    // vanished from the page it had been satisfied on for a week (Validate
+    // Repo run 35447192757, shard-3). Same defect class as the record ledger
+    // above: a set that is rebuilt from one run's view forgets the others.
+    const seen = new Set();
+    const pool = (entries.length ? entries : [entry]);
+    const links = pool.flatMap(e => e?.required_internal_links || [])
+      .filter(x => x?.to_url && x?.anchor_text)
+      .map(x => ({x, href: normalizeBhpcInternalLinkHref(x.to_url)}))
+      .filter(({href}) => href && !seen.has(href) && seen.add(href))
+      .map(({x, href}) => `<li><a href="${escapeHtml(href)}">${escapeHtml(x.anchor_text)}</a></li>`)
+      .join('');
+    return links ? `<nav class="bhpc-agent-block" data-bhpc-agent-block="internal_link_set"><h3>Related pages</h3><ul>${links}</ul></nav>` : '';
+  }
   return '';
 }
 function uniqueValues(values = []) {

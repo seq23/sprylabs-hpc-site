@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
-import {ROOT, readJson, safeScope} from '../agent_intake/bhpc_agent_common.mjs';
+import {ROOT, readJson, safeScope, repoPathForServedExtensionlessRoute} from '../agent_intake/bhpc_agent_common.mjs';
 
 function normalizeRel(value = '') {
   let rel = String(value || '').trim();
@@ -20,7 +20,9 @@ function renderedPath(value = '') {
   if (!rel) return '';
   if (rel.endsWith('/')) return `${rel}index.html`;
   if (rel.endsWith('.html')) return rel;
-  return `${rel.replace(/\/+$/, '')}/index.html`;
+  // Same served-route rule as intake: /download is download.html when that
+  // file exists, and only otherwise download/index.html.
+  return repoPathForServedExtensionlessRoute(rel);
 }
 
 function routeShape(value = '') {

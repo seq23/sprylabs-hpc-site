@@ -156,11 +156,40 @@ export function repoPathFromIntendedWinnerPage(url, policy = loadExactPolicy()) 
     let p = parsed.pathname.replace(/^\//, '');
     if (!p) p = 'index.html';
     if (p.endsWith('/')) p += 'index.html';
-    if (!/\.html$/.test(p) && !p.endsWith('/index.html')) p = p.replace(/\/$/, '') + '/index.html';
+    if (!/\.html$/.test(p) && !p.endsWith('/index.html')) p = repoPathForServedExtensionlessRoute(p);
     return p;
   } catch {
     return raw.replace(/^\//, '');
   }
+}
+
+// An extensionless public URL is a SERVED ROUTE, and Cloudflare Pages serves
+// two shapes of file at one: `<route>.html` and `<route>/index.html`. This
+// used to assume the directory shape unconditionally, so
+// https://spryexecutiveos.com/download resolved to download/index.html - a
+// file that has never existed - while download.html, the file that actually
+// answers that URL (and the one the artifact named in target_filepath), sat
+// beside it. The row was then classified CREATE_NEW_TARGET_PAGE for a page the
+// site already has, and validate:bhpc-seo-execution refused it as
+// repair_not_resolved_to_existing on 2026-09-19 (run 35447192757).
+//
+// scripts/lib/bhpc_internal_links.mjs already resolves served routes both
+// ways (repoPathForBhpcInternalHref); this is the same rule applied at intake,
+// so the two resolvers can no longer disagree about which file a URL names.
+// The file shape wins when it exists; the directory shape is the default for a
+// route that does not exist yet, unchanged from before.
+export function repoPathForServedExtensionlessRoute(routeRel = '') {
+  const rel = String(routeRel || '').replace(/^\/+/, '').replace(/\/+$/, '');
+  if (!rel) return 'index.html';
+  const fileShape = `${rel}.html`;
+  const directoryShape = `${rel}/index.html`;
+  const isFile = (candidate) => {
+    const abs = path.join(ROOT, candidate);
+    return fs.existsSync(abs) && fs.statSync(abs).isFile();
+  };
+  if (isFile(fileShape)) return fileShape;
+  if (isFile(directoryShape)) return directoryShape;
+  return directoryShape;
 }
 
 export function allowedHostFromUrl(url, policy = loadExactPolicy()) {
@@ -601,7 +630,13 @@ export function digestManifest(entry) {
 // URL in preference to a hand-typed repo_file_path, and records the overridden
 // declared path. Without this bump the 13 runs already marked ABSORBED would
 // keep the routing the defect produced, and the fix would change nothing.
-export const NORMALIZATION_CONTRACT_VERSION = '1.5-intended-winner-url-precedence';
+// 1.6: an extensionless intended-winner URL resolves to the file Cloudflare
+// Pages serves at it (/download -> download.html) before falling back to
+// <route>/index.html. Run 2026-09-12 row 005 targeted /download and was
+// classified CREATE for download/index.html, a page that does not exist; under
+// this contract it is a REPAIR of download.html, which does. Bumped so the
+// absorber re-derives every live run rather than leaving that record stale.
+export const NORMALIZATION_CONTRACT_VERSION = '1.6-served-route-resolution';
 export const NORMALIZED_SCHEMA_VERSION = '1.4';
 
 // Wall-clock stamps. They differ on every run by design, so they are excluded
