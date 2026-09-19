@@ -25,14 +25,32 @@ function schemaAction(value=''){
   return 'none';
 }
 export function normalizeBhpcSeoExecution(value, fallback={}){
-  if(!value||typeof value!=='object'||Array.isArray(value)) return {status:'NOT_PROVIDED',seo_execution:null,errors:[]};
+  if(!value||typeof value!=='object'||Array.isArray(value)) return {status:'NOT_PROVIDED',seo_execution:null,errors:[],warnings:[]};
   const policy=loadBhpcSeoPolicy();
   const errors=[];
+  const warnings=[];
   const pageDecision=clean(value.page_decision||fallback.page_decision||'repair_existing').toLowerCase();
   const rawPageType=clean(value.recommended_page_type||fallback.recommended_page_type||'framework_guide').toLowerCase();
   const pageType=policy.page_type_aliases?.[rawPageType]||rawPageType;
   if(!policy.allowed_page_decisions.includes(pageDecision)) errors.push(`unsupported_page_decision:${pageDecision}`);
-  if(!policy.allowed_page_types.includes(rawPageType)&&!policy.allowed_page_types.includes(pageType)) errors.push(`unsupported_page_type:${rawPageType}`);
+  // The page-type allow-list governs what this repository can BUILD: on
+  // build_new and consolidate the type selects the route family and the
+  // template (scripts/lib/bhpc_page_family_router.mjs), so a type nobody can
+  // render is a row nobody can execute and stays INVALID. On repair_existing
+  // and no_action the page already exists with its own type and the router
+  // returns intended_winner_repair before it ever reads the type; the
+  // recommendation is executed from exact_edit, not from the label. The
+  // Saturday artifact labelled the download page "disclosure_block" on
+  // 2026-09-19 and every plumbing validator refused the whole run over a word
+  // that governed nothing. The label is kept verbatim, marked unrecognized,
+  // and reported - never silently accepted, never a reason to refuse an edit
+  // to a page the site already serves.
+  const pageTypeRecognized=policy.allowed_page_types.includes(rawPageType)||policy.allowed_page_types.includes(pageType);
+  const pageTypeGovernsExecution=['build_new','consolidate'].includes(pageDecision);
+  if(!pageTypeRecognized){
+    if(pageTypeGovernsExecution) errors.push(`unsupported_page_type:${rawPageType}`);
+    else warnings.push(`unrecognized_page_type_advisory_on_${pageDecision}:${rawPageType}`);
+  }
   const normalized={
     search_intent:clean(value.search_intent||fallback.search_intent).toLowerCase(),
     buyer_stage:clean(value.buyer_stage||fallback.buyer_stage).toLowerCase(),
@@ -54,6 +72,11 @@ export function normalizeBhpcSeoExecution(value, fallback={}){
     status:clean(value.status||fallback.status||'pending').toLowerCase()
   };
   normalized.hash=hash(normalized);
-  return {status:errors.length?'INVALID':'VALID',seo_execution:normalized,errors};
+  // Recorded after the hash on purpose: the hash is the identity of what the
+  // artifact asked for, and it is pinned in every normalized run already on
+  // disk. Whether this repository recognizes the label is a fact about the
+  // repository, not about the request.
+  normalized.page_type_recognized=pageTypeRecognized;
+  return {status:errors.length?'INVALID':'VALID',seo_execution:normalized,errors,warnings};
 }
 export function isNoActionSeo(seo){return seo?.page_decision==='no_action'}

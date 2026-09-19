@@ -27,7 +27,49 @@
         "page_decision": "build_new",
         "recommended_page_type": "celebrity_endorsement"
       },
-      "expected_status": "INVALID"
+      "expected_status": "INVALID",
+      "expected_errors": [
+        "unsupported_page_type:celebrity_endorsement"
+      ]
+    },
+    {
+      "name": "unrecognized_page_type_on_repair_is_advisory",
+      "input": {
+        "page_decision": "repair_existing",
+        "recommended_page_type": "disclosure_block",
+        "target_url": "https://spryexecutiveos.com/download",
+        "target_filepath": "download.html",
+        "exact_edit": "Add a disclosure block under the H1."
+      },
+      "expected_status": "VALID",
+      "expected_canonical_page_type": "disclosure_block",
+      "expected_page_type_recognized": false,
+      "expected_warnings": [
+        "unrecognized_page_type_advisory_on_repair_existing:disclosure_block"
+      ]
+    },
+    {
+      "name": "unrecognized_page_type_on_consolidate_stays_invalid",
+      "input": {
+        "page_decision": "consolidate",
+        "recommended_page_type": "disclosure_block"
+      },
+      "expected_status": "INVALID",
+      "expected_errors": [
+        "unsupported_page_type:disclosure_block"
+      ]
+    },
+    {
+      "name": "recognized_page_type_on_repair_has_no_warning",
+      "input": {
+        "page_decision": "repair_existing",
+        "recommended_page_type": "faq",
+        "target_filepath": "faq.html"
+      },
+      "expected_status": "VALID",
+      "expected_canonical_page_type": "faq",
+      "expected_page_type_recognized": true,
+      "expected_warnings": []
     }
   ]
 }

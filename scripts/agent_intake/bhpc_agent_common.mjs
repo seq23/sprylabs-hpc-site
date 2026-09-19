@@ -156,11 +156,40 @@ export function repoPathFromIntendedWinnerPage(url, policy = loadExactPolicy()) 
     let p = parsed.pathname.replace(/^\//, '');
     if (!p) p = 'index.html';
     if (p.endsWith('/')) p += 'index.html';
-    if (!/\.html$/.test(p) && !p.endsWith('/index.html')) p = p.replace(/\/$/, '') + '/index.html';
+    if (!/\.html$/.test(p) && !p.endsWith('/index.html')) p = repoPathForServedExtensionlessRoute(p);
     return p;
   } catch {
     return raw.replace(/^\//, '');
   }
+}
+
+// An extensionless public URL is a SERVED ROUTE, and Cloudflare Pages serves
+// two shapes of file at one: `<route>.html` and `<route>/index.html`. This
+// used to assume the directory shape unconditionally, so
+// https://spryexecutiveos.com/download resolved to download/index.html - a
+// file that has never existed - while download.html, the file that actually
+// answers that URL (and the one the artifact named in target_filepath), sat
+// beside it. The row was then classified CREATE_NEW_TARGET_PAGE for a page the
+// site already has, and validate:bhpc-seo-execution refused it as
+// repair_not_resolved_to_existing on 2026-09-19 (run 35447192757).
+//
+// scripts/lib/bhpc_internal_links.mjs already resolves served routes both
+// ways (repoPathForBhpcInternalHref); this is the same rule applied at intake,
+// so the two resolvers can no longer disagree about which file a URL names.
+// The file shape wins when it exists; the directory shape is the default for a
+// route that does not exist yet, unchanged from before.
+export function repoPathForServedExtensionlessRoute(routeRel = '') {
+  const rel = String(routeRel || '').replace(/^\/+/, '').replace(/\/+$/, '');
+  if (!rel) return 'index.html';
+  const fileShape = `${rel}.html`;
+  const directoryShape = `${rel}/index.html`;
+  const isFile = (candidate) => {
+    const abs = path.join(ROOT, candidate);
+    return fs.existsSync(abs) && fs.statSync(abs).isFile();
+  };
+  if (isFile(fileShape)) return fileShape;
+  if (isFile(directoryShape)) return directoryShape;
+  return directoryShape;
 }
 
 export function allowedHostFromUrl(url, policy = loadExactPolicy()) {
@@ -382,6 +411,7 @@ export function classifyRow(row, htmlDigestText = '', context = {}) {
     source_signature: sourceSignature({...row, seo_execution: seo}, context),
     seo_execution_status: seoNormalized.status,
     seo_execution_errors: seoNormalized.errors,
+    seo_execution_warnings: seoNormalized.warnings || [],
     seo_execution: seo,
     recommended_page_type: seo?.recommended_page_type || compact(pick(row,['recommended_page_type'])),
     page_decision: seo?.page_decision || (operation === 'NO_ACTION_MAINTAIN' ? 'no_action' : ''),
