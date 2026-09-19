@@ -2457,9 +2457,29 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-RAW-AGENT-DROP-QUARANTINE",
+      "validation_id": "VAL-RAW-AGENT-DROP-QUARANTINE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:raw-agent-drop-quarantine",
+      "order": 237,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-AGENT-DROP-GATE",
+      "validation_id": "VAL-AGENT-DROP-GATE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:agent-drop-gate",
+      "order": 238,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 245,
+  "entry_count": 247,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3041,6 +3061,14 @@
         {
           "id": "VAL-MAIN-VALIDATION-COVERAGE-EVIDENCE",
           "command": "npm run validate:main-validation-coverage-evidence"
+        },
+        {
+          "id": "VAL-RAW-AGENT-DROP-QUARANTINE",
+          "command": "npm run validate:raw-agent-drop-quarantine"
+        },
+        {
+          "id": "VAL-AGENT-DROP-GATE",
+          "command": "npm run validate:agent-drop-gate"
         }
       ]
     },

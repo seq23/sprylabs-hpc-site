@@ -14,6 +14,17 @@ name: Main Validation Sentinel
 #
 # A red run nobody reads is the same as no run, so the verdict is written into a
 # single reused GitHub issue rather than left in a log.
+#
+# AND IT ACTS ON THE ONE RED IT CAN REPAIR. Every Saturday from 2026-08-08 to
+# 2026-09-19 the Twin Agent pushed its weekly artifact straight to main and
+# Validate Repo went red on it (runs 31258832447, 31886339425, 32575602958,
+# 33254892310, 34696447670, 35447192757). The alarm fired each time and repaired
+# nothing; a person spent the Saturday fixing the intake on top of a red main.
+# When the red commit is a raw agent drop that arrived by direct push - and only
+# then - this workflow now moves the drop to a branch, opens the pull request it
+# should have been, and returns main to its last validated tree through the
+# shared writer helper. See .github/scripts/quarantine_raw_agent_drop.mjs for
+# the exact classification and every refusal.
 
 on:
   schedule:
@@ -38,9 +49,13 @@ env:
   NODE_OPTIONS: --max-old-space-size=3072
 
 permissions:
-  contents: read
-  actions: read
+  # write, not read: the quarantine step below removes a raw agent drop from
+  # main through commit_and_push_if_changed.sh and opens the pull request that
+  # preserves it. Every other step still only reads.
+  contents: write
+  actions: write
   issues: write
+  pull-requests: write
 
 concurrency:
   group: main-validation-sentinel
@@ -49,9 +64,17 @@ concurrency:
 jobs:
   sentinel:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # 10 covered the read-only check. The quarantine path converges the tree
+    # through the writer helper before it pushes, which is a build:all on a cold
+    # runner; the helper's own bound governs that, this only has to outlast it.
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v7
+        with:
+          # The quarantine removes the drop at the exact SHA the coverage check
+          # judged; a shallow clone of a main that has since moved cannot reset
+          # to it.
+          fetch-depth: 0
       - uses: actions/setup-node@v7
         with:
           node-version: 24
@@ -118,6 +141,29 @@ jobs:
           # affected commit now, not once per check.
           exit 1
 
+      - name: Quarantine a raw agent drop off a red main
+        # Runs after the alarm even though the alarm step exits 1, and only on a
+        # RED verdict: an uncovered or pending commit is not yet known to be
+        # broken, and a covered one needs nothing. The script itself decides
+        # whether HEAD is a raw direct drop and names its refusal otherwise; it
+        # never touches a merge, a bot release, or a drop that came through a
+        # pull request.
+        if: always() && steps.coverage.outputs.state == 'red'
+        id: quarantine
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ steps.coverage.outputs.head_sha }}
+        run: |
+          set -euo pipefail
+          ALARM_ISSUE="$(gh issue list --state open --label main-validation --limit 1 --json number -q '.[0].number' || true)"
+          export ALARM_ISSUE
+          node .github/scripts/quarantine_raw_agent_drop.mjs --execute
+          if [ -n "$ALARM_ISSUE" ] && grep -q '^pr_url=' "$GITHUB_OUTPUT"; then
+            pr_url="$(grep '^pr_url=' "$GITHUB_OUTPUT" | tail -1 | cut -d= -f2-)"
+            gh issue comment "$ALARM_ISSUE" --body "Main Validation Sentinel run ${GITHUB_RUN_ID} quarantined the raw agent drop at \`${HEAD_SHA}\` off main: it is preserved on a branch and waits in ${pr_url}. main has been returned to its last validated tree and a Validate Repo run has been requested for the new HEAD; this issue closes when that run is green."
+          fi
+
       - name: Close the alarm once main is covered again
         if: steps.coverage.outcome == 'success' && steps.coverage.outputs.state == 'covered'
         env:
@@ -137,4 +183,6 @@ jobs:
         with:
           name: main-validation-coverage-${{ github.run_id }}
           if-no-files-found: error
-          path: artifacts/validation/main-validation-coverage.json
+          path: |
+            artifacts/validation/main-validation-coverage.json
+            artifacts/validation/raw-agent-drop-quarantine.json
