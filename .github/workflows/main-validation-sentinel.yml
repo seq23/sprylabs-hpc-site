@@ -58,7 +58,11 @@ permissions:
   pull-requests: write
 
 concurrency:
-  group: main-validation-sentinel
+  # main-automation, not a private group: the quarantine step writes main, and
+  # every writer of main queues on this one group so two lanes never push
+  # against each other. Cost: a tick can wait behind a release lane. The
+  # coverage read is cheap and the release lane is the thing moving main.
+  group: main-automation
   cancel-in-progress: false
 
 jobs:
@@ -154,6 +158,10 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           GH_TOKEN: ${{ github.token }}
           HEAD_SHA: ${{ steps.coverage.outputs.head_sha }}
+          # What the writer helper replays if main advances under the push: this
+          # script again, which re-reads HEAD and stops (main_moved_on) instead of
+          # deleting from a tree it has not classified.
+          WORKFLOW_ARGV: node .github/scripts/quarantine_raw_agent_drop.mjs --execute
         run: |
           set -euo pipefail
           ALARM_ISSUE="$(gh issue list --state open --label main-validation --limit 1 --json number -q '.[0].number' || true)"

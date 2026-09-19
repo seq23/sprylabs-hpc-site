@@ -181,6 +181,25 @@ function makeHelperDouble(exitCode) {
   check('execute: an existing branch at a DIFFERENT sha is never overwritten', result.code === 2 && /refusing to overwrite/.test(result.stderr) && !apiServer.requests.some((r) => r.url.endsWith('/pulls') && r.method === 'POST'), `exit ${result.code}`);
 }
 {
+  // main moved between the verdict and the checkout: stop, create nothing.
+  const repo = makeDropRepo();
+  const apiServer = await startApi({commit: commitPayload()});
+  const record = path.join(repo.dir, '..', `record-${path.basename(repo.dir)}`);
+  const result = await runScript({apiUrl: apiServer.url, headSha: 'd'.repeat(40), cwd: repo.dir, execute: true, extraEnv: {QUARANTINE_WRITER_HELPER: makeHelperDouble(0), HELPER_RECORD: record}});
+  apiServer.server.close();
+  check('execute: checkout not at the verdict sha -> named stop, nothing created, helper not called', result.code === 0 && /^reason=main_moved_on$/m.test(result.outputs) && !apiServer.requests.some((r) => r.method === 'POST') && !fs.existsSync(record), `exit ${result.code} ${result.outputs.slice(0, 200)}`);
+}
+{
+  // A declared WORKFLOW_ARGV (the workflow's replay command) is passed through.
+  const repo = makeDropRepo();
+  const apiServer = await startApi({commit: commitPayload()});
+  const record = path.join(repo.dir, '..', `record-${path.basename(repo.dir)}`);
+  await runScript({apiUrl: apiServer.url, headSha: repo.sha, cwd: repo.dir, execute: true, extraEnv: {QUARANTINE_WRITER_HELPER: makeHelperDouble(0), HELPER_RECORD: record, WORKFLOW_ARGV: 'node .github/scripts/quarantine_raw_agent_drop.mjs --execute'}});
+  apiServer.server.close();
+  const recorded = fs.existsSync(record) ? fs.readFileSync(record, 'utf8') : '';
+  check('execute: a declared replay command reaches the helper unchanged', /argv=node \.github\/scripts\/quarantine_raw_agent_drop\.mjs --execute/.test(recorded), recorded.slice(0, 200));
+}
+{
   // The helper seam must be inert against the real API host.
   const src = fs.readFileSync(script, 'utf8');
   check('source: helper override is honoured only against a non-github API url', /apiIsStub/.test(src) && /api\\\.github\\\.com/.test(src));

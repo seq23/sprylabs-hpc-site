@@ -153,6 +153,20 @@ if (mode !== 'execute') {
 }
 
 // --- execute ----------------------------------------------------------------
+// 0. The working tree must BE main at HEAD_SHA. The sentinel checks out main's
+//    tip and reads main's HEAD moments later; if they differ, main moved between
+//    the two reads and HEAD is no longer the drop. Nothing here may reset a
+//    checkout to an older commit to make the removal fit - that is how a replay
+//    reverts work that landed after the drop. Also the replay path: the helper
+//    re-runs this script after a remote advance, and a main that has moved on
+//    is exactly the case where the answer is "stop".
+const here = spawnSync('git', ['rev-parse', 'HEAD'], {encoding: 'utf8'}).stdout.trim();
+if (here !== headSha) {
+  output({...classification, action: 'none', reason: 'main_moved_on', detail: `the checkout is at ${here || '(unreadable)'} but the red verdict was for ${headSha}; main has moved on and HEAD is no longer the drop, so nothing here should revert anything.`});
+  console.log(`[quarantine-raw-agent-drop] STOP main_moved_on: checkout ${here} != verdict ${headSha}`);
+  process.exit(0);
+}
+
 // 1. Preserve the drop on its own branch at the exact SHA. 422 means it exists.
 const refRes = await gh('POST', `/repos/${repo}/git/refs`, {ref: `refs/heads/${branch}`, sha: headSha});
 if (refRes.status === 201) console.log(`[quarantine-raw-agent-drop] created ${branch} at ${headSha}`);
@@ -189,15 +203,7 @@ if (!pr) {
 
 // 3. Remove the drop from main through the shared writer helper. The helper
 //    converges, pushes with retry, dispatches Validate Repo and confirms a run
-//    covers the new HEAD - the same predicate the sentinel checks. Our working
-//    tree must be main at HEAD_SHA for the removal to mean what it says.
-const here = spawnSync('git', ['rev-parse', 'HEAD'], {encoding: 'utf8'}).stdout.trim();
-if (here !== headSha) {
-  const fetch = spawnSync('git', ['fetch', 'origin', 'main'], {stdio: 'inherit'});
-  if (fetch.status !== 0) die('git fetch origin main failed');
-  const reset = spawnSync('git', ['reset', '--hard', headSha], {stdio: 'inherit'});
-  if (reset.status !== 0) die(`could not check out ${headSha}; main may already have moved on, in which case HEAD is no longer the drop and nothing here should revert it`);
-}
+//    covers the new HEAD - the same predicate the sentinel checks.
 for (const dir of dropDirs) {
   const rm = spawnSync('git', ['rm', '-r', '-q', '--', dir], {stdio: 'inherit'});
   if (rm.status !== 0) die(`git rm ${dir} failed`);
@@ -212,7 +218,12 @@ const apiIsStub = Boolean(process.env.GITHUB_API_URL) && !/^https:\/\/api\.githu
 const helper = helperOverride && apiIsStub ? helperOverride : realHelper;
 if (helperOverride && !apiIsStub) console.log('[quarantine-raw-agent-drop] QUARANTINE_WRITER_HELPER ignored: the API is api.github.com, so the real helper is used');
 const commitMessage = `quarantine raw agent drop ${runDate}/${scope}: moved to ${branch}, PR #${pr.number}`;
-const removal = dropDirs.map((d) => `git rm -r -q --ignore-unmatch -- '${d}'`).join(' && ');
+// The helper replays WORKFLOW_ARGV after a remote advance. The workflow
+// declares it as this very script, so a replay re-reads main's new HEAD and
+// refuses (main_moved_on) rather than blindly deleting a directory from a tree
+// it has not classified. Without a declaration the fallback is the removal
+// itself, which --ignore-unmatch makes a no-op on a tree that lost the drop.
+const removal = process.env.WORKFLOW_ARGV || dropDirs.map((d) => `git rm -r -q --ignore-unmatch -- '${d}'`).join(' && ');
 const push = spawnSync('bash', [helper, commitMessage, 'main-validation-sentinel'], {
   stdio: 'inherit',
   env: {...process.env, WORKFLOW_ARGV: removal},

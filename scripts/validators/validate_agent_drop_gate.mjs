@@ -126,7 +126,7 @@ const real = realInputs();
 const broken = [
   ['instructions lose "never push to main"', (i) => ({...i, doc: (i.doc || '').replace(NEVER_MAIN_SENTENCE, 'Push to main when convenient')}), NEVER_MAIN_SENTENCE],
   ['instructions lose the branch', (i) => ({...i, doc: (i.doc || '').replaceAll('agent-drop/', 'some-branch/')}), 'agent-drop/'],
-  ['sentinel stops executing the quarantine', (i) => ({...i, sentinel: (i.sentinel || '').replace('--execute', '')}), '--execute'],
+  ['sentinel stops executing the quarantine', (i) => ({...i, sentinel: (i.sentinel || '').replaceAll('--execute', '')}), '--execute'],
   ['sentinel gate widened off red', (i) => ({...i, sentinel: (i.sentinel || '').replace("steps.coverage.outputs.state == 'red'", "steps.coverage.outputs.state != 'covered'")}), 'gated on'],
   ['sentinel loses contents: write', (i) => ({...i, sentinel: (i.sentinel || '').replace('contents: write', 'contents: read')}), 'contents: write'],
   ['quarantine forgets the pull-request refusal', (i) => ({...i, script: (i.script || '').replaceAll('arrived_through_pull_request', 'x')}), 'arrived through a pull request'],
