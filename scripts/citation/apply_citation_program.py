@@ -193,28 +193,132 @@ if not PRE_GATE_ROUTES:
         "would make 'baseline' legal for every page.")
 
 AGENT_SPEC_PATH = ROOT / "data/citation/agent_page_specs.json"
-if AGENT_SPEC_PATH.exists():
-    _agent_payload = json.loads(AGENT_SPEC_PATH.read_text(encoding="utf-8"))
-    PRIORITY.update(_agent_payload.get("priority_pages", {}))
-    NEW_PAGES.update(_agent_payload.get("new_pages", {}))
-
 AGENT_GENERATED_SPEC_PATH = ROOT / "data/citation/agent_page_specs.generated.json"
-if AGENT_GENERATED_SPEC_PATH.exists():
-    _generated_payload = json.loads(AGENT_GENERATED_SPEC_PATH.read_text(encoding="utf-8"))
-    PRIORITY.update(_generated_payload.get("priority_pages", {}))
-    NEW_PAGES.update(_generated_payload.get("new_pages", {}))
-
 AGENT_REPAIR_SPEC_PATH = ROOT / "data/citation/agent_repair_specs.generated.json"
-if AGENT_REPAIR_SPEC_PATH.exists():
-    _repair_payload = json.loads(AGENT_REPAIR_SPEC_PATH.read_text(encoding="utf-8"))
-    PRIORITY.update(_repair_payload.get("priority_pages", {}))
-    NEW_PAGES.update(_repair_payload.get("new_pages", {}))
-
 AGENT_HTML_REPORT_SPEC_PATH = ROOT / "data/citation/agent_html_report_page_specs.generated.json"
-if AGENT_HTML_REPORT_SPEC_PATH.exists():
-    _html_report_payload = json.loads(AGENT_HTML_REPORT_SPEC_PATH.read_text(encoding="utf-8"))
-    PRIORITY.update(_html_report_payload.get("priority_pages", {}))
-    NEW_PAGES.update(_html_report_payload.get("new_pages", {}))
+
+# Every key patch_priority() and shell() read off a spec. A spec that reaches
+# either without all five is a crash deep inside BeautifulSoup work, not a
+# verdict; see Spry Content Release runs 35448607349, 35451641559, 35452120100.
+REQUIRED_SPEC_KEYS = ("h1", "framework", "type", "definition", "body")
+# The fields on which the curated file is the authority, and the only fields a
+# curated entry may contribute WITHOUT being a complete spec.
+CURATED_AUTHORITY_KEYS = ("h1", "framework", "definition")
+SPEC_SOURCE_LABELS = {
+    "curated": "data/citation/agent_page_specs.json",
+    "generated": "data/citation/agent_page_specs.generated.json",
+    "repair": "data/citation/agent_repair_specs.generated.json",
+    "html_report": "data/citation/agent_html_report_page_specs.generated.json",
+}
+
+def missing_spec_keys(spec) -> list[str]:
+    """The required keys a spec lacks or leaves blank; [] means complete."""
+    if not isinstance(spec, dict):
+        return list(REQUIRED_SPEC_KEYS)
+    return [key for key in REQUIRED_SPEC_KEYS if not str(spec.get(key) or "").strip()]
+
+def require_complete_spec(path: str, spec, source: str) -> dict:
+    """Refuse, by name, a spec that would crash patch_priority()/shell().
+
+    This is the named failure that replaces `KeyError: 'h1'` from line 626. It
+    names the page, where the spec came from, and exactly which keys are missing,
+    so the lane's red is readable without a traceback.
+    """
+    missing = missing_spec_keys(spec)
+    if missing:
+        raise SystemExit(
+            f"citation spec incomplete: {path} (from {source}) is missing required key(s) "
+            f"{', '.join(missing)}; a page spec must carry every one of "
+            f"{', '.join(REQUIRED_SPEC_KEYS)} before it can be applied to a page.")
+    return spec
+
+def load_page_specs(root: Path, priority: dict, new_pages: dict) -> dict[str, dict]:
+    """Merge every spec source into `priority`/`new_pages`; return curated overlays.
+
+    Precedence, lowest to highest: the literals in this file, the curated file,
+    then each generated file (generated, repair, html_report). The curated file
+    is the authority for CURATED_AUTHORITY_KEYS and those are restored last, so
+    no generated spec may win on `framework`, `definition` or `h1` (see the
+    comment block below for how a raw search query reached data-named-framework).
+
+    THE CLASS OF DEFECT THIS LOADER REFUSES. Until 2026-09-19 every source was
+    merged with `dict.update()`, so an entry carrying only `framework` and
+    `type` - which the curated file is explicitly designed to hold, as a NAME
+    overlay - was inserted as if it were a whole page spec. Three such entries
+    (added in #79, 2026-09-12) were harmless for a week only because
+    agent_page_specs.generated.json carried complete specs for the same paths
+    and `{**PRIORITY, **NEW_PAGES}` let the complete one win. The generator
+    emits new_pages for the NEWEST run only, so when the 2026-09-19 drop was
+    absorbed those three left NEW_PAGES, the partial entries became the whole
+    spec, and patch_priority() died on spec["h1"] (Spry Content Release runs
+    35448607349, 35451641559, 35452120100). Every other reader of the curated
+    file already treated it field-by-field; this was the one that did not.
+
+    Now: a curated entry that is not complete is an OVERLAY ONLY. It is never
+    inserted into the buckets; it is applied on top of whatever complete spec
+    (generated or literal) holds that path, and patch_legacy() applies it to a
+    page no complete spec describes any more. A partial entry in a GENERATED
+    file is a generator defect and is refused by name. After the merge every
+    spec in both buckets is proved complete, and an empty result is a fault.
+    """
+    overlays: dict[str, dict] = {}
+    curated_authority: dict[str, dict] = {}
+
+    def _read(fp: Path):
+        return json.loads(fp.read_text(encoding="utf-8")) if fp.exists() else None
+
+    def _merge(payload, source: str, *, overlay_capable: bool):
+        if not isinstance(payload, dict):
+            return
+        for section, bucket in (("priority_pages", priority), ("new_pages", new_pages)):
+            for path, spec in (payload.get(section) or {}).items():
+                if not missing_spec_keys(spec):
+                    bucket[path] = spec
+                    continue
+                if not overlay_capable:
+                    require_complete_spec(path, spec, source)
+                authority = {k: spec[k] for k in CURATED_AUTHORITY_KEYS
+                             if isinstance(spec, dict) and str(spec.get(k) or "").strip()}
+                if not authority:
+                    raise SystemExit(
+                        f"citation spec inert: {path} (from {source}) is neither a complete spec "
+                        f"nor an overlay - it names none of {', '.join(CURATED_AUTHORITY_KEYS)}, "
+                        "so it would govern nothing.")
+                overlays[path] = spec
+
+    curated_payload = _read(root / SPEC_SOURCE_LABELS["curated"])
+    _merge(curated_payload, SPEC_SOURCE_LABELS["curated"], overlay_capable=True)
+    if isinstance(curated_payload, dict):
+        for section in ("priority_pages", "new_pages"):
+            for path, spec in (curated_payload.get(section) or {}).items():
+                # EITHER field is enough to make this the authority for that field.
+                # The framework-only condition meant a curated entry that named only
+                # the heading was skipped entirely, and the generated query won.
+                if isinstance(spec, dict) and any(str(spec.get(k) or "").strip() for k in CURATED_AUTHORITY_KEYS):
+                    curated_authority[path] = spec
+    for key in ("generated", "repair", "html_report"):
+        _merge(_read(root / SPEC_SOURCE_LABELS[key]), SPEC_SOURCE_LABELS[key], overlay_capable=False)
+
+    for bucket in (priority, new_pages):
+        for path, spec in bucket.items():
+            curated = curated_authority.get(path)
+            if not curated:
+                continue
+            for k in CURATED_AUTHORITY_KEYS:
+                if str(curated.get(k) or "").strip():
+                    spec[k] = curated[k]
+
+    examined = 0
+    for label, bucket in (("PRIORITY", priority), ("NEW_PAGES", new_pages)):
+        for path, spec in bucket.items():
+            require_complete_spec(path, spec, label)
+            examined += 1
+    if examined == 0:
+        raise SystemExit(
+            "citation spec set is empty: no complete page spec was loaded from the literals, "
+            f"{SPEC_SOURCE_LABELS['curated']} or any generated spec file; a program that would "
+            "patch zero pages and print a count is not a build.")
+    return overlays
 
 # The curated spec is the authority for a page's NAME, and it is loaded FIRST,
 # so every generated spec above used to overwrite it wholesale. That is how a raw
@@ -222,8 +326,8 @@ if AGENT_HTML_REPORT_SPEC_PATH.exists():
 #
 # The generated specs still contribute body and type for pages the curated file
 # does not describe - that is what they are for - but they may never win on
-# `framework`, `definition` or `h1`. Those three are restored here, after every
-# update().
+# `framework`, `definition` or `h1`. Those three are restored inside
+# load_page_specs(), after every merge.
 #
 # `h1` WAS MISSING FROM THIS LIST, and it is the most visible of the three: it is
 # the heading a reader sees and the string repair_schema_parity.py reads straight
@@ -250,28 +354,12 @@ if AGENT_HTML_REPORT_SPEC_PATH.exists():
 # data/content/manual_expansion_pages.json is merged after PRIORITY and NEW_PAGES
 # further down and still legitimately outranks this; that precedence is unchanged
 # and is asserted by validate:curated-framework-authority.
-if AGENT_SPEC_PATH.exists():
-    _curated_names = {}
-    for _section in ("priority_pages", "new_pages"):
-        for _path, _spec in _agent_payload.get(_section, {}).items():
-            # EITHER field is enough to make this the authority for that field. The
-            # framework-only condition meant a curated entry that named only the
-            # heading was skipped entirely, and the generated query won by default.
-            if isinstance(_spec, dict) and (
-                str(_spec.get("framework", "")).strip() or str(_spec.get("h1", "")).strip()
-            ):
-                _curated_names[_path] = _spec
-    for _bucket in (PRIORITY, NEW_PAGES):
-        for _path, _spec in _bucket.items():
-            _curated = _curated_names.get(_path)
-            if not _curated:
-                continue
-            if str(_curated.get("framework", "")).strip():
-                _spec["framework"] = _curated["framework"]
-            if str(_curated.get("definition", "")).strip():
-                _spec["definition"] = _curated["definition"]
-            if str(_curated.get("h1", "")).strip():
-                _spec["h1"] = _curated["h1"]
+#
+# CURATED_OVERLAYS holds the curated entries that are NOT complete specs: name
+# authority for a page whose body comes from a generated spec, or - once that
+# generated spec has rotated to a newer run - for a page that stays as committed
+# on disk. Those paths are deliberately absent from PRIORITY and NEW_PAGES.
+CURATED_OVERLAYS = load_page_specs(ROOT, PRIORITY, NEW_PAGES)
 
 
 RELATED = [
@@ -361,7 +449,16 @@ def load_manual_pages() -> dict[str, dict]:
         return {}
     payload = json.loads(source.read_text(encoding="utf-8"))
     pages = {}
-    for item in payload.get("pages", []):
+    for index, item in enumerate(payload.get("pages", [])):
+        # The same assumption load_page_specs() refuses: a row missing a field was a
+        # bare KeyError from here, not a verdict. Named, with the row identified.
+        required = ("path", "h1", "framework", "type", "definition", "domain")
+        missing = [k for k in required if not isinstance(item, dict) or not str(item.get(k) or "").strip()]
+        if missing:
+            label = item.get("path") if isinstance(item, dict) and item.get("path") else f"pages[{index}]"
+            raise SystemExit(
+                f"manual expansion page incomplete: {label} in {source.relative_to(ROOT).as_posix()} "
+                f"is missing required key(s) {', '.join(missing)}.")
         pages[item["path"]] = {
             "h1": item["h1"],
             "framework": item["framework"],
@@ -616,6 +713,7 @@ def ensure_fanout_block(soup: BeautifulSoup, spec: dict):
     target.append(section)
 
 def patch_priority(path: str, spec: dict):
+    require_complete_spec(path, spec, "patch_priority caller")
     fp=ROOT/path
     soup=BeautifulSoup(fp.read_text(encoding="utf-8",errors="ignore"),"html.parser")
     h1=soup.find("h1")
@@ -646,6 +744,7 @@ def patch_priority(path: str, spec: dict):
     write_page(fp, str(soup))
 
 def shell(path: str, spec: dict) -> str:
+    require_complete_spec(path, spec, "shell caller")
     canonical=canonical_for(path)
     soup=BeautifulSoup("<!doctype html><html lang='en'><head></head><body></body></html>","html.parser")
     head=soup.head
@@ -1019,8 +1118,15 @@ def patch_legacy(path: str) -> dict|None:
     h1=soup.find("h1"); can=soup.find("link",rel="canonical")
     if not h1 or not can or soup.find("meta",attrs={"name":"robots","content":re.compile("noindex",re.I)}): return None
     override=QUERY_OVERRIDES.get(path)
+    # A curated name-only entry whose complete spec has rotated out of NEW_PAGES
+    # (the generator emits the newest run only) no longer reaches patch_priority,
+    # so the curated authority for h1/framework/definition is applied here instead.
+    # validate:curated-framework-authority reads the result off this page.
+    overlay=CURATED_OVERLAYS.get(path) if path not in PRIORITY and path not in NEW_PAGES else None
     if override:
         h1.clear(); h1.append(override["h1"])
+    elif overlay and str(overlay.get("h1") or "").strip():
+        h1.clear(); h1.append(overlay["h1"])
     if path in SPECIAL_COMPARISON_QUERIES:
         h1.clear(); h1.append(SPECIAL_COMPARISON_QUERIES[path])
     h1text=clean_text(h1.get_text(" ",strip=True))
@@ -1052,13 +1158,15 @@ def patch_legacy(path: str) -> dict|None:
     primary_block=normalize_extraction_container(soup,primary_block)
     existing_framework=clean_text(primary_block.get("data-named-framework",h1text))
     existing_type=clean_text(primary_block.get("data-extraction-type","concept")) or "concept"
-    protected_type=path in PRIORITY or path in NEW_PAGES or path in MANUAL_PAGES or path=="atlas.html" or path in OWNER_INSIGHT_PATHS
+    protected_type=path in PRIORITY or path in NEW_PAGES or path in MANUAL_PAGES or path=="atlas.html" or path in OWNER_INSIGHT_PATHS or bool(overlay)
     if override:
         actual_framework=override["framework"]
         actual_type=override["type"]
     elif protected_type:
         actual_framework=existing_framework
         actual_type=existing_type
+        if overlay and str(overlay.get("framework") or "").strip():
+            actual_framework=overlay["framework"]
     else:
         actual_type=infer_extraction_type(h1text,existing_type)
         actual_framework=existing_framework
@@ -1070,8 +1178,16 @@ def patch_legacy(path: str) -> dict|None:
     opening=soup.select_one(".citation-definition")
     strong=opening.find("strong") if opening else None
     current_definition=clean_text(strong.get_text(" ",strip=True)) if strong else ""
-    protected=path in PRIORITY or path in NEW_PAGES or path in MANUAL_PAGES or path=="atlas.html" or path in OWNER_INSIGHT_PATHS
-    if not protected and (override or definition_is_bad(current_definition,h1text) or normalize_query(existing_framework)==normalize_query(h1text)):
+    protected=path in PRIORITY or path in NEW_PAGES or path in MANUAL_PAGES or path=="atlas.html" or path in OWNER_INSIGHT_PATHS or bool(overlay)
+    if overlay and str(overlay.get("definition") or "").strip():
+        actual_definition=overlay["definition"]
+        if not opening:
+            opening=make_opening(soup,actual_definition); h1.insert_after(opening)
+        elif strong:
+            strong.string=actual_definition
+        else:
+            opening.clear(); newstrong=soup.new_tag("strong"); newstrong.string=actual_definition; opening.append(newstrong)
+    elif not protected and (override or definition_is_bad(current_definition,h1text) or normalize_query(existing_framework)==normalize_query(h1text)):
         actual_definition=build_definition(actual_framework,h1text,actual_type)
         if not opening:
             opening=make_opening(soup,actual_definition); h1.insert_after(opening)
@@ -1481,7 +1597,15 @@ def main():
     import argparse
     parser=argparse.ArgumentParser()
     parser.add_argument("--postbuild", action="store_true")
+    parser.add_argument("--check-specs", action="store_true",
+        help="Load and prove every page spec complete (already done at import), print the counts, write nothing.")
     args=parser.parse_args()
+    if args.check_specs:
+        orphan=[p for p in CURATED_OVERLAYS if p not in PRIORITY and p not in NEW_PAGES]
+        print(f"citation specs: {len(PRIORITY)} priority, {len(NEW_PAGES)} new, {len(MANUAL_PAGES)} manual; "
+              f"{len(CURATED_OVERLAYS)} curated name-only overlay(s), {len(orphan)} of them on a page no "
+              f"complete spec describes (left as committed); every bucket spec carries {', '.join(REQUIRED_SPEC_KEYS)}")
+        return
     if not args.postbuild:
         update_markdown_sources()
         modify_build_insights()

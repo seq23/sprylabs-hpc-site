@@ -7992,8 +7992,38 @@
         "MX-AGENT-DROP-GATE"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-CITATION-SPEC-COMPLETENESS",
+      "status": "ADMITTED",
+      "name": "validate:citation-spec-completeness",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses the state that took Spry Content Release red three times on 2026-09-19 (runs 35448607349, 35451641559, 35452120100): apply_citation_program.py merged every spec source with dict.update(), so a curated entry in data/citation/agent_page_specs.json that carried only framework and type - the name-only overlay the curated file is designed to hold - was inserted as a whole page spec, and patch_priority() died with KeyError: 'h1' the moment agent_page_specs.generated.json rotated to the newest run and stopped carrying the complete spec for that path. Exercises the real load_page_specs() from the module, not a re-implementation: every spec in PRIORITY/NEW_PAGES on the committed data carries h1, framework, type, definition and body; every partial curated entry is held as an overlay and never as a spec, and its name wins on any complete spec for the path; a fixture reproducing the rotated state loads without crashing and leaves the page as committed; a partial spec in any generated file, a curated entry that overlays nothing, and an empty spec set are each refused by a SystemExit that names the path and the missing keys; and patch_priority()/shell() refuse an incomplete spec at the door before touching disk. Hard-fails on zero specs or zero assertions.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:citation-spec-completeness",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-citation-spec-completeness/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-19",
+      "matrix_ids": [
+        "MX-CITATION-SPEC-COMPLETENESS"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 254,
+  "record_count": 255,
   "generated_at": "2026-08-08T23:30:00Z"
 }
