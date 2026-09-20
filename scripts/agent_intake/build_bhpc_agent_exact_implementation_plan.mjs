@@ -7,6 +7,7 @@ import {mergeBhpcExternalCtaLinks} from '../lib/bhpc_conversion_contract.mjs';
 import {evaluateBhpcAcceptance} from '../lib/bhpc_agent_acceptance_satisfaction.mjs';
 import {bhpcGeneratedCitationDefinition, bhpcGeneratedFrameworkName} from '../lib/bhpc_public_page_contract.mjs';
 import {readQuarantine, specFingerprint, quarantinedRow, quarantineReason} from '../lib/agent_page_quarantine.mjs';
+import {measuredDemandQueries, hasMeasuredDemand, noMeasuredDemandReason} from '../lib/measured_demand.mjs';
 
 const manifest=compileAndWriteBhpcAcceptanceManifest();
 function stableGeneratedAt(entries=[]){
@@ -253,6 +254,18 @@ for(const [pathValue,entries] of [...groups]){
   groups.delete(pathValue);
   console.log(`[bhpc-agent-exact-plan] BLOCKED ${pathValue}: ${reason} (quarantined ${row.quarantined_at})`);
 }
+// ─── THE DEMAND GATE IS ASKED HERE, BEFORE THE PAGE EXISTS ──────────────────
+// validate:demand-backed-pages refuses a registered page whose primary query has
+// no record in data/demand/measured_demand.json - and it can only see the page
+// once build:postprocess has registered it, which is after this lane wrote it
+// and the release committed. Run 35477412322 (3f0a52f7f) created three such
+// pages and every Spry Content Release on main went red on the next tick. So a
+// CREATE whose query carries no demand record is planned BLOCKED with a named
+// reason; apply-exact and apply_citation_program.py skip BLOCKED specs. A repair
+// of an existing page is not gated here: the page is already admitted.
+// See scripts/lib/measured_demand.mjs for the one reader both stages use.
+const demandQueries=measuredDemandQueries(ROOT);
+const demandBlockedAcceptanceIds=new Set();
 for(const [pathValue,entries] of groups){
   const primary=entries.find(e=>e.seo_execution_status==='VALID')||entries[0];
   const createIntent=entries.some(e=>e.source_intent_operation==='CREATE_NEW_TARGET_PAGE'&&!e.intended_winner_page&&!e.intended_winner_path);
@@ -264,6 +277,12 @@ for(const [pathValue,entries] of groups){
   const isRepair=(!wantsCreate&&(primary.page_family==='intended_winner_repair'||repairIntent))
     ||(primary.page_family==='intended_winner_repair'&&preexistingForeignPage(pathValue));
   const operation=isRepair?'REPAIR_INTENDED_WINNER_PAGE':'CREATE_NEW_TARGET_PAGE';
+  if(operation==='CREATE_NEW_TARGET_PAGE'&&!hasMeasuredDemand(demandQueries,primary.query)){
+    const reason=noMeasuredDemandReason(primary.query);
+    for(const entry of entries){demandBlockedAcceptanceIds.add(String(entry.id));blocked.push({...entry,acceptance_status:'BLOCKED',operation,blocked_reason:reason});}
+    console.log(`[bhpc-agent-exact-plan] BLOCKED ${pathValue}: ${reason}`);
+    continue;
+  }
   const spec=pageSpecFor(entries,pathValue);
   // The same fingerprint the quarantine ledger is keyed by, carried on the spec so
   // apply_citation_program.py can honour the ledger without re-deriving the hash.
@@ -283,6 +302,6 @@ for(const [pathValue,entries] of groups){
 for(const entry of blocked){specs.push({record_id:entry.record_id,acceptance_ids:[entry.id].filter(Boolean),query:entry.query,run_date:entry.run_date,operation:entry.operation,page_family:entry.page_family,route_status:entry.route_status,intended_winner_page:entry.intended_winner_page||'',intended_winner_path:entry.intended_winner_path||'',implementation_path:entry.implementation_path||'',before_hash:null,status:'BLOCKED',blocked_reason:entry.blocked_reason||'blocked_by_acceptance_compiler'})}
 writeJson('data/citation/agent_page_specs.generated.json',{schema_version:'1.1',generated_at:deterministicGeneratedAt,source:'bhpc_agent_acceptance_manifest',active_run_date:activeRunDate,new_pages});
 writeJson('data/citation/agent_repair_specs.generated.json',{schema_version:'1.1',generated_at:deterministicGeneratedAt,source:'bhpc_agent_acceptance_manifest',active_run_date:activeRunDate,priority_pages});
-const report={schema_version:'1.1',status:'PASS',generated_at:new Date().toISOString(),active_run_date:activeRunDate,acceptance_manifest_path:'data/report_fixes/agent_acceptance_manifest.generated.json',policy_path:'data/report_fixes/agent_exact_implementation_policy.json',repair_count:Object.keys(priority_pages).length,new_page_count:Object.keys(new_pages).length,blocked_count:blocked.length,no_action_count:noAction.length,acceptance_entry_count:manifest.entry_count,active_acceptance_entry_count:activeEntries.length,required_acceptance_entry_count:activeEntries.filter(e=>e.acceptance_status==='REQUIRED'&&!quarantinedAcceptanceIds.has(String(e.id))).length,quarantined_count:quarantinedAcceptanceIds.size,historical_entry_count:allEntries.length-activeEntries.length,specs,no_action:noAction.map(e=>({record_id:e.record_id,query:e.query,reason:'maintain_or_no_action'}))};
+const report={schema_version:'1.1',status:'PASS',generated_at:new Date().toISOString(),active_run_date:activeRunDate,acceptance_manifest_path:'data/report_fixes/agent_acceptance_manifest.generated.json',policy_path:'data/report_fixes/agent_exact_implementation_policy.json',repair_count:Object.keys(priority_pages).length,new_page_count:Object.keys(new_pages).length,blocked_count:blocked.length,no_action_count:noAction.length,acceptance_entry_count:manifest.entry_count,active_acceptance_entry_count:activeEntries.length,required_acceptance_entry_count:activeEntries.filter(e=>e.acceptance_status==='REQUIRED'&&!quarantinedAcceptanceIds.has(String(e.id))&&!demandBlockedAcceptanceIds.has(String(e.id))).length,quarantined_count:quarantinedAcceptanceIds.size,no_measured_demand_count:demandBlockedAcceptanceIds.size,historical_entry_count:allEntries.length-activeEntries.length,specs,no_action:noAction.map(e=>({record_id:e.record_id,query:e.query,reason:'maintain_or_no_action'}))};
 writeJson('artifacts/validation/agent-exact-implementation-plan.json',report);writeJson('reports/bhpc-agent-exact-implementation-plan.json',report);
-console.log(`[bhpc-agent-exact-plan] PASS: active_run=${activeRunDate}; repairs=${report.repair_count}; new_pages=${report.new_page_count}; blocked=${report.blocked_count}; no_action=${report.no_action_count}; historical_skipped=${report.historical_entry_count}`);
+console.log(`[bhpc-agent-exact-plan] PASS: active_run=${activeRunDate}; repairs=${report.repair_count}; new_pages=${report.new_page_count}; blocked=${report.blocked_count} (no_measured_demand=${report.no_measured_demand_count}); no_action=${report.no_action_count}; historical_skipped=${report.historical_entry_count}`);
