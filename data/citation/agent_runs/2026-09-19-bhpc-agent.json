@@ -1,0 +1,967 @@
+{
+  "schema_version": "1.2",
+  "run_id": "2026-09-19-bhpc-agent",
+  "generated_at": "2026-09-19T23:57:29.008Z",
+  "scope": "bhpc",
+  "artifact_contract": "CSV + optional JSON + HTML + manifest",
+  "exact_implementation_policy": "data/report_fixes/agent_exact_implementation_policy.json",
+  "queries_tested": 71,
+  "json_scoreboard_total": null,
+  "json_pages_to_build": 3,
+  "cited_domains": 15,
+  "wins": 13,
+  "new_fixes": 71,
+  "pending": 0,
+  "findings": [
+    {
+      "path": "insights/a-simple-meeting-rule-that-prevents-calendar-chaos.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The page has the actual three-condition meeting filter, but lacks an explicit comparison with productivity apps and a concise application example. This leaves room for Perplexity to substitute a different “action, owner, due date” rule and for GPT-4o to invent AI scheduling features; the unrelated daily-execution material further weakens topical clarity.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-coach-vs-human-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The page has a strong decision framework but does not translate its cited evidence into a concise, scan-friendly comparison of observed research findings and their limits. Perplexity fills that evidence-summary role with specific comparative research claims, while GPT-4o adds the practical expectation that AI can analyze progress data and humans may introduce variability.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "faq.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The LLM answers frame the query as either a product-versus-human-coach disambiguation or a practical high-performance operating system. The page contains the underlying facts, but does not present that distinction and the concrete plan–prioritize–recover–review–execute outcome in one immediate, scannable above-the-fold answer; it instead begins with duplicated generic copy and distributes the differentiators across later FAQ entries.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "download.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The answers either treat the query as a generic search for human-coach reviews or correctly identify the product but flag the lack of independent reviews. The page explains product mechanics well, but it does not directly resolve review intent with a transparent product-vs-human-coaching distinction, limitations, and an explicit independent-review/evaluation disclosure.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "chatgpt-accountability-partner.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The answer surfaces provide immediately usable daily, weekly, review, goal-setting, and accountability prompt language. Our page names a morning check-in, end-of-day log, pattern flagging, and weekly adjustment, but does not provide the actual copy-paste prompts, response rules, example inputs, or a distinct recovery prompt needed to satisfy the query directly.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "chatgpt-accountability-partner.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The LLM answers directly satisfy the query with ready-to-use weekly-review questions or copy-paste prompts covering wins, unfinished work, stalled tasks, priorities, delegation, and next-week actions. Our page only mentions weekly adjustment conceptually and labels a morning check-in, daily log, and pattern review; it lacks a dedicated weekly-review prompt, a structured weekly-review sequence, and an output template that connects the daily accountability loop to next-week planning.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-accountability-system-vs-habit-tracker.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "All three answers satisfy the query’s immediate intent with prompt questions or prompt patterns, while the page names the query in its opening recommendation but provides no ready-to-copy prompts for SMART-style goal definition, milestone planning, check-ins, planned-versus-actual review, or accountability recovery. The page’s distinctive commitments/evidence/recovery framework should be converted into directly usable prompts.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "how-do-you-use-chatgpt-as-an-executive-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The answers, especially Perplexity and GPT-4o, satisfy the query with multiple distinct, immediately usable executive-coaching prompts across leadership, strategy, blind spots, feedback, difficult conversations, and development. Our page promises five battle-tested prompts but supplies only one bundled prompt, so it lacks the scannable prompt library and use-case coverage that the query directly requests.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-executive-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The page explains its proprietary context-to-decision-to-evidence workflow well, but it does not first give a plain-language operational overview of how AI executive coaching typically works: intake, interactive coaching or rehearsal, analysis/feedback, ongoing nudges, and hybrid human handoff. This makes the page less directly aligned with the broad explanatory framing used by the cited Perplexity answer and the generic GPT-4o answer.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "how-do-you-use-chatgpt-as-an-executive-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The page frames ChatGPT as an executive decision and accountability system, but it lacks the concrete daily productivity workflow present in the Perplexity and GPT-4o answers: collecting commitments and energy constraints, prioritizing tasks, assigning time blocks and breaks, and running an end-of-day review. Its existing prompt is broad and executive-oriented rather than a ready-to-run productivity-coach setup.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/framework-for-choosing-what-to-quit.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The page never answers the query’s central decision: how to interpret hesitation and identify a concrete reason to say no. It supplies a generic execution framework for managing tasks after a decision, while all three LLM surfaces supply direct decline criteria such as values misalignment, opportunity cost, inadequate resources, external pressure, and intuition/risk.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/how-to-delegate-without-losing-quality.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The page does not answer the query’s central decision: which concrete recurring tasks should be automated versus delegated this week, how to rank them by time saved and risk, or how to assemble a realistic five-hour capacity target. Its existing capacity-audit language is generic, and the page’s \"Short Answer\" is materially off-topic.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/chatgpt-prompts-for-managers.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "ChatGPT prompts for managers",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/chatgpt-prompts-to-help-executive-coaches-scale.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "ChatGPT prompts to help executive coaches scale",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/how-to-use-chatgpt-as-your-life-and-leadership-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "how to use ChatGPT as your life and leadership coach",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-executive-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "bhpc agent signal",
+      "operation": "NO_ACTION_MAINTAIN",
+      "implementation_required": false,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-coach-vs-human-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "bhpc agent signal",
+      "operation": "NO_ACTION_MAINTAIN",
+      "implementation_required": false,
+      "blocked_reason": ""
+    },
+    {
+      "path": "chatgpt-accountability-partner.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "bhpc agent signal",
+      "operation": "NO_ACTION_MAINTAIN",
+      "implementation_required": false,
+      "blocked_reason": ""
+    },
+    {
+      "path": "how-do-you-use-chatgpt-as-an-executive-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "bhpc agent signal",
+      "operation": "NO_ACTION_MAINTAIN",
+      "implementation_required": false,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-accountability-system-vs-habit-tracker.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "bhpc agent signal",
+      "operation": "NO_ACTION_MAINTAIN",
+      "implementation_required": false,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-simple-meeting-rule-that-prevents-calendar-chaos.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "bhpc agent signal",
+      "operation": "NO_ACTION_MAINTAIN",
+      "implementation_required": false,
+      "blocked_reason": ""
+    },
+    {
+      "path": "chatgpt-accountability-partner.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "ChatGPT accountability coach prompts",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "how-do-you-use-chatgpt-as-an-executive-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "best ChatGPT prompts for executive coaching",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "download.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "Billionaire High Performance Coach review",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "faq.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "Billionaire High Performance Coach",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/how-to-delegate-without-losing-quality.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "which tasks should i automate or delegate to free up 5 hours this week",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-simple-meeting-rule-that-prevents-calendar-chaos.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "It captures agenda and async concepts, but replaces the page’s actual three-condition pre-acceptance filter with a different “one action, one owner, one due date” rule. It also asserts buffer time, focus blocks, and scope caps that are not established by this page, while the page provides no explicit productivity-app comparison to correct the framing.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-simple-meeting-rule-that-prevents-calendar-chaos.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The answer invents an AI scheduling product with availability optimization, automated follow-ups, priority scheduling, and analytics. It omits the page’s actual decision filter: real-time decision, decision value of attendance, and a written agenda with a defined outcome.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-simple-meeting-rule-that-prevents-calendar-chaos.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The response supplies no usable explanation, comparison, rule, or application guidance. It only echoes the topic as a partial title.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-coach-vs-human-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "Our page does not provide a compact evidence snapshot that names comparative study findings, separates alliance/perception evidence from outcome evidence, and translates those findings into a decision rule.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-coach-vs-human-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The response foregrounds AI data analysis/progress tracking and possible human inconsistency or bias; our comparison mentions supplied data and judgment but does not explicitly compare ongoing measurement, tracking, and variability in feedback quality.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-coach-vs-human-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The fragment only suggests AI for low-budget daily tracking and structured skill-building, then cuts off before giving human-selection criteria, trade-offs, safeguards, or a hybrid path.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "faq.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "It identifies the product and its AI-accountability positioning, but the intended FAQ is not the cited destination and the page does not immediately state the full practical outcome set: prioritization, sequencing, recovery, review, and execution.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "faq.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The answer treats the term as a human-coach category and provides generic wellness and leadership topics; it misses the page's self-guided AI executive OS, tangible deliverable, no-calls distinction, and immediate purchase path.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "faq.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "It uses a systems-and-leverage frame that overlaps the page's execution-over-motivation positioning, but supplies no concrete framework, product explanation, recovery/continuity mechanism, or purchase handoff.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "download.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The response identifies BHPC as a prompt-based, self-installed system and notes no independently verified review base, but our page does not directly answer that review concern with a clearly labeled limitations/evidence section or a buyer evaluation framework.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "download.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The answer never identifies Billionaire High Performance Coach as a self-installed LLM operating system, does not distinguish it from human coaching, and gives no product contents, preview-based evaluation criteria, or purchase path.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "download.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The answer assumes an elite human-coach model and offers only generic pros and cons; it does not identify the product as an AI prompt/manual system or explain its actual daily execution, accountability, and recovery components.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "chatgpt-accountability-partner.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "It provides a usable firm-but-supportive weekly prompt plus concrete daily, weekly, and pattern-review behaviors; our page describes comparable loop stages but leaves the actual prompts and enforcement wording absent.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "chatgpt-accountability-partner.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "It directly supplies 25 ready-to-use prompts across daily check-ins, weekly reflections, monthly reviews, goal setting, mindset, and accountability partnership; our page has no equivalent prompt library or monthly/goal-setting prompt coverage.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "chatgpt-accountability-partner.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "Its visible premise correctly emphasizes persona, clear rules, and a feedback loop, but it does not provide the promised curated prompts. Our page has those concepts but should expose them as executable prompt instructions.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "chatgpt-accountability-partner.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The answer provides immediately usable weekly-review prompts that explicitly cover wins, open loops, stalled work, delegation or dropping work, next-week priorities, and a Monday action. Our page says to adjust weekly but supplies no weekly prompt, decision sequence, or review output.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "chatgpt-accountability-partner.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The checklist directly gives review questions for achievements, challenges, time use, goals, habits, priorities, well-being, and learning. Our page has accountability concepts and a weekly-adjustment heading, but no direct weekly-review question set or copy-paste ChatGPT instruction.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "chatgpt-accountability-partner.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The phase framing maps the weekly review into reflection, decluttering, prioritization, and optimization, whereas our page does not organize the weekly adjustment into a user-facing review workflow. The supplied answer is incomplete, leaving an opening for a complete prompt plus structured output.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-accountability-system-vs-habit-tracker.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The answer supplies immediately usable prompt patterns for SMART conversion, 90-day and annual planning, accountability check-ins, weekly review, and tracking. Our page explains the accountability-system decision but does not include copy-paste prompts or a planning/review cadence.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-accountability-system-vs-habit-tracker.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The answer covers priorities, SMART goals, visualization, obstacles, timelines, accountability partners, tracking, reflection, adjustment, rewards, and motivation. Our page lacks a prompt library that turns its outcome/constraint/evidence/recovery concepts into direct user inputs.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-accountability-system-vs-habit-tracker.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The answer frames ChatGPT as a goal-setting and accountability coach and promises curated prompts by stage, but our page has no staged, copy-ready prompt sequence for defining goals, breaking them into actions, and conducting accountability reviews.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "how-do-you-use-chatgpt-as-an-executive-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "Our page does not deliver five distinct, copy-ready prompts for the concrete executive scenarios covered here: root-cause questioning, blind spots, decision risk, difficult conversations, and targeted development planning.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "how-do-you-use-chatgpt-as-an-executive-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "Our page lacks the breadth of discrete coaching prompts across leadership, strategic thinking, communication, emotional intelligence, work-life balance, vision, change, decisions, mentorship, and feedback.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "how-do-you-use-chatgpt-as-an-executive-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "Our page neither names recognized coaching frameworks nor translates its claimed five-prompt protocol into distinct framework-based prompt templates; however, this surface itself is too incomplete to establish a substantive incumbent.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-executive-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "Our page provides a more concrete five-step operating loop and escalation rule, but lacks a front-loaded, category-level explanation of intake, conversational coaching or role-play, pattern analysis, between-session nudges, and hybrid human support.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-executive-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The answer names data collection, feedback, SMART-goal tracking, skill modules, behavioral nudges, privacy, and 24/7 access. Our page covers commitments, evidence, and escalation, but does not plainly summarize the standard intake-to-feedback-to-nudge operating model or distinguish what data the user must deliberately provide.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-executive-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The response is extremely shallow and only identifies LLMs, NLP, and machine learning. Our page already materially exceeds it with an executable five-step loop, output record, limitations, and escalation guidance; only a short plain-language opening explanation would improve direct-match clarity.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "how-do-you-use-chatgpt-as-an-executive-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "Our page does not explicitly teach the productivity-specific daily loop of gathering commitments and energy constraints, prioritizing tasks, time-blocking with buffers, and completing an evening review; it offers executive-system framing and a broad prompt instead.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "how-do-you-use-chatgpt-as-an-executive-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "Our page covers outcomes, constraints, next actions, and review, but does not directly enumerate productivity uses such as task prioritization, scheduling/time blocking, task decomposition, procrastination handling, breaks, and progress check-ins.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "how-do-you-use-chatgpt-as-an-executive-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The response contains no actionable method, prompt, schedule, prioritization process, or review cadence. Our page already has more operational material, but it needs a clearly labeled productivity-coach workflow to capture this query directly.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/framework-for-choosing-what-to-quit.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "Our page lacks a direct hesitation-to-no diagnostic, decline criteria, a pressure-versus-preference distinction, and a script for pausing or declining; it instead moves immediately into task execution mechanics.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/framework-for-choosing-what-to-quit.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "Our page does not provide the answer’s decision checklist for goals/values alignment, risk, opportunity cost, external pressure, and available resources. “Pick the outcome” and “Identify the constraint” are adjacent concepts, but they are framed as execution planning rather than reasons to decline.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/framework-for-choosing-what-to-quit.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "Our page title promises a framework for deciding what to quit, but it never addresses the “hell yes” heuristic, explains when hesitation indicates a no, or gives the user a way to separate protective intuition from ordinary uncertainty.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/how-to-delegate-without-losing-quality.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The answer gives an explicit ranked shortlist of recurring work, distinguishes rules-based automation from judgment-heavy delegation, and recommends selecting one high-frequency workflow first. Our page supplies none of those task-level choices, sorting criteria, or time-savings path to five hours.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/how-to-delegate-without-losing-quality.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The answer directly names ten candidate task categories and provides a practical automation and delegation option for each. Our page has no task inventory, no automate-versus-delegate rule, and no method for totaling expected weekly hours saved.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/how-to-delegate-without-losing-quality.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "Even the incomplete response frames the useful criterion as low-hanging-fruit tasks that are quick to automate or delegate and yield immediate savings. Our page does not define a low-effort/high-time-savings screening rule or provide concrete candidates.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/chatgpt-prompts-for-managers.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "No matching page exists. The answer provides immediately usable manager prompts for OKRs, executive updates, 1:1s, feedback, conflict resolution, and skills-gap analysis; there is no our-page content that can satisfy or improve on these use cases.",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/chatgpt-prompts-for-managers.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "No matching page exists. The answer spans ten manager workflows—motivation, conflict, performance, communication, time management, leadership development, projects, feedback, inclusion, and strategic planning—but no our-page prompt library covers them.",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/chatgpt-prompts-for-managers.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "No matching page exists. The answer identifies a useful prompt-design method—assign a role and provide specific context—but no our-page content offers manager-focused prompt templates or instructions for contextualizing them.",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/chatgpt-prompts-to-help-executive-coaches-scale.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "No matching page exists to compete for the query or supply the specific prompt templates Perplexity cites: onboarding, pre-session preparation, agendas, measurable goal tracking, difficult-conversation roleplay, leadership reflection, and content scaling.",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/chatgpt-prompts-to-help-executive-coaches-scale.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "No matching page exists. A focused page with executable, copy-paste prompts for executive-coaching workflows would be more useful than this generic business-growth prompt list.",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/chatgpt-prompts-to-help-executive-coaches-scale.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "No matching page exists. The page opportunity is to turn the productization, operations automation, and one-to-many scaling framework into a complete, copy-paste executive-coach prompt library.",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/how-to-use-chatgpt-as-your-life-and-leadership-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "No matching incumbent page exists to supply the reusable life-and-leadership coaching prompt, one-question-at-a-time method, structured coaching flow, accountability cadence, or safety boundary cited in the answer.",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/how-to-use-chatgpt-as-your-life-and-leadership-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "No matching incumbent page exists to address the answer's practical topics: clear goals, specific questions, reflection, leadership role-play, emotional intelligence, productivity, well-being, and recurring check-ins.",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/how-to-use-chatgpt-as-your-life-and-leadership-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "No matching incumbent page exists. The visible response establishes only the general use case and explicitly notes AI cannot replace human empathy and intuition; a page should provide the missing actionable process, prompts, leadership exercises, accountability workflow, and limitations.",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    }
+  ],
+  "opportunities": [
+    {
+      "query": "A simple meeting rule that prevents calendar chaos — Spry Executive OS vs productivity apps",
+      "path": "insights/a-simple-meeting-rule-that-prevents-calendar-chaos.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI coaching vs human coaching",
+      "path": "ai-coach-vs-human-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Billionaire High Performance Coach",
+      "path": "faq.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Billionaire High Performance Coach review",
+      "path": "download.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "ChatGPT accountability coach prompts",
+      "path": "chatgpt-accountability-partner.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "ChatGPT productivity prompts for weekly review",
+      "path": "chatgpt-accountability-partner.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "ChatGPT prompts for goal setting and accountability",
+      "path": "ai-accountability-system-vs-habit-tracker.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "best ChatGPT prompts for executive coaching",
+      "path": "how-do-you-use-chatgpt-as-an-executive-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how does ai executive coach work",
+      "path": "ai-executive-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how to use ChatGPT as a productivity coach",
+      "path": "how-do-you-use-chatgpt-as-an-executive-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "is this a hell yes if i'm hesitating help me find the reason to say no",
+      "path": "insights/framework-for-choosing-what-to-quit.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "which tasks should i automate or delegate to free up 5 hours this week",
+      "path": "insights/how-to-delegate-without-losing-quality.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "ChatGPT prompts for managers",
+      "path": "agent/bhpc/chatgpt-prompts-for-managers.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "ChatGPT prompts to help executive coaches scale",
+      "path": "agent/bhpc/chatgpt-prompts-to-help-executive-coaches-scale.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "how to use ChatGPT as your life and leadership coach",
+      "path": "agent/bhpc/how-to-use-chatgpt-as-your-life-and-leadership-coach.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "bhpc agent signal",
+      "path": "ai-executive-coach.html",
+      "operation": "NO_ACTION_MAINTAIN"
+    },
+    {
+      "query": "bhpc agent signal",
+      "path": "ai-coach-vs-human-coach.html",
+      "operation": "NO_ACTION_MAINTAIN"
+    },
+    {
+      "query": "bhpc agent signal",
+      "path": "chatgpt-accountability-partner.html",
+      "operation": "NO_ACTION_MAINTAIN"
+    },
+    {
+      "query": "bhpc agent signal",
+      "path": "how-do-you-use-chatgpt-as-an-executive-coach.html",
+      "operation": "NO_ACTION_MAINTAIN"
+    },
+    {
+      "query": "bhpc agent signal",
+      "path": "ai-accountability-system-vs-habit-tracker.html",
+      "operation": "NO_ACTION_MAINTAIN"
+    },
+    {
+      "query": "bhpc agent signal",
+      "path": "insights/a-simple-meeting-rule-that-prevents-calendar-chaos.html",
+      "operation": "NO_ACTION_MAINTAIN"
+    },
+    {
+      "query": "ChatGPT accountability coach prompts",
+      "path": "chatgpt-accountability-partner.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "best ChatGPT prompts for executive coaching",
+      "path": "how-do-you-use-chatgpt-as-an-executive-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Billionaire High Performance Coach review",
+      "path": "download.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Billionaire High Performance Coach",
+      "path": "faq.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "which tasks should i automate or delegate to free up 5 hours this week",
+      "path": "insights/how-to-delegate-without-losing-quality.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A simple meeting rule that prevents calendar chaos — Spry Executive OS vs productivity apps",
+      "path": "insights/a-simple-meeting-rule-that-prevents-calendar-chaos.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A simple meeting rule that prevents calendar chaos — Spry Executive OS vs productivity apps",
+      "path": "insights/a-simple-meeting-rule-that-prevents-calendar-chaos.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A simple meeting rule that prevents calendar chaos — Spry Executive OS vs productivity apps",
+      "path": "insights/a-simple-meeting-rule-that-prevents-calendar-chaos.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI coaching vs human coaching",
+      "path": "ai-coach-vs-human-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI coaching vs human coaching",
+      "path": "ai-coach-vs-human-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI coaching vs human coaching",
+      "path": "ai-coach-vs-human-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Billionaire High Performance Coach",
+      "path": "faq.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Billionaire High Performance Coach",
+      "path": "faq.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Billionaire High Performance Coach",
+      "path": "faq.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Billionaire High Performance Coach review",
+      "path": "download.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Billionaire High Performance Coach review",
+      "path": "download.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Billionaire High Performance Coach review",
+      "path": "download.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "ChatGPT accountability coach prompts",
+      "path": "chatgpt-accountability-partner.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "ChatGPT accountability coach prompts",
+      "path": "chatgpt-accountability-partner.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "ChatGPT accountability coach prompts",
+      "path": "chatgpt-accountability-partner.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "ChatGPT productivity prompts for weekly review",
+      "path": "chatgpt-accountability-partner.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "ChatGPT productivity prompts for weekly review",
+      "path": "chatgpt-accountability-partner.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "ChatGPT productivity prompts for weekly review",
+      "path": "chatgpt-accountability-partner.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "ChatGPT prompts for goal setting and accountability",
+      "path": "ai-accountability-system-vs-habit-tracker.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "ChatGPT prompts for goal setting and accountability",
+      "path": "ai-accountability-system-vs-habit-tracker.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "ChatGPT prompts for goal setting and accountability",
+      "path": "ai-accountability-system-vs-habit-tracker.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "best ChatGPT prompts for executive coaching",
+      "path": "how-do-you-use-chatgpt-as-an-executive-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "best ChatGPT prompts for executive coaching",
+      "path": "how-do-you-use-chatgpt-as-an-executive-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "best ChatGPT prompts for executive coaching",
+      "path": "how-do-you-use-chatgpt-as-an-executive-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how does ai executive coach work",
+      "path": "ai-executive-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how does ai executive coach work",
+      "path": "ai-executive-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how does ai executive coach work",
+      "path": "ai-executive-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how to use ChatGPT as a productivity coach",
+      "path": "how-do-you-use-chatgpt-as-an-executive-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how to use ChatGPT as a productivity coach",
+      "path": "how-do-you-use-chatgpt-as-an-executive-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how to use ChatGPT as a productivity coach",
+      "path": "how-do-you-use-chatgpt-as-an-executive-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "is this a hell yes if i'm hesitating help me find the reason to say no",
+      "path": "insights/framework-for-choosing-what-to-quit.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "is this a hell yes if i'm hesitating help me find the reason to say no",
+      "path": "insights/framework-for-choosing-what-to-quit.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "is this a hell yes if i'm hesitating help me find the reason to say no",
+      "path": "insights/framework-for-choosing-what-to-quit.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "which tasks should i automate or delegate to free up 5 hours this week",
+      "path": "insights/how-to-delegate-without-losing-quality.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "which tasks should i automate or delegate to free up 5 hours this week",
+      "path": "insights/how-to-delegate-without-losing-quality.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "which tasks should i automate or delegate to free up 5 hours this week",
+      "path": "insights/how-to-delegate-without-losing-quality.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "ChatGPT prompts for managers",
+      "path": "agent/bhpc/chatgpt-prompts-for-managers.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "ChatGPT prompts for managers",
+      "path": "agent/bhpc/chatgpt-prompts-for-managers.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "ChatGPT prompts for managers",
+      "path": "agent/bhpc/chatgpt-prompts-for-managers.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "ChatGPT prompts to help executive coaches scale",
+      "path": "agent/bhpc/chatgpt-prompts-to-help-executive-coaches-scale.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "ChatGPT prompts to help executive coaches scale",
+      "path": "agent/bhpc/chatgpt-prompts-to-help-executive-coaches-scale.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "ChatGPT prompts to help executive coaches scale",
+      "path": "agent/bhpc/chatgpt-prompts-to-help-executive-coaches-scale.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "how to use ChatGPT as your life and leadership coach",
+      "path": "agent/bhpc/how-to-use-chatgpt-as-your-life-and-leadership-coach.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "how to use ChatGPT as your life and leadership coach",
+      "path": "agent/bhpc/how-to-use-chatgpt-as-your-life-and-leadership-coach.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "how to use ChatGPT as your life and leadership coach",
+      "path": "agent/bhpc/how-to-use-chatgpt-as-your-life-and-leadership-coach.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "ChatGPT prompts for managers",
+      "path": "insights/chatgpt-prompts-for-managers.html",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "blocked_reason": "",
+      "source": "json_new_page_opportunities"
+    },
+    {
+      "query": "ChatGPT prompts to help executive coaches scale",
+      "path": "insights/chatgpt-prompts-to-help-executive-coaches-scale.html",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "blocked_reason": "",
+      "source": "json_new_page_opportunities"
+    },
+    {
+      "query": "how to use ChatGPT as your life and leadership coach",
+      "path": "insights/how-to-use-chatgpt-as-your-life-and-leadership-coach.html",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "blocked_reason": "",
+      "source": "json_new_page_opportunities"
+    }
+  ],
+  "interpretation": {
+    "measurement_status": "AGENT_DIGEST_ABSORBED_WITH_EXACT_IMPLEMENTATION_METADATA",
+    "reason": "The digest preserves intended destination, operation, implementation path, and JSON pages-to-build specs when present. Exact application is planned and traced by the agent exact implementation lane."
+  }
+}

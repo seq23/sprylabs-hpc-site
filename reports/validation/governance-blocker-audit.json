@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-09-19T13:34:28.179Z",
+  "generated_at": "2026-09-20T00:04:34.969Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 236,
+  "admitted_hard_fail_count": 239,
   "reviewed_count": 8,
-  "unreviewed_count": 228,
+  "unreviewed_count": 231,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 181,
+    "REVIEW_REQUIRED": 183,
     "EXISTING_REPAIR_AVAILABLE": 8,
-    "TRUE_BLOCKER": 29,
+    "TRUE_BLOCKER": 30,
     "REVIEW_WARNING_BOUNDARY": 18
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 181,
+    "REVIEW_REQUIRED": 183,
     "EXISTING_REPAIR_AVAILABLE": 8,
-    "TRUE_BLOCKER": 29,
+    "TRUE_BLOCKER": 30,
     "REVIEW_WARNING_BOUNDARY": 10
   },
   "migration_status_counts": {
-    "UNREVIEWED": 228,
+    "UNREVIEWED": 231,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -3583,6 +3583,51 @@
         "MX-MAIN-VALIDATION-COVERAGE-EVIDENCE"
       ],
       "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-RAW-AGENT-DROP-QUARANTINE",
+      "name": "validate:raw-agent-drop-quarantine",
+      "command": "npm run validate:raw-agent-drop-quarantine",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses a Main Validation Sentinel whose quarantine action can no longer be trusted with main. Every Saturday from 2026-08-08 to 2026-09-19 the Twin Agent pushed its weekly artifact straight to main and Validate Repo went red on it (runs 31258832447, 31886339425, 32575602958, 33254892310, 34696447670, 35447192757); the sentinel alarmed and repaired nothing. quarantine_raw_agent_drop.mjs now moves such a drop to a branch, opens the pull request it should have been, and removes it from main through commit_and_push_if_changed.sh. Because that action rewrites main, this self-test drives the script against a scripted GitHub API and a recording stand-in for the writer helper: a merged pull request, a github-actions[bot] author, a merge commit, files outside the drop root, or a missing manifest are each a named refusal that writes nothing; an unreadable commit is a hard failure rather than a verdict; the execute path stages exactly the drop and hands the helper the message naming the pull request; a helper that cannot land the removal fails the run; an existing branch at a different sha is never overwritten. Hard-fails on zero cases.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-RAW-AGENT-DROP-QUARANTINE"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-AGENT-DROP-GATE",
+      "name": "validate:agent-drop-gate",
+      "command": "npm run validate:agent-drop-gate",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses the state that produced six red Saturdays in a row: unvalidated Twin Agent content reaching the deploy branch by direct push, with nothing before the push to check it and nothing after it but an alarm. Reads docs/runbooks/TWIN_AGENT_BHPC_REPO_DROP_INSTRUCTIONS.md and fails if the writer's instructions stop naming the agent-drop/<date>-<scope> branch, the pull request, or the sentence Never push to main - a rule written in prose governs nothing until something fails when it is broken. Fails if main-validation-sentinel.yml stops running quarantine_raw_agent_drop.mjs --execute on a red verdict, loses the contents/pull-requests/actions write scopes it needs, or acts on any SHA but the coverage verdict's; if the quarantine script loses its merged-pull-request or bot-author refusal or routes the removal anywhere but commit_and_push_if_changed.sh; if the quarantine self-test is not an ADMITTED matrix entry; if deploy-distribution.yml stops requiring a green Validate Repo workflow_run on main, stops naming the artifact after that run's own head_sha, or gains a push trigger; or if any workflow checks out or pushes with a credential from secrets other than GITHUB_TOKEN. Every assertion is proved negatively on every run against a mutated copy of the real inputs, so a check that has stopped being able to fail is itself a failure. Hard-fails on zero assertions.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-AGENT-DROP-GATE"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-CITATION-SPEC-COMPLETENESS",
+      "name": "validate:citation-spec-completeness",
+      "command": "npm run validate:citation-spec-completeness",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses the state that took Spry Content Release red three times on 2026-09-19 (runs 35448607349, 35451641559, 35452120100): apply_citation_program.py merged every spec source with dict.update(), so a curated entry in data/citation/agent_page_specs.json that carried only framework and type - the name-only overlay the curated file is designed to hold - was inserted as a whole page spec, and patch_priority() died with KeyError: 'h1' the moment agent_page_specs.generated.json rotated to the newest run and stopped carrying the complete spec for that path. Exercises the real load_page_specs() from the module, not a re-implementation: every spec in PRIORITY/NEW_PAGES on the committed data carries h1, framework, type, definition and body; every partial curated entry is held as an overlay and never as a spec, and its name wins on any complete spec for the path; a fixture reproducing the rotated state loads without crashing and leaves the page as committed; a partial spec in any generated file, a curated entry that overlays nothing, and an empty spec set are each refused by a SystemExit that names the path and the missing keys; and patch_priority()/shell() refuse an incomplete spec at the door before touching disk. Hard-fails on zero specs or zero assertions.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-CITATION-SPEC-COMPLETENESS"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",
       "decision": null,
       "evidence": []
