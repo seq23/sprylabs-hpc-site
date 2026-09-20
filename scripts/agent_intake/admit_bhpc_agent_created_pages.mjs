@@ -78,6 +78,8 @@ function candidateRecord(root, pagePath, spec, sealed) {
   const html = fs.readFileSync(path.join(root, pagePath), 'utf8');
   const canonical = (html.match(/<link[^>]+rel=["']canonical["'][^>]+href=["']([^"']+)/i) || html.match(/<link[^>]+href=["']([^"']+)["'][^>]+rel=["']canonical/i) || [])[1] || '';
   let domain = '';
+  // Non-fatal: an unparseable canonical only means the domain falls back to the
+  // path-derived default below, the same default the Python writer uses.
   try { domain = canonical ? new URL(canonical).hostname.toLowerCase() : ''; } catch { domain = ''; }
   // The same route string apply_citation_program.sync_agent_page_admission_records
   // writes ('/' + path), because validate:authority-admission-honesty looks the

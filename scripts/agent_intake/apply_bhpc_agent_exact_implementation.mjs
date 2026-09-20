@@ -15,6 +15,9 @@ import {createRequire} from 'node:module';
 // - correctly, because a second emitter is a second opinion about a page's schema.
 // Going through renderSchemaScript is the lawful way to have both.
 const requireCjs = createRequire(import.meta.url);
+// The health boundary's ONE definition: the same terms validate_programmatic_admission.py
+// tests and the same aside repair:health-boundary appends. Reused here, not restated.
+const {HEALTH_TERMS: HEALTH_ADJACENT_TERMS, BOUNDARY_TERMS: HEALTH_BOUNDARY_TERMS, BLOCK: HEALTH_BOUNDARY_BLOCK, visibleText: healthVisibleText} = requireCjs('../repair/repair_health_boundary_blocks.js');
 const {renderSchemaScript, mainEntityOfPage} = requireCjs('../lib/citation_page_schema.cjs');
 const {routeFor: sharedRouteFor} = requireCjs('../lib/dual_domain_policy.cjs');
 
@@ -716,6 +719,26 @@ function fullHtml(pathValue, entries, spec = {}) {
   // regenerated. The paragraph is built once and passed to both.
   const citationDefinition = registryRow?.definition || bhpcGeneratedCitationDefinition(title);
   const citationDefinitionParagraph = `<p class="citation-definition"><strong>${escapeHtml(citationDefinition)}</strong></p>`;
+  const article = `<article class="article">
+<h1>${escapeHtml(title)}</h1>
+${citationDefinitionParagraph}
+<p>This page turns the intake query into a practical workflow, with the original source provenance retained in machine-readable metadata.</p>
+<p class="product-anchor">This is one of the frameworks inside the <a href="/download.html">Billionaire High Performance Coach system</a> — a structured executive OS for using ChatGPT as your accountability and decision partner.</p>
+<nav class="citation-core-links" aria-label="Core Spry Executive OS pages"><a href="/">Start here</a> · <a href="/strategy">Read the strategy</a></nav>
+${renderExtractionBlock(spec, entries)}
+${renderSections(entries, citationDefinitionParagraph)}
+<section data-content-contract="cta-block" class="contract-cta"><h2>Next step</h2><p>Use the complete operating system when you want these frameworks installed as a repeatable daily workflow.</p><a href="/download.html" class="btn btn--primary">Review Spry / BHPC</a></section>
+</article>`;
+  // A page whose own text is health-adjacent must carry the boundary aside the
+  // demand gate asks for. repair:health-boundary appends exactly this block at the
+  // END of build:all - but release:repair-agent-normalization re-runs this generator
+  // afterwards and rebuilt the page without it, so the corpus run failed
+  // "health-adjacent boundary missing" on a page the repair had already fixed
+  // (measured on how-to-use-chatgpt-as-your-life-and-leadership-coach.html,
+  // 2026-09-20). The writer that produces the text emits the boundary with it.
+  const articleText = healthVisibleText(article);
+  const healthAdjacent = HEALTH_ADJACENT_TERMS.some((t) => articleText.includes(t));
+  const boundaryAside = healthAdjacent && !HEALTH_BOUNDARY_TERMS.some((t) => articleText.includes(t)) ? `\n${HEALTH_BOUNDARY_BLOCK}` : '';
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -761,17 +784,8 @@ ${renderSchemaScript({
 </div>
 </header>
 <main data-bhpc-agent-generated-page="true">
-<article class="article">
-<h1>${escapeHtml(title)}</h1>
-${citationDefinitionParagraph}
-<p>This page turns the intake query into a practical workflow, with the original source provenance retained in machine-readable metadata.</p>
-<p class="product-anchor">This is one of the frameworks inside the <a href="/download.html">Billionaire High Performance Coach system</a> — a structured executive OS for using ChatGPT as your accountability and decision partner.</p>
-<nav class="citation-core-links" aria-label="Core Spry Executive OS pages"><a href="/">Start here</a> · <a href="/strategy">Read the strategy</a></nav>
-${renderExtractionBlock(spec, entries)}
-${renderSections(entries, citationDefinitionParagraph)}
-<section data-content-contract="cta-block" class="contract-cta"><h2>Next step</h2><p>Use the complete operating system when you want these frameworks installed as a repeatable daily workflow.</p><a href="/download.html" class="btn btn--primary">Review Spry / BHPC</a></section>
-</article>
-</main>
+${article}
+</main>${boundaryAside}
 <footer class="footer">
 <div class="footer__row">
 <p class="footer__checkout"><a href="/download.html">Get Instant Access</a> — review the current package and purchase terms.</p>

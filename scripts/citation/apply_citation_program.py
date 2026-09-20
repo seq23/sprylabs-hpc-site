@@ -788,7 +788,12 @@ def _quarantine_rows() -> list[dict]:
         return []
     try:
         rows = json.loads(QUARANTINE_PATH.read_text(encoding="utf-8")).get("rows") or []
-    except Exception:
+    except (OSError, ValueError, AttributeError):
+        # Non-fatal by design: an unreadable or malformed ledger means NO page is
+        # proven quarantined, so this writer behaves exactly as it did before the
+        # ledger existed. The plan builder (the ledger's primary reader) fails
+        # loudly on a malformed file; this second reader must not turn a ledger
+        # defect into a crash of the whole citation program.
         return []
     return [row for row in rows if isinstance(row, dict)]
 QUARANTINE_ROWS = _quarantine_rows()
