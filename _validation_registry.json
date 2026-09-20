@@ -8052,8 +8052,38 @@
         "MX-AGENT-CREATED-PAGE-ADMISSION-GATE"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-AGENT-CREATED-PAGE-DEMAND-GATE",
+      "status": "ADMITTED",
+      "name": "validate:agent-created-page-demand-gate",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses the failure Spry Content Release 35477412322 (commit 3f0a52f7f, 2026-09-20) committed: agent:bhpc:apply-exact created three insights pages for queries with no record in data/demand/measured_demand.json, build:postprocess registered them ADMITTED, and validate:demand-backed-pages - which judges the registry, after the page exists - turned every Spry Content Release on main red from run 35516360344 on. The exact-agent planner now asks the demand gate BEFORE the page exists and plans such a create BLOCKED no_measured_demand; this check replays the 2026-09-19 artifact through the real planner and applier in a scratch repository and fails unless an absent, empty or non-matching demand file blocks every create with the named reason, a seeded query lifts exactly its own block, and the planner and validate:demand-backed-pages read the file through one function.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:agent-created-page-demand-gate",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-agent-created-page-demand-gate/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-20",
+      "matrix_ids": [
+        "MX-AGENT-CREATED-PAGE-DEMAND-GATE"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 256,
+  "record_count": 257,
   "generated_at": "2026-08-08T23:30:00Z"
 }

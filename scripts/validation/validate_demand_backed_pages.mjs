@@ -23,6 +23,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import {measuredDemandQueries, hasMeasuredDemand} from '../lib/measured_demand.mjs';
 
 const ROOT = process.cwd();
 const read = (rel) => JSON.parse(fs.readFileSync(path.join(ROOT, rel), 'utf8'));
@@ -106,11 +107,9 @@ const known = new Set(baselineDoc.routes);
 
 // --- 2 & 3. new pages need demand and a real admission level ----------------
 const demand = exists('data/demand/measured_demand.json') ? read('data/demand/measured_demand.json') : { records: [] };
-const demandQueries = new Set();
-for (const r of demand.records || []) {
-  demandQueries.add(String(r.query_normalized || r.query).toLowerCase().trim());
-  for (const a of r.aliases || []) demandQueries.add(String(a).toLowerCase().trim());
-}
+// The same reader the exact-agent planner uses to refuse a CREATE before the page
+// exists (scripts/lib/measured_demand.mjs); two readers of one file would drift.
+const demandQueries = measuredDemandQueries(ROOT);
 
 /*
  * DISCOVERY IS NOT MEASUREMENT, AND IT MAY NOT GROW.
@@ -166,7 +165,7 @@ for (const rec of records) {
   levelCounts[level] = (levelCounts[level] || 0) + 1;
   const isNew = known ? !known.has(route) : false;
   const q = String(rec.primary_query || '').toLowerCase().trim();
-  if (isNew && q && !demandQueries.has(q)) ungated.push(`${route} (query: "${rec.primary_query}")`);
+  if (isNew && q && !hasMeasuredDemand(demandQueries, q)) ungated.push(`${route} (query: "${rec.primary_query}")`);
   if (level === 'baseline') (isNew ? newBaseline : legacyBaseline).push(route);
 }
 if (ungated.length) {

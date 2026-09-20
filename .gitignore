@@ -88,6 +88,16 @@ artifacts/validation/shards/
 # carries one; this keeps new ones from being created.
 artifacts/validation/lastmod-derivation-receipt.json
 
+# Per-run outputs that a LOCAL validation run rewrites every time it runs, and
+# that nothing reads back from the tree. On 2026-09-17 a prepush run left both
+# of these behind on main - one modified, one untracked - and main sat "dirty"
+# for three days with nothing to push. A validator's own receipt is evidence for
+# the run that wrote it (the sentinel uploads its verdict as a run artifact;
+# the lineage report is regenerated with a fresh generated_at on every run),
+# not repository state. A checkout that has run validation is still clean.
+artifacts/validation/main-validation-coverage.json
+reports/workflow-lineage.json
+
 # Content-hash build cache for `npm run build:all` (scripts/build/). Keyed by
 # .github/scripts/build_input_hash.sh; safe to delete, it is only ever a speed
 # optimization. See docs/runbooks/BUILD_CACHE.md.

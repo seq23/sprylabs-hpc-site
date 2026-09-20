@@ -24,26 +24,17 @@
 //   6. Rule 0 on itself: the self-test hard-fails if its fixture directories
 //      hold no pages, because a gate proved against nothing is not proved.
 import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
-import {spawnSync} from 'node:child_process';
 import {admitCreatedPages, ARTIFACT_PATH} from './admit_bhpc_agent_created_pages.mjs';
 import {readQuarantine, specFingerprint, QUARANTINE_PATH} from '../lib/agent_page_quarantine.mjs';
 import {REJECTION_BACKLOG_PATH} from '../lib/rejection_backlog.mjs';
+import {REAL_ROOT, FIXTURES, PAGES, PLAN, SPECS, REGISTRY, readJson, makeScratch, placeFixtures, plan, apply} from './self_test_scratch_repo.mjs';
 
 const TAG = '[agent-created-page-admission-self-test]';
-const REAL_ROOT = fs.realpathSync(process.cwd());
-const FIXTURES = path.join(REAL_ROOT, 'fixtures/validation/agent_created_page_admission');
-const PAGES = ['insights/chatgpt-prompts-to-help-executive-coaches-scale.html', 'insights/how-to-use-chatgpt-as-your-life-and-leadership-coach.html'];
-const PLAN = 'artifacts/validation/agent-exact-implementation-plan.json';
-const SPECS = 'data/citation/agent_page_specs.generated.json';
-const REGISTRY = 'data/content/page_admission_registry.json';
 
 let assertions = 0;
 const failures = [];
 function check(cond, message) { assertions += 1; if (!cond) failures.push(message); }
-function readJson(abs) { return JSON.parse(fs.readFileSync(abs, 'utf8')); }
-function writeJson(abs, doc) { fs.mkdirSync(path.dirname(abs), {recursive: true}); fs.writeFileSync(abs, JSON.stringify(doc, null, 2) + '\n'); }
 function fixturePages(set) {
   const dir = path.join(FIXTURES, set);
   return fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => f.endsWith('.html')).sort() : [];
@@ -58,36 +49,11 @@ for (const set of ['near_duplicate_pair', 'distinct_pair']) {
   }
 }
 
-/** A scratch repository the real scripts can run in with cwd = scratch. */
-function makeScratch() {
-  const root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'agent-created-page-admission-')));
-  const mk = (rel) => fs.mkdirSync(path.join(root, rel), {recursive: true});
-  for (const d of ['scripts/validation', 'data/report_fixes/normalized_agent_runs', 'data/citation', 'data/content', 'data/demand', 'data/programmatic', 'insights', 'artifacts/validation']) mk(d);
-  // JS scripts resolve ROOT from cwd, so the real directories can be linked.
-  // The Python validator resolves ROOT from its OWN location, so it is copied.
-  fs.symlinkSync(path.join(REAL_ROOT, 'scripts/agent_intake'), path.join(root, 'scripts/agent_intake'));
-  fs.symlinkSync(path.join(REAL_ROOT, 'scripts/lib'), path.join(root, 'scripts/lib'));
-  for (const f of ['validate_programmatic_admission.py', 'style_policy.py']) fs.copyFileSync(path.join(REAL_ROOT, 'scripts/validation', f), path.join(root, 'scripts/validation', f));
-  for (const f of ['data/report_fixes/agent_exact_implementation_policy.json', 'data/content/programmatic_lane_contracts.json', 'data/citation/health_adjacent_content_contract.json', 'data/demand/pre_gate_page_baseline.json']) fs.copyFileSync(path.join(REAL_ROOT, f), path.join(root, f));
-  fs.copyFileSync(path.join(FIXTURES, 'normalized_agent_run.json'), path.join(root, 'data/report_fixes/normalized_agent_runs/2026-09-19_bhpc.json'));
-  fs.copyFileSync(path.join(FIXTURES, 'citable_pages.json'), path.join(root, 'data/citation/citable_pages.json'));
-  writeJson(path.join(root, 'data/citation/query_registry.json'), {queries: []});
-  writeJson(path.join(root, REGISTRY), {schema_version: '1.0', records: [], record_count: 0});
-  writeJson(path.join(root, REJECTION_BACKLOG_PATH), {schema_version: '1.1-compact', rejections: []});
-  return root;
-}
-function placeFixtures(root, set) {
-  for (const rel of PAGES) fs.copyFileSync(path.join(FIXTURES, set, path.basename(rel)), path.join(root, rel));
-}
-function runNode(root, script) {
-  const r = spawnSync(process.execPath, [path.join(root, script)], {cwd: root, encoding: 'utf8'});
-  if (r.status !== 0) throw new Error(`${script} exited ${r.status} in ${root}\n${r.stdout}\n${r.stderr}`);
-  return r.stdout;
-}
-function plan(root) { runNode(root, 'scripts/agent_intake/build_bhpc_agent_exact_implementation_plan.mjs'); return readJson(path.join(root, PLAN)); }
-function apply(root) { return runNode(root, 'scripts/agent_intake/apply_bhpc_agent_exact_implementation.mjs'); }
 function gate(root) { return admitCreatedPages({root, runtimeRoot: REAL_ROOT, runId: 'self-test'}); }
 
+// Both fixture queries carry a demand record in the scratch (self_test_scratch_repo
+// seeds them), so this test judges QUALITY; the demand gate that precedes it is
+// proved by self_test_agent_created_page_demand_gate.mjs.
 const scratch = makeScratch();
 try {
   // ── 1. NEGATIVE: the incident pair is rejected before commit ────────────────
