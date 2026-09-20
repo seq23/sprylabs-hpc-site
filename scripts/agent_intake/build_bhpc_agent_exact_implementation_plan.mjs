@@ -6,6 +6,7 @@ import {compileAndWriteBhpcAcceptanceManifest} from './compile_bhpc_agent_accept
 import {mergeBhpcExternalCtaLinks} from '../lib/bhpc_conversion_contract.mjs';
 import {evaluateBhpcAcceptance} from '../lib/bhpc_agent_acceptance_satisfaction.mjs';
 import {bhpcGeneratedCitationDefinition, bhpcGeneratedFrameworkName} from '../lib/bhpc_public_page_contract.mjs';
+import {readQuarantine, specFingerprint, quarantinedRow, quarantineReason} from '../lib/agent_page_quarantine.mjs';
 
 const manifest=compileAndWriteBhpcAcceptanceManifest();
 function stableGeneratedAt(entries=[]){
@@ -228,6 +229,30 @@ function pageSpecFor(entries,primaryPath=''){
   };
 }
 const priority_pages={},new_pages={},specs=[];
+// ─── THE QUARANTINE LEDGER IS READ HERE, AND ONLY HERE, BY DESIGN ───────────
+// Every writer of an agent-created page runs off this plan: apply-exact skips a
+// BLOCKED spec, and apply_citation_program.py reads agent_page_specs.generated.json,
+// which omits it. A page the admission gate rejected (see
+// scripts/agent_intake/admit_bhpc_agent_created_pages.mjs) is therefore planned as
+// BLOCKED with the gate's reason, so the whole chain - trace, rich-new-page
+// contract, recommendation-driven output - sees one consistent, named state
+// instead of a PLANNED spec whose page is missing. Keyed by path + spec
+// fingerprint: curating the spec re-judges it on the next release.
+const quarantine=readQuarantine(ROOT);
+const quarantinedAcceptanceIds=new Set();
+for(const [pathValue,entries] of [...groups]){
+  const spec=pageSpecFor(entries,pathValue);
+  const fingerprint=specFingerprint({path:pathValue,acceptanceIds:entries.map(e=>e.id),h1:spec.h1,framework:spec.framework,type:spec.type,definition:spec.definition});
+  const row=quarantinedRow(quarantine,pathValue,fingerprint);
+  if(!row) continue;
+  const reason=quarantineReason(row);
+  for(const entry of entries){
+    quarantinedAcceptanceIds.add(String(entry.id));
+    blocked.push({...entry,acceptance_status:'BLOCKED',blocked_reason:reason});
+  }
+  groups.delete(pathValue);
+  console.log(`[bhpc-agent-exact-plan] BLOCKED ${pathValue}: ${reason} (quarantined ${row.quarantined_at})`);
+}
 for(const [pathValue,entries] of groups){
   const primary=entries.find(e=>e.seo_execution_status==='VALID')||entries[0];
   const createIntent=entries.some(e=>e.source_intent_operation==='CREATE_NEW_TARGET_PAGE'&&!e.intended_winner_page&&!e.intended_winner_path);
@@ -240,7 +265,10 @@ for(const [pathValue,entries] of groups){
     ||(primary.page_family==='intended_winner_repair'&&preexistingForeignPage(pathValue));
   const operation=isRepair?'REPAIR_INTENDED_WINNER_PAGE':'CREATE_NEW_TARGET_PAGE';
   const spec=pageSpecFor(entries,pathValue);
-  if(operation==='REPAIR_INTENDED_WINNER_PAGE') priority_pages[pathValue]=spec; else new_pages[pathValue]=spec;
+  // The same fingerprint the quarantine ledger is keyed by, carried on the spec so
+  // apply_citation_program.py can honour the ledger without re-deriving the hash.
+  if(operation==='REPAIR_INTENDED_WINNER_PAGE') priority_pages[pathValue]=spec;
+  else new_pages[pathValue]={...spec,quarantine_fingerprint:specFingerprint({path:pathValue,acceptanceIds:entries.map(e=>e.id),h1:spec.h1,framework:spec.framework,type:spec.type,definition:spec.definition})};
   specs.push({
     record_id:primary.record_id,record_ids:unique(entries.map(e=>e.record_id)),acceptance_ids:unique(entries.map(e=>e.id)),query:primary.query,run_date:primary.run_date,
     operation,page_family:primary.page_family,route_status:primary.route_status,intended_winner_page:primary.intended_winner_page||'',intended_winner_path:primary.intended_winner_path||'',
@@ -255,6 +283,6 @@ for(const [pathValue,entries] of groups){
 for(const entry of blocked){specs.push({record_id:entry.record_id,acceptance_ids:[entry.id].filter(Boolean),query:entry.query,run_date:entry.run_date,operation:entry.operation,page_family:entry.page_family,route_status:entry.route_status,intended_winner_page:entry.intended_winner_page||'',intended_winner_path:entry.intended_winner_path||'',implementation_path:entry.implementation_path||'',before_hash:null,status:'BLOCKED',blocked_reason:entry.blocked_reason||'blocked_by_acceptance_compiler'})}
 writeJson('data/citation/agent_page_specs.generated.json',{schema_version:'1.1',generated_at:deterministicGeneratedAt,source:'bhpc_agent_acceptance_manifest',active_run_date:activeRunDate,new_pages});
 writeJson('data/citation/agent_repair_specs.generated.json',{schema_version:'1.1',generated_at:deterministicGeneratedAt,source:'bhpc_agent_acceptance_manifest',active_run_date:activeRunDate,priority_pages});
-const report={schema_version:'1.1',status:'PASS',generated_at:new Date().toISOString(),active_run_date:activeRunDate,acceptance_manifest_path:'data/report_fixes/agent_acceptance_manifest.generated.json',policy_path:'data/report_fixes/agent_exact_implementation_policy.json',repair_count:Object.keys(priority_pages).length,new_page_count:Object.keys(new_pages).length,blocked_count:blocked.length,no_action_count:noAction.length,acceptance_entry_count:manifest.entry_count,active_acceptance_entry_count:activeEntries.length,required_acceptance_entry_count:activeEntries.filter(e=>e.acceptance_status==='REQUIRED').length,historical_entry_count:allEntries.length-activeEntries.length,specs,no_action:noAction.map(e=>({record_id:e.record_id,query:e.query,reason:'maintain_or_no_action'}))};
+const report={schema_version:'1.1',status:'PASS',generated_at:new Date().toISOString(),active_run_date:activeRunDate,acceptance_manifest_path:'data/report_fixes/agent_acceptance_manifest.generated.json',policy_path:'data/report_fixes/agent_exact_implementation_policy.json',repair_count:Object.keys(priority_pages).length,new_page_count:Object.keys(new_pages).length,blocked_count:blocked.length,no_action_count:noAction.length,acceptance_entry_count:manifest.entry_count,active_acceptance_entry_count:activeEntries.length,required_acceptance_entry_count:activeEntries.filter(e=>e.acceptance_status==='REQUIRED'&&!quarantinedAcceptanceIds.has(String(e.id))).length,quarantined_count:quarantinedAcceptanceIds.size,historical_entry_count:allEntries.length-activeEntries.length,specs,no_action:noAction.map(e=>({record_id:e.record_id,query:e.query,reason:'maintain_or_no_action'}))};
 writeJson('artifacts/validation/agent-exact-implementation-plan.json',report);writeJson('reports/bhpc-agent-exact-implementation-plan.json',report);
 console.log(`[bhpc-agent-exact-plan] PASS: active_run=${activeRunDate}; repairs=${report.repair_count}; new_pages=${report.new_page_count}; blocked=${report.blocked_count}; no_action=${report.no_action_count}; historical_skipped=${report.historical_entry_count}`);

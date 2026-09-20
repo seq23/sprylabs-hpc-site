@@ -4,6 +4,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import os from 'node:os';
 import { spawnSync } from 'node:child_process';
+import {writeRejectionBacklog} from '../lib/rejection_backlog.mjs';
 
 const ROOT=process.cwd();
 const argv=process.argv.slice(2);
@@ -25,49 +26,6 @@ if(!contracts[lane]){console.error(`Unknown programmatic lane: ${lane}`);process
 // TRACKED data. .gitignore governs git, not directory walkers.
 const skipDirs=new Set(['.git','.claude','.pages-output', 'node_modules','artifacts','coverage','reports','.build','test-results','playwright-report']);
 
-const REJECTION_BACKLOG_PATH='data/programmatic/rejection_backlog.json';
-const MAX_REJECTION_BACKLOG_RECORDS=2500;
-const MAX_REJECTION_BACKLOG_BYTES=8*1024*1024;
-function compactRejectionBacklog(backlog,incoming=[]){
- const current=Array.isArray(backlog.rejections)?backlog.rejections:[];
- const all=[...current,...incoming].sort((a,b)=>String(a.rejected_at||'').localeCompare(String(b.rejected_at||''))||String(a.run_id||'').localeCompare(String(b.run_id||''))||String(a.path||'').localeCompare(String(b.path||'')));
- const next={...backlog};
- next.schema_version=next.schema_version||'1.0';
- next.updated_at=new Date().toISOString();
- next.compaction_note='Rejected candidates are retained as a bounded operational ledger so generated workflows cannot create root-deployed files that exceed Cloudflare Pages asset limits. Older detailed rows are summarized in compaction_summary.';
- next.compaction_policy={max_records:MAX_REJECTION_BACKLOG_RECORDS,max_bytes:MAX_REJECTION_BACKLOG_BYTES};
- const priorSummary=next.compaction_summary||{};
- const priorByLane=priorSummary.by_lane||{};
- function summarize(rows){
-  const byLane={};
-  for(const row of rows){const key=String(row.lane||'unknown');byLane[key]=(byLane[key]||0)+1;}
-  return byLane;
- }
- let retained=all.slice(-MAX_REJECTION_BACKLOG_RECORDS);
- let compacted=all.slice(0,Math.max(0,all.length-retained.length));
- let candidate={...next,rejections:retained};
- for(;;){
-  const encoded=JSON.stringify(candidate,null,2)+'\n';
-  if(Buffer.byteLength(encoded)<=MAX_REJECTION_BACKLOG_BYTES||retained.length<=250)break;
-  const drop=Math.max(100,Math.ceil(retained.length*0.1));
-  compacted=[...compacted,...retained.slice(0,drop)];
-  retained=retained.slice(drop);
-  candidate={...candidate,rejections:retained};
- }
- const byLane=summarize(compacted);
- candidate.compaction_summary={
-  total_compacted_count:Number(priorSummary.total_compacted_count||0)+compacted.length,
-  latest_compacted_at:compacted.length?new Date().toISOString():(priorSummary.latest_compacted_at||null),
-  by_lane:Object.fromEntries([...new Set([...Object.keys(priorByLane),...Object.keys(byLane)])].sort().map(key=>[key,Number(priorByLane[key]||0)+Number(byLane[key]||0)])),
-  retained_count:retained.length
- };
- return candidate;
-}
-function writeRejectionBacklog(incoming){
- const backlog=JSON.parse(fs.readFileSync(REJECTION_BACKLOG_PATH,'utf8'));
- const compacted=compactRejectionBacklog(backlog,incoming);
- fs.writeFileSync(REJECTION_BACKLOG_PATH,JSON.stringify(compacted,null,2)+'\n');
-}
 
 function htmlFiles(dir=ROOT,out=[]){for(const e of fs.readdirSync(dir,{withFileTypes:true})){if(skipDirs.has(e.name))continue;const f=path.join(dir,e.name);if(e.isDirectory())htmlFiles(f,out);else if(e.isFile()&&e.name.endsWith('.html'))out.push(path.relative(ROOT,f).split(path.sep).join('/'));}return out;}
 function hash(buf){return crypto.createHash('sha256').update(buf).digest('hex');}

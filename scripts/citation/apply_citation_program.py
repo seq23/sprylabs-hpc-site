@@ -775,6 +775,34 @@ def shell(path: str, spec: dict) -> str:
     return str(soup)
 
 
+# The quarantine ledger written by scripts/agent_intake/admit_bhpc_agent_created_pages.mjs
+# and keyed exactly as scripts/lib/agent_page_quarantine.mjs keys it. The plan builder
+# already omits a quarantined spec from agent_page_specs.generated.json; this is the
+# second reader, so that a stale generated file, or a curated spec that resurrects a
+# path, cannot make THIS writer re-create or re-admit a page the gate rejected. The
+# fingerprint is stamped on the spec by the plan builder; a spec without one cannot
+# be matched and is treated as not quarantined.
+QUARANTINE_PATH = ROOT / "data/content/agent_page_quarantine.json"
+def _quarantine_rows() -> list[dict]:
+    if not QUARANTINE_PATH.exists():
+        return []
+    try:
+        rows = json.loads(QUARANTINE_PATH.read_text(encoding="utf-8")).get("rows") or []
+    except (OSError, ValueError, AttributeError):
+        # Non-fatal by design: an unreadable or malformed ledger means NO page is
+        # proven quarantined, so this writer behaves exactly as it did before the
+        # ledger existed. The plan builder (the ledger's primary reader) fails
+        # loudly on a malformed file; this second reader must not turn a ledger
+        # defect into a crash of the whole citation program.
+        return []
+    return [row for row in rows if isinstance(row, dict)]
+QUARANTINE_ROWS = _quarantine_rows()
+def quarantined_by_admission_gate(path: str, spec) -> bool:
+    fingerprint = str((spec or {}).get("quarantine_fingerprint") or "") if isinstance(spec, dict) else ""
+    if not fingerprint:
+        return False
+    return any(row.get("path") == path and row.get("spec_fingerprint") == fingerprint for row in QUARANTINE_ROWS)
+
 def materialize_agent_new_pages() -> list[str]:
     """Create missing generated agent pages in both normal and postbuild modes.
 
@@ -786,6 +814,8 @@ def materialize_agent_new_pages() -> list[str]:
     created=[]
     for path,spec in NEW_PAGES.items():
         if path in MANUAL_PAGES:
+            continue
+        if quarantined_by_admission_gate(path,spec):
             continue
         target=ROOT/path
         if target.exists():
@@ -820,6 +850,8 @@ def sync_agent_page_admission_records() -> int:
         if not (ROOT/path).exists():
             continue
         if path in by_path:
+            continue
+        if quarantined_by_admission_gate(path,spec):
             continue
         route="/"+path
         if route.endswith("/"):

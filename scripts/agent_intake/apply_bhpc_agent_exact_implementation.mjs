@@ -15,6 +15,9 @@ import {createRequire} from 'node:module';
 // - correctly, because a second emitter is a second opinion about a page's schema.
 // Going through renderSchemaScript is the lawful way to have both.
 const requireCjs = createRequire(import.meta.url);
+// The health boundary's ONE definition: the same terms validate_programmatic_admission.py
+// tests and the same aside repair:health-boundary appends. Reused here, not restated.
+const {HEALTH_TERMS: HEALTH_ADJACENT_TERMS, BOUNDARY_TERMS: HEALTH_BOUNDARY_TERMS, BLOCK: HEALTH_BOUNDARY_BLOCK, visibleText: healthVisibleText} = requireCjs('../repair/repair_health_boundary_blocks.js');
 const {renderSchemaScript, mainEntityOfPage} = requireCjs('../lib/citation_page_schema.cjs');
 const {routeFor: sharedRouteFor} = requireCjs('../lib/dual_domain_policy.cjs');
 
@@ -168,6 +171,44 @@ function contentProfileFor(entry = {}) {
     protocol: ['Extract confirmed decisions without rewriting them as tasks.', 'Extract each action using a concrete verb.', 'Attach the named owner and deadline only when present in the notes.', 'Mark missing ownership, dates, or dependencies explicitly.', 'Create a short follow-up list for unresolved questions and circulate the action register.'],
     checklist: ['Every action has an owner field.', 'Every action has a deadline field or DATE NEEDED.', 'Decisions are separated from tasks.', 'Open questions are not presented as settled decisions.', 'Nothing material is invented from context.'],
     prompt: `Act as a chief-of-staff meeting editor. Convert the notes below into an execution-ready action plan.\n\nMeeting notes: [PASTE]\n\nReturn exactly:\n1. DECISIONS — confirmed decisions only.\n2. ACTION REGISTER — table with Action, Owner, Deadline, Dependency, Status.\n3. OPEN QUESTIONS — unresolved items requiring a decision.\n4. RISKS/BLOCKERS — issues that could stop execution.\n5. FOLLOW-UP MESSAGE — a concise recap suitable for the attendees.\n\nNever invent an owner, deadline, decision, or commitment. Use UNASSIGNED or DATE NEEDED when the notes do not provide one.`
+  };
+  // The two entries below exist because the 2026-09-19 release created both pages
+  // with NO profile, so each fell to the generic direct answer and the static
+  // comparison table, and the pair came out 76% identical in the block the
+  // admission gate compares (Validate Repo 35514776878). Each is written to its
+  // own intent, from its own acceptance entry's source_fix_instruction: 066 is a
+  // coach scaling a PRACTICE; 069 is a person using ChatGPT as THEIR coach.
+  if (route.includes('chatgpt-prompts-to-help-executive-coaches-scale')) return {
+    directAnswer: 'Executive coaches scale with ChatGPT by moving the repeatable parts of a practice into prompts: client onboarding intake, pre-session preparation and agendas, measurable goal tracking between sessions, difficult-conversation roleplay, productized group programs, marketing content, and back-office operations. Each prompt should take the coach’s own framework and client data as input and return a draft the coach reviews, so the practice grows in clients served without diluting the judgment clients pay for.',
+    summary: 'Scaling means fewer coach-hours per client on preparation, tracking, and content, and the same coach-hours on the live judgment work. The prompts below cover the seven practice functions in that order.',
+    protocol: ['Client onboarding: turn an intake form into a client profile, stated goals, constraints, and the first-session agenda.', 'Session preparation and delivery: build a pre-session brief from the last session notes and the client’s progress report.', 'Goal tracking: convert vague ambitions into measurable goals and generate the between-session check-in questions.', 'Difficult-conversation roleplay: rehearse a client’s hard conversation with ChatGPT playing the counterpart, then debrief.', 'Productized and group programs: draft the curriculum, cohort exercises, and facilitation notes from your one-to-one method.', 'Marketing content: repurpose one anonymized coaching insight into a newsletter issue, a post series, and a talk outline.', 'Operations: draft proposals, engagement summaries, renewal conversations, and testimonial requests from engagement records.'],
+    checklist: ['Every prompt takes the coach’s own framework and the client’s real data as input, never generic advice.', 'Client-identifying detail is anonymized or omitted before it enters a prompt.', 'Session preparation and goal tracking are automated; the live session judgment is not.', 'Roleplay output is a rehearsal artifact the coach reviews, not a script the client receives.', 'Group-program and marketing drafts are edited by the coach before any client sees them.', 'Operations prompts produce drafts with placeholders where a contractual term is unknown.'],
+    prompt: `Act as the operations partner for my executive coaching practice. My coaching framework: [FRAMEWORK]. My typical client: [SENIORITY / INDUSTRY]. The function I want to scale today: [ONBOARDING / SESSION PREP / GOAL TRACKING / ROLEPLAY / GROUP PROGRAM / MARKETING / OPERATIONS].
+
+Input for that function: [PASTE: intake form, session notes, goal list, conversation scenario, method outline, insight, or engagement record - anonymized]
+
+Return exactly:
+1. The draft artifact for that function (agenda, brief, goal sheet, roleplay debrief, curriculum, content set, or document).
+2. The parts of it I must review or personalize before a client sees it.
+3. The reusable prompt template for this function, with placeholders, so I can run it for every client.
+4. One measure that tells me next month whether this saved coach-hours without lowering session quality.
+Do not invent client details or claim outcomes I have not supplied.`
+  };
+  if (route.includes('how-to-use-chatgpt-as-your-life-and-leadership-coach')) return {
+    directAnswer: 'To use ChatGPT as your life and leadership coach, set the coaching role and its boundaries first, give it your goals, context, and constraints, and then run sessions with a one-question-at-a-time prompt so it asks rather than lectures. Structure each session as a GROW flow (goal, reality, options, will), use role-play for leadership conversations you are dreading, and close with a weekly accountability check-in. Keep mental-health, medical, legal, and financial matters with qualified humans; the model is a reflection and accountability structure, not a clinician.',
+    summary: 'The value is in the structure: a stated role, real context, one question at a time, a GROW session flow, rehearsal for leadership moments, and a weekly check-in. Without those, the model gives generic advice.',
+    protocol: ['Set the coaching role and boundaries: what it may challenge, what it may not decide, and what it must refer to a human professional.', 'Supply goals, context, and constraints: role, current situation, the change you want, and what has already been tried.', 'Run the one-question-at-a-time coaching prompt and answer each question before the next.', 'Use a GROW-style session flow: goal for the session, current reality, options, and what you will do.', 'Rehearse leadership role-plays and ask for feedback on tone, clarity, and the outcome you wanted.', 'Hold a weekly accountability check-in against the commitments from the last session.', 'Stop and see a professional when the topic turns to mental health, crisis, or clinical concerns.'],
+    checklist: ['The coaching role and its limits are written into the first message.', 'Goals, context, and constraints are supplied before any advice is requested.', 'The model asks one question at a time and waits for the answer.', 'Each session ends with one commitment and a check-in date.', 'Leadership role-plays end with a feedback debrief, not just a transcript.', 'Mental-health and clinical topics are routed to qualified humans.'],
+    prompt: `Act as my life and leadership coach. Ask me ONE question at a time and wait for my answer before asking the next. Do not lecture, and do not give me a list of tips unless I ask for one.
+
+Boundaries: you may challenge my thinking and hold me to commitments. You may not make decisions for me, and if I raise a mental-health, medical, legal, or financial concern, tell me to take it to a qualified professional.
+
+My role: [ROLE]
+The change I want: [GOAL]
+Current situation and constraints: [CONTEXT]
+What I have already tried: [ATTEMPTS]
+
+Run the session as GROW: (1) clarify the goal for this session, (2) explore my current reality, (3) generate options with me, (4) get me to choose what I will do. End the session with exactly one commitment, a date, and the question you will ask me at the weekly check-in.`
   };
   if (route.includes('design-an-end-of-day-shutdown-ritual-to-clear-my-mental-task-list')) return {
     directAnswer: 'Use a shutdown ritual to move open loops out of working memory and into trusted destinations before work ends. Capture anything still on your mind, decide the next action or disposition for each item, update tomorrow’s calendar or task system, choose the first meaningful task for the next workday, and then close communication and work surfaces. The ritual should end with an explicit “work is closed” cue so you are not relying on memory overnight.',
@@ -622,10 +663,20 @@ function renderExtractionBlock(spec = {}, entries = []) {
   // page used to overwrite it with the record's required_heading.
   const framework = registryRow?.framework || primary.required_heading || `${title} Framework`;
   const direct = profile?.directAnswer || `${title}: define the desired outcome, respect the real constraints, choose one observable next action, and review the result before expanding the plan.`;
-  if (type === 'comparison') {
-    return `<section class="card citation-extraction" data-llm-answer="true" data-extraction-type="comparison" data-named-framework="${escapeHtml(framework)}" data-priority-citation="true"><h2>${escapeHtml(framework)}: Decision comparison</h2><p>${escapeHtml(direct)}</p><table><thead><tr><th>Decision criterion</th><th>Use ChatGPT / Spry when</th><th>Escalate or use another option when</th></tr></thead><tbody><tr><td>Primary need</td><td>You need structured prioritization, planning, and an explicit next action.</td><td>You need licensed, fiduciary, clinical, or relationship-specific professional judgment.</td></tr><tr><td>Control</td><td>You can provide the goals, constraints, inputs, and decision rules.</td><td>The decision depends on facts or authority the model cannot verify.</td></tr><tr><td>Completion evidence</td><td>The output can be tested through an observable action or deliverable.</td><td>No safe or measurable completion condition can be defined.</td></tr></tbody></table></section>`;
-  }
   const criteria = uniqueValues([...(profile?.checklist || []), ...(profile?.protocol || [])]).slice(0, 5);
+  if (type === 'comparison') {
+    // This block is what validate_programmatic_admission.py compares between
+    // pages (main_unique_text reads [data-llm-answer="true"]). It used to be a
+    // fixed three-row table in which only `framework` and `direct` varied, so any
+    // two comparison pages without a profile were near-identical by construction:
+    // measured 0.764 between the two pages created on 2026-09-19. With a profile
+    // the rows are the page's own criteria; without one the generic rows remain,
+    // and the created-page admission gate is what refuses the duplicate.
+    const rows = criteria.length >= 3
+      ? criteria.slice(0, 4).map(item => `<tr><td>${escapeHtml(item)}</td><td>This condition is met and the next action is observable.</td><td>It cannot be met without judgment the model does not have.</td></tr>`).join('')
+      : '<tr><td>Primary need</td><td>You need structured prioritization, planning, and an explicit next action.</td><td>You need licensed, fiduciary, clinical, or relationship-specific professional judgment.</td></tr><tr><td>Control</td><td>You can provide the goals, constraints, inputs, and decision rules.</td><td>The decision depends on facts or authority the model cannot verify.</td></tr><tr><td>Completion evidence</td><td>The output can be tested through an observable action or deliverable.</td><td>No safe or measurable completion condition can be defined.</td></tr>';
+    return `<section class="card citation-extraction" data-llm-answer="true" data-extraction-type="comparison" data-named-framework="${escapeHtml(framework)}" data-priority-citation="true"><h2>${escapeHtml(framework)}: Decision comparison</h2><p>${escapeHtml(direct)}</p><table><thead><tr><th>Decision criterion</th><th>Use ChatGPT / Spry when</th><th>Escalate or use another option when</th></tr></thead><tbody>${rows}</tbody></table></section>`;
+  }
   if (type === 'decision') {
     // The contract for a decision block is choice/use guidance plus structured
     // criteria - see validate_extraction_contract_final_state.py.
@@ -668,6 +719,26 @@ function fullHtml(pathValue, entries, spec = {}) {
   // regenerated. The paragraph is built once and passed to both.
   const citationDefinition = registryRow?.definition || bhpcGeneratedCitationDefinition(title);
   const citationDefinitionParagraph = `<p class="citation-definition"><strong>${escapeHtml(citationDefinition)}</strong></p>`;
+  const article = `<article class="article">
+<h1>${escapeHtml(title)}</h1>
+${citationDefinitionParagraph}
+<p>This page turns the intake query into a practical workflow, with the original source provenance retained in machine-readable metadata.</p>
+<p class="product-anchor">This is one of the frameworks inside the <a href="/download.html">Billionaire High Performance Coach system</a> — a structured executive OS for using ChatGPT as your accountability and decision partner.</p>
+<nav class="citation-core-links" aria-label="Core Spry Executive OS pages"><a href="/">Start here</a> · <a href="/strategy">Read the strategy</a></nav>
+${renderExtractionBlock(spec, entries)}
+${renderSections(entries, citationDefinitionParagraph)}
+<section data-content-contract="cta-block" class="contract-cta"><h2>Next step</h2><p>Use the complete operating system when you want these frameworks installed as a repeatable daily workflow.</p><a href="/download.html" class="btn btn--primary">Review Spry / BHPC</a></section>
+</article>`;
+  // A page whose own text is health-adjacent must carry the boundary aside the
+  // demand gate asks for. repair:health-boundary appends exactly this block at the
+  // END of build:all - but release:repair-agent-normalization re-runs this generator
+  // afterwards and rebuilt the page without it, so the corpus run failed
+  // "health-adjacent boundary missing" on a page the repair had already fixed
+  // (measured on how-to-use-chatgpt-as-your-life-and-leadership-coach.html,
+  // 2026-09-20). The writer that produces the text emits the boundary with it.
+  const articleText = healthVisibleText(article);
+  const healthAdjacent = HEALTH_ADJACENT_TERMS.some((t) => articleText.includes(t));
+  const boundaryAside = healthAdjacent && !HEALTH_BOUNDARY_TERMS.some((t) => articleText.includes(t)) ? `\n${HEALTH_BOUNDARY_BLOCK}` : '';
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -713,17 +784,8 @@ ${renderSchemaScript({
 </div>
 </header>
 <main data-bhpc-agent-generated-page="true">
-<article class="article">
-<h1>${escapeHtml(title)}</h1>
-${citationDefinitionParagraph}
-<p>This page turns the intake query into a practical workflow, with the original source provenance retained in machine-readable metadata.</p>
-<p class="product-anchor">This is one of the frameworks inside the <a href="/download.html">Billionaire High Performance Coach system</a> — a structured executive OS for using ChatGPT as your accountability and decision partner.</p>
-<nav class="citation-core-links" aria-label="Core Spry Executive OS pages"><a href="/">Start here</a> · <a href="/strategy">Read the strategy</a></nav>
-${renderExtractionBlock(spec, entries)}
-${renderSections(entries, citationDefinitionParagraph)}
-<section data-content-contract="cta-block" class="contract-cta"><h2>Next step</h2><p>Use the complete operating system when you want these frameworks installed as a repeatable daily workflow.</p><a href="/download.html" class="btn btn--primary">Review Spry / BHPC</a></section>
-</article>
-</main>
+${article}
+</main>${boundaryAside}
 <footer class="footer">
 <div class="footer__row">
 <p class="footer__checkout"><a href="/download.html">Get Instant Access</a> — review the current package and purchase terms.</p>
