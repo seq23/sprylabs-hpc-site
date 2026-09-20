@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-09-20T13:33:47.939Z",
+  "generated_at": "2026-09-20T23:19:46.492Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 239,
+  "admitted_hard_fail_count": 241,
   "reviewed_count": 8,
-  "unreviewed_count": 231,
+  "unreviewed_count": 233,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 183,
+    "REVIEW_REQUIRED": 185,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 30,
     "REVIEW_WARNING_BOUNDARY": 18
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 183,
+    "REVIEW_REQUIRED": 185,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 30,
     "REVIEW_WARNING_BOUNDARY": 10
   },
   "migration_status_counts": {
-    "UNREVIEWED": 231,
+    "UNREVIEWED": 233,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -3626,6 +3626,36 @@
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-CITATION-SPEC-COMPLETENESS"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-AGENT-CREATED-PAGE-ADMISSION-GATE",
+      "name": "validate:agent-created-page-admission-gate",
+      "command": "npm run validate:agent-created-page-admission-gate",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses the failure Spry Content Release 35477412322 committed on 2026-09-19: agent:bhpc:apply-exact created two insights pages 76% identical in their extraction block, validate:programmatic-admission passed because the pair was registered only after it ran (apply_citation_program postbuild admits generated agent pages with no gate), and the next Validate Repo on main (35514776878) went red on the committed pair. The check replays that pair through the real plan builder, applier and admission validator in a scratch repository and fails unless the created-page gate rejects and removes it before commit with a named stop, the rebuilt plan and applier honour the quarantine ledger, and the rewritten pair is admitted at full.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-AGENT-CREATED-PAGE-ADMISSION-GATE"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-AGENT-CREATED-PAGE-DEMAND-GATE",
+      "name": "validate:agent-created-page-demand-gate",
+      "command": "npm run validate:agent-created-page-demand-gate",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses the failure Spry Content Release 35477412322 (commit 3f0a52f7f, 2026-09-20) committed: agent:bhpc:apply-exact created three insights pages for queries with no record in data/demand/measured_demand.json, build:postprocess registered them ADMITTED, and validate:demand-backed-pages - which judges the registry, after the page exists - turned every Spry Content Release on main red from run 35516360344 on. The exact-agent planner now asks the demand gate BEFORE the page exists and plans such a create BLOCKED no_measured_demand; this check replays the 2026-09-19 artifact through the real planner and applier in a scratch repository and fails unless an absent, empty or non-matching demand file blocks every create with the named reason, a seeded query lifts exactly its own block, and the planner and validate:demand-backed-pages read the file through one function.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-AGENT-CREATED-PAGE-DEMAND-GATE"
       ],
       "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",
