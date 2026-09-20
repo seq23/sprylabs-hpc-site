@@ -2487,9 +2487,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-AGENT-CREATED-PAGE-ADMISSION-GATE",
+      "validation_id": "VAL-AGENT-CREATED-PAGE-ADMISSION-GATE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:agent-created-page-admission-gate",
+      "order": 240,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 248,
+  "entry_count": 249,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3083,6 +3093,10 @@
         {
           "id": "VAL-CITATION-SPEC-COMPLETENESS",
           "command": "npm run validate:citation-spec-completeness"
+        },
+        {
+          "id": "VAL-AGENT-CREATED-PAGE-ADMISSION-GATE",
+          "command": "npm run validate:agent-created-page-admission-gate"
         }
       ]
     },
@@ -3379,6 +3393,10 @@
         {
           "id": "VAL-NAMED-STOP-EXIT-CODE",
           "command": "npm run validate:named-stop-exit-code"
+        },
+        {
+          "id": "VAL-AGENT-CREATED-PAGE-ADMISSION-GATE",
+          "command": "npm run validate:agent-created-page-admission-gate"
         }
       ]
     }

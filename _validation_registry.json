@@ -8022,8 +8022,38 @@
         "MX-CITATION-SPEC-COMPLETENESS"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-AGENT-CREATED-PAGE-ADMISSION-GATE",
+      "status": "ADMITTED",
+      "name": "validate:agent-created-page-admission-gate",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses the failure Spry Content Release 35477412322 committed on 2026-09-19: agent:bhpc:apply-exact created two insights pages 76% identical in their extraction block, validate:programmatic-admission passed because the pair was registered only after it ran (apply_citation_program postbuild admits generated agent pages with no gate), and the next Validate Repo on main (35514776878) went red on the committed pair. The check replays that pair through the real plan builder, applier and admission validator in a scratch repository and fails unless the created-page gate rejects and removes it before commit with a named stop, the rebuilt plan and applier honour the quarantine ledger, and the rewritten pair is admitted at full.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:agent-created-page-admission-gate",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-agent-created-page-admission-gate/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-20",
+      "matrix_ids": [
+        "MX-AGENT-CREATED-PAGE-ADMISSION-GATE"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 255,
+  "record_count": 256,
   "generated_at": "2026-08-08T23:30:00Z"
 }

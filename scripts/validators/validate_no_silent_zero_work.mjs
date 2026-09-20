@@ -38,6 +38,7 @@ const REQUIRED_LANE_ARTIFACTS = [
   'reports/fanout-coverage-info.json',
   'artifacts/validation/authority-promotion-gate.json',
   'artifacts/validation/authority-admission-gate.json',
+  'artifacts/validation/agent-created-page-admission.json',
 ];
 const seen = new Set();
 
@@ -170,6 +171,23 @@ check('artifacts/validation/authority-admission-gate.json', (d, rel) => {
   if (refused > 0 && !named(d.stop_reason)) errors.push(`${rel}: refused ${refused} paper(s) with no named stop_reason {code,message}. An unadmitted page still on disk must be visible.`);
   if (admitted === 0 && refused === 0) errors.push(`${rel}: admitted 0 and refused 0. The admission pass examined no released paper at all, which means it ran over an empty queue while reporting success.`);
   if (refused > 0 && (d.refused || []).some((r) => !r.path || !r.reason)) errors.push(`${rel}: a refused entry is missing path or reason, so the refusal cannot be acted on.`);
+});
+
+// 10. Created-page admission: the gate agent:bhpc:admit-created runs over the
+// pages the exact-agent lane created THIS run, before anything commits. It
+// exists because the 2026-09-19 release created a 76%-identical pair, passed
+// the corpus validator (the pair was registered only afterwards) and committed.
+// Admitting nothing is a legitimate day; it must say which kind: no page
+// created, or every created page rejected. A bare PASS with 0 admitted is the
+// "ran but inert" state this whole validator refuses.
+check('artifacts/validation/agent-created-page-admission.json', (d, rel) => {
+  const candidates = Number(d.candidate_count || 0);
+  const admitted = Number(d.admitted_count || 0);
+  const quarantined = Number(d.quarantined_count || 0);
+  if (admitted === 0 && !named(d.stop_reason)) errors.push(`${rel}: admitted_count=0 with no named stop_reason {code,message}. A gate that admitted nothing must say whether nothing was created or everything was rejected.`);
+  if (admitted > 0 && !named(d.outcome)) errors.push(`${rel}: admitted ${admitted} page(s) with no named outcome {code,message}.`);
+  if (candidates !== admitted + quarantined) errors.push(`${rel}: candidate_count=${candidates} but admitted ${admitted} + quarantined ${quarantined}; a candidate left unjudged is a page that reaches the commit without a verdict.`);
+  if (quarantined > 0 && (d.quarantined || []).some((q) => !q.path || !(q.reasons || []).length)) errors.push(`${rel}: a quarantined entry is missing path or reasons, so the rejection cannot be acted on.`);
 });
 
 // The declared list and the checks actually wired up must not drift apart: a lane

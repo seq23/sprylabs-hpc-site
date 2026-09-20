@@ -34,6 +34,17 @@ Lane requirements are machine-readable in `data/content/programmatic_lane_contra
 
 A content-quality rejection does not publish and does not invalidate healthy existing pages. Infrastructure defects, registry drift, active-site regressions, or validation failures stop the workflow.
 
+## Pages the exact-agent lane creates
+
+`agent:bhpc:apply-exact` writes a `CREATE_NEW_TARGET_PAGE` page directly to the tree; it does not go through `programmatic:run-lane`. Those pages are gated by `agent:bhpc:admit-created` (`scripts/agent_intake/admit_bhpc_agent_created_pages.mjs`), which runs in `release:content-finalize` after the repair stages and before the corpus run of `validate:programmatic-admission`:
+
+1. Every created page not yet `ADMITTED` in `data/content/page_admission_registry.json` is a candidate.
+2. Candidates are judged by `validate_programmatic_admission.py --candidate-only` - per-page quality, query collision, similarity against every admitted page, and similarity between the candidates themselves.
+3. Accepted candidates are registered `ADMITTED` at the sealed admission level.
+4. Rejected candidates are removed from the tree before anything commits, recorded in `data/content/agent_page_quarantine.json` and `data/programmatic/rejection_backlog.json`, and the plan is rebuilt so the spec reads `BLOCKED` with the gate's reason. A run in which every created page is rejected, or in which nothing was created, is a NAMED stop (exit 0) recorded in `artifacts/validation/agent-created-page-admission.json`; `validate:no-silent-zero-work` reads it.
+
+The quarantine ledger is keyed by path and a fingerprint of the spec (`h1`, `framework`, `type`, `definition`, acceptance ids). Curating the page in `data/citation/agent_page_specs.json` changes the fingerprint and the next release re-judges it; after a generator change, delete the row to re-judge. `validate:agent-created-page-admission-gate` replays the 2026-09-19 near-duplicate pair through this path and fails if the gate stops rejecting it.
+
 ## Conversion contract
 
 Every fully admitted programmatic page requires:
