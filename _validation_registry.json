@@ -8082,8 +8082,68 @@
         "MX-AGENT-CREATED-PAGE-DEMAND-GATE"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-WORKFLOW-RUN-HANDOFF",
+      "status": "ADMITTED",
+      "name": "validate:workflow-run-handoff",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses the silence found on main 2026-09-18 and 2026-09-20: Spry Content Release pushed ad7beb69f with GITHUB_TOKEN, commit_and_push_if_changed.sh dispatched Validate Repo (run 35544558796), it went green, and Deploy Distribution and Main Validation Sentinel - workflow_run consumers of Validate Repo - never started, because a GITHUB_TOKEN workflow_dispatch run raises no workflow_run event; every automated release was validated and never submitted to IndexNow or Search Console. Validate Repo's gate job now hands a dispatch-started run to every consumer through handoff_validated_main_to_consumers.sh; this guard reads the workflow tree, derives the consumer set from the same module the hand-off runs, and fails when the gate job lacks the hand-off step after the artifact upload, lacks actions: write or GITHUB_TOKEN, when a consumer lacks workflow_dispatch or requires an input Validate Repo cannot supply, or when the tree has zero consumers.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:workflow-run-handoff",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-workflow-run-handoff/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-21",
+      "matrix_ids": [
+        "MX-WORKFLOW-RUN-HANDOFF"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-VALIDATED-MAIN-HANDOFF-GATE",
+      "status": "ADMITTED",
+      "name": "validate:validated-main-handoff-gate",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses a hand-off script that requests without covering, the 2026-09-14 f7572445d shape one hop down from the push helper: exercises handoff_validated_main_to_consumers.sh against a stubbed GitHub API and fails unless a dispatch-started Validate Repo run on main dispatches every workflow_run consumer derived from the tree with artifact_name spry-validated-<sha> and artifact_run_id and confirms a run by exact head_sha, a push-started run and a non-main ref stop by name without dispatching, accepted dispatches that never produce a run exit non-zero, a moved main dispatches nothing, a tree with zero consumers fails, and consumers already covered for the SHA are not dispatched twice.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:validated-main-handoff-gate",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-validated-main-handoff-gate/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-21",
+      "matrix_ids": [
+        "MX-VALIDATED-MAIN-HANDOFF-GATE"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 257,
+  "record_count": 259,
   "generated_at": "2026-08-08T23:30:00Z"
 }

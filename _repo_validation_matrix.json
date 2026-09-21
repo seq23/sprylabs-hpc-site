@@ -2507,9 +2507,29 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-WORKFLOW-RUN-HANDOFF",
+      "validation_id": "VAL-WORKFLOW-RUN-HANDOFF",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:workflow-run-handoff",
+      "order": 242,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-VALIDATED-MAIN-HANDOFF-GATE",
+      "validation_id": "VAL-VALIDATED-MAIN-HANDOFF-GATE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:validated-main-handoff-gate",
+      "order": 243,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 250,
+  "entry_count": 252,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3111,6 +3131,14 @@
         {
           "id": "VAL-AGENT-CREATED-PAGE-DEMAND-GATE",
           "command": "npm run validate:agent-created-page-demand-gate"
+        },
+        {
+          "id": "VAL-WORKFLOW-RUN-HANDOFF",
+          "command": "npm run validate:workflow-run-handoff"
+        },
+        {
+          "id": "VAL-VALIDATED-MAIN-HANDOFF-GATE",
+          "command": "npm run validate:validated-main-handoff-gate"
         }
       ]
     },
