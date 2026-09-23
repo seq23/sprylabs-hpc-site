@@ -201,6 +201,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     needs: [plan, build, validate, clean-rebuild]
+    permissions:
+      contents: read
+      # The hand-off below POSTs to the workflow dispatches endpoint. The root
+      # grant is contents: read; without this the POST is a 403 and every
+      # automated release ends here, validated and undistributed, as before.
+      actions: write
     steps:
       - uses: actions/checkout@v7
         with:
@@ -251,6 +257,25 @@ jobs:
             .build/**
             reports/validation-attestation.json
             artifacts/validation/**
+      - name: Hand the validated commit to its workflow_run consumers
+        # Deploy Distribution and Main Validation Sentinel are `workflow_run:
+        # workflows: ["Validate Repo"]` consumers. The platform raises that
+        # event for a push-started run, and NOT for a run that a GITHUB_TOKEN
+        # workflow_dispatch created - which is how every automated release
+        # reaches this workflow (commit_and_push_if_changed.sh). Observed
+        # 2026-09-18 and 2026-09-20: run 35544558796 validated ad7beb69f and
+        # chained nothing; the pages were never submitted to IndexNow.
+        #
+        # No `if:` here on purpose. The script names its own stops (push-started
+        # run or a person's dispatch: the platform chains those itself; non-main
+        # ref: no consumers) and fails when a consumer cannot be confirmed to
+        # have a run for this SHA. The consumer
+        # set is derived from the workflow tree, not listed here; see
+        # scripts/workflow/validate_repo_consumers.py and the guard
+        # validate:workflow-run-handoff.
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: bash .github/scripts/handoff_validated_main_to_consumers.sh
       - uses: actions/upload-artifact@v7
         if: always()
         with:
