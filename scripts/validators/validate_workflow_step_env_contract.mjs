@@ -22,6 +22,10 @@
  *      token, e.g. GSC_*, INDEXNOW_*) must get it from the step, job or workflow
  *      env, or from an inline `NAME=` assignment on the chain. Otherwise the
  *      script sees it empty and takes its "not configured" branch forever.
+ *   C. hidden upload path: actions/upload-artifact (v4.4+) skips dot-directories
+ *      unless `include-hidden-files: true`. Deploy Distribution published its
+ *      Search Console evidence from `.build/gsc/` without it, so run 36193592492
+ *      warned "No files were found" and the measurement was never kept.
  *
  * Exceptions are named in WAIVERS with a reason; there is no other way past.
  *
@@ -126,7 +130,7 @@ function parseWorkflow(text) {
       // commit_and_push_if_changed.sh replays WORKFLOW_ARGV after a rebase, so the
       // step's env is consumed by that command too.
       if (run && envValues.WORKFLOW_ARGV) run = `${run}\n${envValues.WORKFLOW_ARGV}`;
-      return { line: s.line, name, uses, run, env, jobEnv: s.jobEnv || new Set() };
+      return { line: s.line, name, uses, run, env, jobEnv: s.jobEnv || new Set(), blockText: b.join('\n') };
     }),
   };
 }
@@ -251,6 +255,26 @@ export function validate(root) {
     const families = new Set([...secretNames].map((n) => n.split('_')[0]));
     const wf = parseWorkflow(text);
     for (const step of wf.steps) {
+      if (step.uses && /actions\/upload-artifact@/.test(step.uses)) {
+        stepsChecked++;
+        const pathLines = [];
+        const bl = step.blockText.split('\n');
+        const pi = bl.findIndex((x) => /^\s*path:/.test(x));
+        if (pi >= 0) {
+          const inline = bl[pi].replace(/^\s*path:\s*/, '');
+          if (inline && !/^[|>]/.test(inline)) pathLines.push(inline);
+          const pInd = bl[pi].match(/^ */)[0].length;
+          for (let k = pi + 1; k < bl.length; k++) {
+            if (bl[k].trim() && bl[k].match(/^ */)[0].length <= pInd) break;
+            if (bl[k].trim()) pathLines.push(bl[k].trim());
+          }
+        }
+        const hidden = pathLines.filter((x) => !x.startsWith('!') && /(^|\/)\.(?!\.?\/)[^/$\s]/.test(x.replace(/\$\{\{[^}]*\}\}/g, 'X')));
+        if (hidden.length && !/include-hidden-files:\s*true/.test(step.blockText)) {
+          errors.push(`${f}:${step.line} "${step.name || step.uses}": uploads ${hidden.join(', ')} from a dot-directory without include-hidden-files: true; upload-artifact skips it and publishes nothing`);
+        }
+        continue;
+      }
       if (!step.run) continue;
       stepsChecked++;
       const chain = traceChain(root, step.run, pkgScripts);
@@ -315,6 +339,8 @@ function selfTest() {
     ['the 2026-09-25 defect (script reads GSC_SERVICE_ACCOUNT_JSON_PATH, step never sets it) -> FAIL', mk(wfBad, { 'scripts/deploy.sh': shBad }), (r) => r.errors.some((e) => e.includes('GSC_SERVICE_ACCOUNT_JSON_PATH'))],
     ['same workflow, script reads only what the step provides -> PASS', mk(wfBad, { 'scripts/deploy.sh': shGood }), (r) => r.errors.length === 0 && r.stepsChecked === 2],
     ['a step env name nothing reads (typo) -> FAIL', mk(wfTypo, { 'scripts/deploy.sh': shGood }), (r) => r.errors.some((e) => e.includes('INDEXNOWKEY is set but nothing'))],
+    ['upload of .build/gsc/ without include-hidden-files (run 36193592492) -> FAIL', mk(wfBad + `      - name: publish\n        uses: actions/upload-artifact@v4\n        with:\n          name: e\n          path: |\n            .build/gsc/\n`, { 'scripts/deploy.sh': shGood }), (r) => r.errors.some((e) => e.includes('include-hidden-files'))],
+    ['same upload with include-hidden-files: true -> PASS', mk(wfBad + `      - name: publish\n        uses: actions/upload-artifact@v4\n        with:\n          name: e\n          include-hidden-files: true\n          path: |\n            .build/gsc/\n`, { 'scripts/deploy.sh': shGood }), (r) => r.errors.length === 0],
     ['no workflows -> FAIL rather than PASS', (() => { const d = mk(wfBad, { 'scripts/deploy.sh': shGood }); fs.rmSync(path.join(d, '.github/workflows/w.yml')); return d; })(), (r) => report(r, 'x') === 1],
   ];
   let failed = 0;

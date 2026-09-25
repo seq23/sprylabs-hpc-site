@@ -179,7 +179,11 @@ jobs:
           path: |
             .build/gsc/
             .build/inspection-results-*.json
-          if-no-files-found: warn
+          # .build/ is a dot-directory, and upload-artifact skips those unless told
+          # otherwise; without this every run warned "No files were found" and the
+          # Search Console evidence was never kept.
+          include-hidden-files: true
+          if-no-files-found: error
           retention-days: 90
 
       - name: Fail the run if Search Console ingestion crashed
