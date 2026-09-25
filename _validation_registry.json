@@ -8082,8 +8082,38 @@
         "MX-AGENT-CREATED-PAGE-DEMAND-GATE"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-WORKFLOW-STEP-ENV-CONTRACT",
+      "status": "ADMITTED",
+      "name": "validate:workflow-step-env-contract",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses the failure found in Deploy Distribution run 36191288768 (2026-09-25): the step 'Verify attestation and deploy IndexNow distribution' ran scripts/distribution/deploy_distribution.sh, whose Search Console lane read GSC_SERVICE_ACCOUNT_JSON_PATH and GSC_SITE_URL; the step set neither, so every run printed 'GSC skipped: credentials/site secret not present' although the GSC_SERVICE_ACCOUNT_JSON secret existed. The check traces each workflow run step through npm scripts, scripts/ files and topology lanes, and fails when a step env name is read by nothing it runs, or when a script reads a secret-family variable with no default that the step, job, workflow or call chain never provides. Zero workflows or zero run steps fail.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:workflow-step-env-contract",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-workflow-step-env-contract/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-25",
+      "matrix_ids": [
+        "MX-WORKFLOW-STEP-ENV-CONTRACT"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 257,
+  "record_count": 258,
   "generated_at": "2026-08-08T23:30:00Z"
 }
