@@ -6,8 +6,9 @@
  * Cloudflare Pages matches _redirects rules exactly, so `/x/` and `/x` are two
  * different sources. The manual map produced only the form its source file
  * named: a retired directory page got `/x/` and never `/x`, and Bing Webmaster,
- * 25 Sep 2026, held `/insights/topics/chatgpt-prompts-and-setup-2` (no slash) as
- * a 404 while the slash form redirected. The same map now also carries the 121
+ * 25 Sep 2026, held the no-slash form of a retired paginated insights hub as a
+ * 404 while its slash form redirected. (Retired routes are not spelled out here:
+ * scripts/content/apply_redirect_map.mjs rewrites them in every text file.) The same map now also carries the 121
  * pages that moved from /guides/<slug> to the root on 2026-07-23 (b94f49750),
  * which Bing held as 404s on both hosts.
  *

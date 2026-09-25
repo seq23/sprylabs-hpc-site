@@ -13,7 +13,7 @@
  *      redirects, if it hits one - to a path the surface serves. A link that
  *      ends on nothing is a broken page for a reader and a 404 for a crawler.
  *   3. Every URL Bing Webmaster held as a 404 on 25 Sep 2026 that has a live
- *      equivalent now redirects to it in one hop (fixtures/validation/
+ *      equivalent now redirects to it in one hop (fixtures/validation/redirects/
  *      bing_held_404s.json lists them, and the ones deliberately left 404).
  *
  * Why this exists: Bing reported 221 404s on spryexecutiveos.com and 8 on
@@ -36,7 +36,7 @@ const OUT = process.env.REDIRECT_LINK_INTEGRITY_OUT || path.join(ROOT, '.pages-o
 const HOSTS = new Set(['spryexecutiveos.com', 'billionairehighperformancecoach.com', 'www.spryexecutiveos.com', 'www.billionairehighperformancecoach.com']);
 const MAX_STATIC = 2000;
 const MAX_DYNAMIC = 100;
-const BING_FIXTURE = path.join(ROOT, 'fixtures/validation/bing_held_404s.json');
+const BING_FIXTURE = path.join(ROOT, 'fixtures/validation/redirects/bing_held_404s.json');
 
 const fail = (msg, details = []) => {
   console.error(`[validate:redirect-and-link-integrity] FAIL: ${msg}`);
