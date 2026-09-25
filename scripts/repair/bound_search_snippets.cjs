@@ -26,9 +26,9 @@ const OVERRIDES_PATH = 'data/content/meta_description_overrides.json';
 
 function loadOverrides() {
   const abs = path.join(ROOT, OVERRIDES_PATH);
-  if (!fs.existsSync(abs)) return {};
+  if (!fs.existsSync(abs)) return { descriptions: {}, titles: {} };
   const payload = JSON.parse(fs.readFileSync(abs, 'utf8'));
-  return payload.pages || {};
+  return { descriptions: payload.pages || {}, titles: payload.titles || {} };
 }
 
 function canonicalHost(html) {
@@ -101,12 +101,23 @@ function boundSearchSnippets({ dryRun = false } = {}) {
     const title = B.titleOf(html);
     let newTitle = title;
     if (title) {
-      const cands = B.titleCandidates(title, host);
+      const cands = overrides.titles[rel] ? [B.norm(overrides.titles[rel])] : [];
+      cands.push(...B.titleCandidates(title, host));
       const core = B.titleCore(title);
       const label = sectionLabel(rel);
       if (label) {
         cands.push(`${core} | ${label}`);
         cands.push(`${B.cutWords(core, B.TITLE_MAX - label.length - 3)} | ${label}`);
+      }
+      // Last resort: the page's own slug. A root page that carries another
+      // page's heading (the agent appliers have done this) is still named by
+      // its URL, and that name is unique by construction.
+      const slug = rel.replace(/\/index\.html$|\.html$/, '').split('/').pop().replace(/-+/g, ' ').trim();
+      if (slug) {
+        const named = slug[0].toUpperCase() + slug.slice(1);
+        const brand = B.BRANDS[host];
+        if (brand) cands.push(`${named} | ${brand}`);
+        cands.push(named);
       }
       const pick = cands.filter(B.inTitleRange).find((c) => !takenTitles.has(c));
       if (pick) newTitle = pick;
@@ -116,7 +127,7 @@ function boundSearchSnippets({ dryRun = false } = {}) {
     }
 
     // ---- description
-    const override = overrides[rel];
+    const override = overrides.descriptions[rel];
     const desc = B.descriptionOf(html);
     let newDesc = desc;
     if (desc || override) {

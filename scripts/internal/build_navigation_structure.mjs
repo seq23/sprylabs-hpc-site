@@ -240,8 +240,11 @@ function hubDescription(prefix, examples, blurb) {
       acc = next;
     }
     if (acc === lead && examples.length) {
-      const room = DESC_MAX - lead.length - ', including '.length;
-      if (room >= 24) return `${lead}, including ${snippetBounds.cutWords(examples[0], room)}`;
+      const room = DESC_MAX - lead.length - ', including '.length - 1;
+      if (room >= 24) {
+        const ex = snippetBounds.cutWords(examples[0], room);
+        return ex.endsWith('…') ? `${lead}, including ${ex}` : `${lead}, including ${ex}.`;
+      }
     }
     return `${acc}.`;
   };

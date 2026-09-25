@@ -53,11 +53,13 @@ for (const rel of pages) {
   }
 }
 
-// Reach: every sitemap URL is a page examined above (or an exempt one).
+// Reach: every URL in the sitemaps the site advertises (sitemap.xml's index,
+// which robots.txt points at) is a page examined above (or an exempt one).
 const examined = new Set(pages);
-const sitemapFiles = ['sitemap-bhpc.xml', 'sitemap-spry.xml',
-  ...(fs.existsSync(path.join(ROOT, 'sitemaps')) ? fs.readdirSync(path.join(ROOT, 'sitemaps')).filter((f) => f.endsWith('.xml')).map((f) => `sitemaps/${f}`) : [])]
+const indexXml = fs.existsSync(path.join(ROOT, 'sitemap.xml')) ? fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8') : '';
+const sitemapFiles = [...indexXml.matchAll(/<sitemap>\s*<loc>\s*https?:\/\/[^/<]+\/([^<\s]+)\s*<\/loc>/g)].map((m) => m[1])
   .filter((f) => fs.existsSync(path.join(ROOT, f)));
+if (!sitemapFiles.length) errors.push('sitemap.xml indexes no sitemap present in the tree, so reach cannot be proved');
 let sitemapUrls = 0;
 for (const f of sitemapFiles) {
   const xml = fs.readFileSync(path.join(ROOT, f), 'utf8');
