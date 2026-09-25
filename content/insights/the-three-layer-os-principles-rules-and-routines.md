@@ -1,6 +1,6 @@
 ---
 title: "The three-layer OS: principles, rules, and routines"
-description: "The three-layer OS: principles, rules, and routines — a calm, executable framework (Spry Executive OS)."
+description: "The three-layer personal OS: principles decide direction, rules remove repeat decisions, and routines carry the daily work, each small enough to keep."
 date: "2026-03-08"
 cluster: "systems"
 pillar: "systems & OS thinking"

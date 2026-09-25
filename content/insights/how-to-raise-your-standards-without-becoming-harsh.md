@@ -1,6 +1,6 @@
 ---
 title: "How to raise your standards without becoming harsh"
-description: "How to raise your standards without becoming harsh — a calm, executable framework (Spry Executive OS)."
+description: "How to raise your standards without becoming harsh: raise the floor one step at a time, keep it for a week, and treat misses as data rather than failure."
 date: "2026-04-08"
 cluster: "identity"
 pillar: "identity & power"

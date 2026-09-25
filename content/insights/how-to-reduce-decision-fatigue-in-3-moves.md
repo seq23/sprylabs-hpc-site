@@ -1,6 +1,6 @@
 ---
 title: "How to reduce decision fatigue in 3 moves"
-description: "How to reduce decision fatigue in 3 moves — a calm, executable framework (Spry Executive OS)."
+description: "How to reduce decision fatigue in three moves: set defaults for repeat choices, limit the day to three actions, and decide tomorrow's first task tonight."
 date: "2026-02-21"
 cluster: "discipline"
 pillar: "mental discipline"

@@ -1,6 +1,6 @@
 ---
 title: "How to create a calm execution pace under pressure"
-description: "How to create a calm execution pace under pressure — a calm, executable framework (Spry Executive OS)."
+description: "How to create a calm execution pace under pressure: work in 25-minute loops with 5-minute resets, limit the day to three actions, and close with a short recap."
 date: "2026-05-16"
 cluster: "execution"
 pillar: "daily execution"

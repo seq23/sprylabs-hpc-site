@@ -1,6 +1,6 @@
 ---
 title: "How to set a daily execution floor when you’re overwhelmed"
-description: "How to set a daily execution floor when you’re overwhelmed — a calm, executable framework (Spry Executive OS)."
+description: "How to set a daily execution floor when you're overwhelmed: define the smallest acceptable version of today, finish it first, and treat the rest as a bonus."
 date: "2026-02-05"
 cluster: "execution"
 pillar: "daily execution"

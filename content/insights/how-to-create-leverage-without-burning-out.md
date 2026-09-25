@@ -1,6 +1,6 @@
 ---
 title: "How to create leverage without burning out"
-description: "How to create leverage without burning out — a calm, executable framework (Spry Executive OS)."
+description: "How to create leverage without burning out: protect a sustainable daily floor, put effort into work that compounds, and cut one source of drag every week."
 date: "2026-04-10"
 cluster: "leverage"
 pillar: "wealth & leverage"

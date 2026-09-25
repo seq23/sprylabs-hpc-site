@@ -275,7 +275,11 @@ function walk(dir) {
     const full = path.join(dir, entry.name);
     const rel = path.relative(ROOT, full).split(path.sep).join('/');
     if (entry.isDirectory()) walk(full);
-    else if (entry.isFile() && textExtensions.has(path.extname(entry.name)) && !excluded.has(rel)) {
+    // fixtures/validation/redirects/ holds retired URLs ON PURPOSE - they are the
+    // inputs validate:redirect-and-link-integrity follows through _redirects.
+    // validate:retired-route-references already allows that directory; this
+    // rewriter now agrees, instead of "fixing" the fixture into its own targets.
+    else if (entry.isFile() && textExtensions.has(path.extname(entry.name)) && !excluded.has(rel) && !rel.startsWith('fixtures/validation/redirects/')) {
       const before = fs.readFileSync(full, 'utf8');
       if (prefilter && !prefilter.test(before)) { filesSkippedByPrefilter += 1; continue; }
       const { out, replacements } = rewriteText(rel, before);

@@ -1,6 +1,6 @@
 ---
 title: "The ‘parking lot’ list that saves your brain"
-description: "The ‘parking lot’ list that saves your brain — a calm, executable framework (Spry Executive OS)."
+description: "The parking lot list that saves your brain: capture every stray idea and request in one place during work blocks, then sort it once a day instead of reacting."
 date: "2026-03-16"
 cluster: "systems"
 pillar: "systems & OS thinking"

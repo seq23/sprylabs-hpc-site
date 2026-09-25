@@ -1,6 +1,6 @@
 ---
 title: "Why willpower fails under stress—and what replaces it"
-description: "Why willpower fails under stress—and what replaces it — a calm, executable framework (Spry Executive OS)."
+description: "Why willpower fails under stress and what replaces it: defaults, small floors and prepared first steps that keep you moving when energy and focus run low."
 date: "2026-02-19"
 cluster: "discipline"
 pillar: "mental discipline"

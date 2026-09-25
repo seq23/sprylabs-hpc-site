@@ -1,6 +1,6 @@
 ---
 title: "Discipline that doesn’t feel like punishment"
-description: "Discipline that doesn’t feel like punishment — a calm, executable framework (Spry Executive OS)."
+description: "Discipline that doesn't feel like punishment: set a small floor, remove one point of drag and run one focused loop, so consistency stops needing willpower."
 date: "2026-04-22"
 cluster: "discipline"
 pillar: "mental discipline"

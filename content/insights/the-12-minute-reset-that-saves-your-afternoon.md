@@ -1,6 +1,6 @@
 ---
 title: "The 12-minute reset that saves your afternoon"
-description: "The 12-minute reset that saves your afternoon — a calm, executable framework (Spry Executive OS)."
+description: "The 12-minute reset that saves your afternoon: stop, clear what is open, choose the single next action and restart with one focused loop before energy drops."
 date: "2026-02-06"
 cluster: "execution"
 pillar: "daily execution"

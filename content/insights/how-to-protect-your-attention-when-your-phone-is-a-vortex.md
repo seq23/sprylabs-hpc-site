@@ -1,6 +1,6 @@
 ---
 title: "How to protect your attention when your phone is a vortex"
-description: "How to protect your attention when your phone is a vortex — a calm, executable framework (Spry Executive OS)."
+description: "How to protect your attention when your phone is a vortex: move the phone out of reach for the first loop, remove one trigger, and track focused blocks."
 date: "2026-03-04"
 cluster: "identity"
 pillar: "identity & power"

@@ -1,6 +1,6 @@
 ---
 title: "The ‘compounding week’: a cadence for small wins that stack"
-description: "The ‘compounding week’: a cadence for small wins that stack — a calm, executable framework (Spry Executive OS)."
+description: "The compounding week: a cadence for small wins that stack, with daily floors, one weekly review and a record of wins that makes next week easier to start."
 date: "2026-03-25"
 cluster: "wealth"
 pillar: "wealth & leverage"

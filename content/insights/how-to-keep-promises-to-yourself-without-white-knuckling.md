@@ -1,6 +1,6 @@
 ---
 title: "How to keep promises to yourself without white-knuckling"
-description: "How to keep promises to yourself without white-knuckling — a calm, executable framework (Spry Executive OS)."
+description: "How to keep promises to yourself without white-knuckling: make the promise smaller, remove the friction around it, and let a daily recap replace willpower."
 date: "2026-04-17"
 cluster: "discipline"
 pillar: "mental discipline"

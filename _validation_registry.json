@@ -8112,8 +8112,68 @@
         "MX-WORKFLOW-STEP-ENV-CONTRACT"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-SEARCH-SNIPPET-BOUNDS",
+      "status": "ADMITTED",
+      "name": "validate:search-snippet-bounds",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses the Bing Webmaster findings of 25 Sep 2026: rule 118 'meta description too short' on 8 billionairehighperformancecoach.com and 24 spryexecutiveos.com pages (41-98 characters, the section and topic hubs from build_navigation_structure.mjs and the insight posts' boilerplate front matter), and Site Scan 'title too long' above 70 characters (1,813 pages, a 37-character brand suffix on long questions). Every indexable page must carry a 30-70 character title and a 110-160 character meta description, each unique; every sitemap URL must map to a page the check examined. Zero pages examined fails.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:search-snippet-bounds",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-search-snippet-bounds/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-25",
+      "matrix_ids": [
+        "MX-SEARCH-SNIPPET-BOUNDS"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-REDIRECT-AND-LINK-INTEGRITY",
+      "status": "ADMITTED",
+      "name": "validate:redirect-and-link-integrity",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses the Bing Webmaster 404s of 25 Sep 2026 (221 on spryexecutiveos.com, 8 on billionairehighperformancecoach.com): 121 /guides/<slug> pages moved to the root on 2026-07-23 with no redirect, retired directory pages redirected only in their /x/ form, and a /*.html wildcard above every exact .html rule so none could fire. Against the assembled .pages-output with Cloudflare first-match semantics: every exact _redirects rule must be reachable, single-hop and land on a published page; every internal <a href> must resolve to a published page; every Bing-held 404 in fixtures/validation/bing_held_404s.json must redirect in one hop. Zero rules, pages or links examined fails.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:redirect-and-link-integrity",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-redirect-and-link-integrity/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-25",
+      "matrix_ids": [
+        "MX-REDIRECT-AND-LINK-INTEGRITY"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 258,
+  "record_count": 260,
   "generated_at": "2026-08-08T23:30:00Z"
 }

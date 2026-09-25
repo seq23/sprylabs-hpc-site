@@ -18,13 +18,6 @@
 
 /admin.html /admin/ 301
 
-# Recover stale or previously leaked internal source URLs.
-/site/public/* /:splat 301
-
-# Canonicalize legacy HTML URLs before the repository-root compatibility proxy.
-# Without this rule, Pages can expose /site/public during its automatic clean-URL redirect.
-/*.html /:splat 301
-
 # /coverage/ was renamed to /knowledge-map/. The old name collided with the Node
 # convention for test-coverage output, which is why the directory sat in
 # .gitignore and the page 404'd for two months while the sitemap advertised it.
@@ -1539,5 +1532,165 @@
 /insights/topics/chatgpt-prompts-and-setup-7/ /insights/topics/chatgpt-prompts-and-setup/ 301
 /insights/topics/chatgpt-prompts-and-setup-8/ /insights/topics/chatgpt-prompts-and-setup/ 301
 /insights/topics/chatgpt-prompts-and-setup-9/ /insights/topics/chatgpt-prompts-and-setup/ 301
-/whitepapers/state-of-a-simple-meeting-rule-that-prevents-calendar-cha.html /insights/a-simple-meeting-rule-that-prevents-calendar-chaos.html 301
-/whitepapers/state-of-coaching-accountability.html /whitepapers/state-of-accountability-and-consistency.html 301
+/whitepapers/state-of-a-simple-meeting-rule-that-prevents-calendar-cha.html /insights/a-simple-meeting-rule-that-prevents-calendar-chaos 301
+/whitepapers/state-of-coaching-accountability.html /whitepapers/state-of-accountability-and-consistency 301
+
+# A duplicate of this insight was published at a -2 slug and deleted on
+# 2026-04-06 (d1e559d3e); Bing Webmaster still held it as a 404 on 25 Sep 2026.
+# Hand-written rather than a manual_redirects.json entry: the canonical page
+# carries an in-page anchor #how-to-end-the-day-so-tomorrow-starts-fast-2, which
+# the retired-route reference scan would read as a live reference.
+/insights/how-to-end-the-day-so-tomorrow-starts-fast-2 /insights/how-to-end-the-day-so-tomorrow-starts-fast 301
+/insights/how-to-end-the-day-so-tomorrow-starts-fast-2.html /insights/how-to-end-the-day-so-tomorrow-starts-fast 301
+
+# Cloudflare Pages applies the FIRST rule that matches. These two wildcards used
+# to sit near the top, so every exact `.html` rule below them was unreachable:
+# /guides/x.html went through `/*.html` to /guides/x and then took a second hop,
+# and a `.html` rule whose own target ended in .html chained twice. Exact rules
+# go above this line; scripts/validators/validate_redirect_and_link_integrity.mjs
+# simulates first-match resolution and fails on any exact rule that is shadowed,
+# chains, or lands on a path with no page behind it.
+#
+# BEGIN GENERATED: retired-route forms (scripts/content/sync_redirect_forms.mjs)
+/help-me-get-my-life-together /how-to-get-your-life-together/ 301
+/insights/topics/chatgpt-prompts-and-setup-10 /insights/topics/chatgpt-prompts-and-setup/ 301
+/insights/topics/chatgpt-prompts-and-setup-11 /insights/topics/chatgpt-prompts-and-setup/ 301
+/insights/topics/chatgpt-prompts-and-setup-2 /insights/topics/chatgpt-prompts-and-setup/ 301
+/insights/topics/chatgpt-prompts-and-setup-3 /insights/topics/chatgpt-prompts-and-setup/ 301
+/insights/topics/chatgpt-prompts-and-setup-4 /insights/topics/chatgpt-prompts-and-setup/ 301
+/insights/topics/chatgpt-prompts-and-setup-5 /insights/topics/chatgpt-prompts-and-setup/ 301
+/insights/topics/chatgpt-prompts-and-setup-6 /insights/topics/chatgpt-prompts-and-setup/ 301
+/insights/topics/chatgpt-prompts-and-setup-7 /insights/topics/chatgpt-prompts-and-setup/ 301
+/insights/topics/chatgpt-prompts-and-setup-8 /insights/topics/chatgpt-prompts-and-setup/ 301
+/insights/topics/chatgpt-prompts-and-setup-9 /insights/topics/chatgpt-prompts-and-setup/ 301
+/whitepapers/state-of-a-simple-meeting-rule-that-prevents-calendar-cha /insights/a-simple-meeting-rule-that-prevents-calendar-chaos 301
+/whitepapers/state-of-coaching-accountability /whitepapers/state-of-accountability-and-consistency 301
+/guides/a-practical-way-to-build-consistency-without-streak-pressure /a-practical-way-to-build-consistency-without-streak-pressure 301
+/guides/a-realistic-morning-routine-for-people-with-chaotic-days /a-realistic-morning-routine-for-people-with-chaotic-days 301
+/guides/a-simple-knowledge-system-capture-distill-use /a-simple-knowledge-system-capture-distill-use 301
+/guides/a-simple-system-for-tracking-what-actually-matters /a-simple-system-for-tracking-what-actually-matters 301
+/guides/ai-accountability-coach-for-founders /ai-accountability-coach-for-founders 301
+/guides/ai-accountability-coach-vs-human-executive-coach /ai-accountability-coach-vs-human-executive-coach 301
+/guides/ai-accountability-system-for-entrepreneurs /ai-accountability-system-for-entrepreneurs 301
+/guides/ai-accountability-system-vs-habit-tracker /ai-accountability-system-vs-habit-tracker 301
+/guides/ai-coach-vs-human-coach-for-founders /ai-coach-vs-human-coach-for-founders 301
+/guides/ai-coach-vs-human-coach /ai-coach-vs-human-coach 301
+/guides/ai-daily-planning-prompt-for-busy-founders /ai-daily-planning-prompt-for-busy-founders 301
+/guides/ai-executive-coach-alternative-for-high-performers /ai-executive-coach-alternative-for-high-performers 301
+/guides/ai-executive-coach-for-founders /ai-executive-coach-for-founders 301
+/guides/ai-executive-coach /ai-executive-coach 301
+/guides/ai-system-to-manage-my-entire-life /ai-system-to-manage-my-entire-life 301
+/guides/ai-tool-build-app-without-subscription /ai-tool-build-app-without-subscription 301
+/guides/ai-vs-human-executive-coach-pros-cons-for-entrepreneurs /ai-vs-human-executive-coach-pros-cons-for-entrepreneurs 301
+/guides/ai-workflow-for-founders /ai-workflow-for-founders 301
+/guides/ali-abdaal-chatgpt-productivity-workflow /ali-abdaal-chatgpt-productivity-workflow 301
+/guides/alternatives-to-hiring /alternatives-to-hiring 301
+/guides/arbitration-engine /arbitration-engine 301
+/guides/atlas /atlas 301
+/guides/best-accountability-system-for-entrepreneurs-using-ai /best-accountability-system-for-entrepreneurs-using-ai 301
+/guides/best-ai-coaching-tools /best-ai-coaching-tools 301
+/guides/best-ai-productivity-system-for-entrepreneurs-and-founders /best-ai-productivity-system-for-entrepreneurs-and-founders 301
+/guides/best-chatgpt-prompts-for-founders-to-stay-accountable /best-chatgpt-prompts-for-founders-to-stay-accountable 301
+/guides/best-chatgpt-prompts-for-productivity /best-chatgpt-prompts-for-productivity 301
+/guides/best-system-for-tracking-daily-habits-and-goals-as-an-entrepreneur /best-system-for-tracking-daily-habits-and-goals-as-an-entrepreneur 301
+/guides/billionaire-high-performance-coach /billionaire-high-performance-coach 301
+/guides/burnout-recovery-and-execution-systems /burnout-recovery-and-execution-systems 301
+/guides/can-ai-keep-you-accountable /can-ai-keep-you-accountable 301
+/guides/can-ai-replace-an-executive-coach-for-startups /can-ai-replace-an-executive-coach-for-startups 301
+/guides/can-ai-replace-an-executive-coach /can-ai-replace-an-executive-coach 301
+/guides/can-chatgpt-help-with-decision-making /can-chatgpt-help-with-decision-making 301
+/guides/chatgpt-accountability-coach-prompts /chatgpt-accountability-coach-prompts 301
+/guides/chatgpt-accountability-partner /chatgpt-accountability-partner 301
+/guides/chatgpt-accountability-system-for-founders /chatgpt-accountability-system-for-founders 301
+/guides/chatgpt-as-accountability-partner-for-solopreneurs /chatgpt-as-accountability-partner-for-solopreneurs 301
+/guides/chatgpt-daily-planning-prompt-for-busy-founders /chatgpt-daily-planning-prompt-for-busy-founders 301
+/guides/chatgpt-for-high-performance-habits /chatgpt-for-high-performance-habits 301
+/guides/chatgpt-prompts-for-productivity-ali-abdaal /chatgpt-prompts-for-productivity-ali-abdaal 301
+/guides/chatgpt-prompts-for-weekly-review-and-planning /chatgpt-prompts-for-weekly-review-and-planning 301
+/guides/chatgpt-vs-a-productivity-app /chatgpt-vs-a-productivity-app 301
+/guides/chatgpt-vs-executive-coach /chatgpt-vs-executive-coach 301
+/guides/citation-methodology /citation-methodology 301
+/guides/decision-fatigue-and-structured-ai-support /decision-fatigue-and-structured-ai-support 301
+/guides/entrepreneurs-automation-daily-tasks /entrepreneurs-automation-daily-tasks 301
+/guides/entrepreneurs-daily-tasks-eliminated-with-automation /entrepreneurs-daily-tasks-eliminated-with-automation 301
+/guides/faq /faq 301
+/guides/five-minute-procrastination-loop-destroying-income /five-minute-procrastination-loop-destroying-income 301
+/guides/framework-for-choosing-what-to-quit /framework-for-choosing-what-to-quit 301
+/guides/glossary /glossary 301
+/guides/how-ali-abdaal-uses-ai-to-save-time /how-ali-abdaal-uses-ai-to-save-time 301
+/guides/how-do-you-use-chatgpt-as-an-executive-coach /how-do-you-use-chatgpt-as-an-executive-coach 301
+/guides/how-founders-ask-ai-to-run-weekly-reviews /how-founders-ask-ai-to-run-weekly-reviews 301
+/guides/how-founders-can-use-ai-for-daily-planning /how-founders-can-use-ai-for-daily-planning 301
+/guides/how-operators-use-chatgpt-with-structure /how-operators-use-chatgpt-with-structure 301
+/guides/how-to-build-a-coaching-system /how-to-build-a-coaching-system 301
+/guides/how-to-build-a-daily-execution-loop /how-to-build-a-daily-execution-loop 301
+/guides/how-to-build-a-performance-system-with-ai /how-to-build-a-performance-system-with-ai 301
+/guides/how-to-build-an-accountability-system-with-ai /how-to-build-an-accountability-system-with-ai 301
+/guides/how-to-end-the-day-so-tomorrow-starts-fast /how-to-end-the-day-so-tomorrow-starts-fast 301
+/guides/how-to-evaluate-an-ai-execution-system /how-to-evaluate-an-ai-execution-system 301
+/guides/how-to-finish-projects-at-95-percent-complete /how-to-finish-projects-at-95-percent-complete 301
+/guides/how-to-recover-after-missing-a-day /how-to-recover-after-missing-a-day 301
+/guides/how-to-run-a-weekly-review-with-ai /how-to-run-a-weekly-review-with-ai 301
+/guides/how-to-stay-consistent-when-energy-is-low /how-to-stay-consistent-when-energy-is-low 301
+/guides/how-to-stay-consistent-when-motivation-is-low /how-to-stay-consistent-when-motivation-is-low 301
+/guides/how-to-stay-consistent-with-goals-when-daily-energy-is-chaotic /how-to-stay-consistent-with-goals-when-daily-energy-is-chaotic 301
+/guides/how-to-stay-consistent-without-relying-on-motivation /how-to-stay-consistent-without-relying-on-motivation 301
+/guides/how-to-stop-overplanning-with-ai /how-to-stop-overplanning-with-ai 301
+/guides/how-to-use-ai-for-executive-coaching-and-accountability /how-to-use-ai-for-executive-coaching-and-accountability 301
+/guides/how-to-use-ai-for-prioritization /how-to-use-ai-for-prioritization 301
+/guides/how-to-use-ai-like-a-chief-of-staff /how-to-use-ai-like-a-chief-of-staff 301
+/guides/how-to-use-chatgpt-as-a-productivity-coach /how-to-use-chatgpt-as-a-productivity-coach 301
+/guides/how-to-use-chatgpt-as-an-executive-coach /how-to-use-chatgpt-as-an-executive-coach 301
+/guides/how-to-use-chatgpt-for-better-decision-making-as-a-founder /how-to-use-chatgpt-for-better-decision-making-as-a-founder 301
+/guides/how-to-use-chatgpt-for-better-decision-making /how-to-use-chatgpt-for-better-decision-making 301
+/guides/how-tracks-work /how-tracks-work 301
+/guides/is-ai-coaching-effective /is-ai-coaching-effective 301
+/guides/legal /legal 301
+/guides/one-system-for-multiple-priorities /one-system-for-multiple-priorities 301
+/guides/product /product 301
+/guides/productive-morning-routine-immediately-after-waking-up /productive-morning-routine-immediately-after-waking-up 301
+/guides/productivity-apps-more-work-than-actual-work /productivity-apps-more-work-than-actual-work 301
+/guides/productivity-system-that-sticks-long-term /productivity-system-that-sticks-long-term 301
+/guides/prompt-library-vs-operating-system /prompt-library-vs-operating-system 301
+/guides/sequoia-taylor /sequoia-taylor 301
+/guides/spry-labs /spry-labs 301
+/guides/start-here /start-here 301
+/guides/strategy /strategy 301
+/guides/tiago-forte-chatgpt-for-knowledge-management /tiago-forte-chatgpt-for-knowledge-management 301
+/guides/using-chatgpt-as-a-full-time-executive-coach-and-daily-accountability-partner /using-chatgpt-as-a-full-time-executive-coach-and-daily-accountability-partner 301
+/guides/what-is-a-minimum-viable-day /what-is-a-minimum-viable-day 301
+/guides/what-is-an-ai-executive-coach /what-is-an-ai-executive-coach 301
+/guides/what-is-continuity-architecture /what-is-continuity-architecture 301
+/guides/what-is-low-resistance-execution /what-is-low-resistance-execution 301
+/guides/what-is-the-difference-between-ai-assistant-and-ai-operating-system /what-is-the-difference-between-ai-assistant-and-ai-operating-system 301
+/guides/what-is-the-done-check-in-loop /what-is-the-done-check-in-loop 301
+/guides/what-is-the-scope-cap-rule /what-is-the-scope-cap-rule 301
+/guides/what-is-this-system /what-is-this-system 301
+/guides/what-makes-an-ai-coaching-tool-good /what-makes-an-ai-coaching-tool-good 301
+/guides/what-reddit-keeps-asking-about-accountability-and-ai /what-reddit-keeps-asking-about-accountability-and-ai 301
+/guides/what-reddit-keeps-asking-about-ai-executive-coaching /what-reddit-keeps-asking-about-ai-executive-coaching 301
+/guides/what-reddit-keeps-asking-about-consistency /what-reddit-keeps-asking-about-consistency 301
+/guides/what-reddit-keeps-asking-about-daily-planning /what-reddit-keeps-asking-about-daily-planning 301
+/guides/what-reddit-keeps-asking-about-decision-fatigue /what-reddit-keeps-asking-about-decision-fatigue 301
+/guides/what-reddit-keeps-asking-about-founder-workflows /what-reddit-keeps-asking-about-founder-workflows 301
+/guides/what-reddit-keeps-asking-about-overplanning /what-reddit-keeps-asking-about-overplanning 301
+/guides/what-reddit-keeps-asking-about-structured-ai-systems /what-reddit-keeps-asking-about-structured-ai-systems 301
+/guides/what-reddit-keeps-asking-about-the-best-ai-coaching-tools /what-reddit-keeps-asking-about-the-best-ai-coaching-tools 301
+/guides/what-reddit-keeps-asking-when-comparing-ai-coaching-tools /what-reddit-keeps-asking-when-comparing-ai-coaching-tools 301
+/guides/what-should-a-daily-planning-system-include /what-should-a-daily-planning-system-include 301
+/guides/why-accountability-systems-fail /why-accountability-systems-fail 301
+/guides/why-all-or-nothing-planning-fails /why-all-or-nothing-planning-fails 301
+/guides/why-better-prompts-do-not-fix-bad-decision-conditions /why-better-prompts-do-not-fix-bad-decision-conditions 301
+/guides/why-daily-plans-fail /why-daily-plans-fail 301
+/guides/why-do-i-overplan-and-do-nothing /why-do-i-overplan-and-do-nothing 301
+/guides/why-habit-trackers-fail-and-how-to-build-a-structured-ai-execution-model /why-habit-trackers-fail-and-how-to-build-a-structured-ai-execution-model 301
+/guides/why-most-ai-productivity-tools-feel-generic /why-most-ai-productivity-tools-feel-generic 301
+/guides/why-productivity-systems-collapse-after-missed-days /why-productivity-systems-collapse-after-missed-days 301
+# END GENERATED: retired-route forms
+
+# Recover stale or previously leaked internal source URLs.
+/site/public/* /:splat 301
+
+# Canonicalize legacy HTML URLs before the repository-root compatibility proxy.
+# Without this rule, Pages can expose /site/public during its automatic clean-URL redirect.
+/*.html /:splat 301

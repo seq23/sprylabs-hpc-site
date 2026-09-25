@@ -1,6 +1,6 @@
 ---
 title: "The five-minute boundary script that protects your day"
-description: "The five-minute boundary script that protects your day — a calm, executable framework (Spry Executive OS)."
+description: "The five-minute boundary script that protects your day: a short, polite way to decline or defer requests, so your planned work survives other people's urgency."
 date: "2026-05-02"
 cluster: "discipline"
 pillar: "mental discipline"

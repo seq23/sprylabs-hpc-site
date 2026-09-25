@@ -1,6 +1,6 @@
 ---
 title: "How to build a simple funnel that doesn’t feel gross"
-description: "How to build a simple funnel that doesn’t feel gross — a calm, executable framework (Spry Executive OS)."
+description: "How to build a simple funnel that doesn't feel gross: one clear offer, one useful next step for the reader, and a weekly look at what converted and why."
 date: "2026-04-30"
 cluster: "leverage"
 pillar: "wealth & leverage"

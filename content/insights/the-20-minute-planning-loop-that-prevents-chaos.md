@@ -1,6 +1,6 @@
 ---
 title: "The 20-minute planning loop that prevents chaos"
-description: "The 20-minute planning loop that prevents chaos — a calm, executable framework (Spry Executive OS)."
+description: "The 20-minute planning loop that prevents chaos: one outcome for the day, three ordered actions, a protected block for the first, and a quick evening close."
 date: "2026-04-11"
 cluster: "execution"
 pillar: "daily execution"

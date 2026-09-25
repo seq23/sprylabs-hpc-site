@@ -1,6 +1,6 @@
 ---
 title: "Your personal operating system: what it is and how to build it"
-description: "Your personal operating system: what it is and how to build it — a calm, executable framework (Spry Executive OS)."
+description: "Your personal operating system, what it is and how to build it: a small set of rules, routines and reviews that make good days repeatable instead of lucky."
 date: "2026-04-09"
 cluster: "systems"
 pillar: "systems & os thinking"

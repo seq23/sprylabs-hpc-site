@@ -2517,9 +2517,29 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-SEARCH-SNIPPET-BOUNDS",
+      "validation_id": "VAL-SEARCH-SNIPPET-BOUNDS",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:search-snippet-bounds",
+      "order": 243,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-REDIRECT-AND-LINK-INTEGRITY",
+      "validation_id": "VAL-REDIRECT-AND-LINK-INTEGRITY",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:redirect-and-link-integrity",
+      "order": 244,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 251,
+  "entry_count": 253,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3125,6 +3145,14 @@
         {
           "id": "VAL-WORKFLOW-STEP-ENV-CONTRACT",
           "command": "npm run validate:workflow-step-env-contract"
+        },
+        {
+          "id": "VAL-SEARCH-SNIPPET-BOUNDS",
+          "command": "npm run validate:search-snippet-bounds"
+        },
+        {
+          "id": "VAL-REDIRECT-AND-LINK-INTEGRITY",
+          "command": "npm run validate:redirect-and-link-integrity"
         }
       ]
     },
@@ -3311,6 +3339,14 @@
         {
           "id": "VAL-WORKFLOW-STEP-ENV-CONTRACT",
           "command": "npm run validate:workflow-step-env-contract"
+        },
+        {
+          "id": "VAL-SEARCH-SNIPPET-BOUNDS",
+          "command": "npm run validate:search-snippet-bounds"
+        },
+        {
+          "id": "VAL-REDIRECT-AND-LINK-INTEGRITY",
+          "command": "npm run validate:redirect-and-link-integrity"
         }
       ]
     },

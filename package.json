@@ -118,7 +118,7 @@
     "reddit:normalize": "node scripts/reddit/normalize_reddit.js",
     "reddit:publish": "node scripts/reddit/publish_daily.js",
     "reddit:score": "node scripts/reddit/score_clusters.js",
-    "redirects:apply": "node scripts/content/apply_redirect_map.mjs",
+    "redirects:apply": "node scripts/content/apply_redirect_map.mjs && node scripts/content/sync_redirect_forms.mjs",
     "release:agent-intake": "npm run release:agent-intake:raw && npm run release:content-finalize && npm run release:converge-before-freeze && npm run authority:scale:prepare-drift-scope && npm run authority:scale:freeze && npm run authority:scale:clear-scope && npm run validate:authority-scale",
     "release:agent-intake:raw": "npm run agent:bhpc:validate && npm run agent:bhpc:absorb && npm run agent:bhpc:trace && npm run agent:bhpc:compile-acceptance && npm run validate:bhpc-seo-execution && npm run agent:bhpc:plan-exact && npm run authority:scale:prepare-scope && npm run authority:scale:restore && npm run validate:bhpc-page-family-contract && npm run agent:bhpc:apply-exact && SCHEMA_REPAIR_SCOPE=required npm run schema:repair-parity && npm run retrofit:recommendation-summary && npm run agent:bhpc:trace-exact && npm run validate:page-seo && npm run validate:agent-run",
     "release:attest": "node scripts/release/release_attestation.mjs",
@@ -408,7 +408,9 @@
     "workflow:synthesis-weekly": "npm run workflow:content-expansion -- --mode=synthesis",
     "workflow:whitepaper": "npm run workflow:content-expansion -- --mode=whitepaper",
     "workflow:zero-dollar-autonomous": "npm run release:zero-dollar-autonomous",
-    "validate:workflow-step-env-contract": "node scripts/validators/validate_workflow_step_env_contract.mjs"
+    "validate:workflow-step-env-contract": "node scripts/validators/validate_workflow_step_env_contract.mjs",
+    "validate:search-snippet-bounds": "node scripts/validators/validate_search_snippet_bounds.mjs",
+    "validate:redirect-and-link-integrity": "node scripts/validators/validate_redirect_and_link_integrity.mjs"
   },
   "engines": {
     "node": ">=24.0.0"

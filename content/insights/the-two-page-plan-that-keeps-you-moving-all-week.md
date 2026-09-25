@@ -1,6 +1,6 @@
 ---
 title: "The two-page plan that keeps you moving all week"
-description: "The two-page plan that keeps you moving all week — a calm, executable framework (Spry Executive OS)."
+description: "The two-page plan that keeps you moving all week: one page for the week's outcomes and one for daily next actions, reviewed each morning in under five minutes."
 date: "2026-05-21"
 cluster: "execution"
 pillar: "daily execution"

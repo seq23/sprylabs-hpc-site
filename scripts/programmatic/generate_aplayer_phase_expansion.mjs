@@ -677,6 +677,13 @@ for (const audience of audiences) for (const state of states) for (const dimensi
     type:'answer', lane:'question_cluster', intent:'question', query,
     path:`answers/phase4/${slug}.html`, concept, primary, secondary,
     axisLabel: `${dimension} while ${state}`,
+    // The question itself runs 75-100 characters before the brand suffix, and
+    // six hundred of them share one opening ("What should a founder do when
+    // ..."), so a title cut to the 70-character search limit lost exactly the
+    // part that told two pages apart (Bing Site Scan, 25 Sep 2026). The title
+    // leads with the two axes that make the page unique; the h1 and the query
+    // keep the full question.
+    extraFields: {seo_title: `${dimension[0].toUpperCase()}${dimension.slice(1)} for ${/^[aeiou]/i.test(audience) ? 'an' : 'a'} ${audience} ${state}`},
     uniqueAtom: `Answers the ${state} moment with a specific ${dimension} move drawn from ${concept.framework}, rather than encouragement or a tool switch. ${d.move}`,
     directAnswer: twoSentenceAnswer(st.opening, d.move),
     example: {
@@ -1010,7 +1017,7 @@ function renderPage(atom) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${esc(atom.query)} | Billionaire High Performance Coach</title>
+  <title>${esc(atom.seo_title || atom.query)} | Billionaire High Performance Coach</title>
   <meta name="description" content="${esc(atom.definition)}">
   <link rel="canonical" href="${esc(atom.canonical_url)}">
   <meta property="og:url" content="${esc(atom.canonical_url)}">

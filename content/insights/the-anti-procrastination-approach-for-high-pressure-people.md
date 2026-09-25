@@ -1,6 +1,6 @@
 ---
 title: "The anti-procrastination approach for high-pressure people"
-description: "The anti-procrastination approach for high-pressure people — a calm, executable framework (Spry Executive OS)."
+description: "An anti-procrastination approach for high-pressure people: shrink the first step, remove one friction point and start a 25-minute loop before the dread builds."
 date: "2026-02-11"
 cluster: "execution"
 pillar: "daily execution"

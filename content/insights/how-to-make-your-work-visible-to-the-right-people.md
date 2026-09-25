@@ -1,6 +1,6 @@
 ---
 title: "How to make your work visible to the right people"
-description: "How to make your work visible to the right people — a calm, executable framework (Spry Executive OS)."
+description: "How to make your work visible to the right people: share short, specific progress updates on a steady cadence with the few people who can act on them."
 date: "2026-04-25"
 cluster: "leverage"
 pillar: "wealth & leverage"

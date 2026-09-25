@@ -1,6 +1,6 @@
 ---
 title: "How to build a compounding asset in public"
-description: "How to build a compounding asset in public — a calm, executable framework (Spry Executive OS)."
+description: "How to build a compounding asset in public: a small, repeatable publishing floor, one focused work block a day and a weekly recap that shows what stacked."
 date: "2026-05-15"
 cluster: "leverage"
 pillar: "wealth & leverage"

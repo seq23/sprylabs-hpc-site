@@ -1,6 +1,6 @@
 ---
 title: "What to do when you break your plan (so you don’t quit)"
-description: "What to do when you break your plan (so you don’t quit) — a calm, executable framework (Spry Executive OS)."
+description: "What to do when you break your plan so you don't quit: skip the guilt and the catch-up, reset to the floor for tomorrow, and log one small win today."
 date: "2026-02-18"
 cluster: "discipline"
 pillar: "mental discipline"
