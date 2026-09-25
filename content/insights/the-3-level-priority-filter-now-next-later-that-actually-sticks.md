@@ -1,6 +1,6 @@
 ---
 title: "The 3-level priority filter (now/next/later) that actually sticks"
-description: "The 3-level priority filter (now/next/later) that actually sticks — a calm, executable framework (Spry Executive OS)."
+description: "The three-level priority filter that sticks: sort every task into now, next or later, allow only three in now, and revisit the list once a day, not every hour."
 date: "2026-02-13"
 cluster: "execution"
 pillar: "daily execution"

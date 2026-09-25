@@ -1,6 +1,6 @@
 ---
 title: "How to stop performing and start leading (quiet power)"
-description: "How to stop performing and start leading (quiet power) — a calm, executable framework (Spry Executive OS)."
+description: "How to stop performing and start leading with quiet power: fewer announcements, more kept commitments, and a visible record of follow-through people can trust."
 date: "2026-02-26"
 cluster: "identity"
 pillar: "identity & power"

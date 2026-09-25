@@ -1,6 +1,6 @@
 ---
 title: "How to audit your life like a product"
-description: "How to audit your life like a product — a calm, executable framework (Spry Executive OS)."
+description: "How to audit your life like a product: list what creates drag, pick the fix with the biggest payoff and ship a small change today, not a full redesign."
 date: "2026-05-24"
 cluster: "systems"
 pillar: "systems & os thinking"

@@ -1,6 +1,6 @@
 ---
 title: "Discipline vs motivation: the calm version that works"
-description: "Discipline vs motivation: the calm version that works — a calm, executable framework (Spry Executive OS)."
+description: "Discipline vs motivation, the calm version: why a small daily floor beats waiting to feel ready, and a four-step loop to run when motivation is gone."
 date: "2026-02-15"
 cluster: "discipline"
 pillar: "mental discipline"

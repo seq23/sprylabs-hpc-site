@@ -169,7 +169,12 @@ for (const file of files) {
   }
   seenTitles.set(repairedTitle, rel);
 }
-const report={status:'PASS',changed_files:changedFiles,inserted_canonicals:inserted,title_repairs:titleRepairs.length,changes,title_repair_details:titleRepairs};
+// Last: hold every indexable page's title to 30-70 characters and its meta
+// description to 110-160, unique site-wide (scripts/lib/search_snippet_bounds.cjs).
+// It runs after the duplicate-title pass above because that pass can only make
+// titles longer, and this is the last metadata writer in every lane.
+const snippetBounds = require('./bound_search_snippets.cjs').boundSearchSnippets();
+const report={status:'PASS',changed_files:changedFiles,inserted_canonicals:inserted,title_repairs:titleRepairs.length,snippet_bounds:{scanned:snippetBounds.scanned,changed:snippetBounds.changed,unresolved:snippetBounds.unresolved},changes,title_repair_details:titleRepairs};
 fs.mkdirSync(path.join(root,'artifacts/validation'),{recursive:true});
 fs.writeFileSync(path.join(root,'artifacts/validation/dual-domain-metadata-repair.json'),JSON.stringify(report,null,2)+'\n');
-console.log(`[repair:dual-domain-metadata] PASS: changed=${changedFiles}; inserted=${inserted}; title_repairs=${titleRepairs.length}`);
+console.log(`[repair:dual-domain-metadata] PASS: changed=${changedFiles}; inserted=${inserted}; title_repairs=${titleRepairs.length}; snippet_bounds_changed=${snippetBounds.changed}/${snippetBounds.scanned}; snippet_bounds_unresolved=${snippetBounds.unresolved.length}`);

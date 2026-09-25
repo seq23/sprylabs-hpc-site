@@ -1,6 +1,6 @@
 ---
 title: "How to design an OS that survives chaos days"
-description: "How to design an OS that survives chaos days — a calm, executable framework (Spry Executive OS)."
+description: "How to design a personal OS that survives chaos days: a minimum floor for bad days, a no catch-up rule for missed ones, and one loop you can always run."
 date: "2026-03-09"
 cluster: "systems"
 pillar: "systems & OS thinking"

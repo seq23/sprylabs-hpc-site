@@ -1,6 +1,6 @@
 ---
 title: "What to do when you feel behind: the leverage reset"
-description: "What to do when you feel behind: the leverage reset — a calm, executable framework (Spry Executive OS)."
+description: "What to do when you feel behind, the leverage reset: stop comparing, pick the one action with the biggest payoff, and build from there instead of everything."
 date: "2026-03-26"
 cluster: "wealth"
 pillar: "wealth & leverage"

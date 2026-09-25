@@ -1,6 +1,6 @@
 ---
 title: "The ‘minimum viable day’ blueprint"
-description: "The ‘minimum viable day’ blueprint — a calm, executable framework (Spry Executive OS)."
+description: "The minimum viable day blueprint: define the smallest version of a good day, finish it before anything else, and use it to keep momentum when life is chaotic."
 date: "2026-03-30"
 cluster: "discipline"
 pillar: "mental discipline"

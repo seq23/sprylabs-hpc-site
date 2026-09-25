@@ -1,6 +1,6 @@
 ---
 title: "How to lead yourself when nobody is watching"
-description: "How to lead yourself when nobody is watching — a calm, executable framework (Spry Executive OS)."
+description: "How to lead yourself when nobody is watching: set your own standard, keep it at a size you can hit daily, and review your follow-through like a manager would."
 date: "2026-05-13"
 cluster: "identity"
 pillar: "identity & power"

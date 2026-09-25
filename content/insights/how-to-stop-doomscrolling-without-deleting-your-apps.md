@@ -1,6 +1,6 @@
 ---
 title: "How to stop doomscrolling without deleting your apps"
-description: "How to stop doomscrolling without deleting your apps — a calm, executable framework (Spry Executive OS)."
+description: "How to stop doomscrolling without deleting your apps: move the phone during the first work loop, replace one scroll trigger, and count the focused blocks."
 date: "2026-03-31"
 cluster: "identity"
 pillar: "identity & power"

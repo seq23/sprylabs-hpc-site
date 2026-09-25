@@ -1,6 +1,6 @@
 ---
 title: "The weekly review template that keeps life from drifting"
-description: "The weekly review template that keeps life from drifting — a calm, executable framework (Spry Executive OS)."
+description: "The weekly review template that keeps life from drifting: wins, misses, one lesson, next week's outcome and the first action, done in about 20 minutes."
 date: "2026-04-14"
 cluster: "systems"
 pillar: "systems & os thinking"

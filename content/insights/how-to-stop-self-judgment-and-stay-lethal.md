@@ -1,6 +1,6 @@
 ---
 title: "How to stop self-judgment and stay lethal"
-description: "How to stop self-judgment and stay lethal — a calm, executable framework (Spry Executive OS)."
+description: "How to stop self-judgment and stay sharp: treat misses as data, return to the floor the next day, and keep your energy for the work instead of the critique."
 date: "2026-05-18"
 cluster: "identity"
 pillar: "identity & power"

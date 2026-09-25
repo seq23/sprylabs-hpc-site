@@ -1,6 +1,6 @@
 ---
 title: "How to turn goals into a system you can run"
-description: "How to turn goals into a system you can run — a calm, executable framework (Spry Executive OS)."
+description: "How to turn goals into a system you can run: translate the outcome into a daily floor, a weekly review and one next action, so progress stops depending on mood."
 date: "2026-04-29"
 cluster: "systems"
 pillar: "systems & os thinking"

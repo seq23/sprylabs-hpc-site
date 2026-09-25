@@ -1,6 +1,6 @@
 ---
 title: "How to delegate without losing quality"
-description: "How to delegate without losing quality — a calm, executable framework (Spry Executive OS)."
+description: "How to delegate without losing quality: write down what done looks like, hand over one task with that checklist, and review the first result before scaling up."
 date: "2026-05-10"
 cluster: "leverage"
 pillar: "wealth & leverage"

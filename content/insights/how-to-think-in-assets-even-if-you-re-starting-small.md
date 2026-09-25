@@ -1,6 +1,6 @@
 ---
 title: "How to think in assets (even if you’re starting small)"
-description: "How to think in assets (even if you’re starting small) — a calm, executable framework (Spry Executive OS)."
+description: "How to think in assets when you're starting small: favour work that keeps paying off, such as templates, writing and skills, over tasks that vanish once done."
 date: "2026-03-19"
 cluster: "wealth"
 pillar: "wealth & leverage"

@@ -1,6 +1,6 @@
 ---
 title: "How to build self-trust with tiny, provable wins"
-description: "How to build self-trust with tiny, provable wins — a calm, executable framework (Spry Executive OS)."
+description: "How to build self-trust with tiny, provable wins: make promises small enough to keep, keep them daily, and write down the proof so the pattern becomes visible."
 date: "2026-03-01"
 cluster: "identity"
 pillar: "identity & power"

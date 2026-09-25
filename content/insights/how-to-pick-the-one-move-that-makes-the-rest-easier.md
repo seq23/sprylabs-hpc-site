@@ -1,6 +1,6 @@
 ---
 title: "How to pick the one move that makes the rest easier"
-description: "How to pick the one move that makes the rest easier — a calm, executable framework (Spry Executive OS)."
+description: "How to pick the one move that makes the rest easier: list the next three actions, ask which one unblocks the others, and do that one first in a 30-minute block."
 date: "2026-04-06"
 cluster: "execution"
 pillar: "daily execution"

@@ -1,6 +1,6 @@
 ---
 title: "How to end the day so tomorrow starts fast"
-description: "How to end the day so tomorrow starts fast — a calm, executable framework (Spry Executive OS)."
+description: "How to end the day so tomorrow starts fast: close open loops, write a two-sentence recap, and set tomorrow's first action so the morning needs no decisions."
 date: "2026-02-10"
 cluster: "execution"
 pillar: "daily execution"

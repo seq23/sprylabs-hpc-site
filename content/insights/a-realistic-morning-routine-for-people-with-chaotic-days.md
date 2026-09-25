@@ -1,6 +1,6 @@
 ---
 title: "A Realistic Morning Routine for People with Chaotic Days"
-description: "The Adaptive Morning Protocol is a 5-step routine designed for people whose days are unpredictable."
+description: "The Adaptive Morning Protocol: a five-step morning routine for people whose days are unpredictable, built to survive interruptions, not to need a calm start."
 date: "2026-03-27"
 cluster: "execution"
 pillar: "daily execution"

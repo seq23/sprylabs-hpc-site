@@ -1,6 +1,6 @@
 ---
 title: "How to build templates that save you hours"
-description: "How to build templates that save you hours — a calm, executable framework (Spry Executive OS)."
+description: "How to build templates that save you hours: spot the tasks you redo from scratch, save the structure once, and reuse it so starting takes minutes."
 date: "2026-05-14"
 cluster: "systems"
 pillar: "systems & os thinking"

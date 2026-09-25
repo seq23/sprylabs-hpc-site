@@ -1,6 +1,6 @@
 ---
 title: "How to build templates that make you faster every week"
-description: "How to build templates that make you faster every week — a calm, executable framework (Spry Executive OS)."
+description: "How to build templates that make you faster every week: capture the steps you repeat, turn them into a checklist, and refine one after each weekly review."
 date: "2026-03-12"
 cluster: "systems"
 pillar: "systems & OS thinking"

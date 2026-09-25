@@ -1,6 +1,6 @@
 ---
 title: "How to prevent work from expanding forever (scope control)"
-description: "How to prevent work from expanding forever (scope control) — a calm, executable framework (Spry Executive OS)."
+description: "How to stop work expanding forever with scope control: define done before you start, cap the task to one work block, and ship the smallest complete version."
 date: "2026-03-15"
 cluster: "systems"
 pillar: "systems & OS thinking"

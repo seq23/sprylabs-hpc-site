@@ -1,6 +1,6 @@
 ---
 title: "The ‘offer clarity’ checklist: make it easy for people to say yes"
-description: "The ‘offer clarity’ checklist: make it easy for people to say yes — a calm, executable framework (Spry Executive OS)."
+description: "The offer clarity checklist: say who it is for, what they get, what it costs and what happens next, so saying yes takes no guesswork on the buyer's side."
 date: "2026-04-04"
 cluster: "wealth"
 pillar: "wealth & leverage"

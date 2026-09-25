@@ -1,6 +1,6 @@
 ---
 title: "Identity-based execution: how to act like the person you’re becoming"
-description: "Identity-based execution: how to act like the person you’re becoming — a calm, executable framework (Spry Executive OS)."
+description: "Identity-based execution: act like the person you're becoming by setting their standard as a small daily floor and collecting proof that you keep it."
 date: "2026-02-25"
 cluster: "identity"
 pillar: "identity & power"

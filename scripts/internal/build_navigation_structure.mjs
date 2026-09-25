@@ -25,6 +25,7 @@ const requireCjs = createRequire(import.meta.url);
 const ROOT = process.cwd();
 const { routeFor, hostFor } = requireCjs(path.join(ROOT, 'scripts/lib/dual_domain_policy.cjs'));
 const { serializeSchema, mainEntityOfPage, SCHEMA_SCRIPT_RE } = requireCjs(path.join(ROOT, 'scripts/lib/citation_page_schema.cjs'));
+const snippetBounds = requireCjs(path.join(ROOT, 'scripts/lib/search_snippet_bounds.cjs'));
 
 const MAX_LINKS_PER_HUB = 70;
 // Raised from 6. The property in this portfolio that measurably earns AI
@@ -222,6 +223,42 @@ const topicHubByPage = new Map();
 // the same subject in the other parts of the library.
 const topicHubsByTopic = new Map();
 
+// Hub <title> and meta description, inside the bounds every indexable page is
+// held to (scripts/lib/search_snippet_bounds.cjs: title 30-70, description
+// 110-160). The old one-line hub description - "12 insights pages on
+// consistency and habits, listed by what each one answers." - ran 64-98
+// characters and was the whole of Bing's rule 118 finding on 25 Sep 2026 (32
+// hubs across both hosts). Each description now names what is actually on the
+// page: its own entries' headings, or for a section hub its topics.
+const DESC_MAX = snippetBounds.DESC_MAX;
+function hubDescription(prefix, examples, blurb) {
+  const build = (lead) => {
+    let acc = lead;
+    for (const ex of examples) {
+      const next = `${acc}${acc === lead ? ', including ' : '; '}${ex}`;
+      if (next.length + 1 > DESC_MAX) break;
+      acc = next;
+    }
+    if (acc === lead && examples.length) {
+      const room = DESC_MAX - lead.length - ', including '.length;
+      if (room >= 24) return `${lead}, including ${snippetBounds.cutWords(examples[0], room)}`;
+    }
+    return `${acc}.`;
+  };
+  let out = build(prefix);
+  if (out.length < snippetBounds.DESC_MIN && blurb) out = build(`${blurb.replace(/\.$/, '')}. ${prefix}`);
+  return out;
+}
+// "AI coaching" and "ChatGPT prompts" keep their capitals mid-sentence; a
+// plain first word ("Consistency and habits") drops to lower case.
+function midSentence(name) {
+  return String(name).replace(/^([A-Z])([a-z]+\b)/, (_m, a, b) => a.toLowerCase() + b);
+}
+function hubTitle(parts) {
+  const withBrand = `${parts.join(' | ')} | Spry Executive OS`;
+  return withBrand.length <= snippetBounds.TITLE_MAX ? withBrand : parts.join(' | ');
+}
+
 function sectionHubRel(section) {
   return section === 'guides' ? 'guides/index.html' : `${section}/index.html`;
 }
@@ -259,8 +296,11 @@ for (const [section, topics] of bySection) {
         hubs.push({
           rel, route, host: hostFor(route), kind: 'topic',
           h1: `${label} in ${sectionName.toLowerCase()}`,
-          title: `${label} | ${sectionName} | Spry Executive OS`,
-          description: `${chunk.length} ${sectionName.toLowerCase()} pages on ${topic.name.toLowerCase()}, listed by what each one answers.`,
+          title: hubTitle([label, sectionName]),
+          description: hubDescription(
+            `${sectionName} on ${midSentence(topic.name)}${chunks.length > 1 ? ` (part ${idx + 1} of ${chunks.length})` : ''}: ${chunk.length} ${chunk.length === 1 ? 'page' : 'pages'}`,
+            chunk.map((pg) => pg.h1),
+            SECTION_BLURB.get(section)),
           parents: [sectionCrumb],
           intro: `Every ${sectionName.toLowerCase()} page in the library about ${topic.name.toLowerCase()}. Each link is the page's own heading, so you can tell what it answers before you open it.`,
           links: chunk.map((pg) => ({ href: pg.route, text: pg.h1 })),
@@ -277,8 +317,11 @@ for (const [section, topics] of bySection) {
   hubs.push({
     rel: sectionRel, route: sectionRoute, host: sectionHost, kind: 'section',
     h1: `${sectionName}: the full index`,
-    title: `${sectionName} index | Spry Executive OS`,
-    description: `${SECTION_BLURB.get(section) || ''} ${total} pages, grouped by topic.`.trim(),
+    title: hubTitle([`${sectionName} index`]),
+    description: hubDescription(
+      `${(SECTION_BLURB.get(section) || sectionName).replace(/\.$/, '')}: ${total} pages${total > MAX_LINKS_PER_HUB ? `, grouped into ${topics.size} topics` : ''}`,
+      total > MAX_LINKS_PER_HUB ? [...topics.values()].map((t) => midSentence(t.name)) : sectionLinks.map((l) => l.text),
+      ''),
     parents: [],
     intro: SECTION_BLURB.get(section) || '',
     links: sectionLinks,

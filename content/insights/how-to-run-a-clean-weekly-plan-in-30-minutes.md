@@ -1,6 +1,6 @@
 ---
 title: "How to run a clean weekly plan in 30 minutes"
-description: "How to run a clean weekly plan in 30 minutes — a calm, executable framework (Spry Executive OS)."
+description: "How to run a clean weekly plan in 30 minutes: review last week's wins, pick one outcome per day, and block the first action of each before Monday starts."
 date: "2026-05-06"
 cluster: "execution"
 pillar: "daily execution"

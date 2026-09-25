@@ -1,6 +1,6 @@
 ---
 title: "The 3-checkpoint day structure for high performers"
-description: "The 3-checkpoint day structure for high performers — a calm, executable framework (Spry Executive OS)."
+description: "The three-checkpoint day for high performers: a morning outcome, a midday reset and an evening recap, so the plan is corrected before the day drifts."
 date: "2026-05-01"
 cluster: "execution"
 pillar: "daily execution"

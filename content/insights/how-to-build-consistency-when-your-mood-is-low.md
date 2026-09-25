@@ -1,6 +1,6 @@
 ---
 title: "How to build consistency when your mood is low"
-description: "How to build consistency when your mood is low — a calm, executable framework (Spry Executive OS)."
+description: "How to build consistency when your mood is low: lower the floor instead of skipping, run one 25-minute loop and log the win so a bad day never breaks the chain."
 date: "2026-04-07"
 cluster: "discipline"
 pillar: "mental discipline"
