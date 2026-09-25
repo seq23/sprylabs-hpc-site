@@ -97,8 +97,10 @@ jobs:
             # A named skip, written down. Previously this produced a log line and
             # nothing else, so "never configured" and "ran fine" looked the same
             # from outside the run.
-            node scripts/distribution/record_step_outcome.mjs .build/gsc/queries-ingest-outcome.json \
-              queries:ingest skipped_no_credential 0 "GSC_SERVICE_ACCOUNT_JSON secret is not configured"
+            for site in spry bhpc; do
+              node scripts/distribution/record_step_outcome.mjs .build/gsc/queries-ingest-outcome-$site.json \
+                queries:ingest:$site skipped_no_credential 0 "GSC_SERVICE_ACCOUNT_JSON secret is not configured"
+            done
             echo "GSC skipped: service account not configured"
             exit 0
           fi
@@ -119,23 +121,36 @@ jobs:
           # now records a named outcome and the run is failed at the end of the job
           # if the ingest crashed. A missing credential is a legitimate skip and is
           # named as one; a crash is not.
-          if [ -z "${GSC_SITE_URL_SPRY:-}" ]; then
-            node scripts/distribution/record_step_outcome.mjs .build/gsc/queries-ingest-outcome.json \
-              queries:ingest skipped_no_credential 0 "GSC_SITE_URL_SPRY is not configured"
-          else
-            set +e
-            GSC_SERVICE_ACCOUNT_JSON="$RUNNER_TEMP/.gsc-service-account.json" GSC_SITE_URL="$GSC_SITE_URL_SPRY" \
-              npm run queries:ingest 2>&1 | tee .build/gsc/queries-ingest.log
-            ingest_status=${PIPESTATUS[0]}
-            set -e
-            if [ "$ingest_status" -eq 0 ]; then
-              node scripts/distribution/record_step_outcome.mjs .build/gsc/queries-ingest-outcome.json \
-                queries:ingest ran 0 "" .build/gsc/queries-ingest.log
-            else
-              node scripts/distribution/record_step_outcome.mjs .build/gsc/queries-ingest-outcome.json \
-                queries:ingest failed "$ingest_status" "scripts/queries/ingest_gsc_evidence.py exited non-zero" .build/gsc/queries-ingest.log
+          #
+          # Both properties are ingested. Only spryexecutiveos.com used to be, so
+          # billionairehighperformancecoach.com's measured demand was last read on
+          # 2026-08-27. The ingest writes the evidence file inside the runner, and
+          # this workflow is contents: read, so the refreshed file is copied into
+          # .build/gsc/ and published with the run artifact below; without that the
+          # measurement died with the runner.
+          ingest_site() {
+            local site="$1" site_url="$2" secret_name="$3"
+            if [ -z "$site_url" ]; then
+              node scripts/distribution/record_step_outcome.mjs .build/gsc/queries-ingest-outcome-$site.json \
+                queries:ingest:$site skipped_no_credential 0 "$secret_name is not configured"
+              return 0
             fi
-          fi
+            set +e
+            GSC_SERVICE_ACCOUNT_JSON="$RUNNER_TEMP/.gsc-service-account.json" GSC_SITE_URL="$site_url" \
+              npm run queries:ingest 2>&1 | tee .build/gsc/queries-ingest-$site.log
+            local status=${PIPESTATUS[0]}
+            set -e
+            if [ "$status" -eq 0 ]; then
+              node scripts/distribution/record_step_outcome.mjs .build/gsc/queries-ingest-outcome-$site.json \
+                queries:ingest:$site ran 0 "" .build/gsc/queries-ingest-$site.log
+              cp data/queries/evidence/evidence_queries.json .build/gsc/evidence_queries-$site.json
+            else
+              node scripts/distribution/record_step_outcome.mjs .build/gsc/queries-ingest-outcome-$site.json \
+                queries:ingest:$site failed "$status" "scripts/queries/ingest_gsc_evidence.py exited non-zero" .build/gsc/queries-ingest-$site.log
+            fi
+          }
+          ingest_site spry "${GSC_SITE_URL_SPRY:-}" GSC_SITE_URL_SPRY
+          ingest_site bhpc "${GSC_SITE_URL_BHPC:-}" GSC_SITE_URL_BHPC
           if [ -n "${GSC_SITE_URL_SPRY:-}" ]; then
             grep '^https://spryexecutiveos.com/' .build/indexnow-priority.txt > .build/gsc-priority-spry.txt || true
             python3 scripts/distribution/gsc_submit_sitemaps.py "$RUNNER_TEMP/.gsc-service-account.json" "$GSC_SITE_URL_SPRY" https://spryexecutiveos.com/sitemap-spry.xml
@@ -168,4 +183,6 @@ jobs:
           retention-days: 90
 
       - name: Fail the run if Search Console ingestion crashed
-        run: node scripts/distribution/assert_step_outcome.mjs .build/gsc/queries-ingest-outcome.json
+        run: |
+          node scripts/distribution/assert_step_outcome.mjs .build/gsc/queries-ingest-outcome-spry.json
+          node scripts/distribution/assert_step_outcome.mjs .build/gsc/queries-ingest-outcome-bhpc.json

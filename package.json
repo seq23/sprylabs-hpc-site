@@ -407,7 +407,8 @@
     "workflow:spry-full-rebuild": "npm run strategy:gap-fill:backlog && npm run strategy:gap-fill:release-gap && npm run build:all && npm run release:content-finalize && npm run validate:full-audit && npm run sitemap:lastmod:content && npm run validate:lastmod-ledger-final",
     "workflow:synthesis-weekly": "npm run workflow:content-expansion -- --mode=synthesis",
     "workflow:whitepaper": "npm run workflow:content-expansion -- --mode=whitepaper",
-    "workflow:zero-dollar-autonomous": "npm run release:zero-dollar-autonomous"
+    "workflow:zero-dollar-autonomous": "npm run release:zero-dollar-autonomous",
+    "validate:workflow-step-env-contract": "node scripts/validators/validate_workflow_step_env_contract.mjs"
   },
   "engines": {
     "node": ">=24.0.0"

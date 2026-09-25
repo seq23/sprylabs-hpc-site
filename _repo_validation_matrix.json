@@ -2507,9 +2507,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-WORKFLOW-STEP-ENV-CONTRACT",
+      "validation_id": "VAL-WORKFLOW-STEP-ENV-CONTRACT",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:workflow-step-env-contract",
+      "order": 242,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 250,
+  "entry_count": 251,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3111,6 +3121,10 @@
         {
           "id": "VAL-AGENT-CREATED-PAGE-DEMAND-GATE",
           "command": "npm run validate:agent-created-page-demand-gate"
+        },
+        {
+          "id": "VAL-WORKFLOW-STEP-ENV-CONTRACT",
+          "command": "npm run validate:workflow-step-env-contract"
         }
       ]
     },
@@ -3293,6 +3307,10 @@
         {
           "id": "VAL-CREATED-PAGE-IS-COMPLETE",
           "command": "npm run validate:created-page-complete"
+        },
+        {
+          "id": "VAL-WORKFLOW-STEP-ENV-CONTRACT",
+          "command": "npm run validate:workflow-step-env-contract"
         }
       ]
     },
