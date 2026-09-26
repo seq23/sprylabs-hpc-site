@@ -8,7 +8,7 @@ import {groupBhpcSemanticEntries, renderBhpcRecordEvidence, renderBhpcVisibleSou
 import {normalizeBhpcInternalLinkHref, normalizeBhpcExternalCtaHref} from '../lib/bhpc_internal_links.mjs';
 import {mergeBhpcExternalCtaLinks} from '../lib/bhpc_conversion_contract.mjs';
 import {bhpcReaderQuestionCandidates, cleanBhpcReaderHeading} from '../lib/bhpc_agent_reader_questions.mjs';
-import {BHPC_PRODUCT_ANCHOR_SENTENCE, bhpcGeneratedCitationDefinition} from '../lib/bhpc_public_page_contract.mjs';
+import {BHPC_PRODUCT_ANCHOR_SENTENCE, bhpcGeneratedCitationDefinition, bhpcCitationDefinitionOf} from '../lib/bhpc_public_page_contract.mjs';
 import {createRequire} from 'node:module';
 // THE ONE AUTHOR OF CITATION_PAGE_SCHEMA. A created page needs the block, and
 // hand-rolling the <script> here is what validate:citation-schema-authority refused
@@ -561,16 +561,9 @@ function mergeRecordLedger(html, recordIds) {
   return `${html}\n${comment}\n`;
 }
 
-// The page's own definition sentence, as published. Decoded so it can be
-// re-escaped by whichever block reuses it, rather than double-escaped.
-function citationDefinitionOf(html = '') {
-  const m = String(html).match(/<p[^>]*class="[^"]*citation-definition[^"]*"[^>]*>\s*(?:<strong>)?([\s\S]*?)(?:<\/strong>)?\s*<\/p>/i);
-  if (!m) return '';
-  const text = m[1].replace(/<[^>]+>/g, '')
-    .replace(/&amp;/g, '&').replace(/&#39;/g, "'").replace(/&quot;/g, '"')
-    .replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-  return text.replace(/\s+/g, ' ').trim();
-}
+// The page's own definition sentence: one shared reader, see
+// bhpcCitationDefinitionOf in scripts/lib/bhpc_public_page_contract.mjs.
+const citationDefinitionOf = bhpcCitationDefinitionOf;
 
 // Was a third private copy of the same regex pair, one of three that had to be
 // edited together and never were. It now delegates to the shared reader-question

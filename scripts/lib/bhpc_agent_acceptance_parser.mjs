@@ -1,4 +1,7 @@
-import {slug} from '../agent_intake/bhpc_agent_common.mjs';
+import fs from 'node:fs';
+import path from 'node:path';
+import {slug, ROOT} from '../agent_intake/bhpc_agent_common.mjs';
+import {bhpcCitationDefinitionOf} from './bhpc_public_page_contract.mjs';
 import {
   BHPC_AGENT_BLOCK_TYPES,
   blockTypesForAgentText,
@@ -8,6 +11,18 @@ import {resolveBhpcAgentRoute} from './bhpc_agent_route_resolver.mjs';
 import {partitionBhpcInternalLinkActions, deriveBhpcInternalLinkActionsFromText, deriveBhpcInternalLinkActionsFromNavigation, normalizeBhpcInternalLinkHref} from './bhpc_internal_links.mjs';
 import {mergeBhpcExternalCtaLinks} from './bhpc_conversion_contract.mjs';
 import {cleanBhpcReaderHeading, isPublishableBhpcReaderQuestion} from './bhpc_agent_reader_questions.mjs';
+
+// Which required blocks the applier cannot honestly render on this target.
+// existingHtml is null for a page that does not exist yet (the generator that
+// creates it always writes a p.citation-definition), so only an EXISTING page
+// without one makes definition_callout unrenderable.
+export function unrenderableBhpcRequiredBlocks(requiredBlockTypes=[],existingHtml=null){
+  const out=[];
+  if(existingHtml!==null&&requiredBlockTypes.includes(BHPC_AGENT_BLOCK_TYPES.DEFINITION_CALLOUT)&&!bhpcCitationDefinitionOf(existingHtml)){
+    out.push({type:BHPC_AGENT_BLOCK_TYPES.DEFINITION_CALLOUT,reason:'no_citation_definition_on_target_page'});
+  }
+  return out;
+}
 
 function clean(value=''){return String(value??'').replace(/\s+/g,' ').trim()}
 function unique(values=[]){const seen=new Set(),out=[];for(const raw of values){const value=clean(raw);const key=value.toLowerCase();if(value&&!seen.has(key)){seen.add(key);out.push(value)}}return out}
@@ -109,7 +124,17 @@ export function buildBhpcAcceptanceEntry(row={},context={}){
   if(externalCtaActions.length) requiredBlockTypes.push(BHPC_AGENT_BLOCK_TYPES.CTA_CALLOUT);
   if (String(row.source_intent_operation || row.operation || '') === 'CREATE_NEW_TARGET_PAGE' && /chatgpt|\bprompt\b|convert these|design an end-of-day/i.test(query)) requiredBlockTypes.push(BHPC_AGENT_BLOCK_TYPES.PROMPT_TEMPLATE);
   if(['comparison','alternatives'].includes(seo?.canonical_page_type)&&!requiredBlockTypes.includes(BHPC_AGENT_BLOCK_TYPES.COMPARISON_TABLE)) requiredBlockTypes.push(BHPC_AGENT_BLOCK_TYPES.COMPARISON_TABLE);
-  const blockTypes=unique(requiredBlockTypes);
+  // definition_callout is rendered from the target page's OWN
+  // p.citation-definition and from nothing else (the applier refuses to fall
+  // back to operator-facing text). On an EXISTING page that carries none, the
+  // requirement is one no applier run can satisfy, and the trace is right to
+  // refuse it - so it is recorded as unrenderable, the same channel a
+  // self-referential link action uses, instead of left standing.
+  const targetAbs=route.implementation_path?path.join(ROOT,route.implementation_path):'';
+  const existingTargetHtml=targetAbs&&fs.existsSync(targetAbs)&&fs.statSync(targetAbs).isFile()?fs.readFileSync(targetAbs,'utf8'):null;
+  const unrenderableBlockTypes=unrenderableBhpcRequiredBlocks(requiredBlockTypes,existingTargetHtml);
+  const unrenderableTypeSet=new Set(unrenderableBlockTypes.map(item=>item.type));
+  const blockTypes=unique(requiredBlockTypes).filter(type=>!unrenderableTypeSet.has(type));
   const protectedBuyerPage = ['download.html'].includes(route.implementation_path);
   const blocked=Boolean(route.blocked_reason||String(route.status).startsWith('BLOCKED')||row.seo_execution_status==='INVALID'||protectedBuyerPage);
   const acceptanceStatus=noAction?'NO_ACTION':(blocked?'BLOCKED':'REQUIRED');
@@ -139,6 +164,7 @@ export function buildBhpcAcceptanceEntry(row={},context={}){
     internal_link_source:structuredInternalLinkActions.length?'seo_execution.internal_link_actions':(derivedInternalLinkActions.length?'recommendation_text':(navigationInternalLinkActions.length?'site_navigation_related_section':'none')),
     required_external_cta_links:externalCtaActions,
     rejected_internal_link_actions:rejectedInternalLinkActions,
+    ...(unrenderableBlockTypes.length?{unrenderable_required_blocks:unrenderableBlockTypes}:{}),
     schema_action:seo?.schema_action||'none',
     acceptance_checks:seo?.acceptance_checks||[],
     table_columns_exact:tableColumns(blockTypes),min_table_rows:minimumRows(blockTypes),

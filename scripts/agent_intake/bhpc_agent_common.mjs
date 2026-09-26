@@ -157,10 +157,78 @@ export function repoPathFromIntendedWinnerPage(url, policy = loadExactPolicy()) 
     if (!p) p = 'index.html';
     if (p.endsWith('/')) p += 'index.html';
     if (!/\.html$/.test(p) && !p.endsWith('/index.html')) p = repoPathForServedExtensionlessRoute(p);
-    return p;
+    return repoPathThroughSiteRedirect(p).path;
   } catch {
     return raw.replace(/^\//, '');
   }
+}
+
+// A URL the site RETIRES is still a URL the agent can measure. Crawlers and
+// answer engines keep a retired address for months, so the weekly artifact
+// names it as the page to repair. The 2026-09-26 drop did exactly that: row
+// 2026-09-26-bhpc-020 targeted insights/how-to-end-the-day-so-tomorrow-starts-
+// fast-2.html, a duplicate deleted on 2026-04-06 (d1e559d3e) whose URL
+// _redirects has 301'd to the canonical insight since #107. The resolver
+// ignored _redirects, so the row became CREATE_NEW_TARGET_PAGE for a page the
+// site deliberately retired, validate:bhpc-seo-execution refused it as
+// repair_not_resolved_to_existing, and Spry Content Release (run 36245892727)
+// stopped at release:agent-intake.
+//
+// A reader who follows that URL lands on the 301 target, so the target is the
+// page the repair has to reach. Only an address with NO file behind it is
+// followed (a file on disk keeps resolving to itself, exactly as before), only
+// exact permanent rules are read (no splats, no placeholders), chains are
+// followed to a bounded depth, and the result is used only when it is a real
+// file - otherwise the original path comes back unchanged and the downstream
+// CREATE/REPAIR classification decides as it always has.
+const PERMANENT_REDIRECT_STATUSES = new Set(['301', '308']);
+let exactSiteRedirectsCache = null;
+export function loadExactSiteRedirects(file = path.join(ROOT, '_redirects')) {
+  const isSiteFile = file === path.join(ROOT, '_redirects');
+  if (isSiteFile && exactSiteRedirectsCache) return exactSiteRedirectsCache;
+  const rules = new Map();
+  const text = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : '';
+  for (const line of text.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+    const [source, target, status = '302'] = trimmed.split(/\s+/);
+    if (!source || !target || !PERMANENT_REDIRECT_STATUSES.has(status)) continue;
+    if (/[*:]/.test(source) || /[*:]/.test(target.replace(/^https?:\/\//, ''))) continue;
+    // Cloudflare Pages applies the FIRST matching rule.
+    if (!rules.has(source)) rules.set(source, target);
+  }
+  if (isSiteFile) exactSiteRedirectsCache = rules;
+  return rules;
+}
+
+export function repoPathThroughSiteRedirect(repoRel = '', rules = loadExactSiteRedirects()) {
+  const original = String(repoRel || '').replace(/^\/+/, '');
+  const isFile = (candidate) => {
+    const abs = path.join(ROOT, candidate);
+    return fs.existsSync(abs) && fs.statSync(abs).isFile();
+  };
+  if (!original || isFile(original)) return { path: original, redirected_from: '' };
+  let current = original;
+  const seen = new Set();
+  for (let hop = 0; hop < 5; hop += 1) {
+    const route = `/${current}`;
+    const bare = route.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
+    const target = [route, bare, bare.endsWith('/') ? bare.slice(0, -1) : `${bare}/`]
+      .map((candidate) => rules.get(candidate))
+      .find(Boolean);
+    if (!target || seen.has(route)) break;
+    seen.add(route);
+    let targetPath;
+    try {
+      targetPath = new URL(target, 'https://billionairehighperformancecoach.com').pathname.replace(/^\//, '');
+    } catch { break; }
+    if (!targetPath) targetPath = 'index.html';
+    else if (targetPath.endsWith('/')) targetPath += 'index.html';
+    else if (!/\.html$/.test(targetPath)) targetPath = repoPathForServedExtensionlessRoute(targetPath);
+    if (isFile(targetPath)) return { path: targetPath, redirected_from: original };
+    current = targetPath;
+  }
+  return { path: original, redirected_from: '' };
 }
 
 // An extensionless public URL is a SERVED ROUTE, and Cloudflare Pages serves
@@ -319,7 +387,7 @@ function pathFromRepoFilePath(value = '') {
   const raw = compact(value).replace(/^\/+/, '');
   if (!raw || /^n\/?a$/i.test(raw) || raw.includes('..') || path.isAbsolute(raw)) return '';
   if (/^https?:\/\//i.test(raw)) return repoPathFromIntendedWinnerPage(raw) || '';
-  return raw;
+  return repoPathThroughSiteRedirect(raw).path;
 }
 
 function sourceSignature(row = {}, context = {}) {
@@ -375,6 +443,16 @@ export function classifyRow(row, htmlDigestText = '', context = {}) {
   // convenience nobody outside the repository can see.
   const winnerUrlPath = repoPathFromIntendedWinnerPage(intendedWinnerPage, policy) || '';
   const intendedPath = winnerUrlPath || declaredRepoPath || '';
+  // Provenance for a retired address resolved through _redirects: the record
+  // says which URL the agent measured and which file the repair reaches.
+  const intendedWinnerRedirectedFrom = intendedPath && intendedWinnerPage
+    ? (() => {
+      try {
+        const measured = new URL(intendedWinnerPage, 'https://billionairehighperformancecoach.com').pathname.replace(/^\//, '');
+        return measured && measured !== intendedPath && !fs.existsSync(path.join(ROOT, measured)) && repoPathThroughSiteRedirect(measured).path === intendedPath ? measured : '';
+      } catch { return ''; }
+    })()
+    : '';
   const declaredPathOverriddenBy = winnerUrlPath && declaredRepoPath && declaredRepoPath !== winnerUrlPath
     ? 'intended_winner_page'
     : '';
@@ -398,6 +476,7 @@ export function classifyRow(row, htmlDigestText = '', context = {}) {
     gap: gap.trim().slice(0, 700),
     intended_winner_page: String(intendedWinnerPage || '').trim(),
     intended_winner_path: intendedPath || '',
+    ...(intendedWinnerRedirectedFrom ? { intended_winner_redirected_from: intendedWinnerRedirectedFrom } : {}),
     declared_repo_path: declaredRepoPath || '',
     declared_repo_path_overridden_by: declaredPathOverriddenBy,
     patch_needed: patchNeeded,
@@ -636,7 +715,7 @@ export function digestManifest(entry) {
 // classified CREATE for download/index.html, a page that does not exist; under
 // this contract it is a REPAIR of download.html, which does. Bumped so the
 // absorber re-derives every live run rather than leaving that record stale.
-export const NORMALIZATION_CONTRACT_VERSION = '1.6-served-route-resolution';
+export const NORMALIZATION_CONTRACT_VERSION = '1.7-site-redirect-resolution';
 export const NORMALIZED_SCHEMA_VERSION = '1.4';
 
 // Wall-clock stamps. They differ on every run by design, so they are excluded

@@ -8264,8 +8264,38 @@
         "MX-ABSORB-CLAIMS-ONLY-IN-ABSORBER"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-FROZEN-OUTPUT-SHRINK",
+      "status": "ADMITTED",
+      "name": "validate:frozen-output-shrink",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "A reviewed pull request (#107, 2026-09-25) thinned two insight pages by more than 10% and merged green, because the only material-shrink check lived in frozen_outputs.mjs freeze, which only unattended writer lanes run; the next morning Daily Citation Intelligence run 36245956232 failed FROZEN_OUTPUT_MATERIAL_SHRINK with nobody there to judge the trim. This check applies the same shrink rule at pull-request time: every admitted page that lost >= 2048 bytes and >= 10% of its frozen output must carry a named acceptance (route, frozen sha256, floor, reason) in data/release/frozen_output_shrink_acceptances.json, malformed or stale acceptances fail, six self-proof cases prove it can still refuse, and zero frozen records examined is a failure.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:frozen-output-shrink",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-frozen-output-shrink/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-26",
+      "matrix_ids": [
+        "MX-FROZEN-OUTPUT-SHRINK"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 263,
+  "record_count": 264,
   "generated_at": "2026-08-08T23:30:00Z"
 }

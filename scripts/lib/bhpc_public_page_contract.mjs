@@ -106,3 +106,22 @@ export function bhpcGeneratedFrameworkName(query = '') {
   // A name that is still entirely lowercase (all small words) is not a name.
   return titled === titled.toLowerCase() ? '' : titled;
 }
+
+// The page's own definition sentence, as published in p.citation-definition.
+// Decoded so it can be re-escaped by whichever block reuses it, rather than
+// double-escaped. ONE copy, read by both sides of the definition_callout
+// contract: the applier renders the callout from it, and the acceptance
+// compiler asks it whether the callout CAN be rendered before requiring it.
+// When those two kept separate rules, the 2026-09-26 drop required
+// definition_callout on product.html - a noindex product alias with no
+// p.citation-definition - the applier (correctly) emitted nothing, and
+// agent:bhpc:trace-exact failed four REQUIRED rows that no applier run could
+// ever satisfy.
+export function bhpcCitationDefinitionOf(html = '') {
+  const m = String(html).match(/<p[^>]*class="[^"]*citation-definition[^"]*"[^>]*>\s*(?:<strong>)?([\s\S]*?)(?:<\/strong>)?\s*<\/p>/i);
+  if (!m) return '';
+  const text = m[1].replace(/<[^>]+>/g, '')
+    .replace(/&amp;/g, '&').replace(/&#39;/g, "'").replace(/&quot;/g, '"')
+    .replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+  return text.replace(/\s+/g, ' ').trim();
+}
