@@ -1,4 +1,7 @@
 name: Spry Content Release
+# A drop run names its branch so Agent Drop Intake can find the run it asked for
+# and re-ask if a newer queued run in main-automation cancelled it while pending.
+run-name: "${{ inputs.drop_branch && format('Spry Content Release: absorb {0}', inputs.drop_branch) || (github.event_name == 'push' && github.event.head_commit.message) || github.workflow }}"
 
 on:
   workflow_dispatch:
@@ -17,6 +20,11 @@ on:
           - whitepaper
           - citation-expansion
           - strict
+      drop_branch:
+        description: "agent-drop/<YYYY-MM-DD>-<scope> branch to absorb into main (agent-intake mode only; set by Agent Drop Intake)"
+        required: false
+        default: ""
+        type: string
   schedule:
     - cron: "17 14 * * *"
   push:
@@ -29,6 +37,16 @@ env:
   NODE_OPTIONS: --max-old-space-size=3072
   PUSH_RETRY_ATTEMPTS: 5
   GITHUB_TOKEN: ${{ github.token }}
+  # The one road from a Twin Agent drop to main: the drop is laid onto main's
+  # tip here and lands in the SAME commit as the pages it repairs. See
+  # .github/scripts/overlay_agent_drop.mjs.
+  DROP_BRANCH: ${{ inputs.drop_branch || '' }}
+  # This lane is THE absorber: the only place a READY_FOR_ABSORPTION run is
+  # claimed. Everywhere else (Validate Repo, pre-push, other lanes' convergence)
+  # a pending drop is inert, so a drop commit on main validates green and never
+  # again turns main red by being absorbed inside its own validation. See
+  # scripts/agent_intake/absorb_bhpc_agent_runs.mjs.
+  BHPC_ABSORB_READY_RUNS: "1"
   REDDIT_ACCESS_TOKEN: ${{ secrets.REDDIT_ACCESS_TOKEN }}
   REDDIT_USER_AGENT: ${{ secrets.REDDIT_USER_AGENT }}
 
@@ -38,6 +56,10 @@ permissions:
   # landed. A GITHUB_TOKEN push raises no push event, so without this the
   # workflow can change main but nothing can be asked to check it.
   actions: write
+  # A drop run closes the drop's pull request and deletes its branch once the
+  # drop is on main, and names the refusal on the pull request when it is not.
+  pull-requests: write
+  issues: write
 
 concurrency:
   group: main-automation
@@ -56,6 +78,14 @@ jobs:
         run: |
           git fetch origin main
           git reset --hard origin/main
+      - name: Lay the agent drop onto main's tip
+        if: env.DROP_BRANCH != ''
+        run: |
+          if [ "${{ github.event.inputs.mode }}" != "agent-intake" ]; then
+            echo "drop_branch is only absorbed by mode=agent-intake, got '${{ github.event.inputs.mode }}'" >&2
+            exit 1
+          fi
+          node .github/scripts/overlay_agent_drop.mjs overlay "$DROP_BRANCH"
       - name: Check autonomous runtime state
         id: runtime
         run: |
@@ -197,7 +227,36 @@ jobs:
             npm run repair:citation-contract-surfaces &&
             npm run sitemap:lastmod:content
         run: |
-          ./.github/scripts/commit_and_push_if_changed.sh "spry content release" spry-content-release
+          if [ -n "$DROP_BRANCH" ]; then
+            # A replay after a remote advance resets to the new main; the drop must
+            # be laid onto it again or the replayed commit would publish without it.
+            export WORKFLOW_ARGV="node .github/scripts/overlay_agent_drop.mjs overlay '$DROP_BRANCH' && $WORKFLOW_ARGV"
+            ./.github/scripts/commit_and_push_if_changed.sh "spry content release: absorb $DROP_BRANCH" spry-content-release
+          else
+            ./.github/scripts/commit_and_push_if_changed.sh "spry content release" spry-content-release
+          fi
+      - name: Close the drop once it is on main
+        if: env.DROP_BRANCH != '' && steps.runtime.outputs.run == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          node .github/scripts/overlay_agent_drop.mjs verify-landed "$DROP_BRANCH"
+          landed="$(git rev-parse --short origin/main)"
+          for pr in $(gh pr list --state open --head "$DROP_BRANCH" --json number -q '.[].number'); do
+            gh pr comment "$pr" --body "Absorbed into main at ${landed} by Spry Content Release run ${GITHUB_RUN_ID}: the drop, the pages it repairs and the matching extraction snapshot landed as one commit. Closing; the branch is deleted."
+            gh pr close "$pr"
+          done
+          gh api -X DELETE "repos/${GITHUB_REPOSITORY}/git/refs/heads/${DROP_BRANCH}"
+      - name: Name the refusal on the drop
+        if: failure() && env.DROP_BRANCH != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for pr in $(gh pr list --state open --head "$DROP_BRANCH" --json number -q '.[].number'); do
+            gh pr comment "$pr" --body "NAMED STOP agent_drop_not_absorbed: Spry Content Release run ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} could not absorb this drop, so nothing from it reached main and main stays on its last validated tree. The failing step is in that run; fix the intake (or the artifact) and re-run Agent Drop Intake for ${DROP_BRANCH}."
+          done
+          echo "NAMED STOP agent_drop_not_absorbed: ${DROP_BRANCH} was refused before anything reached main."
       # A failing release uploads everything EXCEPT the thing that explains the
       # failure. validate_citation_contract.py writes its verdict to
       # artifacts/diagnostics/container-current/, which was not on the path list, and

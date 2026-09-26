@@ -6531,6 +6531,38 @@
       "not_applicable_reason": null
     },
     {
+      "validation_id": "VAL-WF-AGENT-DROP-INTAKE",
+      "status": "ADMITTED",
+      "name": "agent-drop-intake.yml",
+      "check_type": "workflow",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "The Twin Agent's weekly drop reached main raw on seven Saturdays (2026-08-08..2026-09-26) and turned it red each time. A drop pushed to agent-drop/<date>-<scope> now reaches main only through this lane: it classifies the branch with overlay_agent_drop.mjs (anything but a run directory is refused and nothing is dispatched), dispatches Spry Content Release in agent-intake mode with drop_branch, and stays until that run concludes, re-asking if a newer queued run in main-automation cancelled it while pending.",
+      "existing_coverage_gap": "Before 2026-09-26 a drop branch had no consumer: the writer's instructions asked for a pull request that could never go green (a raw drop is never the generators' fixed point) and the sentinel's quarantine could not open one (GITHUB_TOKEN is refused pull-request creation, run 36246107783).",
+      "scope": [
+        "github-actions",
+        "agent-drop",
+        "main"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/agent-drop-intake.yml",
+      "implementation_path": ".github/workflows/agent-drop-intake.yml",
+      "environment": "ci",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "GitHub Actions trace plus artifacts/validation/agent-drop-overlay-receipt.json in the release run",
+      "runtime_budget_seconds": 18000,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted as the only consumer of agent-drop/** branches; guarded by validate:agent-drop-gate and validate:agent-drop-overlay.",
+      "decision_date": "2026-09-26",
+      "matrix_ids": [
+        "MX-WF-AGENT-DROP-INTAKE"
+      ],
+      "not_applicable_reason": null
+    },
+    {
       "validation_id": "VAL-CITATION-SCHEMA-AUTHORITY",
       "status": "ADMITTED",
       "name": "validate:citation-schema-authority",
@@ -8174,6 +8206,66 @@
       "not_applicable_reason": null
     },
     {
+      "validation_id": "VAL-AGENT-DROP-OVERLAY",
+      "status": "ADMITTED",
+      "name": "validate:agent-drop-overlay",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses an agent-drop road to main that could carry anything but a run directory. Seven Saturdays (2026-08-08..2026-09-26, last Validate Repo 36245892704) the Twin Agent pushed its weekly artifact straight to main; a raw drop is never a valid main tree because build:all applies its repairs to governed pages, so the extraction-surface guard fails until the release lane commits drop + pages + snapshot together. overlay_agent_drop.mjs is now the only road: Spry Content Release lays an agent-drop/<date>-<scope> branch onto main's tip and commits it with the pages it repairs. This self-test drives the script against real git: a branch that adds a page, lacks a manifest, nests below the run directory, deletes a file, or is not named agent-drop/<date>-<scope> lays nothing onto main; a checkout that is not origin/main is refused; an absorbed drop is a named stop; verify-landed passes only when every drop file is on main. Hard-fails on zero cases.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:agent-drop-overlay",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-agent-drop-overlay/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-26",
+      "matrix_ids": [
+        "MX-AGENT-DROP-OVERLAY"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-ABSORB-CLAIMS-ONLY-IN-ABSORBER",
+      "status": "ADMITTED",
+      "name": "validate:absorb-claims-only-in-absorber",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses a validation lane that absorbs a pending Twin Agent drop. Seven Saturdays (2026-08-08..2026-09-26) the drop commit itself went red in Validate Repo (last 36245892704: extraction-surface-guard, 5 governed surfaces changed) because Validate Repo's producer chain ran absorb_bhpc_agent_runs.mjs, which claimed the READY_FOR_ABSORPTION run, and build:all then rewrote governed pages the commit did not contain - red regardless of artifact quality. The absorber now claims a READY run only where BHPC_ABSORB_READY_RUNS=1, set solely at the top of spry-content-release.yml. This self-test runs the real absorber in a scratch tree on the real 2026-09-26 drop: unset/true/0 leave the manifest byte-identical, write no normalized or social run, and name the pending run; =1 absorbs it; and no other workflow may set the switch. Hard-fails on zero assertions.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:absorb-claims-only-in-absorber",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-absorb-claims-only-in-absorber/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-26",
+      "matrix_ids": [
+        "MX-ABSORB-CLAIMS-ONLY-IN-ABSORBER"
+      ],
+      "not_applicable_reason": null
+    },
+    {
       "validation_id": "VAL-FROZEN-OUTPUT-SHRINK",
       "status": "ADMITTED",
       "name": "validate:frozen-output-shrink",
@@ -8204,6 +8296,6 @@
       "not_applicable_reason": null
     }
   ],
-  "record_count": 261,
+  "record_count": 264,
   "generated_at": "2026-08-08T23:30:00Z"
 }
