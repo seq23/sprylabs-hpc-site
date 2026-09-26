@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-09-25T14:41:52.343Z",
+  "generated_at": "2026-09-26T13:35:02.437Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 241,
+  "admitted_hard_fail_count": 244,
   "reviewed_count": 8,
-  "unreviewed_count": 233,
+  "unreviewed_count": 236,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 185,
+    "REVIEW_REQUIRED": 187,
     "EXISTING_REPAIR_AVAILABLE": 8,
-    "TRUE_BLOCKER": 30,
+    "TRUE_BLOCKER": 31,
     "REVIEW_WARNING_BOUNDARY": 18
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 185,
+    "REVIEW_REQUIRED": 187,
     "EXISTING_REPAIR_AVAILABLE": 8,
-    "TRUE_BLOCKER": 30,
+    "TRUE_BLOCKER": 31,
     "REVIEW_WARNING_BOUNDARY": 10
   },
   "migration_status_counts": {
-    "UNREVIEWED": 233,
+    "UNREVIEWED": 236,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -3656,6 +3656,51 @@
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-AGENT-CREATED-PAGE-DEMAND-GATE"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-WORKFLOW-STEP-ENV-CONTRACT",
+      "name": "validate:workflow-step-env-contract",
+      "command": "npm run validate:workflow-step-env-contract",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses the failure found in Deploy Distribution run 36191288768 (2026-09-25): the step 'Verify attestation and deploy IndexNow distribution' ran scripts/distribution/deploy_distribution.sh, whose Search Console lane read GSC_SERVICE_ACCOUNT_JSON_PATH and GSC_SITE_URL; the step set neither, so every run printed 'GSC skipped: credentials/site secret not present' although the GSC_SERVICE_ACCOUNT_JSON secret existed. The check traces each workflow run step through npm scripts, scripts/ files and topology lanes, and fails when a step env name is read by nothing it runs, or when a script reads a secret-family variable with no default that the step, job, workflow or call chain never provides. Zero workflows or zero run steps fail.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-WORKFLOW-STEP-ENV-CONTRACT"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-SEARCH-SNIPPET-BOUNDS",
+      "name": "validate:search-snippet-bounds",
+      "command": "npm run validate:search-snippet-bounds",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses the Bing Webmaster findings of 25 Sep 2026: rule 118 'meta description too short' on 8 billionairehighperformancecoach.com and 24 spryexecutiveos.com pages (41-98 characters, the section and topic hubs from build_navigation_structure.mjs and the insight posts' boilerplate front matter), and Site Scan 'title too long' above 70 characters (1,813 pages, a 37-character brand suffix on long questions). Every indexable page must carry a 30-70 character title and a 110-160 character meta description, each unique; every sitemap URL must map to a page the check examined. Zero pages examined fails.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-SEARCH-SNIPPET-BOUNDS"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-REDIRECT-AND-LINK-INTEGRITY",
+      "name": "validate:redirect-and-link-integrity",
+      "command": "npm run validate:redirect-and-link-integrity",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses the Bing Webmaster 404s of 25 Sep 2026 (221 on spryexecutiveos.com, 8 on billionairehighperformancecoach.com): 121 /guides/<slug> pages moved to the root on 2026-07-23 with no redirect, retired directory pages redirected only in their /x/ form, and a /*.html wildcard above every exact .html rule so none could fire. Against the assembled .pages-output with Cloudflare first-match semantics: every exact _redirects rule must be reachable, single-hop and land on a published page; every internal <a href> must resolve to a published page; every Bing-held 404 in fixtures/validation/bing_held_404s.json must redirect in one hop. Zero rules, pages or links examined fails.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-REDIRECT-AND-LINK-INTEGRITY"
       ],
       "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",
