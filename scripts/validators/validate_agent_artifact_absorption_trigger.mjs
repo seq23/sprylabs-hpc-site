@@ -93,6 +93,19 @@ const DROP_ROOT = 'data/report_fixes/agent_runs';
 const MANIFEST_NAME = 'agent_run_manifest.json';
 const ACCEPTANCE = 'data/report_fixes/agent_acceptance_manifest.generated.json';
 const BUDGET = 'data/report_fixes/agent_absorption_reader_coverage_budget.json';
+// E3. The exact-implementation plan's own gates are holds, not gaps. The plan
+// (agent:bhpc:plan-exact) BLOCKS a REQUIRED entry for reasons the acceptance
+// layer cannot know - no_measured_demand, quarantined_by_admission_gate - and
+// records that decision in its report. Until 2026-09-26 this validator read
+// only the acceptance manifest, so a CREATE row the plan had refused by name
+// (2026-09-26-bhpc-json_new_page_opportunities-001/002, no_measured_demand)
+// showed up here as "a new gap the reader cannot see": two components each
+// keeping their own list, and Validate Repo red on the release commit
+// (36253208500) for a page the repository had decided, correctly, not to
+// publish. One definition now: the plan's BLOCKED overlay is read here too.
+// The override exists only so the self-proof can hide the plan and watch the
+// hold turn back into a failure.
+const PLAN_REPORT = process.env.AGENT_EXACT_PLAN_REPORT || 'reports/bhpc-agent-exact-implementation-plan.json';
 const WORKFLOW = '.github/workflows/spry-content-release.yml';
 const TOPOLOGY = 'data/workflows/workflow_topology.json';
 const LANE = 'spry-content-release';
@@ -416,6 +429,16 @@ function readerDocument(entry) {
 
 const perRun = [];
 const outstandingForReader = [];
+// E3: record_id -> blocked_reason for every spec the plan refused by name.
+const planReport = readJson(PLAN_REPORT);
+const heldByPlan = new Map();
+for (const spec of (planReport?.specs || [])) {
+  if (String(spec.status || '').toUpperCase() !== 'BLOCKED') continue;
+  for (const id of [spec.record_id, ...(spec.acceptance_ids || [])]) {
+    if (id) heldByPlan.set(String(id), String(spec.blocked_reason || 'BLOCKED'));
+  }
+}
+const heldForReader = [];
 let reconciled = 0;
 for (const run of runs) {
   const status = String(run.manifest.status || '').toUpperCase();
@@ -465,6 +488,18 @@ for (const run of runs) {
       ? { satisfied: false, reasons: ['reader_document_missing'] }
       : evaluateBhpcAcceptance(entry, html);
     if (verdict.satisfied) { satisfiedForReader += 1; continue; }
+    // E3. A plan-gated entry is a hold the repository made by name, so it is
+    // reported as one - never as a new gap. It is only a hold while the gate
+    // still holds: a document that EXISTS for an id the plan refused means
+    // something published past the gate, and that is an error, not a hold.
+    if (heldByPlan.has(id)) {
+      const reason = heldByPlan.get(id);
+      if (html != null) {
+        errors.push(`${id}: the exact-implementation plan BLOCKED this entry (${reason.split(':')[0]}) yet ${doc} exists and does not satisfy it; a gate that holds a row cannot also have let its page through`);
+      }
+      heldForReader.push({ record_id: id, run_date: run.date, implementation_path: String(entry.implementation_path || ''), plan_blocked_reason: reason });
+      continue;
+    }
     outstandingForReader.push({
       record_id: id,
       run_date: run.date,
@@ -490,6 +525,15 @@ for (const run of runs) {
     satisfied_for_reader: satisfiedForReader,
     outstanding_for_reader: required.length - satisfiedForReader,
   });
+}
+// E3, Rule 0 on the hold itself: a plan report that cannot be read leaves no
+// way to tell a hold from a gap, so the check refuses rather than guesses -
+// but only once there is something unsatisfied to classify.
+if (!planReport && (outstandingForReader.length || heldForReader.length)) {
+  errors.push(`${PLAN_REPORT}: unreadable, so a REQUIRED entry the plan refused by name cannot be told from a new gap; this check refuses to guess`);
+}
+if (heldForReader.length) {
+  notes.push(`${heldForReader.length} REQUIRED entry(ies) are held by the exact-implementation plan's own gates and are not reader gaps: ${heldForReader.map((h) => `${h.record_id} [${h.plan_blocked_reason.split(':')[0]}]`).join(', ')}`);
 }
 
 // Rule 0 again, on the reconciliation loop specifically: a manifest that
@@ -563,6 +607,9 @@ const report = {
   outstanding_for_reader: outstandingForReader.length,
   outstanding_budgeted: budgetedIds.size,
   outstanding_records: outstandingForReader,
+  held_by_plan_gate: heldForReader.length,
+  held_records: heldForReader,
+  plan_report: PLAN_REPORT,
   per_run: perRun,
   notes,
   errors,

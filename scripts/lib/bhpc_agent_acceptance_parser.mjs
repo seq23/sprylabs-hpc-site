@@ -24,6 +24,30 @@ export function unrenderableBhpcRequiredBlocks(requiredBlockTypes=[],existingHtm
   return out;
 }
 
+// The buyer surfaces no agent row may repair. download.html is the frozen
+// revenue page; product.html is its "Product alias route" bridge - the same
+// buyer, one click earlier. Only download.html was listed here, so on
+// 2026-09-26 four REPAIR rows (bhpc-008/044/045/046) were REQUIRED on
+// product.html and Spry Content Release applied them: the H1 became the query
+// text, the SoftwareApplication schema was replaced, a truncated fragment of
+// the artifact's own gap prose became an <h2>, and the page entered the
+// citable set and the bhpc sitemap. Validate Repo on that release commit
+// (36253208500) failed extraction-contract, programmatic-admission,
+// search-snippet-bounds and the lastmod truth check on that one page. A
+// protected page is BLOCKED at acceptance, so the plan, the applier and the
+// trace all see one decision. validate_bhpc_page_contracts.mjs guards both
+// pages against the scaffold this would leave behind.
+export const BHPC_PROTECTED_BUYER_PAGES_REL='data/page_contracts/protected_buyer_pages.json';
+export const BHPC_PROTECTED_BUYER_PAGES=Object.freeze((()=>{
+  const pages=JSON.parse(fs.readFileSync(path.join(ROOT,BHPC_PROTECTED_BUYER_PAGES_REL),'utf8')).pages;
+  if(!Array.isArray(pages)||!pages.includes('download.html')) throw new Error(`${BHPC_PROTECTED_BUYER_PAGES_REL}: must list download.html; a protected buyer page list without the revenue page protects nothing`);
+  return pages.map(p=>String(p).replace(/^\/+/,''));
+})());
+export function protectedBuyerPageBlockedReason(implementationPath=''){
+  const page=String(implementationPath||'').replace(/\.html$/,'').replace(/[^a-z0-9]+/gi,'_')||'buyer_page';
+  return `PROTECTED_BUYER_PAGE_CONTRACT:no_visible_agent_or_citation_injection_on_${page}`;
+}
+
 function clean(value=''){return String(value??'').replace(/\s+/g,' ').trim()}
 function unique(values=[]){const seen=new Set(),out=[];for(const raw of values){const value=clean(raw);const key=value.toLowerCase();if(value&&!seen.has(key)){seen.add(key);out.push(value)}}return out}
 function meaningfulSegments(value=''){
@@ -135,7 +159,7 @@ export function buildBhpcAcceptanceEntry(row={},context={}){
   const unrenderableBlockTypes=unrenderableBhpcRequiredBlocks(requiredBlockTypes,existingTargetHtml);
   const unrenderableTypeSet=new Set(unrenderableBlockTypes.map(item=>item.type));
   const blockTypes=unique(requiredBlockTypes).filter(type=>!unrenderableTypeSet.has(type));
-  const protectedBuyerPage = ['download.html'].includes(route.implementation_path);
+  const protectedBuyerPage = BHPC_PROTECTED_BUYER_PAGES.includes(route.implementation_path);
   const blocked=Boolean(route.blocked_reason||String(route.status).startsWith('BLOCKED')||row.seo_execution_status==='INVALID'||protectedBuyerPage);
   const acceptanceStatus=noAction?'NO_ACTION':(blocked?'BLOCKED':'REQUIRED');
   const heading=deriveBhpcRequiredHeading(rawFix,query);
@@ -150,7 +174,7 @@ export function buildBhpcAcceptanceEntry(row={},context={}){
     seo_execution_status:row.seo_execution_status||'NOT_PROVIDED',seo_execution:seo,seo_execution_hash:seo?.hash||'',
     intended_winner_page:row.intended_winner_page||'',intended_winner_path:row.intended_winner_path||'',
     implementation_path:route.implementation_path,route_status:route.status,route_resolution:route.route_resolution||null,page_family:route.page_family,
-    acceptance_status:acceptanceStatus,blocked_reason:blocked?(protectedBuyerPage?'PROTECTED_BUYER_PAGE_CONTRACT:no_visible_agent_or_citation_injection_on_download':(route.blocked_reason||row.seo_execution_errors?.join(';')||'invalid_seo_execution')):'',
+    acceptance_status:acceptanceStatus,blocked_reason:blocked?(protectedBuyerPage?protectedBuyerPageBlockedReason(route.implementation_path):(route.blocked_reason||row.seo_execution_errors?.join(';')||'invalid_seo_execution')):'',
     required_heading:heading,
     required_block_types:blockTypes,
     // The SAME cleaning the applier writes with, from the SAME module, so a

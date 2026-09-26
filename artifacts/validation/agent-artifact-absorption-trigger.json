@@ -3,7 +3,7 @@
   "validator": "agent-artifact-absorption-trigger",
   "status": "PASS",
   "drop_root": "data/report_fixes/agent_runs",
-  "runs_discovered": 13,
+  "runs_discovered": 16,
   "push_paths": [
     "data/report_fixes/agent_runs/**/agent_run_manifest.json"
   ],
@@ -15,9 +15,9 @@
   "catch_up_mode": "full-content-cycle",
   "catch_up_mode_absorbs": true,
   "pending_runs": [],
-  "requirements_reconciled": 946,
-  "required_entries_total": 946,
-  "satisfied_for_reader": 942,
+  "requirements_reconciled": 1142,
+  "required_entries_total": 1142,
+  "satisfied_for_reader": 1138,
   "outstanding_for_reader": 4,
   "outstanding_budgeted": 4,
   "outstanding_records": [
@@ -50,6 +50,22 @@
       "reasons": "required_string_absent:1"
     }
   ],
+  "held_by_plan_gate": 2,
+  "held_records": [
+    {
+      "record_id": "2026-09-26-bhpc-json_new_page_opportunities-001",
+      "run_date": "2026-09-26",
+      "implementation_path": "insights/ask-me-the-hardest-questions-about-my-business-plan.html",
+      "plan_blocked_reason": "no_measured_demand:\"Ask me the hardest questions about my business plan\" has no record in data/demand/measured_demand.json; a created page must answer measured demand or an owner_approved_seed with approved_by, and that approval is the owner's to give"
+    },
+    {
+      "record_id": "2026-09-26-bhpc-json_new_page_opportunities-002",
+      "run_date": "2026-09-26",
+      "implementation_path": "answers/what-are-the-highest-leverage-actions-i-should-take-today.html",
+      "plan_blocked_reason": "no_measured_demand:\"What are the highest-leverage actions I should take today?\" has no record in data/demand/measured_demand.json; a created page must answer measured demand or an owner_approved_seed with approved_by, and that approval is the owner's to give"
+    }
+  ],
+  "plan_report": "reports/bhpc-agent-exact-implementation-plan.json",
   "per_run": [
     {
       "run_date": "2026-06-23",
@@ -77,8 +93,8 @@
       "status": "ABSORBED",
       "declared_records": 194,
       "normalized_records": 194,
-      "required_entries": 192,
-      "satisfied_for_reader": 190,
+      "required_entries": 193,
+      "satisfied_for_reader": 191,
       "outstanding_for_reader": 2
     },
     {
@@ -87,8 +103,8 @@
       "status": "ABSORBED",
       "declared_records": 225,
       "normalized_records": 225,
-      "required_entries": 232,
-      "satisfied_for_reader": 230,
+      "required_entries": 233,
+      "satisfied_for_reader": 231,
       "outstanding_for_reader": 2
     },
     {
@@ -180,11 +196,42 @@
       "required_entries": 50,
       "satisfied_for_reader": 50,
       "outstanding_for_reader": 0
+    },
+    {
+      "run_date": "2026-09-12",
+      "vertical": "bhpc",
+      "status": "ABSORBED",
+      "declared_records": 74,
+      "normalized_records": 74,
+      "required_entries": 68,
+      "satisfied_for_reader": 68,
+      "outstanding_for_reader": 0
+    },
+    {
+      "run_date": "2026-09-19",
+      "vertical": "bhpc",
+      "status": "ABSORBED",
+      "declared_records": 71,
+      "normalized_records": 71,
+      "required_entries": 63,
+      "satisfied_for_reader": 63,
+      "outstanding_for_reader": 0
+    },
+    {
+      "run_date": "2026-09-26",
+      "vertical": "bhpc",
+      "status": "ABSORBED",
+      "declared_records": 70,
+      "normalized_records": 70,
+      "required_entries": 63,
+      "satisfied_for_reader": 61,
+      "outstanding_for_reader": 2
     }
   ],
   "notes": [
-    "push trigger [\"data/report_fixes/agent_runs/**/agent_run_manifest.json\"] matches all 13 manifest path(s) on disk",
-    "push resolves to mode \"agent-intake\" and it absorbs"
+    "push trigger [\"data/report_fixes/agent_runs/**/agent_run_manifest.json\"] matches all 16 manifest path(s) on disk",
+    "push resolves to mode \"agent-intake\" and it absorbs",
+    "2 REQUIRED entry(ies) are held by the exact-implementation plan's own gates and are not reader gaps: 2026-09-26-bhpc-json_new_page_opportunities-001 [no_measured_demand], 2026-09-26-bhpc-json_new_page_opportunities-002 [no_measured_demand]"
   ],
   "errors": []
 }
