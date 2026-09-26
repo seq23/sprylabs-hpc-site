@@ -1,0 +1,97 @@
+name: Agent Drop Intake
+
+# The Twin Agent's weekly drop arrives on agent-drop/<YYYY-MM-DD>-<scope>
+# (docs/runbooks/TWIN_AGENT_BHPC_REPO_DROP_INSTRUCTIONS.md); a direct push to
+# main is refused by the repository ruleset. This workflow hands the branch to
+# the ONE lane that may put it on main - Spry Content Release in agent-intake
+# mode with drop_branch - and stays until that run has concluded, re-asking if a
+# newer queued run in the main-automation group cancelled it while pending.
+#
+# A branch that is not a drop (anything outside the run directory, no manifest,
+# a deletion) is refused here and nothing is dispatched. The definition is
+# .github/scripts/agent_drop_contract.mjs; this file keeps no list of its own.
+#
+# The sentinel's quarantine creates the branch with GITHUB_TOKEN, which raises
+# no push event, so it dispatches this workflow itself (workflow_dispatch).
+
+on:
+  push:
+    branches:
+      - "agent-drop/**"
+  workflow_dispatch:
+    inputs:
+      drop_branch:
+        description: "agent-drop/<YYYY-MM-DD>-<scope> branch to absorb"
+        required: true
+        type: string
+
+env:
+  NODE_OPTIONS: --max-old-space-size=3072
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: agent-drop-intake-${{ inputs.drop_branch || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  absorb:
+    runs-on: ubuntu-latest
+    # The release lane's own bound is 120 minutes; this outlasts one queued
+    # wait plus one run, and a re-ask after a cancellation.
+    timeout-minutes: 300
+    env:
+      DROP_BRANCH: ${{ inputs.drop_branch || github.ref_name }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Refuse a branch that is not a drop
+        run: node .github/scripts/overlay_agent_drop.mjs classify "$DROP_BRANCH"
+      - name: Hand the drop to Spry Content Release and see it through
+        run: |
+          set -euo pipefail
+          title="Spry Content Release: absorb ${DROP_BRANCH}"
+          for attempt in 1 2 3; do
+            since="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            gh workflow run spry-content-release.yml --ref main -f mode=agent-intake -f drop_branch="$DROP_BRANCH"
+            run_id=""
+            for _ in $(seq 1 30); do
+              sleep 10
+              run_id="$(gh run list --workflow spry-content-release.yml --event workflow_dispatch --limit 20 \
+                --json databaseId,displayTitle,createdAt \
+                -q "[.[] | select(.displayTitle == \"${title}\" and .createdAt >= \"${since}\")][0].databaseId // empty")"
+              [ -n "$run_id" ] && break
+            done
+            if [ -z "$run_id" ]; then
+              echo "::error::dispatch accepted but no run titled '${title}' appeared within 5 minutes (attempt ${attempt})"
+              continue
+            fi
+            echo "Absorbing ${DROP_BRANCH} in ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${run_id}"
+            while :; do
+              status="$(gh run view "$run_id" --json status,conclusion -q '.status + " " + (.conclusion // "")')"
+              case "$status" in
+                "completed success") echo "PASS: ${DROP_BRANCH} absorbed into main by run ${run_id}"; exit 0 ;;
+                "completed cancelled") echo "run ${run_id} was cancelled (a newer queued run in main-automation displaces a pending one); re-asking"; break ;;
+                completed*) echo "::error::NAMED STOP agent_drop_not_absorbed: run ${run_id} concluded '${status#completed }'; nothing from ${DROP_BRANCH} reached main. The refusal is named on the run and on the drop's pull request."; exit 1 ;;
+              esac
+              sleep 60
+            done
+          done
+          echo "::error::${DROP_BRANCH} was not absorbed after 3 requests; main is untouched"
+          exit 1
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: agent-drop-intake-${{ github.run_id }}
+          if-no-files-found: error
+          path: artifacts/validation/agent-drop-overlay-receipt.json

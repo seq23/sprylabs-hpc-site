@@ -29,7 +29,7 @@ function commitPayload({files = DROP_FILES, parents = 1, login = 'seq23', name =
   };
 }
 
-async function startApi({commit, pulls = [], commitStatus = 200, refStatus = 201, prStatus = 201}) {
+async function startApi({commit, pulls = [], commitStatus = 200, refStatus = 201, dispatchStatus = 204}) {
   const requests = [];
   const server = http.createServer((req, res) => {
     let body = '';
@@ -41,8 +41,8 @@ async function startApi({commit, pulls = [], commitStatus = 200, refStatus = 201
       if (req.method === 'GET' && /\/commits\/[0-9a-f]{40}$/.test(req.url)) return send(commitStatus, commitStatus === 200 ? commit : {message: 'boom'});
       if (req.method === 'POST' && req.url.endsWith('/git/refs')) return send(refStatus, {ref: 'refs/heads/agent-drop/2026-09-19-bhpc'});
       if (req.method === 'GET' && req.url.includes('/git/ref/heads/')) return send(200, {object: {sha: process.env.TEST_EXISTING_REF_SHA || ''}});
-      if (req.method === 'GET' && req.url.includes('/pulls?state=open')) return send(200, []);
-      if (req.method === 'POST' && req.url.endsWith('/pulls')) return send(prStatus, {number: 101, html_url: 'https://example.invalid/pull/101'});
+      if (req.method === 'POST' && req.url.endsWith('/actions/workflows/agent-drop-intake.yml/dispatches')) { res.writeHead(dispatchStatus); return res.end(); }
+      if (req.method === 'POST' && req.url.endsWith('/pulls')) return send(403, {message: 'GitHub Actions is not permitted to create or approve pull requests.'});
       send(404, {message: `unscripted ${req.method} ${req.url}`});
     });
   });
@@ -90,6 +90,7 @@ const scratch = fs.mkdtempSync(path.join(os.tmpdir(), 'quarantine-test-'));
     ['raw direct drop by the owner on red main -> would quarantine', {commit: commitPayload()}, 'would_quarantine', null],
     ['same files by github-actions[bot] -> none (bot_author)', {commit: commitPayload({login: 'github-actions[bot]', name: 'github-actions[bot]'})}, 'none', 'bot_author'],
     ['drop plus a page outside the drop root -> none (not_a_raw_drop)', {commit: commitPayload({files: [...DROP_FILES, 'insights/how-to-delegate-without-losing-quality.html']})}, 'none', 'not_a_raw_drop'],
+    ['drop files nested below the run directory -> none (not_a_run_directory)', {commit: commitPayload({files: [...DROP_FILES, `${DROP}/extra/notes.txt`]})}, 'none', 'not_a_run_directory'],
     ['drop files without a manifest -> none (no_manifest)', {commit: commitPayload({files: DROP_FILES.filter((f) => !f.endsWith('agent_run_manifest.json'))})}, 'none', 'no_manifest'],
     ['merge commit -> none (not_a_direct_push)', {commit: commitPayload({parents: 2})}, 'none', 'not_a_direct_push'],
     ['drop that arrived through a merged PR -> none (arrived_through_pull_request)', {commit: commitPayload(), pulls: [{number: 95, merged_at: '2026-09-19T15:00:00Z', state: 'closed'}]}, 'none', 'arrived_through_pull_request'],
@@ -155,12 +156,13 @@ function makeHelperDouble(exitCode) {
   const posts = apiServer.requests.filter((r) => r.method === 'POST');
   const recorded = fs.existsSync(record) ? fs.readFileSync(record, 'utf8') : '';
   check('execute: branch created at the exact drop SHA', posts.some((r) => r.url.endsWith('/git/refs') && r.body?.sha === repo.sha && r.body?.ref === 'refs/heads/agent-drop/2026-09-19-bhpc'), JSON.stringify(posts.map((p) => p.url)));
-  check('execute: pull request opened from that branch onto main', posts.some((r) => r.url.endsWith('/pulls') && r.body?.head === 'agent-drop/2026-09-19-bhpc' && r.body?.base === 'main'));
+  check('execute: Agent Drop Intake dispatched for that branch on main', posts.some((r) => r.url.endsWith('/actions/workflows/agent-drop-intake.yml/dispatches') && r.body?.ref === 'main' && r.body?.inputs?.drop_branch === 'agent-drop/2026-09-19-bhpc'), JSON.stringify(posts.map((p) => p.url)));
+  check('execute: no pull request is attempted (GITHUB_TOKEN is refused that, run 36246107783)', !posts.some((r) => r.url.endsWith('/pulls')));
   check('execute: the drop is staged for removal when the helper is called', /^D  data\/report_fixes\/agent_runs\/2026-09-19\/bhpc\/agent_run_manifest\.json$/m.test(recorded), recorded.slice(0, 400));
   check('execute: nothing but the drop is staged', !recorded.split('\n').some((l) => /^[ MADRCU]{2} /.test(l) && !l.includes(DROP)), recorded.slice(0, 400));
-  check('execute: the helper is told the PR it is clearing main for', /message=quarantine raw agent drop 2026-09-19\/bhpc: moved to agent-drop\/2026-09-19-bhpc, PR #101/.test(recorded), recorded.slice(0, 200));
+  check('execute: the helper is told the branch the intake absorbs from', /message=quarantine raw agent drop 2026-09-19\/bhpc: moved to agent-drop\/2026-09-19-bhpc, Agent Drop Intake absorbs it from there/.test(recorded), recorded.slice(0, 200));
   check('execute: the replay argv removes exactly the drop', /argv=git rm -r -q --ignore-unmatch -- 'data\/report_fixes\/agent_runs\/2026-09-19\/bhpc'/.test(recorded));
-  check('execute: exit 0 and pr_url reported', result.code === 0 && /^pr_url=https:\/\/example\.invalid\/pull\/101$/m.test(result.outputs), `exit ${result.code} ${result.stderr.slice(0, 300)}`);
+  check('execute: exit 0 and intake_branch reported', result.code === 0 && /^intake_branch=agent-drop\/2026-09-19-bhpc$/m.test(result.outputs), `exit ${result.code} ${result.stderr.slice(0, 300)}`);
 }
 {
   const repo = makeDropRepo();
@@ -178,7 +180,17 @@ function makeHelperDouble(exitCode) {
   const result = await runScript({apiUrl: apiServer.url, headSha: repo.sha, cwd: repo.dir, execute: true, extraEnv: {QUARANTINE_WRITER_HELPER: makeHelperDouble(0), HELPER_RECORD: record}});
   apiServer.server.close();
   delete process.env.TEST_EXISTING_REF_SHA;
-  check('execute: an existing branch at a DIFFERENT sha is never overwritten', result.code === 2 && /refusing to overwrite/.test(result.stderr) && !apiServer.requests.some((r) => r.url.endsWith('/pulls') && r.method === 'POST'), `exit ${result.code}`);
+  check('execute: an existing branch at a DIFFERENT sha is never overwritten', result.code === 2 && /refusing to overwrite/.test(result.stderr) && !apiServer.requests.some((r) => r.url.includes('/dispatches') && r.method === 'POST'), `exit ${result.code}`);
+}
+{
+  // The intake could not be asked: main keeps the drop (the alarm stands), the
+  // helper is never called, and the run fails rather than stranding the branch.
+  const repo = makeDropRepo();
+  const apiServer = await startApi({commit: commitPayload(), dispatchStatus: 403});
+  const record = path.join(repo.dir, '..', `record-${path.basename(repo.dir)}`);
+  const result = await runScript({apiUrl: apiServer.url, headSha: repo.sha, cwd: repo.dir, execute: true, extraEnv: {QUARANTINE_WRITER_HELPER: makeHelperDouble(0), HELPER_RECORD: record}});
+  apiServer.server.close();
+  check('execute: a refused intake dispatch fails the run and leaves main alone', result.code === 2 && /could not dispatch Agent Drop Intake/.test(result.stderr) && !fs.existsSync(record), `exit ${result.code} ${result.stderr.slice(0, 200)}`);
 }
 {
   // main moved between the verdict and the checkout: stop, create nothing.
