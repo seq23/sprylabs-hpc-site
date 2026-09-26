@@ -60,7 +60,34 @@ function isIncompleteAbsorbedRun(entry) {
   const normalized = readJson(normalizedRel, null);
   return !normalized || normalized.normalization_contract_version !== NORMALIZATION_CONTRACT_VERSION || !fs.existsSync(path.join(ROOT, socialRel));
 }
-const ready = allReady.filter(entry => manifestAllowedByExactPolicy(entry, policy) || isIncompleteAbsorbedRun(entry));
+const eligible = allReady.filter(entry => manifestAllowedByExactPolicy(entry, policy) || isIncompleteAbsorbedRun(entry));
+// CLAIMING A NEW RUN IS PUBLISHING, AND ONLY THE ABSORBER LANE PUBLISHES.
+//
+// A READY_FOR_ABSORPTION run on main is a legal, pending state: the Twin Agent's
+// drop lands, and Spry Content Release - the absorber, triggered by that very
+// push and re-walking every manifest on its daily schedule - claims it and
+// commits the run together with the pages it repairs.
+// validate_agent_artifact_absorption_trigger.mjs already models exactly that
+// (pending within one cadence cycle plus grace, stranded after).
+//
+// This script is ALSO a producer step inside Validate Repo, the pre-push
+// profile and every other lane's convergence loop. It used to claim READY runs
+// there too, so validating a pending drop meant absorbing it: build:all applied
+// its repairs to governed pages the commit does not contain, and the
+// extraction-surface guard failed on the drop commit itself. That is why main
+// went red on every Saturday drop from 2026-08-08 to 2026-09-26 (last: Validate
+// Repo 36245892704, "5 governed surfaces changed") no matter how good the
+// artifact was, and why each week's fix held only until the next drop.
+//
+// So a READY run is claimed only where BHPC_ABSORB_READY_RUNS=1 - set once, at
+// the top of spry-content-release.yml - and everywhere else it is reported as
+// pending, by name, and changes nothing. Already-ABSORBED runs whose derived
+// files are missing or stale are still regenerated everywhere: that restores
+// the committed state, it does not publish anything new.
+const CLAIMS_NEW_RUNS = process.env.BHPC_ABSORB_READY_RUNS === '1';
+const isNewRun = (entry) => entry.manifest?.status === 'READY_FOR_ABSORPTION';
+const pendingForAbsorber = CLAIMS_NEW_RUNS ? [] : eligible.filter(isNewRun);
+const ready = CLAIMS_NEW_RUNS ? eligible : eligible.filter(entry => !isNewRun(entry));
 const skipped = allReady.filter(entry => !manifestAllowedByExactPolicy(entry, policy) && !isIncompleteAbsorbedRun(entry)).map(entry => ({manifest:entry.manifestRel, run_date:entry.runDate, scope: entry.scope, reason:'before_exact_implementation_cutover'}));
 const absorbed = [];
 for (const entry of ready) {
@@ -128,6 +155,10 @@ for (const entry of ready) {
   writeJson(entry.manifestRel, manifest);
   absorbed.push({run_date: entry.runDate, scope, normalized_path: normalizedRel, social_run_path: socialRel, records: digest.rows.length, page_specs: digest.page_specs.length});
 }
-const report = {schema_version:'1.2', generated_at:new Date().toISOString(), status:'PASS', ready_count: ready.length, skipped_by_policy: skipped, absorbed_count: absorbed.length, absorbed};
+const pendingAbsorption = pendingForAbsorber.map(entry => ({manifest: entry.manifestRel, run_date: entry.runDate, scope: safeScope(entry.scope || entry.manifest?.scope || 'bhpc')}));
+const report = {schema_version:'1.3', generated_at:new Date().toISOString(), status:'PASS', claims_new_runs: CLAIMS_NEW_RUNS, ready_count: ready.length, skipped_by_policy: skipped, pending_absorption: pendingAbsorption, absorbed_count: absorbed.length, absorbed};
 writeJson('reports/bhpc-agent-absorption.json', report);
-console.log(`[agent-absorb] PASS: absorbed=${absorbed.length}; ready=${ready.length}; skipped_by_policy=${skipped.length}`);
+for (const run of pendingAbsorption) {
+  console.log(`[agent-absorb] NAMED STOP pending_absorption: ${run.manifest} is READY_FOR_ABSORPTION; only Spry Content Release claims a new run (BHPC_ABSORB_READY_RUNS=1), so it is left untouched here and the tree stays what main committed.`);
+}
+console.log(`[agent-absorb] PASS: absorbed=${absorbed.length}; ready=${ready.length}; pending_for_absorber=${pendingAbsorption.length}; skipped_by_policy=${skipped.length}`);

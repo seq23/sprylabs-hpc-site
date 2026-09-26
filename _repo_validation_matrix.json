@@ -1999,6 +1999,16 @@
       "status": "ADMITTED"
     },
     {
+      "matrix_id": "MX-WF-AGENT-DROP-INTAKE",
+      "validation_id": "VAL-WF-AGENT-DROP-INTAKE",
+      "lane": "validation-control-plane",
+      "command": ".github/workflows/agent-drop-intake.yml",
+      "order": 247,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
       "matrix_id": "MX-CITATION-SCHEMA-AUTHORITY",
       "validation_id": "VAL-CITATION-SCHEMA-AUTHORITY",
       "lane": "validation-control-plane",
@@ -2537,9 +2547,29 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-AGENT-DROP-OVERLAY",
+      "validation_id": "VAL-AGENT-DROP-OVERLAY",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:agent-drop-overlay",
+      "order": 245,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-ABSORB-CLAIMS-ONLY-IN-ABSORBER",
+      "validation_id": "VAL-ABSORB-CLAIMS-ONLY-IN-ABSORBER",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:absorb-claims-only-in-absorber",
+      "order": 246,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 253,
+  "entry_count": 256,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3153,6 +3183,14 @@
         {
           "id": "VAL-REDIRECT-AND-LINK-INTEGRITY",
           "command": "npm run validate:redirect-and-link-integrity"
+        },
+        {
+          "id": "VAL-AGENT-DROP-OVERLAY",
+          "command": "npm run validate:agent-drop-overlay"
+        },
+        {
+          "id": "VAL-ABSORB-CLAIMS-ONLY-IN-ABSORBER",
+          "command": "npm run validate:absorb-claims-only-in-absorber"
         }
       ]
     },

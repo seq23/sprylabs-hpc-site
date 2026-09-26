@@ -25,58 +25,59 @@ in-repo `GITHUB_TOKEN` lanes, whose pushes raise no push event - and could not
 have stopped a push made with the owner's own credentials, which raises every
 event and simply fails them.
 
-## What now holds the gate
+## Why it came back on 2026-09-26, and what holds it now
 
-1. **The writer's instructions** (`TWIN_AGENT_BHPC_REPO_DROP_INSTRUCTIONS.md`)
-   say branch `agent-drop/<date>-<scope>` + pull request, and carry the sentence
-   "Never push to `main`". `validate:agent-drop-gate` reads the document and
-   fails if the sentence, the branch, or the pull request goes missing.
-2. **The sentinel acts.** When the Main Validation Sentinel finds `main` red and
-   HEAD is a raw direct drop (single parent, only files under
-   `data/report_fixes/agent_runs/`, a manifest among them, not a bot author, no
-   merged pull request behind it), `.github/scripts/quarantine_raw_agent_drop.mjs`
-   preserves the drop on `agent-drop/<date>-<scope>`, opens the pull request,
-   and removes the drop from `main` through `commit_and_push_if_changed.sh`,
-   which converges, pushes, and confirms a Validate Repo run on the new HEAD.
-   Every refusal is named and writes nothing;
-   `validate:raw-agent-drop-quarantine` proves each one against a scripted API.
-3. **The intake absorbs what the artifact actually says.** Extensionless URLs
-   resolve to the file Cloudflare Pages serves (`/download` -> `download.html`);
-   an unlisted `recommended_page_type` on `repair_existing` is advisory, not a
-   refusal; agent blocks render the union of every run on a page; absorb runs
-   the cluster signal writers and re-compiles acceptance so one pass of the
-   producers leaves the tree the validators describe.
-4. **Distribution deploy is gated on the commit's own SHA** and the gate
-   validator pins that shape.
+The seventh drop (`71962cd28`, Validate Repo
+[36245892704](https://github.com/seq23/sprylabs-hpc-site/actions/runs/36245892704))
+failed on `[extraction-surface-guard] FAIL: 5 governed surfaces changed`. That
+failure does not depend on the artifact at all: Validate Repo's producer chain
+(`release:repair-agent-normalization`) ran the absorber, which claimed the
+`READY_FOR_ABSORPTION` run, and `build:all` then applied its repairs to governed
+pages the commit did not contain. **A raw drop could never validate green, and
+neither could a pull request holding only the drop** - so neither "fix the
+intake" nor "open a PR" could stop the next Saturday. The quarantine that #95
+added also failed: GitHub refuses pull-request creation to `GITHUB_TOKEN`
+(sentinel run 36246107783, HTTP 403).
+
+What holds it now:
+
+1. **A pending drop is inert outside the absorber.**
+   `absorb_bhpc_agent_runs.mjs` claims a READY run only where
+   `BHPC_ABSORB_READY_RUNS=1`, set once, at the top of
+   `spry-content-release.yml`. Validate Repo, the pre-push profile and every
+   other lane's convergence leave it untouched and print
+   `NAMED STOP pending_absorption`. A drop commit therefore validates the tree it
+   actually holds. `validate_agent_artifact_absorption_trigger.mjs` already
+   bounds how long a run may stay pending. Guard:
+   `validate:absorb-claims-only-in-absorber` (real absorber, real 2026-09-26
+   drop, both ways; no other workflow may set the switch).
+2. **The drop lands with its pages, in one commit, or not at all.** Spry
+   Content Release (push-triggered on the manifest, and daily) absorbs,
+   validates, converges and commits drop + pages + snapshot. An artifact the
+   intake refuses fails that lane by name; `main` keeps its validated tree.
+3. **The branch road** (`agent-drop/<date>-<scope>`, the writer's instructions)
+   is absorbed by Agent Drop Intake -> Spry Content Release with `drop_branch`,
+   which lays the drop onto `main`'s tip before the release validates it
+   (`overlay_agent_drop.mjs`), then closes the PR and deletes the branch once
+   `verify-landed` proves the drop is on `main`. Guard:
+   `validate:agent-drop-overlay`.
+4. **The quarantine** (fallback for a drop-shaped commit that is red for some
+   other reason) preserves it on `agent-drop/<date>-<scope>` and dispatches
+   Agent Drop Intake instead of opening a pull request. Guard:
+   `validate:raw-agent-drop-quarantine`.
+5. **What a drop is** lives once, in `.github/scripts/agent_drop_contract.mjs`,
+   read by the quarantine, the overlay and `validate:agent-drop-gate`.
+6. Distribution deploy stays gated on the commit's own SHA.
 
 ## Named stops - owner actions this repository cannot take from inside
 
-### 1. Branch protection on `main`
+### 1. Branch protection on `main` - not available on a user-owned repository
 
-`main` has no protection and no ruleset (`gh api repos/seq23/sprylabs-hpc-site/rules/branches/main`
-returns `[]`, checked 2026-09-19). A ruleset requiring the Validate Repo `gate`
-check and a pull request would refuse the direct push at the door. It is not
-enabled here because the three in-repo writer lanes (Spry Content Release,
-Daily Citation Intelligence, Search Intelligence Cycle) push to `main` with
-`GITHUB_TOKEN` and would be refused too unless the GitHub Actions app is a
-bypass actor - and whether that bypass is available on this plan has to be
-confirmed in the ruleset UI, not guessed. To enable it:
-
-```bash
-gh api -X POST repos/seq23/sprylabs-hpc-site/rulesets --input - <<'JSON'
-{"name":"main: validated pull requests only","target":"branch","enforcement":"active",
- "conditions":{"ref_name":{"include":["refs/heads/main"],"exclude":[]}},
- "rules":[{"type":"pull_request","parameters":{"required_approving_review_count":0,"dismiss_stale_reviews_on_push":false,"require_code_owner_review":false,"require_last_push_approval":false,"required_review_thread_resolution":false}},
-          {"type":"required_status_checks","parameters":{"strict_required_status_checks_policy":false,"required_status_checks":[{"context":"gate"}]}}],
- "bypass_actors":[]}
-JSON
-```
-
-then add the GitHub Actions app as a bypass actor in the ruleset UI (Settings ->
-Rules -> Rulesets -> this ruleset -> Bypass list) and confirm the next scheduled
-Spry Content Release still lands. Until then the sentinel's quarantine is the
-gate, and it closes the window to roughly one Validate Repo run (~10 minutes)
-rather than a day.
+Tried 2026-09-26: a ruleset requiring pull requests with the GitHub Actions app
+as bypass actor is refused (HTTP 422, "Actor GitHub Actions integration must be
+part of the ruleset source or owner organization"). Without that bypass the
+three `GITHUB_TOKEN` release lanes would be refused too. It is no longer needed:
+item 1 above makes a direct drop harmless rather than forbidden.
 
 ### 2. Cloudflare Pages deploys `main` on push, validated or not
 
