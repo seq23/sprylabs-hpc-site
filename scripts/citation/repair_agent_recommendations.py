@@ -8,6 +8,7 @@ VENDOR=Path(__file__).resolve().parents[1]/'_vendor'
 if VENDOR.is_dir(): sys.path.insert(0,str(VENDOR))
 from bs4 import BeautifulSoup
 ROOT=Path.cwd()
+PROTECTED_BUYER_PAGES=set(json.loads((ROOT/'data/page_contracts/protected_buyer_pages.json').read_text(encoding='utf-8'))['pages'])
 CONTRACT=ROOT/'data/citation/agent_recommendation_acceptance.json'
 PRODUCT="This is one of the frameworks inside the Billionaire High Performance Coach system — a structured executive OS for using ChatGPT as your accountability and decision partner."
 
@@ -132,7 +133,11 @@ def repair_item(item):
     # of the protected baseline. Reserializing it through BeautifulSoup changes
     # its hash without changing a word, which trips validate:ownership on a page
     # nobody intended to edit.
-    if str(fp.resolve().name)=='download.html' and fp.resolve().parent==ROOT.resolve():
+    # product.html, the alias onto the same buyer, joined the list on 2026-09-26
+    # (data/page_contracts/protected_buyer_pages.json is the one list).
+    try: _rel=fp.resolve().relative_to(ROOT.resolve()).as_posix()
+    except ValueError: _rel=''
+    if _rel in PROTECTED_BUYER_PAGES:
         return False
     if new!=raw:
         fp.write_text(new,encoding='utf-8')

@@ -5,7 +5,7 @@ import {ROOT, writeJson, parseVelocityJson, repoPathFromIntendedWinnerPage, repo
 import {resolveBhpcAgentRoute} from '../lib/bhpc_agent_route_resolver.mjs';
 import {requiredBlockTypesForPageFamily} from '../lib/bhpc_agent_block_schema.mjs';
 import {groupBhpcSemanticEntries, renderBhpcRecordEvidence} from '../lib/bhpc_agent_semantic_contract.mjs';
-import {deriveBhpcRequiredHeading} from '../lib/bhpc_agent_acceptance_parser.mjs';
+import {deriveBhpcRequiredHeading, buildBhpcAcceptanceEntry, BHPC_PROTECTED_BUYER_PAGES, protectedBuyerPageBlockedReason} from '../lib/bhpc_agent_acceptance_parser.mjs';
 import {reconcileBhpcAcceptanceRouteConflicts} from './compile_bhpc_agent_acceptance_manifest.mjs';
 import {findBhpcAcceptanceRouteConflicts} from '../lib/bhpc_acceptance_invariants.mjs';
 
@@ -204,6 +204,45 @@ fs.writeFileSync(tmpRedirects, '# comment\n/a /b 302\n/c/* /d 301\n/e/:slug /f 3
 const parsedFixture = loadExactSiteRedirects(tmpRedirects);
 fs.rmSync(tmpRedirects, {force: true});
 expect('only exact permanent rules are read, first match wins', parsedFixture.size === 1 && parsedFixture.get('/g') === '/h', JSON.stringify([...parsedFixture]));
+
+// Protected buyer pages are BLOCKED at acceptance, whatever the artifact asks.
+// download.html was always here; product.html (the "Product alias route") was
+// not, and on 2026-09-26 four REPAIR rows rewrote it and turned the release
+// commit red. Both pages are pinned, product.html by name, and a real
+// unprotected page is the control so the assertion cannot pass by blocking
+// everything.
+const protectedBuyerCases = BHPC_PROTECTED_BUYER_PAGES.map((page) => {
+  const entry = buildBhpcAcceptanceEntry({
+    id: `selftest-protected-${page}`,
+    run_date: '2099-01-04',
+    scope: 'bhpc',
+    query: 'what do you get with the product',
+    action_tier: 'page fix',
+    primary_fix_type: 'completeness',
+    operation: 'REPAIR_INTENDED_WINNER_PAGE',
+    intended_winner_page: `https://billionairehighperformancecoach.com/${page}`,
+    fix_recommendation: 'Add a direct answer, a comparison table and a definition callout to the page.'
+  }, {run_date: '2099-01-04', scope: 'bhpc'});
+  return {page, implementation_path: entry.implementation_path, acceptance_status: entry.acceptance_status, blocked_reason: entry.blocked_reason};
+});
+expect('product.html is a protected buyer page by name', BHPC_PROTECTED_BUYER_PAGES.includes('product.html') && BHPC_PROTECTED_BUYER_PAGES.includes('download.html'), JSON.stringify(BHPC_PROTECTED_BUYER_PAGES));
+for (const c of protectedBuyerCases) {
+  expect(`${c.page}: a REPAIR row resolves onto the protected page itself`, c.implementation_path === c.page, JSON.stringify(c));
+  expect(`${c.page}: acceptance is BLOCKED by the protected buyer page contract`, c.acceptance_status === 'BLOCKED' && c.blocked_reason === protectedBuyerPageBlockedReason(c.page) && /^PROTECTED_BUYER_PAGE_CONTRACT:/.test(c.blocked_reason), JSON.stringify(c));
+}
+expect('download.html keeps the reason string every committed acceptance manifest already carries', protectedBuyerPageBlockedReason('download.html') === 'PROTECTED_BUYER_PAGE_CONTRACT:no_visible_agent_or_citation_injection_on_download');
+const unprotectedControl = buildBhpcAcceptanceEntry({
+  id: 'selftest-unprotected-control',
+  run_date: '2099-01-04',
+  scope: 'bhpc',
+  query: 'common objections and fit questions',
+  action_tier: 'page fix',
+  primary_fix_type: 'completeness',
+  operation: 'REPAIR_INTENDED_WINNER_PAGE',
+  intended_winner_page: 'https://billionairehighperformancecoach.com/faq',
+  fix_recommendation: 'Add a direct answer and a definition callout to the page.'
+}, {run_date: '2099-01-04', scope: 'bhpc'});
+expect('an unprotected existing page stays REQUIRED (the block is not blanket)', /^faq(\/index)?\.html$/.test(unprotectedControl.implementation_path) && fs.existsSync(path.join(ROOT, unprotectedControl.implementation_path)) && !BHPC_PROTECTED_BUYER_PAGES.includes(unprotectedControl.implementation_path) && unprotectedControl.acceptance_status === 'REQUIRED', JSON.stringify({path: unprotectedControl.implementation_path, status: unprotectedControl.acceptance_status, reason: unprotectedControl.blocked_reason}));
 
 const report = {
   schema_version: '1.0',
