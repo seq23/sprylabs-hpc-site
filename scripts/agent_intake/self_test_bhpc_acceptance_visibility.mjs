@@ -34,6 +34,8 @@
  * fails rather than reporting a clean sheet over an empty loop.
  */
 import assert from 'node:assert/strict';
+import {unrenderableBhpcRequiredBlocks} from '../lib/bhpc_agent_acceptance_parser.mjs';
+import {bhpcCitationDefinitionOf} from '../lib/bhpc_public_page_contract.mjs';
 import {
   evaluateBhpcAcceptance,
   normalizeForAcceptance,
@@ -110,6 +112,22 @@ const blockEntry = { record_id: '', required_block_types: ['definition_callout']
 assert.equal(evaluateBhpcAcceptance(blockEntry, page('<!-- data-bhpc-agent-block="definition_callout" -->')).satisfied, false);
 assert.equal(evaluateBhpcAcceptance(blockEntry, page('<aside data-bhpc-agent-block="definition_callout"><p>x</p></aside>')).satisfied, true);
 asserted += 2;
+
+// definition_callout is rendered ONLY from the target page's own
+// p.citation-definition, so the compiler must not require it on an existing
+// page that has none (2026-09-26: product.html, four REQUIRED rows no applier
+// run could satisfy), must still require it where the page has one, and must
+// still require it on a page that does not exist yet.
+const withDefinition = '<article><h1>X</h1><p class="citation-definition"><strong>X is a thing.</strong></p></article>';
+const withoutDefinition = '<article><h1>X</h1><p>X is a thing.</p></article>';
+assert.equal(bhpcCitationDefinitionOf(withDefinition), 'X is a thing.');
+assert.equal(bhpcCitationDefinitionOf(withoutDefinition), '');
+assert.deepEqual(unrenderableBhpcRequiredBlocks(['direct_answer', 'definition_callout'], withoutDefinition),
+  [{ type: 'definition_callout', reason: 'no_citation_definition_on_target_page' }]);
+assert.deepEqual(unrenderableBhpcRequiredBlocks(['direct_answer', 'definition_callout'], withDefinition), []);
+assert.deepEqual(unrenderableBhpcRequiredBlocks(['direct_answer', 'definition_callout'], null), []);
+assert.deepEqual(unrenderableBhpcRequiredBlocks(['direct_answer'], withoutDefinition), []);
+asserted += 6;
 
 // Unit-level checks on the two helpers, so a regression names its own cause.
 assert.equal(readerRenderedMarkup('<!-- x -->a').trim(), 'a');

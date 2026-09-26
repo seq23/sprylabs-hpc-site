@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
-import {ROOT, writeJson, parseVelocityJson} from './bhpc_agent_common.mjs';
+import {ROOT, writeJson, parseVelocityJson, repoPathFromIntendedWinnerPage, repoPathThroughSiteRedirect, loadExactSiteRedirects} from './bhpc_agent_common.mjs';
 import {resolveBhpcAgentRoute} from '../lib/bhpc_agent_route_resolver.mjs';
 import {requiredBlockTypesForPageFamily} from '../lib/bhpc_agent_block_schema.mjs';
 import {groupBhpcSemanticEntries, renderBhpcRecordEvidence} from '../lib/bhpc_agent_semantic_contract.mjs';
@@ -167,12 +167,50 @@ expect('comparison page family requires comparison table', requiredBlockTypesFor
 const derivedHeading = deriveBhpcRequiredHeading('n/a||Page lacks a clear block||Add an explicit H2 callout matching "Vocal clarity scorecard" under the protocol.', 'Fallback query');
 expect('delimiter-rich agent instruction yields a clean required heading', derivedHeading === 'Vocal clarity scorecard', derivedHeading);
 
+// A retired URL the site 301s is resolved to the page a reader lands on.
+// 2026-09-26: row 020 targeted insights/how-to-end-the-day-so-tomorrow-starts-
+// fast-2.html (deleted 2026-04-06, 301'd by _redirects) and the resolver made
+// it a CREATE for a retired page, which validate:bhpc-seo-execution refused and
+// Spry Content Release run 36245892727 stopped on.
+const siteRedirects = loadExactSiteRedirects();
+expect('site redirects are read (Rule 0: a resolver with no rules proves nothing)', siteRedirects.size > 100, `rules=${siteRedirects.size}`);
+expect('retired -2 insight resolves through its 301 to the canonical page',
+  repoPathFromIntendedWinnerPage('https://spryexecutiveos.com/insights/how-to-end-the-day-so-tomorrow-starts-fast-2.html') === 'insights/how-to-end-the-day-so-tomorrow-starts-fast.html');
+expect('retired extensionless form resolves the same way',
+  repoPathFromIntendedWinnerPage('https://spryexecutiveos.com/insights/how-to-end-the-day-so-tomorrow-starts-fast-2') === 'insights/how-to-end-the-day-so-tomorrow-starts-fast.html');
+const fixtureRules = new Map([
+  ['/download.html', '/insights/how-to-end-the-day-so-tomorrow-starts-fast'],
+  ['/selftest-chain-a.html', '/selftest-chain-b'],
+  ['/selftest-chain-b', '/insights/how-to-end-the-day-so-tomorrow-starts-fast'],
+  ['/selftest-loop-a.html', '/selftest-loop-b'],
+  ['/selftest-loop-b', '/selftest-loop-a.html'],
+  ['/selftest-dead.html', '/selftest-nowhere'],
+]);
+const redirectCases = {
+  existing_file_is_never_redirected: repoPathThroughSiteRedirect('download.html', fixtureRules),
+  chain_followed_to_a_real_file: repoPathThroughSiteRedirect('selftest-chain-a.html', fixtureRules),
+  loop_returns_original: repoPathThroughSiteRedirect('selftest-loop-a.html', fixtureRules),
+  dead_target_returns_original: repoPathThroughSiteRedirect('selftest-dead.html', fixtureRules),
+  no_rule_returns_original: repoPathThroughSiteRedirect('selftest-no-rule.html', fixtureRules),
+};
+expect('an existing file keeps resolving to itself', redirectCases.existing_file_is_never_redirected.path === 'download.html' && !redirectCases.existing_file_is_never_redirected.redirected_from);
+expect('a redirect chain is followed to the file that answers it', redirectCases.chain_followed_to_a_real_file.path === 'insights/how-to-end-the-day-so-tomorrow-starts-fast.html' && redirectCases.chain_followed_to_a_real_file.redirected_from === 'selftest-chain-a.html');
+expect('a redirect loop returns the original path', redirectCases.loop_returns_original.path === 'selftest-loop-a.html' && !redirectCases.loop_returns_original.redirected_from);
+expect('a redirect to a missing page returns the original path', redirectCases.dead_target_returns_original.path === 'selftest-dead.html');
+expect('no rule returns the original path', redirectCases.no_rule_returns_original.path === 'selftest-no-rule.html');
+const tmpRedirects = path.join(ROOT, '.validation-runtime', 'selftest-redirects');
+fs.mkdirSync(path.dirname(tmpRedirects), {recursive: true});
+fs.writeFileSync(tmpRedirects, '# comment\n/a /b 302\n/c/* /d 301\n/e/:slug /f 301\n/g /h 301\n/g /i 301\n/j /k\n');
+const parsedFixture = loadExactSiteRedirects(tmpRedirects);
+fs.rmSync(tmpRedirects, {force: true});
+expect('only exact permanent rules are read, first match wins', parsedFixture.size === 1 && parsedFixture.get('/g') === '/h', JSON.stringify([...parsedFixture]));
+
 const report = {
   schema_version: '1.0',
   validator: 'bhpc-route-resolution-self-test',
   generated_at: new Date().toISOString(),
   status: errors.length ? 'FAIL' : 'PASS',
-  cases: {unambiguousTitleTypo, ambiguousTitleTypo, existingPathTypo, newPageSpec, evidenceBackedSpec, bareDomainSpec, unrelatedEvidenceSpec, existingCreateRoute, unsupportedSpec, reconciledConflict, rawAcceptanceConflicts, semantic_group_count: semanticGroups.length, derived_heading: derivedHeading},
+  cases: {redirectCases, unambiguousTitleTypo, ambiguousTitleTypo, existingPathTypo, newPageSpec, evidenceBackedSpec, bareDomainSpec, unrelatedEvidenceSpec, existingCreateRoute, unsupportedSpec, reconciledConflict, rawAcceptanceConflicts, semantic_group_count: semanticGroups.length, derived_heading: derivedHeading},
   errors
 };
 writeJson('artifacts/validation/bhpc-route-resolution-self-test.json', report);
