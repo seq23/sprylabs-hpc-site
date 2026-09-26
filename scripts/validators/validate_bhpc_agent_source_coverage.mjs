@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
+import {isPendingForAbsorber} from '../agent_intake/absorption_claim.mjs';
 import {ROOT, NORMALIZED_ROOT, findAgentManifests, digestManifest, readJson, writeJson, safeScope, runKey} from '../agent_intake/bhpc_agent_common.mjs';
 
 function recordKey(item = {}) {
@@ -34,6 +35,7 @@ if (!allManifests.length) {
   errors.push(`coverage cutoff excludes every run: ${allManifests.length} agent run manifest(s) exist under data/report_fixes/agent_runs, but none is READY_FOR_ABSORPTION/ABSORBED on or after BHPC_AGENT_SOURCE_COVERAGE_FROM=${coverageFrom}. A cutoff that admits nothing proves no source coverage.`);
 }
 
+let pendingCount = 0;
 for (const entry of checkable) {
   const scope = safeScope(entry.scope || entry.manifest?.scope || 'bhpc');
   const key = runKey(entry.runDate, scope);
@@ -61,6 +63,17 @@ for (const entry of checkable) {
   }));
   const expected = [...expectedRows, ...expectedPages];
 
+  // A run only the absorber lane may claim is PENDING here: it must be cleanly
+  // pending (nothing derived yet), and it is covered once Spry Content Release
+  // absorbs it. validate_agent_artifact_absorption_trigger.mjs bounds how long
+  // it may wait. Everywhere the absorber runs, a READY run is not pending and a
+  // missing normalized record stays the error below.
+  if (isPendingForAbsorber(entry)) {
+    if (normalized) errors.push(`${entry.runDate}/${scope}: HALF_ABSORBED - ${entry.manifestRel} is still READY_FOR_ABSORPTION but ${normalizedRel} exists; only the absorber lane writes it, and it flips the manifest in the same pass`);
+    runs.push({run_date: entry.runDate, scope, manifest: entry.manifestRel, normalized_path: normalizedRel, source_record_count: expectedRows.length, new_page_source_record_count: expectedPages.length, root_cause: 'PENDING_ABSORPTION'});
+    pendingCount += 1;
+    continue;
+  }
   if (!normalized) {
     errors.push(`${entry.runDate}/${scope}: normalized prerequisite missing after repair phase: ${normalizedRel}`);
     runs.push({
@@ -175,6 +188,9 @@ for (const entry of checkable) {
   });
 }
 
+if (checkable.length && pendingCount === checkable.length) {
+  errors.push(`every one of ${checkable.length} checkable run(s) is pending for the absorber; coverage of zero normalized runs proves nothing`);
+}
 const report = {
   schema_version: '2.0',
   validator: 'bhpc-agent-source-coverage',
@@ -183,11 +199,12 @@ const report = {
   policy: {
     checked_statuses: ['READY_FOR_ABSORPTION', 'ABSORBED'],
     coverage_from: process.env.BHPC_AGENT_SOURCE_COVERAGE_FROM || '2026-07-04',
-    rule: 'The repair phase must normalize every eligible agent run before coverage validation. Page-level proof markers and canonical new-page build checks are enforced for the active exact implementation plan; historical absorbed runs remain represented in normalized/acceptance ledgers without forcing broad page rewrites.'
+    rule: 'The repair phase must normalize every eligible agent run before coverage validation, except a READY run pending for the absorber lane (scripts/agent_intake/absorption_claim.mjs), which must have nothing derived yet. Page-level proof markers and canonical new-page build checks are enforced for the active exact implementation plan; historical absorbed runs remain represented in normalized/acceptance ledgers without forcing broad page rewrites.'
   },
   active_plan_source_record_count: 0,
   historical_page_marker_enforcement: 'SKIPPED_OUTSIDE_ACTIVE_EXACT_PLAN',
   run_count: runs.length,
+  pending_for_absorber_count: pendingCount,
   runs,
   warnings,
   errors,
@@ -199,4 +216,4 @@ if (errors.length) {
   for (const error of errors.slice(0, 80)) console.error(` - ${error}`);
   process.exit(1);
 }
-console.log(`[bhpc-agent-source-coverage] PASS: runs=${runs.length}`);
+console.log(`[bhpc-agent-source-coverage] PASS: runs=${runs.length}; pending_for_absorber=${pendingCount}`);

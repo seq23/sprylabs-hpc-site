@@ -89,3 +89,9 @@ jobs:
           done
           echo "::error::${DROP_BRANCH} was not absorbed after 3 requests; main is untouched"
           exit 1
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: agent-drop-intake-${{ github.run_id }}
+          if-no-files-found: error
+          path: artifacts/validation/agent-drop-overlay-receipt.json

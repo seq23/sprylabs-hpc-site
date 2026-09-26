@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
+import {claimsNewRuns, isPendingForAbsorber} from './absorption_claim.mjs';
 import {ROOT, NORMALIZED_ROOT, SOCIAL_RUNS_ROOT, findAgentManifests, writeJson, digestManifest, readJson, manifestAllowedByExactPolicy, loadExactPolicy, runKey, sourceKey, safeScope, policyRenormalizesRun, buildNormalizedRecord, buildAbsorbedManifest, NORMALIZATION_CONTRACT_VERSION} from './bhpc_agent_common.mjs';
 
 // NORMALIZATION_CONTRACT_VERSION now lives in bhpc_agent_common.mjs beside the
@@ -84,10 +85,9 @@ const eligible = allReady.filter(entry => manifestAllowedByExactPolicy(entry, po
 // pending, by name, and changes nothing. Already-ABSORBED runs whose derived
 // files are missing or stale are still regenerated everywhere: that restores
 // the committed state, it does not publish anything new.
-const CLAIMS_NEW_RUNS = process.env.BHPC_ABSORB_READY_RUNS === '1';
-const isNewRun = (entry) => entry.manifest?.status === 'READY_FOR_ABSORPTION';
-const pendingForAbsorber = CLAIMS_NEW_RUNS ? [] : eligible.filter(isNewRun);
-const ready = CLAIMS_NEW_RUNS ? eligible : eligible.filter(entry => !isNewRun(entry));
+const CLAIMS_NEW_RUNS = claimsNewRuns();
+const pendingForAbsorber = eligible.filter(entry => isPendingForAbsorber(entry));
+const ready = eligible.filter(entry => !isPendingForAbsorber(entry));
 const skipped = allReady.filter(entry => !manifestAllowedByExactPolicy(entry, policy) && !isIncompleteAbsorbedRun(entry)).map(entry => ({manifest:entry.manifestRel, run_date:entry.runDate, scope: entry.scope, reason:'before_exact_implementation_cutover'}));
 const absorbed = [];
 for (const entry of ready) {

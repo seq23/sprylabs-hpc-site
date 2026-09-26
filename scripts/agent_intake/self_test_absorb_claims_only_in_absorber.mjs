@@ -98,6 +98,14 @@ for (const f of workflows.filter((x) => `${WORKFLOWS}/${x}` !== ABSORBER)) {
   check(`${WORKFLOWS}/${f} does not set BHPC_ABSORB_READY_RUNS (only the absorber claims new runs)`, !text.includes('BHPC_ABSORB_READY_RUNS'));
 }
 
+// One definition: the absorber and every validator that asks "must this run be
+// normalized already?" read the same predicate, so they cannot disagree.
+for (const rel of ['scripts/agent_intake/absorb_bhpc_agent_runs.mjs', 'scripts/validators/validate_bhpc_agent_source_coverage.mjs', 'scripts/validators/validate_derived_absorber_reproducibility.mjs']) {
+  const text = fs.readFileSync(path.join(REAL, rel), 'utf8');
+  check(`${rel} reads isPendingForAbsorber from absorption_claim.mjs`, /import \{[^}]*isPendingForAbsorber[^}]*\} from '[./]*(agent_intake\/)?absorption_claim\.mjs'/.test(text) && text.includes('isPendingForAbsorber(entry'));
+  check(`${rel} does not read the switch on its own`, !text.includes("BHPC_ABSORB_READY_RUNS === '1'") && !text.includes('env.BHPC_ABSORB_READY_RUNS'));
+}
+
 if (assertions === 0) { console.error('[absorb-claims-only-in-absorber] FAIL: zero assertions'); process.exit(1); }
 if (failures.length) {
   console.error(`[absorb-claims-only-in-absorber] FAIL: ${failures.length} of ${assertions}`);
