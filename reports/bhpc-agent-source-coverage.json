@@ -1,7 +1,7 @@
 {
   "schema_version": "2.0",
   "validator": "bhpc-agent-source-coverage",
-  "generated_at": "2026-09-25T14:32:44.392Z",
+  "generated_at": "2026-09-26T15:33:23.284Z",
   "status": "PASS",
   "policy": {
     "checked_statuses": [
@@ -9,11 +9,12 @@
       "ABSORBED"
     ],
     "coverage_from": "2026-07-04",
-    "rule": "The repair phase must normalize every eligible agent run before coverage validation. Page-level proof markers and canonical new-page build checks are enforced for the active exact implementation plan; historical absorbed runs remain represented in normalized/acceptance ledgers without forcing broad page rewrites."
+    "rule": "The repair phase must normalize every eligible agent run before coverage validation, except a READY run pending for the absorber lane (scripts/agent_intake/absorption_claim.mjs), which must have nothing derived yet. Page-level proof markers and canonical new-page build checks are enforced for the active exact implementation plan; historical absorbed runs remain represented in normalized/acceptance ledgers without forcing broad page rewrites."
   },
   "active_plan_source_record_count": 0,
   "historical_page_marker_enforcement": "SKIPPED_OUTSIDE_ACTIVE_EXACT_PLAN",
-  "run_count": 12,
+  "run_count": 13,
+  "pending_for_absorber_count": 0,
   "runs": [
     {
       "run_date": "2026-07-04",
@@ -231,24 +232,35 @@
       "normalized_path": "data/report_fixes/normalized_agent_runs/2026-09-19_bhpc.json",
       "source_record_count": 71,
       "new_page_source_record_count": 3,
-      "canonical_new_page_count": 3,
+      "canonical_new_page_count": 0,
       "normalized_record_count": 74,
       "missing_from_normalized_count": 0,
       "unaddressed_count": 0,
       "content_proof_missing_count": 0,
-      "built_new_page_count": 3,
-      "queued_new_page_count": 3,
+      "built_new_page_count": 0,
+      "queued_new_page_count": 0,
       "missing_built_new_page_count": 0,
-      "built_new_pages": [
-        "insights/chatgpt-prompts-for-managers.html",
-        "insights/chatgpt-prompts-to-help-executive-coaches-scale.html",
-        "insights/how-to-use-chatgpt-as-your-life-and-leadership-coach.html"
-      ],
-      "queued_new_pages": [
-        "insights/chatgpt-prompts-for-managers.html",
-        "insights/chatgpt-prompts-to-help-executive-coaches-scale.html",
-        "insights/how-to-use-chatgpt-as-your-life-and-leadership-coach.html"
-      ],
+      "built_new_pages": [],
+      "queued_new_pages": [],
+      "duplicate_canonical_new_page_groups": []
+    },
+    {
+      "run_date": "2026-09-26",
+      "scope": "bhpc",
+      "manifest": "data/report_fixes/agent_runs/2026-09-26/bhpc/agent_run_manifest.json",
+      "normalized_path": "data/report_fixes/normalized_agent_runs/2026-09-26_bhpc.json",
+      "source_record_count": 70,
+      "new_page_source_record_count": 2,
+      "canonical_new_page_count": 0,
+      "normalized_record_count": 72,
+      "missing_from_normalized_count": 0,
+      "unaddressed_count": 0,
+      "content_proof_missing_count": 0,
+      "built_new_page_count": 0,
+      "queued_new_page_count": 0,
+      "missing_built_new_page_count": 0,
+      "built_new_pages": [],
+      "queued_new_pages": [],
       "duplicate_canonical_new_page_groups": []
     }
   ],

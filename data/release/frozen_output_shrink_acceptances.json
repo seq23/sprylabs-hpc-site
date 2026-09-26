@@ -1,27 +1,5 @@
 {
   "schema_version": "1.0",
   "policy": "A named, reviewed acceptance that lowers the frozen-output shrink floor for one route, written against one frozen sha256. Read by scripts/authority_scale/frozen_output_shrink.mjs; enforced at pull-request time by validate:frozen-output-shrink; retired by frozen_outputs.mjs freeze once the frozen baseline it names has moved.",
-  "acceptances": [
-    {
-      "route": "/insights/how-to-create-a-calm-execution-pace-under-pressure.html",
-      "from_sha256": "a75e8f847bafa4e06f1ab72ac09e45a610ee033a61155e08de7868001e8e6f76",
-      "floor_bytes": 22856,
-      "accepted_on": "2026-09-26",
-      "reason": "#107 (2026-09-25) replaced this post's boilerplate description '- a calm, executable framework (Spry Executive OS).' with page-specific text. The longer text puts the page over the word-count floor, so auto_expand_short_pages.js drops its generic 'Implementation notes' filler (data-content-contract=word-count-repair), and the visible FAQ built from page sections loses the question that filler supplied and falls below three questions, so build_visible_faq_sections.py drops it. Everything lost is generated filler or boilerplate repeated from the old description; no authored content is removed. Floor is the smaller of the committed page after #107 and the converged page measured by Daily Citation Intelligence run 36245956232 and a local agent-intake replay."
-    },
-    {
-      "route": "/insights/how-to-turn-your-content-into-a-conversion-machine.html",
-      "from_sha256": "1d8eac22ec7f1d0f6ceeeeb2945c1279adbca209b8a97b1258c8d3b89c97df40",
-      "floor_bytes": 22762,
-      "accepted_on": "2026-09-26",
-      "reason": "#107 (2026-09-25) replaced this post's boilerplate description '- a calm, executable framework (Spry Executive OS).' with page-specific text. The longer text puts the page over the word-count floor, so auto_expand_short_pages.js drops its generic 'Implementation notes' filler (data-content-contract=word-count-repair), and the visible FAQ built from page sections loses the question that filler supplied and falls below three questions, so build_visible_faq_sections.py drops it. Everything lost is generated filler or boilerplate repeated from the old description; no authored content is removed. Floor is the smaller of the committed page after #107 and the converged page measured by Daily Citation Intelligence run 36245956232 and a local agent-intake replay."
-    },
-    {
-      "route": "/insights/how-to-design-your-day-like-a-simple-operating-system.html",
-      "from_sha256": "34c2ec4e940e15fc225021ab581c1d478002b21ac1a96453dfc9a0fbe366b30a",
-      "floor_bytes": 23011,
-      "accepted_on": "2026-09-26",
-      "reason": "#107 (2026-09-25) replaced this post's boilerplate description '- a calm, executable framework (Spry Executive OS).' with page-specific text. The longer text puts the page over the word-count floor, so auto_expand_short_pages.js drops its generic 'Implementation notes' filler (data-content-contract=word-count-repair), and the visible FAQ built from page sections loses the question that filler supplied and falls below three questions, so build_visible_faq_sections.py drops it. Everything lost is generated filler or boilerplate repeated from the old description; no authored content is removed. Floor is the smaller of the committed page after #107 and the converged page measured by Daily Citation Intelligence run 36245956232 and a local agent-intake replay."
-    }
-  ]
+  "acceptances": []
 }

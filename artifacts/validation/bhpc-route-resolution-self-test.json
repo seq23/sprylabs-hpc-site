@@ -1,9 +1,31 @@
 {
   "schema_version": "1.0",
   "validator": "bhpc-route-resolution-self-test",
-  "generated_at": "2026-09-25T14:32:35.765Z",
+  "generated_at": "2026-09-26T15:33:16.899Z",
   "status": "PASS",
   "cases": {
+    "redirectCases": {
+      "existing_file_is_never_redirected": {
+        "path": "download.html",
+        "redirected_from": ""
+      },
+      "chain_followed_to_a_real_file": {
+        "path": "insights/how-to-end-the-day-so-tomorrow-starts-fast.html",
+        "redirected_from": "selftest-chain-a.html"
+      },
+      "loop_returns_original": {
+        "path": "selftest-loop-a.html",
+        "redirected_from": ""
+      },
+      "dead_target_returns_original": {
+        "path": "selftest-dead.html",
+        "redirected_from": ""
+      },
+      "no_rule_returns_original": {
+        "path": "selftest-no-rule.html",
+        "redirected_from": ""
+      }
+    },
     "unambiguousTitleTypo": {
       "status": "TYPO_RESOLVED_REGISTRY_REPAIR",
       "page_family": "intended_winner_repair",

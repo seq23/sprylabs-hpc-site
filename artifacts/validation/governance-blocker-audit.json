@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-09-26T13:35:02.437Z",
+  "generated_at": "2026-09-26T15:44:16.061Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 244,
+  "admitted_hard_fail_count": 248,
   "reviewed_count": 8,
-  "unreviewed_count": 236,
+  "unreviewed_count": 240,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 187,
+    "REVIEW_REQUIRED": 191,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 31,
     "REVIEW_WARNING_BOUNDARY": 18
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 187,
+    "REVIEW_REQUIRED": 191,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 31,
     "REVIEW_WARNING_BOUNDARY": 10
   },
   "migration_status_counts": {
-    "UNREVIEWED": 236,
+    "UNREVIEWED": 240,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -2898,6 +2898,21 @@
       "evidence": []
     },
     {
+      "validation_id": "VAL-WF-AGENT-DROP-INTAKE",
+      "name": "agent-drop-intake.yml",
+      "command": ".github/workflows/agent-drop-intake.yml",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "The Twin Agent's weekly drop reached main raw on seven Saturdays (2026-08-08..2026-09-26) and turned it red each time. A drop pushed to agent-drop/<date>-<scope> now reaches main only through this lane: it classifies the branch with overlay_agent_drop.mjs (anything but a run directory is refused and nothing is dispatched), dispatches Spry Content Release in agent-intake mode with drop_branch, and stays until that run concludes, re-asking if a newer queued run in main-automation cancelled it while pending.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-WF-AGENT-DROP-INTAKE"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
       "validation_id": "VAL-CITATION-SCHEMA-AUTHORITY",
       "name": "validate:citation-schema-authority",
       "command": "npm run validate:citation-schema-authority",
@@ -3701,6 +3716,51 @@
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-REDIRECT-AND-LINK-INTEGRITY"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-AGENT-DROP-OVERLAY",
+      "name": "validate:agent-drop-overlay",
+      "command": "npm run validate:agent-drop-overlay",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses an agent-drop road to main that could carry anything but a run directory. Seven Saturdays (2026-08-08..2026-09-26, last Validate Repo 36245892704) the Twin Agent pushed its weekly artifact straight to main; a raw drop is never a valid main tree because build:all applies its repairs to governed pages, so the extraction-surface guard fails until the release lane commits drop + pages + snapshot together. overlay_agent_drop.mjs is now the only road: Spry Content Release lays an agent-drop/<date>-<scope> branch onto main's tip and commits it with the pages it repairs. This self-test drives the script against real git: a branch that adds a page, lacks a manifest, nests below the run directory, deletes a file, or is not named agent-drop/<date>-<scope> lays nothing onto main; a checkout that is not origin/main is refused; an absorbed drop is a named stop; verify-landed passes only when every drop file is on main. Hard-fails on zero cases.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-AGENT-DROP-OVERLAY"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-ABSORB-CLAIMS-ONLY-IN-ABSORBER",
+      "name": "validate:absorb-claims-only-in-absorber",
+      "command": "npm run validate:absorb-claims-only-in-absorber",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses a validation lane that absorbs a pending Twin Agent drop. Seven Saturdays (2026-08-08..2026-09-26) the drop commit itself went red in Validate Repo (last 36245892704: extraction-surface-guard, 5 governed surfaces changed) because Validate Repo's producer chain ran absorb_bhpc_agent_runs.mjs, which claimed the READY_FOR_ABSORPTION run, and build:all then rewrote governed pages the commit did not contain - red regardless of artifact quality. The absorber now claims a READY run only where BHPC_ABSORB_READY_RUNS=1, set solely at the top of spry-content-release.yml. This self-test runs the real absorber in a scratch tree on the real 2026-09-26 drop: unset/true/0 leave the manifest byte-identical, write no normalized or social run, and name the pending run; =1 absorbs it; and no other workflow may set the switch. Hard-fails on zero assertions.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-ABSORB-CLAIMS-ONLY-IN-ABSORBER"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-FROZEN-OUTPUT-SHRINK",
+      "name": "validate:frozen-output-shrink",
+      "command": "npm run validate:frozen-output-shrink",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "A reviewed pull request (#107, 2026-09-25) thinned two insight pages by more than 10% and merged green, because the only material-shrink check lived in frozen_outputs.mjs freeze, which only unattended writer lanes run; the next morning Daily Citation Intelligence run 36245956232 failed FROZEN_OUTPUT_MATERIAL_SHRINK with nobody there to judge the trim. This check applies the same shrink rule at pull-request time: every admitted page that lost >= 2048 bytes and >= 10% of its frozen output must carry a named acceptance (route, frozen sha256, floor, reason) in data/release/frozen_output_shrink_acceptances.json, malformed or stale acceptances fail, six self-proof cases prove it can still refuse, and zero frozen records examined is a failure.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-FROZEN-OUTPUT-SHRINK"
       ],
       "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",
