@@ -715,7 +715,7 @@ export function digestManifest(entry) {
 // classified CREATE for download/index.html, a page that does not exist; under
 // this contract it is a REPAIR of download.html, which does. Bumped so the
 // absorber re-derives every live run rather than leaving that record stale.
-export const NORMALIZATION_CONTRACT_VERSION = '1.6-served-route-resolution';
+export const NORMALIZATION_CONTRACT_VERSION = '1.7-site-redirect-resolution';
 export const NORMALIZED_SCHEMA_VERSION = '1.4';
 
 // Wall-clock stamps. They differ on every run by design, so they are excluded
