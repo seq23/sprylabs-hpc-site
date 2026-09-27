@@ -2,17 +2,17 @@
   "schema_version": "1.0",
   "status": "PASS",
   "drop_root": "data/report_fixes/agent_runs",
-  "runs_discovered": 15,
+  "runs_discovered": 16,
   "verticals": [
     "bhpc"
   ],
-  "requirements_evaluated": 1077,
-  "outstanding_total": 4,
+  "requirements_evaluated": 1142,
+  "outstanding_total": 6,
   "outstanding_pages": 1,
   "carry_limit": 120,
   "carry_saturated": false,
   "outstanding_unaccounted": 0,
-  "page_ledgers_checked": 107,
+  "page_ledgers_checked": 112,
   "orphaned_ledger_records": 0,
   "per_run": [
     {
@@ -45,9 +45,9 @@
       "manifest_status": "ABSORBED",
       "declared_records": 194,
       "acceptance_entries": 194,
-      "required": 192,
-      "blocked": 2,
-      "satisfied": 190,
+      "required": 193,
+      "blocked": 1,
+      "satisfied": 191,
       "outstanding": 2,
       "outstanding_examples": [
         {
@@ -72,9 +72,9 @@
       "manifest_status": "ABSORBED",
       "declared_records": 225,
       "acceptance_entries": 235,
-      "required": 232,
-      "blocked": 2,
-      "satisfied": 230,
+      "required": 233,
+      "blocked": 1,
+      "satisfied": 231,
       "outstanding": 2,
       "outstanding_examples": [
         {
@@ -224,6 +224,33 @@
       "satisfied": 63,
       "outstanding": 0,
       "outstanding_examples": []
+    },
+    {
+      "run_date": "2026-09-26",
+      "vertical": "bhpc",
+      "manifest_status": "ABSORBED",
+      "declared_records": 70,
+      "acceptance_entries": 72,
+      "required": 63,
+      "blocked": 8,
+      "satisfied": 61,
+      "outstanding": 2,
+      "outstanding_examples": [
+        {
+          "id": "2026-09-26-bhpc-json_new_page_opportunities-001",
+          "path": "insights/ask-me-the-hardest-questions-about-my-business-plan.html",
+          "reasons": [
+            "target_missing"
+          ]
+        },
+        {
+          "id": "2026-09-26-bhpc-json_new_page_opportunities-002",
+          "path": "answers/what-are-the-highest-leverage-actions-i-should-take-today.html",
+          "reasons": [
+            "target_missing"
+          ]
+        }
+      ]
     }
   ],
   "named_stops": [
