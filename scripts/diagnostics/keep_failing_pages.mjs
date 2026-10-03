@@ -22,22 +22,32 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const SUMMARY = 'artifacts/diagnostics/container-current/validate-citation-contract/summary.json';
+// The page-seo contract writes its verdict here, and on 2026-10-03 (run
+// 37127626280) it was the failing contract: this script read only the citation
+// contract's summary, so the one page that failed was not kept and the runner's
+// copy of it could not be read anywhere. Both contracts are read now.
+const PAGE_SEO = 'artifacts/validation/page-seo-contract.json';
 const OUT = 'artifacts/diagnostics/failing-pages';
 
-if (!fs.existsSync(SUMMARY)) {
-  console.log(`[keep-failing-pages] no contract summary at ${SUMMARY}; nothing to keep.`);
+function readJsonOrNull(rel) {
+  if (!fs.existsSync(rel)) return null;
+  try { return JSON.parse(fs.readFileSync(rel, 'utf8')); } catch (e) {
+    console.log(`[keep-failing-pages] could not read ${rel}: ${e.message}`);
+    return null;
+  }
+}
+
+const doc = readJsonOrNull(SUMMARY);
+const pageSeo = readJsonOrNull(PAGE_SEO);
+if (!doc && !pageSeo) {
+  console.log(`[keep-failing-pages] no contract summary at ${SUMMARY} or ${PAGE_SEO}; nothing to keep.`);
   process.exit(0);
 }
 
-let doc;
-try {
-  doc = JSON.parse(fs.readFileSync(SUMMARY, 'utf8'));
-} catch (e) {
-  console.log(`[keep-failing-pages] could not read ${SUMMARY}: ${e.message}`);
-  process.exit(0);
-}
-
-const named = [...new Set((doc.errors || []).map((e) => String(e).split(':')[0].trim()))].sort();
+const named = [...new Set([
+  ...(doc?.errors || []).map((e) => String(e).split(':')[0].trim()),
+  ...(pageSeo?.status === 'FAIL' ? (pageSeo.failures || []).map((f) => String(f.path || '').trim()) : []),
+].filter(Boolean))].sort();
 fs.mkdirSync(OUT, { recursive: true });
 
 let kept = 0;

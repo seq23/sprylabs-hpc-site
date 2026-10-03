@@ -2577,9 +2577,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-INTAKE-HOLDS-NONCONFORMING-PAGE",
+      "validation_id": "VAL-INTAKE-HOLDS-NONCONFORMING-PAGE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:intake-holds-nonconforming-page",
+      "order": 249,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 257,
+  "entry_count": 258,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3205,6 +3215,10 @@
         {
           "id": "VAL-FROZEN-OUTPUT-SHRINK",
           "command": "npm run validate:frozen-output-shrink"
+        },
+        {
+          "id": "VAL-INTAKE-HOLDS-NONCONFORMING-PAGE",
+          "command": "npm run validate:intake-holds-nonconforming-page"
         }
       ]
     },

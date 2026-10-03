@@ -2,22 +2,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {readCapturedScope} from './page_scope.mjs';
-import {normalizeBhpcInternalLinkHref} from '../lib/bhpc_internal_links.mjs';
-import {saysPhrase} from '../lib/bhpc_agent_acceptance_satisfaction.mjs';
+import {examinePageSeoContract, acceptanceEntriesByPath, activePlanSpecs as activeSpecsOf} from '../lib/page_seo_contract.mjs';
 
 const ROOT = process.cwd();
 const mode = process.argv.includes('--full') || process.env.VALIDATION_CACHE_MODE === 'full' ? 'full' : 'incremental';
-const approvedHosts = new Set(['spryexecutiveos.com', 'billionairehighperformancecoach.com']);
-const forbiddenPublicPatterns = [
-  /Agent recommendation implementation/i,
-  /Agent-directed implementation/i,
-  /Agent source instruction/i,
-  /Source FIX instruction/i,
-  /Required acceptance strings/i,
-  /BHPC Agent Acceptance Framework/i,
-  /visible semantic proof/i,
-  /route-specific implementation/i
-];
+// The rules themselves live in scripts/lib/page_seo_contract.mjs, shared with
+// the agent-intake hold stage so a held page and a failed page are judged by
+// one definition. This file owns the examination scope and the verdict.
 
 // The old readJson(rel, fallback) had a bare `catch { return fallback; }`, so a
 // MISSING or CORRUPT artifact was indistinguishable from a present, empty one:
@@ -36,40 +27,9 @@ function readRequiredJson(rel, produced) {
     process.exit(1);
   }
 }
-function walkHtml(dir, out = []) {
-  if (!fs.existsSync(dir)) return out;
-  for (const entry of fs.readdirSync(dir, {withFileTypes: true})) {
-    if (['.git', '.pages-output', 'node_modules', '.validation-runtime'].includes(entry.name)) continue;
-    const abs = path.join(dir, entry.name);
-    if (entry.isDirectory()) walkHtml(abs, out);
-    else if (entry.isFile() && entry.name.endsWith('.html')) out.push(abs);
-  }
-  return out;
-}
-function count(re, text) { return [...String(text).matchAll(re)].length; }
-function stripTags(value = '') { return String(value).replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/\s+/g, ' ').trim(); }
-function metaContent(html, name) {
-  const re = new RegExp(`<meta\\b[^>]*(?:name|property)=["']${name}["'][^>]*content=["']([^"']*)["'][^>]*>|<meta\\b[^>]*content=["']([^"']*)["'][^>]*(?:name|property)=["']${name}["'][^>]*>`, 'i');
-  const m = html.match(re); return (m?.[1] || m?.[2] || '').trim();
-}
-function canonicalHref(html) {
-  const m = html.match(/<link\b[^>]*rel=["']canonical["'][^>]*href=["']([^"']+)["'][^>]*>|<link\b[^>]*href=["']([^"']+)["'][^>]*rel=["']canonical["'][^>]*>/i);
-  return (m?.[1] || m?.[2] || '').trim();
-}
-function jsonLdErrors(html) {
-  const errors = [];
-  const re = /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
-  let m; let i = 0;
-  while ((m = re.exec(html))) {
-    i += 1;
-    try { JSON.parse(m[1].trim()); } catch (error) { errors.push(`invalid_json_ld_${i}:${error.message}`); }
-  }
-  return errors;
-}
 function pathToRel(abs) { return path.relative(ROOT, abs).split(path.sep).join('/'); }
 function activePlanSpecs() {
-  const plan = readRequiredJson('artifacts/validation/agent-exact-implementation-plan.json', 'npm run agent:bhpc:plan-exact');
-  return (plan.specs || []).filter(x => x.status !== 'BLOCKED' && x.implementation_path);
+  return activeSpecsOf(readRequiredJson('artifacts/validation/agent-exact-implementation-plan.json', 'npm run agent:bhpc:plan-exact'));
 }
 function citablePagePaths() {
   const registry = readRequiredJson('data/citation/citable_pages.json', 'npm run build:all');
@@ -85,17 +45,7 @@ function activeAcceptanceIds() {
 }
 function acceptanceByPath() {
   const manifest = readRequiredJson('data/report_fixes/agent_acceptance_manifest.generated.json', 'npm run agent:bhpc:compile-acceptance');
-  const activeIds = activeAcceptanceIds();
-  const map = new Map();
-  for (const entry of manifest.entries || []) {
-    const rel = String(entry.implementation_path || '').replace(/^\/+/, '');
-    const recordId = String(entry.record_id || entry.id || '');
-    if (!rel || entry.acceptance_status === 'NO_ACTION') continue;
-    if (!activeIds.has(recordId)) continue;
-    if (!map.has(rel)) map.set(rel, []);
-    map.get(rel).push(entry);
-  }
-  return map;
+  return acceptanceEntriesByPath(manifest, activeAcceptanceIds());
 }
 
 const active = activePaths();
@@ -136,82 +86,9 @@ for (const rel of scopedPaths) {
 for (const abs of files) {
   const rel = pathToRel(abs);
   const html = fs.readFileSync(abs, 'utf8');
-  const titleCount = count(/<title\b[^>]*>[\s\S]*?<\/title>/gi, html);
-  const h1Count = count(/<h1\b[^>]*>[\s\S]*?<\/h1>/gi, html);
-  const canonicalCount = count(/<link\b[^>]*rel=["']canonical["'][^>]*>/gi, html);
-  if (titleCount !== 1) failures.push({path: rel, code: 'TITLE_COUNT', detail: titleCount});
-  if (h1Count !== 1) failures.push({path: rel, code: 'H1_COUNT', detail: h1Count});
-  if (canonicalCount !== 1) failures.push({path: rel, code: 'CANONICAL_COUNT', detail: canonicalCount});
-  const canonical = canonicalHref(html);
-  if (canonical) {
-    try {
-      const u = new URL(canonical);
-      if (!approvedHosts.has(u.hostname)) failures.push({path: rel, code: 'CANONICAL_HOST', detail: u.hostname});
-    } catch { failures.push({path: rel, code: 'CANONICAL_INVALID', detail: canonical}); }
-  }
-  for (const detail of jsonLdErrors(html)) failures.push({path: rel, code: 'JSON_LD', detail});
-  if (/\{\{[^}]+\}\}|%%[A-Z0-9_:.-]+%%|\[TODO\]|\bTODO:\b/i.test(html)) failures.push({path: rel, code: 'UNRESOLVED_TOKEN'});
-  for (const re of forbiddenPublicPatterns) if (re.test(html)) failures.push({path: rel, code: 'PUBLIC_OPERATIONAL_SCAFFOLDING', detail: re.source});
-
-  for (const entry of acceptance.get(rel) || []) {
-    const marker = `data-bhpc-agent-record="${entry.record_id}"`;
-    if (!html.includes(marker)) failures.push({path: rel, code: 'MISSING_RECORD_MARKER', detail: entry.record_id});
-    /*
-     * A THIRD LANE USED TO ASK THIS QUESTION ITS OWN WAY. The plan builder and the
-     * trace were unified on scripts/lib/bhpc_agent_acceptance_satisfaction.mjs - see
-     * the measurement in that file's header - and this contract was left behind on
-     * `stripTags(html).toLowerCase().includes(...)`, a raw substring match. So a
-     * page that plainly SAYS the required heading still failed here whenever the
-     * rendered heading differed by punctuation the applier legitimately writes.
-     *
-     * Reproduced 2026-09-12: ai-coach-vs-human-coach.html carries
-     * <h1>AI Coach vs Human Coach: Which Is Better?</h1> - the CURATED heading - and
-     * records 2026-06-27-bhpc-106 and 2026-07-04-bhpc-137 require "AI coach vs human
-     * coach which is better". The page says it. A colon and a question mark made
-     * this lane call it missing, and it took Spry Content Release red at
-     * release:agent-intake:raw immediately after the trace it disagrees with had
-     * reported PASS on the same page.
-     *
-     * saysPhrase is not a loosening: it keeps word order and adjacency and is
-     * strictly stronger than the token-wise test this repo has already rejected. It
-     * is the weakest test that still means "the page says this", and it is now the
-     * ONE test all three lanes use.
-     */
-    const heading = stripTags(entry.required_heading || '');
-    if (heading && !saysPhrase(html, heading)) failures.push({path: rel, code: 'MISSING_REQUIRED_HEADING', detail: heading});
-    for (const link of entry.required_internal_links || []) {
-      if (!link?.to_url) continue;
-      // Compare the route the applier actually renders, not the raw to_url. An
-      // artifact writes its target with the .html extension
-      // (".../a-practical-way-....html"); every internal link on this site is
-      // published at the extensionless route the same normalizer produces, which
-      // is why the acceptance entry already carries normalized_internal_href.
-      // Checking the raw pathname asked for an href no page has ever contained,
-      // so a link that was rendered correctly still failed the contract. The
-      // check still fails when the link is genuinely absent - it just looks for
-      // the form the site serves.
-      let rawPathname = '';
-      try { rawPathname = new URL(link.to_url, 'https://billionairehighperformancecoach.com').pathname; } catch { rawPathname = String(link.to_url); }
-      // A link action whose to_url resolves to this same page is a self-link. The
-      // apply step cannot render it as a related-page link, so requiring its anchor
-      // text here can never be satisfied. Skip it and record it as a data warning
-      // against the emitting record rather than blocking every downstream deploy.
-      if (rawPathname.replace(/^\/+/, '') === rel) {
-        warnings.push({path: rel, code: 'SELF_REFERENTIAL_LINK_ACTION', detail: rawPathname, record_id: entry.record_id});
-        continue;
-      }
-      const pathname = link.normalized_internal_href || normalizeBhpcInternalLinkHref(link.to_url) || rawPathname;
-      if (!html.includes(`href="${pathname}"`) && !html.includes(`href='${pathname}'`)) failures.push({path: rel, code: 'MISSING_REQUIRED_LINK', detail: pathname});
-      // Link presence is an invariant; exact anchor wording is a recommendation.
-      if (link.anchor_text && !stripTags(html).toLowerCase().includes(String(link.anchor_text).toLowerCase())) warnings.push({path: rel, code: 'ANCHOR_TEXT_MISMATCH', detail: link.anchor_text, record_id: entry.record_id});
-    }
-  }
-
-  const title = stripTags((html.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i) || [])[1] || '');
-  const description = metaContent(html, 'description');
-  if (title.length && (title.length < 20 || title.length > 70)) warnings.push({path: rel, code: 'TITLE_LENGTH', detail: title.length});
-  if (description.length && (description.length < 70 || description.length > 180)) warnings.push({path: rel, code: 'META_DESCRIPTION_LENGTH', detail: description.length});
-  if (active.has(rel) && !/data-bhpc-agent-block=["']direct_answer["']/i.test(html)) warnings.push({path: rel, code: 'NO_DIRECT_ANSWER_BLOCK'});
+  const verdict = examinePageSeoContract({rel, html, acceptanceEntries: acceptance.get(rel) || [], active: active.has(rel)});
+  failures.push(...verdict.failures);
+  warnings.push(...verdict.warnings);
   checked.push(rel);
 }
 
