@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-10-03T14:45:34.111Z",
+  "generated_at": "2026-10-03T15:32:42.387Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 248,
+  "admitted_hard_fail_count": 249,
   "reviewed_count": 8,
-  "unreviewed_count": 240,
+  "unreviewed_count": 241,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 191,
+    "REVIEW_REQUIRED": 192,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 31,
     "REVIEW_WARNING_BOUNDARY": 18
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 191,
+    "REVIEW_REQUIRED": 192,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 31,
     "REVIEW_WARNING_BOUNDARY": 10
   },
   "migration_status_counts": {
-    "UNREVIEWED": 240,
+    "UNREVIEWED": 241,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -3761,6 +3761,21 @@
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-FROZEN-OUTPUT-SHRINK"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-INTAKE-HOLDS-NONCONFORMING-PAGE",
+      "name": "validate:intake-holds-nonconforming-page",
+      "command": "npm run validate:intake-holds-nonconforming-page",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses a regression in which one nonconforming agent page fails the whole Spry Content Release again. Three Fridays running (2026-09-19, 2026-09-26, 2026-10-03 run 37127626280 on f4163ce) the Twin Agent drop reached main by direct push and the release it started went red at release:agent-intake:raw because validate:page-seo-contract, the lane's last stage, failed the run on ONE rendered page (ai-coach-vs-human-coach.html MISSING_REQUIRED_HEADING, one of eleven). scripts/agent_intake/hold_nonconforming_agent_pages.mjs now runs before that validator and holds a failing page by name: last validated bytes restored, ledgered in data/content/agent_page_quarantine.json under lane agent_intake_hold, planned BLOCKED, reported; the other pages ship and the run exits 0. This self-test runs the real plan builder, applier, hold stage and contract validator in a scratch git tree, breaks one of two rendered pages, and proves the validator fails before the hold, the hold restores exactly that page and ledgers it, the validator passes after it, the hold persists across re-plan and re-apply, and a missing plan is a named failure. Hard-fails on zero assertions.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-INTAKE-HOLDS-NONCONFORMING-PAGE"
       ],
       "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",
