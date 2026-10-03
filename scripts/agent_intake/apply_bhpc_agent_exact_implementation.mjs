@@ -97,6 +97,33 @@ function cleanExistingSemanticSections(html = '') {
   return String(html || '').replace(/(?:\r?\n[\t ]*)*<section\b[^>]*class=["'][^"']*bhpc-agent-semantic-repair[^"']*["'][\s\S]*?<\/section>(?:[\t ]*\r?\n)*/gi, '\n');
 }
 
+// THE SURFACES ANOTHER STAGE REWRITES FROM THIS ONE'S OUTPUT ARE NOT EVIDENCE.
+//
+// renderRequiredHeadingVariants omits a required heading it already finds on
+// the page, so a curated H1 that says it is not repeated. But the page also
+// carries the recommendation-summary panel (data-content-block=
+// "recommendation_summary"), which scripts/retrofit_recommendation_summary.js
+// rebuilds AFTER this applier from the first sentence of the direct answer -
+// and the direct answer carries only the PRIMARY record's heading. So last
+// week's heading sat in that panel, this applier saw it there and left it out
+// of the variants, and the retrofit then rewrote the panel from this week's
+// primary. The heading vanished from the page between two stages that each
+// behaved as designed, and validate:page-seo-contract failed the page.
+//
+// Reproduced 2026-10-03 (Spry Content Release 37127626280, red main):
+// ai-coach-vs-human-coach.html, record 2026-09-26-bhpc-001 "is AI coaching
+// worth it" - present on main in the panel and the direct answer, absent after
+// the lane once 2026-10-03-bhpc-002 became the primary.
+//
+// A required heading therefore counts as already present only where it stands
+// in content this lane does not derive: the page with the semantic section AND
+// the recommendation-summary panel removed. The panel's identity is its MARK
+// attribute, the same one the retrofit keys on.
+const RECOMMENDATION_SUMMARY_PANEL = /<div\b[^>]*data-content-block=["']recommendation_summary["'][^>]*>(?:(?!<div\b)[\s\S])*?<\/div>/gi;
+function stripVolatileDerivedSurfaces(html = '') {
+  return String(html || '').replace(RECOMMENDATION_SUMMARY_PANEL, '');
+}
+
 function extractQuotedPhrases(value = '') {
   const phrases = [];
   const text = String(value || '');
@@ -597,7 +624,7 @@ function sectionForEntries(entries, existingHtml = '') {
     const representative = (type === 'cta_callout' ? entries.find(entry => (entry.required_external_cta_links || []).length) : null) || entries.find(entry => requiredBlockTypesForBhpcEntry(entry).includes(type)) || primary;
     return renderBlock(representative, type, entries, existingHtml);
   }).filter(Boolean).join('\n');
-  const headingVariants = renderRequiredHeadingVariants(entries, existingHtml);
+  const headingVariants = renderRequiredHeadingVariants(entries, stripVolatileDerivedSurfaces(existingHtml));
   return `
 <section class="bhpc-agent-semantic-repair" data-bhpc-agent-semantic="true" data-bhpc-agent-record="${escapeHtml(primary.record_id)}" data-bhpc-agent-record-count="${appliedRecordIds.length}" data-bhpc-agent-records="${escapeHtml(appliedRecordIds.join(' '))}" data-bhpc-agent-page-family="${escapeHtml(primary.page_family)}" data-bhpc-agent-route-status="${escapeHtml(primary.route_status)}" data-bhpc-seo-contract="${escapeHtml(primary.seo_execution_hash || 'legacy')}">
   <h2>${escapeHtml(cleanRequiredHeading(primary.required_heading) || primary.query)}</h2>

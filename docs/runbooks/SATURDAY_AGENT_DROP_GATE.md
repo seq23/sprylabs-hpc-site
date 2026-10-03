@@ -94,3 +94,45 @@ project and deploy from Deploy Distribution with `wrangler pages deploy
 and `CLOUDFLARE_ACCOUNT_ID` in the repository secrets. Both are owner-held;
 this is the one channel the quarantine cannot reach, and it is why a raw drop
 that only adds data files was never a broken site - only a red one.
+
+## Why Fridays stayed red after the gate (2026-10-03), and what now happens to a bad page
+
+The Twin Agent kept pushing its drop straight to `main` (`f4163ce`, 2026-10-03;
+`71962cd28`, 2026-09-26), and the gate above did its job: the drop commit itself
+validated green. What went red was the Spry Content Release that the push
+starts. Its agent-intake lane rebuilt every page the drop names, and
+`validate:page-seo-contract` - the last stage of `release:agent-intake:raw` -
+failed the whole run when any ONE of those pages did not conform (run
+37127626280: `ai-coach-vs-human-coach.html`, `MISSING_REQUIRED_HEADING "is AI
+coaching worth it"`, one page of eleven). The heading was on `main`; the lane
+lost it between two stages that each behaved as designed - the applier saw last
+week's heading in the recommendation-summary panel and left it out of the
+section it writes, then the retrofit rebuilt that panel from this week's primary
+record. That applier defect is fixed at source (it no longer treats a surface
+another stage rewrites as evidence), and `validate:page-seo-contract` is
+unchanged.
+
+The structural change is that **intake now holds, it does not halt**.
+`scripts/agent_intake/hold_nonconforming_agent_pages.mjs` runs before the
+contract validator and asks the same question of every rendered page, from the
+same definition (`scripts/lib/page_seo_contract.mjs`). A page that fails is
+held by name: its bytes go back to the last validated page (`git HEAD`; a page
+that did not exist there is removed), a row goes into
+`data/content/agent_page_quarantine.json` under lane `agent_intake_hold`, the
+plan is rebuilt so the page's spec is `BLOCKED` with reason `held_by_intake:...`
+for the rest of that run and for every daily run until the next drop changes
+the page's acceptance set, and the hold is printed as a `NAMED STOP
+agent_page_held` line, written to `artifacts/validation/agent-intake-held-pages.json`
+(committed by the release) and to the GitHub step summary. Every other page
+ships and the run exits 0. The run exits 1 only when the hold itself cannot be
+made (no plan, no validated copy, or a plan rebuild that does not honour the
+ledger). `validate:bhpc-page-family-contract` pins a held page to HEAD identity:
+a held page the lane still modified is an error.
+
+Guarded by `npm run validate:intake-holds-nonconforming-page`, which renders
+two pages in a scratch git tree, breaks one, and proves the contract fails
+before the hold, the hold restores exactly that page and ledgers it, and the
+contract passes after it with the other page shipped. The producer itself (the
+Twin Agent, an external writer that pushes as the owner) is still asked to push
+`agent-drop/<date>-<scope>` instead of `main`; nothing in this repository can
+make it comply, so the intake no longer depends on it complying.

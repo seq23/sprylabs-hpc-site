@@ -8294,8 +8294,38 @@
         "MX-FROZEN-OUTPUT-SHRINK"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-INTAKE-HOLDS-NONCONFORMING-PAGE",
+      "status": "ADMITTED",
+      "name": "validate:intake-holds-nonconforming-page",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses a regression in which one nonconforming agent page fails the whole Spry Content Release again. Three Fridays running (2026-09-19, 2026-09-26, 2026-10-03 run 37127626280 on f4163ce) the Twin Agent drop reached main by direct push and the release it started went red at release:agent-intake:raw because validate:page-seo-contract, the lane's last stage, failed the run on ONE rendered page (ai-coach-vs-human-coach.html MISSING_REQUIRED_HEADING, one of eleven). scripts/agent_intake/hold_nonconforming_agent_pages.mjs now runs before that validator and holds a failing page by name: last validated bytes restored, ledgered in data/content/agent_page_quarantine.json under lane agent_intake_hold, planned BLOCKED, reported; the other pages ship and the run exits 0. This self-test runs the real plan builder, applier, hold stage and contract validator in a scratch git tree, breaks one of two rendered pages, and proves the validator fails before the hold, the hold restores exactly that page and ledgers it, the validator passes after it, the hold persists across re-plan and re-apply, and a missing plan is a named failure. Hard-fails on zero assertions.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:intake-holds-nonconforming-page",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-intake-holds-nonconforming-page/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-03",
+      "matrix_ids": [
+        "MX-INTAKE-HOLDS-NONCONFORMING-PAGE"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 264,
+  "record_count": 265,
   "generated_at": "2026-08-08T23:30:00Z"
 }

@@ -286,9 +286,13 @@ for(const [pathValue,entries] of groups){
   const spec=pageSpecFor(entries,pathValue);
   // The same fingerprint the quarantine ledger is keyed by, carried on the spec so
   // apply_citation_program.py can honour the ledger without re-deriving the hash.
+  // Computed once and carried on BOTH the created-page spec and the plan spec, so
+  // the admission gate (creates) and the intake hold stage (repairs) key the one
+  // quarantine ledger exactly as this builder reads it back.
+  const quarantine_fingerprint=specFingerprint({path:pathValue,acceptanceIds:entries.map(e=>e.id),h1:spec.h1,framework:spec.framework,type:spec.type,definition:spec.definition});
   if(operation==='REPAIR_INTENDED_WINNER_PAGE') priority_pages[pathValue]=spec;
-  else new_pages[pathValue]={...spec,quarantine_fingerprint:specFingerprint({path:pathValue,acceptanceIds:entries.map(e=>e.id),h1:spec.h1,framework:spec.framework,type:spec.type,definition:spec.definition})};
-  specs.push({
+  else new_pages[pathValue]={...spec,quarantine_fingerprint};
+  specs.push({quarantine_fingerprint,
     record_id:primary.record_id,record_ids:unique(entries.map(e=>e.record_id)),acceptance_ids:unique(entries.map(e=>e.id)),query:primary.query,run_date:primary.run_date,
     operation,page_family:primary.page_family,route_status:primary.route_status,intended_winner_page:primary.intended_winner_page||'',intended_winner_path:primary.intended_winner_path||'',
     implementation_path:pathValue,before_hash:hashFile(pathValue),status:'PLANNED',blocked_reason:'',extraction_type:spec.type,
