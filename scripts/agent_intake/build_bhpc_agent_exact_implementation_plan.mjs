@@ -5,7 +5,7 @@ import {ROOT, writeJson, hashFile} from './bhpc_agent_common.mjs';
 import {compileAndWriteBhpcAcceptanceManifest} from './compile_bhpc_agent_acceptance_manifest.mjs';
 import {mergeBhpcExternalCtaLinks} from '../lib/bhpc_conversion_contract.mjs';
 import {evaluateBhpcAcceptance} from '../lib/bhpc_agent_acceptance_satisfaction.mjs';
-import {bhpcGeneratedCitationDefinition, bhpcGeneratedFrameworkName} from '../lib/bhpc_public_page_contract.mjs';
+import {bhpcPublishedPageIdentity, bhpcRepairPageIdentity} from '../lib/bhpc_public_page_contract.mjs';
 import {readQuarantine, specFingerprint, quarantinedRow, quarantineReason} from '../lib/agent_page_quarantine.mjs';
 import {measuredDemandQueries, hasMeasuredDemand, noMeasuredDemandReason} from '../lib/measured_demand.mjs';
 
@@ -202,26 +202,28 @@ function pageSpecFor(entries,primaryPath=''){
   const blockTypes=unique(entries.flatMap(e=>e.required_block_types||[]));
   const heading=primary.required_heading||primary.query;
   const curated=curatedSpecs.get(String(primaryPath))||null;
-  // Resolved BEFORE the literal, because the generated definition names it. A definition
-  // that does not name its framework is re-prefixed in the registry and nowhere else,
-  // and the page and the registry then disagree forever.
-  const frameworkName=(curated&&String(curated.framework||'').trim())
-    ? curated.framework
-    : (bhpcGeneratedFrameworkName(primary.query) || heading);
+  // CURATION FIRST, then - for a page that already exists and that this pipeline did
+  // not create - the page's OWN published identity, then a derived name, and only
+  // then the raw heading. The rungs and the reason for each live in ONE place,
+  // bhpcRepairPageIdentity() in scripts/lib/bhpc_public_page_contract.mjs, and are
+  // pinned by scripts/agent_intake/self_test_repair_page_identity.mjs. Without the
+  // published rung a repair renamed the page it repaired: on 2026-10-03 the agent
+  // query "i'm going to organize these files ..." became the title and framework of
+  // insights/deep-work-realistic-protocol.html and took Validate Repo red at
+  // validate:framework-name-shape. A page the artifact CREATES has no published
+  // identity, so its result is exactly what it was.
+  const published=(primaryPath&&preexistingForeignPage(primaryPath))
+    ? bhpcPublishedPageIdentity(fs.readFileSync(path.join(ROOT,primaryPath),'utf8'))
+    : null;
+  const identity=bhpcRepairPageIdentity({query:primary.query,heading,curated,published});
   return {
-    h1:(curated&&String(curated.h1||'').trim())?curated.h1:primary.query,
-    // CURATION FIRST, then a derived NAME, and only then the raw heading. The
-    // middle rung did not exist: a page the artifact CREATES has no curated entry by
-    // definition, so the fallback was always the query and every new page was a
-    // regression against validate:framework-name-shape's shrink-only baseline. The
-    // derivation returns '' rather than a severed phrase, so the last rung still
-    // stands and the shape guard names the page that needs curating.
-    framework:frameworkName,
+    h1:identity.h1,
+    framework:identity.framework,
     // The site publishes four extraction types (concept, howto, comparison,
     // decision). Choosing only between comparison and concept made the plan
     // demand that an existing how-to page be reshaped into a concept page.
     type:existingExtractionType(primaryPath)||(blockTypes.includes('comparison_table')?'comparison':'concept'),
-    definition:(curated&&String(curated.definition||'').trim())?curated.definition:bhpcGeneratedCitationDefinition(primary.query, frameworkName),
+    definition:identity.definition,
     body:`<section data-bhpc-agent-record="${primary.record_id}" data-bhpc-agent-semantic="true"><h2>${heading}</h2></section>`,
     agent_acceptance:{
       record_ids:unique(entries.map(e=>e.record_id)),acceptance_ids:unique(entries.map(e=>e.id)),page_family:primary.page_family,route_status:primary.route_status,

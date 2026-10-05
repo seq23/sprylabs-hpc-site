@@ -2587,9 +2587,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-AGENT-REPAIR-PAGE-IDENTITY",
+      "validation_id": "VAL-AGENT-REPAIR-PAGE-IDENTITY",
+      "lane": "validation-control-plane",
+      "command": "npm run agent:bhpc:self-test-repair-identity",
+      "order": 250,
+      "severity": "STRONG_WARNING",
+      "release_effect": false,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 258,
+  "entry_count": 259,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3219,6 +3229,10 @@
         {
           "id": "VAL-INTAKE-HOLDS-NONCONFORMING-PAGE",
           "command": "npm run validate:intake-holds-nonconforming-page"
+        },
+        {
+          "id": "VAL-AGENT-REPAIR-PAGE-IDENTITY",
+          "command": "npm run agent:bhpc:self-test-repair-identity"
         }
       ]
     },

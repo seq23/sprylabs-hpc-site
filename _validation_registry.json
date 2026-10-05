@@ -8324,8 +8324,38 @@
         "MX-INTAKE-HOLDS-NONCONFORMING-PAGE"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-AGENT-REPAIR-PAGE-IDENTITY",
+      "status": "ADMITTED",
+      "name": "agent:bhpc:self-test-repair-identity",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Spry Content Release e74b7ba2 (2026-10-03) repaired a published page with no curated entry and wrote the agent row's raw query into its title, framework and definition; Validate Repo then stayed red on main at validate:framework-name-shape. This pins bhpcRepairPageIdentity (published identity kept, damaged identity healed, curation wins, created pages unchanged), that the planner and validator share one shape rule, and that every committed repair spec carries no new query-shaped name, failing on zero specs examined.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "STRONG_WARNING",
+      "command": "npm run agent:bhpc:self-test-repair-identity",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/agent-bhpc-self-test-repair-identity/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-05",
+      "matrix_ids": [
+        "MX-AGENT-REPAIR-PAGE-IDENTITY"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 265,
+  "record_count": 266,
   "generated_at": "2026-08-08T23:30:00Z"
 }
