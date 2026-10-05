@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0",
-  "generated_at": "2026-08-29T03:44:13.589Z",
-  "files_scanned": 473,
-  "source_count": 236,
-  "hard_gate_source_count": 218,
-  "warning_source_count": 37,
+  "generated_at": "2026-10-05T13:21:56.722Z",
+  "files_scanned": 554,
+  "source_count": 312,
+  "hard_gate_source_count": 296,
+  "warning_source_count": 42,
   "records": [
     {
       "file": "scripts/admin/apply_overrides.js",
@@ -14,7 +14,13 @@
     },
     {
       "file": "scripts/admin/run_admin_command.mjs",
-      "hard_gate_signals": 1,
+      "hard_gate_signals": 9,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/agent_intake/admit_bhpc_agent_created_pages.mjs",
+      "hard_gate_signals": 7,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -37,6 +43,36 @@
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/agent_intake/hold_nonconforming_agent_pages.mjs",
+      "hard_gate_signals": 2,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/agent_intake/self_test_absorb_claims_only_in_absorber.mjs",
+      "hard_gate_signals": 7,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/agent_intake/self_test_agent_created_page_admission.mjs",
+      "hard_gate_signals": 5,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/agent_intake/self_test_agent_created_page_demand_gate.mjs",
+      "hard_gate_signals": 5,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/agent_intake/self_test_bhpc_acceptance_visibility.mjs",
+      "hard_gate_signals": 2,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/agent_intake/self_test_bhpc_route_resolution.mjs",
       "hard_gate_signals": 3,
       "warning_signals": 0,
@@ -45,6 +81,24 @@
     {
       "file": "scripts/agent_intake/self_test_cross_vertical_artifact_shape.mjs",
       "hard_gate_signals": 3,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/agent_intake/self_test_intake_holds_nonconforming_page.mjs",
+      "hard_gate_signals": 6,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/agent_intake/self_test_repair_page_identity.mjs",
+      "hard_gate_signals": 2,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/agent_intake/self_test_scratch_repo.mjs",
+      "hard_gate_signals": 1,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -73,6 +127,12 @@
       "classification": "mixed"
     },
     {
+      "file": "scripts/answer_surface/score.js",
+      "hard_gate_signals": 4,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/assemble_pages_output.js",
       "hard_gate_signals": 9,
       "warning_signals": 0,
@@ -80,7 +140,7 @@
     },
     {
       "file": "scripts/atlas/validate_atlas_units.mjs",
-      "hard_gate_signals": 3,
+      "hard_gate_signals": 6,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -110,7 +170,7 @@
     },
     {
       "file": "scripts/authority_scale/frozen_outputs.mjs",
-      "hard_gate_signals": 6,
+      "hard_gate_signals": 8,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -139,16 +199,52 @@
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/baseline.mjs",
+      "hard_gate_signals": 8,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/build_404.js",
       "hard_gate_signals": 2,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
     {
-      "file": "scripts/cadence_gate.js",
+      "file": "scripts/build/build_all_cache_key.mjs",
+      "hard_gate_signals": 2,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/build/restore_build_cache.mjs",
+      "hard_gate_signals": 7,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/build/save_build_cache.mjs",
       "hard_gate_signals": 1,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/cadence_gate.js",
+      "hard_gate_signals": 3,
       "warning_signals": 5,
       "classification": "mixed"
+    },
+    {
+      "file": "scripts/citation_intelligence/apply_release_plan.mjs",
+      "hard_gate_signals": 1,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/citation_intelligence/build_release_plan.mjs",
+      "hard_gate_signals": 3,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
     },
     {
       "file": "scripts/citation_intelligence/pipeline_lib.mjs",
@@ -175,13 +271,37 @@
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/citation/build_contract_violation_scope.mjs",
+      "hard_gate_signals": 4,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/content/build_manual_expansion_pages.mjs",
       "hard_gate_signals": 5,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/content/fill_strategy_release_gap.mjs",
+      "hard_gate_signals": 2,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/content/self_heal_citation_os.mjs",
+      "hard_gate_signals": 10,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/content/self_heal_generated_content.mjs",
+      "hard_gate_signals": 4,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/content/sync_redirect_forms.mjs",
       "hard_gate_signals": 2,
       "warning_signals": 0,
       "classification": "hard-gate-source"
@@ -259,6 +379,12 @@
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/internal/record_build_all_state.mjs",
+      "hard_gate_signals": 6,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/legacy/root-tools/apply_guardrails.sh",
       "hard_gate_signals": 2,
       "warning_signals": 0,
@@ -271,14 +397,50 @@
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/lib/admission_level.js",
+      "hard_gate_signals": 1,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/lib/bhpc_agent_acceptance_parser.mjs",
+      "hard_gate_signals": 1,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/lib/bhpc_agent_block_schema.mjs",
       "hard_gate_signals": 1,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/lib/bhpc_seo_execution_contract.mjs",
+      "hard_gate_signals": 0,
+      "warning_signals": 1,
+      "classification": "warning-source"
+    },
+    {
+      "file": "scripts/lib/page_seo_contract.mjs",
+      "hard_gate_signals": 0,
+      "warning_signals": 5,
+      "classification": "warning-source"
+    },
+    {
+      "file": "scripts/lib/site_pages.js",
+      "hard_gate_signals": 2,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/lib/strict_backlog_gate.js",
       "hard_gate_signals": 4,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/lib/word_count_utils.js",
+      "hard_gate_signals": 2,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -295,12 +457,6 @@
       "classification": "hard-gate-source"
     },
     {
-      "file": "scripts/phase35_final_normalize.py",
-      "hard_gate_signals": 3,
-      "warning_signals": 0,
-      "classification": "hard-gate-source"
-    },
-    {
       "file": "scripts/prebuild/run_prebuild_validation.js",
       "hard_gate_signals": 2,
       "warning_signals": 0,
@@ -308,13 +464,13 @@
     },
     {
       "file": "scripts/programmatic/demand_backed_atoms.mjs",
-      "hard_gate_signals": 1,
+      "hard_gate_signals": 2,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
     {
       "file": "scripts/programmatic/generate_aplayer_phase_expansion.mjs",
-      "hard_gate_signals": 16,
+      "hard_gate_signals": 18,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -427,8 +583,8 @@
       "classification": "hard-gate-source"
     },
     {
-      "file": "scripts/run_validate_all.js",
-      "hard_gate_signals": 3,
+      "file": "scripts/repair/repair_published_agent_blocks.mjs",
+      "hard_gate_signals": 2,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -500,7 +656,7 @@
     },
     {
       "file": "scripts/social/collect_social.js",
-      "hard_gate_signals": 3,
+      "hard_gate_signals": 5,
       "warning_signals": 2,
       "classification": "mixed"
     },
@@ -547,6 +703,12 @@
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/validate_fanout_warning.js",
+      "hard_gate_signals": 2,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/validate_geo_semantics.js",
       "hard_gate_signals": 3,
       "warning_signals": 0,
@@ -554,7 +716,7 @@
     },
     {
       "file": "scripts/validation/add_validator.mjs",
-      "hard_gate_signals": 7,
+      "hard_gate_signals": 14,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -584,7 +746,7 @@
     },
     {
       "file": "scripts/validation/inventory_validation_sources.mjs",
-      "hard_gate_signals": 1,
+      "hard_gate_signals": 7,
       "warning_signals": 1,
       "classification": "mixed"
     },
@@ -602,13 +764,19 @@
     },
     {
       "file": "scripts/validation/python_runtime.mjs",
-      "hard_gate_signals": 7,
+      "hard_gate_signals": 8,
       "warning_signals": 4,
       "classification": "mixed"
     },
     {
-      "file": "scripts/validation/run_extraction_contract_final_state_sharded.mjs",
+      "file": "scripts/validation/rebaseline_protected_evidence.mjs",
       "hard_gate_signals": 4,
+      "warning_signals": 1,
+      "classification": "mixed"
+    },
+    {
+      "file": "scripts/validation/run_extraction_contract_final_state_sharded.mjs",
+      "hard_gate_signals": 6,
       "warning_signals": 1,
       "classification": "mixed"
     },
@@ -619,8 +787,56 @@
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/validation/self_test_admin_command_verify.mjs",
+      "hard_gate_signals": 5,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/validation/self_test_changed_page_scope.mjs",
       "hard_gate_signals": 5,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validation/self_test_control_plane_reachability.mjs",
+      "hard_gate_signals": 5,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validation/self_test_convergence_reentry.mjs",
+      "hard_gate_signals": 7,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validation/self_test_extraction_surface_baseline_presence.mjs",
+      "hard_gate_signals": 5,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validation/self_test_frozen_output_shrink_guard.mjs",
+      "hard_gate_signals": 5,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validation/self_test_lastmod_derivation_receipt.mjs",
+      "hard_gate_signals": 5,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validation/self_test_ledger_receipt_run_scope.mjs",
+      "hard_gate_signals": 5,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validation/self_test_named_stop_exit_code.mjs",
+      "hard_gate_signals": 7,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -667,6 +883,12 @@
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/validation/validate_agent_block_suppliers_run_first.mjs",
+      "hard_gate_signals": 3,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/validation/validate_agent_recommendations.py",
       "hard_gate_signals": 0,
       "warning_signals": 1,
@@ -674,7 +896,7 @@
     },
     {
       "file": "scripts/validation/validate_artifact_packaging_parity.mjs",
-      "hard_gate_signals": 2,
+      "hard_gate_signals": 4,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -686,14 +908,14 @@
     },
     {
       "file": "scripts/validation/validate_canonical_no_redirect.mjs",
-      "hard_gate_signals": 4,
+      "hard_gate_signals": 6,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
     {
       "file": "scripts/validation/validate_citation_contract.py",
       "hard_gate_signals": 1,
-      "warning_signals": 2,
+      "warning_signals": 3,
       "classification": "mixed"
     },
     {
@@ -703,13 +925,61 @@
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/validation/validate_citation_repair_reach.mjs",
+      "hard_gate_signals": 17,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validation/validate_citation_schema_authority_reach.mjs",
+      "hard_gate_signals": 5,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validation/validate_citation_schema_serialization.mjs",
+      "hard_gate_signals": 6,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validation/validate_citation_signal_join.mjs",
+      "hard_gate_signals": 3,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validation/validate_citation_spec_completeness.py",
+      "hard_gate_signals": 1,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/validation/validate_claim_safety.mjs",
+      "hard_gate_signals": 7,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validation/validate_created_page_is_complete.mjs",
       "hard_gate_signals": 3,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
     {
       "file": "scripts/validation/validate_demand_backed_pages.mjs",
+      "hard_gate_signals": 12,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validation/validate_freeze_after_convergence.mjs",
+      "hard_gate_signals": 3,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validation/validate_health_boundary_reach.mjs",
       "hard_gate_signals": 3,
       "warning_signals": 0,
       "classification": "hard-gate-source"
@@ -727,6 +997,12 @@
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/validation/validate_lastmod_ledger_final.mjs",
+      "hard_gate_signals": 3,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/validation/validate_llms_full_coverage.mjs",
       "hard_gate_signals": 3,
       "warning_signals": 0,
@@ -739,26 +1015,38 @@
       "classification": "warning-source"
     },
     {
-      "file": "scripts/validation/validate_no_keyword_swap_pages.mjs",
+      "file": "scripts/validation/validate_new_evidence_is_pinned_on_absorb.mjs",
       "hard_gate_signals": 3,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/validation/validate_no_keyword_swap_pages.mjs",
+      "hard_gate_signals": 5,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validation/validate_one_acceptance_satisfaction_test.mjs",
+      "hard_gate_signals": 5,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/validation/validate_operator_doc_currency.mjs",
-      "hard_gate_signals": 1,
+      "hard_gate_signals": 2,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
     {
       "file": "scripts/validation/validate_page_seo_contract.mjs",
-      "hard_gate_signals": 0,
-      "warning_signals": 5,
-      "classification": "warning-source"
+      "hard_gate_signals": 6,
+      "warning_signals": 1,
+      "classification": "mixed"
     },
     {
       "file": "scripts/validation/validate_profile.mjs",
-      "hard_gate_signals": 7,
+      "hard_gate_signals": 8,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -805,6 +1093,12 @@
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/validation/validate_workflow_manual_only_declared.mjs",
+      "hard_gate_signals": 13,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/validation/validate_workflow_topology.mjs",
       "hard_gate_signals": 0,
       "warning_signals": 3,
@@ -823,31 +1117,7 @@
       "classification": "mixed"
     },
     {
-      "file": "scripts/validators/legacy_ops/validate_extractability.js",
-      "hard_gate_signals": 3,
-      "warning_signals": 0,
-      "classification": "hard-gate-source"
-    },
-    {
-      "file": "scripts/validators/legacy_ops/validate_indexnow_distribution_workflow.js",
-      "hard_gate_signals": 3,
-      "warning_signals": 0,
-      "classification": "hard-gate-source"
-    },
-    {
-      "file": "scripts/validators/legacy_ops/validate_insight_schema.js",
-      "hard_gate_signals": 3,
-      "warning_signals": 0,
-      "classification": "hard-gate-source"
-    },
-    {
       "file": "scripts/validators/legacy_ops/validate_internal_links.js",
-      "hard_gate_signals": 3,
-      "warning_signals": 0,
-      "classification": "hard-gate-source"
-    },
-    {
-      "file": "scripts/validators/legacy_ops/validate_phrase_policy.js",
       "hard_gate_signals": 3,
       "warning_signals": 0,
       "classification": "hard-gate-source"
@@ -860,18 +1130,6 @@
     },
     {
       "file": "scripts/validators/legacy_ops/validate_reddit_uniqueness.js",
-      "hard_gate_signals": 3,
-      "warning_signals": 0,
-      "classification": "hard-gate-source"
-    },
-    {
-      "file": "scripts/validators/legacy_ops/validate_source_product.js",
-      "hard_gate_signals": 3,
-      "warning_signals": 0,
-      "classification": "hard-gate-source"
-    },
-    {
-      "file": "scripts/validators/legacy_ops/validate_terminology.js",
       "hard_gate_signals": 3,
       "warning_signals": 0,
       "classification": "hard-gate-source"
@@ -895,8 +1153,32 @@
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/validators/validate_agent_artifact_absorption_trigger.mjs",
+      "hard_gate_signals": 3,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/validate_agent_drop_gate.mjs",
+      "hard_gate_signals": 8,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/validators/validate_agent_live.mjs",
-      "hard_gate_signals": 5,
+      "hard_gate_signals": 7,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/validate_agent_run_absorption_completeness.mjs",
+      "hard_gate_signals": 3,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/validate_amazon_book_landing.mjs",
+      "hard_gate_signals": 9,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -926,7 +1208,7 @@
     },
     {
       "file": "scripts/validators/validate_artifact_consistency_e2e.mjs",
-      "hard_gate_signals": 2,
+      "hard_gate_signals": 8,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -937,14 +1219,32 @@
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/validators/validate_attestation_matches_receipt.mjs",
+      "hard_gate_signals": 12,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/validators/validate_author_trust.js",
       "hard_gate_signals": 2,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/validators/validate_authority_admission_honesty.mjs",
+      "hard_gate_signals": 9,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/validators/validate_authority_engine.js",
       "hard_gate_signals": 2,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/validate_authority_paper_disk_registry_parity.mjs",
+      "hard_gate_signals": 3,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -992,7 +1292,7 @@
     },
     {
       "file": "scripts/validators/validate_bhpc_agent_recommendation_driven_output.mjs",
-      "hard_gate_signals": 3,
+      "hard_gate_signals": 11,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -1004,32 +1304,32 @@
     },
     {
       "file": "scripts/validators/validate_bhpc_browser_structural.mjs",
-      "hard_gate_signals": 3,
+      "hard_gate_signals": 5,
       "warning_signals": 4,
       "classification": "mixed"
     },
     {
       "file": "scripts/validators/validate_bhpc_dynamic_page_contract.mjs",
-      "hard_gate_signals": 2,
+      "hard_gate_signals": 6,
       "warning_signals": 1,
       "classification": "mixed"
     },
     {
       "file": "scripts/validators/validate_bhpc_fallback_gap_separation.mjs",
-      "hard_gate_signals": 3,
+      "hard_gate_signals": 7,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
     {
       "file": "scripts/validators/validate_bhpc_no_marker_only_agent_pass.mjs",
-      "hard_gate_signals": 3,
+      "hard_gate_signals": 5,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
     {
       "file": "scripts/validators/validate_bhpc_page_family_contract.mjs",
       "hard_gate_signals": 3,
-      "warning_signals": 2,
+      "warning_signals": 3,
       "classification": "mixed"
     },
     {
@@ -1040,13 +1340,25 @@
     },
     {
       "file": "scripts/validators/validate_bhpc_seo_execution_contract.mjs",
-      "hard_gate_signals": 3,
+      "hard_gate_signals": 7,
+      "warning_signals": 3,
+      "classification": "mixed"
+    },
+    {
+      "file": "scripts/validators/validate_browserless_mock_backup.mjs",
+      "hard_gate_signals": 4,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
     {
-      "file": "scripts/validators/validate_browserless_mock_backup.mjs",
-      "hard_gate_signals": 2,
+      "file": "scripts/validators/validate_build_all_integrity.mjs",
+      "hard_gate_signals": 4,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/validate_build_cache_integrity.mjs",
+      "hard_gate_signals": 4,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -1064,9 +1376,21 @@
     },
     {
       "file": "scripts/validators/validate_citation_readiness_warning.js",
-      "hard_gate_signals": 0,
-      "warning_signals": 12,
-      "classification": "warning-source"
+      "hard_gate_signals": 4,
+      "warning_signals": 11,
+      "classification": "mixed"
+    },
+    {
+      "file": "scripts/validators/validate_citation_schema_authority.mjs",
+      "hard_gate_signals": 9,
+      "warning_signals": 2,
+      "classification": "mixed"
+    },
+    {
+      "file": "scripts/validators/validate_cluster_signal_integrity.mjs",
+      "hard_gate_signals": 7,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
     },
     {
       "file": "scripts/validators/validate_content_ownership_boundaries.mjs",
@@ -1076,13 +1400,19 @@
     },
     {
       "file": "scripts/validators/validate_content_pattern_contract.js",
-      "hard_gate_signals": 2,
+      "hard_gate_signals": 9,
       "warning_signals": 2,
       "classification": "mixed"
     },
     {
       "file": "scripts/validators/validate_content_routing.js",
       "hard_gate_signals": 3,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/validate_control_plane_identity.mjs",
+      "hard_gate_signals": 9,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -1094,7 +1424,7 @@
     },
     {
       "file": "scripts/validators/validate_conversion_contract.js",
-      "hard_gate_signals": 7,
+      "hard_gate_signals": 8,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -1123,8 +1453,26 @@
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/validators/validate_curated_definition_registry_reach.mjs",
+      "hard_gate_signals": 3,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/validate_curated_framework_name_authority.mjs",
+      "hard_gate_signals": 13,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/validators/validate_daily_proof_packet.mjs",
       "hard_gate_signals": 2,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/validate_derived_absorber_reproducibility.mjs",
+      "hard_gate_signals": 1,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -1142,7 +1490,7 @@
     },
     {
       "file": "scripts/validators/validate_extractability.js",
-      "hard_gate_signals": 2,
+      "hard_gate_signals": 3,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -1153,14 +1501,44 @@
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/validators/validate_feed_date_determinism.mjs",
+      "hard_gate_signals": 5,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/validators/validate_firehose_source_contract.mjs",
-      "hard_gate_signals": 2,
+      "hard_gate_signals": 4,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/validate_framework_name_shape.mjs",
+      "hard_gate_signals": 7,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/validate_frozen_output_contract.mjs",
+      "hard_gate_signals": 3,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/validate_frozen_output_shrink.mjs",
+      "hard_gate_signals": 3,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
     {
       "file": "scripts/validators/validate_generated_content_finalization_contract.mjs",
       "hard_gate_signals": 2,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/validate_insight_schema.js",
+      "hard_gate_signals": 7,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -1189,6 +1567,12 @@
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/validators/validate_main_writer_convergence.mjs",
+      "hard_gate_signals": 3,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/validators/validate_money_link_floor.js",
       "hard_gate_signals": 1,
       "warning_signals": 0,
@@ -1201,8 +1585,20 @@
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/validators/validate_no_silent_zero_work.mjs",
+      "hard_gate_signals": 5,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/validators/validate_page_contracts.js",
       "hard_gate_signals": 1,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/validate_page_surface_coverage.mjs",
+      "hard_gate_signals": 7,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -1231,10 +1627,10 @@
       "classification": "hard-gate-source"
     },
     {
-      "file": "scripts/validators/validate_publish_wordcount_gate.js",
-      "hard_gate_signals": 0,
-      "warning_signals": 1,
-      "classification": "warning-source"
+      "file": "scripts/validators/validate_published_surface_is_pages_only.mjs",
+      "hard_gate_signals": 13,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
     },
     {
       "file": "scripts/validators/validate_query_coverage.js",
@@ -1261,10 +1657,34 @@
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/validators/validate_redirect_and_link_integrity.mjs",
+      "hard_gate_signals": 4,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/validate_redirect_map_equivalence.mjs",
+      "hard_gate_signals": 3,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/validators/validate_release_plan_integrity.mjs",
       "hard_gate_signals": 2,
       "warning_signals": 0,
       "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/validate_repair_fixture_capability.mjs",
+      "hard_gate_signals": 20,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/validate_repo_walk_boundary.mjs",
+      "hard_gate_signals": 9,
+      "warning_signals": 4,
+      "classification": "mixed"
     },
     {
       "file": "scripts/validators/validate_safe_harbor_autopublish.mjs",
@@ -1285,8 +1705,20 @@
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/validators/validate_search_snippet_bounds.mjs",
+      "hard_gate_signals": 4,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/validators/validate_signal_normalization.mjs",
       "hard_gate_signals": 2,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/validate_signal_source_producers.mjs",
+      "hard_gate_signals": 5,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -1303,8 +1735,14 @@
       "classification": "hard-gate-source"
     },
     {
+      "file": "scripts/validators/validate_social_source_contract.js",
+      "hard_gate_signals": 7,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
       "file": "scripts/validators/validate_strategy_gap_fill_contract.mjs",
-      "hard_gate_signals": 2,
+      "hard_gate_signals": 6,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -1317,6 +1755,12 @@
     {
       "file": "scripts/validators/validate_structural_graph_live_policy.mjs",
       "hard_gate_signals": 2,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/validate_surface_guard_ordering.mjs",
+      "hard_gate_signals": 7,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -1352,9 +1796,9 @@
     },
     {
       "file": "scripts/validators/validate_velocity_warnings.js",
-      "hard_gate_signals": 0,
+      "hard_gate_signals": 3,
       "warning_signals": 7,
-      "classification": "warning-source"
+      "classification": "mixed"
     },
     {
       "file": "scripts/validators/validate_vertical_keys.js",
@@ -1370,13 +1814,19 @@
     },
     {
       "file": "scripts/validators/validate_workflow_artifacts.mjs",
-      "hard_gate_signals": 2,
+      "hard_gate_signals": 4,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
     {
       "file": "scripts/validators/validate_workflow_runtime_mutations.mjs",
-      "hard_gate_signals": 2,
+      "hard_gate_signals": 4,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
+    },
+    {
+      "file": "scripts/validators/validate_workflow_step_env_contract.mjs",
+      "hard_gate_signals": 4,
       "warning_signals": 0,
       "classification": "hard-gate-source"
     },
@@ -1391,6 +1841,12 @@
       "hard_gate_signals": 2,
       "warning_signals": 1,
       "classification": "mixed"
+    },
+    {
+      "file": "scripts/validators/verify_product_urls.mjs",
+      "hard_gate_signals": 7,
+      "warning_signals": 0,
+      "classification": "hard-gate-source"
     },
     {
       "file": "scripts/workflow/hostile_review.mjs",

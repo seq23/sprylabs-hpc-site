@@ -125,3 +125,87 @@ export function bhpcCitationDefinitionOf(html = '') {
     .replace(/&lt;/g, '<').replace(/&gt;/g, '>');
   return text.replace(/\s+/g, ' ').trim();
 }
+
+/**
+ * Why a framework name reads like a search query rather than a named method.
+ *
+ * ONE definition, read by validate:framework-name-shape (which fails a NEW
+ * violation) and by the repair planner (which must not plan one). When the rule
+ * lived only in the validator, the planner could not ask it, so it shipped a raw
+ * query as a published page's name and the validator found out on main.
+ */
+export const FRAMEWORK_NAME_MAX_WORDS = 12;
+export function frameworkNameShapeViolations(name = '') {
+  const out = [];
+  const v = String(name || '').trim();
+  if (!v) return out;
+  const words = v.split(/\s+/).length;
+  if (v === v.toLowerCase()) out.push('entirely lowercase, which is how a raw search query reads');
+  if (words > FRAMEWORK_NAME_MAX_WORDS) out.push(`${words} words; a named method is not a sentence`);
+  if (v.endsWith('?')) out.push('ends in a question mark, so it is a question and not a name');
+  if (/[—–-]\s*(vs|versus)\s/i.test(v)) out.push('carries a comparison suffix, so it is a page title and not a name');
+  return out;
+}
+const shapeLegal = (v) => Boolean(String(v || '').trim()) && frameworkNameShapeViolations(v).length === 0;
+
+const decodeEntities = (s) => String(s || '')
+  .replace(/&#39;|&#x27;|&apos;/g, "'").replace(/&quot;/g, '"')
+  .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&');
+const textOf = (s) => decodeEntities(String(s || '').replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim();
+
+/** The sentence bhpcGeneratedCitationDefinition() writes. A definition ending in it
+ *  is this pipeline's own boilerplate, not a page's established definition. */
+const GENERATED_DEFINITION_TAIL = 'is addressed with a direct answer, practical decision criteria, and a clear next step.';
+
+/** The identity a page already publishes: its <h1>, its named framework, its definition. */
+export function bhpcPublishedPageIdentity(html = '') {
+  const s = String(html || '');
+  const h1 = s.match(/<h1\b[^>]*>([\s\S]*?)<\/h1>/i);
+  const fw = s.match(/data-named-framework="([^"]*)"/i);
+  return {
+    h1: h1 ? textOf(h1[1]) : '',
+    framework: fw ? decodeEntities(fw[1]).trim() : '',
+    definition: bhpcCitationDefinitionOf(s),
+  };
+}
+
+/**
+ * h1 / framework / definition for a page an agent recommendation REPAIRS.
+ *
+ * ─── THE DEFECT (Validate Repo red on main since e74b7ba2, 2026-10-03) ──────
+ * A repair took its identity from the agent row's raw query whenever no curated
+ * entry existed. insights/deep-work-realistic-protocol.html - a published page
+ * named "Deep work for high-pressure people: a realistic protocol" - was repaired
+ * for the query "i'm going to organize these files don't let me spend more than
+ * 20 minutes on it keep me focused", and that string became its <title>, og:title,
+ * data-named-framework, definition and registry framework. start-here.html's
+ * title became "how to stop restarting your life" the same way. A repair adds
+ * what the query asks for to a page; it does not rename the page.
+ *
+ * ─── THE RULE ───────────────────────────────────────────────────────────────
+ * curated entry (data/citation/agent_page_specs.json) first, always. Then, for a
+ * page that already exists and was not created by this pipeline (`published`
+ * non-null), the page's own established identity - each field only when it is not
+ * itself query-shaped or this pipeline's boilerplate, so a page damaged by the old
+ * rule is repaired rather than frozen. The raw query is the last rung, and for a
+ * page the pipeline creates (`published` null) the result is exactly what it was.
+ */
+export function bhpcRepairPageIdentity({query = '', heading = '', curated = null, published = null} = {}) {
+  const pick = (k) => (curated && String(curated[k] || '').trim()) ? curated[k] : '';
+  const pub = published || {};
+  // The subject the page is about: its own heading when that reads as a title (a heading
+  // may be a question - "Which Is Better?" - so the NAME rules are not applied to it;
+  // an all-lowercase heading is a query that an earlier repair wrote), else the query.
+  const pubH1 = String(pub.h1 || '').trim();
+  const subject = (published && pubH1 && pubH1 !== pubH1.toLowerCase()) ? pubH1 : query;
+  const framework = pick('framework')
+    || (published && shapeLegal(pub.framework) ? pub.framework : '')
+    || (published && shapeLegal(subject) && subject !== query ? subject : '')
+    || bhpcGeneratedFrameworkName(subject)
+    || heading;
+  const establishedDefinition = String(pub.definition || '').trim();
+  const definition = pick('definition')
+    || (published && establishedDefinition && !establishedDefinition.endsWith(GENERATED_DEFINITION_TAIL) ? establishedDefinition : '')
+    || bhpcGeneratedCitationDefinition(subject, framework);
+  return {h1: pick('h1') || subject, framework, definition};
+}
