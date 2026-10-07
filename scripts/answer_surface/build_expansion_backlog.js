@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+const { buildTimestamp } = require('../lib/build_clock.cjs');
 const fs = require('fs');
 const path = require('path');
 const ROOT = process.cwd();
@@ -20,7 +21,7 @@ const backlog = (scorecard.ranked || []).filter(r => r.status !== 'strong').map(
     'Add query variants to fanout block and llms-readable surfaces'
   ]
 }));
-const output = { generated_at: new Date().toISOString(), count: backlog.length, items: backlog };
+const output = { generated_at: buildTimestamp(), count: backlog.length, items: backlog };
 fs.writeFileSync(path.join(outDir, 'expansion_backlog.json'), JSON.stringify(output, null, 2) + '\n');
 fs.writeFileSync(path.join(reports, 'answer_surface_expansion_backlog.json'), JSON.stringify(output, null, 2) + '\n');
 console.log(`answer:backlog wrote ${backlog.length} items`);

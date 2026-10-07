@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+const { buildTimestamp } = require('../lib/build_clock.cjs');
 const fs = require('fs');
 const path = require('path');
 const ROOT = process.cwd();
@@ -121,7 +122,7 @@ for (const [key, observations] of groups) {
 ranked.sort((a, b) => a.score - b.score || b.total_queries - a.total_queries);
 
 const output = {
-  generated_at: new Date().toISOString(),
+  generated_at: buildTimestamp(),
   clusters: ranked.length,
   observation_sources: {
     candidates: candidates.length,

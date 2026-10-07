@@ -1,3 +1,4 @@
+const { buildTimestamp } = require('../lib/build_clock.cjs');
 const fs = require("fs");
 
 function readJson(file, fallback) {
@@ -87,7 +88,7 @@ const queries = [...merged.values()];
 
 fs.mkdirSync("data/intake", { recursive: true });
 fs.writeFileSync("data/intake/query_corpus.json", JSON.stringify({
-  generated_at: new Date().toISOString(),
+  generated_at: buildTimestamp(),
   source: "taxonomy_universe_plus_existing_signals",
   counts: {
     queries: queries.length

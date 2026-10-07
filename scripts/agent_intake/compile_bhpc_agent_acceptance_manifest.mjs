@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { buildTimestamp } from '../lib/build_clock.cjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import {ROOT, NORMALIZED_ROOT, readJson, writeJson, loadExactPolicy, safeScope} from './bhpc_agent_common.mjs';
@@ -149,7 +150,7 @@ export function compileAndWriteBhpcAcceptanceManifest() {
   if (previousSemantic) delete previousSemantic.generated_at;
   const generatedAt = previousCurrent?.generated_at && JSON.stringify(previousSemantic) === JSON.stringify(semanticCurrent)
     ? previousCurrent.generated_at
-    : new Date().toISOString();
+    : buildTimestamp();
   for (const payload of runPayloads) {
     writeJson(payload.rel, {
       schema_version: '1.0',

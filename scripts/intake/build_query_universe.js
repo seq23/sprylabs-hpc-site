@@ -1,3 +1,4 @@
+const { buildTimestamp } = require('../lib/build_clock.cjs');
 const fs = require("fs");
 
 function readJson(path) {
@@ -90,7 +91,7 @@ for (const role of roles) {
 }
 
 const output = {
-  generated_at: new Date().toISOString(),
+  generated_at: buildTimestamp(),
   generator: "taxonomy_query_universe_v1",
   counts: {
     product_roles: roles.length,

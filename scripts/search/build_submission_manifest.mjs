@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { buildTimestamp } from '../lib/build_clock.cjs';
 import fs from 'node:fs';
 import path from 'node:path';
 const root=process.cwd();
@@ -16,7 +17,7 @@ const sitemapUrls=[...new Set([...parseLocs('sitemap-bhpc.xml'),...parseLocs('si
 const missingFromSitemap=unique.filter(u=>!sitemapUrls.includes(u));
 const manifest={
   schema_version:'1.0',
-  generated_at:new Date().toISOString(),
+  generated_at:buildTimestamp(),
   repo:'sprylabs-hpc-site',
   indexnow:{
     configured:Boolean(config.indexnow?.key&&config.indexnow?.key_file),

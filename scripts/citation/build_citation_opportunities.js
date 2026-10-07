@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const { buildTimestamp } = require('../lib/build_clock.cjs');
 const fs = require('fs');
 const path = require('path');
 const root = process.cwd();
@@ -34,7 +35,7 @@ const targets = Array.from(byTarget.entries()).sort(([a], [b]) => a.localeCompar
   patch_depth: Math.max(...rows.map(row => Number(row.purchase_path_potential || 0))) >= 5 ? 'priority' : 'standard'
 }));
 const payload = {
-  generated_at: new Date().toISOString(),
+  generated_at: buildTimestamp(),
   source: 'data/citation_opportunities/bhpc_priority_queries.json',
   query_count: items.length,
   target_count: targets.length,

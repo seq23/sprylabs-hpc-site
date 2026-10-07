@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+const { buildTimestamp } = require('../lib/build_clock.cjs');
 const fs = require('fs');
 const path = require('path');
 const ROOT = process.cwd();
@@ -173,7 +174,7 @@ if (uncovered.length) {
 }
 
 const output = {
-  generated_at: new Date().toISOString(),
+  generated_at: buildTimestamp(),
   selection_model: 'ranked_items_plus_mandatory_use_case_coverage_v2',
   min_score: MIN_SCORE,
   max_ranked_items: MAX_RANKED_ITEMS,

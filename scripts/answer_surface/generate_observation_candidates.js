@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+const { buildTimestamp } = require('../lib/build_clock.cjs');
 const fs = require('fs');
 const path = require('path');
 const ROOT = process.cwd();
@@ -22,7 +23,7 @@ if (!seeds) {
     if (!clusterId) continue;
     items.push({ vertical: 'bhpc', cluster: clusterId, query: clusterId.replace(/[-_]+/g, ' ') });
   }
-  seeds = { generated_at: new Date().toISOString(), queries: items.filter(i => typeof i.query === 'string' && i.query.trim()) };
+  seeds = { generated_at: buildTimestamp(), queries: items.filter(i => typeof i.query === 'string' && i.query.trim()) };
   fs.writeFileSync(seedPath, JSON.stringify(seeds, null, 2) + '\n');
 }
 const candidates = (seeds.queries || seeds.items || []).map((item, index) => ({
@@ -33,5 +34,5 @@ const candidates = (seeds.queries || seeds.items || []).map((item, index) => ({
   expected_domains: ['billionairehighperformancecoach.com', 'spryexecutiveos.com', 'aplayermode.com'],
   status: 'pending_manual_or_api_observation'
 })).filter(i => typeof i.query === 'string' && i.query.trim());
-fs.writeFileSync(path.join(outDir, 'observation_candidates.json'), JSON.stringify({ generated_at: new Date().toISOString(), count: candidates.length, observations: candidates }, null, 2) + '\n');
+fs.writeFileSync(path.join(outDir, 'observation_candidates.json'), JSON.stringify({ generated_at: buildTimestamp(), count: candidates.length, observations: candidates }, null, 2) + '\n');
 console.log(`answer:observe candidates: ${candidates.length}`);

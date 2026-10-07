@@ -1,4 +1,33 @@
 #!/usr/bin/env node
+/**
+ * validate:clean-rebuild-parity — `npm run build:all` must be REPRODUCIBLE:
+ * two fresh clones of the same commit, built independently, must leave every
+ * tracked file (and every new, non-ignored file) byte-identical.
+ *
+ * WHY THIS IS STRICTER THAN IT WAS (7 Oct 2026). The earlier version passed while
+ * a fresh clone produced different output, for three reasons:
+ *   1. It copied the WORKING TREE (untracked and ignored files included, and the
+ *      .build-cache), so it could not see a build that relied on an untracked
+ *      file, and a warm build cache let both copies "build" by restoring the same
+ *      bytes without running a generator.
+ *   2. It compared only *.html, the sitemaps, llms.txt, _redirects and
+ *      data/citation/, skipping data/, reports/ and artifacts/ - exactly where
+ *      ~50 tracked files carried a wall-clock generated_at (fixed at source by
+ *      scripts/lib/build_clock.cjs) and an absolute interpreter path
+ *      (artifacts/validation/python-runtime.json, fixed in python_runtime.mjs).
+ *   3. It hid generated_at in two files behind a semantic-JSON allowlist.
+ *
+ * NOW: each build runs in its own `git fetch` of HEAD (full history, which the
+ * lastmod ledger reads; no untracked file can leak in), with the build cache
+ * disabled, and afterwards `git add -A` + `git ls-files -s` gives the blob hash
+ * of every tracked and new non-ignored path. The two manifests must be equal,
+ * byte for byte, with no allowlist. The public-file snapshot (every *.html plus
+ * the sitemaps, llms.txt, _redirects, data/citation/) is still compared too,
+ * now strictly, ignored outputs included.
+ *
+ * RULE 0: a build that exits non-zero, or a manifest with fewer than
+ * MIN_HTML_FILES pages, fails rather than passing as "two empty builds agree".
+ */
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
@@ -6,9 +35,17 @@ import crypto from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {fail,pass,writeSummary} from './common.mjs';
 
-const ROOT=process.cwd();
-const excludedTop=new Set(['.git','.pages-output', 'node_modules','artifacts','coverage','reports','.build','test-results','playwright-report','logs','releases']);
-const snapshotSkip=new Set(['.git','.pages-output', 'node_modules','artifacts','coverage','reports','.build','test-results','playwright-report','logs','releases','data/answer_surface','data/answer_surface_monitoring','data/backlog','data/intake/source_ingestion','data/authority']);
+const LABEL='[validate:clean-rebuild-parity]';
+const git=(cwd,args,opts={})=>{
+  const r=spawnSync('git',args,{cwd,encoding:'utf8',maxBuffer:1<<28,...opts});
+  if(r.status!==0) fail(`${LABEL} FAIL: git ${args.join(' ')} exited ${r.status}: ${(r.stderr||'').trim().slice(0,400)}`);
+  return r.stdout;
+};
+const ROOT=git(process.cwd(),['rev-parse','--show-toplevel']).trim();
+const HEAD=git(ROOT,['rev-parse','HEAD']).trim();
+const MIN_HTML_FILES=Number(process.env.CLEAN_REBUILD_MIN_HTML||1000);
+
+const snapshotSkip=['.git','.pages-output','node_modules','coverage','test-results','playwright-report','logs','releases','.validation-runtime','.build-cache'];
 const includeNames=new Set(['sitemap.xml','sitemap-spry.xml','sitemap-bhpc.xml','llms.txt','_redirects']);
 
 function publicFiles(base,dir=base,out=[]){
@@ -16,101 +53,95 @@ function publicFiles(base,dir=base,out=[]){
     const full=path.join(dir,e.name);
     const rel=path.relative(base,full).split(path.sep).join('/');
     if(e.isDirectory()){
-      if([...snapshotSkip].some(x=>rel===x||rel.startsWith(x+'/'))) continue;
+      if(snapshotSkip.some(x=>rel===x||rel.startsWith(x+'/'))) continue;
       publicFiles(base,full,out);
     }else if(e.isFile()&&(e.name.endsWith('.html')||includeNames.has(rel)||rel.startsWith('data/citation/'))) out.push(rel);
   }
   return out.sort();
 }
-const semanticJsonFiles = new Set([
-  'data/citation/agent_page_specs.generated.json',
-  'data/citation/agent_repair_specs.generated.json',
-]);
-const approvedVolatileKeys = new Set(['generated_at']);
-
-function hashBuffer(value){
-  return crypto.createHash('sha256').update(value).digest('hex');
-}
-function hashFile(f){
-  return hashBuffer(fs.readFileSync(f));
-}
-function normalizeSemanticJson(value){
-  if(Array.isArray(value)) return value.map(normalizeSemanticJson);
-  if(value && typeof value === 'object'){
-    const out={};
-    for(const key of Object.keys(value).sort()){
-      if(approvedVolatileKeys.has(key)) continue;
-      out[key]=normalizeSemanticJson(value[key]);
-    }
-    return out;
-  }
-  return value;
-}
-function artifactHash(base,rel){
-  const full=path.join(base,rel);
-  if(!semanticJsonFiles.has(rel)) return {mode:'strict-byte',hash:hashFile(full)};
-  const parsed=JSON.parse(fs.readFileSync(full,'utf8'));
-  const normalized=JSON.stringify(normalizeSemanticJson(parsed));
-  return {mode:'semantic-json',hash:hashBuffer(normalized)};
-}
-function snapshot(base){
+const hashFile=(f)=>crypto.createHash('sha256').update(fs.readFileSync(f)).digest('hex');
+function publicSnapshot(base){
   const o={};
-  for(const rel of publicFiles(base)) o[rel]=artifactHash(base,rel);
+  for(const rel of publicFiles(base)) o[rel]=hashFile(path.join(base,rel));
+  return o;
+}
+/** path -> blob id for every tracked and new non-ignored file after the build. */
+function treeManifest(base){
+  // node_modules is a symlink here, which the `node_modules/` ignore rule (a directory rule) does not match.
+  git(base,['add','-A','--','.',':(exclude)node_modules']);
+  const o={};
+  for(const rec of git(base,['ls-files','-s','-z']).split('\0')){
+    if(!rec) continue;
+    const m=rec.match(/^(\d+) ([0-9a-f]+) \d\t(.*)$/s);
+    if(m) o[m[3]]=`${m[1]}:${m[2]}`;
+  }
+  return o;
+}
+function headManifest(base){
+  const o={};
+  for(const rec of git(base,['ls-tree','-r','-z','HEAD']).split('\0')){
+    if(!rec) continue;
+    const m=rec.match(/^(\d+) blob ([0-9a-f]+)\t(.*)$/s);
+    if(m) o[m[3]]=`${m[1]}:${m[2]}`;
+  }
   return o;
 }
 function compare(a,b){
   const changed=[];
-  for(const k of new Set([...Object.keys(a),...Object.keys(b)])){
-    if(!a[k]||!b[k]||a[k].mode!==b[k].mode||a[k].hash!==b[k].hash) changed.push(k);
-  }
+  for(const k of new Set([...Object.keys(a),...Object.keys(b)])) if(a[k]!==b[k]) changed.push(k);
   return changed.sort();
 }
-function copySource(src,dst){
-  fs.cpSync(src,dst,{recursive:true,filter:(source)=>{
-    const rel=path.relative(src,source).split(path.sep).join('/');
-    if(!rel) return true;
-    return !excludedTop.has(rel.split('/')[0]);
-  }});
-}
-function prepareCopy(label){
+function prepareClone(label){
   const temp=fs.mkdtempSync(path.join(os.tmpdir(),`spry-clean-${label}-`));
-  copySource(ROOT,temp);
+  git(temp,['init','--quiet']);
+  git(temp,['fetch','--quiet','--no-tags',ROOT,HEAD]);
+  git(temp,['-c','advice.detachedHead=false','checkout','--quiet','--detach',HEAD]);
+  // Same identity everywhere so a generator that commits or reads config cannot diverge.
+  git(temp,['config','user.name','clean-rebuild-parity']);
+  git(temp,['config','user.email','clean-rebuild-parity@invalid']);
+  // Dependencies come from the lockfile install in ROOT; they are not part of the source.
   fs.symlinkSync(path.join(ROOT,'node_modules'),path.join(temp,'node_modules'),'dir');
   return temp;
 }
 function runBuild(temp,label){
-  const r=spawnSync('npm',['run','build:all'],{cwd:temp,stdio:'inherit',env:{...process.env,CLEAN_REBUILD_PARITY:'1'}});
-  if(r.status!==0) fail(`[validate:clean-rebuild-parity] FAIL: isolated ${label} build exited ${r.status??'unknown'}`);
-  return snapshot(temp);
+  const r=spawnSync('npm',['run','build:all'],{cwd:temp,stdio:'inherit',env:{...process.env,CLEAN_REBUILD_PARITY:'1',BUILD_ALL_CACHE_DISABLE:'1'}});
+  if(r.status!==0) fail(`${LABEL} FAIL: isolated ${label} build exited ${r.status??'unknown'}`);
+  const pub=publicSnapshot(temp);
+  return {pub,tree:treeManifest(temp)};
 }
 
-if(!fs.existsSync(path.join(ROOT,'node_modules'))) fail('[validate:clean-rebuild-parity] FAIL: node_modules missing; install dependencies first');
-const tempA=prepareCopy('a');
-const tempB=prepareCopy('b');
+if(!fs.existsSync(path.join(ROOT,'node_modules'))) fail(`${LABEL} FAIL: node_modules missing; install dependencies first`);
+const tempA=prepareClone('a');
+const tempB=prepareClone('b');
 try{
-  const buildA=runBuild(tempA,'A');
-  const buildB=runBuild(tempB,'B');
-  // compare({},{}) returns [], so two builds that emitted NO public output at all
-  // were indistinguishable from two byte-identical builds. Each snapshot is built
-  // independently, so each needs its own floor.
-  if(!Object.keys(buildA).length||!Object.keys(buildB).length){
-    fail(`[validate:clean-rebuild-parity] FAIL: an isolated clean-copy build produced no public/distribution files to compare (A=${Object.keys(buildA).length}, B=${Object.keys(buildB).length}); expected build:all to emit HTML pages, ${[...includeNames].sort().join(', ')} and data/citation artifacts. Comparing two empty snapshots proves nothing.`);
+  const a=runBuild(tempA,'A');
+  const b=runBuild(tempB,'B');
+  const htmlA=Object.keys(a.tree).filter(k=>k.endsWith('.html')).length;
+  const htmlB=Object.keys(b.tree).filter(k=>k.endsWith('.html')).length;
+  if(htmlA<MIN_HTML_FILES||htmlB<MIN_HTML_FILES||!Object.keys(a.pub).length||!Object.keys(b.pub).length){
+    fail(`${LABEL} FAIL: Rule 0 - a clean-clone build left too little to compare (html A=${htmlA}, B=${htmlB}, public A=${Object.keys(a.pub).length}, B=${Object.keys(b.pub).length}; floor ${MIN_HTML_FILES} pages)`);
   }
-  const changed=compare(buildA,buildB);
+  const treeChanged=compare(a.tree,b.tree);
+  const pubChanged=compare(a.pub,b.pub);
+  const vsHead=compare(headManifest(tempA),a.tree);
   writeSummary('validate-clean-rebuild-parity',{
-    status:changed.length?'FAIL':'PASS',
-    build_a_files:Object.keys(buildA).length,
-    build_b_files:Object.keys(buildB).length,
-    changed,
-    strict_byte_files:Object.values(buildB).filter(entry=>entry.mode==='strict-byte').length,
-    semantic_json_files:Object.values(buildB).filter(entry=>entry.mode==='semantic-json').length,
-    semantic_json_allowlist:[...semanticJsonFiles].sort(),
-    normalized_volatile_keys:[...approvedVolatileKeys].sort(),
-    proof:'two independent clean-copy build:all executions compared using strict byte parity except explicitly allowlisted semantic JSON metadata',
+    status:treeChanged.length||pubChanged.length?'FAIL':'PASS',
+    head:HEAD,
+    tracked_files_a:Object.keys(a.tree).length,
+    tracked_files_b:Object.keys(b.tree).length,
+    public_files:Object.keys(b.pub).length,
+    tracked_changed:treeChanged,
+    public_changed:pubChanged,
+    build_changed_vs_head:vsHead.length,
+    build_changed_vs_head_sample:vsHead.slice(0,50),
+    proof:'two fresh git clones of HEAD, build cache disabled, each built with npm run build:all; every tracked and new non-ignored file compared by blob id, every public file by sha256, no allowlist',
   });
-  if(changed.length) fail(`[validate:clean-rebuild-parity] FAIL: ${changed.length} public/distribution files differ between two isolated clean-copy rebuilds`,changed.slice(0,200));
-  pass(`[validate:clean-rebuild-parity] OK: two isolated clean-copy rebuilds match ${Object.keys(buildB).length} public/distribution files`);
+  console.log(`${LABEL} note: the build rewrote ${vsHead.length} tracked path(s) relative to HEAD (identically in both clones when the check passes)`);
+  if(treeChanged.length||pubChanged.length){
+    fail(`${LABEL} FAIL: build:all is not reproducible - ${treeChanged.length} tracked and ${pubChanged.length} public file(s) differ between two fresh clones of ${HEAD.slice(0,9)}`,[...new Set([...treeChanged,...pubChanged])].slice(0,200));
+  }
+  pass(`${LABEL} OK: two fresh clones of ${HEAD.slice(0,9)} built identically: ${Object.keys(b.tree).length} tracked files (${htmlB} pages) and ${Object.keys(b.pub).length} public files, byte for byte`);
 }finally{
-  if(process.env.KEEP_CLEAN_REBUILD_DIR==='1') console.log(`[validate:clean-rebuild-parity] retained ${tempA} and ${tempB}`);
+  if(process.env.KEEP_CLEAN_REBUILD_DIR==='1') console.log(`${LABEL} retained ${tempA} and ${tempB}`);
   else { fs.rmSync(tempA,{recursive:true,force:true}); fs.rmSync(tempB,{recursive:true,force:true}); }
 }

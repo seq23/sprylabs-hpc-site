@@ -1,3 +1,4 @@
+const { buildTimestamp } = require('../lib/build_clock.cjs');
 const fs = require("fs");
 
 const scorecardPath = "reports/answer_surface_scorecard.json";
@@ -34,14 +35,16 @@ const normalized = clusters.map(c => {
 }).filter(c => c.cluster_id);
 
 const run = {
-  generated_at: new Date().toISOString(),
+  generated_at: buildTimestamp(),
   cluster_count: normalized.length,
   clusters: normalized
 };
 
 const output = {
   version: "1.0",
-  runs: [...(previous.runs || []), run].slice(-30)
+  // A rebuild of the same commit stamps the same build-clock time (scripts/lib/build_clock.cjs):
+  // it replaces that commit's run instead of appending a duplicate, so build:all is idempotent.
+  runs: [...(previous.runs || []).filter((r) => r.generated_at !== run.generated_at), run].slice(-30)
 };
 
 fs.mkdirSync("data/answer_surface", { recursive: true });
