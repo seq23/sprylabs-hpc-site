@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { buildTimestamp } from '../lib/build_clock.cjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
@@ -602,7 +603,7 @@ for (const candidate of demandSelection.candidates) {
 {
   const report = {
     schema_version: '1.0',
-    generated_at: new Date().toISOString(),
+    generated_at: buildTimestamp(),
     input: {demand: 'data/demand/measured_demand.json', atlas: 'data/authority_scale/query_atlas.json', map: 'data/content/demand_axis_map.json', material: LIBRARY_PATH},
     stats: {...demandSelection.stats, composed: demandComposed.length, refused: demandRefused.length},
     composed: demandComposed,

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+const { buildTimestamp } = require('../lib/build_clock.cjs');
 const fs = require('fs');
 const path = require('path');
 const ROOT = process.cwd();
@@ -24,5 +25,5 @@ for (const c of approved) {
     status: 'pending'
   });
 }
-fs.writeFileSync(path.join(outDir, 'expansion_backlog.json'), JSON.stringify({ generated_at: new Date().toISOString(), count: items.length, items }, null, 2) + '\n');
+fs.writeFileSync(path.join(outDir, 'expansion_backlog.json'), JSON.stringify({ generated_at: buildTimestamp(), count: items.length, items }, null, 2) + '\n');
 console.log(`backlog:build wrote ${items.length} items`);

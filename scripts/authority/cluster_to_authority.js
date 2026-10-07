@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const { buildTimestamp } = require('../lib/build_clock.cjs');
 const fs = require('fs');
 const path = require('path');
 const ROOT = process.cwd();
@@ -99,7 +100,7 @@ function promote({ minScore = 70, maxItems = 8 } = {}){
     const audiences = audienceCounts(routes, clusterId);
     const primary_audience = Object.entries(audiences).sort((a,b)=>b[1]-a[1])[0]?.[0] || 'executive';
     const item = {
-      id: `authority_${slug(clusterId)}_${new Date().toISOString().slice(0,10)}`,
+      id: `authority_${slug(clusterId)}_${buildTimestamp().slice(0,10)}`,
       cluster_id: clusterId,
       slug: cleanSlug,
       title: `State of ${titleFrom(clusterId)}: Execution Patterns, AI Coaching, and Accountability Demand`,
@@ -114,15 +115,15 @@ function promote({ minScore = 70, maxItems = 8 } = {}){
       evidence: evidenceLines(cluster),
       canonical_target: `${AUTHORITY_DOMAIN}/whitepapers/${cleanSlug}.html`,
       cta_target: CTA_TARGET,
-      created_at: new Date().toISOString()
+      created_at: buildTimestamp()
     };
     queue.items.push(item);
     existing.add(clusterId);
     created.push(item);
     if (created.length >= maxItems) break;
   }
-  if (created.length) queue.generated_at = new Date().toISOString();
-  else if (!queue.generated_at) queue.generated_at = new Date().toISOString();
+  if (created.length) queue.generated_at = buildTimestamp();
+  else if (!queue.generated_at) queue.generated_at = buildTimestamp();
   queue.policy = { trigger_based_authority: true, min_authority_score: minScore, min_distinct_signals: MIN_DISTINCT_SIGNALS, max_promotions_per_run: maxItems, cta_target: CTA_TARGET };
   write(QUEUE, queue);
 
@@ -141,7 +142,7 @@ function promote({ minScore = 70, maxItems = 8 } = {}){
         : { code: 'NO_CLUSTER_REACHED_THE_SCORE', message: `${considered} unqueued cluster(s) considered, none reached authority score ${minScore}, ${MIN_DISTINCT_SIGNALS} distinct signals, or authority_ready. This is the expected daily outcome.` };
 
   write(STOP_REPORT, {
-    generated_at: new Date().toISOString(),
+    generated_at: buildTimestamp(),
     lane: 'authority-promotion',
     status: created.length ? 'PASS' : 'NAMED_STOP',
     clusters_tracked: (memory.clusters || []).length,

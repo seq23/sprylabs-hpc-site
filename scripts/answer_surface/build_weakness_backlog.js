@@ -1,3 +1,4 @@
+const { buildTimestamp } = require('../lib/build_clock.cjs');
 const fs = require("fs");
 
 const scorecardPath = "reports/answer_surface_scorecard.json";
@@ -52,7 +53,7 @@ const items = ranked.map((item, index) => {
 }).filter(item => item.priority === "critical" || item.priority === "high");
 
 const output = {
-  generated_at: new Date().toISOString(),
+  generated_at: buildTimestamp(),
   source: "answer_surface_scorecard",
   count: items.length,
   items

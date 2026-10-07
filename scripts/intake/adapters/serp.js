@@ -1,3 +1,4 @@
+const { buildTimestamp } = require('../../lib/build_clock.cjs');
 /**
  * NOT AN INGESTION. This file writes a hardcoded five-element list of strings
  * somebody typed here by hand. It makes no network call, contacts a Google SERP
@@ -37,11 +38,11 @@ const queries = serpQueries.map(q => ({
   content_type: "answer",
   authority_target: "execution",
   conversion_path: "https://aplayermode.com",
-  ingested_at: new Date().toISOString(),
+  ingested_at: buildTimestamp(),
   provenance: "hardcoded_seed_list",
   observed: false
 }));
 
-fs.writeFileSync(OUTPUT, JSON.stringify({ generated_at: new Date().toISOString(), queries }, null, 2));
+fs.writeFileSync(OUTPUT, JSON.stringify({ generated_at: buildTimestamp(), queries }, null, 2));
 
 console.log(`SERP INGESTION: wrote ${queries.length} queries`);

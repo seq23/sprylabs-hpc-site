@@ -117,7 +117,11 @@ export function ensureRuntime(){
  const executableForReceipt=path.isAbsolute(SELECTED_PY)?SELECTED_PY:path.resolve(ROOT,SELECTED_PY);
  const final={schema_version:'1.2',requirements_sha256:wanted,dependency_mode:dependencyMode,...identity,python_executable:executableForReceipt,parser:'lxml',yaml:identity.yaml};
  fs.mkdirSync(RUNTIME,{recursive:true});fs.writeFileSync(MARKER,JSON.stringify(final,null,2)+'\n');
- fs.mkdirSync(path.join(ROOT,'artifacts','validation'),{recursive:true});fs.writeFileSync(path.join(ROOT,'artifacts','validation','python-runtime.json'),JSON.stringify({status:'PASS',...final},null,2)+'\n');
+ fs.mkdirSync(path.join(ROOT,'artifacts','validation'),{recursive:true});// The tracked receipt names the interpreter repo-relative when it lives inside the checkout
+ // (.validation-runtime/venv/...): an absolute path made two clones of one commit write
+ // different bytes into a committed file. The untracked MARKER keeps the absolute path.
+ const receiptExecutable=path.relative(ROOT,executableForReceipt).startsWith('..')?executableForReceipt:path.relative(ROOT,executableForReceipt).split(path.sep).join('/');
+ fs.writeFileSync(path.join(ROOT,'artifacts','validation','python-runtime.json'),JSON.stringify({status:'PASS',...final,python_executable:receiptExecutable},null,2)+'\n');
  return final;
 }
 function main(){const [cmd,...args]=process.argv.slice(2);try{

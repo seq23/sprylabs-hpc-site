@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const { buildTimestamp } = require('../lib/build_clock.cjs');
 const fs = require('fs');
 const path = require('path');
 const {
@@ -113,7 +114,7 @@ for (const file of listTargetFiles()) {
 }
 
 const report = {
-  timestamp: new Date().toISOString(),
+  timestamp: buildTimestamp(),
   safePublishMin: SAFE_PUBLISH_MIN,
   repairedCount: repaired.length,
   normalizedCount: normalized.length,

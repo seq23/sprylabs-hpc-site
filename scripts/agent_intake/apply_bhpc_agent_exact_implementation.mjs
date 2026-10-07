@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { buildTimestamp } from '../lib/build_clock.cjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import {ROOT, readJson, writeJson} from './bhpc_agent_common.mjs';
@@ -864,7 +865,7 @@ for (const spec of plan.specs || []) {
   fs.writeFileSync(abs, after);
   applied.push({record_id: spec.record_id, acceptance_ids: spec.acceptance_ids || [], path: rel, created: !before, changed: before !== after});
 }
-const report = {schema_version: '1.0', generated_at: new Date().toISOString(), status: 'PASS', applied_count: applied.length, skipped_count: skipped.length, legacy_marker_files_cleaned: legacyFilesCleaned, applied, skipped};
+const report = {schema_version: '1.0', generated_at: buildTimestamp(), status: 'PASS', applied_count: applied.length, skipped_count: skipped.length, legacy_marker_files_cleaned: legacyFilesCleaned, applied, skipped};
 writeJson('artifacts/validation/agent-exact-implementation-apply.json', report);
 writeJson('reports/bhpc-agent-exact-implementation-apply.json', report);
 console.log(`[bhpc-agent-exact-apply] PASS: applied=${applied.length}; skipped=${skipped.length}; legacy_cleaned=${legacyFilesCleaned}`);

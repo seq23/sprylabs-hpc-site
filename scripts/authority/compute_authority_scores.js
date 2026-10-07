@@ -1,3 +1,4 @@
+const { buildTimestamp } = require('../lib/build_clock.cjs');
 const fs = require("fs");
 const path = require("path");
 
@@ -82,7 +83,7 @@ const ranked = Object.values(pages).sort((a, b) => b.score - a.score);
 
 fs.mkdirSync(path.dirname(OUT), { recursive: true });
 fs.writeFileSync(OUT, JSON.stringify({
-  generated_at: new Date().toISOString(),
+  generated_at: buildTimestamp(),
   page_count: ranked.length,
   scoring: {
     inbound_links: "up to 40",

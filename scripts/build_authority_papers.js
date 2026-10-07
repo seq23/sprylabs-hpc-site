@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+const { buildTimestamp } = require('./lib/build_clock.cjs');
 /* eslint-disable no-console */
 'use strict';
 
@@ -183,7 +184,7 @@ function upsertReleasedAuthorityAdmission(queue, gate, refusedBeforeRender = [])
       verified_at: null,
       health_adjacent: false,
       commercial_comparison: false,
-      admitted_at: item.released_at || new Date().toISOString().slice(0,10),
+      admitted_at: item.released_at || buildTimestamp().slice(0,10),
       source: 'authority_paper_queue'
     };
     if (byPath.has(rel)) Object.assign(byPath.get(rel), record);
@@ -192,10 +193,10 @@ function upsertReleasedAuthorityAdmission(queue, gate, refusedBeforeRender = [])
   }
   registry.records.sort((a,b) => a.path.localeCompare(b.path));
   registry.record_count = registry.records.length;
-  registry.generated_at = new Date().toISOString();
+  registry.generated_at = buildTimestamp();
   writeJson('data/content/page_admission_registry.json', registry);
   writeJson('artifacts/validation/authority-admission-gate.json', {
-    generated_at: new Date().toISOString(),
+    generated_at: buildTimestamp(),
     lane: 'authority-admission',
     status: (refused.length || refusedBeforeRender.length) ? 'NAMED_STOP' : 'PASS',
     admitted_count: upserted,
@@ -247,7 +248,7 @@ function main(){
     return result.item;
   });
 
-  queue.generated_at = new Date().toISOString();
+  queue.generated_at = buildTimestamp();
   queue.policy = {
     ...(queue.policy || {}),
     trigger_based_authority: true,

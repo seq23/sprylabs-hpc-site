@@ -1,3 +1,4 @@
+const { buildTimestamp } = require('../lib/build_clock.cjs');
 const fs = require("fs");
 
 function readJson(file, fallback) {
@@ -58,7 +59,7 @@ const output = [...clusters.values()].map(c => ({
 }));
 
 fs.writeFileSync("data/intake/query_clusters.json", JSON.stringify({
-  generated_at: new Date().toISOString(),
+  generated_at: buildTimestamp(),
   clustering_model: "taxonomy_product_role_use_case_v1",
   counts: {
     queries: queries.length,
