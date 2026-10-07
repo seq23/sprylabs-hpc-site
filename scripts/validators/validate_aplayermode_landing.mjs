@@ -1,0 +1,215 @@
+#!/usr/bin/env node
+/**
+ * Guards the A Player Mode landing page (aplayermode/index.html), built as a
+ * private preview for aplayermode.com.
+ *
+ * WHAT IT REFUSES
+ *
+ *   1. A price that is not the app's price. A Player Mode's only price source is
+ *      PLAN_PRICES / CHIEF_OF_STAFF_INTRO_OFFERS in seq23/aplayer-mode
+ *      packages/policy/src/index.ts. config/aplayermode_plan_prices.json is a
+ *      pinned copy with a source note. Every [data-price] element must show
+ *      exactly the pinned amount, every required price must be on the page, and
+ *      no other $X.XX amount may appear anywhere on it. When an aplayer-mode
+ *      checkout is reachable (APLAYER_MODE_DIR, ../aplayer-mode, ~/aplayer-mode)
+ *      the pinned copy is also compared to the source itself.
+ *   2. "Billionaire Mindset" (the internal Track key's old name; the user-facing
+ *      name is "Billionaire High Performance Coach Track") and "free trial"
+ *      (there is none) anywhere in the page or its scripts.
+ *   3. A broken or empty link. Every href/src must be an existing in-page id, a
+ *      file committed in this repo, or an allow-listed external URL; "#", "" and
+ *      javascript: are refused. Download buttons are driven by ONE constant in
+ *      aplayermode/config.js: each value must be '' (rendered as a disabled
+ *      "Available soon" element with no href) or an https:// URL, and every
+ *      route in that constant must have exactly one button on the page.
+ *   4. A dropped selling point. The page's first section sells the Billionaire
+ *      High Performance Coach digital product, and must carry every selling
+ *      point on the frozen download.html (read-only here). The points are
+ *      extracted from download.html at run time, so a point added there is
+ *      required here too.
+ *   5. Rule 0: zero prices, zero links or zero selling points examined is a
+ *      failure, not a pass.
+ */
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import vm from 'node:vm';
+
+const ROOT = process.cwd();
+const LABEL = '[validate:aplayermode-landing]';
+const PAGE = process.env.APM_LANDING_PAGE || 'aplayermode/index.html';
+const CONFIG_JS = process.env.APM_LANDING_CONFIG || 'aplayermode/config.js';
+const PRICES = process.env.APM_LANDING_PRICES || 'config/aplayermode_plan_prices.json';
+const BHPC_SOURCE = process.env.APM_LANDING_BHPC_SOURCE || 'download.html';
+const SCRIPTS = ['aplayermode/app.js', CONFIG_JS];
+
+const failures = [];
+const notes = [];
+const fail = (m) => failures.push(m);
+const read = (p) => fs.readFileSync(path.resolve(ROOT, p), "utf8");
+
+const html = read(PAGE);
+
+// ---------------------------------------------------------------- helpers
+const decode = (s) => s
+  .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+  .replace(/&quot;/g, '"').replace(/&#39;|&#x27;|&apos;/g, "'")
+  .replace(/&rarr;/g, '→').replace(/&mdash;/g, '—').replace(/&ndash;/g, '–').replace(/&hellip;/g, '…');
+const stripTags = (s) => decode(s
+  .replace(/<!--[\s\S]*?-->/g, ' ')
+  .replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, ' ')
+  .replace(/<br\s*\/?>/gi, ' ')
+  .replace(/<[^>]+>/g, ' '));
+const norm = (s) => decode(s).toLowerCase()
+  .replace(/[‘’‛]/g, "'").replace(/[“”]/g, '"')
+  .replace(/[–—]/g, '-').replace(/…/g, '...')
+  .replace(/\s+/g, ' ').trim();
+const usd = (cents) => `$${(cents / 100).toFixed(2)}`;
+
+// ---------------------------------------------------------------- 1. prices
+const pinned = JSON.parse(read(PRICES));
+const expected = {};
+for (const [plan, p] of Object.entries(pinned.plan_prices)) {
+  expected[`${plan}.monthly`] = p.monthlyUsdCents;
+  expected[`${plan}.annual`] = p.annualUsdCents;
+}
+expected['founding100.monthly'] = pinned.intro_offers.founding100.monthlyUsdCents;
+expected['founding100.was'] = pinned.plan_prices.chief_of_staff.monthlyUsdCents;
+expected['introductory.monthly'] = pinned.intro_offers.introductory.monthlyUsdCents;
+expected['introductory.then'] = pinned.intro_offers.introductory.thenMonthlyUsdCents;
+
+const priceEls = [...html.matchAll(/<[a-z]+\b[^>]*\bdata-price="([^"]+)"[^>]*>([\s\S]*?)<\/[a-z]+>/gi)];
+if (priceEls.length === 0) fail('Rule 0: no [data-price] elements found on the page');
+const seenKeys = new Set();
+for (const [, key, inner] of priceEls) {
+  seenKeys.add(key);
+  if (!(key in expected)) { fail(`unknown data-price key "${key}"`); continue; }
+  const shown = stripTags(inner).trim();
+  if (shown !== usd(expected[key])) fail(`price ${key} shows "${shown}", PLAN_PRICES says ${usd(expected[key])}`);
+}
+for (const key of Object.keys(expected)) if (!seenKeys.has(key)) fail(`required price ${key} (${usd(expected[key])}) is not on the page`);
+const allowedAmounts = new Set(Object.values(expected).map(usd));
+for (const m of stripTags(html).matchAll(/\$\d[\d,]*\.\d{2}\b/g)) {
+  if (!allowedAmounts.has(m[0])) fail(`amount ${m[0]} on the page is not a PLAN_PRICES amount`);
+}
+
+// Pinned copy vs the source itself, when a checkout is reachable.
+const sourceDirs = [process.env.APLAYER_MODE_DIR, path.resolve(ROOT, '..', 'aplayer-mode'), path.join(os.homedir(), 'aplayer-mode')].filter(Boolean);
+const srcDir = sourceDirs.find((d) => fs.existsSync(path.join(d, pinned.source_path)));
+if (srcDir) {
+  const ts = fs.readFileSync(path.join(srcDir, pinned.source_path), 'utf8');
+  for (const [plan, p] of Object.entries(pinned.plan_prices)) {
+    const row = ts.match(new RegExp(`\\b${plan}:\\s*\\{[^}]*monthlyUsdCents:\\s*(\\d+),\\s*annualUsdCents:\\s*(\\d+)`));
+    if (!row) { fail(`PLAN_PRICES.${plan} not found in ${srcDir}/${pinned.source_path}`); continue; }
+    if (Number(row[1]) !== p.monthlyUsdCents || Number(row[2]) !== p.annualUsdCents) {
+      fail(`pinned ${plan} ${p.monthlyUsdCents}/${p.annualUsdCents} differs from source ${row[1]}/${row[2]}; re-copy from aplayer-mode`);
+    }
+  }
+  const f100 = ts.match(/founding100:\s*\{[^}]*monthlyUsdCents:\s*(\d+)/);
+  const intro = ts.match(/introductory:\s*\{\s*monthlyUsdCents:\s*(\d+),\s*months:\s*(\d+),\s*thenMonthlyUsdCents:\s*(\d+)/);
+  if (!f100 || Number(f100[1]) !== pinned.intro_offers.founding100.monthlyUsdCents) fail('pinned founding100 price differs from source');
+  if (!intro || Number(intro[1]) !== pinned.intro_offers.introductory.monthlyUsdCents || Number(intro[2]) !== pinned.intro_offers.introductory.months || Number(intro[3]) !== pinned.intro_offers.introductory.thenMonthlyUsdCents) fail('pinned introductory offer differs from source');
+  notes.push(`pinned prices compared to ${srcDir}`);
+} else {
+  notes.push('no aplayer-mode checkout reachable; page compared to the pinned copy only');
+}
+
+// ---------------------------------------------------------------- 2. forbidden phrases
+const FORBIDDEN = [[/billionaire\s+mindset/i, '"Billionaire Mindset" (use "Billionaire High Performance Coach Track")'], [/free\s+trial/i, '"free trial" (there is none)']];
+for (const file of [PAGE, ...SCRIPTS]) {
+  const text = read(file);
+  for (const [re, what] of FORBIDDEN) if (re.test(text)) fail(`${file} contains ${what}`);
+}
+
+// ---------------------------------------------------------------- 3. links and config
+const sandbox = { window: {} };
+vm.runInNewContext(read(CONFIG_JS), sandbox, { filename: CONFIG_JS });
+const links = sandbox.window.APM_LINKS;
+if (!links) fail(`${CONFIG_JS} does not define window.APM_LINKS`);
+const ROUTES = ['beta.webApp', 'beta.androidApk', 'beta.iosTestFlight', 'stores.appStore', 'stores.googlePlay', 'legal.terms', 'legal.privacy'];
+const lookup = (p) => p.split('.').reduce((o, k) => (o == null ? undefined : o[k]), links);
+const isHttps = (u) => { try { return new URL(u).protocol === 'https:' && !/\s/.test(u); } catch { return false; } };
+for (const r of [...ROUTES, 'gumroad']) {
+  const v = lookup(r);
+  if (typeof v !== 'string') { fail(`APM_LINKS.${r} is missing`); continue; }
+  if (v !== '' && !isHttps(v)) fail(`APM_LINKS.${r} = "${v}" is neither '' nor an https:// URL`);
+}
+if (!isHttps(links?.gumroad || '')) fail('APM_LINKS.gumroad must be set to the live Gumroad listing');
+
+const ids = new Set([...html.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]));
+const EXTERNAL_ALLOW = new Set([links?.gumroad].filter(Boolean));
+const refs = [...html.matchAll(/\b(href|src)\s*=\s*"([^"]*)"/gi)].map((m) => m[2]);
+if (refs.length === 0) fail('Rule 0: no href/src found on the page');
+const fileExists = (p) => {
+  const clean = decodeURIComponent(p.split(/[?#]/)[0]).replace(/^\//, '');
+  return [clean, path.join(clean, 'index.html'), `${clean}.html`].some((c) => c && fs.existsSync(path.join(ROOT, c)) && fs.statSync(path.join(ROOT, c)).isFile());
+};
+for (const ref of refs) {
+  if (ref === '' || ref === '#' || /^javascript:/i.test(ref)) { fail(`empty or dead link: href/src="${ref}"`); continue; }
+  if (ref.startsWith('#')) { if (!ids.has(ref.slice(1))) fail(`in-page link ${ref} has no matching id`); continue; }
+  if (/^https?:\/\//i.test(ref)) { if (!EXTERNAL_ALLOW.has(ref)) fail(`external link ${ref} is not in the allow-list (APM_LINKS.gumroad)`); continue; }
+  if (/^(mailto|tel):/i.test(ref)) continue;
+  if (!ref.startsWith('/')) { fail(`relative link "${ref}" breaks when the page moves to aplayermode.com; use a root path`); continue; }
+  if (!fileExists(ref)) fail(`internal link ${ref} resolves to no committed file`);
+}
+
+// Download buttons: one per route, never an <a> in the static page, always a "soon" label.
+// A button's body runs from its opening tag to the next button (or 600 chars):
+// buttons nest spans, so a lazy match to the first closing tag would cut it short.
+const linkOpens = [...html.matchAll(/<([a-z]+)\b([^>]*)\bdata-link="([^"]+)"([^>]*)>/gi)];
+const linkEls = linkOpens.map((m, i) => {
+  const start = m.index + m[0].length;
+  const end = Math.min(i + 1 < linkOpens.length ? linkOpens[i + 1].index : html.length, start + 600);
+  return [m[0], m[1], m[2], m[3], m[4], html.slice(start, end)];
+});
+const linkCounts = {};
+for (const [, tag, before, route, after, inner] of linkEls) {
+  linkCounts[route] = (linkCounts[route] || 0) + 1;
+  if (!ROUTES.includes(route)) fail(`data-link="${route}" names no route in APM_LINKS`);
+  if (tag.toLowerCase() === 'a' || /\bhref\s*=/.test(before + after)) fail(`download button ${route} carries an href in the static page; app.js adds it only when the URL is set`);
+  if (!/data-soon-label/.test(inner)) fail(`download button ${route} has no "Available soon" / "Coming soon" label`);
+}
+for (const r of ROUTES.filter((x) => !x.startsWith('legal.'))) {
+  if ((linkCounts[r] || 0) !== 1) fail(`route ${r} needs exactly one download button, found ${linkCounts[r] || 0}`);
+}
+if (!/data-legal-links/.test(html)) fail('footer has no [data-legal-links] slot for Terms / Privacy');
+
+// ---------------------------------------------------------------- 4. BHPC selling points
+const source = read(BHPC_SOURCE).replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, '');
+// Sections that sell the product. Excluded: legal text, the related-search
+// block, preserved navigation paths, the publisher card, the page-role
+// explainer, and the image-only system preview.
+const EXCLUDED_SECTION = /download-legal|fanout-block|preserved-download-paths|trust-card|apm-bottom-bridge|apm-system-image-large/;
+// Navigation copy about the download page itself, not a claim about the product.
+const EXCLUDED_POINT = new Set(['you clicked to inspect the system.']);
+const points = [];
+for (const m of source.matchAll(/<section\b([^>]*)>([\s\S]*?)<\/section>/gi)) {
+  const attrs = m[1];
+  if (!/download-section|apm-hero/.test(attrs) || EXCLUDED_SECTION.test(attrs)) continue;
+  for (const p of m[2].matchAll(/<(h2|h3|li|strong)\b[^>]*>([\s\S]*?)<\/\1>/gi)) {
+    const text = norm(stripTags(p[2]));
+    if (!text || text.endsWith(':') || EXCLUDED_POINT.has(text)) continue;
+    points.push(text);
+  }
+}
+const uniquePoints = [...new Set(points)];
+if (uniquePoints.length < 50) fail(`Rule 0: only ${uniquePoints.length} selling points extracted from ${BHPC_SOURCE}; the extractor no longer matches its markup`);
+const bhpcMatch = html.match(/<div\b[^>]*\bdata-bhpc-section\b[^>]*>([\s\S]*?)<\/div><!-- \/#bhpc -->/);
+if (!bhpcMatch) fail('no [data-bhpc-section] block (closed by <!-- /#bhpc -->) on the page');
+const bhpcText = bhpcMatch ? norm(stripTags(bhpcMatch[1])) : '';
+const firstSection = html.indexOf('data-bhpc-section');
+const appSection = html.indexOf('id="app"');
+if (!(firstSection > -1 && appSection > firstSection)) fail('the BHPC digital-product section must come before the app (#app)');
+if (bhpcMatch && !bhpcMatch[1].includes(links?.gumroad || '\u0000')) fail('the BHPC section does not link to the Gumroad product');
+const missing = uniquePoints.filter((p) => !bhpcText.includes(p));
+for (const p of missing) fail(`BHPC selling point from ${BHPC_SOURCE} missing: "${p}"`);
+
+// ---------------------------------------------------------------- report
+const summary = `${priceEls.length} prices, ${refs.length} links, ${linkEls.length} download buttons, ${uniquePoints.length} BHPC selling points`;
+for (const n of notes) console.log(`${LABEL} note: ${n}`);
+if (failures.length) {
+  for (const f of failures) console.error(`${LABEL} FAIL ${f}`);
+  console.error(`${LABEL} FAIL (${failures.length}) - checked ${summary}`);
+  process.exit(1);
+}
+console.log(`${LABEL} PASS - checked ${summary}`);

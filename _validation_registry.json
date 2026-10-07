@@ -8354,8 +8354,38 @@
         "MX-AGENT-REPAIR-PAGE-IDENTITY"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-APLAYERMODE-LANDING",
+      "status": "ADMITTED",
+      "name": "validate:aplayermode-landing",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "The aplayermode.com landing preview could show an A Player Mode price that differs from PLAN_PRICES in seq23/aplayer-mode, say Billionaire Mindset or free trial, ship a download button with an empty or broken href, or drop a selling point carried on the frozen download.html; the check reads the page, its link config, the pinned price copy and download.html and fails on each.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:aplayermode-landing",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-aplayermode-landing/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-07",
+      "matrix_ids": [
+        "MX-APLAYERMODE-LANDING"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 266,
+  "record_count": 267,
   "generated_at": "2026-08-08T23:30:00Z"
 }
