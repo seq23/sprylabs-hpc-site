@@ -43,6 +43,16 @@
  *      FAQ answers the four approved questions.
  *   7. "free trial" is allowed exactly once: the FAQ question "Is there a free
  *      trial?" whose answer starts with "No". Anywhere else it fails.
+ *   8. A page that drifts from the app's design system. The app's theme
+ *      (seq23/aplayer-mode apps/mobile/src/theme/tokens.ts) is pinned in
+ *      config/aplayermode_theme_tokens.json with a source note. aplayermode.css
+ *      must declare every palette value as --apm-<kebab-case key>: the light
+ *      value in its first :root block, the dark value in the :root inside
+ *      @media (prefers-color-scheme: dark), same names in both. No hex colour
+ *      may appear outside those two blocks, the display/body families must be
+ *      Outfit and Nunito Sans, and the page must load both from Google Fonts
+ *      (the only external <link> allowed). When an aplayer-mode checkout is
+ *      reachable the pinned copy is also compared to tokens.ts itself.
  */
 import fs from 'node:fs';
 import os from 'node:os';
@@ -54,6 +64,8 @@ const LABEL = '[validate:aplayermode-landing]';
 const PAGE = process.env.APM_LANDING_PAGE || 'aplayermode/index.html';
 const CONFIG_JS = process.env.APM_LANDING_CONFIG || 'aplayermode/config.js';
 const PRICES = process.env.APM_LANDING_PRICES || 'config/aplayermode_plan_prices.json';
+const THEME = process.env.APM_LANDING_THEME || 'config/aplayermode_theme_tokens.json';
+const CSS = process.env.APM_LANDING_CSS || 'aplayermode/aplayermode.css';
 const BHPC_SOURCE = process.env.APM_LANDING_BHPC_SOURCE || 'download.html';
 const SCRIPTS = ['aplayermode/app.js', CONFIG_JS];
 
@@ -175,9 +187,14 @@ const EXTERNAL_ALLOW = new Set([links?.gumroad].filter(Boolean));
 // Inline script bodies are code, not links (the site build injects the Clarity
 // loader, whose code builds a URL string), and <link rel=canonical|alternate>
 // is metadata the site build stamps on every page, not a link a reader follows.
+// The Google Fonts <link> tags (preconnect + one stylesheet) are checked in
+// section 8 and are the only external <link> the page may carry.
+const FONT_LINK_RE = /<link\b[^>]*\bhref="https:\/\/fonts\.(googleapis|gstatic)\.com[^"]*"[^>]*>/gi;
+const fontLinks = [...html.matchAll(FONT_LINK_RE)].map((m) => m[0]);
 const linkScan = html
   .replace(/<script\b(?![^>]*\bsrc=)[^>]*>[\s\S]*?<\/script>/gi, '')
-  .replace(/<link\b[^>]*\brel="(canonical|alternate)"[^>]*>/gi, '');
+  .replace(/<link\b[^>]*\brel="(canonical|alternate)"[^>]*>/gi, '')
+  .replace(FONT_LINK_RE, '');
 const refs = [...linkScan.matchAll(/\b(href|src)\s*=\s*"([^"]*)"/gi)].map((m) => m[2]);
 if (refs.length === 0) fail('Rule 0: no href/src found on the page');
 const fileExists = (p) => {
@@ -334,8 +351,78 @@ const ORDER = ['data-hero', 'id="problem"', 'id="jobs"', 'id="personas"', 'data-
 const at = ORDER.map((m) => html.indexOf(m));
 ORDER.forEach((m, i) => { if (at[i] === -1) fail(`section marker ${m} is missing`); else if (i && at[i] < at[i - 1]) fail(`section ${m} is out of the approved order (must follow ${ORDER[i - 1]})`); });
 
+// ---------------------------------------------------------------- 8. design tokens
+const theme = JSON.parse(read(THEME));
+const css = read(CSS);
+const kebab = (k) => k.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
+const blockAfter = (src, at) => {
+  // The {...} body that opens at the first "{" at or after `at`, braces balanced.
+  const open = src.indexOf('{', at);
+  if (open === -1) return null;
+  let depth = 0;
+  for (let i = open; i < src.length; i++) {
+    if (src[i] === '{') depth++;
+    else if (src[i] === '}' && --depth === 0) return { start: open, end: i + 1, body: src.slice(open + 1, i) };
+  }
+  return null;
+};
+const cssNoComments = css.replace(/\/\*[\s\S]*?\*\//g, (m) => ' '.repeat(m.length));
+const lightAt = cssNoComments.search(/(^|\})\s*:root\s*\{/);
+const lightBlock = lightAt === -1 ? null : blockAfter(cssNoComments, lightAt);
+const darkMedia = cssNoComments.search(/@media\s*\(\s*prefers-color-scheme\s*:\s*dark\s*\)/);
+const darkMediaBlock = darkMedia === -1 ? null : blockAfter(cssNoComments, darkMedia);
+const darkRootAt = darkMediaBlock ? darkMediaBlock.body.search(/:root\s*\{/) : -1;
+const darkBlock = darkRootAt === -1 ? null : blockAfter(darkMediaBlock.body, darkRootAt);
+if (!lightBlock) fail(`${CSS} has no light :root token block`);
+if (!darkBlock) fail(`${CSS} has no :root block inside @media (prefers-color-scheme: dark)`);
+const declared = (block) => Object.fromEntries([...(block?.body || '').matchAll(/(--apm-[a-z0-9-]+)\s*:\s*([^;]+);/gi)].map((m) => [m[1], m[2].trim()]));
+const lightDecl = declared(lightBlock);
+const darkDecl = declared(darkBlock);
+let tokensChecked = 0;
+for (const scheme of ['light', 'dark']) {
+  const pal = theme.palettes?.[scheme] || {};
+  const decl = scheme === 'light' ? lightDecl : darkDecl;
+  if (Object.keys(pal).length < 20) fail(`Rule 0: ${THEME} palettes.${scheme} has only ${Object.keys(pal).length} colours`);
+  for (const [key, hex] of Object.entries(pal)) {
+    tokensChecked++;
+    const name = `--apm-${kebab(key)}`;
+    if (!(name in decl)) { fail(`${CSS} ${scheme} block does not declare ${name} (app palette ${scheme}.${key} = ${hex})`); continue; }
+    if (decl[name].toLowerCase() !== hex.toLowerCase()) fail(`${CSS} ${scheme} ${name} is ${decl[name]}, the app theme says ${hex}`);
+  }
+}
+for (const name of Object.keys(darkDecl)) if (!(name in lightDecl)) fail(`${CSS} dark block declares ${name}, which the light block does not (same token names in both schemes)`);
+// No hex colour outside the two token blocks: rules use tokens, never values.
+let outside = cssNoComments;
+for (const b of [darkMediaBlock && darkBlock ? { start: darkMediaBlock.start + 1 + darkBlock.start, end: darkMediaBlock.start + 1 + darkBlock.end } : null, lightBlock].filter(Boolean).sort((a, b) => b.start - a.start)) {
+  outside = outside.slice(0, b.start) + ' '.repeat(b.end - b.start) + outside.slice(b.end);
+}
+for (const m of outside.matchAll(/#[0-9a-f]{3,8}\b/gi)) fail(`${CSS} hard-codes colour ${m[0]} outside the :root token blocks; use a token`);
+const fam = (name) => (lightDecl[name] || '').split(',')[0].replace(/["']/g, '').trim();
+if (fam('--apm-font-display') !== theme.fonts?.display?.family) fail(`--apm-font-display must start with "${theme.fonts?.display?.family}", found "${fam('--apm-font-display')}"`);
+if (fam('--apm-font-body') !== theme.fonts?.body?.family) fail(`--apm-font-body must start with "${theme.fonts?.body?.family}", found "${fam('--apm-font-body')}"`);
+const fontSheet = fontLinks.find((l) => /rel="stylesheet"/.test(l));
+if (!fontSheet) fail('the page does not load the app fonts from Google Fonts (<link rel="stylesheet" href="https://fonts.googleapis.com/css2?...">)');
+else {
+  const href = decode(fontSheet.match(/href="([^"]+)"/)[1]);
+  if (!href.startsWith('https://fonts.googleapis.com/css2?')) fail(`font stylesheet ${href} is not a Google Fonts css2 URL`);
+  if (!new RegExp(`family=Outfit:wght@[^&]*${theme.fonts.display.weight}`).test(href)) fail(`font stylesheet does not request Outfit ${theme.fonts.display.weight}`);
+  if (!/family=Nunito\+Sans:wght@[^&]*400/.test(href)) fail('font stylesheet does not request Nunito Sans 400');
+}
+for (const l of fontLinks) if (!/rel="(preconnect|stylesheet)"/.test(l)) fail(`unexpected Google Fonts link ${l}`);
+const themeSrc = sourceDirs.find((d) => fs.existsSync(path.join(d, theme.source_path)));
+if (themeSrc) {
+  const ts = fs.readFileSync(path.join(themeSrc, theme.source_path), 'utf8');
+  for (const scheme of ['light', 'dark']) {
+    const body = ts.match(new RegExp(`const ${scheme}: Palette = \\{([\\s\\S]*?)\\};`));
+    if (!body) { fail(`palette ${scheme} not found in ${themeSrc}/${theme.source_path}`); continue; }
+    const src = Object.fromEntries([...body[1].matchAll(/(\w+):\s*'(#[0-9A-Fa-f]{3,8})'/g)].map((m) => [m[1], m[2]]));
+    if (JSON.stringify(src) !== JSON.stringify(theme.palettes[scheme])) fail(`pinned palettes.${scheme} differs from ${themeSrc}/${theme.source_path}; re-copy it`);
+  }
+  notes.push(`pinned theme compared to ${themeSrc}`);
+}
+
 // ---------------------------------------------------------------- report
-const summary = `${priceEls.length} prices, ${refs.length} links, ${linkEls.length} download buttons, ${uniquePoints.length} BHPC selling points, ${h1s.length} h1, ${ORDER.length} sections in order, ${FAQ_QS.length} FAQ questions`;
+const summary = `${tokensChecked} theme tokens, ${priceEls.length} prices, ${refs.length} links, ${linkEls.length} download buttons, ${uniquePoints.length} BHPC selling points, ${h1s.length} h1, ${ORDER.length} sections in order, ${FAQ_QS.length} FAQ questions`;
 for (const n of notes) console.log(`${LABEL} note: ${n}`);
 if (failures.length) {
   for (const f of failures) console.error(`${LABEL} FAIL ${f}`);

@@ -1,0 +1,89 @@
+{
+  "_source_note": "Pinned copy of the A Player Mode app design tokens. Source of truth: seq23/aplayer-mode apps/mobile/src/theme/tokens.ts (palettes, radius, spacing, FONT_FAMILIES) at main 8d09e85 (7 Oct 2026, design overhaul 9258714). aplayermode/aplayermode.css must declare every palette value below as --apm-<kebab-case key> in :root (light) and in the prefers-color-scheme: dark block (dark); validate_aplayermode_landing.mjs enforces it and, when an aplayer-mode checkout is reachable, compares this copy to the source itself. Re-copy from the source when the app theme changes.",
+  "source_repo": "seq23/aplayer-mode",
+  "source_path": "apps/mobile/src/theme/tokens.ts",
+  "source_commit": "8d09e85",
+  "palettes": {
+    "light": {
+      "bg": "#E9E5DE",
+      "surface": "#F6F4F0",
+      "surfaceMuted": "#EFEBE4",
+      "ink": "#1E1C19",
+      "inkMuted": "#655F57",
+      "line": "#D4CEC4",
+      "lineStrong": "#8A8170",
+      "brass": "#A39780",
+      "accent": "#3E4B3C",
+      "onAccent": "#F6F4F0",
+      "accentSoft": "#E3E6DC",
+      "primary": "#1E1C19",
+      "onPrimary": "#F6F4F0",
+      "chipOn": "#1E1C19",
+      "onChipOn": "#F6F4F0",
+      "warning": "#7A5A1E",
+      "warningSoft": "#F2EAD9",
+      "danger": "#9C3E33",
+      "onDanger": "#F6F4F0",
+      "dangerSoft": "#F1E3DE",
+      "success": "#3E4B3C",
+      "successSoft": "#E3E6DC",
+      "shadow": "#1E1C19"
+    },
+    "dark": {
+      "bg": "#1B1916",
+      "surface": "#25221E",
+      "surfaceMuted": "#2E2A25",
+      "ink": "#EDE7DC",
+      "inkMuted": "#A9A193",
+      "line": "#3A352F",
+      "lineStrong": "#8C8069",
+      "brass": "#8C8069",
+      "accent": "#A3B49A",
+      "onAccent": "#1B1916",
+      "accentSoft": "#2C3329",
+      "primary": "#EDE7DC",
+      "onPrimary": "#1B1916",
+      "chipOn": "#EDE7DC",
+      "onChipOn": "#1B1916",
+      "warning": "#D8B46E",
+      "warningSoft": "#352D1E",
+      "danger": "#E8A090",
+      "onDanger": "#1B1916",
+      "dangerSoft": "#3A2622",
+      "success": "#A3B49A",
+      "successSoft": "#2C3329",
+      "shadow": "#000000"
+    }
+  },
+  "radius": {
+    "sm": 12,
+    "md": 16,
+    "lg": 20,
+    "xl": 24,
+    "pill": 999
+  },
+  "spacing": {
+    "xxs": 4,
+    "xs": 8,
+    "sm": 12,
+    "md": 16,
+    "lg": 20,
+    "xl": 24,
+    "xxl": 32,
+    "xxxl": 44
+  },
+  "fonts": {
+    "display": {
+      "family": "Outfit",
+      "weight": 600
+    },
+    "body": {
+      "family": "Nunito Sans",
+      "weights": [
+        400,
+        600,
+        700
+      ]
+    }
+  }
+}
