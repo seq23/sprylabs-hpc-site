@@ -32,6 +32,17 @@
  *      required here too.
  *   5. Rule 0: zero prices, zero links or zero selling points examined is a
  *      failure, not a pass.
+ *   6. A page a first-time visitor cannot read. Exactly one h1, the approved
+ *      headline, inside the hero, and BEFORE any digital-product selling
+ *      content (the [data-bhpc-section] block, a Gumroad link, the
+ *      "Download Billionaire High Performance Coach" heading). The hero carries
+ *      both chooser cards (the app -> #app with its Founding 100 price, the
+ *      digital product -> #bhpc with its Gumroad price). The sticky nav links
+ *      The App / The Digital Product / Plans / Compare. A "Which is right for
+ *      me?" table compares the two products on the five approved rows, and the
+ *      FAQ answers the four approved questions.
+ *   7. "free trial" is allowed exactly once: the FAQ question "Is there a free
+ *      trial?" whose answer starts with "No". Anywhere else it fails.
  */
 import fs from 'node:fs';
 import os from 'node:os';
@@ -80,6 +91,12 @@ expected['founding100.monthly'] = pinned.intro_offers.founding100.monthlyUsdCent
 expected['founding100.was'] = pinned.plan_prices.chief_of_staff.monthlyUsdCents;
 expected['introductory.monthly'] = pinned.intro_offers.introductory.monthlyUsdCents;
 expected['introductory.then'] = pinned.intro_offers.introductory.thenMonthlyUsdCents;
+// The BHPC digital product's one-time Gumroad price, shown in whole dollars as
+// Gumroad shows it. Pinned with its own source note; it is not a PLAN_PRICES amount.
+const bhpcCents = pinned.bhpc_digital_product?.oneTimeUsdCents;
+if (!Number.isInteger(bhpcCents) || bhpcCents <= 0) fail(`${PRICES} has no bhpc_digital_product.oneTimeUsdCents`);
+else expected['bhpc.onetime'] = bhpcCents;
+const shownAs = (key, cents) => (key === 'bhpc.onetime' && cents % 100 === 0 ? `$${cents / 100}` : usd(cents));
 
 const priceEls = [...html.matchAll(/<[a-z]+\b[^>]*\bdata-price="([^"]+)"[^>]*>([\s\S]*?)<\/[a-z]+>/gi)];
 if (priceEls.length === 0) fail('Rule 0: no [data-price] elements found on the page');
@@ -88,10 +105,10 @@ for (const [, key, inner] of priceEls) {
   seenKeys.add(key);
   if (!(key in expected)) { fail(`unknown data-price key "${key}"`); continue; }
   const shown = stripTags(inner).trim();
-  if (shown !== usd(expected[key])) fail(`price ${key} shows "${shown}", PLAN_PRICES says ${usd(expected[key])}`);
+  if (shown !== shownAs(key, expected[key])) fail(`price ${key} shows "${shown}", the pinned price is ${shownAs(key, expected[key])}`);
 }
-for (const key of Object.keys(expected)) if (!seenKeys.has(key)) fail(`required price ${key} (${usd(expected[key])}) is not on the page`);
-const allowedAmounts = new Set(Object.values(expected).map(usd));
+for (const key of Object.keys(expected)) if (!seenKeys.has(key)) fail(`required price ${key} (${shownAs(key, expected[key])}) is not on the page`);
+const allowedAmounts = new Set(Object.entries(expected).filter(([k]) => k !== 'bhpc.onetime').map(([, c]) => usd(c)));
 for (const m of stripTags(html).matchAll(/\$\d[\d,]*\.\d{2}\b/g)) {
   if (!allowedAmounts.has(m[0])) fail(`amount ${m[0]} on the page is not a PLAN_PRICES amount`);
 }
@@ -118,9 +135,23 @@ if (srcDir) {
 }
 
 // ---------------------------------------------------------------- 2. forbidden phrases
-const FORBIDDEN = [[/billionaire\s+mindset/i, '"Billionaire Mindset" (use "Billionaire High Performance Coach Track")'], [/free\s+trial/i, '"free trial" (there is none)']];
+// The one permitted "free trial": the FAQ entry that answers "No". It must be
+// a <details data-faq="free-trial"> whose summary is the question and whose
+// answer starts with "No" and never says "free trial" itself. That one block is
+// removed before the scan; every other "free trial" anywhere still fails.
+const trialBlocks = [...html.matchAll(/<details\b[^>]*\bdata-faq="free-trial"[^>]*>([\s\S]*?)<\/details>/gi)];
+if (trialBlocks.length !== 1) fail(`the FAQ needs exactly one "Is there a free trial?" entry (data-faq="free-trial"), found ${trialBlocks.length}`);
+for (const [, inner] of trialBlocks) {
+  const q = inner.match(/<summary\b[^>]*>([\s\S]*?)<\/summary>/i);
+  const answer = norm(stripTags(q ? inner.slice(q.index + q[0].length) : ''));
+  if (!q || norm(stripTags(q[1])) !== 'is there a free trial?') fail('the free-trial FAQ entry must ask exactly "Is there a free trial?"');
+  if (!/^no\b/.test(answer)) fail(`the free-trial FAQ answer must start with "No", found "${answer.slice(0, 40)}"`);
+  if (/free\s+trial/i.test(answer)) fail('the free-trial FAQ answer must not say "free trial" itself');
+}
+const FORBIDDEN = [[/billionaire\s+mindset/i, '"Billionaire Mindset" (use "Billionaire High Performance Coach Track")'], [/free\s+trial/i, '"free trial" (there is none; only the FAQ "Is there a free trial?" answered "No" may say it)']];
 for (const file of [PAGE, ...SCRIPTS]) {
-  const text = read(file);
+  let text = read(file);
+  if (file === PAGE && trialBlocks.length === 1) text = text.replace(trialBlocks[0][0], ' ');
   for (const [re, what] of FORBIDDEN) if (re.test(text)) fail(`${file} contains ${what}`);
 }
 
@@ -241,8 +272,70 @@ if (bhpcMatch && !bhpcMatch[1].includes(links?.gumroad || '\u0000')) fail('the B
 const missing = uniquePoints.filter((p) => !bhpcText.includes(p));
 for (const p of missing) fail(`BHPC selling point from ${BHPC_SOURCE} missing: "${p}"`);
 
+// ---------------------------------------------------------------- 6. newcomer structure
+const H1_TEXT = 'your five-person executive team. two ways to get it.';
+const h1s = [...html.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/gi)];
+const h1Opens = (html.match(/<h1\b/gi) || []).length;
+if (h1Opens !== 1 || h1s.length !== 1) fail(`the page needs exactly one h1, found ${h1Opens}`);
+const h1At = h1s.length ? h1s[0].index : -1;
+if (h1s.length && norm(stripTags(h1s[0][1])) !== H1_TEXT) fail(`the h1 must read "Your five-person executive team. Two ways to get it.", found "${stripTags(h1s[0][1]).trim()}"`);
+const firstOf = (needle) => { const i = needle instanceof RegExp ? html.search(needle) : html.indexOf(needle); return i; };
+const BHPC_MARKERS = [
+  ['the [data-bhpc-section] block', /<[a-z]+\b[^>]*\bdata-bhpc-section\b/i],
+  ['a Gumroad link', /href="https:\/\/[^"]*gumroad\.com/i],
+  ['"Download Billionaire High Performance Coach"', /download billionaire high performance coach/i],
+];
+for (const [what, re] of BHPC_MARKERS) {
+  const at = firstOf(re);
+  if (at === -1) { fail(`Rule 0: ${what} not found, so "h1 before BHPC selling content" checked nothing`); continue; }
+  if (!(h1At > -1 && h1At < at)) fail(`the h1 must come before ${what}`);
+}
+const heroMatch = html.match(/<section\b[^>]*\bdata-hero\b[^>]*>([\s\S]*?)<\/section>/i);
+if (!heroMatch) fail('no hero section ([data-hero]) on the page');
+else {
+  const firstSectionAt = html.search(/<section\b/i);
+  if (heroMatch.index !== firstSectionAt) fail('the hero ([data-hero]) must be the first section on the page');
+  if (!/<h1\b/i.test(heroMatch[1])) fail('the h1 must sit inside the hero');
+  const CARDS = [['app', '#app', 'founding100.monthly'], ['bhpc', '#bhpc', 'bhpc.onetime']];
+  for (const [name, target, price] of CARDS) {
+    const card = heroMatch[1].match(new RegExp(`<a\\b[^>]*\\bdata-choice="${name}"[^>]*>([\\s\\S]*?)<\\/a>`, 'i'));
+    if (!card) { fail(`hero chooser card "${name}" ([data-choice="${name}"]) is missing`); continue; }
+    if (!new RegExp(`href="${target}"`).test(card[0])) fail(`hero chooser card "${name}" must jump to ${target}`);
+    if (!card[1].includes(`data-price="${price}"`)) fail(`hero chooser card "${name}" must show its price (${price})`);
+  }
+}
+const nav = html.match(/<nav\b[^>]*\bdata-topnav\b[^>]*>([\s\S]*?)<\/nav>/i);
+const NAV = [['#app', 'the app'], ['#bhpc', 'the digital product'], ['#plans', 'plans'], ['#compare', 'compare']];
+if (!nav) fail('no sticky top nav ([data-topnav])');
+else {
+  const navLinks = [...nav[1].matchAll(/<a\b[^>]*href="([^"]+)"[^>]*>([\s\S]*?)<\/a>/gi)].map((m) => [m[1], norm(stripTags(m[2]))]);
+  if (JSON.stringify(navLinks) !== JSON.stringify(NAV)) fail(`top nav must be ${JSON.stringify(NAV)}, found ${JSON.stringify(navLinks)}`);
+}
+const compare = html.match(/<section\b[^>]*\bid="compare"[^>]*>([\s\S]*?)<\/section>/i);
+const table = compare && compare[1].match(/<table\b[^>]*\bdata-compare-table\b[^>]*>([\s\S]*?)<\/table>/i);
+if (!table) fail('no comparison table ([data-compare-table] inside #compare)');
+else {
+  const rows = [...table[1].matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)].map((r) => [...r[1].matchAll(/<t[hd]\b[^>]*>([\s\S]*?)<\/t[hd]>/gi)].map((c) => norm(stripTags(c[1]))));
+  const header = rows[0] || [];
+  if (header[1] !== 'digital product' || header[2] !== 'app') fail(`comparison table header must be Digital product | App, found ${JSON.stringify(header)}`);
+  const ROWS = ['what it is', 'where it runs', 'who does the work', 'price model', 'best for'];
+  const labels = rows.slice(1).map((r) => r[0]);
+  if (JSON.stringify(labels) !== JSON.stringify(ROWS)) fail(`comparison table rows must be ${JSON.stringify(ROWS)}, found ${JSON.stringify(labels)}`);
+  for (const r of rows.slice(1)) if (r.length !== 3 || r.some((c) => !c)) fail(`comparison row "${r[0]}" needs a non-empty cell for both products`);
+  const price = rows.find((r) => r[0] === 'price model');
+  if (price && !(/one[- ]time/.test(price[1]) && /subscription/.test(price[2]))) fail('comparison "Price model" must say one-time for the digital product and subscription for the app');
+  if (!/can i use both\?/i.test(compare[1])) fail('the comparison must answer "Can I use both?" under the table');
+}
+const FAQ_QS = ["what's the difference between the app and the digital product?", 'can i use both?', 'is there a free trial?', 'when is the app in the stores?'];
+const faq = html.match(/<section\b[^>]*\bid="faq"[^>]*>([\s\S]*?)<\/section>/i);
+const faqQs = faq ? [...faq[1].matchAll(/<summary\b[^>]*>([\s\S]*?)<\/summary>/gi)].map((m) => norm(stripTags(m[1]))) : [];
+for (const q of FAQ_QS) if (!faqQs.includes(q)) fail(`FAQ (#faq) is missing "${q}"`);
+const ORDER = ['data-hero', 'id="problem"', 'id="jobs"', 'id="personas"', 'data-bhpc-section', 'id="app"', 'id="plans"', 'id="get-the-app"', 'id="compare"', 'id="faq"'];
+const at = ORDER.map((m) => html.indexOf(m));
+ORDER.forEach((m, i) => { if (at[i] === -1) fail(`section marker ${m} is missing`); else if (i && at[i] < at[i - 1]) fail(`section ${m} is out of the approved order (must follow ${ORDER[i - 1]})`); });
+
 // ---------------------------------------------------------------- report
-const summary = `${priceEls.length} prices, ${refs.length} links, ${linkEls.length} download buttons, ${uniquePoints.length} BHPC selling points`;
+const summary = `${priceEls.length} prices, ${refs.length} links, ${linkEls.length} download buttons, ${uniquePoints.length} BHPC selling points, ${h1s.length} h1, ${ORDER.length} sections in order, ${FAQ_QS.length} FAQ questions`;
 for (const n of notes) console.log(`${LABEL} note: ${n}`);
 if (failures.length) {
   for (const f of failures) console.error(`${LABEL} FAIL ${f}`);
