@@ -4,12 +4,32 @@
   "source_path": "packages/policy/src/index.ts",
   "source_commit": "cc751d1",
   "plan_prices": {
-    "chief_of_staff": { "monthlyUsdCents": 2499, "annualUsdCents": 24999 },
-    "life_os": { "monthlyUsdCents": 3999, "annualUsdCents": 39999 },
-    "autopilot": { "monthlyUsdCents": 7999, "annualUsdCents": 79999 }
+    "chief_of_staff": {
+      "displayName": "Executive Roundtable",
+      "monthlyUsdCents": 2499,
+      "annualUsdCents": 24999
+    },
+    "life_os": {
+      "displayName": "Executive Suite",
+      "monthlyUsdCents": 3999,
+      "annualUsdCents": 39999
+    },
+    "autopilot": {
+      "displayName": "Autopilot",
+      "monthlyUsdCents": 7999,
+      "annualUsdCents": 79999
+    }
   },
   "intro_offers": {
-    "founding100": { "subscribers": 100, "monthlyUsdCents": 999 },
-    "introductory": { "monthlyUsdCents": 999, "months": 3, "thenMonthlyUsdCents": 2499 }
-  }
+    "founding100": {
+      "subscribers": 100,
+      "monthlyUsdCents": 999
+    },
+    "introductory": {
+      "monthlyUsdCents": 999,
+      "months": 3,
+      "thenMonthlyUsdCents": 2499
+    }
+  },
+  "_display_names_source": "Plan display names renamed by the owner on 2026-10-07: Executive Roundtable (was Chief of Staff), Executive Suite (was Life OS), Autopilot. A parallel aplayer-mode PR changes PLAN_PRICES displayName to match; until it merges the source still carries the old names, and the validator compares names to the source only once the source has been renamed. \"Chief of Staff\" is now only one of the 5 jobs, never a plan name."
 }

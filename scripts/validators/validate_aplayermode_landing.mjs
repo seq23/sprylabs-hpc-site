@@ -22,6 +22,9 @@
  *      aplayermode/config.js: each value must be '' (rendered as a disabled
  *      "Available soon" element with no href) or an https:// URL, and every
  *      route in that constant must have exactly one button on the page.
+ *   3b. A retired plan name. Plans are Executive Roundtable / Executive Suite /
+ *      Autopilot (pinned with a source note). "Life OS" fails anywhere;
+ *      "Chief of Staff" fails anywhere except as one of the 5 jobs.
  *   4. A dropped selling point. The page's first section sells the Billionaire
  *      High Performance Coach digital product, and must carry every selling
  *      point on the frozen download.html (read-only here). The points are
@@ -138,7 +141,13 @@ if (!isHttps(links?.gumroad || '')) fail('APM_LINKS.gumroad must be set to the l
 
 const ids = new Set([...html.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]));
 const EXTERNAL_ALLOW = new Set([links?.gumroad].filter(Boolean));
-const refs = [...html.matchAll(/\b(href|src)\s*=\s*"([^"]*)"/gi)].map((m) => m[2]);
+// Inline script bodies are code, not links (the site build injects the Clarity
+// loader, whose code builds a URL string), and <link rel=canonical|alternate>
+// is metadata the site build stamps on every page, not a link a reader follows.
+const linkScan = html
+  .replace(/<script\b(?![^>]*\bsrc=)[^>]*>[\s\S]*?<\/script>/gi, '')
+  .replace(/<link\b[^>]*\brel="(canonical|alternate)"[^>]*>/gi, '');
+const refs = [...linkScan.matchAll(/\b(href|src)\s*=\s*"([^"]*)"/gi)].map((m) => m[2]);
 if (refs.length === 0) fail('Rule 0: no href/src found on the page');
 const fileExists = (p) => {
   const clean = decodeURIComponent(p.split(/[?#]/)[0]).replace(/^\//, '');
@@ -173,6 +182,34 @@ for (const r of ROUTES.filter((x) => !x.startsWith('legal.'))) {
   if ((linkCounts[r] || 0) !== 1) fail(`route ${r} needs exactly one download button, found ${linkCounts[r] || 0}`);
 }
 if (!/data-legal-links/.test(html)) fail('footer has no [data-legal-links] slot for Terms / Privacy');
+
+// ---------------------------------------------------------------- 3b. plan names
+// Plans are Executive Roundtable / Executive Suite / Autopilot. "Life OS" is a
+// retired plan name; "Chief of Staff" is one of the 5 jobs and may appear only
+// as a job: an [data-job] heading, a [data-jobs-list] item, or the BHPC copy's
+// "a chief of staff for sequencing".
+const planNames = [...html.matchAll(/<[a-z0-9]+\b[^>]*\bdata-plan-name\b[^>]*>([\s\S]*?)<\/[a-z0-9]+>/gi)].map((m) => stripTags(m[1]).trim());
+const expectedNames = Object.values(pinned.plan_prices).map((p) => p.displayName);
+if (expectedNames.some((n) => !n)) fail(`${PRICES} is missing a displayName`);
+if (JSON.stringify(planNames) !== JSON.stringify(expectedNames)) fail(`plan names on the page ${JSON.stringify(planNames)} differ from ${JSON.stringify(expectedNames)}`);
+const RETIRED = ['Chief of Staff', 'Life OS'];
+for (const n of expectedNames) if (RETIRED.some((r) => r.toLowerCase() === n.toLowerCase())) fail(`pinned plan name "${n}" is a retired plan name`);
+for (const file of [PAGE, ...SCRIPTS]) if (/\blife\s+os\b/i.test(stripTags(read(file)))) fail(`${file} contains "Life OS", a retired plan name (now Executive Suite)`);
+const jobsStripped = stripTags(html
+  .replace(/<([a-z0-9]+)\b[^>]*\bdata-job\b[^>]*>[^<]*<\/\1>/gi, ' ')
+  .replace(/<([a-z0-9]+)\b[^>]*\bdata-jobs-list\b[^>]*>[\s\S]*?<\/\1>/gi, ' '))
+  .replace(/a chief of staff for sequencing/g, ' ');
+const cosLeft = (jobsStripped.match(/chief\s+of\s+staff/gi) || []).length;
+if (cosLeft) fail(`"Chief of Staff" appears ${cosLeft} time(s) outside the 5 jobs; it is no longer a plan name (now Executive Roundtable)`);
+if (srcDir) {
+  const ts = fs.readFileSync(path.join(srcDir, pinned.source_path), 'utf8');
+  for (const [plan, p] of Object.entries(pinned.plan_prices)) {
+    const m = ts.match(new RegExp(`\\b${plan}:\\s*\\{[^}]*displayName:\\s*'([^']+)'`));
+    if (!m) continue;
+    if (RETIRED.includes(m[1])) { notes.push(`aplayer-mode source still names ${plan} "${m[1]}" (rename PR not merged yet)`); continue; }
+    if (m[1] !== p.displayName) fail(`pinned ${plan} name "${p.displayName}" differs from source "${m[1]}"`);
+  }
+}
 
 // ---------------------------------------------------------------- 4. BHPC selling points
 const source = read(BHPC_SOURCE).replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, '');

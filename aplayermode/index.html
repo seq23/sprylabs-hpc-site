@@ -129,11 +129,11 @@
     <h2>The 5 Executive Roles This System Installs Inside Your AI</h2>
     <p>This system converts an LLM into a structured operating layer that performs five core executive functions.</p>
     <div class="grid grid-5">
-      <div class="card"><h3>Executive Coach</h3><p class="small">Provides performance framing, pressure management, and clear directives under stress.</p></div>
-      <div class="card"><h3>Executive Assistant</h3><p class="small">Handles daily sequencing, removes decision friction, and tells you exactly where to start.</p></div>
-      <div class="card"><h3>Chief of Staff</h3><p class="small">Maintains alignment between projects, priorities, and long-term goals.</p></div>
-      <div class="card"><h3>Accountability Partner</h3><p class="small">Prevents drift between days and enforces continuity when motivation disappears.</p></div>
-      <div class="card"><h3>Cognitive Behavioral Mindset Coach</h3><p class="small">Interrupts negative thought spirals and gets you back into execution quickly.</p></div>
+      <div class="card"><h3 data-job>Executive Coach</h3><p class="small">Provides performance framing, pressure management, and clear directives under stress.</p></div>
+      <div class="card"><h3 data-job>Executive Assistant</h3><p class="small">Handles daily sequencing, removes decision friction, and tells you exactly where to start.</p></div>
+      <div class="card"><h3 data-job>Chief of Staff</h3><p class="small">Maintains alignment between projects, priorities, and long-term goals.</p></div>
+      <div class="card"><h3 data-job>Accountability Partner</h3><p class="small">Prevents drift between days and enforces continuity when motivation disappears.</p></div>
+      <div class="card"><h3 data-job>Cognitive Behavioral Mindset Coach</h3><p class="small">Interrupts negative thought spirals and gets you back into execution quickly.</p></div>
     </div>
     <p class="callout">You are no longer asking AI for advice. You are running a system that regulates your behavior.</p>
   </div>
@@ -437,15 +437,15 @@
 
 <section class="section" id="five-jobs">
   <div class="wrap">
-    <p class="kicker">5 jobs in one</p>
+    <p class="kicker">5 jobs in one · what it does</p>
     <h2>Replaces the 5 people you'd hire.</h2>
-    <p>At the highest levels, performance is supported by a team. Most people are expected to do all of that alone. A Player Mode does all five jobs in one app, every day, so none of it sits in your head.</p>
+    <p>At the highest levels, performance is supported by a team. Most people are expected to do all of that alone. A Player Mode does all five jobs in one app, every day, so none of it sits in your head. Every plan does all 5 jobs; the plans differ only in how much they do for you.</p>
     <div class="grid grid-5">
-      <div class="card"><h3>Executive Coach</h3><p class="small">Performance framing, pressure management, and clear directives under stress.</p></div>
-      <div class="card"><h3>Executive Assistant</h3><p class="small">Daily sequencing, no decision friction, and exactly where to start.</p></div>
-      <div class="card"><h3>Chief of Staff</h3><p class="small">Keeps projects, priorities and long-term goals aligned.</p></div>
-      <div class="card"><h3>Accountability Partner</h3><p class="small">Prevents drift between days and holds continuity when motivation disappears.</p></div>
-      <div class="card"><h3>Cognitive Behavioral Mindset Coach</h3><p class="small">Interrupts negative thought spirals and gets you back into execution quickly.</p></div>
+      <div class="card"><h3 data-job>Executive Coach</h3><p class="small">Performance framing, pressure management, and clear directives under stress.</p></div>
+      <div class="card"><h3 data-job>Executive Assistant</h3><p class="small">Daily sequencing, no decision friction, and exactly where to start.</p></div>
+      <div class="card"><h3 data-job>Chief of Staff</h3><p class="small">Keeps projects, priorities and long-term goals aligned.</p></div>
+      <div class="card"><h3 data-job>Accountability Partner</h3><p class="small">Prevents drift between days and holds continuity when motivation disappears.</p></div>
+      <div class="card"><h3 data-job>Cognitive Behavioral Mindset Coach</h3><p class="small">Interrupts negative thought spirals and gets you back into execution quickly.</p></div>
     </div>
     <p class="callout">You are no longer asking AI for advice. You are running a system that regulates your behavior.</p>
   </div>
@@ -453,7 +453,7 @@
 
 <section class="section" id="personas">
   <div class="wrap">
-    <p class="kicker">Who it's for</p>
+    <p class="kicker">Personas · who it's for</p>
     <h2>For anyone who wants to be an A player in whatever game they're playing.</h2>
     <p>One life, many games. Tell APM which games you're in and it fits the plan to all of them, so you stop explaining your life to a planner.</p>
     <div class="grid grid-3">
@@ -597,9 +597,9 @@
 
 <section class="section" id="plans">
   <div class="wrap">
-    <p class="kicker">Plans</p>
-    <h2>How much should APM carry?</h2>
-    <p>Every tier reduces cognitive load: Chief of Staff decides, Life OS remembers and prepares, Autopilot does.</p>
+    <p class="kicker">Plans · how much it does for you</p>
+    <h2>Every plan does all 5 jobs. The plan sets how much it does for you.</h2>
+    <p>The 5 jobs are what A Player Mode does. The personas are who it's for. The plan is how much of the work it takes off you: it plans and coaches, it runs your whole life when you tap yes, or it handles the recurring things on its own.</p>
 
     <input class="billing-input" type="radio" name="billing" id="billing-monthly" checked>
     <input class="billing-input" type="radio" name="billing" id="billing-annual">
@@ -610,62 +610,74 @@
 
     <div class="grid grid-3 tiers">
       <div class="card tier">
-        <h3>Chief of Staff</h3>
-        <p class="tagline">Decides the day</p>
+        <h3 data-plan-name>Executive Roundtable</h3>
+        <p class="tagline">Your five-person executive team in one app</p>
         <div class="price price-monthly"><span data-price="chief_of_staff.monthly">$24.99</span> <small>/ month</small></div>
         <div class="price price-annual"><span data-price="chief_of_staff.annual">$249.99</span> <small>/ year · 2 months free</small></div>
+        <p class="small">It plans and coaches you; you do the last step.</p>
         <ul class="small">
+          <li data-jobs-list>All 5 jobs: Executive Coach, Executive Assistant, Chief of Staff, Accountability Partner, Cognitive Behavioral Mindset Coach</li>
           <li>Your agenda arrives every morning, prioritised</li>
           <li>Goal → plan → daily steps</li>
           <li>Radar catches dropped promises and flags who you owe a reply</li>
           <li>Missed yesterday? Minimum day, no catch-up</li>
           <li>Coaching, one question at a time, plus all five coaching modes</li>
+          <li>Connects 1 calendar and 1 inbox</li>
         </ul>
-        <p class="small muted">Left on you: doing the plan.</p>
       </div>
       <div class="card tier">
-        <h3>Life OS</h3>
-        <p class="tagline">Remembers and prepares</p>
+        <h3 data-plan-name>Executive Suite</h3>
+        <p class="tagline">It runs your whole life</p>
         <div class="price price-monthly"><span data-price="life_os.monthly">$39.99</span> <small>/ month</small></div>
         <div class="price price-annual"><span data-price="life_os.annual">$399.99</span> <small>/ year · 2 months free</small></div>
+        <p class="small">Relationships, appointments and travel, bills and subscriptions, meals, health and life admin. It acts when you tap yes.</p>
         <ul class="small">
-          <li>Everything in Chief of Staff</li>
-          <li>Family, home, health and money in the plan</li>
-          <li>Birthdays, bills, renewals and appointments tracked and prepared</li>
+          <li>Everything in Executive Roundtable</li>
+          <li>Birthdays, bills, renewals and appointments tracked and prepared to one-tap approve</li>
           <li>Drafts the replies you owe; proposes the calendar fix</li>
           <li>Flags subscriptions you're wasting money on</li>
+          <li>Connects 1 calendar and 1 inbox</li>
         </ul>
-        <p class="small muted">Left on you: tapping Approve.</p>
       </div>
       <div class="card tier">
-        <h3>Autopilot</h3>
-        <p class="tagline">Does</p>
+        <h3 data-plan-name>Autopilot</h3>
+        <p class="tagline">It handles recurring things on its own</p>
         <div class="price price-monthly"><span data-price="autopilot.monthly">$79.99</span> <small>/ month</small></div>
         <div class="price price-annual"><span data-price="autopilot.annual">$799.99</span> <small>/ year · 2 months free</small></div>
+        <p class="small">Inside rules you set. It saves money; it never spends it.</p>
         <ul class="small">
-          <li>Everything in Life OS</li>
-          <li>Acts inside your standing rules: sends follow-ups, moves flexible meetings, books appointments, cancels unused subscriptions</li>
-          <li>Clears the calendar to a minimum day when you're overwhelmed</li>
-          <li>A daily done-list with undo. It may save you money; it never spends it</li>
+          <li>Everything in Executive Suite</li>
+          <li>Standing rules: sends follow-ups, moves flexible meetings, books appointments, cancels unused subscriptions, all on its own within your rules</li>
+          <li>Multiple accounts: work and personal calendars and inboxes connected at once</li>
+          <li>A daily done-list with undo</li>
         </ul>
-        <p class="small muted">Left on you: reading the done-list.</p>
       </div>
+    </div>
+
+    <div class="table-scroll" style="margin-top:16px">
+      <table>
+        <tr><th></th><th>Executive Roundtable</th><th>Executive Suite</th><th>Autopilot</th></tr>
+        <tr><td>The 5 jobs</td><td>All 5</td><td>All 5</td><td>All 5</td></tr>
+        <tr><td>How much it does for you</td><td>Plans and coaches; you do the last step</td><td>Runs your whole life; acts when you tap yes</td><td>Handles recurring things on its own, inside your rules</td></tr>
+        <tr><td>Connected calendars &amp; inboxes</td><td>1</td><td>1</td><td>Multiple (work + personal)</td></tr>
+        <tr><td>Left on you</td><td>Doing the plan</td><td>Tapping yes</td><td>Reading the done-list</td></tr>
+      </table>
     </div>
 
     <div class="card offer" id="founding-100" style="margin-top:16px">
       <span class="badge">Introductory offer · Founding 100</span>
-      <h3 style="margin-top:10px">Chief of Staff for the first 100 members</h3>
+      <h3 style="margin-top:10px">Executive Roundtable for the first 100 members</h3>
       <p><span class="was" data-price="founding100.was">$24.99</span><span class="now" data-price="founding100.monthly">$9.99</span> <span class="muted">/ month</span></p>
       <p><b>First 100 members. Stays $9.99/mo while subscribed.</b></p>
-      <p class="small muted">After the first 100: Chief of Staff is <span data-price="introductory.monthly">$9.99</span>/mo for your first 3 months, then <span data-price="introductory.then">$24.99</span>/mo. Intro pricing applies to Chief of Staff monthly only.</p>
+      <p class="small muted">After the first 100: Executive Roundtable is <span data-price="introductory.monthly">$9.99</span>/mo for your first 3 months, then <span data-price="introductory.then">$24.99</span>/mo. Intro pricing applies to Executive Roundtable monthly only.</p>
     </div>
 
-    <p class="small muted" style="margin-top:16px">Subscriptions are bought in the app through the App Store or Google Play and renew automatically at the price shown until you cancel in your store settings. Buying a tier never grants autonomy: you switch on each permission yourself.</p>
+    <p class="small muted" style="margin-top:16px">Subscriptions are bought in the app through the App Store or Google Play and renew automatically at the price shown until you cancel in your store settings. Buying a plan never grants autonomy: you switch on each permission yourself.</p>
 
     <h3 style="margin-top:28px">What you no longer think about</h3>
     <div class="table-scroll">
       <table>
-        <tr><th>In your head today</th><th>Chief of Staff</th><th>Life OS</th><th>Autopilot</th></tr>
+        <tr><th>In your head today</th><th>Executive Roundtable</th><th>Executive Suite</th><th>Autopilot</th></tr>
         <tr><td>"What should I do today?"</td><td>Agenda arrives, prioritised</td><td>+ family, home, health, money</td><td>+ books the time</td></tr>
         <tr><td>"Am I forgetting something?"</td><td>Radar catches dropped promises</td><td>+ birthdays, bills, renewals</td><td>+ sends follow-ups</td></tr>
         <tr><td>"How do I start this goal?"</td><td>Goal → plan → daily steps</td><td>+ logistics</td><td>+ books it, keeps it booked</td></tr>
