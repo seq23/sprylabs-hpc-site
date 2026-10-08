@@ -423,12 +423,16 @@ if (themeSrc) {
 
 // ---------------------------------------------------------------- public launch
 // Public since 8 Oct 2026: aplayermode.com and www 301 to this page and card
-// payments are live (Stripe via RevenueCat). A leftover noindex would hide the
-// domain's front door from search; "private beta" / "payments open soon" copy
-// would contradict a live checkout; a canonical on aplayermode.com would point
-// at a URL that only redirects back here.
+// payments are live (Stripe via RevenueCat). Robots is exactly "noindex, follow",
+// the /amazon/ contract: noindex keeps the page out of the generated guide
+// indexes and citation registries of the two sites sharing this repo (dropping
+// it makes the build rewrite guides/ on spryexecutiveos.com), and "follow" keeps
+// every outbound link live; the old preview "nofollow" is refused. "private
+// beta" / "payments open soon" copy would contradict a live checkout; a
+// canonical on aplayermode.com would point at a URL that only redirects here.
 const PUBLIC_CANONICAL = 'https://billionairehighperformancecoach.com/aplayermode/';
-if (/<meta\b[^>]*name="robots"[^>]*noindex/i.test(html)) fail('page carries a noindex robots meta; it is public');
+const robots = (html.match(/<meta\b[^>]*name="robots"[^>]*content="([^"]*)"/i) || [])[1];
+if (robots !== 'noindex, follow') fail(`robots meta is ${JSON.stringify(robots)}; expected "noindex, follow" (public, kept out of the shared sites' generated indexes)`);
 const canon = (html.match(/<link\b[^>]*rel="canonical"[^>]*href="([^"]+)"/i) || [])[1];
 if (canon !== PUBLIC_CANONICAL) fail(`canonical is ${canon}; expected ${PUBLIC_CANONICAL}`);
 const visibleText = html.replace(/<script\b[\s\S]*?<\/script>/gi, '').replace(/<!--[\s\S]*?-->/g, '').replace(/<[^>]+>/g, ' ');
