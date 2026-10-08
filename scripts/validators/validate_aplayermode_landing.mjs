@@ -347,7 +347,7 @@ const FAQ_QS = ["what's the difference between the app and the digital product?"
 const faq = html.match(/<section\b[^>]*\bid="faq"[^>]*>([\s\S]*?)<\/section>/i);
 const faqQs = faq ? [...faq[1].matchAll(/<summary\b[^>]*>([\s\S]*?)<\/summary>/gi)].map((m) => norm(stripTags(m[1]))) : [];
 for (const q of FAQ_QS) if (!faqQs.includes(q)) fail(`FAQ (#faq) is missing "${q}"`);
-const ORDER = ['data-hero', 'id="problem"', 'id="jobs"', 'id="personas"', 'data-bhpc-section', 'id="app"', 'id="plans"', 'id="get-the-app"', 'id="compare"', 'id="faq"'];
+const ORDER = ['data-hero', 'id="problem"', 'id="llm-gap"', 'id="jobs"', 'id="personas"', 'data-bhpc-section', 'id="app"', 'id="plans"', 'id="get-the-app"', 'id="compare"', 'id="faq"'];
 const at = ORDER.map((m) => html.indexOf(m));
 ORDER.forEach((m, i) => { if (at[i] === -1) fail(`section marker ${m} is missing`); else if (i && at[i] < at[i - 1]) fail(`section ${m} is out of the approved order (must follow ${ORDER[i - 1]})`); });
 
@@ -444,7 +444,7 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
 {
   const hero = (html.match(/<section\b[^>]*\bdata-hero\b[^>]*>([\s\S]*?)<\/section>/i) || [])[1] || '';
   const roles = (hero.match(/<div\b[^>]*\bdata-roles\b[^>]*>([\s\S]*?)<\/div>/i) || [])[1] || '';
-  if (!/The 5 roles this system installs/.test(roles)) fail('hero [data-roles] must lead with "The 5 roles this system installs"');
+  if (!/The 5 roles this system installs:/.test(roles)) fail('hero [data-roles] must lead with "The 5 roles this system installs:"');
   const roleNames = [...roles.matchAll(/<li>\s*<b>([^<:]+):<\/b>/g)].map((m) => m[1].trim());
   const ROLE_ORDER = ['Executive Coach', 'Executive Assistant', 'Chief of Staff', 'Accountability Partner', 'Cognitive Behavioral Mindset Coach'];
   if (JSON.stringify(roleNames) !== JSON.stringify(ROLE_ORDER)) fail(`hero roles ${JSON.stringify(roleNames)}; expected ${JSON.stringify(ROLE_ORDER)}`);
@@ -461,6 +461,11 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
   }
   const bhpcCard = (hero.match(/<a\b[^>]*data-choice="bhpc"[^>]*>([\s\S]*?)<\/a>/i) || [])[1] || '';
   if (!bhpcCard.includes('installs that structure into ChatGPT, Claude, Gemini, Perplexity, DeepSeek, or the LLM you already use')) fail('the LLM install line belongs on the digital-product card');
+  const gap = (html.match(/<section\b[^>]*\bdata-llm-gap\b[^>]*>([\s\S]*?)<\/section>/i) || [])[1] || '';
+  if (!/<h2>LLMs Give Advice\. They Do Not Enforce Behavior Across Days\.<\/h2>/.test(gap)) fail('section [data-llm-gap] must be headed "LLMs Give Advice. They Do Not Enforce Behavior Across Days."');
+  if ((html.match(/<h2>LLMs Give Advice/g) || []).length !== 1) fail('"LLMs Give Advice..." must be the h2 of exactly one section (#llm-gap)');
+  for (const w of ['$20', 'Founders, executives, working parents, operators', 'Continuity, daily sequencing and accountability']) if (!gap.includes(w)) fail(`section [data-llm-gap] is missing "${w}"`);
+  if ((gap.match(/<b>A chat on its own:<\/b>/g) || []).length < 3 || (gap.match(/<b>With the system:<\/b>/g) || []).length < 3) fail('section [data-llm-gap] must contrast a chat on its own with the system in at least 3 cards');
   const visible = stripTags(html);
   for (const line of ['self-directed alternative to BetterUp, Hone, and Culture Amp', 'reduces cognitive load by doing the planning, sequencing, strategic triage, and next-step selection with you', 'Discover your own A-player mode by inspecting the operating system before you buy.']) {
     if (!visible.includes(line)) fail(`owner AEO copy missing: "${line}"`);
