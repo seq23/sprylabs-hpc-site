@@ -11,7 +11,7 @@
  */
 window.APM_LINKS = Object.freeze({
   beta: Object.freeze({
-    // Private beta routes that need no store approval.
+    // Live routes that need no store approval (card payments via Stripe).
     webApp: 'https://app.aplayermode.com', // Web app: open in the browser, then Add to Home Screen.
     androidApk: 'https://github.com/seq23/aplayer-mode/releases/download/android-beta-2026-10-07/aplayermode.apk', // Android direct download (APK).
     iosTestFlight: '', // iPhone TestFlight public link.

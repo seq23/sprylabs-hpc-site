@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Guards the A Player Mode landing page (aplayermode/index.html), built as a
- * private preview for aplayermode.com.
+ * public landing page (aplayermode.com 301s here).
  *
  * WHAT IT REFUSES
  *
@@ -419,6 +419,21 @@ if (themeSrc) {
     if (JSON.stringify(src) !== JSON.stringify(theme.palettes[scheme])) fail(`pinned palettes.${scheme} differs from ${themeSrc}/${theme.source_path}; re-copy it`);
   }
   notes.push(`pinned theme compared to ${themeSrc}`);
+}
+
+// ---------------------------------------------------------------- public launch
+// Public since 8 Oct 2026: aplayermode.com and www 301 to this page and card
+// payments are live (Stripe via RevenueCat). A leftover noindex would hide the
+// domain's front door from search; "private beta" / "payments open soon" copy
+// would contradict a live checkout; a canonical on aplayermode.com would point
+// at a URL that only redirects back here.
+const PUBLIC_CANONICAL = 'https://billionairehighperformancecoach.com/aplayermode/';
+if (/<meta\b[^>]*name="robots"[^>]*noindex/i.test(html)) fail('page carries a noindex robots meta; it is public');
+const canon = (html.match(/<link\b[^>]*rel="canonical"[^>]*href="([^"]+)"/i) || [])[1];
+if (canon !== PUBLIC_CANONICAL) fail(`canonical is ${canon}; expected ${PUBLIC_CANONICAL}`);
+const visibleText = html.replace(/<script\b[\s\S]*?<\/script>/gi, '').replace(/<!--[\s\S]*?-->/g, '').replace(/<[^>]+>/g, ' ');
+for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /join the beta/i, /bought in the app through the App Store or Google Play/i]) {
+  if (stale.test(visibleText)) fail(`stale pre-launch copy matches ${stale}`);
 }
 
 // ---------------------------------------------------------------- report
