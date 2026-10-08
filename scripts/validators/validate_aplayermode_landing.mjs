@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * Guards the A Player Mode landing page (aplayermode/index.html), built as a
- * public landing page (aplayermode.com 301s here).
+ * public landing page served at https://aplayermode.com/ by the
+ * workers/aplayermode-com Worker (see section "aplayermode.com owns the page").
  *
  * WHAT IT REFUSES
  *
@@ -66,6 +67,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import vm from 'node:vm';
+import { pathToFileURL } from 'node:url';
 
 const ROOT = process.cwd();
 const LABEL = '[validate:aplayermode-landing]';
@@ -452,19 +454,65 @@ if (themeSrc) {
 }
 
 // ---------------------------------------------------------------- public launch
-// Public since 8 Oct 2026: aplayermode.com and www 301 to this page and card
-// payments are live (Stripe via RevenueCat). Robots is exactly "noindex, follow",
-// the /amazon/ contract: noindex keeps the page out of the generated guide
-// indexes and citation registries of the two sites sharing this repo (dropping
-// it makes the build rewrite guides/ on spryexecutiveos.com), and "follow" keeps
-// every outbound link live; the old preview "nofollow" is refused. "private
-// beta" / "payments open soon" copy would contradict a live checkout; a
-// canonical on aplayermode.com would point at a URL that only redirects here.
-const PUBLIC_CANONICAL = 'https://billionairehighperformancecoach.com/aplayermode/';
+// Public since 8 Oct 2026, card payments live (Stripe via RevenueCat). Robots is
+// exactly "noindex, follow", the /amazon/ contract: noindex keeps the page out of
+// the generated guide indexes and citation registries of the two sites sharing
+// this repo (dropping it makes the build rewrite guides/ on spryexecutiveos.com),
+// and "follow" keeps every outbound link live; the old preview "nofollow" is
+// refused. "private beta" / "payments open soon" copy would contradict a live
+// checkout.
+//
+// aplayermode.com owns the page (owner, 8 Oct 2026: "move aplayermode.com
+// entirely"): canonical, og:url and any JSON-LD url are exactly
+// https://aplayermode.com/; the old BHPC address (which now 301s to it) is
+// refused anywhere in the page.
+const PUBLIC_CANONICAL = 'https://aplayermode.com/';
 const robots = (html.match(/<meta\b[^>]*name="robots"[^>]*content="([^"]*)"/i) || [])[1];
 if (robots !== 'noindex, follow') fail(`robots meta is ${JSON.stringify(robots)}; expected "noindex, follow" (public, kept out of the shared sites' generated indexes)`);
+const canonTags = [...html.matchAll(/<link\b[^>]*rel="canonical"[^>]*>/gi)];
+if (canonTags.length !== 1) fail(`expected exactly one <link rel="canonical">, found ${canonTags.length}`);
 const canon = (html.match(/<link\b[^>]*rel="canonical"[^>]*href="([^"]+)"/i) || [])[1];
 if (canon !== PUBLIC_CANONICAL) fail(`canonical is ${canon}; expected ${PUBLIC_CANONICAL}`);
+const ogUrl = (html.match(/<meta\b[^>]*property="og:url"[^>]*content="([^"]+)"/i) || [])[1];
+if (ogUrl !== PUBLIC_CANONICAL) fail(`og:url is ${ogUrl}; expected ${PUBLIC_CANONICAL}`);
+for (const m of html.matchAll(/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi)) {
+  for (const u of m[1].matchAll(/"(?:url|@id)"\s*:\s*"([^"]+)"/g)) if (!u[1].startsWith(PUBLIC_CANONICAL)) fail(`JSON-LD url ${u[1]} is not on ${PUBLIC_CANONICAL}`);
+}
+if (/billionairehighperformancecoach\.com\/aplayermode/i.test(html)) fail('the page still names billionairehighperformancecoach.com/aplayermode, which only redirects to aplayermode.com');
+
+// ---------------------------------------------------------------- aplayermode.com owns the page
+// The Worker (workers/aplayermode-com) serves / and every file the page loads
+// from the Pages origin, 301s everything else, and must never fetch from a host
+// that redirects back to it. The Pages Function (functions/aplayermode/index.js)
+// 301s /aplayermode/ on the shared sites' hosts and serves it everywhere else.
+{
+  const workerDir = path.join(ROOT, 'workers', 'aplayermode-com');
+  const w = await import(pathToFileURL(path.join(workerDir, 'src', 'index.js')).href);
+  if (w.ORIGIN !== 'https://sprylabs-hpc-site.pages.dev') fail(`Worker ORIGIN is ${w.ORIGIN}; it must be the Pages origin https://sprylabs-hpc-site.pages.dev (any BHPC host redirects back: loop)`);
+  const page = w.route('/');
+  if (page.kind !== 'page' || page.upstream !== '/aplayermode/') fail(`Worker must serve / from /aplayermode/; route('/') = ${JSON.stringify(page)}`);
+  const localRefs = refs.filter((r) => r.startsWith('/') && !r.startsWith('//')).map((r) => r.split(/[?#]/)[0]);
+  if (localRefs.length === 0) fail('Rule 0: the page loads no local file; the Worker asset check would check nothing');
+  for (const ref of new Set(localRefs)) {
+    const r = w.route(ref);
+    if (r.kind !== 'asset' || r.upstream !== ref) fail(`page loads ${ref} but the aplayermode.com Worker does not serve it (route = ${JSON.stringify(r)})`);
+  }
+  for (const [p, loc] of [['/aplayermode/', '/'], ['/download', '/'], ['/admin.html', '/'], ['/about.html', '/'], ['/amazon/', 'https://billionairehighperformancecoach.com/amazon/'], ['/amazon/x/', 'https://billionairehighperformancecoach.com/amazon/x/']]) {
+    const r = w.route(p);
+    if (r.kind !== 'redirect' || r.location !== loc) fail(`Worker route(${p}) must 301 to ${loc}; got ${JSON.stringify(r)}`);
+  }
+  for (const s of w.SHARED_ASSETS) if (!fs.existsSync(path.join(ROOT, s.slice(1)))) fail(`Worker SHARED_ASSETS lists ${s}, which is no committed file`);
+  const wcfg = fs.readFileSync(path.join(workerDir, 'wrangler.jsonc'), 'utf8');
+  if (!/"pattern":\s*"aplayermode\.com\/\*"/.test(wcfg) || !/"zone_name":\s*"aplayermode\.com"/.test(wcfg)) fail('workers/aplayermode-com/wrangler.jsonc must route aplayermode.com/* on zone aplayermode.com');
+  if (/"name":\s*"sprylabs-hpc-site"/.test(wcfg)) fail('the aplayermode.com Worker must not be named after the Pages project');
+  const fnSrc = fs.readFileSync(path.join(ROOT, 'functions', 'aplayermode', 'index.js'), 'utf8');
+  const moved = [...((fnSrc.match(/MOVED_HOSTS = new Set\(\[([\s\S]*?)\]\)/) || [])[1] || '').matchAll(/'([^']+)'/g)].map((m) => m[1]).sort();
+  const MOVED_EXPECTED = ['billionairehighperformancecoach.com', 'spryexecutiveos.com', 'www.billionairehighperformancecoach.com', 'www.spryexecutiveos.com'];
+  if (JSON.stringify(moved) !== JSON.stringify(MOVED_EXPECTED)) fail(`functions/aplayermode/index.js MOVED_HOSTS is ${JSON.stringify(moved)}; expected exactly ${JSON.stringify(MOVED_EXPECTED)} (pages.dev must keep serving the page: the Worker fetches it there)`);
+  if (!/APLAYERMODE_URL = 'https:\/\/aplayermode\.com\/'/.test(fnSrc) || !/status: 301/.test(fnSrc)) fail('functions/aplayermode/index.js must 301 to https://aplayermode.com/');
+  const assemble = fs.readFileSync(path.join(ROOT, 'scripts', 'assemble_pages_output.js'), 'utf8');
+  if (!/^\s*'workers',/m.test(assemble)) fail('scripts/assemble_pages_output.js must exclude workers/ from the Pages output');
+}
 const visibleText = html.replace(/<script\b[\s\S]*?<\/script>/gi, '').replace(/<!--[\s\S]*?-->/g, '').replace(/<[^>]+>/g, ' ');
 for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /join the beta/i, /bought in the app through the App Store or Google Play/i]) {
   if (stale.test(visibleText)) fail(`stale pre-launch copy matches ${stale}`);

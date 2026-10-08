@@ -60,7 +60,7 @@ import { createRequire } from 'node:module';
 import {IGNORED_DIRS} from '../lib/repo_walk.mjs';
 
 const require = createRequire(import.meta.url);
-const { routeFor, hostFor, FROZEN_HTML_ROUTES } = require('../lib/dual_domain_policy.cjs');
+const { routeFor, hostFor, canonicalUrlFor, FROZEN_HTML_ROUTES } = require('../lib/dual_domain_policy.cjs');
 
 const ROOT = process.cwd();
 const LIVE = process.argv.includes('--live');
@@ -119,7 +119,7 @@ let linkLeakFiles = 0;
 
 for (const rel of files) {
   const expectedRoute = routeFor(rel);
-  const expected = hostFor(expectedRoute, overrides) + expectedRoute;
+  const expected = canonicalUrlFor(expectedRoute, overrides);
   const isFrozen = FROZEN_HTML_ROUTES.has(rel);
   const html = fs.readFileSync(path.join(ROOT, rel), 'utf8');
 
@@ -178,7 +178,7 @@ if (LIVE) {
   for (const rel of files) {
     if (FROZEN_HTML_ROUTES.has(rel)) continue;
     const route = routeFor(rel);
-    const url = hostFor(route, overrides) + route;
+    const url = canonicalUrlFor(route, overrides);
     try {
       const res = await fetch(url, { method: 'HEAD', redirect: 'manual' });
       liveChecked += 1;

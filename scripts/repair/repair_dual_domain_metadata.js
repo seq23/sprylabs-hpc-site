@@ -2,7 +2,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
-const { routeFor, hostFor } = require('../lib/dual_domain_policy.cjs');
+const { routeFor, hostFor, canonicalUrlFor } = require('../lib/dual_domain_policy.cjs');
 
 const root = process.cwd();
 const skipDirs = new Set(['.git','.pages-output', 'node_modules','_ops','templates','docs']);
@@ -127,7 +127,7 @@ function normalizeInternalUrls(html) {
 for (const file of files) {
   const rel=path.relative(root,file).replace(/\\/g,'/');
   const route=routeFor(rel);
-  const canonical=hostFor(route,publishedHostOverrides)+route;
+  const canonical=canonicalUrlFor(route,publishedHostOverrides);
   let html=fs.readFileSync(file,'utf8');
   const before=html;
   html=normalizeInternalUrls(html);

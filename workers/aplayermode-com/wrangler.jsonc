@@ -1,0 +1,11 @@
+// Dedicated Worker for aplayermode.com (NOT the Pages project; Pages deploys
+// through its own pipeline). Deploy: npx wrangler deploy --config workers/aplayermode-com/wrangler.jsonc
+{
+  "name": "aplayermode-com",
+  "main": "src/index.js",
+  "compatibility_date": "2026-08-26",
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [{ "pattern": "aplayermode.com/*", "zone_name": "aplayermode.com" }],
+  "observability": { "enabled": true }
+}
