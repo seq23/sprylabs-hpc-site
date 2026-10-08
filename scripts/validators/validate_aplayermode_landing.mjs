@@ -478,10 +478,10 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
   const roleNames = [...roles.matchAll(/<li>\s*<b>([^<:]+):<\/b>/g)].map((m) => m[1].trim());
   const ROLE_ORDER = ['Executive Coach', 'Executive Assistant', 'Chief of Staff', 'Accountability Partner', 'Cognitive Behavioral Mindset Coach'];
   if (JSON.stringify(roleNames) !== JSON.stringify(ROLE_ORDER)) fail(`hero roles ${JSON.stringify(roleNames)}; expected ${JSON.stringify(ROLE_ORDER)}`);
-  const chips = (roles.match(/<ul\b[^>]*\bdata-role-chips\b[^>]*>([\s\S]*?)<\/ul>/i) || [])[1] || '';
+  const chips = (hero.match(/<ul\b[^>]*\bdata-role-chips\b[^>]*>([\s\S]*?)<\/ul>/i) || [])[1] || '';
   const chipNames = [...chips.matchAll(/<li\b[^>]*>([^<]+)<\/li>/g)].map((m) => m[1].trim());
   if (JSON.stringify(chipNames) !== JSON.stringify(ROLE_ORDER)) fail(`hero role chips ([data-role-chips]) ${JSON.stringify(chipNames)}; expected ${JSON.stringify(ROLE_ORDER)}`);
-  if (chips && roles.indexOf('data-role-chips') > roles.indexOf('data-jobs-list')) fail('hero role chips must come before the full role descriptions');
+  if (chips && hero.indexOf('data-role-chips') > hero.indexOf('data-roles')) fail('hero role chips must come before the full role descriptions');
   for (const choice of ['app', 'bhpc']) {
     const card = (hero.match(new RegExp(`<a\\b[^>]*data-choice="${choice}"[^>]*>([\\s\\S]*?)<\\/a>`, 'i')) || [])[1] || '';
     const img = card.match(/<img\b[^>]*>/i);
@@ -524,12 +524,22 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
 {
   const webApp = links?.beta?.webApp;
   const hero = (html.match(/<section\b[^>]*\bdata-hero\b[^>]*>([\s\S]*?)<\/section>/i) || [])[1] || '';
-  // Directly under the h1: the sub-line, then the two buy buttons, before the roles and the chooser.
+  // Hero order at 375px (owner, 8 Oct 2026): h1, the cognitive-load lead (a real
+  // sentence, so it is also the page's direct answer), the five role chips, the
+  // "$20 ChatGPT" sub-line, the two buy buttons, then the full role descriptions.
   const afterH1 = hero.slice(hero.search(/<\/h1>/i) + 5);
+  const LEAD_BIG = 'reduce your cognitive load.';
+  const LEAD = 'reduce your cognitive load. stop holding every project, role, rule and reset in your head. five roles carry it with you:';
+  const lead = afterH1.match(/^\s*<p\b[^>]*\bdata-hero-lead\b[^>]*>(\s*<strong\b[^>]*>([\s\S]*?)<\/strong>[\s\S]*?)<\/p>/i);
+  if (!lead || norm(stripTags(lead[2])) !== LEAD_BIG || norm(stripTags(lead[1])) !== LEAD) fail(`the element directly under the h1 must be [data-hero-lead]: a bold "Reduce your cognitive load." then "Stop holding every project, role, rule and reset in your head. Five roles carry it with you:"`);
   const SUB = 'your $20 chatgpt gives advice. this makes tomorrow actually happen.';
-  const sub = afterH1.match(/^\s*<p\b[^>]*\bdata-hero-sub\b[^>]*>([\s\S]*?)<\/p>/i);
-  if (!sub || norm(stripTags(sub[1])) !== SUB) fail('the element directly under the h1 must be [data-hero-sub] "Your $20 ChatGPT gives advice. This makes tomorrow actually happen."');
-  const ctas = afterH1.match(/^\s*<p\b[^>]*\bdata-hero-sub\b[^>]*>[\s\S]*?<\/p>\s*<div\b[^>]*\bdata-hero-ctas\b[^>]*>([\s\S]*?)<\/div>/i);
+  const seq = afterH1.match(/^\s*<p\b[^>]*\bdata-hero-lead\b[^>]*>[\s\S]*?<\/p>\s*<ul\b[^>]*\bdata-role-chips\b[^>]*>[\s\S]*?<\/ul>\s*<p\b[^>]*\bdata-hero-sub\b[^>]*>([\s\S]*?)<\/p>\s*<div\b[^>]*\bdata-hero-ctas\b[^>]*>([\s\S]*?)<\/div>\s*<div\b[^>]*\bdata-roles\b/i);
+  if (!seq || norm(stripTags(seq[1])) !== SUB) fail('hero order must be: h1, [data-hero-lead], [data-role-chips], [data-hero-sub] "Your $20 ChatGPT gives advice. This makes tomorrow actually happen.", [data-hero-ctas], then [data-roles]');
+  const ctas = seq ? [null, seq[2]] : null;
+  const desc = (html.match(/<meta\b[^>]*name="description"[^>]*content="([^"]*)"/i) || [])[1] || '';
+  if (!/reduce cognitive load/i.test(desc)) fail('the meta description must say "reduce cognitive load"');
+  const og = (html.match(/<meta\b[^>]*property="og:description"[^>]*content="([^"]*)"/i) || [])[1];
+  if (og !== undefined && !/reduce cognitive load/i.test(og)) fail('og:description must say "reduce cognitive load"');
   if (!ctas) fail('the two hero buy buttons ([data-hero-ctas]) must follow the sub-line directly');
   else {
     const btn = (k) => ctas[1].match(new RegExp(`<a\\b[^>]*\\bdata-hero-cta="${k}"[^>]*>([\\s\\S]*?)<\\/a>`, 'i'));
@@ -580,7 +590,7 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
     const outside = stripTags(html.replace(fold[0], ' '));
     const count = (re) => (outside.match(re) || []).length;
     for (const r of ['Executive Coach', 'Executive Assistant', 'Chief of Staff', 'Accountability Partner', 'Cognitive Behavioral Mindset Coach']) {
-      const heroOnly = stripTags(html.replace(fold[0], ' ').replace(/<div\b[^>]*\bdata-roles\b[^>]*>[\s\S]*?<\/div>/i, ' '));
+      const heroOnly = stripTags(html.replace(fold[0], ' ').replace(/<div\b[^>]*\bdata-roles\b[^>]*>[\s\S]*?<\/div>/i, ' ').replace(/<ul\b[^>]*\bdata-role-chips\b[^>]*>[\s\S]*?<\/ul>/i, ' '));
       const left = (heroOnly.match(new RegExp(`\\b${r}\\b(?! Track)`, 'g')) || []).length;
       if (left) fail(`role "${r}" appears ${left} time(s) outside the hero roles and the folded block; show the five roles once`);
     }

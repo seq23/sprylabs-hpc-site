@@ -329,11 +329,14 @@ table.compare { min-width: 0; }
 .llm-gap-grid .card p + p { padding-top: var(--apm-space-sm); border-top: 1px solid var(--apm-line); }
 .legal-h { font-size: 1rem; margin: var(--apm-space-lg) 0 var(--apm-space-xs); }
 
-/* Hero: sub-line and the two buy buttons sit directly under the h1 (first screen at 375px). */
-.hero-sub { font-size: var(--apm-size-heading); line-height: 1.35; color: var(--apm-ink); margin: 0 0 var(--apm-space-md); max-width: 32em; }
+/* Hero (375px first screen): h1, cognitive-load lead, role chips, sub-line, the two buy buttons. */
+.hero-lead { margin: 0 0 var(--apm-space-sm); max-width: 36em; color: var(--apm-ink-muted); }
+.hero-lead-big { display: block; font-family: var(--apm-font-display); font-size: 26px; line-height: 1.2; font-weight: 600; letter-spacing: -0.01em; color: var(--apm-ink); margin-bottom: var(--apm-space-xxs); }
+.hero-sub { font-size: 18px; line-height: 1.35; font-weight: 600; color: var(--apm-ink); margin: 0 0 var(--apm-space-sm); max-width: 32em; }
 .hero-ctas { margin: 0 0 var(--apm-space-xl); }
-.role-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 0 0 var(--apm-space-sm); list-style: none; }
-.role-chips li { margin: 0; padding: 6px 12px; border: 1px solid var(--apm-line); border-radius: var(--apm-radius-pill); background: var(--apm-surface); font-size: var(--apm-size-small); font-weight: 700; line-height: 18px; }
+.hero-ctas .btn { min-height: 48px; }
+.role-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 0 0 var(--apm-space-md); list-style: none; }
+.role-chips li { margin: 0; padding: 5px 11px; border: 1px solid var(--apm-line); border-radius: var(--apm-radius-pill); background: var(--apm-surface); font-size: var(--apm-size-small); font-weight: 700; line-height: 18px; }
 .roles-list { font-size: var(--apm-size-small); color: var(--apm-ink-muted); }
 .choice-col { display: flex; flex-direction: column; gap: var(--apm-space-xs); min-width: 0; }
 .choice-col .choice { flex: 1; }
