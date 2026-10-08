@@ -347,7 +347,7 @@ const FAQ_QS = ["what's the difference between the app and the digital product?"
 const faq = html.match(/<section\b[^>]*\bid="faq"[^>]*>([\s\S]*?)<\/section>/i);
 const faqQs = faq ? [...faq[1].matchAll(/<summary\b[^>]*>([\s\S]*?)<\/summary>/gi)].map((m) => norm(stripTags(m[1]))) : [];
 for (const q of FAQ_QS) if (!faqQs.includes(q)) fail(`FAQ (#faq) is missing "${q}"`);
-const ORDER = ['data-hero', 'id="problem"', 'id="llm-gap"', 'id="jobs"', 'id="personas"', 'data-bhpc-section', 'id="app"', 'id="plans"', 'id="get-the-app"', 'id="compare"', 'id="faq"'];
+const ORDER = ['data-hero', 'id="problem"', 'id="llm-gap"', 'id="jobs"', 'id="personas"', 'data-bhpc-section', 'id="app"', 'id="plans"', 'id="get-the-app"', 'id="cost"', 'id="compare"', 'id="faq"'];
 const at = ORDER.map((m) => html.indexOf(m));
 ORDER.forEach((m, i) => { if (at[i] === -1) fail(`section marker ${m} is missing`); else if (i && at[i] < at[i - 1]) fail(`section ${m} is out of the approved order (must follow ${ORDER[i - 1]})`); });
 
@@ -466,6 +466,20 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
   if ((html.match(/<h2>LLMs Give Advice/g) || []).length !== 1) fail('"LLMs Give Advice..." must be the h2 of exactly one section (#llm-gap)');
   for (const w of ['$20', 'Founders, executives, working parents, operators', 'Continuity, daily sequencing and accountability']) if (!gap.includes(w)) fail(`section [data-llm-gap] is missing "${w}"`);
   if ((gap.match(/<b>A chat on its own:<\/b>/g) || []).length < 3 || (gap.match(/<b>With the system:<\/b>/g) || []).length < 3) fail('section [data-llm-gap] must contrast a chat on its own with the system in at least 3 cards');
+  const DISCLAIMER = [
+    'This product is not affiliated with, endorsed by, or sponsored by Showtime, CBS, Billions, or any television network or media property. Any references to executive behavior or coaching styles are descriptive only.',
+    'This product does not provide medical, psychological, legal, financial, or therapeutic advice. It is not a substitute for licensed professional services. Users experiencing clinical depression, ADHD, anxiety, or other conditions should seek licensed professional care.',
+    'Any comparison to professional coaching fees or high-end executive support is illustrative only and does not represent guaranteed outcomes, service parity, or financial returns.',
+    'By purchasing, you acknowledge that this is a self-managed digital organizational framework and that all execution and outcomes remain your responsibility.',
+  ];
+  const footer = (html.match(/<footer\b[^>]*>([\s\S]*?)<\/footer>/i) || [])[1] || '';
+  const legal = (footer.match(/<div\b[^>]*\bdata-legal-disclaimer\b[^>]*>([\s\S]*?)<\/div>/i) || [])[1] || '';
+  if (!/<h2\b[^>]*>Legal Disclaimer<\/h2>/.test(legal)) fail('footer needs a [data-legal-disclaimer] block headed "Legal Disclaimer"');
+  for (const d of DISCLAIMER) if (!legal.includes(`<p>${d}</p>`)) fail(`legal disclaimer paragraph missing or altered: "${d.slice(0, 60)}..."`);
+  if ((html.match(/not affiliated with, endorsed by, or sponsored by Showtime/g) || []).length !== 1) fail('exactly one legal disclaimer on the page');
+  const cost = (html.match(/<section\b[^>]*\bdata-cost-tradeoff\b[^>]*>([\s\S]*?)<\/section>/i) || [])[1] || '';
+  for (const k of ['bhpc.onetime', 'chief_of_staff.monthly', 'founding100.monthly', 'introductory.monthly']) if (!cost.includes(`data-price="${k}"`)) fail(`cost tradeoff must show the ${k} price from the price file`);
+  if (!/hundreds to thousands of dollars per session/.test(cost) || !/illustrative only/.test(cost)) fail('cost tradeoff must keep coaching costs general and illustrative');
   const visible = stripTags(html);
   for (const line of ['self-directed alternative to BetterUp, Hone, and Culture Amp', 'reduces cognitive load by doing the planning, sequencing, strategic triage, and next-step selection with you', 'Discover your own A-player mode by inspecting the operating system before you buy.']) {
     if (!visible.includes(line)) fail(`owner AEO copy missing: "${line}"`);
