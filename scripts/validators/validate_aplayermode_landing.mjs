@@ -42,7 +42,15 @@
  *      me?" table compares the two products on the five approved rows, and the
  *      FAQ answers the four approved questions.
  *   7. "free trial" is allowed exactly once: the FAQ question "Is there a free
- *      trial?" whose answer starts with "No". Anywhere else it fails.
+ *      trial?" whose answer starts with "No" and then states the real intro
+ *      offer (Founding 100 and introductory prices). Anywhere else it fails.
+ *   9. A page a buyer cannot act on (persona review, 8 Oct 2026): a CTA on every
+ *      plan card and two buy buttons with prices directly under the h1, all to
+ *      the live web app / Gumroad; Terms and Privacy set; cancel and refund FAQ
+ *      entries; a day-1 promise on each hero card; the five roles, the "LLMs
+ *      Give Advice" h2 and the BetterUp line each shown once outside the folded
+ *      "Full product description"; and no copy that claims the digital product
+ *      enforces anything on its own.
  *   8. A page that drifts from the app's design system. The app's theme
  *      (seq23/aplayer-mode apps/mobile/src/theme/tokens.ts) is pinned in
  *      config/aplayermode_theme_tokens.json with a source note. aplayermode.css
@@ -80,7 +88,7 @@ const html = read(PAGE);
 const decode = (s) => s
   .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
   .replace(/&quot;/g, '"').replace(/&#39;|&#x27;|&apos;/g, "'")
-  .replace(/&rarr;/g, '→').replace(/&mdash;/g, '—').replace(/&ndash;/g, '–').replace(/&hellip;/g, '…');
+  .replace(/&rsquo;/g, '’').replace(/&lsquo;/g, '‘').replace(/&ldquo;/g, '“').replace(/&rdquo;/g, '”').replace(/&rarr;/g, '→').replace(/&mdash;/g, '—').replace(/&ndash;/g, '–').replace(/&hellip;/g, '…');
 const stripTags = (s) => decode(s
   .replace(/<!--[\s\S]*?-->/g, ' ')
   .replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, ' ')
@@ -90,6 +98,8 @@ const norm = (s) => decode(s).toLowerCase()
   .replace(/[‘’‛]/g, "'").replace(/[“”]/g, '"')
   .replace(/[–—]/g, '-').replace(/…/g, '...')
   .replace(/\s+/g, ' ').trim();
+// Visible text of an inline run (a button label with a nested price span): tags dropped, not spaced.
+const flat = (s) => norm(s.replace(/<[^>]+>/g, ''));
 const usd = (cents) => `$${(cents / 100).toFixed(2)}`;
 
 // ---------------------------------------------------------------- 1. prices
@@ -159,6 +169,7 @@ for (const [, inner] of trialBlocks) {
   if (!q || norm(stripTags(q[1])) !== 'is there a free trial?') fail('the free-trial FAQ entry must ask exactly "Is there a free trial?"');
   if (!/^no\b/.test(answer)) fail(`the free-trial FAQ answer must start with "No", found "${answer.slice(0, 40)}"`);
   if (/free\s+trial/i.test(answer)) fail('the free-trial FAQ answer must not say "free trial" itself');
+  for (const k of ['founding100.monthly', 'introductory.monthly', 'introductory.then']) if (!inner.includes(`data-price="${k}"`)) fail(`the free-trial FAQ answer must state the real intro offer (${k}), not a flat "No"`);
 }
 const FORBIDDEN = [[/billionaire\s+mindset/i, '"Billionaire Mindset" (use "Billionaire High Performance Coach Track")'], [/free\s+trial/i, '"free trial" (there is none; only the FAQ "Is there a free trial?" answered "No" may say it)']];
 for (const file of [PAGE, ...SCRIPTS]) {
@@ -181,9 +192,12 @@ for (const r of [...ROUTES, 'gumroad']) {
   if (v !== '' && !isHttps(v)) fail(`APM_LINKS.${r} = "${v}" is neither '' nor an https:// URL`);
 }
 if (!isHttps(links?.gumroad || '')) fail('APM_LINKS.gumroad must be set to the live Gumroad listing');
+// Terms and Privacy exist (seq23/aplayer-mode apps/mobile/public/{terms,privacy}); the footer must show them.
+for (const r of ['legal.terms', 'legal.privacy', 'beta.webApp']) if (!isHttps(lookup(r) || '')) fail(`APM_LINKS.${r} must be set to its live https:// page`);
 
 const ids = new Set([...html.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]));
-const EXTERNAL_ALLOW = new Set([links?.gumroad].filter(Boolean));
+// The web app is where a plan is bought (setup, then the plan choice and card checkout).
+const EXTERNAL_ALLOW = new Set([links?.gumroad, links?.beta?.webApp].filter(Boolean));
 // Inline script bodies are code, not links (the site build injects the Clarity
 // loader, whose code builds a URL string), and <link rel=canonical|alternate>
 // is metadata the site build stamps on every page, not a link a reader follows.
@@ -204,7 +218,7 @@ const fileExists = (p) => {
 for (const ref of refs) {
   if (ref === '' || ref === '#' || /^javascript:/i.test(ref)) { fail(`empty or dead link: href/src="${ref}"`); continue; }
   if (ref.startsWith('#')) { if (!ids.has(ref.slice(1))) fail(`in-page link ${ref} has no matching id`); continue; }
-  if (/^https?:\/\//i.test(ref)) { if (!EXTERNAL_ALLOW.has(ref)) fail(`external link ${ref} is not in the allow-list (APM_LINKS.gumroad)`); continue; }
+  if (/^https?:\/\//i.test(ref)) { if (!EXTERNAL_ALLOW.has(ref)) fail(`external link ${ref} is not in the allow-list (APM_LINKS.gumroad, APM_LINKS.beta.webApp)`); continue; }
   if (/^(mailto|tel):/i.test(ref)) continue;
   if (!ref.startsWith('/')) { fail(`relative link "${ref}" breaks when the page moves to aplayermode.com; use a root path`); continue; }
   if (!fileExists(ref)) fail(`internal link ${ref} resolves to no committed file`);
@@ -286,7 +300,23 @@ const firstSection = html.indexOf('data-bhpc-section');
 const appSection = html.indexOf('id="app"');
 if (!(firstSection > -1 && appSection > firstSection)) fail('the BHPC digital-product section must come before the app (#app)');
 if (bhpcMatch && !bhpcMatch[1].includes(links?.gumroad || '\u0000')) fail('the BHPC section does not link to the Gumroad product');
-const missing = uniquePoints.filter((p) => !bhpcText.includes(p));
+// Points reworded on purpose (persona review, 8 Oct 2026): the digital product
+// does not act on its own, so a claim that it does contradicts the "$20 ChatGPT"
+// argument. Each source point is replaced by an exact required wording and the
+// old wording must be gone. Only these points; every other point is still exact.
+const REWORDED = new Map([
+  ['situations this handles automatically', 'situations this has a protocol for'],
+]);
+for (const [from, to] of REWORDED) {
+  if (!uniquePoints.includes(from)) fail(`reworded point "${from}" is no longer on ${BHPC_SOURCE}; drop it from REWORDED`);
+  if (!bhpcText.includes(to)) fail(`reworded point "${to}" (replaces "${from}") missing from the BHPC section`);
+  if (bhpcText.includes(from)) fail(`"${from}" must be reworded to "${to}"`);
+}
+const HONEST = "BHPC gives your AI the rules. Open it each morning and it holds the line. Want something that reaches you first and doesn't wait to be asked? That's the app.";
+const honest = (html.match(/<p\b[^>]*\bdata-bhpc-honest\b[^>]*>([\s\S]*?)<\/p>/i) || [])[1];
+if (!honest || norm(stripTags(honest)) !== norm(HONEST)) fail(`the Built-In Execution Guardrails block needs [data-bhpc-honest] reading "${HONEST}"`);
+for (const claim of [/they are enforced through the system/i, /handles automatically/i]) if (claim.test(stripTags(html))) fail(`copy claims the digital product enforces on its own: ${claim}`);
+const missing = uniquePoints.filter((p) => !REWORDED.has(p) && !bhpcText.includes(p));
 for (const p of missing) fail(`BHPC selling point from ${BHPC_SOURCE} missing: "${p}"`);
 
 // ---------------------------------------------------------------- 6. newcomer structure
@@ -448,6 +478,10 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
   const roleNames = [...roles.matchAll(/<li>\s*<b>([^<:]+):<\/b>/g)].map((m) => m[1].trim());
   const ROLE_ORDER = ['Executive Coach', 'Executive Assistant', 'Chief of Staff', 'Accountability Partner', 'Cognitive Behavioral Mindset Coach'];
   if (JSON.stringify(roleNames) !== JSON.stringify(ROLE_ORDER)) fail(`hero roles ${JSON.stringify(roleNames)}; expected ${JSON.stringify(ROLE_ORDER)}`);
+  const chips = (roles.match(/<ul\b[^>]*\bdata-role-chips\b[^>]*>([\s\S]*?)<\/ul>/i) || [])[1] || '';
+  const chipNames = [...chips.matchAll(/<li\b[^>]*>([^<]+)<\/li>/g)].map((m) => m[1].trim());
+  if (JSON.stringify(chipNames) !== JSON.stringify(ROLE_ORDER)) fail(`hero role chips ([data-role-chips]) ${JSON.stringify(chipNames)}; expected ${JSON.stringify(ROLE_ORDER)}`);
+  if (chips && roles.indexOf('data-role-chips') > roles.indexOf('data-jobs-list')) fail('hero role chips must come before the full role descriptions');
   for (const choice of ['app', 'bhpc']) {
     const card = (hero.match(new RegExp(`<a\\b[^>]*data-choice="${choice}"[^>]*>([\\s\\S]*?)<\\/a>`, 'i')) || [])[1] || '';
     const img = card.match(/<img\b[^>]*>/i);
@@ -484,6 +518,85 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
   for (const line of ['self-directed alternative to BetterUp, Hone, and Culture Amp', 'reduces cognitive load by doing the planning, sequencing, strategic triage, and next-step selection with you', 'Discover your own A-player mode by inspecting the operating system before you buy.']) {
     if (!visible.includes(line)) fail(`owner AEO copy missing: "${line}"`);
   }
+}
+
+// ---------------------------------------------------------------- 9. a buyer can act (persona review, 8 Oct 2026)
+{
+  const webApp = links?.beta?.webApp;
+  const hero = (html.match(/<section\b[^>]*\bdata-hero\b[^>]*>([\s\S]*?)<\/section>/i) || [])[1] || '';
+  // Directly under the h1: the sub-line, then the two buy buttons, before the roles and the chooser.
+  const afterH1 = hero.slice(hero.search(/<\/h1>/i) + 5);
+  const SUB = 'your $20 chatgpt gives advice. this makes tomorrow actually happen.';
+  const sub = afterH1.match(/^\s*<p\b[^>]*\bdata-hero-sub\b[^>]*>([\s\S]*?)<\/p>/i);
+  if (!sub || norm(stripTags(sub[1])) !== SUB) fail('the element directly under the h1 must be [data-hero-sub] "Your $20 ChatGPT gives advice. This makes tomorrow actually happen."');
+  const ctas = afterH1.match(/^\s*<p\b[^>]*\bdata-hero-sub\b[^>]*>[\s\S]*?<\/p>\s*<div\b[^>]*\bdata-hero-ctas\b[^>]*>([\s\S]*?)<\/div>/i);
+  if (!ctas) fail('the two hero buy buttons ([data-hero-ctas]) must follow the sub-line directly');
+  else {
+    const btn = (k) => ctas[1].match(new RegExp(`<a\\b[^>]*\\bdata-hero-cta="${k}"[^>]*>([\\s\\S]*?)<\\/a>`, 'i'));
+    const HERO_CTAS = [['app', webApp, 'founding100.monthly', /^get the app · \$9\.99\/mo$/], ['bhpc', links?.gumroad, 'bhpc.onetime', /^get bhpc · \$49$/]];
+    for (const [k, url, price, label] of HERO_CTAS) {
+      const b = btn(k);
+      if (!b) { fail(`hero buy button [data-hero-cta="${k}"] is missing`); continue; }
+      if (!b[0].includes(`href="${url}"`)) fail(`hero buy button ${k} must go to ${url}`);
+      if (!b[1].includes(`data-price="${price}"`)) fail(`hero buy button ${k} must show its price (${price})`);
+      if (!label.test(flat(b[1]))) fail(`hero buy button ${k} reads "${stripTags(b[1]).trim()}"`);
+    }
+  }
+  const seeApp = hero.match(/<a\b[^>]*\bdata-choice-cta="app"[^>]*>([\s\S]*?)<\/a>/i);
+  if (!seeApp || !seeApp[0].includes(`href="${webApp}"`) || norm(stripTags(seeApp[1])) !== 'see the app →') fail(`hero "See the app →" ([data-choice-cta="app"]) must go to the web app ${webApp}`);
+  const DAY1 = { app: "in 3 minutes: tomorrow's plan is set, waiting for you each morning.", bhpc: 'in 20 minutes: your ai has your rules. say the trigger each morning.' };
+  for (const [k, text] of Object.entries(DAY1)) {
+    const card = (hero.match(new RegExp(`<a\\b[^>]*data-choice="${k}"[^>]*>([\\s\\S]*?)<\\/a>`, 'i')) || [])[1] || '';
+    const d = card.match(new RegExp(`<span\\b[^>]*\\bdata-day1="${k}"[^>]*>([\\s\\S]*?)<\\/span>`, 'i'));
+    if (!d || norm(stripTags(d[1])) !== text) fail(`hero card ${k} needs its day-1 promise [data-day1="${k}"]: "${text}"`);
+  }
+  // No web/iPhone user gets an Expo push; the agenda waits for them (aplayer-mode
+  // services/api/src/morningTrigger.ts sends push only). Never promise "arrives on its own".
+  if (/arrives on its own|sends your agenda on its own/i.test(stripTags(html))) fail('copy promises the agenda "arrives on its own"; only Android gets a morning push');
+  // Every plan card carries its CTA to the web app.
+  const PLAN_CTAS = ['start for $9.99/mo →', 'start executive suite →', 'start autopilot →'];
+  const tiers = [...html.matchAll(/<div\b[^>]*class="card tier"[^>]*>([\s\S]*?)\n      <\/div>/gi)].map((m) => m[1]);
+  if (tiers.length !== 3) fail(`expected 3 plan cards, found ${tiers.length}`);
+  tiers.forEach((t, i) => {
+    const c = [...t.matchAll(/<a\b([^>]*\bdata-plan-cta\b[^>]*)>([\s\S]*?)<\/a>/gi)];
+    if (c.length !== 1) { fail(`plan card ${i + 1} needs exactly one CTA ([data-plan-cta]), found ${c.length}`); return; }
+    if (!c[0][1].includes(`href="${webApp}"`)) fail(`plan card ${i + 1} CTA must go to the web app ${webApp}`);
+    if (flat(c[0][2]) !== PLAN_CTAS[i]) fail(`plan card ${i + 1} CTA reads "${stripTags(c[0][2]).trim()}", expected "${PLAN_CTAS[i]}"`);
+    if (i === 0 && !c[0][2].includes('data-price="founding100.monthly"')) fail('the Executive Roundtable CTA price must be the pinned founding100 price');
+  });
+  // Cancel and refund answers.
+  const faqBlock = (k) => (html.match(new RegExp(`<details\\b[^>]*\\bdata-faq="${k}"[^>]*>([\\s\\S]*?)<\\/details>`, 'i')) || [])[1] || '';
+  const cancel = norm(stripTags(faqBlock('cancel')));
+  if (!cancel.startsWith('can i cancel?') || !cancel.includes('cancel anytime from settings → manage subscription')) fail('FAQ needs "Can I cancel?" answered "Cancel anytime from Settings → Manage subscription"');
+  if (srcDir && !/app\.get\('\/v1\/billing\/web\/portal'/.test(fs.readFileSync(path.join(srcDir, 'services/api/src/index.ts'), 'utf8'))) fail('the cancel FAQ points at Manage subscription, but aplayer-mode has no GET /v1/billing/web/portal route');
+  const refund = norm(stripTags(faqBlock('refund')));
+  if (!refund.includes('no refunds as standard') || !refund.includes('case by case')) fail('FAQ needs the BHPC refund answer, stating only the Gumroad listing policy (no refunds as standard; case by case)');
+  // Shown once outside the folded "Full product description".
+  const fold = html.match(/<details\b([^>]*)\bdata-everything\b([^>]*)>\s*<summary>([\s\S]*?)<\/summary>[\s\S]*?<\/details>/i);
+  if (!fold) fail('the frozen /download copy must sit in a <details data-everything>');
+  else {
+    if (/\bopen\b/.test(fold[1] + fold[2])) fail('the "Full product description" <details> must be closed by default');
+    if (norm(stripTags(fold[3])) !== 'full product description') fail('the folded block must be labelled "Full product description"');
+    const outside = stripTags(html.replace(fold[0], ' '));
+    const count = (re) => (outside.match(re) || []).length;
+    for (const r of ['Executive Coach', 'Executive Assistant', 'Chief of Staff', 'Accountability Partner', 'Cognitive Behavioral Mindset Coach']) {
+      const heroOnly = stripTags(html.replace(fold[0], ' ').replace(/<div\b[^>]*\bdata-roles\b[^>]*>[\s\S]*?<\/div>/i, ' '));
+      const left = (heroOnly.match(new RegExp(`\\b${r}\\b(?! Track)`, 'g')) || []).length;
+      if (left) fail(`role "${r}" appears ${left} time(s) outside the hero roles and the folded block; show the five roles once`);
+    }
+    if (count(/LLMs Give Advice/g) !== 1) fail(`"LLMs Give Advice" appears ${count(/LLMs Give Advice/g)} times outside the folded block; once`);
+    if (count(/self-directed alternative to BetterUp, Hone, and Culture Amp/g) !== 1) fail('the BetterUp line must appear exactly once outside the folded block');
+    if (!/\$1,000–\$3,000 per session/.test(outside)) fail('"$1,000–$3,000 per session" must stay visible outside the folded block');
+  }
+  // "Without the System / With the Protocol" rows directly under the LLM-gap h2.
+  const gap = (html.match(/<section\b[^>]*\bdata-llm-gap\b[^>]*>([\s\S]*?)<\/section>/i) || [])[1] || '';
+  if (!/<\/h2>\s*<div\b[^>]*\bdata-diff-rows\b/.test(gap)) fail('the Without/With rows ([data-diff-rows]) must sit directly under the "LLMs Give Advice" h2');
+  const rows = [...gap.matchAll(/data-persona-row="([^"]+)"/g)].map((m) => m[1]);
+  if (JSON.stringify(rows) !== JSON.stringify(['founder', 'parent', 'operator'])) fail(`LLM-gap persona rows ${JSON.stringify(rows)}; expected founder, parent, operator`);
+  // Accuracy.
+  if (/books appointments/i.test(stripTags(html))) fail('Autopilot requests appointments by email; it does not "book appointments"');
+  const where = compare && (compare[1].match(/<tr>\s*<td>Where it runs<\/td>\s*<td>[\s\S]*?<\/td>\s*<td>([\s\S]*?)<\/td>/i) || [])[1];
+  if (!where || norm(stripTags(where)) !== 'web and android today; iphone soon') fail('compare "Where it runs" for the app must read "Web and Android today; iPhone soon"');
 }
 
 // ---------------------------------------------------------------- report

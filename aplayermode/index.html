@@ -49,9 +49,20 @@
 <section class="hero hero-choose" data-hero>
   <div class="wrap">
     <h1>Your five-person executive team. Two ways to get it.</h1>
-    <p class="lede">Five jobs that usually take five people, so your brain stops carrying everything alone. Pick how you want it.</p>
+    <p class="hero-sub" data-hero-sub>Your $20 ChatGPT gives advice. This makes tomorrow actually happen.</p>
+    <div class="btn-row hero-ctas" data-hero-ctas>
+      <a class="btn btn-primary" data-hero-cta="app" href="https://app.aplayermode.com" rel="noopener"><span>Get the app · <span data-price="founding100.monthly">$9.99</span>/mo</span></a>
+      <a class="btn btn-ghost" data-hero-cta="bhpc" href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach" rel="noopener"><span>Get BHPC · <span data-price="bhpc.onetime">$49</span></span></a>
+    </div>
     <div class="roles" data-roles>
       <p class="roles-lead"><b>The 5 roles this system installs:</b></p>
+      <ul class="role-chips" data-role-chips>
+        <li data-job>Executive Coach</li>
+        <li data-job>Executive Assistant</li>
+        <li data-job>Chief of Staff</li>
+        <li data-job>Accountability Partner</li>
+        <li data-job>Cognitive Behavioral Mindset Coach</li>
+      </ul>
       <ul class="roles-list" data-jobs-list>
         <li><b>Executive Coach:</b> performance framing, pressure management, clear directives under stress.</li>
         <li><b>Executive Assistant:</b> daily sequencing, task clarity, removes decision friction when starting work.</li>
@@ -59,25 +70,29 @@
         <li><b>Accountability Partner:</b> prevents drift between days, enforces continuity when motivation disappears.</li>
         <li><b>Cognitive Behavioral Mindset Coach:</b> interrupts negative thought spirals, reframes decisions so you return to execution quickly.</li>
       </ul>
-      <p class="small">It reduces cognitive load by doing the planning, sequencing, strategic triage, and next-step selection with you — instead of making your brain hold every project, role, rule, and reset alone.</p>
-      <p class="small">It is a self-directed alternative to BetterUp, Hone, and Culture Amp for operators who want structured ChatGPT accountability and decision support without another scheduled coaching program.</p>
     </div>
     <div class="chooser" data-chooser>
-      <a class="choice" data-choice="app" href="#app">
-        <img class="choice-img choice-img-app" src="/aplayermode/img/app-screen.webp" width="480" height="1039" alt="The A Player Mode app on a phone: the start screen reads &quot;Reduce your cognitive load.&quot; with a Start button" loading="eager" decoding="async">
-        <span class="choice-kicker">The app</span>
-        <span class="choice-title">Runs your day for you.</span>
-        <span class="choice-detail">3 plans, from <span data-price="founding100.monthly">$9.99</span>/mo (Founding 100).</span>
-        <span class="choice-cta">See the app &rarr;</span>
-      </a>
-      <a class="choice" data-choice="bhpc" href="#bhpc">
-        <img class="choice-img" src="/aplayermode/img/bhpc-book.webp" width="720" height="604" alt="The Billionaire High Performance Coach book on a desk next to a Spry Labs mug" loading="eager" decoding="async">
-        <span class="choice-kicker">The digital product</span>
-        <span class="choice-title">Install it into the AI you already use (ChatGPT, Claude, Gemini…).</span>
-        <span class="choice-detail">Billionaire High Performance Coach OS. <span data-price="bhpc.onetime">$49</span> once, on Gumroad.</span>
-        <span class="choice-detail">The system installs that structure into ChatGPT, Claude, Gemini, Perplexity, DeepSeek, or the LLM you already use.</span>
-        <span class="choice-cta">See the digital product &rarr;</span>
-      </a>
+      <div class="choice-col">
+        <a class="choice" data-choice="app" href="#app">
+          <img class="choice-img choice-img-app" src="/aplayermode/img/app-screen.webp" width="480" height="1039" alt="The A Player Mode app on a phone: the start screen reads &quot;Reduce your cognitive load.&quot; with a Start button" loading="eager" decoding="async">
+          <span class="choice-kicker">The app</span>
+          <span class="choice-title">Runs your day for you.</span>
+          <span class="choice-day1" data-day1="app">In 3 minutes: tomorrow&rsquo;s plan is set, waiting for you each morning.</span>
+          <span class="choice-detail">3 plans, from <span data-price="founding100.monthly">$9.99</span>/mo (Founding 100).</span>
+        </a>
+        <a class="choice-cta" data-choice-cta="app" href="https://app.aplayermode.com" rel="noopener">See the app &rarr;</a>
+      </div>
+      <div class="choice-col">
+        <a class="choice" data-choice="bhpc" href="#bhpc">
+          <img class="choice-img" src="/aplayermode/img/bhpc-book.webp" width="720" height="604" alt="The Billionaire High Performance Coach book on a desk next to a Spry Labs mug" loading="eager" decoding="async">
+          <span class="choice-kicker">The digital product</span>
+          <span class="choice-title">Install it into the AI you already use (ChatGPT, Claude, Gemini…).</span>
+          <span class="choice-day1" data-day1="bhpc">In 20 minutes: your AI has your rules. Say the trigger each morning.</span>
+          <span class="choice-detail">Billionaire High Performance Coach OS. <span data-price="bhpc.onetime">$49</span> once, on Gumroad.</span>
+          <span class="choice-detail">The system installs that structure into ChatGPT, Claude, Gemini, Perplexity, DeepSeek, or the LLM you already use.</span>
+        </a>
+        <a class="choice-cta" data-choice-cta="bhpc" href="#bhpc">See the digital product &rarr;</a>
+      </div>
     </div>
     <p class="small muted">Not sure which? <a href="#compare">Compare them side by side</a>.</p>
   </div>
@@ -95,6 +110,8 @@
     <p>Every project, role, promise and restart lives in your head. That weight is <b>cognitive load</b>.</p>
     <p>Most people plan, prioritise, follow up and recover from bad days alone. You are not lazy. You are overloaded.</p>
     <p><b>Both versions do one thing: take that load off you.</b></p>
+    <p>It reduces cognitive load by doing the planning, sequencing, strategic triage, and next-step selection with you — instead of making your brain hold every project, role, rule, and reset alone.</p>
+    <p>It is a self-directed alternative to BetterUp, Hone, and Culture Amp for operators who want structured ChatGPT accountability and decision support without another scheduled coaching program.</p>
   </div>
 </section>
 
@@ -103,45 +120,36 @@
   <div class="wrap">
     <p class="kicker">Why your $20/mo ChatGPT is not enough on its own</p>
     <h2>LLMs Give Advice. They Do Not Enforce Behavior Across Days.</h2>
-    <p class="lede">You run a company, a team or a household, often all three. You already pay $20 a month for ChatGPT, and it gives good advice. Then tomorrow arrives, the kids are late, the inbox is on fire, and the advice is still sitting in yesterday&rsquo;s chat.</p>
-    <div class="grid grid-2 llm-gap-grid">
-      <div class="card">
-        <h3>Yesterday</h3>
-        <p class="small"><b>A chat on its own:</b> each new conversation starts cold. You re-explain your week, your rules and where you left off, or you skip it.</p>
-        <p class="small"><b>With the system:</b> your priorities, your rules and your minimum day are set once and carried into every day.</p>
-      </div>
-      <div class="card">
-        <h3>The morning</h3>
-        <p class="small"><b>A chat on its own:</b> waits for you to open it and ask. On the mornings you need it most, you don&rsquo;t.</p>
-        <p class="small"><b>With the system:</b> the app sends your agenda on its own at the time you set: one priority, a short start, then the day. The digital product gives your AI a Morning Start Sequence, so &ldquo;what first?&rdquo; already has an answer.</p>
-      </div>
-      <div class="card">
-        <h3>When motivation drops</h3>
-        <p class="small"><b>A chat on its own:</b> agrees to whatever new plan you pitch at 9 p.m. Every bad day becomes a fresh start.</p>
-        <p class="small"><b>With the system:</b> locked rules hold the line: Never Miss Twice, No Catch-Up, Minimum Viable Day. A hard day shrinks; it does not reset.</p>
-      </div>
-      <div class="card">
-        <h3>The day after a miss</h3>
-        <p class="small"><b>A chat on its own:</b> offers a bigger, better plan, the one you will abandon by Thursday.</p>
-        <p class="small"><b>With the system:</b> a recovery day: the minimum day, no catch-up, no guilt, then back to the plan.</p>
-      </div>
+    <div class="diff-rows" data-diff-rows>
+      <div class="diff-head" aria-hidden="true"><span>Without the System</span><span>With the Protocol</span></div>
+      <article class="diff-row" data-persona-row="founder">
+        <h3>A founder with an investor follow-up</h3>
+        <p class="small"><b>A chat on its own:</b> you tell it Monday you&rsquo;ll send the investor follow-up by Thursday. It writes a good draft. Thursday, it doesn&rsquo;t remember, and neither do you.</p>
+        <p class="small"><b>With the system:</b> the app spots the promise in your connected Gmail or Outlook and puts it on your Radar with its due date: &ldquo;due tomorrow&rdquo;, then &ldquo;due today&rdquo;. On Executive Suite it drafts the reply for you to send.</p>
+      </article>
+      <article class="diff-row" data-persona-row="parent">
+        <h3>A parent with a forgotten school form</h3>
+        <p class="small"><b>A chat on its own:</b> it helped you plan a calmer school morning. Nobody mentioned the form due Friday, because a chat only knows what you type into it today.</p>
+        <p class="small"><b>With the system:</b> add the form once with its due date. On Executive Suite the app tracks it as a family obligation and keeps it on your Radar from a week out until it is done.</p>
+      </article>
+      <article class="diff-row" data-persona-row="operator">
+        <h3>An operator whose morning plan drifted</h3>
+        <p class="small"><b>A chat on its own:</b> at 2 p.m. you ask for a new plan. It happily writes one, and tomorrow starts from scratch again.</p>
+        <p class="small"><b>With the system:</b> the plan made this morning stands. The app tells you to do the smallest version of the next item and close the day; tomorrow is rebuilt automatically, with no catch-up. With Operator Discipline on, a change needs one line saying what changed.</p>
+      </article>
     </div>
-    <p>Founders, executives, working parents, operators: if your day has more inputs than hours, more advice is not the gap. <b>Continuity, daily sequencing and accountability are.</b> Keep the AI you already pay for. The digital product installs those operating rules into it; the app runs them for you every day.</p>
+    <p>You already pay $20 a month for ChatGPT, and it gives good advice. Founders, executives, working parents, operators: if your day has more inputs than hours, more advice is not the gap. <b>Continuity, daily sequencing and accountability are.</b> Keep the AI you already pay for. The digital product gives it the operating rules; the app runs them for you every day.</p>
   </div>
 </section>
 
 <!-- 3. THE 5 JOBS -->
 <section class="section" id="jobs">
   <div class="wrap">
-    <p class="kicker">The 5 jobs · what both versions do</p>
-    <h2>Five jobs, off your plate.</h2>
-    <p>The app and the digital product both do all five. The difference is only who runs them: the app runs them for you; the digital product gives them to the AI you already use.</p>
-    <div class="grid grid-5">
-      <div class="card"><span class="both">Both versions</span><h3 data-job>Executive Coach</h3><p class="small">Calm, clear direction under pressure. You stop talking yourself in circles.</p></div>
-      <div class="card"><span class="both">Both versions</span><h3 data-job>Executive Assistant</h3><p class="small">Sequences the day and tells you exactly where to start. You stop deciding what is first.</p></div>
-      <div class="card"><span class="both">Both versions</span><h3 data-job>Chief of Staff</h3><p class="small">Keeps projects, priorities and long-term goals lined up. You stop holding the whole map.</p></div>
-      <div class="card"><span class="both">Both versions</span><h3 data-job>Accountability Partner</h3><p class="small">Holds the line between days when motivation disappears. You stop restarting.</p></div>
-      <div class="card"><span class="both">Both versions</span><h3 data-job>Cognitive Behavioral Mindset Coach</h3><p class="small">Interrupts the spiral after a miss and gets you back to one small action. You stop the shame loop.</p></div>
+    <p class="kicker">The 5 roles · what both versions do</p>
+    <h2>Same five roles. The difference is who runs them.</h2>
+    <div class="grid grid-2">
+      <div class="card"><h3>The digital product</h3><p class="small">Gives the five roles to the AI you already use. You open it each morning, say the trigger, and it holds the line.</p></div>
+      <div class="card"><h3>The app</h3><p class="small">Runs the five roles for you: it builds the plan, has the day ready each morning, watches your Radar and, on higher plans, acts for you.</p></div>
     </div>
   </div>
 </section>
@@ -238,7 +246,7 @@
     <p class="trust">Secure checkout via Gumroad. Instant digital access after purchase.</p>
 
     <details class="everything" data-everything>
-      <summary>See everything included</summary>
+      <summary>Full product description</summary>
   <section class="everything-block">
     <div class="wrap">
       <p class="kicker">Self-installed LLM operating system · The digital product</p>
@@ -446,7 +454,7 @@
         <p class="muted">You don’t switch systems when your life changes. The system adapts—so you can keep moving without restarting.</p>
       </div>
       <div>
-        <h2>Situations This Handles Automatically</h2>
+        <h2>Situations This Has a Protocol For</h2>
         <ul class="arrow-list">
           <li>Wake up with resistance → Morning Start Sequence</li>
           <li>Missed yesterday → Recovery Day Protocol</li>
@@ -457,7 +465,7 @@
           <li>Loss of momentum → Re-entry Protocol</li>
           <li>Urge to rebuild your whole system → No-Redesign Stabilization</li>
         </ul>
-        <p class="muted">No guessing. No negotiating with yourself. No rebuilding systems.</p>
+        <p class="muted">Bring your AI the situation and it runs the protocol. No guessing. No negotiating with yourself. No rebuilding systems.</p>
       </div>
     </div>
   </section>
@@ -488,7 +496,7 @@
           <div class="card"><h3>Collapse Cycle Interruption</h3><p class="small">Stop one miss from becoming a full reset.</p></div>
           <div class="card"><h3>Minimum Viable Momentum</h3><p class="small">Keep the identity alive with the smallest executable action.</p></div>
         </div>
-        <p class="muted small" style="margin-top:10px">These are not suggestions. They are enforced through the system.</p>
+        <p class="muted small" style="margin-top:10px" data-bhpc-honest>BHPC gives your AI the rules. Open it each morning and it holds the line. Want something that reaches you first and doesn&rsquo;t wait to be asked? That&rsquo;s the app.</p>
       </div>
     </div>
   </section>
@@ -567,7 +575,7 @@
     <div class="grid grid-3 steps">
       <div class="card"><span class="step">1</span><h3>Answer easy-tap questions</h3><p class="small">About 3 minutes to a working plan. Stop any time; nothing is lost. No essays.</p></div>
       <div class="card"><span class="step">2</span><h3>It builds your Mind, Body, Spirit plan and Tracks</h3><p class="small">Your goals, your rules and your minimum day. You approve each piece.</p></div>
-      <div class="card"><span class="step">3</span><h3>It runs your day</h3><p class="small">Every morning your plan arrives on its own: one priority, a short start, then the day. Bad days shrink automatically. No catch-up, no guilt.</p></div>
+      <div class="card"><span class="step">3</span><h3>It runs your day</h3><p class="small">Every morning your plan is ready: one priority, a short start, then the day. On Android it arrives as a notification at the time you set; on the web it is waiting when you open the app. Bad days shrink automatically. No catch-up, no guilt.</p></div>
     </div>
     <h3 class="sub-h">What "it runs your day" looks like</h3>
     <div class="grid grid-3">
@@ -587,7 +595,7 @@
       </div>
       <div class="card">
         <h3>"What do I do first this morning?"</h3>
-        <p class="small muted">Your morning order arrives on its own, at the time you set. Max 5 physical steps, then the one task that matters.</p>
+        <p class="small muted">Your morning order is ready at the time you set. Max 5 physical steps, then the one task that matters.</p>
         <ol class="small">
           <li>Feet to the floor (10 seconds)</li>
           <li>1 minute of breathing</li>
@@ -685,14 +693,15 @@
         <div class="price price-annual"><span data-price="chief_of_staff.annual">$249.99</span> <small>/ year · 2 months free</small></div>
         <p class="small">It plans and coaches you; you do the last step.</p>
         <ul class="small">
-          <li data-jobs-list>All 5 jobs: Executive Coach, Executive Assistant, Chief of Staff, Accountability Partner, Cognitive Behavioral Mindset Coach</li>
-          <li>Your agenda arrives every morning, prioritised</li>
+          <li>All 5 roles</li>
+          <li>Your agenda is ready every morning, prioritised</li>
           <li>Goal → plan → daily steps</li>
           <li>Radar catches dropped promises and flags who you owe a reply</li>
           <li>Missed yesterday? Minimum day, no catch-up</li>
           <li>Coaching, one question at a time, plus all five coaching modes</li>
           <li>Connects 1 calendar and 1 inbox</li>
         </ul>
+        <a class="btn btn-primary plan-cta" data-plan-cta href="https://app.aplayermode.com" rel="noopener"><span>Start for <span data-price="founding100.monthly">$9.99</span>/mo &rarr;</span></a>
       </div>
       <div class="card tier">
         <h3 data-plan-name>Executive Suite</h3>
@@ -707,6 +716,7 @@
           <li>Flags subscriptions you're wasting money on</li>
           <li>Connects 1 calendar and 1 inbox</li>
         </ul>
+        <a class="btn btn-primary plan-cta" data-plan-cta href="https://app.aplayermode.com" rel="noopener">Start Executive Suite &rarr;</a>
       </div>
       <div class="card tier">
         <h3 data-plan-name>Autopilot</h3>
@@ -716,10 +726,11 @@
         <p class="small">Inside rules you set. It saves money; it never spends it.</p>
         <ul class="small">
           <li>Everything in Executive Suite</li>
-          <li>Standing rules: sends follow-ups, moves flexible meetings, books appointments, cancels unused subscriptions, all on its own within your rules</li>
+          <li>Standing rules: sends follow-ups, moves flexible meetings, requests appointments by email, cancels unused subscriptions, all on its own within your rules</li>
           <li>Multiple accounts: work and personal calendars and inboxes connected at once</li>
           <li>A daily done-list with undo</li>
         </ul>
+        <a class="btn btn-primary plan-cta" data-plan-cta href="https://app.aplayermode.com" rel="noopener">Start Autopilot &rarr;</a>
       </div>
     </div>
 
@@ -741,7 +752,7 @@
       <p class="small muted">After the first 100: Executive Roundtable is <span data-price="introductory.monthly">$9.99</span>/mo for your first 3 months, then <span data-price="introductory.then">$24.99</span>/mo. Intro pricing applies to Executive Roundtable monthly only.</p>
     </div>
 
-    <p class="small muted" style="margin-top:16px">Subscriptions are paid by card in the web app and the Android download (secure checkout by Stripe) and renew automatically at the price shown until you cancel in the app's settings. Buying a plan never grants autonomy: you switch on each permission yourself.</p>
+    <p class="small muted" style="margin-top:16px">Each button opens the web app: a 3-minute setup, then you pick your plan and pay by card. Subscriptions are paid by card in the web app and the Android download (secure checkout by Stripe) and renew automatically at the price shown until you cancel in the app's settings. Buying a plan never grants autonomy: you switch on each permission yourself.</p>
 
     <details class="more">
       <summary>What you no longer think about, plan by plan</summary>
@@ -836,7 +847,7 @@
       <table class="compare" data-compare-table>
         <tr><th>At a glance</th><th>Digital product</th><th>App</th></tr>
         <tr><td>What it is</td><td>Billionaire High Performance Coach OS: a manual and prompt pack</td><td>A Player Mode: an app for your phone</td></tr>
-        <tr><td>Where it runs</td><td>Inside the AI you already use (ChatGPT, Claude, Gemini…)</td><td>On its own, on iPhone, Android and the web</td></tr>
+        <tr><td>Where it runs</td><td>Inside the AI you already use (ChatGPT, Claude, Gemini…)</td><td>Web and Android today; iPhone soon</td></tr>
         <tr><td>Who does the work</td><td>You run it: your AI tells you what to do each day</td><td>The app runs it: the plan arrives, and on higher plans it acts for you</td></tr>
         <tr><td>Price model</td><td>One time: <span data-price="bhpc.onetime">$49</span></td><td>Subscription: 3 plans, from <span data-price="founding100.monthly">$9.99</span>/mo (Founding 100)</td></tr>
         <tr><td>Best for</td><td>People who already live in an AI chat and like to drive</td><td>People who want the day handled for them</td></tr>
@@ -853,9 +864,11 @@
     <h2>Questions</h2>
     <details class="faq" data-faq="difference"><summary>What's the difference between the app and the digital product?</summary><p>Both do the same five jobs. The digital product is a one-time download you install into the AI you already use, and you run it. The app is a subscription that runs your day for you.</p></details>
     <details class="faq" data-faq="both"><summary>Can I use both?</summary><p>Yes. Many people use the digital product in their AI chat and the app on their phone. The app's Billionaire High Performance Coach Track carries the same rules.</p></details>
-    <details class="faq" data-faq="free-trial"><summary>Is there a free trial?</summary><p>No. The digital product is a one-time purchase, and the app's first 100 members get Executive Roundtable at <span data-price="founding100.monthly">$9.99</span>/mo instead.</p></details>
+    <details class="faq" data-faq="free-trial"><summary>Is there a free trial?</summary><p>No, but the app has an intro price. The first 100 members get Executive Roundtable at <span data-price="founding100.monthly">$9.99</span>/mo for as long as they stay subscribed. After that, Executive Roundtable is <span data-price="introductory.monthly">$9.99</span>/mo for your first 3 months, then <span data-price="introductory.then">$24.99</span>/mo. The digital product is a one-time purchase.</p></details>
+    <details class="faq" data-faq="cancel"><summary>Can I cancel?</summary><p>Yes. Cancel anytime from Settings &rarr; Manage subscription in the app. Cancelling stops the next renewal; you keep access until the end of the period you paid for.</p></details>
+    <details class="faq" data-faq="refund"><summary>Can I get a refund on the digital product?</summary><p>The Gumroad listing&rsquo;s policy: no refunds as standard; because it is a digital product, refunds are handled case by case. Contact us through Gumroad if you have an issue.</p></details>
     <details class="faq" data-faq="stores"><summary>When is the app in the stores?</summary><p>Coming soon: the App Store and Google Play versions are awaiting store approval, and the store buttons above switch on the day they are approved. You do not have to wait: the web app and the Android download are live now, with card payments.</p></details>
-    <details class="faq" data-faq="alternatives"><summary>Is this an alternative to BetterUp, Hone or Culture Amp?</summary><p>Yes. It is a self-directed alternative to BetterUp, Hone, and Culture Amp for operators who want structured ChatGPT accountability and decision support without another scheduled coaching program.</p></details>
+    <details class="faq" data-faq="alternatives"><summary>Is this an alternative to BetterUp, Hone or Culture Amp?</summary><p>Yes. Those sell scheduled coaching programs, usually bought by employers. Here there are no sessions to book: your AI, or the app, holds the structure every day.</p></details>
     <details class="faq" data-faq="need-app"><summary>Do I need the app to use the digital product?</summary><p>No. The digital product runs inside your AI chat after setup. No other app needed.</p></details>
   </div>
 </section>

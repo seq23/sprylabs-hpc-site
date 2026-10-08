@@ -283,9 +283,13 @@ table.compare { min-width: 0; }
 @media (max-width: 559px) {
   .topbar .brand { display: none; }
   .topbar .wrap { justify-content: center; }
-  .toc { gap: 0; }
-  .toc a { padding: var(--apm-space-xs) 10px; }
+  .topbar .wrap { padding: 0 var(--apm-space-xs); }
+  .toc { gap: 0; font-size: 13px; overflow-x: visible; }
+  .toc a { padding: var(--apm-space-xs) 6px; }
   .btn-row .btn { width: 100%; }
+  .hero { padding-top: var(--apm-space-lg); }
+  .hero h1 { font-size: 36px; }
+  .hero-ctas .btn { padding: 12px 20px; }
 }
 @media (min-width: 640px) {
   .chooser { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -324,3 +328,31 @@ table.compare { min-width: 0; }
 .llm-gap-grid { margin: var(--apm-space-lg) 0 var(--apm-space-xl); }
 .llm-gap-grid .card p + p { padding-top: var(--apm-space-sm); border-top: 1px solid var(--apm-line); }
 .legal-h { font-size: 1rem; margin: var(--apm-space-lg) 0 var(--apm-space-xs); }
+
+/* Hero: sub-line and the two buy buttons sit directly under the h1 (first screen at 375px). */
+.hero-sub { font-size: var(--apm-size-heading); line-height: 1.35; color: var(--apm-ink); margin: 0 0 var(--apm-space-md); max-width: 32em; }
+.hero-ctas { margin: 0 0 var(--apm-space-xl); }
+.role-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 0 0 var(--apm-space-sm); list-style: none; }
+.role-chips li { margin: 0; padding: 6px 12px; border: 1px solid var(--apm-line); border-radius: var(--apm-radius-pill); background: var(--apm-surface); font-size: var(--apm-size-small); font-weight: 700; line-height: 18px; }
+.roles-list { font-size: var(--apm-size-small); color: var(--apm-ink-muted); }
+.choice-col { display: flex; flex-direction: column; gap: var(--apm-space-xs); min-width: 0; }
+.choice-col .choice { flex: 1; }
+a.choice-cta { text-decoration: none; }
+.choice-day1 { font-weight: 700; font-size: 15px; line-height: 20px; color: var(--apm-ink); }
+.plan-cta { margin-top: var(--apm-space-md); width: 100%; }
+.tier { display: flex; flex-direction: column; }
+.tier .plan-cta { margin-top: auto; }
+.tier ul { margin-bottom: var(--apm-space-md); }
+/* "Without the System / With the Protocol": three persona rows under the LLM-gap h2. */
+.diff-rows { display: grid; gap: var(--apm-space-sm); margin: var(--apm-space-lg) 0 var(--apm-space-xl); }
+.diff-head { display: none; grid-template-columns: 1fr 1fr; gap: var(--apm-space-md); padding: 0 var(--apm-space-lg); font-size: var(--apm-size-label); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--apm-accent); }
+.diff-row { padding: var(--apm-space-lg); border: 1px solid var(--apm-line); border-radius: var(--apm-radius-xl); background: var(--apm-surface); }
+.diff-row h3 { font-size: var(--apm-size-card-title); }
+.diff-row p { margin: 0; }
+.diff-row p + p { margin-top: var(--apm-space-sm); padding-top: var(--apm-space-sm); border-top: 1px solid var(--apm-line); }
+@media (min-width: 760px) {
+  .diff-head { display: grid; }
+  .diff-row { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--apm-space-md); }
+  .diff-row h3 { grid-column: 1 / -1; }
+  .diff-row p + p { margin-top: 0; padding-top: 0; border-top: 0; padding-left: var(--apm-space-md); border-left: 1px solid var(--apm-line); }
+}

@@ -21,8 +21,8 @@ window.APM_LINKS = Object.freeze({
     googlePlay: '',    // Google Play listing (awaiting store approval).
   }),
   legal: Object.freeze({
-    terms: '',         // Terms of Use page.
-    privacy: '',       // Privacy Policy page.
+    terms: 'https://app.aplayermode.com/terms',     // Terms of Service (static page in seq23/aplayer-mode apps/mobile/public/terms).
+    privacy: 'https://app.aplayermode.com/privacy', // Privacy Policy (static page in seq23/aplayer-mode apps/mobile/public/privacy).
   }),
   // The Billionaire High Performance Coach digital product (Gumroad checkout),
   // the same listing download.html links to.

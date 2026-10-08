@@ -29,7 +29,7 @@
 
   var footer = document.querySelector('[data-legal-links]');
   if (footer) {
-    [['terms', 'Terms of Use'], ['privacy', 'Privacy Policy']].forEach(function (pair) {
+    [['terms', 'Terms of Service'], ['privacy', 'Privacy Policy']].forEach(function (pair) {
       var url = links.legal && links.legal[pair[0]];
       if (!isLive(url)) return;
       var a = document.createElement('a');
