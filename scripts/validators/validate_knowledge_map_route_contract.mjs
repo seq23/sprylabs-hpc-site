@@ -29,5 +29,11 @@ const publicJson=JSON.parse(fs.readFileSync(path.join(root,'knowledge-map/knowle
 const html=fs.readFileSync(path.join(root,'knowledge-map/index.html'),'utf8');
 if(/Upcoming dated drafts|Draft runway|>Draft</.test(html)) fail.push('public knowledge-map page exposes operational draft/runway data');
 if(!/Published coverage snapshot/.test(html)) fail.push('public knowledge-map page lacks published coverage snapshot');
+// Build clock: the generator must date its output from scripts/lib/build_clock.cjs.
+// A bare `new Date()` / `Date.now()` stamps the wall clock, so two clones of one
+// commit built either side of a UTC midnight differ (clean-rebuild-parity red).
+const gen=fs.readFileSync(path.join(root,'scripts/build_knowledge_map.js'),'utf8').replace(/\/\/.*$/gm,'');
+if(!/require\(["']\.\/lib\/build_clock\.cjs["']\)/.test(gen)) fail.push('scripts/build_knowledge_map.js does not use scripts/lib/build_clock.cjs');
+if(/new Date\(\s*\)|Date\.now\(/.test(gen)) fail.push('scripts/build_knowledge_map.js reads the wall clock (new Date() / Date.now()); use buildDate()/buildTimestamp()');
 if(fail.length){console.error('knowledge-map-route-contract FAIL\n'+fail.map(x=>'- '+x).join('\n'));process.exit(1);}
 console.log('knowledge-map-route-contract PASS');
