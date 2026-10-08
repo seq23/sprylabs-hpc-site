@@ -440,6 +440,33 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
   if (stale.test(visibleText)) fail(`stale pre-launch copy matches ${stale}`);
 }
 
+// ---------------------------------------------------------------- hero roles, pictures, AEO copy (owner, 8 Oct 2026)
+{
+  const hero = (html.match(/<section\b[^>]*\bdata-hero\b[^>]*>([\s\S]*?)<\/section>/i) || [])[1] || '';
+  const roles = (hero.match(/<div\b[^>]*\bdata-roles\b[^>]*>([\s\S]*?)<\/div>/i) || [])[1] || '';
+  if (!/The 5 roles this system installs/.test(roles)) fail('hero [data-roles] must lead with "The 5 roles this system installs"');
+  const roleNames = [...roles.matchAll(/<li>\s*<b>([^<:]+):<\/b>/g)].map((m) => m[1].trim());
+  const ROLE_ORDER = ['Executive Coach', 'Executive Assistant', 'Chief of Staff', 'Accountability Partner', 'Cognitive Behavioral Mindset Coach'];
+  if (JSON.stringify(roleNames) !== JSON.stringify(ROLE_ORDER)) fail(`hero roles ${JSON.stringify(roleNames)}; expected ${JSON.stringify(ROLE_ORDER)}`);
+  for (const choice of ['app', 'bhpc']) {
+    const card = (hero.match(new RegExp(`<a\\b[^>]*data-choice="${choice}"[^>]*>([\\s\\S]*?)<\\/a>`, 'i')) || [])[1] || '';
+    const img = card.match(/<img\b[^>]*>/i);
+    if (!img) { fail(`hero chooser card "${choice}" has no picture`); continue; }
+    const src = (img[0].match(/src="([^"]+)"/) || [])[1] || '';
+    const alt = (img[0].match(/alt="([^"]*)"/) || [])[1] || '';
+    if (!/^\/aplayermode\/img\/[\w-]+\.webp$/.test(src) || !fs.existsSync(path.join(ROOT, src.slice(1)))) fail(`hero card "${choice}" picture ${src} must be a committed webp under /aplayermode/img/`);
+    else if (fs.statSync(path.join(ROOT, src.slice(1))).size > 150000) fail(`hero card "${choice}" picture ${src} is over 150 KB; optimise it`);
+    if (alt.trim().length < 15) fail(`hero card "${choice}" picture needs real alt text`);
+    if (!/\bwidth="\d+"/.test(img[0]) || !/\bheight="\d+"/.test(img[0])) fail(`hero card "${choice}" picture needs width/height (no layout shift)`);
+  }
+  const bhpcCard = (hero.match(/<a\b[^>]*data-choice="bhpc"[^>]*>([\s\S]*?)<\/a>/i) || [])[1] || '';
+  if (!bhpcCard.includes('installs that structure into ChatGPT, Claude, Gemini, Perplexity, DeepSeek, or the LLM you already use')) fail('the LLM install line belongs on the digital-product card');
+  const visible = stripTags(html);
+  for (const line of ['self-directed alternative to BetterUp, Hone, and Culture Amp', 'reduces cognitive load by doing the planning, sequencing, strategic triage, and next-step selection with you', 'Discover your own A-player mode by inspecting the operating system before you buy.']) {
+    if (!visible.includes(line)) fail(`owner AEO copy missing: "${line}"`);
+  }
+}
+
 // ---------------------------------------------------------------- report
 const summary = `${tokensChecked} theme tokens, ${priceEls.length} prices, ${refs.length} links, ${linkEls.length} download buttons, ${uniquePoints.length} BHPC selling points, ${h1s.length} h1, ${ORDER.length} sections in order, ${FAQ_QS.length} FAQ questions`;
 for (const n of notes) console.log(`${LABEL} note: ${n}`);
