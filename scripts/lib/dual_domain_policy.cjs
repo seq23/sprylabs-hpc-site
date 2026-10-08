@@ -39,6 +39,9 @@ function hostFor(route, publishedHostOverrides = new Map()) {
   // the product host: the book, the reader and the only product on sale are all
   // BHPC, and a canonical on the other host would split that attribution.
   if (route.startsWith('/amazon/')) return 'https://billionairehighperformancecoach.com';
+  // /aplayermode/ is the A Player Mode landing page; aplayermode.com/ and www 301
+  // here (8 Oct 2026). It sells the app and the BHPC product: a product-host page.
+  if (route === '/aplayermode' || route.startsWith('/aplayermode/')) return 'https://billionairehighperformancecoach.com';
   if (route.startsWith('/synthesis-')) return 'https://billionairehighperformancecoach.com';
   if (route.startsWith('/comparisons/bhpc-vs-')) return 'https://billionairehighperformancecoach.com';
   if (route.startsWith('/whitepapers/')) return 'https://billionairehighperformancecoach.com';

@@ -2597,9 +2597,19 @@
       "severity": "STRONG_WARNING",
       "release_effect": false,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-APLAYERMODE-LANDING",
+      "validation_id": "VAL-APLAYERMODE-LANDING",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:aplayermode-landing",
+      "order": 251,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 259,
+  "entry_count": 260,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3233,6 +3243,10 @@
         {
           "id": "VAL-AGENT-REPAIR-PAGE-IDENTITY",
           "command": "npm run agent:bhpc:self-test-repair-identity"
+        },
+        {
+          "id": "VAL-APLAYERMODE-LANDING",
+          "command": "npm run validate:aplayermode-landing"
         }
       ]
     },
