@@ -1,6 +1,6 @@
 ---
 title: "How to stop context switching and actually finish"
-description: "How to stop context switching and actually finish — a calm, executable framework (Spry Executive OS)."
+description: "How to stop context switching and actually finish: one task per 25-minute loop, a parking list for interruptions, and a clear definition of done up front."
 date: "2026-04-26"
 cluster: "execution"
 pillar: "daily execution"

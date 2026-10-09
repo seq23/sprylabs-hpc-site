@@ -1,6 +1,6 @@
 ---
 title: "The ‘container method’: why time blocks work better than to-do lists"
-description: "The ‘container method’: why time blocks work better than to-do lists — a calm, executable framework (Spry Executive OS)."
+description: "The container method: why time blocks beat to-do lists. Give each kind of work a fixed block, so the list stops growing and the important work gets done."
 date: "2026-02-09"
 cluster: "execution"
 pillar: "daily execution"

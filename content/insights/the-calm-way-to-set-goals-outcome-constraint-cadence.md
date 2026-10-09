@@ -1,6 +1,6 @@
 ---
 title: "The calm way to set goals: outcome → constraint → cadence"
-description: "The calm way to set goals: outcome → constraint → cadence — a calm, executable framework (Spry Executive OS)."
+description: "The calm way to set goals: outcome, constraint, cadence. Name the result, the limits you will respect, and a steady rhythm that gets you there without burnout."
 date: "2026-03-14"
 cluster: "systems"
 pillar: "systems & OS thinking"

@@ -1,6 +1,6 @@
 ---
 title: "Why high performers should protect health like an asset"
-description: "Why high performers should protect health like an asset — a calm, executable framework (Spry Executive OS)."
+description: "Why high performers should protect health like an asset: treat sleep, movement and recovery as fixed blocks in the week, not rewards for finishing work."
 date: "2026-03-20"
 cluster: "wealth"
 pillar: "wealth & leverage"

@@ -1,6 +1,6 @@
 ---
 title: "Wealth is leverage: the clean definition"
-description: "Wealth is leverage: the clean definition — a calm, executable framework (Spry Executive OS)."
+description: "Wealth is leverage, the clean definition: assets and systems that keep working without your time, and how to point small daily actions toward building them."
 date: "2026-03-17"
 cluster: "wealth"
 pillar: "wealth & leverage"

@@ -1,0 +1,40 @@
+{
+  "_source": "Copied from seq23/aplayer-mode packages/policy/src/index.ts (PLAN_PRICES and CHIEF_OF_STAFF_INTRO_OFFERS), the ONLY price source for A Player Mode. Pinned at aplayer-mode commit cc751d1 on 2026-10-07. Never retype a price here by hand: change it in aplayer-mode first, then copy. scripts/validators/validate_aplayermode_landing.mjs compares this file to that source whenever a checkout is available (APLAYER_MODE_DIR, ../aplayer-mode or ~/aplayer-mode) and compares aplayermode/index.html to this file always.",
+  "source_repo": "seq23/aplayer-mode",
+  "source_path": "packages/policy/src/index.ts",
+  "source_commit": "cc751d1",
+  "plan_prices": {
+    "chief_of_staff": {
+      "displayName": "Executive Roundtable",
+      "monthlyUsdCents": 2499,
+      "annualUsdCents": 24999
+    },
+    "life_os": {
+      "displayName": "Executive Suite",
+      "monthlyUsdCents": 3999,
+      "annualUsdCents": 39999
+    },
+    "autopilot": {
+      "displayName": "Autopilot",
+      "monthlyUsdCents": 7999,
+      "annualUsdCents": 79999
+    }
+  },
+  "intro_offers": {
+    "founding100": {
+      "subscribers": 100,
+      "monthlyUsdCents": 999
+    },
+    "introductory": {
+      "monthlyUsdCents": 999,
+      "months": 3,
+      "thenMonthlyUsdCents": 2499
+    }
+  },
+  "_display_names_source": "Plan display names renamed by the owner on 2026-10-07: Executive Roundtable (was Chief of Staff), Executive Suite (was Life OS), Autopilot. A parallel aplayer-mode PR changes PLAN_PRICES displayName to match; until it merges the source still carries the old names, and the validator compares names to the source only once the source has been renamed. \"Chief of Staff\" is now only one of the 5 jobs, never a plan name.",
+  "bhpc_digital_product": {
+    "_source": "Billionaire High Performance Coach OS, the one-time digital product on Gumroad (APM_LINKS.gumroad). Read from the live listing on 2026-10-07: price_cents 4900 (offers.price 49.0, USD). Not an A Player Mode price; never set from PLAN_PRICES. If the Gumroad price changes, change it here and the page together.",
+    "url": "https://sprylabs.gumroad.com/l/billionaire-high-performance-coach",
+    "oneTimeUsdCents": 4900
+  }
+}

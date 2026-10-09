@@ -50,8 +50,8 @@ env:
 
 permissions:
   # write, not read: the quarantine step below removes a raw agent drop from
-  # main through commit_and_push_if_changed.sh and opens the pull request that
-  # preserves it. Every other step still only reads.
+  # main through commit_and_push_if_changed.sh and dispatches Agent Drop Intake
+  # for the branch that preserves it. Every other step still only reads.
   contents: write
   actions: write
   issues: write
@@ -167,9 +167,9 @@ jobs:
           ALARM_ISSUE="$(gh issue list --state open --label main-validation --limit 1 --json number -q '.[0].number' || true)"
           export ALARM_ISSUE
           node .github/scripts/quarantine_raw_agent_drop.mjs --execute
-          if [ -n "$ALARM_ISSUE" ] && grep -q '^pr_url=' "$GITHUB_OUTPUT"; then
-            pr_url="$(grep '^pr_url=' "$GITHUB_OUTPUT" | tail -1 | cut -d= -f2-)"
-            gh issue comment "$ALARM_ISSUE" --body "Main Validation Sentinel run ${GITHUB_RUN_ID} quarantined the raw agent drop at \`${HEAD_SHA}\` off main: it is preserved on a branch and waits in ${pr_url}. main has been returned to its last validated tree and a Validate Repo run has been requested for the new HEAD; this issue closes when that run is green."
+          if [ -n "$ALARM_ISSUE" ] && grep -q '^intake_branch=' "$GITHUB_OUTPUT"; then
+            intake_branch="$(grep '^intake_branch=' "$GITHUB_OUTPUT" | tail -1 | cut -d= -f2-)"
+            gh issue comment "$ALARM_ISSUE" --body "Main Validation Sentinel run ${GITHUB_RUN_ID} quarantined the raw agent drop at \`${HEAD_SHA}\` off main: it is preserved on \`${intake_branch}\` and Agent Drop Intake is absorbing it from there. main has been returned to its last validated tree and a Validate Repo run has been requested for the new HEAD; this issue closes when that run is green."
           fi
 
       - name: Close the alarm once main is covered again

@@ -1,6 +1,6 @@
 ---
 title: "How to choose high-leverage tasks when you’re overwhelmed"
-description: "How to choose high-leverage tasks when you’re overwhelmed — a calm, executable framework (Spry Executive OS)."
+description: "How to choose high-leverage tasks when you're overwhelmed: cut the list to three, pick the one that makes the others easier, and start it within 30 minutes."
 date: "2026-05-25"
 cluster: "leverage"
 pillar: "wealth & leverage"

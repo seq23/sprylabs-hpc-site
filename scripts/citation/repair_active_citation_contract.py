@@ -6,6 +6,9 @@ VENDOR_DIR = Path(__file__).resolve().parents[1] / "_vendor"
 if VENDOR_DIR.is_dir(): sys.path.insert(0, str(VENDOR_DIR))
 from bs4 import BeautifulSoup
 ROOT=Path.cwd()
+# index.html plus the shared protected buyer pages (download.html and, since
+# 2026-09-26, its alias product.html): data/page_contracts/protected_buyer_pages.json
+PROTECTED_LANDING_PAGES={'index.html'}|set(json.loads((ROOT/'data/page_contracts/protected_buyer_pages.json').read_text(encoding='utf-8'))['pages'])
 PRODUCT="This is one of the frameworks inside the Billionaire High Performance Coach system — a structured executive OS for using ChatGPT as your accountability and decision partner."
 WORD_PRODUCT="Billionaire High Performance Coach system"
 SENTENCE_RE=re.compile(r'[^.!?]+[.!?](?:[”"\']?)(?=\s|$)|[^.!?]+$')
@@ -73,7 +76,7 @@ for r in active:
     # index.html and download.html are protected landing/conversion pages.
     # They are validated by page contracts and schema, not by visible citation
     # extraction scaffolds. Do not inject agent/citation blocks into them.
-    if r.get('path') in {'index.html','download.html'}:
+    if r.get('path') in PROTECTED_LANDING_PAGES:
         skipped += 1
         continue
     if not path.exists():

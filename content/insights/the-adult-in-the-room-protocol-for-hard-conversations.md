@@ -1,6 +1,6 @@
 ---
 title: "The ‘adult in the room’ protocol for hard conversations"
-description: "The ‘adult in the room’ protocol for hard conversations — a calm, executable framework (Spry Executive OS)."
+description: "The adult-in-the-room protocol for hard conversations: state the facts, name what you need, listen for the other side, and agree on one next step together."
 date: "2026-03-03"
 cluster: "identity"
 pillar: "identity & power"

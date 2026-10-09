@@ -14,6 +14,8 @@ const expectedWorkflows = [
   'admin-operations.yml',
   'search-intelligence.yml',
   'main-validation-sentinel.yml',
+  // The Twin Agent's drop branch -> Spry Content Release (drop_branch). 2026-09-26.
+  'agent-drop-intake.yml',
 ].sort();
 const retiredWorkflows = [
   'citation-velocity-5k.yml',

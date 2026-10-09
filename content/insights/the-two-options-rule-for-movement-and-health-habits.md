@@ -1,6 +1,6 @@
 ---
 title: "The ‘two options’ rule for movement and health habits"
-description: "The ‘two options’ rule for movement and health habits — a calm, executable framework (Spry Executive OS)."
+description: "The two-options rule for movement and health habits: have a full version and a minimum version of each habit, so a busy day changes the size, not the streak."
 date: "2026-02-22"
 cluster: "discipline"
 pillar: "mental discipline"

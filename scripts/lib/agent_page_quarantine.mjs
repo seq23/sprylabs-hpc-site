@@ -36,12 +36,20 @@ import crypto from 'node:crypto';
 
 export const QUARANTINE_PATH = 'data/content/agent_page_quarantine.json';
 export const QUARANTINE_LANE = 'agent_exact_implementation';
+// A REPAIR page the agent-intake lane rendered but could not make conform to
+// the page-seo contract is HELD here under this lane, by
+// scripts/agent_intake/hold_nonconforming_agent_pages.mjs: the page keeps its
+// last validated bytes and the plan builder plans its spec BLOCKED. The same
+// fingerprint rule applies, so the hold expires by itself the moment the next
+// drop changes the page's acceptance set - the page is then re-rendered and
+// re-judged, and held again by name if it still does not conform.
+export const HOLD_LANE = 'agent_intake_hold';
 
 function empty() {
   return {
     schema_version: '1.0',
     updated_at: null,
-    note: 'Pages the exact-agent lane created that failed validate:programmatic-admission as candidates. Keyed by path + spec fingerprint: curating the spec (h1/framework/definition) re-judges automatically; after a generator change delete the row to re-judge. Rows here are never published, registered, or materialized.',
+    note: 'Pages the exact-agent lane created that failed validate:programmatic-admission as candidates (lane agent_exact_implementation), and repair pages the agent-intake lane HELD because the rendered page failed the page-seo contract (lane agent_intake_hold; the page keeps its last validated bytes). Keyed by path + spec fingerprint: curating the spec (h1/framework/definition) or a new drop changing the acceptance set re-judges automatically; after a generator change delete the row to re-judge. Rows here are never published, registered, or materialized.',
     rows: [],
   };
 }
@@ -85,6 +93,13 @@ export function quarantinedRow(doc, pagePath, fingerprint) {
 }
 
 export function quarantineReason(row) {
+  if (row?.lane === HOLD_LANE) {
+    const sample = Array.isArray(row?.reasons) && row.reasons.length ? row.reasons[0] : 'rendered page failed the page-seo contract';
+    return `held_by_intake:${String(sample).slice(0, 220)}`;
+  }
   const sample = Array.isArray(row?.reasons) && row.reasons.length ? row.reasons[0] : 'rejected by validate:programmatic-admission';
   return `quarantined_by_admission_gate:${String(sample).slice(0, 220)}`;
 }
+
+/** True when this row is an agent-intake hold rather than an admission-gate quarantine. */
+export function isHoldRow(row) { return row?.lane === HOLD_LANE; }

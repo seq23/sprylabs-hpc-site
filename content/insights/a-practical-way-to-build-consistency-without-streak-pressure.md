@@ -1,6 +1,6 @@
 ---
 title: "A Practical Way to Build Consistency Without Streak Pressure"
-description: "The Minimum Viable Cadence method replaces streak-based consistency with a floor-based system."
+description: "The Minimum Viable Cadence method replaces streak-based consistency with a floor-based system, so one missed day lowers the bar instead of resetting to zero."
 date: "2026-02-20"
 cluster: "discipline"
 pillar: "mental discipline"

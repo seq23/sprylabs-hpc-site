@@ -1,6 +1,6 @@
 ---
 title: "What is a personal operating system? (definition + build steps)"
-description: "What is a personal operating system? (definition + build steps) — a calm, executable framework (Spry Executive OS)."
+description: "What is a personal operating system? A definition plus build steps: the rules, routines and reviews that run your days, and a minimal first version to set up."
 date: "2026-03-07"
 cluster: "systems"
 pillar: "systems & OS thinking"

@@ -1,0 +1,474 @@
+{
+  "schema_version": "1.0",
+  "workflow_id": "search-intelligence",
+  "workflow_name": "Search Intelligence Cycle",
+  "run_id": "20260921133232-2397",
+  "trigger": "schedule",
+  "repository": "seq23/sprylabs-hpc-site",
+  "ref": "refs/heads/main",
+  "sha": "ad7beb69f17eef59ceb261a0f2c13758255d58b6",
+  "actor": "seq23",
+  "started_at": "2026-09-21T13:32:32.115Z",
+  "command": "npm run workflow:search-intelligence",
+  "contract_file": "data/workflows/workflow_contracts.json",
+  "workflow_file": ".github/workflows/search-intelligence.yml",
+  "lane": "search-intelligence",
+  "lineage": {
+    "input_patterns": [
+      "data/intake/query_universe.json",
+      "data/content_ownership_registry.json",
+      "data/search_intelligence/**",
+      "site/public/**"
+    ],
+    "output_patterns": [
+      "data/search_intelligence/**",
+      "site/public/**",
+      "dist/**",
+      "reports/workflows/search-intelligence/**",
+      "artifacts/validation/search-intelligence.json",
+      "reports/implementation/protected_agent_runtime_proof.json"
+    ],
+    "inputs_before": [
+      {
+        "file": "data/content_ownership_registry.json",
+        "sha256": "0beee616de44d03ebf5619edd857f4569e6181b255bba0d37de4830759de0831",
+        "bytes": 877724
+      },
+      {
+        "file": "data/intake/query_universe.json",
+        "sha256": "ef5d9d4c5e473404786605b55bdb40f2cc887c23486729f56b4d71cdef681cb9",
+        "bytes": 5424636
+      },
+      {
+        "file": "data/search_intelligence/before_after_evidence.json",
+        "sha256": "0cf64979e0c427e4b62b906516535760ad3038391c8991df2d3b0410629dc671",
+        "bytes": 25398
+      },
+      {
+        "file": "data/search_intelligence/competitor_comparison.json",
+        "sha256": "353baa76f75f7df1dec1a02cb83a4bcedf36720868682250f541b9caef69b557",
+        "bytes": 39430
+      },
+      {
+        "file": "data/search_intelligence/gsc_truth.json",
+        "sha256": "27934086ecb866156d9855c32628905c776e0f65f3a8021cadfa1a7e5d5c1d04",
+        "bytes": 47810
+      },
+      {
+        "file": "data/search_intelligence/live_search_observations.json",
+        "sha256": "2179c8e60c118959cf6581c8bee70e41147519b79daacc92605e163c6ac7e536",
+        "bytes": 100013
+      },
+      {
+        "file": "data/search_intelligence/provider_inputs/.gitkeep",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "file": "data/search_intelligence/provider_inputs/gsc_bhpc.json",
+        "sha256": "9948fd23c842ccf17208c1552bd830752bc892e04bb3cf6cefe0145cfacec585",
+        "bytes": 5751
+      },
+      {
+        "file": "data/search_intelligence/provider_inputs/gsc_spry.json",
+        "sha256": "f01279c83d31ec93f15e65bd55e94bceb0f676c7ddef52f4242535bd34643eba",
+        "bytes": 5767
+      },
+      {
+        "file": "data/search_intelligence/repair_apply_receipt.json",
+        "sha256": "372ca1c63ea7e0a4122414e4bb6e246c081d23fced3eda31efe96c509f9f7062",
+        "bytes": 112
+      },
+      {
+        "file": "data/search_intelligence/repair_candidates.json",
+        "sha256": "c93a0b1c5d3fe3e08f08aa526f13a21a1a9abc32faba61e49f84898b2a7b52c1",
+        "bytes": 228
+      },
+      {
+        "file": "data/search_intelligence/repair_ledger.json",
+        "sha256": "b32b045099bcc9c4529b137decfbcc6f74f9675ab6d98ecd06615a33146d9ded",
+        "bytes": 40125
+      },
+      {
+        "file": "data/search_intelligence/retest_snapshots.json",
+        "sha256": "c500c1048ce3b3045a52e240d55d243ec40bca15b1b3f6f43aadb46792770528",
+        "bytes": 12137
+      },
+      {
+        "file": "data/search_intelligence/rotation_cursor.json",
+        "sha256": "d72ac2f5fee3c4dab1ebe06a29560562761122ff2e4860c98da963242a132002",
+        "bytes": 165
+      },
+      {
+        "file": "data/search_intelligence/search_diagnosis.json",
+        "sha256": "41a03ad618c2aeff9d27a7bdcf8832e74a984f08d379641d503ebc43dc59fc50",
+        "bytes": 199971
+      },
+      {
+        "file": "data/search_intelligence/search_intelligence_contract.json",
+        "sha256": "742511bb73e069666e64f1ed4427c8f946a9b70d7e22b4101628caddff466f0b",
+        "bytes": 3970
+      },
+      {
+        "file": "data/search_intelligence/status.json",
+        "sha256": "d4fd9b1e8c8e26717d0855c538a81fe7e6ad00722fc2b4a37f5363b9640bb79b",
+        "bytes": 411
+      },
+      {
+        "file": "data/search_intelligence/target_query_set.json",
+        "sha256": "1d38a3283e05fbc9f643b1afa23916a66210e3899f89de7ffe873fa96d76c6a0",
+        "bytes": 104450
+      }
+    ],
+    "outputs_before": [
+      {
+        "file": "data/search_intelligence/before_after_evidence.json",
+        "sha256": "0cf64979e0c427e4b62b906516535760ad3038391c8991df2d3b0410629dc671",
+        "bytes": 25398
+      },
+      {
+        "file": "data/search_intelligence/competitor_comparison.json",
+        "sha256": "353baa76f75f7df1dec1a02cb83a4bcedf36720868682250f541b9caef69b557",
+        "bytes": 39430
+      },
+      {
+        "file": "data/search_intelligence/gsc_truth.json",
+        "sha256": "27934086ecb866156d9855c32628905c776e0f65f3a8021cadfa1a7e5d5c1d04",
+        "bytes": 47810
+      },
+      {
+        "file": "data/search_intelligence/live_search_observations.json",
+        "sha256": "2179c8e60c118959cf6581c8bee70e41147519b79daacc92605e163c6ac7e536",
+        "bytes": 100013
+      },
+      {
+        "file": "data/search_intelligence/provider_inputs/.gitkeep",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "file": "data/search_intelligence/provider_inputs/gsc_bhpc.json",
+        "sha256": "9948fd23c842ccf17208c1552bd830752bc892e04bb3cf6cefe0145cfacec585",
+        "bytes": 5751
+      },
+      {
+        "file": "data/search_intelligence/provider_inputs/gsc_spry.json",
+        "sha256": "f01279c83d31ec93f15e65bd55e94bceb0f676c7ddef52f4242535bd34643eba",
+        "bytes": 5767
+      },
+      {
+        "file": "data/search_intelligence/repair_apply_receipt.json",
+        "sha256": "372ca1c63ea7e0a4122414e4bb6e246c081d23fced3eda31efe96c509f9f7062",
+        "bytes": 112
+      },
+      {
+        "file": "data/search_intelligence/repair_candidates.json",
+        "sha256": "c93a0b1c5d3fe3e08f08aa526f13a21a1a9abc32faba61e49f84898b2a7b52c1",
+        "bytes": 228
+      },
+      {
+        "file": "data/search_intelligence/repair_ledger.json",
+        "sha256": "b32b045099bcc9c4529b137decfbcc6f74f9675ab6d98ecd06615a33146d9ded",
+        "bytes": 40125
+      },
+      {
+        "file": "data/search_intelligence/retest_snapshots.json",
+        "sha256": "c500c1048ce3b3045a52e240d55d243ec40bca15b1b3f6f43aadb46792770528",
+        "bytes": 12137
+      },
+      {
+        "file": "data/search_intelligence/rotation_cursor.json",
+        "sha256": "d72ac2f5fee3c4dab1ebe06a29560562761122ff2e4860c98da963242a132002",
+        "bytes": 165
+      },
+      {
+        "file": "data/search_intelligence/search_diagnosis.json",
+        "sha256": "41a03ad618c2aeff9d27a7bdcf8832e74a984f08d379641d503ebc43dc59fc50",
+        "bytes": 199971
+      },
+      {
+        "file": "data/search_intelligence/search_intelligence_contract.json",
+        "sha256": "742511bb73e069666e64f1ed4427c8f946a9b70d7e22b4101628caddff466f0b",
+        "bytes": 3970
+      },
+      {
+        "file": "data/search_intelligence/status.json",
+        "sha256": "d4fd9b1e8c8e26717d0855c538a81fe7e6ad00722fc2b4a37f5363b9640bb79b",
+        "bytes": 411
+      },
+      {
+        "file": "data/search_intelligence/target_query_set.json",
+        "sha256": "1d38a3283e05fbc9f643b1afa23916a66210e3899f89de7ffe873fa96d76c6a0",
+        "bytes": 104450
+      }
+    ],
+    "outputs_after": [
+      {
+        "file": "data/search_intelligence/before_after_evidence.json",
+        "sha256": "38a547de0847b6a70020f9aedc0dff82b4e8385bdbb540e5ce6109ff5db80613",
+        "bytes": 22418
+      },
+      {
+        "file": "data/search_intelligence/competitor_comparison.json",
+        "sha256": "8e63e6e6fd7758dcfd0e0c5fc019da62cfee7d8a2489fdeaeaf24025316d835d",
+        "bytes": 32964
+      },
+      {
+        "file": "data/search_intelligence/gsc_truth.json",
+        "sha256": "39fc39054e25e0544a043827e7ce89e212a70f67e00a033cf4e962efa38aadc9",
+        "bytes": 47810
+      },
+      {
+        "file": "data/search_intelligence/live_search_observations.json",
+        "sha256": "bd6592d8e86e4de293f57a44d28ef6f39eef2202e2e66083718f04848604ac8c",
+        "bytes": 84890
+      },
+      {
+        "file": "data/search_intelligence/provider_inputs/.gitkeep",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "file": "data/search_intelligence/provider_inputs/gsc_bhpc.json",
+        "sha256": "03c8e71e349540280edb6707808614adf593d53185a72ca6009ef00b27ceee35",
+        "bytes": 5752
+      },
+      {
+        "file": "data/search_intelligence/provider_inputs/gsc_spry.json",
+        "sha256": "187919425d7cf8f4a5d7ae6217719e232aac7ef374142d49fe72a0908f0f3d54",
+        "bytes": 5808
+      },
+      {
+        "file": "data/search_intelligence/repair_apply_receipt.json",
+        "sha256": "21e6f9d2f268abcecc1fea456c467e5b1f0719b3845a24a94f5def124dd319f2",
+        "bytes": 112
+      },
+      {
+        "file": "data/search_intelligence/repair_candidates.json",
+        "sha256": "93cd7afaa8941284f70d923885fee8253f4ab526bd9d32fb7af520ed7b01d457",
+        "bytes": 2173
+      },
+      {
+        "file": "data/search_intelligence/repair_ledger.json",
+        "sha256": "b32b045099bcc9c4529b137decfbcc6f74f9675ab6d98ecd06615a33146d9ded",
+        "bytes": 40125
+      },
+      {
+        "file": "data/search_intelligence/retest_snapshots.json",
+        "sha256": "45aa0246acfd2838a17c814c0e736ff1b3363a8282a9e16c8aea3957564327fb",
+        "bytes": 9573
+      },
+      {
+        "file": "data/search_intelligence/rotation_cursor.json",
+        "sha256": "eaf4105caa842299d4811d9aa7445820a7e553edf653f9287dd36476855d4db2",
+        "bytes": 166
+      },
+      {
+        "file": "data/search_intelligence/search_diagnosis.json",
+        "sha256": "250b59c3fac606091698e5703a415de1b9a71e12dd2808997be8082fe977d1c9",
+        "bytes": 199707
+      },
+      {
+        "file": "data/search_intelligence/search_intelligence_contract.json",
+        "sha256": "742511bb73e069666e64f1ed4427c8f946a9b70d7e22b4101628caddff466f0b",
+        "bytes": 3970
+      },
+      {
+        "file": "data/search_intelligence/status.json",
+        "sha256": "0d8c9cde22a4467fac33e35a3216f69ac0f2f43e1dd2c1ab8ec5e092e46bd9fc",
+        "bytes": 423
+      },
+      {
+        "file": "data/search_intelligence/target_query_set.json",
+        "sha256": "0981ad1a5cd2ca7bfaed9407770c3e875f06f9ac23affeb92bf4b741c02b878c",
+        "bytes": 104450
+      }
+    ],
+    "changed_files": [
+      {
+        "file": "agency/index.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "50986c00022c7c7dd01bedf9b84c64a3936eb4caedfc6c5c726f95090a2fc138",
+          "bytes": 96659
+        },
+        "after": {
+          "sha256": "0ea071fbd01c0342ea0af0af4b84db02db6fb1373979828b7caa1038ec32d8d7",
+          "bytes": 95569
+        }
+      },
+      {
+        "file": "data/search_intelligence/before_after_evidence.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "0cf64979e0c427e4b62b906516535760ad3038391c8991df2d3b0410629dc671",
+          "bytes": 25398
+        },
+        "after": {
+          "sha256": "38a547de0847b6a70020f9aedc0dff82b4e8385bdbb540e5ce6109ff5db80613",
+          "bytes": 22418
+        }
+      },
+      {
+        "file": "data/search_intelligence/competitor_comparison.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "353baa76f75f7df1dec1a02cb83a4bcedf36720868682250f541b9caef69b557",
+          "bytes": 39430
+        },
+        "after": {
+          "sha256": "8e63e6e6fd7758dcfd0e0c5fc019da62cfee7d8a2489fdeaeaf24025316d835d",
+          "bytes": 32964
+        }
+      },
+      {
+        "file": "data/search_intelligence/gsc_truth.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "27934086ecb866156d9855c32628905c776e0f65f3a8021cadfa1a7e5d5c1d04",
+          "bytes": 47810
+        },
+        "after": {
+          "sha256": "39fc39054e25e0544a043827e7ce89e212a70f67e00a033cf4e962efa38aadc9",
+          "bytes": 47810
+        }
+      },
+      {
+        "file": "data/search_intelligence/live_search_observations.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "2179c8e60c118959cf6581c8bee70e41147519b79daacc92605e163c6ac7e536",
+          "bytes": 100013
+        },
+        "after": {
+          "sha256": "bd6592d8e86e4de293f57a44d28ef6f39eef2202e2e66083718f04848604ac8c",
+          "bytes": 84890
+        }
+      },
+      {
+        "file": "data/search_intelligence/provider_inputs/gsc_bhpc.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "9948fd23c842ccf17208c1552bd830752bc892e04bb3cf6cefe0145cfacec585",
+          "bytes": 5751
+        },
+        "after": {
+          "sha256": "03c8e71e349540280edb6707808614adf593d53185a72ca6009ef00b27ceee35",
+          "bytes": 5752
+        }
+      },
+      {
+        "file": "data/search_intelligence/provider_inputs/gsc_spry.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "f01279c83d31ec93f15e65bd55e94bceb0f676c7ddef52f4242535bd34643eba",
+          "bytes": 5767
+        },
+        "after": {
+          "sha256": "187919425d7cf8f4a5d7ae6217719e232aac7ef374142d49fe72a0908f0f3d54",
+          "bytes": 5808
+        }
+      },
+      {
+        "file": "data/search_intelligence/repair_apply_receipt.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "372ca1c63ea7e0a4122414e4bb6e246c081d23fced3eda31efe96c509f9f7062",
+          "bytes": 112
+        },
+        "after": {
+          "sha256": "21e6f9d2f268abcecc1fea456c467e5b1f0719b3845a24a94f5def124dd319f2",
+          "bytes": 112
+        }
+      },
+      {
+        "file": "data/search_intelligence/repair_candidates.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "c93a0b1c5d3fe3e08f08aa526f13a21a1a9abc32faba61e49f84898b2a7b52c1",
+          "bytes": 228
+        },
+        "after": {
+          "sha256": "93cd7afaa8941284f70d923885fee8253f4ab526bd9d32fb7af520ed7b01d457",
+          "bytes": 2173
+        }
+      },
+      {
+        "file": "data/search_intelligence/retest_snapshots.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "c500c1048ce3b3045a52e240d55d243ec40bca15b1b3f6f43aadb46792770528",
+          "bytes": 12137
+        },
+        "after": {
+          "sha256": "45aa0246acfd2838a17c814c0e736ff1b3363a8282a9e16c8aea3957564327fb",
+          "bytes": 9573
+        }
+      },
+      {
+        "file": "data/search_intelligence/rotation_cursor.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "d72ac2f5fee3c4dab1ebe06a29560562761122ff2e4860c98da963242a132002",
+          "bytes": 165
+        },
+        "after": {
+          "sha256": "eaf4105caa842299d4811d9aa7445820a7e553edf653f9287dd36476855d4db2",
+          "bytes": 166
+        }
+      },
+      {
+        "file": "data/search_intelligence/search_diagnosis.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "41a03ad618c2aeff9d27a7bdcf8832e74a984f08d379641d503ebc43dc59fc50",
+          "bytes": 199971
+        },
+        "after": {
+          "sha256": "250b59c3fac606091698e5703a415de1b9a71e12dd2808997be8082fe977d1c9",
+          "bytes": 199707
+        }
+      },
+      {
+        "file": "data/search_intelligence/status.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "d4fd9b1e8c8e26717d0855c538a81fe7e6ad00722fc2b4a37f5363b9640bb79b",
+          "bytes": 411
+        },
+        "after": {
+          "sha256": "0d8c9cde22a4467fac33e35a3216f69ac0f2f43e1dd2c1ab8ec5e092e46bd9fc",
+          "bytes": 423
+        }
+      },
+      {
+        "file": "data/search_intelligence/target_query_set.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "1d38a3283e05fbc9f643b1afa23916a66210e3899f89de7ffe873fa96d76c6a0",
+          "bytes": 104450
+        },
+        "after": {
+          "sha256": "0981ad1a5cd2ca7bfaed9407770c3e875f06f9ac23affeb92bf4b741c02b878c",
+          "bytes": 104450
+        }
+      }
+    ]
+  },
+  "validation": {
+    "canonical_validation": "npm run validate:all (enforced by programmatic:run-lane)",
+    "status": "PASSED"
+  },
+  "hostile_review": {
+    "status": "PASSED",
+    "report": "reports/workflows/search-intelligence/20260921133232-2397/hostile-review.json"
+  },
+  "monitor_validation": {
+    "status": "PASSED"
+  },
+  "status": "PASS",
+  "completed_at": "2026-09-21T13:38:41.939Z",
+  "command_exit_code": 0,
+  "signal": null,
+  "finalized_at": "2026-09-21T13:38:42.306Z"
+}

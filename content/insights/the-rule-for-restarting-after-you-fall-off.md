@@ -1,6 +1,6 @@
 ---
 title: "The rule for restarting after you fall off"
-description: "The rule for restarting after you fall off — a calm, executable framework (Spry Executive OS)."
+description: "The rule for restarting after you fall off: never miss twice, never catch up. Restart at the floor the next day and let the recap rebuild momentum."
 date: "2026-04-12"
 cluster: "discipline"
 pillar: "mental discipline"

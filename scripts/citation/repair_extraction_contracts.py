@@ -7,7 +7,7 @@ VENDOR_DIR=Path(__file__).resolve().parents[1]/'_vendor'
 if VENDOR_DIR.is_dir():sys.path.insert(0,str(VENDOR_DIR))
 from bs4 import BeautifulSoup
 from extraction_contract import *
-ROOT=Path.cwd();PAGES=ROOT/'data/citation/citable_pages.json';QUERIES=ROOT/'data/citation/query_registry.json';ADMISSION=ROOT/'data/content/page_admission_registry.json';AUTH=ROOT/'data/citation/extraction_reclassification.json';REPORT=ROOT/'artifacts/validation/extraction-contract-repair.json'
+ROOT=Path.cwd();PROTECTED_LANDING_PAGES={'index.html'}|set(json.loads((ROOT/'data/page_contracts/protected_buyer_pages.json').read_text(encoding='utf-8'))['pages']);PAGES=ROOT/'data/citation/citable_pages.json';QUERIES=ROOT/'data/citation/query_registry.json';ADMISSION=ROOT/'data/content/page_admission_registry.json';AUTH=ROOT/'data/citation/extraction_reclassification.json';REPORT=ROOT/'artifacts/validation/extraction-contract-repair.json'
 payload=json.loads(PAGES.read_text());queries=json.loads(QUERIES.read_text()) if QUERIES.exists() else {'queries':[]};admission=json.loads(ADMISSION.read_text()) if ADMISSION.exists() else {};auth=json.loads(AUTH.read_text()) if AUTH.exists() else {'authorized':[]}
 authmap={x['path']:x for x in auth.get('authorized',[]) if x.get('path') and x.get('to_type')}
 repairs=[];reclassifications=[];failures=[];audited=0
@@ -36,9 +36,10 @@ def sync_reclassification(row,new_type,soup,block):
 
 for row in payload.get('pages',[]):
  path=row.get('path');etype=normalize_type(row.get('extraction_type'))
- if path in {'index.html','download.html'}:
+ if path in PROTECTED_LANDING_PAGES:
   # Protected landing/conversion pages are validated by dedicated page
   # contracts and schema. Do not force visible extraction blocks onto buyer pages.
+  # The buyer pages come from data/page_contracts/protected_buyer_pages.json.
   continue
  if not path or not etype:continue
  fp=ROOT/path

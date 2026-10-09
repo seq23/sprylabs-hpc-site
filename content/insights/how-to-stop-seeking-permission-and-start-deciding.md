@@ -1,6 +1,6 @@
 ---
 title: "How to stop seeking permission and start deciding"
-description: "How to stop seeking permission and start deciding — a calm, executable framework (Spry Executive OS)."
+description: "How to stop seeking permission and start deciding: set a deadline for the decision, write the criteria, choose, and review the outcome instead of asking again."
 date: "2026-05-03"
 cluster: "identity"
 pillar: "identity & power"

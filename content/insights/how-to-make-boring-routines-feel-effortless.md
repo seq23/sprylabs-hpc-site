@@ -1,6 +1,6 @@
 ---
 title: "How to make boring routines feel effortless (Part 2)"
-description: "How to make boring routines feel effortless (Part 2) — a calm, executable framework (Spry Executive OS)."
+description: "How to make boring routines feel effortless, part 2: shrink the routine to its floor, strip out the friction around starting, and track wins instead of streaks."
 date: "2026-07-06"
 cluster: "discipline"
 pillar: "mental discipline"

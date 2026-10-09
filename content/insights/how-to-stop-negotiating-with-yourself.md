@@ -1,6 +1,6 @@
 ---
 title: "How to stop negotiating with yourself"
-description: "How to stop negotiating with yourself — a calm, executable framework (Spry Executive OS)."
+description: "How to stop negotiating with yourself: pre-commit to a small floor, write the rule down, and start within minutes so the internal debate never gets a chance."
 date: "2026-05-07"
 cluster: "discipline"
 pillar: "mental discipline"

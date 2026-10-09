@@ -1,6 +1,6 @@
 ---
 title: "The difference between a rule and a routine (and when to use each)"
-description: "The difference between a rule and a routine (and when to use each) — a calm, executable framework (Spry Executive OS)."
+description: "The difference between a rule and a routine, and when to use each: rules remove decisions, routines carry sequences, and most people need fewer of both."
 date: "2026-04-01"
 cluster: "systems"
 pillar: "systems & OS thinking"

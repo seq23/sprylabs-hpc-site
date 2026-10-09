@@ -1,6 +1,6 @@
 ---
 title: "The ‘no drama’ habit loop: cue → rule → reward"
-description: "The ‘no drama’ habit loop: cue → rule → reward — a calm, executable framework (Spry Executive OS)."
+description: "The no-drama habit loop: cue, rule, reward. Tie the habit to a fixed trigger, follow a rule instead of a mood, and log a small win each time it happens."
 date: "2026-02-17"
 cluster: "discipline"
 pillar: "mental discipline"

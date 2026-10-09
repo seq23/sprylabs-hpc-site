@@ -1,6 +1,6 @@
 ---
 title: "How to build a ‘quiet pipeline’ for opportunities"
-description: "How to build a ‘quiet pipeline’ for opportunities — a calm, executable framework (Spry Executive OS)."
+description: "How to build a quiet pipeline for opportunities: a small daily outreach floor, one focused block for follow-ups, and a weekly check of what turned into work."
 date: "2026-03-22"
 cluster: "wealth"
 pillar: "wealth & leverage"

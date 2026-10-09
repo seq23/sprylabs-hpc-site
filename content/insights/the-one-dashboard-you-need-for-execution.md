@@ -1,6 +1,6 @@
 ---
 title: "The one dashboard you need for execution"
-description: "The one dashboard you need for execution — a calm, executable framework (Spry Executive OS)."
+description: "The one execution dashboard you need: today's outcome, the next three actions and a running list of wins, kept on a single page you look at every morning."
 date: "2026-05-09"
 cluster: "systems"
 pillar: "systems & os thinking"

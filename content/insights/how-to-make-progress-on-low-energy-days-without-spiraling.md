@@ -1,6 +1,6 @@
 ---
 title: "How to make progress on low-energy days without spiraling"
-description: "How to make progress on low-energy days without spiraling — a calm, executable framework (Spry Executive OS)."
+description: "How to make progress on low-energy days without spiraling: drop to the minimum floor, run one short focused loop, and stop there without guilt or catch-up."
 date: "2026-02-12"
 cluster: "execution"
 pillar: "daily execution"

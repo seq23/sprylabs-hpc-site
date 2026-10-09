@@ -1,3 +1,4 @@
+const { buildTimestamp } = require('../lib/build_clock.cjs');
 const fs = require("fs");
 const { scoreItems, queriesForItem, buildCitationSignal } = require("../scoring/score_cluster");
 
@@ -78,7 +79,7 @@ fs.mkdirSync("data/intake", { recursive: true });
 fs.writeFileSync(
   "data/intake/query_scores.json",
   JSON.stringify({
-    generated_at: new Date().toISOString(),
+    generated_at: buildTimestamp(),
     scoring_model: "weighted_conversion_authority_extractability_v1",
     competition_opportunity_coverage: coverage,
     items: scored

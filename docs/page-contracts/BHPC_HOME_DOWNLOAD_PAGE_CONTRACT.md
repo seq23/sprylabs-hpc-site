@@ -40,6 +40,14 @@ Status: active / release-enforced by `scripts/validation/validate_bhpc_page_cont
 - `/download.html` must remain admitted in `data/release/frozen_output_registry.json`, and its frozen accepted-output blob must be refreshed whenever the protected page contract changes.
 - `npm run validate:content` must fail if the download page repeats agent headings, carries visible extraction attributes, has more than one JSON-LD script, or loses the protected buyer-page structure.
 
+## Protected buyer-page freeze guard — Product alias
+
+- `/product.html` is the "Product alias route" onto the same buyer and is protected exactly like `/download.html`: no agent semantic repair sections, no agent blocks, no LLM/citation scaffolding, and its `Product Overview` H1 stays.
+- The protected list lives once, in `data/page_contracts/protected_buyer_pages.json`, and every writer reads it: the acceptance parser BLOCKS agent rows aimed at a listed page, the citation program never opens or registers one, and the repair passes skip them.
+- `/product.html` is `never_citable`: it must not be an `ACTIVE` record in `data/citation/citable_pages.json` and must not appear in `sitemap-bhpc.xml`. It is a bridge, not an indexable citation page.
+- Origin: on 2026-09-26 four Twin Agent REPAIR rows were REQUIRED on `product.html`, Spry Content Release applied them, the citation program registered the rewritten alias as ACTIVE and kept rewriting it, and Validate Repo on release commit `2701370e9` failed extraction-contract, programmatic-admission, search-snippet-bounds and the lastmod truth check on that one page.
+- `npm run validate:content` must fail if `product.html` carries agent or citation scaffold, loses its kicker and H1, becomes an ACTIVE citable page, appears in the bhpc sitemap, or if the shared protected list loses either page.
+
 
 
 ## Visual Layout Guardrails — Download

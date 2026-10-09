@@ -25,7 +25,16 @@ ROOT = Path(__file__).resolve().parents[2]
 # void-tag closing change, the wording does not, and the baseline check then
 # fails on a file nobody meant to touch. The page already carries the product
 # schema this pass would add, so skipping it costs nothing.
-PROTECTED_PAGES = {'download.html'}
+#
+# The list lives in data/page_contracts/protected_buyer_pages.json, shared
+# with the acceptance parser and every repair pass. product.html (the
+# "Product alias route") joined it on 2026-09-26 after this program registered
+# the agent-rewritten alias as an ACTIVE citable page and kept rewriting it;
+# it is also `never_citable`, so it is neither scanned nor added to the set.
+_PROTECTED_BUYER = json.loads((ROOT / 'data/page_contracts/protected_buyer_pages.json').read_text(encoding='utf-8'))
+PROTECTED_PAGES = set(_PROTECTED_BUYER['pages'])
+NEVER_CITABLE = set(_PROTECTED_BUYER.get('never_citable', []))
+NEVER_CITABLE_REASON = _PROTECTED_BUYER.get('exclusion_reason', 'protected buyer page')
 
 def _protected(fp) -> bool:
     try: return Path(fp).resolve().relative_to(ROOT).as_posix() in PROTECTED_PAGES
@@ -43,7 +52,7 @@ EXCLUDED = {
     "admin.html",
     "knowledge-map/index.html",
     "reports/answer-surface-dashboard.html",
-}
+} | NEVER_CITABLE
 EXCLUDED_PREFIXES = ("templates/", "artifacts/", "fixtures/", "node_modules/", ".git/", "answers/phase4/", "use-cases/phase4/", "vs/phase4/", "glossary/phase4/", "methods/phase4/", "brand-defense/", "platforms/phase4/")
 CITATION_REPAIR_WARNINGS = []
 
@@ -1388,7 +1397,7 @@ def build_registries(records: list[dict]):
         owner = canonical_owner_by_path.get(path, {})
         canonical_query = owner.get("query") or spec["h1"]
         bypath[path]={"path":path,"canonical_url":canonical_for(path),"canonical_domain":re.sub(r"^https?://([^/]+).*$",r"\1",canonical_for(path)),"query":canonical_query,"framework":spec["framework"],"extraction_type":owner.get("intent_class") or spec["type"],"schema_type":"HowTo" if (owner.get("intent_class") or spec["type"])=="howto" else "DefinedTerm","status":"ACTIVE","definition":spec["definition"],"priority":True,"canonical_owner_metadata":owner}
-    exclusions=[{"path":x,"status":"EXCLUDED","exclusion_reason":"Owner-approved exclusion or non-public operator surface"} for x in sorted(EXCLUDED)]
+    exclusions=[{"path":x,"status":"EXCLUDED","exclusion_reason":(NEVER_CITABLE_REASON if x in NEVER_CITABLE else "Owner-approved exclusion or non-public operator surface")} for x in sorted(EXCLUDED)]
     pages=sorted(bypath.values(),key=lambda x:x["path"])+exclusions
     (d/"citable_pages.json").write_text(json.dumps({"version":"1.0","generated_at":TODAY,"pages":pages},indent=2,ensure_ascii=False)+"\n")
     # query grouping

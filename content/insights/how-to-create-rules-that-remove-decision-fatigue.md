@@ -1,6 +1,6 @@
 ---
 title: "How to create rules that remove decision fatigue"
-description: "How to create rules that remove decision fatigue — a calm, executable framework (Spry Executive OS)."
+description: "How to create rules that remove decision fatigue: turn repeat choices into written defaults, so your judgment goes to the one decision that matters today."
 date: "2026-05-19"
 cluster: "systems"
 pillar: "systems & os thinking"

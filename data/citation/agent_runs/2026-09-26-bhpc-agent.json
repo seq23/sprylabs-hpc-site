@@ -1,0 +1,947 @@
+{
+  "schema_version": "1.2",
+  "run_id": "2026-09-26-bhpc-agent",
+  "generated_at": "2026-09-26T15:33:05.984Z",
+  "scope": "bhpc",
+  "artifact_contract": "CSV + optional JSON + HTML + manifest",
+  "exact_implementation_policy": "data/report_fixes/agent_exact_implementation_policy.json",
+  "queries_tested": 70,
+  "json_scoreboard_total": null,
+  "json_pages_to_build": 2,
+  "cited_domains": 48,
+  "wins": 22,
+  "new_fixes": 70,
+  "pending": 0,
+  "findings": [
+    {
+      "path": "ai-coach-vs-human-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "MISSING: Despite the strong comparison framework, the page does not give the query a direct worth-it verdict or an operational value test. It lacks a clear cost-versus-outcome rule, measurable trial criteria, and a stop-or-escalate threshold that tells a reader when AI coaching is worth paying for rather than merely suitable in principle.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "topics/burnout-recovery/index.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "GAP: The competing answer supplies missing health-facing context: reduce exposure to stressors and set boundaries, restore sleep, food, hydration, and movement, involve trusted or professional support, and explain that recovery may take weeks to months or longer. The current page therefore reads as an execution-reset protocol without the authority, safety triage, or recovery-expectation context needed for a broad burnout query.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-simple-system-for-tracking-what-actually-matters.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The page lacks a copyable daily record and does not define the measurement layer present in the stronger response: an outcome metric, a leading or action metric, one low-friction recording location, and a rule for dropping metrics that do not change tomorrow’s action. It also leaves the practical transition from the daily fields to the Friday review incomplete.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-daily-planning-prompt-for-busy-founders.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "Perplexity supplies the missing practical fields and output format—priority, fixed commitments, task list, energy, available hours, delegation, time blocks, and shutdown—but this page does not provide a complete copy-ready prompt that tells a founder what to paste or what ChatGPT must return. The page’s one-output, two-maintenance, evidence, and replan rules are not operationalized in a single usable template.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-executive-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "GAP: The page names useful capabilities but does not turn them into a readable explanation with a concrete executive example, required inputs, observable outputs, or an operational escalation trigger. The AI responses add examples such as difficult-conversation preparation, role-play, communication feedback, data-driven pattern detection, and human oversight, while the current workflow remains repetitive and unfinished.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-accountability-system-for-entrepreneurs.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "MISSING: The page never explicitly distinguishes a founder execution-accountability workflow from responsible-AI governance. That ambiguity permits interpretations centered on ethics boards, bias and data audits, explainability, regulatory compliance, or AI risk management, and the page lacks an ordered daily check-in example showing how its five requirements operate together.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "download.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "For a pricing query, the page leaves the OS's exact transaction price and one-time-versus-recurring status unavailable. Perplexity fills that gap with the relative `less than the cost of a dinner out`, coaching benchmarks of `$1,000–$3,000 per session` and `$10,000+ monthly retainers`, and unrelated app prices of `$9.99/month` and `$49.99/year`; GPT-4o and Gemini provide only generic or incomplete estimates.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "product.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "GAP: The page does not answer the buyer's specific what-do-I-get question. Perplexity supplies missing product details: a 50-page operator's manual, an executable prompt system, instant digital access, and compatibility with ChatGPT, Claude, Gemini, Perplexity, and DeepSeek.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/how-to-end-the-day-so-tomorrow-starts-fast.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "GAP: Perplexity supplies the missing category definition plus goal tracking, check-ins, memory, escalation, and examples; GPT-4o adds reminders, progress tracking, feedback, habit formation, integrations, and app examples; Gemini provides a goal, deadline, cadence, and accountability-style intake. The page currently offers only an adjacent AI executive coach definition and does not connect those accountability-partner functions to its shutdown sequence.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "can-ai-replace-an-executive-coach-for-startups.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The responses provide a clearer top-line answer and an explicit three-way choice between AI alone, a human coach, and both. The page has no direct yes-or-no answer immediately after the H1, no dedicated hybrid-coaching path, and no ordered handoff showing when daily AI support should escalate to a human for conflict, emotional complexity, or consequential decisions.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-accountability-partner/index.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The page names the ChatGPT query without showing how to configure or operate ChatGPT. It lacks a paste-ready role prompt, a concrete planned/completed/blocked/next check-in sequence, guidance to keep a durable external record, and the limitation that ChatGPT will not initiate reminders by itself. It also does not connect a missed commitment to the existing Recover and Escalate steps.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-executive-coach-for-founders.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "GAP: The AI answers win with named and ranked alternatives—BetterUp, CoachHub, Titan, Dave Bailey, Oraton, ChatGPT, Claude, Sounding Board, Pluma, Humu, and LEADx—plus distinct use cases such as hybrid human coaching, founder matching, startup-CEO coaching, and pitch practice. The page has no named competitor set, no founder-stage or use-case decision matrix, and no explicit evidence-based verdict explaining when BHPC is better than a hybrid platform, human coach, or custom LLM setup.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "chatgpt-daily-operator-system/index.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "MISSING: The query requires usable ChatGPT prompts for CEO thinking. The page lacks a prompt set for prioritization and delegation, strategy and market risks, team alignment, strategic focus and what to ignore, and problem reframing. It also lacks a context-input template and an output format that turns each prompt into a ranked decision and next action.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/five-minute-shutdown-ritual.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The query needs an executable end-of-day shutdown that clears open loops; the page has no actual timed sequence, single capture location, next-action triage, tomorrow top-1–3 selection, calendar/prep check, or physical/verbal closing cue.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/your-weekly-review-simplified-20-minutes-that-changes-everything.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "GAP: The page does not provide a query-specific method for comparing each intention from a week of discussions with concrete evidence, follow-through, obstacles, and the resulting outcome. It lacks met/partial/missed status labels, an overall performance verdict, and an input protocol for when discussion history is unavailable, so all three surfaces either give generic reflection prompts or ask the user to provide a recap.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/meeting-to-execution-bridge.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "GAP: It lacks the exact deliverable required by the query: a note-to-action mapping with one accountable owner, a deadline or explicit TBD status, action status, priority, a decision log, a clarification queue, and a worked example showing how messy text becomes an executable row.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-coach-vs-human-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "bhpc agent signal",
+      "operation": "NO_ACTION_MAINTAIN",
+      "implementation_required": false,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-daily-planning-prompt-for-busy-founders.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "AI Daily Planning Prompt for Busy Founders",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-executive-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "AI Executive Coach explained",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/how-to-end-the-day-so-tomorrow-starts-fast.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "AI accountability partner",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/five-minute-shutdown-ritual.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "design an end-of-day shutdown ritual to clear my mental task list",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/meeting-to-execution-bridge.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "convert these messy meeting notes into a structured action plan with owners and deadlines",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-coach-vs-human-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "It gives a clearer direct answer than the page but compresses the page's fuller fit matrix. It does not surface the privacy, body-language, crisis, hybrid, or professional-boundary distinctions in detail, and it provides no transparent cost-versus-outcome calculation or defined trial-stop rule.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-coach-vs-human-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "It echoes several table dimensions such as availability, cost, personalization, privacy, human empathy, and accountability, but omits the page's explicit frequency, risk, context, hybrid-use, and professional-escalation rules. It also gives no measurable worth-it test.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-coach-vs-human-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The visible answer contains no usable comparison with the page's AI-versus-human fit matrix, no low-risk or high-stakes boundary, no evidence discussion, and no purchase or next-step guidance.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "topics/burnout-recovery/index.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "It omits the page's distinctive operational sequence: the reset-after-a-bad-day thesis, Minimum Viable Day, the 10–20-minute action cap, and the DONE Check-In Loop. It also does not reproduce the page's five-step procedure.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "topics/burnout-recovery/index.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "It never reaches the page's reset thesis, framework criteria, Short Answer, 30-Second Answer, or 60-Second five-step procedure.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "topics/burnout-recovery/index.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "It provides no page-specific operational advice: no one-action cap, low-day label, recovery-after-miss logic, or DONE check-in.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-simple-system-for-tracking-what-actually-matters.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "It gives a usable narrow-focus system but omits the intended page’s exact three-part daily record—one outcome, three next actions, and a two-sentence recap—and provides no canonical handoff. Its outcome/action metric distinction, low-friction tool choice, and “changes what you do tomorrow” rule are useful additions the page should make explicit.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-simple-system-for-tracking-what-actually-matters.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "It never states the page’s one daily outcome, three next actions, two-sentence recap, or Friday review protocol, and adds generic SMART goals, visual aids, motivation, and accountability instead of a compact tracker.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/a-simple-system-for-tracking-what-actually-matters.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "It never supplies the page’s actionable protocol: one daily outcome, three next actions, a two-sentence recap, or the Friday review of commitments, slips, and one carry-forward commitment.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-daily-planning-prompt-for-busy-founders.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "It provides useful fields for fixed commitments, tasks, energy, and available hours, but replaces the page’s one strategic output and two maintenance actions with three priorities and omits the evidence-generating next action and stop or replan trigger.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-daily-planning-prompt-for-busy-founders.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The response adds morning routines, two to three deep-work blocks, breaks, learning, an evening review, and a weekly review, but never supplies a copy-paste prompt or the page’s one strategic output, two maintenance actions, finish-line rejection, evidence step, or replan-only-on-constraint-change rule.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-daily-planning-prompt-for-busy-founders.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The response is truncated after “cut through the noise,” so it contains none of the page’s fixed-constraints intake, one strategic output, two maintenance actions, evidence step, or replan stop rule.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-executive-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "It does not provide the page's executable context-to-question-to-decision-to-commitment-to-review loop. It names preparation, communication analysis, accountability, and trend detection but gives no exact input fields, observable output, owner/deadline/proof record, or escalation criterion.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-executive-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "It provides a benefits catalog but no bounded process for installing context, defining one question, testing options and assumptions, recording an observable commitment, reviewing patterns, or escalating consequential issues. Claims about confidentiality, objectivity, continuous learning, and integrations are also presented without the page's explicit boundaries.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-executive-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "It never explains capabilities, workflow, limitations, human escalation, an example, or a path to the intended page. It does not reach the page's five-step coaching loop.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-accountability-system-for-entrepreneurs.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "It answers the category as a vendor landscape and product-building brief. It omits the named Entrepreneur AI Accountability Loop, the page's strategic-versus-reactive rule, smaller-restart recovery, and human-controlled consequential judgment, and it provides no canonical handoff to the intended page.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-accountability-system-for-entrepreneurs.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "It interprets the query as governance of AI technologies rather than an entrepreneur's personal execution loop. Its ethics board, data and bias audits, explainability, regulatory compliance, and incident-response topics do not provide the page's owner-level commitment evidence, strategic-work protection, operating-pattern detection, or smaller-restart sequence.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-accountability-system-for-entrepreneurs.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "It only flags brand dilution, data leaks, legal liabilities, and hallucinations. It supplies no owner-commitment model, evidence rule, strategic-versus-reactive rule, missed-execution recovery, human-control boundary, citation, or handoff.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "download.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "It correctly signals that no standard price is visible, but it cannot provide the OS's exact price and introduces potentially confusing alternatives: `$1,000–$3,000` per coaching session, `$10,000+` monthly retainers, and `$9.99/month` or `$49.99/year` for a related app.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "download.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "It supplies broad estimates such as hundreds to thousands per hour, `$10,000–$50,000+` per month, and hundreds of thousands annually, but never identifies the Billionaire High Performance Coach OS or its checkout price.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "download.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "It never reaches a price, identifies the Billionaire High Performance Coach OS, or provides a purchase path.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "product.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "It answers the product query substantially better than the target page, but does not provide a direct handoff to product.html or a clear single purchase CTA. Its citation set is also broader and noisier than necessary.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "product.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "It misidentifies the offer as personalized human coaching for high-net-worth individuals and invents services such as retreats, health professionals, 24/7 support, subscriptions, and bespoke packages that are not established by the page.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "product.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "It treats the query as a request to design a high-ticket coaching offer for billionaires and never identifies the actual product as an LLM operating system, digital manual, or prompt system.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/how-to-end-the-day-so-tomorrow-starts-fast.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "It answers the query more directly than the page by covering goal tracking, regular check-ins, memory, and escalation, but it does not hand off to the page or show how those functions become the page's close-open-loops, two-sentence-recap, and tomorrow-first-action routine.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/how-to-end-the-day-so-tomorrow-starts-fast.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "It covers goal setting, reminders, progress tracking, motivation, habits, personalization, check-ins, and integrations, but it does not connect those functions to the page's end-of-day shutdown method or its specific two-sentence recap and first-action rule.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/how-to-end-the-day-so-tomorrow-starts-fast.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The intake is actionable but the provided response stops at the Accountability Style prompt, never defines an AI accountability partner, and does not translate the page's close-open-loops, two-sentence-recap, and tomorrow-first-action sequence into the check-in routine.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "can-ai-replace-an-executive-coach-for-startups.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "It supplies the missing hybrid recommendation and concrete use cases such as always-on support, meeting practice, quick feedback, and daily accountability, while omitting the page's named boundary, exact four-function AI list, and ordered evidence-based escalation sequence.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "can-ai-replace-an-executive-coach-for-startups.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "It covers broad data analysis, scalability, consistency, empathy, context, trust, and judgment, but it lacks the page's named Startup Coaching Replacement Boundary, exact startup coaching functions, explicit escalation triggers, and observable-evidence workflow.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "can-ai-replace-an-executive-coach-for-startups.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "It never reaches the page's startup-specific AI-versus-human task boundary, escalation triggers, decision rule, or next step; the response ends after 'cash-'.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-accountability-partner/index.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "This is the strongest practical answer, covering goal, role, cadence, one-chat context, external tracking, and review questions. It still omits the page’s explicit human-escalation rule and pre-agreed recovery response after a miss, and it provides no canonical handoff.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-accountability-partner/index.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "It covers goals, milestones, check-ins, progress, reflection, and motivation, but lacks observable-evidence formatting, a durable record design, a pre-agreed response to a miss, human escalation, and a reliable reminder limitation.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-accountability-partner/index.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "Only generic claims about availability, non-judgment, customization, and proactive-texting limitations are supplied. It does not explain cadence, commitments, records, miss recovery, or escalation.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-executive-coach-for-founders.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "This is the strongest competing answer because it names and prioritizes recognizable alternatives, but it never presents BHPC or maps its five founder workflows to the decision. The page lacks the named alternatives, founder-stage and use-case segmentation, and explicit trade-off table needed to explain why a self-run operating OS is preferable to hybrid coaching, a matched human coach, or a roleplay tool.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-executive-coach-for-founders.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The response supplies platform names but no founder-specific winner, no comparison of self-run versus managed coaching, no bounded operating model, and no direct path to the intended product. It omits the page's concrete differentiators: daily accountability, meeting preparation, pattern review, and escalation of legal, financial, relational, or emotionally complex issues.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-executive-coach-for-founders.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "It never reaches a recommendation, comparison, founder-specific criteria, evidence, or purchase path, so it does not surface any of the page's decision-support, accountability, meeting-preparation, or human-escalation features.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "chatgpt-daily-operator-system/index.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "It is the strongest direct answer but still does not hand off to the intended page, name the AI Operator Model or DONE Check-In Loop, or connect CEO prompts to the page’s 90-day lever, controlled action, ship, and review procedure.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "chatgpt-daily-operator-system/index.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "It offers breadth but no copy-ready context fields, no ordered CEO workflow, no daily execution loop, and no handoff to the intended Daily Operator System or its prompt pack.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "chatgpt-daily-operator-system/index.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "It does not complete a CEO prompt list and provides no prioritization framework, prompt variables, concrete decision output, or connection to the page’s one-lever and DONE-check-in procedure.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/five-minute-shutdown-ritual.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The page lacks the answer’s concrete operational details: one trusted inbox, a do/delegate/defer/delete decision, top 1–3 tomorrow tasks, calendar preparation, a physical close, and the “Shutdown complete” cue.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/five-minute-shutdown-ritual.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "It gives a usable general routine, but the page lacks the concrete 5–10-minute execution sequence, one trusted capture location, explicit do/delegate/defer/delete triage, and a fixed closure cue that make the answer actionable.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/five-minute-shutdown-ritual.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The response never delivers the promised ritual, so the page still needs explicit capture, triage, tomorrow-planning, and closure instructions rather than only framework labels.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/your-weekly-review-simplified-20-minutes-that-changes-everything.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "It gives the strongest generic assessment framework, but still cannot judge this user's week and does not surface the intended page's 20-minute workflow or provide a met/partial/missed output template.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/your-weekly-review-simplified-20-minutes-that-changes-everything.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The numbered questions resemble a review but do not produce a grounded verdict against each intention, request evidence in a fixed format, or operationalize the page's 20-minute review.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/your-weekly-review-simplified-20-minutes-that-changes-everything.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "It asks for intentions and what happened but supplies no comparison rubric, status labels, next-outcome step, or connection to the page's 20-minute review sequence.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/meeting-to-execution-bridge.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "It offers a useful blank checklist but does not convert actual notes, provide a decision log or clarification queue, include a priority field, or apply the page’s outcome-to-constraint-to-winning-move-to-container-to-close-the-loop framework.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/meeting-to-execution-bridge.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "It provides no conversion method and no structured fields for action, owner, deadline, status, priority, decisions, or follow-up clarification.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/meeting-to-execution-bridge.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "It cannot perform the conversion until a second turn and supplies only placeholders. It does not show a note-to-row extraction rule, a single-owner accountability rule, a deadline/TBD rule, status handling, or a worked example.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    }
+  ],
+  "opportunities": [
+    {
+      "query": "is AI coaching worth it",
+      "path": "ai-coach-vs-human-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Burnout and Recovery",
+      "path": "topics/burnout-recovery/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A simple system for tracking what actually matters",
+      "path": "insights/a-simple-system-for-tracking-what-actually-matters.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI Daily Planning Prompt for Busy Founders",
+      "path": "ai-daily-planning-prompt-for-busy-founders.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI Executive Coach explained",
+      "path": "ai-executive-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI Accountability System for Entrepreneurs",
+      "path": "ai-accountability-system-for-entrepreneurs.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Billionaire High Performance Coach pricing",
+      "path": "download.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Billionaire High Performance Coach product",
+      "path": "product.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI accountability partner",
+      "path": "insights/how-to-end-the-day-so-tomorrow-starts-fast.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Can AI Replace an Executive Coach for Startups?",
+      "path": "can-ai-replace-an-executive-coach-for-startups.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how to use ChatGPT as an accountability partner",
+      "path": "ai-accountability-partner/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "best AI executive coach for founders",
+      "path": "ai-executive-coach-for-founders.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "ChatGPT prompts to think like a CEO",
+      "path": "chatgpt-daily-operator-system/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "design an end-of-day shutdown ritual to clear my mental task list",
+      "path": "insights/five-minute-shutdown-ritual.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "based on our discussions this week how did i perform against my intentions",
+      "path": "insights/your-weekly-review-simplified-20-minutes-that-changes-everything.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "convert these messy meeting notes into a structured action plan with owners and deadlines",
+      "path": "insights/meeting-to-execution-bridge.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "bhpc agent signal",
+      "path": "ai-coach-vs-human-coach.html",
+      "operation": "NO_ACTION_MAINTAIN"
+    },
+    {
+      "query": "AI Daily Planning Prompt for Busy Founders",
+      "path": "ai-daily-planning-prompt-for-busy-founders.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI Executive Coach explained",
+      "path": "ai-executive-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI accountability partner",
+      "path": "insights/how-to-end-the-day-so-tomorrow-starts-fast.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "design an end-of-day shutdown ritual to clear my mental task list",
+      "path": "insights/five-minute-shutdown-ritual.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "convert these messy meeting notes into a structured action plan with owners and deadlines",
+      "path": "insights/meeting-to-execution-bridge.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "is AI coaching worth it",
+      "path": "ai-coach-vs-human-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "is AI coaching worth it",
+      "path": "ai-coach-vs-human-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "is AI coaching worth it",
+      "path": "ai-coach-vs-human-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Burnout &amp; Recovery",
+      "path": "topics/burnout-recovery/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Burnout &amp; Recovery",
+      "path": "topics/burnout-recovery/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Burnout &amp; Recovery",
+      "path": "topics/burnout-recovery/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A simple system for tracking what actually matters — Spry Executive OS",
+      "path": "insights/a-simple-system-for-tracking-what-actually-matters.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A simple system for tracking what actually matters — Spry Executive OS",
+      "path": "insights/a-simple-system-for-tracking-what-actually-matters.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "A simple system for tracking what actually matters — Spry Executive OS",
+      "path": "insights/a-simple-system-for-tracking-what-actually-matters.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI Daily Planning Prompt for Busy Founders",
+      "path": "ai-daily-planning-prompt-for-busy-founders.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI Daily Planning Prompt for Busy Founders",
+      "path": "ai-daily-planning-prompt-for-busy-founders.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI Daily Planning Prompt for Busy Founders",
+      "path": "ai-daily-planning-prompt-for-busy-founders.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI Executive Coach explained",
+      "path": "ai-executive-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI Executive Coach explained",
+      "path": "ai-executive-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI Executive Coach explained",
+      "path": "ai-executive-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI Accountability System for Entrepreneurs",
+      "path": "ai-accountability-system-for-entrepreneurs.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI Accountability System for Entrepreneurs",
+      "path": "ai-accountability-system-for-entrepreneurs.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI Accountability System for Entrepreneurs",
+      "path": "ai-accountability-system-for-entrepreneurs.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Billionaire High Performance Coach pricing",
+      "path": "download.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Billionaire High Performance Coach pricing",
+      "path": "download.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Billionaire High Performance Coach pricing",
+      "path": "download.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Billionaire High Performance Coach product",
+      "path": "product.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Billionaire High Performance Coach product",
+      "path": "product.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Billionaire High Performance Coach product",
+      "path": "product.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI accountability partner",
+      "path": "insights/how-to-end-the-day-so-tomorrow-starts-fast.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI accountability partner",
+      "path": "insights/how-to-end-the-day-so-tomorrow-starts-fast.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI accountability partner",
+      "path": "insights/how-to-end-the-day-so-tomorrow-starts-fast.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Can AI Replace an Executive Coach for Startups?",
+      "path": "can-ai-replace-an-executive-coach-for-startups.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Can AI Replace an Executive Coach for Startups?",
+      "path": "can-ai-replace-an-executive-coach-for-startups.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Can AI Replace an Executive Coach for Startups?",
+      "path": "can-ai-replace-an-executive-coach-for-startups.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how to use ChatGPT as an accountability partner",
+      "path": "ai-accountability-partner/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how to use ChatGPT as an accountability partner",
+      "path": "ai-accountability-partner/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how to use ChatGPT as an accountability partner",
+      "path": "ai-accountability-partner/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "best AI executive coach for founders",
+      "path": "ai-executive-coach-for-founders.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "best AI executive coach for founders",
+      "path": "ai-executive-coach-for-founders.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "best AI executive coach for founders",
+      "path": "ai-executive-coach-for-founders.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "ChatGPT prompts to think like a CEO",
+      "path": "chatgpt-daily-operator-system/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "ChatGPT prompts to think like a CEO",
+      "path": "chatgpt-daily-operator-system/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "ChatGPT prompts to think like a CEO",
+      "path": "chatgpt-daily-operator-system/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "design an end-of-day shutdown ritual to clear my mental task list",
+      "path": "insights/five-minute-shutdown-ritual.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "design an end-of-day shutdown ritual to clear my mental task list",
+      "path": "insights/five-minute-shutdown-ritual.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "design an end-of-day shutdown ritual to clear my mental task list",
+      "path": "insights/five-minute-shutdown-ritual.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "based on our discussions this week how did i perform against my intentions",
+      "path": "insights/your-weekly-review-simplified-20-minutes-that-changes-everything.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "based on our discussions this week how did i perform against my intentions",
+      "path": "insights/your-weekly-review-simplified-20-minutes-that-changes-everything.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "based on our discussions this week how did i perform against my intentions",
+      "path": "insights/your-weekly-review-simplified-20-minutes-that-changes-everything.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "convert these messy meeting notes into a structured action plan with owners and deadlines",
+      "path": "insights/meeting-to-execution-bridge.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "convert these messy meeting notes into a structured action plan with owners and deadlines",
+      "path": "insights/meeting-to-execution-bridge.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "convert these messy meeting notes into a structured action plan with owners and deadlines",
+      "path": "insights/meeting-to-execution-bridge.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Ask me the hardest questions about my business plan",
+      "path": "insights/ask-me-the-hardest-questions-about-my-business-plan.html",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "blocked_reason": "",
+      "source": "json_new_page_opportunities"
+    },
+    {
+      "query": "What are the highest-leverage actions I should take today?",
+      "path": "answers/what-are-the-highest-leverage-actions-i-should-take-today.html",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "blocked_reason": "",
+      "source": "json_new_page_opportunities"
+    }
+  ],
+  "interpretation": {
+    "measurement_status": "AGENT_DIGEST_ABSORBED_WITH_EXACT_IMPLEMENTATION_METADATA",
+    "reason": "The digest preserves intended destination, operation, implementation path, and JSON pages-to-build specs when present. Exact application is planned and traced by the agent exact implementation lane."
+  }
+}

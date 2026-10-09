@@ -1,6 +1,6 @@
 ---
 title: "How to build a powerful identity through tiny wins"
-description: "How to build a powerful identity through tiny wins — a calm, executable framework (Spry Executive OS)."
+description: "How to build a stronger identity through tiny wins: define the smallest version you will do today, finish it, and record the win so self-trust grows daily."
 date: "2026-05-08"
 cluster: "identity"
 pillar: "identity & power"

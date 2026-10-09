@@ -1,6 +1,6 @@
 ---
 title: "The self-trust protocol: do what you said you’d do"
-description: "The self-trust protocol: do what you said you’d do — a calm, executable framework (Spry Executive OS)."
+description: "The self-trust protocol: do what you said you'd do by making promises small, keeping them daily, and writing down the evidence that you followed through."
 date: "2026-04-13"
 cluster: "identity"
 pillar: "identity & power"

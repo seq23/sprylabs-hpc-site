@@ -9,6 +9,10 @@ Outputs:
 
 const fs = require("fs");
 const path = require("path");
+// One build clock (SOURCE_DATE_EPOCH, else the HEAD commit time), never the wall
+// clock: a wall-clock "today" made two clones of one commit differ after a UTC
+// date rollover (validate:clean-rebuild-parity, PR #118 run 37721109042).
+const { buildDate, buildTimestamp } = require("./lib/build_clock.cjs");
 
 const ROOT = path.resolve(__dirname, "..");
 const DRAFT_DIR = path.join(ROOT, "content", "insights", "_drafts");
@@ -28,7 +32,7 @@ function ensureDir(p) {
 }
 
 function utcTodayYYYYMMDD() {
-  const d = new Date();
+  const d = buildDate();
   const y = d.getUTCFullYear();
   const m = String(d.getUTCMonth() + 1).padStart(2, "0");
   const day = String(d.getUTCDate()).padStart(2, "0");
@@ -161,7 +165,7 @@ function summarizeCoverage({ clusters, drafts, lives, redditPages }) {
   for (const k of Object.keys(byCluster)) byCluster[k].draftDates.sort();
 
   return {
-    generatedAtUtc: new Date().toISOString(),
+    generatedAtUtc: buildTimestamp(),
     todayUtc: today,
     totals: {
       drafts: drafts.length,

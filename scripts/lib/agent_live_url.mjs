@@ -2,7 +2,7 @@ import path from 'node:path';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
-const { routeFor, hostFor } = require('./dual_domain_policy.cjs');
+const { routeFor, hostFor, canonicalUrlFor } = require('./dual_domain_policy.cjs');
 const KNOWN_HOSTS = new Set(['billionairehighperformancecoach.com', 'spryexecutiveos.com']);
 
 function cleanRelative(value = '') {
@@ -26,5 +26,5 @@ export function resolveAgentLiveUrl(entry = {}, publishedHostOverrides = new Map
   const rel = cleanRelative(entry.implementation_path || entry.intended_winner_path || '');
   if (!rel) return '';
   const route = routeFor(rel);
-  return `${hostFor(route, publishedHostOverrides)}${route}`;
+  return canonicalUrlFor(route, publishedHostOverrides);
 }

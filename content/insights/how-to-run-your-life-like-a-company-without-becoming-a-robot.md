@@ -1,6 +1,6 @@
 ---
 title: "How to run your life like a company (without becoming a robot)"
-description: "How to run your life like a company (without becoming a robot) — a calm, executable framework (Spry Executive OS)."
+description: "How to run your life like a company without becoming a robot: borrow the reviews, priorities and defaults of a well-run team, and keep room for being human."
 date: "2026-03-06"
 cluster: "identity"
 pillar: "identity & power"

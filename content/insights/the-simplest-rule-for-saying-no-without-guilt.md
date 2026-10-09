@@ -1,6 +1,6 @@
 ---
 title: "The simplest rule for saying no (without guilt)"
-description: "The simplest rule for saying no (without guilt) — a calm, executable framework (Spry Executive OS)."
+description: "The simplest rule for saying no without guilt: if it does not serve this week's outcome, the answer is not now, delivered kindly and without long explanations."
 date: "2026-03-23"
 cluster: "wealth"
 pillar: "wealth & leverage"

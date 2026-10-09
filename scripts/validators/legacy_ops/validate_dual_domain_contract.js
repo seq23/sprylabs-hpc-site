@@ -19,7 +19,7 @@ function walk(dir, out = []) {
   }
   return out;
 }
-const { routeFor, hostFor } = require('../../lib/dual_domain_policy.cjs');
+const { routeFor, hostFor, canonicalUrlFor } = require('../../lib/dual_domain_policy.cjs');
 const publishedManifestPath = path.join(root, 'data/reddit/published_manifest.json');
 const publishedManifest = fs.existsSync(publishedManifestPath) ? JSON.parse(fs.readFileSync(publishedManifestPath, 'utf8')) : { items: [] };
 const publishedHostOverrides = new Map((publishedManifest.items || []).map((item) => [item.route, item.canonical_host]));
@@ -148,7 +148,7 @@ for (const file of htmlFiles) {
   const rel = path.relative(root, file).replace(/\\/g, '/');
   const route = routeFor(rel);
   const host = hostFor(route, publishedHostOverrides);
-  const expectedCanonical = host + route;
+  const expectedCanonical = canonicalUrlFor(route, publishedHostOverrides);
   const html = fs.readFileSync(file, 'utf8');
   const privateNoindex = isPrivateNoindex(rel, html);
   if (privateNoindex) {

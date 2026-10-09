@@ -18,15 +18,22 @@
 //
 //   1. preserves the drop on a branch (agent-drop/<date>-<scope>) at the exact
 //      SHA that landed, so nothing the writer produced is lost;
-//   2. opens a pull request from that branch, where Validate Repo already
-//      reports on the SHA and where the intake can be repaired before merge;
+//   2. dispatches Agent Drop Intake for that branch, which hands it to the one
+//      lane that may put a drop on main (Spry Content Release, drop_branch) -
+//      the drop lands there together with the pages it repairs. (This step used
+//      to open a pull request; GitHub refuses that to GITHUB_TOKEN - sentinel run
+//      36246107783, HTTP 403 - and a PR holding only the raw drop can never go
+//      green anyway, see overlay_agent_drop.mjs.)
 //   3. removes the drop from main through the shared writer helper, which
 //      converges, pushes, and confirms a Validate Repo run covers the new HEAD -
 //      returning main to the tree that was last validated green.
 //
-// The writer keeps publishing: the merge of that pull request is a push event
-// on the manifest path, and Spry Content Release absorbs it exactly as it would
-// have absorbed the direct drop - but only after the drop has been proved.
+// The writer keeps publishing: the drop is absorbed from its branch, and only a
+// tree that passes the release lane's validation reaches main.
+//
+// With the main ruleset in place a direct drop is refused at push time, so this
+// is the fallback for a ruleset that has been removed; the sentinel alarms on
+// that separately.
 //
 // WHAT IT DOES NOT DO. A red main whose HEAD is not a raw direct drop - a bot
 // release, a human merge, a drop that DID come through a pull request - is left
@@ -50,9 +57,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {spawnSync} from 'node:child_process';
+import {DROP_ROOT, branchFor, classifyDropFiles} from './agent_drop_contract.mjs';
 
-const DROP_ROOT = 'data/report_fixes/agent_runs/';
-const MANIFEST = 'agent_run_manifest.json';
 const BOT_LOGIN = 'github-actions[bot]';
 
 const mode = process.argv.includes('--execute') ? 'execute' : 'classify';
@@ -119,10 +125,8 @@ function refuse(reason, detail) {
 
 if (parents.length !== 1) refuse('not_a_direct_push', `commit has ${parents.length} parent(s); a raw drop is a single-parent direct push.`);
 if (!files.length) refuse('empty_commit', 'commit touched no files.');
-const outside = files.filter((f) => !f.startsWith(DROP_ROOT));
-if (outside.length) refuse('not_a_raw_drop', `${outside.length} of ${files.length} file(s) are outside ${DROP_ROOT}: ${outside.slice(0, 5).join(', ')}${outside.length > 5 ? ', ...' : ''}. A red commit that changes anything else is the existing alarm's business.`);
-const manifests = files.filter((f) => path.posix.basename(f) === MANIFEST);
-if (!manifests.length) refuse('no_manifest', `all ${files.length} file(s) are under ${DROP_ROOT} but none is ${MANIFEST}; without a manifest nothing would have absorbed it and nothing here should revert it.`);
+const drop = classifyDropFiles(files);
+if (!drop.ok) refuse(drop.reason, `${drop.detail} A red commit that is not exactly a drop is the existing alarm's business.`);
 if (authorLogin === BOT_LOGIN || authorName === BOT_LOGIN) refuse('bot_author', `authored by ${BOT_LOGIN}; bot writes go through commit_and_push_if_changed.sh and are covered on their own SHA, so this red is a different class.`);
 
 const pullsRes = await gh('GET', `/repos/${repo}/commits/${headSha}/pulls?per_page=100`);
@@ -130,10 +134,8 @@ if (pullsRes.status !== 200 || !Array.isArray(pullsRes.json)) die(`could not lis
 const merged = pullsRes.json.filter((p) => p && (p.merged_at || p.state === 'closed' && p.merge_commit_sha === headSha));
 if (merged.length) refuse('arrived_through_pull_request', `commit is the merge of pull request #${merged[0].number}; it was validated before it landed and a person merged it. Not reverting a human decision.`);
 
-// One drop directory per manifest; the branch name is derived from the first.
-const dropDirs = [...new Set(manifests.map((m) => path.posix.dirname(m)))];
-const [, , , runDate, scope] = dropDirs[0].split('/');
-const branch = `agent-drop/${runDate}-${scope}`;
+const {dropDirs, runDate, scope} = drop;
+const branch = branchFor(runDate, scope);
 const classification = {
   action: 'quarantine',
   reason: 'raw_direct_drop_on_red_main',
@@ -177,29 +179,12 @@ else if (refRes.status === 422) {
   console.log(`[quarantine-raw-agent-drop] ${branch} already exists at ${headSha}`);
 } else die(`could not create ${branch}: HTTP ${refRes.status} ${refRes.text.slice(0, 300)}`);
 
-// 2. Open the pull request, or find the one already open for this branch.
-const owner = repo.split('/')[0];
-const openRes = await gh('GET', `/repos/${repo}/pulls?state=open&head=${encodeURIComponent(`${owner}:${branch}`)}&per_page=10`);
-let pr = Array.isArray(openRes.json) ? openRes.json[0] : null;
-if (!pr) {
-  const title = `Saturday agent drop ${runDate} (${scope}): validate before it lands`;
-  const body = [
-    `The Twin Agent pushed \`${headSha}\` ("${message.split('\n')[0]}") directly to \`main\`, and Validate Repo failed on it.`,
-    '',
-    `Main Validation Sentinel moved the drop here so \`main\` returns to its last validated tree. Nothing the writer produced is lost: this branch is the exact commit that landed.`,
-    '',
-    '**What to do:** repair whatever the checks name (usually the intake, not the artifact), push to this branch, and land it green. Its merge is the push event on `agent_run_manifest.json` that Spry Content Release absorbs.',
-    '',
-    `Drop: \`${dropDirs.join('`, `')}\``,
-    alarmIssue ? `Alarm: #${alarmIssue}` : '',
-    '',
-    'Opened by `.github/scripts/quarantine_raw_agent_drop.mjs`.',
-  ].filter((line) => line !== null).join('\n');
-  const createRes = await gh('POST', `/repos/${repo}/pulls`, {title, head: branch, base: 'main', body});
-  if (createRes.status !== 201 || !createRes.json?.number) die(`could not open the pull request from ${branch}: HTTP ${createRes.status} ${createRes.text.slice(0, 300)}`);
-  pr = createRes.json;
-  console.log(`[quarantine-raw-agent-drop] opened pull request #${pr.number}: ${pr.html_url}`);
-} else console.log(`[quarantine-raw-agent-drop] pull request #${pr.number} already open: ${pr.html_url}`);
+// 2. Hand the branch to Agent Drop Intake. A GITHUB_TOKEN ref creation raises
+//    no push event, so the intake is dispatched explicitly; 204 is the only
+//    acceptance. Without it the drop would sit on a branch nothing reads.
+const intakeRes = await gh('POST', `/repos/${repo}/actions/workflows/agent-drop-intake.yml/dispatches`, {ref: 'main', inputs: {drop_branch: branch}});
+if (intakeRes.status !== 204) die(`could not dispatch Agent Drop Intake for ${branch}: HTTP ${intakeRes.status} ${intakeRes.text.slice(0, 300)}; main still carries the drop`);
+console.log(`[quarantine-raw-agent-drop] dispatched Agent Drop Intake for ${branch}`);
 
 // 3. Remove the drop from main through the shared writer helper. The helper
 //    converges, pushes with retry, dispatches Validate Repo and confirms a run
@@ -217,7 +202,7 @@ const helperOverride = process.env.QUARANTINE_WRITER_HELPER || '';
 const apiIsStub = Boolean(process.env.GITHUB_API_URL) && !/^https:\/\/api\.github\.com\/?$/.test(process.env.GITHUB_API_URL);
 const helper = helperOverride && apiIsStub ? helperOverride : realHelper;
 if (helperOverride && !apiIsStub) console.log('[quarantine-raw-agent-drop] QUARANTINE_WRITER_HELPER ignored: the API is api.github.com, so the real helper is used');
-const commitMessage = `quarantine raw agent drop ${runDate}/${scope}: moved to ${branch}, PR #${pr.number}`;
+const commitMessage = `quarantine raw agent drop ${runDate}/${scope}: moved to ${branch}, Agent Drop Intake absorbs it from there`;
 // The helper replays WORKFLOW_ARGV after a remote advance. The workflow
 // declares it as this very script, so a replay re-reads main's new HEAD and
 // refuses (main_moved_on) rather than blindly deleting a directory from a tree
@@ -228,7 +213,7 @@ const push = spawnSync('bash', [helper, commitMessage, 'main-validation-sentinel
   stdio: 'inherit',
   env: {...process.env, WORKFLOW_ARGV: removal},
 });
-if (push.status !== 0) die(`the writer helper refused or failed to land the removal (exit ${push.status}); main still carries the drop and the pull request #${pr.number} stands`, push.status || 1);
+if (push.status !== 0) die(`the writer helper refused or failed to land the removal (exit ${push.status}); main still carries the drop and ${branch} holds it`, push.status || 1);
 
-output({...classification, pr_number: pr.number, pr_url: pr.html_url});
-console.log(`[quarantine-raw-agent-drop] PASS: ${headSha} preserved on ${branch} (PR #${pr.number}) and removed from main`);
+output({...classification, intake_branch: branch});
+console.log(`[quarantine-raw-agent-drop] PASS: ${headSha} preserved on ${branch}, Agent Drop Intake dispatched for it, and removed from main`);

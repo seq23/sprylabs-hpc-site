@@ -21,6 +21,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import {isPendingForAbsorber} from '../agent_intake/absorption_claim.mjs';
 import {
   ROOT,
   findAgentManifests,
@@ -68,6 +69,7 @@ function firstDivergence(expected, actual, trail = '') {
   return `${trail || '<root>'}: on disk ${JSON.stringify(actual)?.slice(0, 160)} / re-derived ${JSON.stringify(expected)?.slice(0, 160)}`;
 }
 
+const pending = [];
 for (const entry of entries) {
   const scope = safeScope(entry.scope || entry.manifest?.scope || 'bhpc');
   // Runs before the exact-implementation cutover are deliberately never
@@ -78,6 +80,16 @@ for (const entry of entries) {
 
   const normalizedRel = normalizedRelFor(entry);
   const onDisk = readJson(normalizedRel, null);
+  // Pending for the absorber lane (absorption_claim.mjs): nothing is derived
+  // yet, so there is nothing to reproduce - but anything derived that DOES
+  // exist is a half-absorbed run, which is an error.
+  if (isPendingForAbsorber(entry)) {
+    const socialPending = `${SOCIAL_RUNS_ROOT}/${sourceKey(entry.runDate, scope)}.json`;
+    if (onDisk) errors.push(`HALF_ABSORBED: ${normalizedRel} exists but ${entry.manifestRel} is still READY_FOR_ABSORPTION; only the absorber lane derives a run, and it flips the manifest in the same pass`);
+    if (fs.existsSync(path.join(ROOT, socialPending))) errors.push(`HALF_ABSORBED: ${socialPending} exists but ${entry.manifestRel} is still READY_FOR_ABSORPTION`);
+    pending.push({run_date: entry.runDate, scope, manifest_path: entry.manifestRel});
+    continue;
+  }
   if (!onDisk) { errors.push(`derived output missing: ${normalizedRel} (run ${entry.runDate}/${scope} is live under the current policy and must have a normalized record)`); continue; }
 
   const digest = digestManifest({...entry, scope});
@@ -129,9 +141,10 @@ const report = {
   errors,
   normalization_contract: readJson('data/report_fixes/agent_exact_implementation_policy.json', {}).effective_from || null,
   live_runs_reproduced: checked.length,
-  frozen_runs_skipped: entries.length - checked.length,
+  frozen_runs_skipped: entries.length - checked.length - pending.length,
+  pending_for_absorber: pending,
   checked,
 };
 writeJson('artifacts/validation/derived-absorber-reproducibility.json', report);
-console.log(JSON.stringify({status, errors, live_runs_reproduced: checked.length, frozen_runs_skipped: entries.length - checked.length}, null, 2));
+console.log(JSON.stringify({status, errors, live_runs_reproduced: checked.length, pending_for_absorber: pending.length, frozen_runs_skipped: entries.length - checked.length - pending.length}, null, 2));
 if (errors.length) process.exit(1);

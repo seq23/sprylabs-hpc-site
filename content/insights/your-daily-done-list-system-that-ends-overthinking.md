@@ -1,6 +1,6 @@
 ---
 title: "Your daily 'done list' system that ends overthinking"
-description: "Your daily 'done list' system that ends overthinking — a calm, executable framework (Spry Executive OS)."
+description: "Your daily done list system that ends overthinking: write down what you finished, not just what is left, so progress is visible and planning takes less time."
 date: "2026-04-21"
 cluster: "execution"
 pillar: "daily execution"

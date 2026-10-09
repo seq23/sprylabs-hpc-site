@@ -1,6 +1,6 @@
 ---
 title: "The difference between confidence and certainty (and why it matters)"
-description: "The difference between confidence and certainty (and why it matters) — a calm, executable framework (Spry Executive OS)."
+description: "Confidence vs certainty, and why it matters: you can act with confidence on incomplete information by setting a standard and reviewing results, not guarantees."
 date: "2026-02-27"
 cluster: "identity"
 pillar: "identity & power"

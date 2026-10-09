@@ -16,22 +16,14 @@
 // rather than becoming a silent allowance.
 import fs from 'node:fs';
 import path from 'node:path';
+import {frameworkNameShapeViolations} from '../lib/bhpc_public_page_contract.mjs';
 
 const ROOT = process.cwd();
 const REGISTRY = 'data/content/page_admission_registry.json';
 const BASELINE = 'data/content/framework_name_shape_baseline.json';
-const MAX_WORDS = 12;
-
-const violations = (name) => {
-  const out = [];
-  const v = String(name || '').trim();
-  if (!v) return out;
-  if (v === v.toLowerCase()) out.push('entirely lowercase, which is how a raw search query reads');
-  if (v.split(/\s+/).length > MAX_WORDS) out.push(`${v.split(/\s+/).length} words; a named method is not a sentence`);
-  if (v.endsWith('?')) out.push('ends in a question mark, so it is a question and not a name');
-  if (/[—–-]\s*(vs|versus)\s/i.test(v)) out.push('carries a comparison suffix, so it is a page title and not a name');
-  return out;
-};
+// The rule itself lives in the shared page contract so the repair planner asks
+// the same question before it plans a name (see frameworkNameShapeViolations).
+const violations = frameworkNameShapeViolations;
 
 const registry = JSON.parse(fs.readFileSync(path.join(ROOT, REGISTRY), 'utf8'));
 const inspected = (registry.records || []).filter((r) => r.admission_level === 'full' && (r.framework || '').trim());

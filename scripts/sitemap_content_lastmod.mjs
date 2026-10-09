@@ -184,7 +184,28 @@ const needSeed = [...resolved.entries()]
   .map(([, f]) => f);
 const seeded = needSeed.length ? seedDates([...new Set(needSeed)]) : new Map();
 
-const stats = { seeded_from_git: 0, unchanged: 0, regressed_claim_corrected: 0, content_changed: 0, kept_existing_no_evidence: 0, unresolvable_file: unresolvable.length };
+const stats = { seeded_from_git: 0, pending_change_dated_today: 0, unchanged: 0, regressed_claim_corrected: 0, content_changed: 0, kept_existing_no_evidence: 0, unresolvable_file: unresolvable.length };
+
+// A URL new to the ledger is dated from git history - but this deriver runs
+// INSIDE the release, before the commit that carries the page. When the page on
+// disk already differs from every committed version, the newest commit that
+// "moved its visible text" has not been made yet; it is the one this run is
+// about to make. Dating the record from history then under-reports the change
+// by exactly one release, and the --check mode, run on the committed tree by
+// validate:search-measurement-truthfulness, walks git after the commit and
+// contradicts it. That is what turned release commit 2701370e9 red on
+// 2026-09-26: /chatgpt-daily-operator-system/ (ledger 2026-09-20, git
+// 2026-09-26) and /product (ledger 2026-08-26, git 2026-09-26) were both new
+// to the ledger with uncommitted visible changes. So: a new URL whose on-disk
+// visible text is not the text at HEAD is a pending change, and today is its
+// honest date, exactly as it is for a URL the ledger already knew.
+function visibleHashAtHead(file) {
+  const h = loadHistory().get(file);
+  const blob = h && h.length ? h[0].blob : null;
+  if (!blob) return null;
+  hashBlobs([blob]);
+  return blobHashCache.get(blob) ?? null;
+}
 // URLs whose visible content is byte-for-byte what the ledger recorded. Only for
 // these can a sitemap/ledger mismatch mean the sitemap is publishing a false date;
 // for the rest it means the ledger is due a regeneration, which is a different
@@ -228,6 +249,12 @@ for (const [loc, existing] of allLocs) {
   if (!gitDate) {
     stats.kept_existing_no_evidence += 1;
     if (existing) urls.push({ url: loc, source_file: file, content_sha256: hash, lastmod: existing, evidence: 'retained_existing_sitemap_value', first_seen: existing });
+    continue;
+  }
+  const headHash = visibleHashAtHead(file);
+  if (headHash && headHash !== hash) {
+    stats.pending_change_dated_today += 1;
+    urls.push({ url: loc, source_file: file, content_sha256: hash, lastmod: TODAY, evidence: 'content_hash_changed', first_seen: gitDate });
     continue;
   }
   stats.seeded_from_git += 1;

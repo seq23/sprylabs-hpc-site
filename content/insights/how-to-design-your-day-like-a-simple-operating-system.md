@@ -1,6 +1,6 @@
 ---
 title: "How to design your day like a simple operating system"
-description: "How to design your day like a simple operating system — a calm, executable framework (Spry Executive OS)."
+description: "How to design your day like a simple operating system: one outcome, three ordered actions, 25-minute work loops and a two-sentence close-out each evening."
 date: "2026-04-19"
 cluster: "systems"
 pillar: "systems & os thinking"

@@ -1,6 +1,6 @@
 ---
 title: "How to stop negotiating with yourself (without brute force)"
-description: "How to stop negotiating with yourself (without brute force) — a calm, executable framework (Spry Executive OS)."
+description: "How to stop negotiating with yourself without brute force: decide the standard once, make it small enough to keep, and remove the daily debate over doing it."
 date: "2026-02-16"
 cluster: "discipline"
 pillar: "mental discipline"

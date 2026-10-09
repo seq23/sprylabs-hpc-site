@@ -1,6 +1,6 @@
 ---
 title: "How to create standards you can actually keep"
-description: "How to create standards you can actually keep — a calm, executable framework (Spry Executive OS)."
+description: "How to create standards you can actually keep: set the floor at what you can do on your worst day, keep it without exceptions, and raise it only once it holds."
 date: "2026-02-24"
 cluster: "discipline"
 pillar: "mental discipline"

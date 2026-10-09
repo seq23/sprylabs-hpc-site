@@ -1,6 +1,6 @@
 ---
 title: "The ‘one page’ decision memo: make better bets faster"
-description: "The ‘one page’ decision memo: make better bets faster — a calm, executable framework (Spry Executive OS)."
+description: "The one-page decision memo: write the choice, the options, the criteria and the call on a single page, so you make better bets faster and can review them later."
 date: "2026-03-21"
 cluster: "wealth"
 pillar: "wealth & leverage"

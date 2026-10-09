@@ -1,6 +1,6 @@
 ---
 title: "The ‘friction audit’: how to remove what drains you"
-description: "The ‘friction audit’: how to remove what drains you — a calm, executable framework (Spry Executive OS)."
+description: "The friction audit: list what drains energy during a normal day, pick the one point of drag that costs the most, and remove or delay it this week."
 date: "2026-03-11"
 cluster: "systems"
 pillar: "systems & OS thinking"

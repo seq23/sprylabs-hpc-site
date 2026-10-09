@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-09-20T23:19:46.492Z",
+  "generated_at": "2026-10-08T14:50:36.923Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 241,
+  "admitted_hard_fail_count": 249,
   "reviewed_count": 8,
-  "unreviewed_count": 233,
+  "unreviewed_count": 241,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 185,
+    "REVIEW_REQUIRED": 192,
     "EXISTING_REPAIR_AVAILABLE": 8,
-    "TRUE_BLOCKER": 30,
+    "TRUE_BLOCKER": 31,
     "REVIEW_WARNING_BOUNDARY": 18
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 185,
+    "REVIEW_REQUIRED": 192,
     "EXISTING_REPAIR_AVAILABLE": 8,
-    "TRUE_BLOCKER": 30,
+    "TRUE_BLOCKER": 31,
     "REVIEW_WARNING_BOUNDARY": 10
   },
   "migration_status_counts": {
-    "UNREVIEWED": 233,
+    "UNREVIEWED": 241,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -2898,6 +2898,21 @@
       "evidence": []
     },
     {
+      "validation_id": "VAL-WF-AGENT-DROP-INTAKE",
+      "name": "agent-drop-intake.yml",
+      "command": ".github/workflows/agent-drop-intake.yml",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "The Twin Agent's weekly drop reached main raw on seven Saturdays (2026-08-08..2026-09-26) and turned it red each time. A drop pushed to agent-drop/<date>-<scope> now reaches main only through this lane: it classifies the branch with overlay_agent_drop.mjs (anything but a run directory is refused and nothing is dispatched), dispatches Spry Content Release in agent-intake mode with drop_branch, and stays until that run concludes, re-asking if a newer queued run in main-automation cancelled it while pending.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-WF-AGENT-DROP-INTAKE"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
       "validation_id": "VAL-CITATION-SCHEMA-AUTHORITY",
       "name": "validate:citation-schema-authority",
       "command": "npm run validate:citation-schema-authority",
@@ -3656,6 +3671,111 @@
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-AGENT-CREATED-PAGE-DEMAND-GATE"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-WORKFLOW-STEP-ENV-CONTRACT",
+      "name": "validate:workflow-step-env-contract",
+      "command": "npm run validate:workflow-step-env-contract",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses the failure found in Deploy Distribution run 36191288768 (2026-09-25): the step 'Verify attestation and deploy IndexNow distribution' ran scripts/distribution/deploy_distribution.sh, whose Search Console lane read GSC_SERVICE_ACCOUNT_JSON_PATH and GSC_SITE_URL; the step set neither, so every run printed 'GSC skipped: credentials/site secret not present' although the GSC_SERVICE_ACCOUNT_JSON secret existed. The check traces each workflow run step through npm scripts, scripts/ files and topology lanes, and fails when a step env name is read by nothing it runs, or when a script reads a secret-family variable with no default that the step, job, workflow or call chain never provides. Zero workflows or zero run steps fail.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-WORKFLOW-STEP-ENV-CONTRACT"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-SEARCH-SNIPPET-BOUNDS",
+      "name": "validate:search-snippet-bounds",
+      "command": "npm run validate:search-snippet-bounds",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses the Bing Webmaster findings of 25 Sep 2026: rule 118 'meta description too short' on 8 billionairehighperformancecoach.com and 24 spryexecutiveos.com pages (41-98 characters, the section and topic hubs from build_navigation_structure.mjs and the insight posts' boilerplate front matter), and Site Scan 'title too long' above 70 characters (1,813 pages, a 37-character brand suffix on long questions). Every indexable page must carry a 30-70 character title and a 110-160 character meta description, each unique; every sitemap URL must map to a page the check examined. Zero pages examined fails.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-SEARCH-SNIPPET-BOUNDS"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-REDIRECT-AND-LINK-INTEGRITY",
+      "name": "validate:redirect-and-link-integrity",
+      "command": "npm run validate:redirect-and-link-integrity",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses the Bing Webmaster 404s of 25 Sep 2026 (221 on spryexecutiveos.com, 8 on billionairehighperformancecoach.com): 121 /guides/<slug> pages moved to the root on 2026-07-23 with no redirect, retired directory pages redirected only in their /x/ form, and a /*.html wildcard above every exact .html rule so none could fire. Against the assembled .pages-output with Cloudflare first-match semantics: every exact _redirects rule must be reachable, single-hop and land on a published page; every internal <a href> must resolve to a published page; every Bing-held 404 in fixtures/validation/bing_held_404s.json must redirect in one hop. Zero rules, pages or links examined fails.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-REDIRECT-AND-LINK-INTEGRITY"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-AGENT-DROP-OVERLAY",
+      "name": "validate:agent-drop-overlay",
+      "command": "npm run validate:agent-drop-overlay",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses an agent-drop road to main that could carry anything but a run directory. Seven Saturdays (2026-08-08..2026-09-26, last Validate Repo 36245892704) the Twin Agent pushed its weekly artifact straight to main; a raw drop is never a valid main tree because build:all applies its repairs to governed pages, so the extraction-surface guard fails until the release lane commits drop + pages + snapshot together. overlay_agent_drop.mjs is now the only road: Spry Content Release lays an agent-drop/<date>-<scope> branch onto main's tip and commits it with the pages it repairs. This self-test drives the script against real git: a branch that adds a page, lacks a manifest, nests below the run directory, deletes a file, or is not named agent-drop/<date>-<scope> lays nothing onto main; a checkout that is not origin/main is refused; an absorbed drop is a named stop; verify-landed passes only when every drop file is on main. Hard-fails on zero cases.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-AGENT-DROP-OVERLAY"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-ABSORB-CLAIMS-ONLY-IN-ABSORBER",
+      "name": "validate:absorb-claims-only-in-absorber",
+      "command": "npm run validate:absorb-claims-only-in-absorber",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses a validation lane that absorbs a pending Twin Agent drop. Seven Saturdays (2026-08-08..2026-09-26) the drop commit itself went red in Validate Repo (last 36245892704: extraction-surface-guard, 5 governed surfaces changed) because Validate Repo's producer chain ran absorb_bhpc_agent_runs.mjs, which claimed the READY_FOR_ABSORPTION run, and build:all then rewrote governed pages the commit did not contain - red regardless of artifact quality. The absorber now claims a READY run only where BHPC_ABSORB_READY_RUNS=1, set solely at the top of spry-content-release.yml. This self-test runs the real absorber in a scratch tree on the real 2026-09-26 drop: unset/true/0 leave the manifest byte-identical, write no normalized or social run, and name the pending run; =1 absorbs it; and no other workflow may set the switch. Hard-fails on zero assertions.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-ABSORB-CLAIMS-ONLY-IN-ABSORBER"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-FROZEN-OUTPUT-SHRINK",
+      "name": "validate:frozen-output-shrink",
+      "command": "npm run validate:frozen-output-shrink",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "A reviewed pull request (#107, 2026-09-25) thinned two insight pages by more than 10% and merged green, because the only material-shrink check lived in frozen_outputs.mjs freeze, which only unattended writer lanes run; the next morning Daily Citation Intelligence run 36245956232 failed FROZEN_OUTPUT_MATERIAL_SHRINK with nobody there to judge the trim. This check applies the same shrink rule at pull-request time: every admitted page that lost >= 2048 bytes and >= 10% of its frozen output must carry a named acceptance (route, frozen sha256, floor, reason) in data/release/frozen_output_shrink_acceptances.json, malformed or stale acceptances fail, six self-proof cases prove it can still refuse, and zero frozen records examined is a failure.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-FROZEN-OUTPUT-SHRINK"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-INTAKE-HOLDS-NONCONFORMING-PAGE",
+      "name": "validate:intake-holds-nonconforming-page",
+      "command": "npm run validate:intake-holds-nonconforming-page",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses a regression in which one nonconforming agent page fails the whole Spry Content Release again. Three Fridays running (2026-09-19, 2026-09-26, 2026-10-03 run 37127626280 on f4163ce) the Twin Agent drop reached main by direct push and the release it started went red at release:agent-intake:raw because validate:page-seo-contract, the lane's last stage, failed the run on ONE rendered page (ai-coach-vs-human-coach.html MISSING_REQUIRED_HEADING, one of eleven). scripts/agent_intake/hold_nonconforming_agent_pages.mjs now runs before that validator and holds a failing page by name: last validated bytes restored, ledgered in data/content/agent_page_quarantine.json under lane agent_intake_hold, planned BLOCKED, reported; the other pages ship and the run exits 0. This self-test runs the real plan builder, applier, hold stage and contract validator in a scratch git tree, breaks one of two rendered pages, and proves the validator fails before the hold, the hold restores exactly that page and ledgers it, the validator passes after it, the hold persists across re-plan and re-apply, and a missing plan is a named failure. Hard-fails on zero assertions.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-INTAKE-HOLDS-NONCONFORMING-PAGE"
       ],
       "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",

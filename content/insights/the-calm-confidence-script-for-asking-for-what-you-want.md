@@ -1,6 +1,6 @@
 ---
 title: "The calm confidence script for asking for what you want"
-description: "The calm confidence script for asking for what you want — a calm, executable framework (Spry Executive OS)."
+description: "The calm confidence script for asking for what you want: say what you want, why it is fair, and what you will do next, without apology or over-explaining."
 date: "2026-04-05"
 cluster: "identity"
 pillar: "identity & power"

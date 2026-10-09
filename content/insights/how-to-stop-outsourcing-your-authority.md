@@ -1,6 +1,6 @@
 ---
 title: "How to stop outsourcing your authority"
-description: "How to stop outsourcing your authority — a calm, executable framework (Spry Executive OS)."
+description: "How to stop outsourcing your authority: gather input, then make the call yourself with a written rule for what counts as enough information to decide."
 date: "2026-04-23"
 cluster: "identity"
 pillar: "identity & power"

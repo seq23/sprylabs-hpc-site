@@ -1,6 +1,6 @@
 ---
 title: "Why checklists beat willpower (and how to use them)"
-description: "Why checklists beat willpower (and how to use them) — a calm, executable framework (Spry Executive OS)."
+description: "Why checklists beat willpower and how to use them: write the steps once, follow them when tired or stressed, and improve the list after each weekly review."
 date: "2026-05-04"
 cluster: "systems"
 pillar: "systems & os thinking"

@@ -1,6 +1,6 @@
 ---
 title: "A simple system for tracking what actually matters"
-description: "A simple system for tracking what actually matters — a calm, executable framework (Spry Executive OS)."
+description: "A simple tracking system for what actually matters: one daily outcome, three next actions and a two-sentence recap instead of a dashboard of every metric."
 date: "2026-03-13"
 cluster: "systems"
 pillar: "systems & OS thinking"

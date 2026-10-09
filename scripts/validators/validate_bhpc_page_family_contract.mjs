@@ -1,8 +1,24 @@
 #!/usr/bin/env node
+import fs from 'node:fs';
+import {spawnSync} from 'node:child_process';
 import {writeJson} from '../agent_intake/bhpc_agent_common.mjs';
 import {collectBhpcRouteAuthority, validateBhpcRouteAuthorityRecord} from '../lib/bhpc_route_authority.mjs';
 
 const {records, admitted, blocked} = collectBhpcRouteAuthority();
+const headIdentity = new Map();
+/** True only when the page on disk is byte-identical to HEAD's copy. Fails closed: no git, no HEAD copy -> false. */
+function heldPageMatchesHead(rel) {
+  const key = String(rel || '').replace(/^\/+/, '');
+  if (!headIdentity.has(key)) {
+    let same = false;
+    try {
+      const show = spawnSync('git', ['show', `HEAD:${key}`], {encoding: 'buffer', maxBuffer: 256 * 1024 * 1024});
+      same = show.status === 0 && fs.existsSync(key) && Buffer.compare(show.stdout, fs.readFileSync(key)) === 0;
+    } catch { same = false; }
+    headIdentity.set(key, same);
+  }
+  return headIdentity.get(key);
+}
 const errors = [];
 const warnings = [];
 
@@ -41,7 +57,17 @@ for (const record of records) {
   if (record.blocked && record.rendered_exists) {
     const blockReason = String(record.blocked_reason || record.route_status || record.operation || '');
     const protectedBuyerPageBlock = blockReason.includes('PROTECTED_BUYER_PAGE_CONTRACT');
-    if (protectedBuyerPageBlock) {
+    // A page the agent-intake lane HELD (scripts/agent_intake/hold_nonconforming_agent_pages.mjs)
+    // exists because it existed before this run: the hold put its last validated
+    // bytes back and planned the spec BLOCKED. That is not a blocked route being
+    // rendered - it is a blocked route being left alone - and the pin here is
+    // stricter than "exists": the page must be byte-identical to HEAD. A held
+    // page the lane still modified is the defect the hold exists to prevent.
+    const heldByIntake = blockReason.startsWith('held_by_intake:');
+    if (heldByIntake) {
+      if (heldPageMatchesHead(record.implementation_path)) warnings.push(`held_page_kept_last_validated:${record.record_id}:${record.implementation_path}:${blockReason}`);
+      else errors.push(`held_page_modified_by_lane:${record.record_id}:${record.implementation_path}:${blockReason}`);
+    } else if (protectedBuyerPageBlock) {
       warnings.push(`protected_buyer_page_visible_route_agent_injection_blocked:${record.record_id}:${record.implementation_path}:${blockReason}`);
     } else {
       errors.push(`blocked_route_rendered:${record.record_id}:${record.implementation_path}:${blockReason}`);

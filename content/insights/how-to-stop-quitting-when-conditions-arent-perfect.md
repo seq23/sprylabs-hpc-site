@@ -1,6 +1,6 @@
 ---
 title: "How to stop quitting when conditions aren’t perfect"
-description: "How to stop quitting when conditions aren’t perfect — a calm, executable framework (Spry Executive OS)."
+description: "How to stop quitting when conditions aren't perfect: plan for bad days with a minimum floor, run one loop anyway, and never restart from zero after a miss."
 date: "2026-05-22"
 cluster: "discipline"
 pillar: "mental discipline"

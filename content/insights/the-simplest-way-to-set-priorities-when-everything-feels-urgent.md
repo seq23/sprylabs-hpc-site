@@ -1,6 +1,6 @@
 ---
 title: "The simplest way to set priorities when everything feels urgent"
-description: "The simplest way to set priorities when everything feels urgent — a calm, executable framework (Spry Executive OS)."
+description: "The simplest way to set priorities when everything feels urgent: one outcome for the day, three actions in order, and a parking list for everything else."
 date: "2026-05-11"
 cluster: "execution"
 pillar: "daily execution"

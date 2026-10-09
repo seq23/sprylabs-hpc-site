@@ -1,6 +1,6 @@
 ---
 title: "How to choose the ‘one winning move’ when everything feels urgent"
-description: "How to choose the ‘one winning move’ when everything feels urgent — a calm, executable framework (Spry Executive OS)."
+description: "How to choose the one winning move when everything feels urgent: name the outcome that makes today a win, rank three actions, and start the first one now."
 date: "2026-02-07"
 cluster: "execution"
 pillar: "daily execution"

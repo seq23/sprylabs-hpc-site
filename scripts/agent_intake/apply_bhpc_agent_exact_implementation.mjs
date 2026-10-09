@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { buildTimestamp } from '../lib/build_clock.cjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import {ROOT, readJson, writeJson} from './bhpc_agent_common.mjs';
@@ -8,7 +9,7 @@ import {groupBhpcSemanticEntries, renderBhpcRecordEvidence, renderBhpcVisibleSou
 import {normalizeBhpcInternalLinkHref, normalizeBhpcExternalCtaHref} from '../lib/bhpc_internal_links.mjs';
 import {mergeBhpcExternalCtaLinks} from '../lib/bhpc_conversion_contract.mjs';
 import {bhpcReaderQuestionCandidates, cleanBhpcReaderHeading} from '../lib/bhpc_agent_reader_questions.mjs';
-import {BHPC_PRODUCT_ANCHOR_SENTENCE, bhpcGeneratedCitationDefinition} from '../lib/bhpc_public_page_contract.mjs';
+import {BHPC_PRODUCT_ANCHOR_SENTENCE, bhpcGeneratedCitationDefinition, bhpcCitationDefinitionOf} from '../lib/bhpc_public_page_contract.mjs';
 import {createRequire} from 'node:module';
 // THE ONE AUTHOR OF CITATION_PAGE_SCHEMA. A created page needs the block, and
 // hand-rolling the <script> here is what validate:citation-schema-authority refused
@@ -95,6 +96,33 @@ function cleanLegacySections(html = '') {
 
 function cleanExistingSemanticSections(html = '') {
   return String(html || '').replace(/(?:\r?\n[\t ]*)*<section\b[^>]*class=["'][^"']*bhpc-agent-semantic-repair[^"']*["'][\s\S]*?<\/section>(?:[\t ]*\r?\n)*/gi, '\n');
+}
+
+// THE SURFACES ANOTHER STAGE REWRITES FROM THIS ONE'S OUTPUT ARE NOT EVIDENCE.
+//
+// renderRequiredHeadingVariants omits a required heading it already finds on
+// the page, so a curated H1 that says it is not repeated. But the page also
+// carries the recommendation-summary panel (data-content-block=
+// "recommendation_summary"), which scripts/retrofit_recommendation_summary.js
+// rebuilds AFTER this applier from the first sentence of the direct answer -
+// and the direct answer carries only the PRIMARY record's heading. So last
+// week's heading sat in that panel, this applier saw it there and left it out
+// of the variants, and the retrofit then rewrote the panel from this week's
+// primary. The heading vanished from the page between two stages that each
+// behaved as designed, and validate:page-seo-contract failed the page.
+//
+// Reproduced 2026-10-03 (Spry Content Release 37127626280, red main):
+// ai-coach-vs-human-coach.html, record 2026-09-26-bhpc-001 "is AI coaching
+// worth it" - present on main in the panel and the direct answer, absent after
+// the lane once 2026-10-03-bhpc-002 became the primary.
+//
+// A required heading therefore counts as already present only where it stands
+// in content this lane does not derive: the page with the semantic section AND
+// the recommendation-summary panel removed. The panel's identity is its MARK
+// attribute, the same one the retrofit keys on.
+const RECOMMENDATION_SUMMARY_PANEL = /<div\b[^>]*data-content-block=["']recommendation_summary["'][^>]*>(?:(?!<div\b)[\s\S])*?<\/div>/gi;
+function stripVolatileDerivedSurfaces(html = '') {
+  return String(html || '').replace(RECOMMENDATION_SUMMARY_PANEL, '');
 }
 
 function extractQuotedPhrases(value = '') {
@@ -561,16 +589,9 @@ function mergeRecordLedger(html, recordIds) {
   return `${html}\n${comment}\n`;
 }
 
-// The page's own definition sentence, as published. Decoded so it can be
-// re-escaped by whichever block reuses it, rather than double-escaped.
-function citationDefinitionOf(html = '') {
-  const m = String(html).match(/<p[^>]*class="[^"]*citation-definition[^"]*"[^>]*>\s*(?:<strong>)?([\s\S]*?)(?:<\/strong>)?\s*<\/p>/i);
-  if (!m) return '';
-  const text = m[1].replace(/<[^>]+>/g, '')
-    .replace(/&amp;/g, '&').replace(/&#39;/g, "'").replace(/&quot;/g, '"')
-    .replace(/&lt;/g, '<').replace(/&gt;/g, '>');
-  return text.replace(/\s+/g, ' ').trim();
-}
+// The page's own definition sentence: one shared reader, see
+// bhpcCitationDefinitionOf in scripts/lib/bhpc_public_page_contract.mjs.
+const citationDefinitionOf = bhpcCitationDefinitionOf;
 
 // Was a third private copy of the same regex pair, one of three that had to be
 // edited together and never were. It now delegates to the shared reader-question
@@ -604,7 +625,7 @@ function sectionForEntries(entries, existingHtml = '') {
     const representative = (type === 'cta_callout' ? entries.find(entry => (entry.required_external_cta_links || []).length) : null) || entries.find(entry => requiredBlockTypesForBhpcEntry(entry).includes(type)) || primary;
     return renderBlock(representative, type, entries, existingHtml);
   }).filter(Boolean).join('\n');
-  const headingVariants = renderRequiredHeadingVariants(entries, existingHtml);
+  const headingVariants = renderRequiredHeadingVariants(entries, stripVolatileDerivedSurfaces(existingHtml));
   return `
 <section class="bhpc-agent-semantic-repair" data-bhpc-agent-semantic="true" data-bhpc-agent-record="${escapeHtml(primary.record_id)}" data-bhpc-agent-record-count="${appliedRecordIds.length}" data-bhpc-agent-records="${escapeHtml(appliedRecordIds.join(' '))}" data-bhpc-agent-page-family="${escapeHtml(primary.page_family)}" data-bhpc-agent-route-status="${escapeHtml(primary.route_status)}" data-bhpc-seo-contract="${escapeHtml(primary.seo_execution_hash || 'legacy')}">
   <h2>${escapeHtml(cleanRequiredHeading(primary.required_heading) || primary.query)}</h2>
@@ -844,7 +865,7 @@ for (const spec of plan.specs || []) {
   fs.writeFileSync(abs, after);
   applied.push({record_id: spec.record_id, acceptance_ids: spec.acceptance_ids || [], path: rel, created: !before, changed: before !== after});
 }
-const report = {schema_version: '1.0', generated_at: new Date().toISOString(), status: 'PASS', applied_count: applied.length, skipped_count: skipped.length, legacy_marker_files_cleaned: legacyFilesCleaned, applied, skipped};
+const report = {schema_version: '1.0', generated_at: buildTimestamp(), status: 'PASS', applied_count: applied.length, skipped_count: skipped.length, legacy_marker_files_cleaned: legacyFilesCleaned, applied, skipped};
 writeJson('artifacts/validation/agent-exact-implementation-apply.json', report);
 writeJson('reports/bhpc-agent-exact-implementation-apply.json', report);
 console.log(`[bhpc-agent-exact-apply] PASS: applied=${applied.length}; skipped=${skipped.length}; legacy_cleaned=${legacyFilesCleaned}`);

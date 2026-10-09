@@ -1,3 +1,4 @@
+const { buildTimestamp } = require('../lib/build_clock.cjs');
 const fs = require("fs");
 
 function read(file) {
@@ -162,7 +163,7 @@ for (const cluster of clusters) {
 }
 
 const output = {
-  generated_at: new Date().toISOString(),
+  generated_at: buildTimestamp(),
   mode: "full_coverage",
   count: items.length,
   items

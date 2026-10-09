@@ -1,6 +1,6 @@
 ---
 title: "The simplest way to feel powerful again when you’re depleted"
-description: "The simplest way to feel powerful again when you’re depleted — a calm, executable framework (Spry Executive OS)."
+description: "The simplest way to feel powerful again when you're depleted: finish one small, visible task, rest on purpose, and let a completed loop restore control."
 date: "2026-03-05"
 cluster: "identity"
 pillar: "identity & power"

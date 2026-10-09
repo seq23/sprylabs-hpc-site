@@ -1,11 +1,11 @@
 {
   "schema_version": "1.0",
   "validator": "repair-fixture-capability",
-  "status": "PASS",
-  "generated_at": "2026-09-10T00:47:28.532Z",
+  "status": "FAIL",
+  "generated_at": "2026-09-26T16:24:04.926Z",
   "repairs_registered": 10,
   "distinct_repair_commands": 6,
-  "behavioural_pass": 9,
+  "behavioural_pass": 8,
   "fixture_floor": 9,
   "behavioural_fixture_missing": [
     "VAL-EXTRACTION-SURFACE-GUARD-CHECK"
@@ -47,16 +47,15 @@
     },
     {
       "id": "VAL-FULL-PAGE-AUDIT",
-      "repair_command": "npm run agent:bhpc:plan-exact && npm run agent:bhpc:apply-exact",
+      "repair_command": "npm run agent:bhpc:plan-exact && npm run agent:bhpc:apply-exact && npm run retrofit:recommendation-summary && npm run schema:repair-parity",
       "validate_command": "npm run validate:full-page-audit",
-      "fault": "how-to-stay-consistent/index.html lost the acceptance record marker for 2026-06-27-bhpc-005",
-      "behavioural": "PASS"
+      "behavioural": "FAIL"
     },
     {
       "id": "VAL-BHPC-PAGE-SEO",
-      "repair_command": "npm run agent:bhpc:plan-exact && npm run agent:bhpc:apply-exact",
+      "repair_command": "npm run agent:bhpc:plan-exact && npm run agent:bhpc:apply-exact && npm run retrofit:recommendation-summary && npm run schema:repair-parity",
       "validate_command": "npm run validate:page-seo",
-      "fault": "how-to-stay-consistent/index.html lost the acceptance record marker for 2026-06-27-bhpc-005",
+      "fault": "insights/how-to-end-the-day-so-tomorrow-starts-fast.html lost the acceptance record marker for 2026-06-27-bhpc-044",
       "behavioural": "PASS"
     },
     {
@@ -81,5 +80,8 @@
       "behavioural": "PASS"
     }
   ],
-  "errors": []
+  "errors": [
+    "validator_already_failing:VAL-FULL-PAGE-AUDIT - `npm run validate:full-page-audit` fails on the untouched tree, so a repair cannot be proven capable against a constructed fault here. Fix the tree first. Output:  - product.html comparison requires a table with at least two rows and two columns",
+    "behavioural_coverage_fell:8 repair(s) proved capable against a failing fixture, below the grow-only floor of 9. A repair that was once proven capable must stay proven capable - restore the fixture rather than lowering the floor."
+  ]
 }

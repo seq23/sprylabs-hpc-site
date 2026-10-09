@@ -1,6 +1,6 @@
 ---
 title: "The difference between busy work and value creation"
-description: "The difference between busy work and value creation — a calm, executable framework (Spry Executive OS)."
+description: "The difference between busy work and value creation: a simple test for whether a task moves the outcome, and how to protect time for the work that does."
 date: "2026-03-18"
 cluster: "wealth"
 pillar: "wealth & leverage"

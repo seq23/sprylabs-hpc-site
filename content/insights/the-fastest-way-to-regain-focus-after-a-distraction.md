@@ -1,6 +1,6 @@
 ---
 title: "The fastest way to regain focus after a distraction"
-description: "The fastest way to regain focus after a distraction — a calm, executable framework (Spry Executive OS)."
+description: "The fastest way to regain focus after a distraction: park the interruption on a list, restate the one next action, and restart a short loop straight away."
 date: "2026-02-23"
 cluster: "discipline"
 pillar: "mental discipline"

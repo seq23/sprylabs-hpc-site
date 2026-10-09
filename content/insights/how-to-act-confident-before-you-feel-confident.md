@@ -1,6 +1,6 @@
 ---
 title: "How to act confident before you feel confident"
-description: "How to act confident before you feel confident — a calm, executable framework (Spry Executive OS)."
+description: "How to act confident before you feel confident: choose one standard, take the first small action anyway, and let evidence of follow-through build the feeling."
 date: "2026-04-18"
 cluster: "identity"
 pillar: "identity & power"

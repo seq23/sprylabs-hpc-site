@@ -1,6 +1,6 @@
 ---
 title: "How to align daily actions with long-term wealth"
-description: "How to align daily actions with long-term wealth — a calm, executable framework (Spry Executive OS)."
+description: "How to align daily actions with long-term wealth: name the one outcome that compounds, cut the day to three actions and review what moved the needle."
 date: "2026-05-20"
 cluster: "leverage"
 pillar: "wealth & leverage"

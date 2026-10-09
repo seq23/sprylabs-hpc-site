@@ -1,6 +1,6 @@
 ---
 title: "Your weekly review, simplified: 20 minutes that changes everything"
-description: "Your weekly review, simplified: 20 minutes that changes everything — a calm, executable framework (Spry Executive OS)."
+description: "Your weekly review, simplified: 20 minutes to list wins and misses, pick one lesson and set next week's outcome, so the week starts with a plan, not a scramble."
 date: "2026-03-10"
 cluster: "systems"
 pillar: "systems & OS thinking"

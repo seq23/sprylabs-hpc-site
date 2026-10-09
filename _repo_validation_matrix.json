@@ -1999,6 +1999,16 @@
       "status": "ADMITTED"
     },
     {
+      "matrix_id": "MX-WF-AGENT-DROP-INTAKE",
+      "validation_id": "VAL-WF-AGENT-DROP-INTAKE",
+      "lane": "validation-control-plane",
+      "command": ".github/workflows/agent-drop-intake.yml",
+      "order": 247,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
       "matrix_id": "MX-CITATION-SCHEMA-AUTHORITY",
       "validation_id": "VAL-CITATION-SCHEMA-AUTHORITY",
       "lane": "validation-control-plane",
@@ -2509,11 +2519,101 @@
       "status": "ADMITTED"
     },
     {
+      "matrix_id": "MX-WORKFLOW-STEP-ENV-CONTRACT",
+      "validation_id": "VAL-WORKFLOW-STEP-ENV-CONTRACT",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:workflow-step-env-contract",
+      "order": 242,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-SEARCH-SNIPPET-BOUNDS",
+      "validation_id": "VAL-SEARCH-SNIPPET-BOUNDS",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:search-snippet-bounds",
+      "order": 243,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-REDIRECT-AND-LINK-INTEGRITY",
+      "validation_id": "VAL-REDIRECT-AND-LINK-INTEGRITY",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:redirect-and-link-integrity",
+      "order": 244,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-AGENT-DROP-OVERLAY",
+      "validation_id": "VAL-AGENT-DROP-OVERLAY",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:agent-drop-overlay",
+      "order": 245,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-ABSORB-CLAIMS-ONLY-IN-ABSORBER",
+      "validation_id": "VAL-ABSORB-CLAIMS-ONLY-IN-ABSORBER",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:absorb-claims-only-in-absorber",
+      "order": 246,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-FROZEN-OUTPUT-SHRINK",
+      "validation_id": "VAL-FROZEN-OUTPUT-SHRINK",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:frozen-output-shrink",
+      "order": 248,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-INTAKE-HOLDS-NONCONFORMING-PAGE",
+      "validation_id": "VAL-INTAKE-HOLDS-NONCONFORMING-PAGE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:intake-holds-nonconforming-page",
+      "order": 249,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-AGENT-REPAIR-PAGE-IDENTITY",
+      "validation_id": "VAL-AGENT-REPAIR-PAGE-IDENTITY",
+      "lane": "validation-control-plane",
+      "command": "npm run agent:bhpc:self-test-repair-identity",
+      "order": 250,
+      "severity": "STRONG_WARNING",
+      "release_effect": false,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-APLAYERMODE-LANDING",
+      "validation_id": "VAL-APLAYERMODE-LANDING",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:aplayermode-landing",
+      "order": 251,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
       "matrix_id": "MX-WORKFLOW-RUN-HANDOFF",
       "validation_id": "VAL-WORKFLOW-RUN-HANDOFF",
       "lane": "validation-control-plane",
       "command": "npm run validate:workflow-run-handoff",
-      "order": 242,
+      "order": 252,
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
@@ -2523,13 +2623,13 @@
       "validation_id": "VAL-VALIDATED-MAIN-HANDOFF-GATE",
       "lane": "validation-control-plane",
       "command": "npm run validate:validated-main-handoff-gate",
-      "order": 243,
+      "order": 253,
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
     }
   ],
-  "entry_count": 252,
+  "entry_count": 262,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3133,6 +3233,42 @@
           "command": "npm run validate:agent-created-page-demand-gate"
         },
         {
+          "id": "VAL-WORKFLOW-STEP-ENV-CONTRACT",
+          "command": "npm run validate:workflow-step-env-contract"
+        },
+        {
+          "id": "VAL-SEARCH-SNIPPET-BOUNDS",
+          "command": "npm run validate:search-snippet-bounds"
+        },
+        {
+          "id": "VAL-REDIRECT-AND-LINK-INTEGRITY",
+          "command": "npm run validate:redirect-and-link-integrity"
+        },
+        {
+          "id": "VAL-AGENT-DROP-OVERLAY",
+          "command": "npm run validate:agent-drop-overlay"
+        },
+        {
+          "id": "VAL-ABSORB-CLAIMS-ONLY-IN-ABSORBER",
+          "command": "npm run validate:absorb-claims-only-in-absorber"
+        },
+        {
+          "id": "VAL-FROZEN-OUTPUT-SHRINK",
+          "command": "npm run validate:frozen-output-shrink"
+        },
+        {
+          "id": "VAL-INTAKE-HOLDS-NONCONFORMING-PAGE",
+          "command": "npm run validate:intake-holds-nonconforming-page"
+        },
+        {
+          "id": "VAL-AGENT-REPAIR-PAGE-IDENTITY",
+          "command": "npm run agent:bhpc:self-test-repair-identity"
+        },
+        {
+          "id": "VAL-APLAYERMODE-LANDING",
+          "command": "npm run validate:aplayermode-landing"
+        },
+        {
           "id": "VAL-WORKFLOW-RUN-HANDOFF",
           "command": "npm run validate:workflow-run-handoff"
         },
@@ -3321,6 +3457,18 @@
         {
           "id": "VAL-CREATED-PAGE-IS-COMPLETE",
           "command": "npm run validate:created-page-complete"
+        },
+        {
+          "id": "VAL-WORKFLOW-STEP-ENV-CONTRACT",
+          "command": "npm run validate:workflow-step-env-contract"
+        },
+        {
+          "id": "VAL-SEARCH-SNIPPET-BOUNDS",
+          "command": "npm run validate:search-snippet-bounds"
+        },
+        {
+          "id": "VAL-REDIRECT-AND-LINK-INTEGRITY",
+          "command": "npm run validate:redirect-and-link-integrity"
         }
       ]
     },

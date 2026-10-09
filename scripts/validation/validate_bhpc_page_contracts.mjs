@@ -121,6 +121,40 @@ for (const forbidden of [
 ]) {
   if (download.includes(forbidden)) errors.push(`download: protected buyer page contains forbidden agent/citation scaffold: ${forbidden}`);
 }
+// product.html is the "Product alias route" onto the same buyer page, and it
+// was never in this guard: on 2026-09-26 the agent applier rewrote it (four
+// REPAIR rows the acceptance layer should have BLOCKED as a protected buyer
+// page) and Validate Repo went red on the release commit. The scaffold list is
+// the download list, applied to the alias, so the alias cannot drift back.
+const product = read('product.html');
+for (const forbidden of [
+  'data-generated-extraction-structure="true"',
+  'data-llm-answer="true"',
+  'data-bhpc-agent-semantic="true"',
+  'bhpc-agent-semantic-repair',
+  'data-bhpc-agent-block=',
+  'bhpc-agent-records:',
+  'Agent recommendation implementation',
+  'Agent source instruction',
+  'Route decision:',
+  'BHPC Agent Acceptance Framework'
+]) {
+  if (product.includes(forbidden)) errors.push(`product: protected buyer alias page contains forbidden agent/citation scaffold: ${forbidden}`);
+}
+if (!/<p class="kicker"><strong>Product alias route<\/strong><\/p>\s*<h1>Product Overview<\/h1>/.test(product)) {
+  errors.push('product: protected buyer alias page must keep its "Product alias route" kicker and "Product Overview" H1; an agent row rewrote the H1 to the query text on 2026-09-26');
+}
+// The shared protected-buyer-page list is what every writer reads; a list that
+// has lost either page, or a protected page that is still an ACTIVE citation
+// surface or a sitemap URL, is the 2026-09-26 failure waiting to recur.
+const protectedList = JSON.parse(read('data/page_contracts/protected_buyer_pages.json'));
+for (const must of ['download.html', 'product.html']) {
+  if (!Array.isArray(protectedList.pages) || !protectedList.pages.includes(must)) errors.push(`data/page_contracts/protected_buyer_pages.json: must list ${must}`);
+}
+const citableActive = new Set((JSON.parse(read('data/citation/citable_pages.json')).pages || []).filter((p) => p.status === 'ACTIVE').map((p) => p.path));
+const bhpcSitemap = read('sitemap-bhpc.xml');
+if (citableActive.has('product.html')) errors.push('product: protected buyer alias page is an ACTIVE citation surface in data/citation/citable_pages.json; the citation program would keep rewriting it (this is how 2701370e9 went red)');
+if (/<loc>https:\/\/billionairehighperformancecoach\.com\/product(\.html)?<\/loc>/.test(bhpcSitemap)) errors.push('product: protected buyer alias page is listed in sitemap-bhpc.xml; it is not an indexable citation page (validate:search-snippet-bounds refuses it)');
 for (const forbiddenHeading of [
   'BHPC Agent Acceptance Framework — AI executive coach alternative for high performers',
   'AI executive coach alternative for high performers',
@@ -186,6 +220,8 @@ requireRegex('download dark-only text', css, /\.apm-mode-definition,\s*\nbody\[d
 requireText('contract doc', read('docs/page-contracts/BHPC_HOME_DOWNLOAD_PAGE_CONTRACT.md'), 'Do not gut the current long `/download` page');
 requireText('contract doc', read('docs/page-contracts/BHPC_HOME_DOWNLOAD_PAGE_CONTRACT.md'), 'Keep explicit cognitive-load language');
 requireText('contract doc', read('docs/page-contracts/BHPC_HOME_DOWNLOAD_PAGE_CONTRACT.md'), 'right-side rail/card');
+requireText('contract doc', read('docs/page-contracts/BHPC_HOME_DOWNLOAD_PAGE_CONTRACT.md'), 'Protected buyer-page freeze guard — Product alias');
+requireText('contract doc', read('docs/page-contracts/BHPC_HOME_DOWNLOAD_PAGE_CONTRACT.md'), 'data/page_contracts/protected_buyer_pages.json');
 
 if (errors.length) {
   console.error('BHPC_PAGE_CONTRACT_FAIL');

@@ -6531,6 +6531,38 @@
       "not_applicable_reason": null
     },
     {
+      "validation_id": "VAL-WF-AGENT-DROP-INTAKE",
+      "status": "ADMITTED",
+      "name": "agent-drop-intake.yml",
+      "check_type": "workflow",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "The Twin Agent's weekly drop reached main raw on seven Saturdays (2026-08-08..2026-09-26) and turned it red each time. A drop pushed to agent-drop/<date>-<scope> now reaches main only through this lane: it classifies the branch with overlay_agent_drop.mjs (anything but a run directory is refused and nothing is dispatched), dispatches Spry Content Release in agent-intake mode with drop_branch, and stays until that run concludes, re-asking if a newer queued run in main-automation cancelled it while pending.",
+      "existing_coverage_gap": "Before 2026-09-26 a drop branch had no consumer: the writer's instructions asked for a pull request that could never go green (a raw drop is never the generators' fixed point) and the sentinel's quarantine could not open one (GITHUB_TOKEN is refused pull-request creation, run 36246107783).",
+      "scope": [
+        "github-actions",
+        "agent-drop",
+        "main"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/agent-drop-intake.yml",
+      "implementation_path": ".github/workflows/agent-drop-intake.yml",
+      "environment": "ci",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "GitHub Actions trace plus artifacts/validation/agent-drop-overlay-receipt.json in the release run",
+      "runtime_budget_seconds": 18000,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted as the only consumer of agent-drop/** branches; guarded by validate:agent-drop-gate and validate:agent-drop-overlay.",
+      "decision_date": "2026-09-26",
+      "matrix_ids": [
+        "MX-WF-AGENT-DROP-INTAKE"
+      ],
+      "not_applicable_reason": null
+    },
+    {
       "validation_id": "VAL-CITATION-SCHEMA-AUTHORITY",
       "status": "ADMITTED",
       "name": "validate:citation-schema-authority",
@@ -8084,6 +8116,276 @@
       "not_applicable_reason": null
     },
     {
+      "validation_id": "VAL-WORKFLOW-STEP-ENV-CONTRACT",
+      "status": "ADMITTED",
+      "name": "validate:workflow-step-env-contract",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses the failure found in Deploy Distribution run 36191288768 (2026-09-25): the step 'Verify attestation and deploy IndexNow distribution' ran scripts/distribution/deploy_distribution.sh, whose Search Console lane read GSC_SERVICE_ACCOUNT_JSON_PATH and GSC_SITE_URL; the step set neither, so every run printed 'GSC skipped: credentials/site secret not present' although the GSC_SERVICE_ACCOUNT_JSON secret existed. The check traces each workflow run step through npm scripts, scripts/ files and topology lanes, and fails when a step env name is read by nothing it runs, or when a script reads a secret-family variable with no default that the step, job, workflow or call chain never provides. Zero workflows or zero run steps fail.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:workflow-step-env-contract",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-workflow-step-env-contract/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-25",
+      "matrix_ids": [
+        "MX-WORKFLOW-STEP-ENV-CONTRACT"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-SEARCH-SNIPPET-BOUNDS",
+      "status": "ADMITTED",
+      "name": "validate:search-snippet-bounds",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses the Bing Webmaster findings of 25 Sep 2026: rule 118 'meta description too short' on 8 billionairehighperformancecoach.com and 24 spryexecutiveos.com pages (41-98 characters, the section and topic hubs from build_navigation_structure.mjs and the insight posts' boilerplate front matter), and Site Scan 'title too long' above 70 characters (1,813 pages, a 37-character brand suffix on long questions). Every indexable page must carry a 30-70 character title and a 110-160 character meta description, each unique; every sitemap URL must map to a page the check examined. Zero pages examined fails.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:search-snippet-bounds",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-search-snippet-bounds/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-25",
+      "matrix_ids": [
+        "MX-SEARCH-SNIPPET-BOUNDS"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-REDIRECT-AND-LINK-INTEGRITY",
+      "status": "ADMITTED",
+      "name": "validate:redirect-and-link-integrity",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses the Bing Webmaster 404s of 25 Sep 2026 (221 on spryexecutiveos.com, 8 on billionairehighperformancecoach.com): 121 /guides/<slug> pages moved to the root on 2026-07-23 with no redirect, retired directory pages redirected only in their /x/ form, and a /*.html wildcard above every exact .html rule so none could fire. Against the assembled .pages-output with Cloudflare first-match semantics: every exact _redirects rule must be reachable, single-hop and land on a published page; every internal <a href> must resolve to a published page; every Bing-held 404 in fixtures/validation/bing_held_404s.json must redirect in one hop. Zero rules, pages or links examined fails.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:redirect-and-link-integrity",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-redirect-and-link-integrity/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-25",
+      "matrix_ids": [
+        "MX-REDIRECT-AND-LINK-INTEGRITY"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-AGENT-DROP-OVERLAY",
+      "status": "ADMITTED",
+      "name": "validate:agent-drop-overlay",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses an agent-drop road to main that could carry anything but a run directory. Seven Saturdays (2026-08-08..2026-09-26, last Validate Repo 36245892704) the Twin Agent pushed its weekly artifact straight to main; a raw drop is never a valid main tree because build:all applies its repairs to governed pages, so the extraction-surface guard fails until the release lane commits drop + pages + snapshot together. overlay_agent_drop.mjs is now the only road: Spry Content Release lays an agent-drop/<date>-<scope> branch onto main's tip and commits it with the pages it repairs. This self-test drives the script against real git: a branch that adds a page, lacks a manifest, nests below the run directory, deletes a file, or is not named agent-drop/<date>-<scope> lays nothing onto main; a checkout that is not origin/main is refused; an absorbed drop is a named stop; verify-landed passes only when every drop file is on main. Hard-fails on zero cases.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:agent-drop-overlay",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-agent-drop-overlay/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-26",
+      "matrix_ids": [
+        "MX-AGENT-DROP-OVERLAY"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-ABSORB-CLAIMS-ONLY-IN-ABSORBER",
+      "status": "ADMITTED",
+      "name": "validate:absorb-claims-only-in-absorber",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses a validation lane that absorbs a pending Twin Agent drop. Seven Saturdays (2026-08-08..2026-09-26) the drop commit itself went red in Validate Repo (last 36245892704: extraction-surface-guard, 5 governed surfaces changed) because Validate Repo's producer chain ran absorb_bhpc_agent_runs.mjs, which claimed the READY_FOR_ABSORPTION run, and build:all then rewrote governed pages the commit did not contain - red regardless of artifact quality. The absorber now claims a READY run only where BHPC_ABSORB_READY_RUNS=1, set solely at the top of spry-content-release.yml. This self-test runs the real absorber in a scratch tree on the real 2026-09-26 drop: unset/true/0 leave the manifest byte-identical, write no normalized or social run, and name the pending run; =1 absorbs it; and no other workflow may set the switch. Hard-fails on zero assertions.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:absorb-claims-only-in-absorber",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-absorb-claims-only-in-absorber/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-26",
+      "matrix_ids": [
+        "MX-ABSORB-CLAIMS-ONLY-IN-ABSORBER"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-FROZEN-OUTPUT-SHRINK",
+      "status": "ADMITTED",
+      "name": "validate:frozen-output-shrink",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "A reviewed pull request (#107, 2026-09-25) thinned two insight pages by more than 10% and merged green, because the only material-shrink check lived in frozen_outputs.mjs freeze, which only unattended writer lanes run; the next morning Daily Citation Intelligence run 36245956232 failed FROZEN_OUTPUT_MATERIAL_SHRINK with nobody there to judge the trim. This check applies the same shrink rule at pull-request time: every admitted page that lost >= 2048 bytes and >= 10% of its frozen output must carry a named acceptance (route, frozen sha256, floor, reason) in data/release/frozen_output_shrink_acceptances.json, malformed or stale acceptances fail, six self-proof cases prove it can still refuse, and zero frozen records examined is a failure.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:frozen-output-shrink",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-frozen-output-shrink/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-09-26",
+      "matrix_ids": [
+        "MX-FROZEN-OUTPUT-SHRINK"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-INTAKE-HOLDS-NONCONFORMING-PAGE",
+      "status": "ADMITTED",
+      "name": "validate:intake-holds-nonconforming-page",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Refuses a regression in which one nonconforming agent page fails the whole Spry Content Release again. Three Fridays running (2026-09-19, 2026-09-26, 2026-10-03 run 37127626280 on f4163ce) the Twin Agent drop reached main by direct push and the release it started went red at release:agent-intake:raw because validate:page-seo-contract, the lane's last stage, failed the run on ONE rendered page (ai-coach-vs-human-coach.html MISSING_REQUIRED_HEADING, one of eleven). scripts/agent_intake/hold_nonconforming_agent_pages.mjs now runs before that validator and holds a failing page by name: last validated bytes restored, ledgered in data/content/agent_page_quarantine.json under lane agent_intake_hold, planned BLOCKED, reported; the other pages ship and the run exits 0. This self-test runs the real plan builder, applier, hold stage and contract validator in a scratch git tree, breaks one of two rendered pages, and proves the validator fails before the hold, the hold restores exactly that page and ledgers it, the validator passes after it, the hold persists across re-plan and re-apply, and a missing plan is a named failure. Hard-fails on zero assertions.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:intake-holds-nonconforming-page",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-intake-holds-nonconforming-page/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-03",
+      "matrix_ids": [
+        "MX-INTAKE-HOLDS-NONCONFORMING-PAGE"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-AGENT-REPAIR-PAGE-IDENTITY",
+      "status": "ADMITTED",
+      "name": "agent:bhpc:self-test-repair-identity",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Spry Content Release e74b7ba2 (2026-10-03) repaired a published page with no curated entry and wrote the agent row's raw query into its title, framework and definition; Validate Repo then stayed red on main at validate:framework-name-shape. This pins bhpcRepairPageIdentity (published identity kept, damaged identity healed, curation wins, created pages unchanged), that the planner and validator share one shape rule, and that every committed repair spec carries no new query-shaped name, failing on zero specs examined.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "STRONG_WARNING",
+      "command": "npm run agent:bhpc:self-test-repair-identity",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/agent-bhpc-self-test-repair-identity/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-05",
+      "matrix_ids": [
+        "MX-AGENT-REPAIR-PAGE-IDENTITY"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-APLAYERMODE-LANDING",
+      "status": "ADMITTED",
+      "name": "validate:aplayermode-landing",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "The aplayermode.com landing preview could show an A Player Mode price that differs from PLAN_PRICES in seq23/aplayer-mode, say Billionaire Mindset or free trial, ship a download button with an empty or broken href, or drop a selling point carried on the frozen download.html; the check reads the page, its link config, the pinned price copy and download.html and fails on each.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:aplayermode-landing",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-aplayermode-landing/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-07",
+      "matrix_ids": [
+        "MX-APLAYERMODE-LANDING"
+      ],
+      "not_applicable_reason": null
+    },
+    {
       "validation_id": "VAL-WORKFLOW-RUN-HANDOFF",
       "status": "ADMITTED",
       "name": "validate:workflow-run-handoff",
@@ -8144,6 +8446,6 @@
       "not_applicable_reason": null
     }
   ],
-  "record_count": 259,
+  "record_count": 269,
   "generated_at": "2026-08-08T23:30:00Z"
 }

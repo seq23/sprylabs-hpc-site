@@ -1,6 +1,6 @@
 ---
 title: "The KPI method for personal growth (without being annoying)"
-description: "The KPI method for personal growth (without being annoying) — a calm, executable framework (Spry Executive OS)."
+description: "The KPI method for personal growth without being annoying: track one or two leading indicators you control, review them weekly, and ignore vanity metrics."
 date: "2026-04-24"
 cluster: "systems"
 pillar: "systems & os thinking"

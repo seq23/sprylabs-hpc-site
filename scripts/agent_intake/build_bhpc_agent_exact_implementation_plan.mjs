@@ -1,11 +1,12 @@
 #!/usr/bin/env node
+import { buildTimestamp } from '../lib/build_clock.cjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import {ROOT, writeJson, hashFile} from './bhpc_agent_common.mjs';
 import {compileAndWriteBhpcAcceptanceManifest} from './compile_bhpc_agent_acceptance_manifest.mjs';
 import {mergeBhpcExternalCtaLinks} from '../lib/bhpc_conversion_contract.mjs';
 import {evaluateBhpcAcceptance} from '../lib/bhpc_agent_acceptance_satisfaction.mjs';
-import {bhpcGeneratedCitationDefinition, bhpcGeneratedFrameworkName} from '../lib/bhpc_public_page_contract.mjs';
+import {bhpcPublishedPageIdentity, bhpcRepairPageIdentity} from '../lib/bhpc_public_page_contract.mjs';
 import {readQuarantine, specFingerprint, quarantinedRow, quarantineReason} from '../lib/agent_page_quarantine.mjs';
 import {measuredDemandQueries, hasMeasuredDemand, noMeasuredDemandReason} from '../lib/measured_demand.mjs';
 
@@ -202,26 +203,28 @@ function pageSpecFor(entries,primaryPath=''){
   const blockTypes=unique(entries.flatMap(e=>e.required_block_types||[]));
   const heading=primary.required_heading||primary.query;
   const curated=curatedSpecs.get(String(primaryPath))||null;
-  // Resolved BEFORE the literal, because the generated definition names it. A definition
-  // that does not name its framework is re-prefixed in the registry and nowhere else,
-  // and the page and the registry then disagree forever.
-  const frameworkName=(curated&&String(curated.framework||'').trim())
-    ? curated.framework
-    : (bhpcGeneratedFrameworkName(primary.query) || heading);
+  // CURATION FIRST, then - for a page that already exists and that this pipeline did
+  // not create - the page's OWN published identity, then a derived name, and only
+  // then the raw heading. The rungs and the reason for each live in ONE place,
+  // bhpcRepairPageIdentity() in scripts/lib/bhpc_public_page_contract.mjs, and are
+  // pinned by scripts/agent_intake/self_test_repair_page_identity.mjs. Without the
+  // published rung a repair renamed the page it repaired: on 2026-10-03 the agent
+  // query "i'm going to organize these files ..." became the title and framework of
+  // insights/deep-work-realistic-protocol.html and took Validate Repo red at
+  // validate:framework-name-shape. A page the artifact CREATES has no published
+  // identity, so its result is exactly what it was.
+  const published=(primaryPath&&preexistingForeignPage(primaryPath))
+    ? bhpcPublishedPageIdentity(fs.readFileSync(path.join(ROOT,primaryPath),'utf8'))
+    : null;
+  const identity=bhpcRepairPageIdentity({query:primary.query,heading,curated,published});
   return {
-    h1:(curated&&String(curated.h1||'').trim())?curated.h1:primary.query,
-    // CURATION FIRST, then a derived NAME, and only then the raw heading. The
-    // middle rung did not exist: a page the artifact CREATES has no curated entry by
-    // definition, so the fallback was always the query and every new page was a
-    // regression against validate:framework-name-shape's shrink-only baseline. The
-    // derivation returns '' rather than a severed phrase, so the last rung still
-    // stands and the shape guard names the page that needs curating.
-    framework:frameworkName,
+    h1:identity.h1,
+    framework:identity.framework,
     // The site publishes four extraction types (concept, howto, comparison,
     // decision). Choosing only between comparison and concept made the plan
     // demand that an existing how-to page be reshaped into a concept page.
     type:existingExtractionType(primaryPath)||(blockTypes.includes('comparison_table')?'comparison':'concept'),
-    definition:(curated&&String(curated.definition||'').trim())?curated.definition:bhpcGeneratedCitationDefinition(primary.query, frameworkName),
+    definition:identity.definition,
     body:`<section data-bhpc-agent-record="${primary.record_id}" data-bhpc-agent-semantic="true"><h2>${heading}</h2></section>`,
     agent_acceptance:{
       record_ids:unique(entries.map(e=>e.record_id)),acceptance_ids:unique(entries.map(e=>e.id)),page_family:primary.page_family,route_status:primary.route_status,
@@ -286,9 +289,13 @@ for(const [pathValue,entries] of groups){
   const spec=pageSpecFor(entries,pathValue);
   // The same fingerprint the quarantine ledger is keyed by, carried on the spec so
   // apply_citation_program.py can honour the ledger without re-deriving the hash.
+  // Computed once and carried on BOTH the created-page spec and the plan spec, so
+  // the admission gate (creates) and the intake hold stage (repairs) key the one
+  // quarantine ledger exactly as this builder reads it back.
+  const quarantine_fingerprint=specFingerprint({path:pathValue,acceptanceIds:entries.map(e=>e.id),h1:spec.h1,framework:spec.framework,type:spec.type,definition:spec.definition});
   if(operation==='REPAIR_INTENDED_WINNER_PAGE') priority_pages[pathValue]=spec;
-  else new_pages[pathValue]={...spec,quarantine_fingerprint:specFingerprint({path:pathValue,acceptanceIds:entries.map(e=>e.id),h1:spec.h1,framework:spec.framework,type:spec.type,definition:spec.definition})};
-  specs.push({
+  else new_pages[pathValue]={...spec,quarantine_fingerprint};
+  specs.push({quarantine_fingerprint,
     record_id:primary.record_id,record_ids:unique(entries.map(e=>e.record_id)),acceptance_ids:unique(entries.map(e=>e.id)),query:primary.query,run_date:primary.run_date,
     operation,page_family:primary.page_family,route_status:primary.route_status,intended_winner_page:primary.intended_winner_page||'',intended_winner_path:primary.intended_winner_path||'',
     implementation_path:pathValue,before_hash:hashFile(pathValue),status:'PLANNED',blocked_reason:'',extraction_type:spec.type,
@@ -302,6 +309,6 @@ for(const [pathValue,entries] of groups){
 for(const entry of blocked){specs.push({record_id:entry.record_id,acceptance_ids:[entry.id].filter(Boolean),query:entry.query,run_date:entry.run_date,operation:entry.operation,page_family:entry.page_family,route_status:entry.route_status,intended_winner_page:entry.intended_winner_page||'',intended_winner_path:entry.intended_winner_path||'',implementation_path:entry.implementation_path||'',before_hash:null,status:'BLOCKED',blocked_reason:entry.blocked_reason||'blocked_by_acceptance_compiler'})}
 writeJson('data/citation/agent_page_specs.generated.json',{schema_version:'1.1',generated_at:deterministicGeneratedAt,source:'bhpc_agent_acceptance_manifest',active_run_date:activeRunDate,new_pages});
 writeJson('data/citation/agent_repair_specs.generated.json',{schema_version:'1.1',generated_at:deterministicGeneratedAt,source:'bhpc_agent_acceptance_manifest',active_run_date:activeRunDate,priority_pages});
-const report={schema_version:'1.1',status:'PASS',generated_at:new Date().toISOString(),active_run_date:activeRunDate,acceptance_manifest_path:'data/report_fixes/agent_acceptance_manifest.generated.json',policy_path:'data/report_fixes/agent_exact_implementation_policy.json',repair_count:Object.keys(priority_pages).length,new_page_count:Object.keys(new_pages).length,blocked_count:blocked.length,no_action_count:noAction.length,acceptance_entry_count:manifest.entry_count,active_acceptance_entry_count:activeEntries.length,required_acceptance_entry_count:activeEntries.filter(e=>e.acceptance_status==='REQUIRED'&&!quarantinedAcceptanceIds.has(String(e.id))&&!demandBlockedAcceptanceIds.has(String(e.id))).length,quarantined_count:quarantinedAcceptanceIds.size,no_measured_demand_count:demandBlockedAcceptanceIds.size,historical_entry_count:allEntries.length-activeEntries.length,specs,no_action:noAction.map(e=>({record_id:e.record_id,query:e.query,reason:'maintain_or_no_action'}))};
+const report={schema_version:'1.1',status:'PASS',generated_at:buildTimestamp(),active_run_date:activeRunDate,acceptance_manifest_path:'data/report_fixes/agent_acceptance_manifest.generated.json',policy_path:'data/report_fixes/agent_exact_implementation_policy.json',repair_count:Object.keys(priority_pages).length,new_page_count:Object.keys(new_pages).length,blocked_count:blocked.length,no_action_count:noAction.length,acceptance_entry_count:manifest.entry_count,active_acceptance_entry_count:activeEntries.length,required_acceptance_entry_count:activeEntries.filter(e=>e.acceptance_status==='REQUIRED'&&!quarantinedAcceptanceIds.has(String(e.id))&&!demandBlockedAcceptanceIds.has(String(e.id))).length,quarantined_count:quarantinedAcceptanceIds.size,no_measured_demand_count:demandBlockedAcceptanceIds.size,historical_entry_count:allEntries.length-activeEntries.length,specs,no_action:noAction.map(e=>({record_id:e.record_id,query:e.query,reason:'maintain_or_no_action'}))};
 writeJson('artifacts/validation/agent-exact-implementation-plan.json',report);writeJson('reports/bhpc-agent-exact-implementation-plan.json',report);
 console.log(`[bhpc-agent-exact-plan] PASS: active_run=${activeRunDate}; repairs=${report.repair_count}; new_pages=${report.new_page_count}; blocked=${report.blocked_count} (no_measured_demand=${report.no_measured_demand_count}); no_action=${report.no_action_count}; historical_skipped=${report.historical_entry_count}`);

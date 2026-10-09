@@ -14,6 +14,11 @@ EXCLUDE_PATHS={
     'insights/how-to-end-the-day-so-tomorrow-starts-fast-2.html':'duplicate active citation surface; canonical page owns this query',
     'n/a/index.html':'invalid placeholder path from legacy agent import'
 }
+# Protected buyer pages that may never be citation surfaces (product.html, the
+# alias route the 2026-09-26 release registered as ACTIVE). One shared list.
+_PROTECTED_BUYER=json.loads((ROOT/'data/page_contracts/protected_buyer_pages.json').read_text(encoding='utf-8'))
+for _p in _PROTECTED_BUYER.get('never_citable',[]):
+    EXCLUDE_PATHS.setdefault(_p,_PROTECTED_BUYER.get('exclusion_reason','protected buyer page'))
 
 def manual_definition_map():
     fp=ROOT/'data/content/manual_expansion_pages.json'

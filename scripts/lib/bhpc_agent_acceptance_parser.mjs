@@ -1,4 +1,7 @@
-import {slug} from '../agent_intake/bhpc_agent_common.mjs';
+import fs from 'node:fs';
+import path from 'node:path';
+import {slug, ROOT} from '../agent_intake/bhpc_agent_common.mjs';
+import {bhpcCitationDefinitionOf} from './bhpc_public_page_contract.mjs';
 import {
   BHPC_AGENT_BLOCK_TYPES,
   blockTypesForAgentText,
@@ -8,6 +11,42 @@ import {resolveBhpcAgentRoute} from './bhpc_agent_route_resolver.mjs';
 import {partitionBhpcInternalLinkActions, deriveBhpcInternalLinkActionsFromText, deriveBhpcInternalLinkActionsFromNavigation, normalizeBhpcInternalLinkHref} from './bhpc_internal_links.mjs';
 import {mergeBhpcExternalCtaLinks} from './bhpc_conversion_contract.mjs';
 import {cleanBhpcReaderHeading, isPublishableBhpcReaderQuestion} from './bhpc_agent_reader_questions.mjs';
+
+// Which required blocks the applier cannot honestly render on this target.
+// existingHtml is null for a page that does not exist yet (the generator that
+// creates it always writes a p.citation-definition), so only an EXISTING page
+// without one makes definition_callout unrenderable.
+export function unrenderableBhpcRequiredBlocks(requiredBlockTypes=[],existingHtml=null){
+  const out=[];
+  if(existingHtml!==null&&requiredBlockTypes.includes(BHPC_AGENT_BLOCK_TYPES.DEFINITION_CALLOUT)&&!bhpcCitationDefinitionOf(existingHtml)){
+    out.push({type:BHPC_AGENT_BLOCK_TYPES.DEFINITION_CALLOUT,reason:'no_citation_definition_on_target_page'});
+  }
+  return out;
+}
+
+// The buyer surfaces no agent row may repair. download.html is the frozen
+// revenue page; product.html is its "Product alias route" bridge - the same
+// buyer, one click earlier. Only download.html was listed here, so on
+// 2026-09-26 four REPAIR rows (bhpc-008/044/045/046) were REQUIRED on
+// product.html and Spry Content Release applied them: the H1 became the query
+// text, the SoftwareApplication schema was replaced, a truncated fragment of
+// the artifact's own gap prose became an <h2>, and the page entered the
+// citable set and the bhpc sitemap. Validate Repo on that release commit
+// (36253208500) failed extraction-contract, programmatic-admission,
+// search-snippet-bounds and the lastmod truth check on that one page. A
+// protected page is BLOCKED at acceptance, so the plan, the applier and the
+// trace all see one decision. validate_bhpc_page_contracts.mjs guards both
+// pages against the scaffold this would leave behind.
+export const BHPC_PROTECTED_BUYER_PAGES_REL='data/page_contracts/protected_buyer_pages.json';
+export const BHPC_PROTECTED_BUYER_PAGES=Object.freeze((()=>{
+  const pages=JSON.parse(fs.readFileSync(path.join(ROOT,BHPC_PROTECTED_BUYER_PAGES_REL),'utf8')).pages;
+  if(!Array.isArray(pages)||!pages.includes('download.html')) throw new Error(`${BHPC_PROTECTED_BUYER_PAGES_REL}: must list download.html; a protected buyer page list without the revenue page protects nothing`);
+  return pages.map(p=>String(p).replace(/^\/+/,''));
+})());
+export function protectedBuyerPageBlockedReason(implementationPath=''){
+  const page=String(implementationPath||'').replace(/\.html$/,'').replace(/[^a-z0-9]+/gi,'_')||'buyer_page';
+  return `PROTECTED_BUYER_PAGE_CONTRACT:no_visible_agent_or_citation_injection_on_${page}`;
+}
 
 function clean(value=''){return String(value??'').replace(/\s+/g,' ').trim()}
 function unique(values=[]){const seen=new Set(),out=[];for(const raw of values){const value=clean(raw);const key=value.toLowerCase();if(value&&!seen.has(key)){seen.add(key);out.push(value)}}return out}
@@ -109,8 +148,18 @@ export function buildBhpcAcceptanceEntry(row={},context={}){
   if(externalCtaActions.length) requiredBlockTypes.push(BHPC_AGENT_BLOCK_TYPES.CTA_CALLOUT);
   if (String(row.source_intent_operation || row.operation || '') === 'CREATE_NEW_TARGET_PAGE' && /chatgpt|\bprompt\b|convert these|design an end-of-day/i.test(query)) requiredBlockTypes.push(BHPC_AGENT_BLOCK_TYPES.PROMPT_TEMPLATE);
   if(['comparison','alternatives'].includes(seo?.canonical_page_type)&&!requiredBlockTypes.includes(BHPC_AGENT_BLOCK_TYPES.COMPARISON_TABLE)) requiredBlockTypes.push(BHPC_AGENT_BLOCK_TYPES.COMPARISON_TABLE);
-  const blockTypes=unique(requiredBlockTypes);
-  const protectedBuyerPage = ['download.html'].includes(route.implementation_path);
+  // definition_callout is rendered from the target page's OWN
+  // p.citation-definition and from nothing else (the applier refuses to fall
+  // back to operator-facing text). On an EXISTING page that carries none, the
+  // requirement is one no applier run can satisfy, and the trace is right to
+  // refuse it - so it is recorded as unrenderable, the same channel a
+  // self-referential link action uses, instead of left standing.
+  const targetAbs=route.implementation_path?path.join(ROOT,route.implementation_path):'';
+  const existingTargetHtml=targetAbs&&fs.existsSync(targetAbs)&&fs.statSync(targetAbs).isFile()?fs.readFileSync(targetAbs,'utf8'):null;
+  const unrenderableBlockTypes=unrenderableBhpcRequiredBlocks(requiredBlockTypes,existingTargetHtml);
+  const unrenderableTypeSet=new Set(unrenderableBlockTypes.map(item=>item.type));
+  const blockTypes=unique(requiredBlockTypes).filter(type=>!unrenderableTypeSet.has(type));
+  const protectedBuyerPage = BHPC_PROTECTED_BUYER_PAGES.includes(route.implementation_path);
   const blocked=Boolean(route.blocked_reason||String(route.status).startsWith('BLOCKED')||row.seo_execution_status==='INVALID'||protectedBuyerPage);
   const acceptanceStatus=noAction?'NO_ACTION':(blocked?'BLOCKED':'REQUIRED');
   const heading=deriveBhpcRequiredHeading(rawFix,query);
@@ -125,7 +174,7 @@ export function buildBhpcAcceptanceEntry(row={},context={}){
     seo_execution_status:row.seo_execution_status||'NOT_PROVIDED',seo_execution:seo,seo_execution_hash:seo?.hash||'',
     intended_winner_page:row.intended_winner_page||'',intended_winner_path:row.intended_winner_path||'',
     implementation_path:route.implementation_path,route_status:route.status,route_resolution:route.route_resolution||null,page_family:route.page_family,
-    acceptance_status:acceptanceStatus,blocked_reason:blocked?(protectedBuyerPage?'PROTECTED_BUYER_PAGE_CONTRACT:no_visible_agent_or_citation_injection_on_download':(route.blocked_reason||row.seo_execution_errors?.join(';')||'invalid_seo_execution')):'',
+    acceptance_status:acceptanceStatus,blocked_reason:blocked?(protectedBuyerPage?protectedBuyerPageBlockedReason(route.implementation_path):(route.blocked_reason||row.seo_execution_errors?.join(';')||'invalid_seo_execution')):'',
     required_heading:heading,
     required_block_types:blockTypes,
     // The SAME cleaning the applier writes with, from the SAME module, so a
@@ -139,6 +188,7 @@ export function buildBhpcAcceptanceEntry(row={},context={}){
     internal_link_source:structuredInternalLinkActions.length?'seo_execution.internal_link_actions':(derivedInternalLinkActions.length?'recommendation_text':(navigationInternalLinkActions.length?'site_navigation_related_section':'none')),
     required_external_cta_links:externalCtaActions,
     rejected_internal_link_actions:rejectedInternalLinkActions,
+    ...(unrenderableBlockTypes.length?{unrenderable_required_blocks:unrenderableBlockTypes}:{}),
     schema_action:seo?.schema_action||'none',
     acceptance_checks:seo?.acceptance_checks||[],
     table_columns_exact:tableColumns(blockTypes),min_table_rows:minimumRows(blockTypes),

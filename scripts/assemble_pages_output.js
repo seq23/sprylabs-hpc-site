@@ -31,6 +31,8 @@ const EXCLUDE = new Set([
   '.nvmrc', '.build', '.validation-cache', '.validation-runtime',
   'scripts', 'data', 'reports', 'artifacts', 'docs', 'tests', 'fixtures',
   'config', 'content', 'functions', 'seo', 'LICENSES',
+  // workers/ holds the aplayermode.com Worker source; it deploys on its own.
+  'workers',
   // templates/ holds the raw Mustache sources the generators render FROM. They
   // are not pages, but the root deploy published them anyway, so
   // https://spryexecutiveos.com/templates/answer_page and eleven siblings

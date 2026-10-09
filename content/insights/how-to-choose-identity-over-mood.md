@@ -1,6 +1,6 @@
 ---
 title: "How to choose identity over mood"
-description: "How to choose identity over mood — a calm, executable framework (Spry Executive OS)."
+description: "How to choose identity over mood: decide the standard in advance, shrink it to a floor you can hit on a bad day, and act from that instead of how you feel."
 date: "2026-05-23"
 cluster: "identity"
 pillar: "identity & power"

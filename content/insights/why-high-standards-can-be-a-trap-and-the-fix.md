@@ -1,6 +1,6 @@
 ---
 title: "Why ‘high standards’ can be a trap—and the fix"
-description: "Why ‘high standards’ can be a trap—and the fix — a calm, executable framework (Spry Executive OS)."
+description: "Why high standards can be a trap, and the fix: standards set for your best day guarantee misses, so set a floor you can keep and raise it gradually."
 date: "2026-03-02"
 cluster: "identity"
 pillar: "identity & power"

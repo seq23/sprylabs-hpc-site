@@ -1,6 +1,6 @@
 ---
 title: "The smallest daily habit that compounds fastest"
-description: "The smallest daily habit that compounds fastest — a calm, executable framework (Spry Executive OS)."
+description: "The smallest daily habit that compounds fastest: a two-sentence evening recap of what worked and what to repeat, which makes every next day easier to start."
 date: "2026-05-12"
 cluster: "discipline"
 pillar: "mental discipline"

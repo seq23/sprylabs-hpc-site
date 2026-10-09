@@ -1,6 +1,6 @@
 ---
 title: "How to reduce resistance before it shows up"
-description: "How to reduce resistance before it shows up — a calm, executable framework (Spry Executive OS)."
+description: "How to reduce resistance before it shows up: prepare the first step the night before, remove one point of friction, and start with a task under five minutes."
 date: "2026-04-27"
 cluster: "discipline"
 pillar: "mental discipline"

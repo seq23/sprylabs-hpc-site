@@ -493,8 +493,8 @@ function buildPillars(posts, clusters) {
 
   const pillarsIndexCanonical = `${SITE_BASE}/pillars/`;
   writePageUtf8(path.join(PILLARS_DIR, "index.html"), renderPage({
-    title: "Pillars — Spry Executive OS",
-    description: "Topic pillars for planning, consistency, recovery, decision-making, coaching, and practical AI support.",
+    title: "Pillars: the topics behind the library — Spry Executive OS",
+    description: "The topic pillars the library is organised around: planning, consistency, recovery, decision-making, coaching, and practical AI support.",
     canonical: pillarsIndexCanonical,
     activePath: "/pillars/",
     contentHtml: pillarsIndexContent,
@@ -563,7 +563,7 @@ function buildPillars(posts, clusters) {
 
     const canonical = `${SITE_BASE}/pillars/${c.id}/`;
     writePageUtf8(path.join(PILLARS_DIR, c.id, "index.html"), renderPage({
-      title: `${c.name} — Spry Executive OS`,
+      title: `${c.name} pillar — Spry Executive OS`,
       description: c.description || `Structured guidance for ${c.name}.`,
       canonical,
       activePath: `/pillars/${c.id}/`,
@@ -716,7 +716,7 @@ function buildInsightsIndex(posts, clustersMap) {
 
   const canonical = `${SITE_BASE}/insights/`;
   const page = renderPage({
-    title: "Insights — Spry Executive OS",
+    title: "Insights: working notes on execution — Spry Executive OS",
     description: "Operator-grade guidance on planning, consistency, recovery, decision-making, coaching, and practical AI support.",
     canonical,
     activePath: "/insights/",
@@ -829,8 +829,8 @@ function buildAtlasPage(clusters, posts) {
 
   const canonical = `${SITE_BASE}/atlas`;
   const page = renderPage({
-    title: "Atlas — Spry Executive OS",
-    description: "An opinionated map of Spry: the pillars, what they cover, and where to start.",
+    title: "Atlas: a map of the Spry pillars — Spry Executive OS",
+    description: "An opinionated map of Spry Executive OS: the pillars, what each one covers, and where to start when you know the problem but not the page.",
     canonical,
     activePath: "/atlas",
     contentHtml,

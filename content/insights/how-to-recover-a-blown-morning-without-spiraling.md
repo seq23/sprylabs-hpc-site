@@ -1,6 +1,6 @@
 ---
 title: "How to recover a blown morning without spiraling"
-description: "How to recover a blown morning without spiraling — a calm, executable framework (Spry Executive OS)."
+description: "How to recover a blown morning without spiraling: reset in five minutes, cut the day to one outcome and three actions, and start the first one before lunch."
 date: "2026-04-16"
 cluster: "execution"
 pillar: "daily execution"

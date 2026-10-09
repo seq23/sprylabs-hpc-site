@@ -1,6 +1,6 @@
 ---
 title: "How to use time blocks to buy back your week"
-description: "How to use time blocks to buy back your week — a calm, executable framework (Spry Executive OS)."
+description: "How to use time blocks to buy back your week: protect one 30-minute block a day for the most important action, and put the rest of the week into containers."
 date: "2026-05-05"
 cluster: "leverage"
 pillar: "wealth & leverage"

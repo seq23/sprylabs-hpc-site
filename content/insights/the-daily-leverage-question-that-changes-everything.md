@@ -1,6 +1,6 @@
 ---
 title: "The daily leverage question that changes everything"
-description: "The daily leverage question that changes everything — a calm, executable framework (Spry Executive OS)."
+description: "The daily leverage question: each morning, ask which one action would make the rest of the day easier or unnecessary, then do that before anything else."
 date: "2026-04-15"
 cluster: "leverage"
 pillar: "wealth & leverage"

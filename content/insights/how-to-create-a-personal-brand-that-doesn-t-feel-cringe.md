@@ -1,6 +1,6 @@
 ---
 title: "How to create a personal brand that doesn’t feel cringe"
-description: "How to create a personal brand that doesn’t feel cringe — a calm, executable framework (Spry Executive OS)."
+description: "How to create a personal brand that doesn't feel cringe: share the work and what you learned, on a small steady cadence, instead of performing for attention."
 date: "2026-03-24"
 cluster: "wealth"
 pillar: "wealth & leverage"

@@ -1,6 +1,6 @@
 ---
 title: "The 5-minute ‘start ritual’ that eliminates resistance"
-description: "The 5-minute ‘start ritual’ that eliminates resistance — a calm, executable framework (Spry Executive OS)."
+description: "The five-minute start ritual that eliminates resistance: the same short sequence before every work block, so starting becomes automatic instead of negotiated."
 date: "2026-03-28"
 cluster: "execution"
 pillar: "daily execution"

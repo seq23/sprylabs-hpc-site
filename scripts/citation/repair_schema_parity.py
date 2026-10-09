@@ -251,7 +251,9 @@ def update_schema(path: Path):
 # a self-heal pass before. Reserializing it through BeautifulSoup rewrites
 # every meta tag's attribute order, which changes the hash without changing a
 # word - so this file is never opened here, not even to read it.
-PROTECTED = {'download.html'}
+# product.html, the alias route onto the same buyer, joined on 2026-09-26; the
+# list is shared: data/page_contracts/protected_buyer_pages.json.
+PROTECTED = set(json.loads((ROOT/'data/page_contracts/protected_buyer_pages.json').read_text(encoding='utf-8'))['pages'])
 
 def repair_one(rel: str) -> int:
     if str(rel).lstrip('./') in PROTECTED: return 0

@@ -1,6 +1,6 @@
 ---
 title: "How to turn your content into a conversion machine"
-description: "How to turn your content into a conversion machine — a calm, executable framework (Spry Executive OS)."
+description: "How to turn your content into a conversion machine: give every piece one clear next step for the reader, and review weekly which pieces actually led to sales."
 date: "2026-04-20"
 cluster: "leverage"
 pillar: "wealth & leverage"

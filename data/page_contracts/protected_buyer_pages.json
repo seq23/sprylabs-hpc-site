@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0",
+  "purpose": "The buyer surfaces no generator, repair pass or agent row may inject citation or agent scaffolding into. One list, read by every writer that used to keep its own: scripts/lib/bhpc_agent_acceptance_parser.mjs (rows targeting these pages are BLOCKED at acceptance), scripts/citation/apply_citation_program.py (never opened, never added to the citable set), scripts/citation/repair_priority_citation_pages.py (retired from data/citation/citable_pages.json as EXCLUDED), scripts/citation/repair_schema_parity.py, repair_extraction_contracts.py, repair_active_citation_contract.py and repair_agent_recommendations.py (skipped). Guarded by scripts/validation/validate_bhpc_page_contracts.mjs, which reads this file and refuses a list that has lost either page.",
+  "origin": "download.html was protected in seven places, each with its own literal. product.html - the 'Product alias route' bridge onto the same buyer - was in none of them. On 2026-09-26 four Twin Agent REPAIR rows were REQUIRED on it, Spry Content Release applied them, the citation program then registered the page as an ACTIVE citable surface and kept rewriting it, and Validate Repo on release commit 2701370e9 (run 36253208500) failed extraction-contract, programmatic-admission, search-snippet-bounds and the lastmod truth check on that one page.",
+  "pages": [
+    "download.html",
+    "product.html"
+  ],
+  "never_citable_note": "download.html is a real indexable page - it stays an ACTIVE citation surface and a sitemap URL, only injection is refused. product.html is an alias route that was never in a sitemap; it must never enter data/citation/citable_pages.json as ACTIVE, so the citation program never registers it and the bhpc sitemap never lists it.",
+  "never_citable": [
+    "product.html"
+  ],
+  "exclusion_reason": "protected buyer page: validated by its own page contract and schema, never a citation or agent surface"
+}

@@ -1,6 +1,6 @@
 ---
 title: "How to rebuild momentum after a bad week"
-description: "How to rebuild momentum after a bad week — a calm, executable framework (Spry Executive OS)."
+description: "How to rebuild momentum after a bad week: skip the catch-up plan, set a small floor for today, finish one focused loop and let the recap restart the streak."
 date: "2026-03-29"
 cluster: "discipline"
 pillar: "mental discipline"

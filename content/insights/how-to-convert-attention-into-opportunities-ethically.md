@@ -1,6 +1,6 @@
 ---
 title: "How to convert attention into opportunities (ethically)"
-description: "How to convert attention into opportunities (ethically) — a calm, executable framework (Spry Executive OS)."
+description: "How to convert attention into opportunities ethically: offer one clear, useful next step, follow up on real interest, and never pressure anyone who isn't ready."
 date: "2026-04-03"
 cluster: "wealth"
 pillar: "wealth & leverage"
