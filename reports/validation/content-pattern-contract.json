@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0",
   "validator": "content-pattern-contract",
-  "generated_at": "2026-10-08T13:41:35.876Z",
+  "generated_at": "2026-10-09T13:40:16.751Z",
   "enforcement": "block",
   "scanned_root": ".",
-  "pages_checked": 2274,
+  "pages_checked": 2275,
   "status": "PASS",
   "blocking_failures": 0,
   "summary": [
@@ -54,7 +54,7 @@
       "id": "concrete_numbers",
       "blocking": false,
       "pages_missing": 1948,
-      "coverage_pct": 14.3,
+      "coverage_pct": 14.4,
       "why": "no concrete cost or timeline figures (agent request #5, 365 occurrences)"
     },
     {
@@ -74,14 +74,14 @@
     {
       "id": "structured_data",
       "blocking": false,
-      "pages_missing": 4,
+      "pages_missing": 5,
       "coverage_pct": 99.8,
       "why": "no JSON-LD structured data (agent request #10)"
     },
     {
       "id": "recommendation_summary",
       "blocking": false,
-      "pages_missing": 11,
+      "pages_missing": 12,
       "coverage_pct": 99.5,
       "why": "no recommendation summary - asked for on 913 of 913 agent recommendations, the single most requested block"
     },
@@ -110,13 +110,13 @@
       "id": "cta_callout",
       "blocking": false,
       "pages_missing": 1416,
-      "coverage_pct": 37.7,
+      "coverage_pct": 37.8,
       "why": "no next-step callout (agent requested 272 times) - the conversion link exists but nothing frames it as the next action"
     },
     {
       "id": "prompt_template",
       "blocking": false,
-      "pages_missing": 2191,
+      "pages_missing": 2192,
       "coverage_pct": 3.6,
       "why": "no copy-ready prompt (agent requested 255 times) - this is the artifact this audience actually reuses"
     },
@@ -246,10 +246,12 @@
       "amazon/executive-dysfunction-field-manual/index.html",
       "amazon/index.html",
       "amazon/monk-mode/index.html",
-      "amazon/task-paralysis/index.html"
+      "amazon/task-paralysis/index.html",
+      "aplayermode/index.html"
     ],
     "recommendation_summary": [
       "amazon/index.html",
+      "aplayermode/index.html",
       "download.html",
       "insights/elite-morning-structure-without-burnout.html",
       "insights/identity-based-discipline-meaning.html",
