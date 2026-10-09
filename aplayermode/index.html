@@ -59,7 +59,7 @@
     </ul>
     <p class="hero-sub" data-hero-sub>Your $20 ChatGPT gives advice. This makes tomorrow actually happen.</p>
     <div class="btn-row hero-ctas" data-hero-ctas>
-      <a class="btn btn-primary" data-hero-cta="app" href="https://app.aplayermode.com" rel="noopener"><span>Get the app · <span data-price="founding100.monthly">$9.99</span>/mo</span></a>
+      <a class="btn btn-primary" data-hero-cta="app" href="https://app.aplayermode.com/join" rel="noopener"><span>Join the Founding 100 — <span data-price="founding100.monthly">$9.99</span>/month</span></a>
       <a class="btn btn-ghost" data-hero-cta="bhpc" href="https://sprylabs.gumroad.com/l/billionaire-high-performance-coach" rel="noopener"><span>Get BHPC · <span data-price="bhpc.onetime">$49</span></span></a>
     </div>
     <div class="roles" data-roles>
@@ -673,11 +673,32 @@
   </div>
 </section>
 
+<!-- Testimonials: real quotes only, from ONE file in seq23/aplayer-mode
+     (apps/mobile/public/testimonials.json, served at APM_LINKS.testimonials).
+     Hidden until that file has at least one quote; app.js fills it. -->
+<section class="section" id="testimonials" data-testimonials hidden>
+  <div class="wrap">
+    <p class="kicker">From people using it</p>
+    <h2>In their words.</h2>
+    <div class="grid grid-3" data-testimonial-list></div>
+  </div>
+</section>
+
 <section class="section" id="plans">
   <div class="wrap">
     <p class="kicker">The app · plans</p>
     <h2>Three plans. Each does all 5 jobs.</h2>
     <p>The only difference is who does the last step: you, you with one tap, or the app on its own.</p>
+
+    <div class="card offer" id="founding-100">
+      <span class="badge">Introductory offer · Founding 100</span>
+      <h3 style="margin-top:10px">Executive Roundtable for the first 100 members</h3>
+      <p><span class="was" data-price="founding100.was">$24.99</span><span class="now" data-price="founding100.monthly">$9.99</span> <span class="muted">/ month</span></p>
+      <p><b>First 100 members. Stays $9.99/mo while subscribed.</b></p>
+      <p class="small muted">After the first 100: Executive Roundtable is <span data-price="introductory.monthly">$9.99</span>/mo for your first 3 months, then <span data-price="introductory.then">$24.99</span>/mo. Intro pricing applies to Executive Roundtable monthly only.</p>
+      <div class="btn-row"><a class="btn btn-primary" data-founding-cta href="https://app.aplayermode.com/join" rel="noopener"><span>Join the Founding 100 — <span data-price="founding100.monthly">$9.99</span>/month</span></a></div>
+      <p class="small muted">The button opens the secure card checkout straight away; you answer the setup questions after paying.</p>
+    </div>
 
     <input class="billing-input" type="radio" name="billing" id="billing-monthly" checked>
     <input class="billing-input" type="radio" name="billing" id="billing-annual">
@@ -687,7 +708,8 @@
     </div>
 
     <div class="grid grid-3 tiers">
-      <div class="card tier">
+      <div class="card tier tier-lead">
+        <span class="badge">Start here</span>
         <h3 data-plan-name>Executive Roundtable</h3>
         <p class="tagline">Your five-person executive team in one app</p>
         <div class="price price-monthly"><span data-price="chief_of_staff.monthly">$24.99</span> <small>/ month</small></div>
@@ -702,7 +724,7 @@
           <li>Coaching, one question at a time, plus all five coaching modes</li>
           <li>Connects 1 calendar and 1 inbox</li>
         </ul>
-        <a class="btn btn-primary plan-cta" data-plan-cta href="https://app.aplayermode.com" rel="noopener"><span>Start for <span data-price="founding100.monthly">$9.99</span>/mo &rarr;</span></a>
+        <a class="btn btn-primary plan-cta" data-plan-cta href="https://app.aplayermode.com/join" rel="noopener"><span>Join the Founding 100 — <span data-price="founding100.monthly">$9.99</span>/month</span></a>
       </div>
       <div class="card tier">
         <h3 data-plan-name>Executive Suite</h3>
@@ -731,7 +753,7 @@
           <li>Multiple accounts: work and personal calendars and inboxes connected at once</li>
           <li>A daily done-list with undo</li>
         </ul>
-        <a class="btn btn-primary plan-cta" data-plan-cta href="https://app.aplayermode.com" rel="noopener">Start Autopilot &rarr;</a>
+        <a class="btn btn-ghost plan-cta" data-plan-cta href="https://app.aplayermode.com" rel="noopener">Start Autopilot &rarr;</a>
       </div>
     </div>
 
@@ -745,15 +767,8 @@
       </table>
     </div>
 
-    <div class="card offer" id="founding-100" style="margin-top:16px">
-      <span class="badge">Introductory offer · Founding 100</span>
-      <h3 style="margin-top:10px">Executive Roundtable for the first 100 members</h3>
-      <p><span class="was" data-price="founding100.was">$24.99</span><span class="now" data-price="founding100.monthly">$9.99</span> <span class="muted">/ month</span></p>
-      <p><b>First 100 members. Stays $9.99/mo while subscribed.</b></p>
-      <p class="small muted">After the first 100: Executive Roundtable is <span data-price="introductory.monthly">$9.99</span>/mo for your first 3 months, then <span data-price="introductory.then">$24.99</span>/mo. Intro pricing applies to Executive Roundtable monthly only.</p>
-    </div>
 
-    <p class="small muted" style="margin-top:16px">Each button opens the web app: a 3-minute setup, then you pick your plan and pay by card. Subscriptions are paid by card in the web app and the Android download (secure checkout by Stripe) and renew automatically at the price shown until you cancel in the app's settings. Buying a plan never grants autonomy: you switch on each permission yourself.</p>
+    <p class="small muted" style="margin-top:16px">The Founding 100 button opens the card checkout first; you set up after paying. The other buttons open the web app: a 3-minute setup, then you pick your plan and pay by card. Subscriptions are paid by card in the web app and the Android download (secure checkout by Stripe) and renew automatically at the price shown until you cancel in the app's settings. Buying a plan never grants autonomy: you switch on each permission yourself.</p>
 
     <details class="more">
       <summary>What you no longer think about, plan by plan</summary>
@@ -871,6 +886,25 @@
     <details class="faq" data-faq="stores"><summary>When is the app in the stores?</summary><p>Coming soon: the App Store and Google Play versions are awaiting store approval, and the store buttons above switch on the day they are approved. You do not have to wait: the web app and the Android download are live now, with card payments.</p></details>
     <details class="faq" data-faq="alternatives"><summary>Is this an alternative to BetterUp, Hone or Culture Amp?</summary><p>Yes. Those sell scheduled coaching programs, usually bought by employers. Here there are no sessions to book: your AI, or the app, holds the structure every day.</p></details>
     <details class="faq" data-faq="need-app"><summary>Do I need the app to use the digital product?</summary><p>No. The digital product runs inside your AI chat after setup. No other app needed.</p></details>
+  </div>
+</section>
+
+<!-- "Get launch updates": stored by the A Player Mode API (POST APM_LINKS.launchUpdates,
+     seq23/aplayer-mode migration 0095). Hidden until that endpoint answers this page;
+     app.js shows it. Nothing here sends email. -->
+<section class="section" id="launch-updates" data-launch-updates hidden>
+  <div class="wrap narrow">
+    <p class="kicker">Launch updates</p>
+    <h2>Get launch updates.</h2>
+    <p>The App Store and Google Play launch, and new features as they ship. A few emails, not a newsletter.</p>
+    <form class="signup" data-launch-form novalidate>
+      <label class="signup-label" for="launch-email">Email</label>
+      <input class="signup-input" id="launch-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
+      <div class="signup-trap" aria-hidden="true"><label for="launch-website">Leave this empty</label><input id="launch-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+      <label class="signup-consent"><input type="checkbox" name="consent" data-consent-version="2026-10-08" required> <span data-consent-text>Email me A Player Mode launch updates. No spam; unsubscribe any time. Spry Labs handles your email under the Privacy Policy at app.aplayermode.com/privacy.</span></label>
+      <button class="btn btn-primary" type="submit">Get launch updates</button>
+      <p class="small" data-launch-status role="status" aria-live="polite"></p>
+    </form>
   </div>
 </section>
 

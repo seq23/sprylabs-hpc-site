@@ -359,3 +359,20 @@ a.choice-cta { text-decoration: none; }
   .diff-row h3 { grid-column: 1 / -1; }
   .diff-row p + p { margin-top: 0; padding-top: 0; border-top: 0; padding-left: var(--apm-space-md); border-left: 1px solid var(--apm-line); }
 }
+
+/* Plans: Executive Roundtable leads (Founding 100); Autopilot is never featured */
+.tier-lead { border: 2px solid var(--apm-primary); }
+.tier .badge { align-self: flex-start; margin-bottom: var(--apm-space-xs); }
+#founding-100 { margin-bottom: var(--apm-space-md); }
+
+/* Testimonials (hidden until the data file has quotes) */
+.testimonial { margin: 0; }
+.testimonial blockquote { margin: 0 0 var(--apm-space-sm); font-size: 17px; line-height: 26px; }
+
+/* Launch updates sign-up */
+.signup { display: flex; flex-direction: column; gap: var(--apm-space-sm); max-width: 480px; }
+.signup-label { font-weight: 600; }
+.signup-input { min-height: 48px; padding: 10px 16px; border-radius: var(--apm-radius-pill); border: 1px solid var(--apm-line-strong); background: var(--apm-surface); color: var(--apm-ink); font: inherit; }
+.signup-consent { display: flex; gap: var(--apm-space-xs); align-items: flex-start; font-size: var(--apm-size-small); }
+.signup-consent input { margin-top: 4px; min-width: 18px; min-height: 18px; }
+.signup-trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }

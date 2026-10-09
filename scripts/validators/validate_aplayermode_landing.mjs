@@ -199,7 +199,12 @@ for (const r of ['legal.terms', 'legal.privacy', 'beta.webApp']) if (!isHttps(lo
 
 const ids = new Set([...html.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]));
 // The web app is where a plan is bought (setup, then the plan choice and card checkout).
-const EXTERNAL_ALLOW = new Set([links?.gumroad, links?.beta?.webApp].filter(Boolean));
+const EXTERNAL_ALLOW = new Set([links?.gumroad, links?.beta?.webApp, links?.join].filter(Boolean));
+// "Join the Founding 100" goes straight to the card checkout through the web app's /join route
+// (seq23/aplayer-mode apps/mobile/app/join.tsx); testimonials and launch updates are read/posted by app.js.
+if (links?.join !== `${links?.beta?.webApp}/join`) fail(`APM_LINKS.join must be the web app's /join route (${links?.beta?.webApp}/join)`);
+if (links?.testimonials !== `${links?.beta?.webApp}/testimonials.json`) fail('APM_LINKS.testimonials must be the web app\'s /testimonials.json (the ONE testimonials file)');
+if (links?.launchUpdates !== 'https://api.aplayermode.com/v1/launch-updates') fail('APM_LINKS.launchUpdates must be https://api.aplayermode.com/v1/launch-updates');
 // Inline script bodies are code, not links (the site build injects the Clarity
 // loader, whose code builds a URL string), and <link rel=canonical|alternate>
 // is metadata the site build stamps on every page, not a link a reader follows.
@@ -220,7 +225,7 @@ const fileExists = (p) => {
 for (const ref of refs) {
   if (ref === '' || ref === '#' || /^javascript:/i.test(ref)) { fail(`empty or dead link: href/src="${ref}"`); continue; }
   if (ref.startsWith('#')) { if (!ids.has(ref.slice(1))) fail(`in-page link ${ref} has no matching id`); continue; }
-  if (/^https?:\/\//i.test(ref)) { if (!EXTERNAL_ALLOW.has(ref)) fail(`external link ${ref} is not in the allow-list (APM_LINKS.gumroad, APM_LINKS.beta.webApp)`); continue; }
+  if (/^https?:\/\//i.test(ref)) { if (!EXTERNAL_ALLOW.has(ref)) fail(`external link ${ref} is not in the allow-list (APM_LINKS.gumroad, APM_LINKS.beta.webApp, APM_LINKS.join)`); continue; }
   if (/^(mailto|tel):/i.test(ref)) continue;
   if (!ref.startsWith('/')) { fail(`relative link "${ref}" breaks when the page moves to aplayermode.com; use a root path`); continue; }
   if (!fileExists(ref)) fail(`internal link ${ref} resolves to no committed file`);
@@ -591,7 +596,7 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
   if (!ctas) fail('the two hero buy buttons ([data-hero-ctas]) must follow the sub-line directly');
   else {
     const btn = (k) => ctas[1].match(new RegExp(`<a\\b[^>]*\\bdata-hero-cta="${k}"[^>]*>([\\s\\S]*?)<\\/a>`, 'i'));
-    const HERO_CTAS = [['app', webApp, 'founding100.monthly', /^get the app · \$9\.99\/mo$/], ['bhpc', links?.gumroad, 'bhpc.onetime', /^get bhpc · \$49$/]];
+    const HERO_CTAS = [['app', links?.join, 'founding100.monthly', /^join the founding 100 - \$9\.99\/month$/], ['bhpc', links?.gumroad, 'bhpc.onetime', /^get bhpc · \$49$/]];
     for (const [k, url, price, label] of HERO_CTAS) {
       const b = btn(k);
       if (!b) { fail(`hero buy button [data-hero-cta="${k}"] is missing`); continue; }
@@ -611,14 +616,27 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
   // No web/iPhone user gets an Expo push; the agenda waits for them (aplayer-mode
   // services/api/src/morningTrigger.ts sends push only). Never promise "arrives on its own".
   if (/arrives on its own|sends your agenda on its own/i.test(stripTags(html))) fail('copy promises the agenda "arrives on its own"; only Android gets a morning push');
-  // Every plan card carries its CTA to the web app.
-  const PLAN_CTAS = ['start for $9.99/mo →', 'start executive suite →', 'start autopilot →'];
-  const tiers = [...html.matchAll(/<div\b[^>]*class="card tier"[^>]*>([\s\S]*?)\n      <\/div>/gi)].map((m) => m[1]);
+  // Every plan card carries its CTA: Executive Roundtable straight to the Founding 100 checkout,
+  // the other two to the web app. Founding 100 and Executive Roundtable lead (owner, 8 Oct 2026):
+  // the Founding 100 offer sits above the cards with its own join button, the Roundtable card is
+  // the only lead card, and Autopilot ($79.99) is never featured and never a primary button.
+  const PLAN_CTAS = ['join the founding 100 - $9.99/month', // norm() folds the em dash to '-'
+    'start executive suite →', 'start autopilot →'];
+  const PLAN_HREFS = [links?.join, webApp, webApp];
+  const tierOpens = [...html.matchAll(/<div\b[^>]*class="card tier( tier-lead)?"[^>]*>/gi)];
+  const tiers = [...html.matchAll(/<div\b[^>]*class="card tier(?: tier-lead)?"[^>]*>([\s\S]*?)\n      <\/div>/gi)].map((m) => m[1]);
+  if (JSON.stringify(tierOpens.map((m) => Boolean(m[1]))) !== JSON.stringify([true, false, false])) fail('only the first plan card (Executive Roundtable) may be the lead card (class "card tier tier-lead")');
+  if (tiers[2] && (/\bbtn-primary\b/.test(tiers[2]) || /class="badge"|featured|recommended|most popular/i.test(tiers[2]))) fail('the Autopilot card must not be featured: no badge, no "featured/recommended", no btn-primary');
+  const offerAt = html.indexOf('id="founding-100"'); const firstTier = tierOpens[0]?.index ?? -1;
+  if (offerAt === -1 || firstTier === -1 || offerAt > firstTier) fail('the Founding 100 offer (#founding-100) must sit above the plan cards');
+  const offerCard = (html.slice(offerAt).match(/^[\s\S]*?\n    <\/div>/) || [''])[0];
+  const fcta = [...offerCard.matchAll(/<a\b([^>]*\bdata-founding-cta\b[^>]*)>([\s\S]*?)<\/a>/gi)];
+  if (fcta.length !== 1 || !fcta[0][1].includes(`href="${links?.join}"`) || flat(fcta[0][2]) !== PLAN_CTAS[0]) fail(`the Founding 100 offer needs one [data-founding-cta] "Join the Founding 100 — $9.99/month" to ${links?.join}`);
   if (tiers.length !== 3) fail(`expected 3 plan cards, found ${tiers.length}`);
   tiers.forEach((t, i) => {
     const c = [...t.matchAll(/<a\b([^>]*\bdata-plan-cta\b[^>]*)>([\s\S]*?)<\/a>/gi)];
     if (c.length !== 1) { fail(`plan card ${i + 1} needs exactly one CTA ([data-plan-cta]), found ${c.length}`); return; }
-    if (!c[0][1].includes(`href="${webApp}"`)) fail(`plan card ${i + 1} CTA must go to the web app ${webApp}`);
+    if (!c[0][1].includes(`href="${PLAN_HREFS[i]}"`)) fail(`plan card ${i + 1} CTA must go to ${PLAN_HREFS[i]}`);
     if (flat(c[0][2]) !== PLAN_CTAS[i]) fail(`plan card ${i + 1} CTA reads "${stripTags(c[0][2]).trim()}", expected "${PLAN_CTAS[i]}"`);
     if (i === 0 && !c[0][2].includes('data-price="founding100.monthly"')) fail('the Executive Roundtable CTA price must be the pinned founding100 price');
   });
@@ -658,6 +676,42 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
 }
 
 // ---------------------------------------------------------------- report
+// ---------------------------------------------------------------- 10. testimonials and launch updates (owner, 8 Oct 2026)
+{
+  // Testimonials: never a quote in the static page (no invented quotes); hidden until app.js
+  // reads at least one consented entry from the ONE file (aplayer-mode apps/mobile/public/testimonials.json).
+  const t = html.match(/<section\b([^>]*\bdata-testimonials\b[^>]*)>([\s\S]*?)<\/section>/i);
+  if (!t) fail('the testimonials section ([data-testimonials]) is missing');
+  else {
+    if (!/\bhidden\b/.test(t[1])) fail('the testimonials section must be hidden in the static page (app.js shows it only when the file has quotes)');
+    if (!/<div\b[^>]*\bdata-testimonial-list\b[^>]*><\/div>/.test(t[2])) fail('the testimonial list must be empty in the static page: quotes come only from the data file, never written into the page');
+    if (/<blockquote|<figure|&ldquo;|“/i.test(t[2])) fail('a quote is written into the static page; testimonials come only from the data file');
+  }
+  const appJs = read(path.join(path.dirname(CONFIG_JS), 'app.js'));
+  if (!/typeof t\.consent === 'string' && t\.consent\.trim\(\)/.test(appJs)) fail('app.js must show only testimonials with a consent record');
+  if (!/q\.textContent = '“' \+ t\.quote/.test(appJs) || /innerHTML\s*=\s*[^;]*\bt\./.test(appJs)) fail('app.js must render testimonial text with textContent, never innerHTML');
+  // Launch updates: hidden until the endpoint answers; explicit consent with a version; no other endpoint.
+  const l = html.match(/<section\b([^>]*\bdata-launch-updates\b[^>]*)>([\s\S]*?)<\/section>/i);
+  if (!l) fail('the launch-updates section ([data-launch-updates]) is missing');
+  else {
+    if (!/\bhidden\b/.test(l[1])) fail('the launch-updates section must be hidden in the static page (app.js shows it once the endpoint answers)');
+    const box = l[2].match(/<input\b[^>]*type="checkbox"[^>]*name="consent"[^>]*>/i);
+    if (!box || !/\brequired\b/.test(box[0]) || /\bchecked\b/.test(box[0]) || !/data-consent-version="\d{4}-\d{2}-\d{2}"/.test(box[0])) fail('the launch-updates consent must be an unticked, required checkbox carrying data-consent-version');
+    if (/\baction\s*=/.test(l[2])) fail('the launch-updates form must post only through app.js to APM_LINKS.launchUpdates (no form action)');
+    const wording = norm(stripTags((l[2].match(/<span\b[^>]*\bdata-consent-text\b[^>]*>([\s\S]*?)<\/span>/i) || [])[1] || ''));
+    if (!wording.includes('launch updates') || !wording.includes('unsubscribe')) fail('the consent wording must say what is sent (launch updates) and that unsubscribing is possible');
+    // The server stores ITS copy of the wording; the page must show exactly that copy and version.
+    const serverFile = srcDir && path.join(srcDir, 'services/api/src/launchUpdates.ts');
+    if (serverFile && fs.existsSync(serverFile)) {
+      const ts = fs.readFileSync(serverFile, 'utf8');
+      const ver = (ts.match(/version: '([^']+)'/) || [])[1]; const text = (ts.match(/text: '([^']+)'/) || [])[1];
+      if (!box || !box[0].includes(`data-consent-version="${ver}"`)) fail(`the consent version on the page differs from the server's (${ver})`);
+      if (wording !== norm(text || '')) fail('the consent wording on the page differs from the server copy in services/api/src/launchUpdates.ts');
+      notes.push('launch-updates consent compared to the server copy');
+    }
+  }
+}
+
 const summary = `${tokensChecked} theme tokens, ${priceEls.length} prices, ${refs.length} links, ${linkEls.length} download buttons, ${uniquePoints.length} BHPC selling points, ${h1s.length} h1, ${ORDER.length} sections in order, ${FAQ_QS.length} FAQ questions`;
 for (const n of notes) console.log(`${LABEL} note: ${n}`);
 if (failures.length) {
