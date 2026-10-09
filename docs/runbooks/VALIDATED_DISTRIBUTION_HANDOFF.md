@@ -35,3 +35,10 @@ Manual dispatch runs the complete CI validation profile before deployment. An un
 - accepted/rejected candidate counts;
 - actionable warning count;
 - validation status.
+
+## Hand-off when Validate Repo was dispatched, not pushed
+
+Deploy Distribution and Main Validation Sentinel are `workflow_run` consumers of Validate Repo. The platform raises `workflow_run` for a push-started run and for a person's `workflow_dispatch`, and does not raise it for a run created by a `GITHUB_TOKEN` dispatch, which is how every automated writer reaches Validate Repo (`.github/scripts/commit_and_push_if_changed.sh`). Found 2026-09-18 and 2026-09-20: Validate Repo 35544558796 validated ad7beb69f and started nothing; every automated release was validated and never submitted.
+
+The last step of the `gate` job runs `.github/scripts/handoff_validated_main_to_consumers.sh`, which on a `GITHUB_TOKEN`-dispatched run on `main` dispatches each consumer with `artifact_name`, `artifact_run_id` and `commit_sha` and confirms a run exists by exact `head_sha`. The consumer set is derived from the workflow files by `scripts/workflow/validate_repo_consumers.py`; nothing keeps a list. `npm run validate:workflow-run-handoff` reads the workflow tree and fails when the step, its permissions, or any consumer's `workflow_dispatch` reachability is missing; `npm run validate:validated-main-handoff-gate` exercises the script against a stubbed API.
+

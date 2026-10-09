@@ -466,16 +466,38 @@ done
 
 # The helper itself must still make the request. Deleting the call would leave
 # every check above passing while restoring the original hole.
-if ! grep -q 'actions/workflows/validate-repo.yml/dispatches' "$repo_root/.github/scripts/commit_and_push_if_changed.sh"; then
+#
+# The request/confirm/re-request loop moved into workflow_dispatch_lib.sh so
+# that Validate Repo's hand-off to its workflow_run consumers (which the same
+# GITHUB_TOKEN recursion guard silences) shares it instead of copying it. These
+# pins therefore follow the call: the helper must source the library and ask it
+# for validate-repo.yml by name, and the library must be the thing that POSTs to
+# the dispatches endpoint and reads back by exact head_sha. Any one of the three
+# missing is the original silence, wearing a refactor.
+helper_path="$repo_root/.github/scripts/commit_and_push_if_changed.sh"
+lib_path="$repo_root/.github/scripts/workflow_dispatch_lib.sh"
+if [ ! -f "$lib_path" ]; then
+  echo "writer coordination: the shared dispatch library $lib_path is missing" >&2
+  exit 1
+fi
+if ! grep -Eq '^\. "\$\(cd "\$\(dirname "\$\{BASH_SOURCE\[0\]\}"\)" && pwd\)/workflow_dispatch_lib\.sh"$' "$helper_path"; then
+  echo "writer coordination: the shared push helper no longer sources workflow_dispatch_lib.sh, so it cannot request Validate Repo after pushing to main" >&2
+  exit 1
+fi
+if ! grep -Eq 'request_workflow_run_for_sha[[:space:]]+validate-repo\.yml[[:space:]]' "$helper_path"; then
   echo "writer coordination: the shared push helper no longer requests Validate Repo after pushing to main" >&2
   exit 1
 fi
+if ! grep -q 'actions/workflows/${workflow_file}/dispatches' "$lib_path"; then
+  echo "writer coordination: workflow_dispatch_lib.sh no longer POSTs to the workflow dispatches endpoint" >&2
+  exit 1
+fi
 
-# Requesting is not covering. The helper must read back that a run exists for the
-# SHA it pushed; deleting that read restores the 2026-09-14 f7572445d race while
-# every check above still passes.
-if ! grep -q 'actions/runs?head_sha=' "$repo_root/.github/scripts/commit_and_push_if_changed.sh"; then
-  echo "writer coordination: the shared push helper no longer confirms a Validate Repo run exists for the SHA it pushed" >&2
+# Requesting is not covering. The library must read back that a run exists for
+# the SHA it was asked about; deleting that read restores the 2026-09-14
+# f7572445d race while every check above still passes.
+if ! grep -q 'actions/runs?head_sha=' "$lib_path"; then
+  echo "writer coordination: workflow_dispatch_lib.sh no longer confirms a run exists for the SHA it dispatched for" >&2
   exit 1
 fi
 
