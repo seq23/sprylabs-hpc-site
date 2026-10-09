@@ -1,0 +1,83 @@
+{
+  "schema_version": "1.4",
+  "workflow_id": "spry-content-release",
+  "run_id": "20261009143707-2480",
+  "generated_at": "2026-10-09T14:51:01.222Z",
+  "status": "PASS_WITH_WARNING",
+  "changed_file_count": 2138,
+  "raw_finding_count": 1175,
+  "aggregated_finding_count": 1,
+  "input_count": 823,
+  "output_count": 4339,
+  "finding_summary": {
+    "counts": {
+      "SAFE_NOISE": 0,
+      "WARNING": 1,
+      "SELF_HEALABLE": 0,
+      "ITEM_SKIP": 0,
+      "TRUE_BLOCKER": 0,
+      "INTERNAL_ERROR": 0
+    },
+    "blocking_count": 0,
+    "warning_count": 1,
+    "safe_noise_count": 0,
+    "self_healable_count": 0,
+    "item_skip_count": 0
+  },
+  "findings": [
+    {
+      "id": "aggregate:undeclared_generated_output",
+      "kind": "undeclared_generated_output",
+      "message": "1175 generated output(s) were outside declared workflow patterns",
+      "file": null,
+      "material": false,
+      "repairable": false,
+      "item_scoped": false,
+      "evidence": [
+        {
+          "occurrence_count": 1175,
+          "sample_files": [
+            ".build-cache/470bf71e5e3422f69f97b3d5482aff3ea785961290e00304b635be77f1b085f6/manifest.json",
+            ".build-cache/470bf71e5e3422f69f97b3d5482aff3ea785961290e00304b635be77f1b085f6/payload.tar",
+            ".build-cache/470bf71e5e3422f69f97b3d5482aff3ea785961290e00304b635be77f1b085f6/removed.txt",
+            ".build-cache/6f124477bb0ef7f78a78b533d92ea88a5437040f60ac0a10efd6d79492c86883/manifest.json",
+            ".build-cache/6f124477bb0ef7f78a78b533d92ea88a5437040f60ac0a10efd6d79492c86883/payload.tar",
+            ".build-cache/6f124477bb0ef7f78a78b533d92ea88a5437040f60ac0a10efd6d79492c86883/removed.txt",
+            ".build-cache/edd716b9d4f6671be4ef51ac5ce2a46d33043c929bac9e73df6506b77a848f27/manifest.json",
+            ".build-cache/edd716b9d4f6671be4ef51ac5ce2a46d33043c929bac9e73df6506b77a848f27/payload.tar"
+          ]
+        }
+      ],
+      "classification": "WARNING",
+      "occurrence_count": 1175,
+      "sample_files": [
+        ".build-cache/470bf71e5e3422f69f97b3d5482aff3ea785961290e00304b635be77f1b085f6/manifest.json",
+        ".build-cache/470bf71e5e3422f69f97b3d5482aff3ea785961290e00304b635be77f1b085f6/payload.tar",
+        ".build-cache/470bf71e5e3422f69f97b3d5482aff3ea785961290e00304b635be77f1b085f6/removed.txt",
+        ".build-cache/6f124477bb0ef7f78a78b533d92ea88a5437040f60ac0a10efd6d79492c86883/manifest.json",
+        ".build-cache/6f124477bb0ef7f78a78b533d92ea88a5437040f60ac0a10efd6d79492c86883/payload.tar",
+        ".build-cache/6f124477bb0ef7f78a78b533d92ea88a5437040f60ac0a10efd6d79492c86883/removed.txt",
+        ".build-cache/edd716b9d4f6671be4ef51ac5ce2a46d33043c929bac9e73df6506b77a848f27/manifest.json",
+        ".build-cache/edd716b9d4f6671be4ef51ac5ce2a46d33043c929bac9e73df6506b77a848f27/payload.tar"
+      ]
+    }
+  ],
+  "errors": [],
+  "warnings": [
+    "1175 generated output(s) were outside declared workflow patterns"
+  ],
+  "safe_noise": [],
+  "info": [
+    "programmatic candidate manifest retains 1410 admitted release atom(s) for downstream validation"
+  ],
+  "governance_fixture_count": 15,
+  "governance_blocker_audit": {
+    "admitted_hard_fail_count": 252,
+    "suggested_review_counts": {
+      "REVIEW_REQUIRED": 195,
+      "EXISTING_REPAIR_AVAILABLE": 8,
+      "TRUE_BLOCKER": 31,
+      "REVIEW_WARNING_BOUNDARY": 18
+    }
+  }
+}
