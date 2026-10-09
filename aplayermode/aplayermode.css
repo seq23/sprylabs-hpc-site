@@ -376,3 +376,6 @@ a.choice-cta { text-decoration: none; }
 .signup-consent { display: flex; gap: var(--apm-space-xs); align-items: flex-start; font-size: var(--apm-size-small); }
 .signup-consent input { margin-top: 4px; min-width: 18px; min-height: 18px; }
 .signup-trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+
+/* Founding 100 sell-out: app.js swaps these from the live count; hidden must win over .btn span rules. */
+[data-join-standard][hidden], [data-join-founding][hidden], [data-founding-full][hidden], [data-founding-open][hidden], [data-founding-left][hidden] { display: none !important; }

@@ -80,6 +80,30 @@
       .catch(function () { /* stays hidden */ });
   }
 
+  // Founding 100 sell-out: the live count (APM_LINKS.founding). While places remain the card says
+  // how many; once the server says open:false every join button and the offer card switch to the
+  // standard Executive Roundtable offer. Unreadable count: the page stays as it is (/join checks
+  // again before any checkout opens, so no founding price is ever sold past 100).
+  if (isLive(links.founding) && typeof fetch === 'function') {
+    fetch(links.founding, { mode: 'cors', credentials: 'omit' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) {
+        if (!data || typeof data.open !== 'boolean' || typeof data.remaining !== 'number') return;
+        if (data.open && data.remaining > 0) {
+          var left = document.querySelector('[data-founding-left]');
+          if (left) { left.textContent = data.remaining + ' of ' + (data.total || 100) + ' places left.'; left.hidden = false; }
+          return;
+        }
+        document.querySelectorAll('[data-join-founding]').forEach(function (el) { el.hidden = true; });
+        document.querySelectorAll('[data-join-standard]').forEach(function (el) { el.hidden = false; });
+        document.querySelectorAll('[data-founding-open]').forEach(function (el) { el.hidden = true; });
+        document.querySelectorAll('[data-founding-full]').forEach(function (el) { el.hidden = false; });
+        var badge = document.querySelector('#founding-100 .badge');
+        if (badge) badge.textContent = 'Founding 100 · Full';
+      })
+      .catch(function () { /* unchanged */ });
+  }
+
   // "Get launch updates": shown only once the endpoint answers this page (a probe that stores
   // nothing: an empty body is refused 400 by a live endpoint, and blocked by CORS before it exists).
   var lSection = document.querySelector('[data-launch-updates]');

@@ -103,6 +103,18 @@ const norm = (s) => decode(s).toLowerCase()
 // Visible text of an inline run (a button label with a nested price span): tags dropped, not spaced.
 const flat = (s) => norm(s.replace(/<[^>]+>/g, ''));
 const usd = (cents) => `$${(cents / 100).toFixed(2)}`;
+// A join button carries two labels (9 Oct 2026): the founding one, shown, and the standard one,
+// hidden until app.js reads the live Founding 100 count as full. Rules read each part on its own.
+const STANDARD_RE = /<span\b[^>]*\bdata-join-standard\b[^>]*>(?:[^<]|<span\b[^>]*>[^<]*<\/span>)*<\/span>/i;
+const foundingPart = (inner) => inner.replace(STANDARD_RE, '');
+const JOIN_STANDARD = 'join the executive roundtable - $9.99/month for 3 months, then $24.99/month';
+const checkStandardPart = (inner, where) => {
+  const m = inner.match(STANDARD_RE);
+  if (!m) { fail(`${where} needs its hidden standard label [data-join-standard] for when the Founding 100 is full`); return; }
+  if (!/\bhidden\b/.test(m[0].match(/^<span\b[^>]*>/)[0])) fail(`${where}: the standard label must be hidden in the static page (app.js shows it only when the count reads full)`);
+  if (flat(m[0]) !== JOIN_STANDARD) fail(`${where}: the standard label reads "${stripTags(m[0]).trim()}", expected "${JOIN_STANDARD}"`);
+  if (!m[0].includes('data-price="introductory.monthly"') || !m[0].includes('data-price="introductory.then"')) fail(`${where}: the standard label prices must be the pinned introductory prices`);
+};
 
 // ---------------------------------------------------------------- 1. prices
 const pinned = JSON.parse(read(PRICES));
@@ -205,6 +217,14 @@ const EXTERNAL_ALLOW = new Set([links?.gumroad, links?.beta?.webApp, links?.join
 if (links?.join !== `${links?.beta?.webApp}/join`) fail(`APM_LINKS.join must be the web app's /join route (${links?.beta?.webApp}/join)`);
 if (links?.testimonials !== `${links?.beta?.webApp}/testimonials.json`) fail('APM_LINKS.testimonials must be the web app\'s /testimonials.json (the ONE testimonials file)');
 if (links?.launchUpdates !== 'https://api.aplayermode.com/v1/launch-updates') fail('APM_LINKS.launchUpdates must be https://api.aplayermode.com/v1/launch-updates');
+if (links?.founding !== 'https://api.aplayermode.com/v1/billing/founding') fail('APM_LINKS.founding must be https://api.aplayermode.com/v1/billing/founding (the live Founding 100 count)');
+{
+  const appJsSrc = read(path.join(path.dirname(CONFIG_JS), 'app.js'));
+  // The switch: only an explicit open:false from the server shows the standard offer; all three join buttons follow it.
+  if (!/fetch\(links\.founding, \{ mode: 'cors', credentials: 'omit' \}\)/.test(appJsSrc)) fail('app.js must read the live Founding 100 count from APM_LINKS.founding');
+  if (!/if \(data\.open && data\.remaining > 0\) \{/.test(appJsSrc)) fail('app.js must keep the founding offer only while the count says places remain');
+  for (const sel of ['[data-join-founding]', '[data-join-standard]', '[data-founding-open]', '[data-founding-full]']) if (!appJsSrc.includes(`document.querySelectorAll('${sel}')`)) fail(`app.js must switch every ${sel} once the Founding 100 is full`);
+}
 // Inline script bodies are code, not links (the site build injects the Clarity
 // loader, whose code builds a URL string), and <link rel=canonical|alternate>
 // is metadata the site build stamps on every page, not a link a reader follows.
@@ -602,7 +622,8 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
       if (!b) { fail(`hero buy button [data-hero-cta="${k}"] is missing`); continue; }
       if (!b[0].includes(`href="${url}"`)) fail(`hero buy button ${k} must go to ${url}`);
       if (!b[1].includes(`data-price="${price}"`)) fail(`hero buy button ${k} must show its price (${price})`);
-      if (!label.test(flat(b[1]))) fail(`hero buy button ${k} reads "${stripTags(b[1]).trim()}"`);
+      if (!label.test(flat(foundingPart(b[1])))) fail(`hero buy button ${k} reads "${stripTags(b[1]).trim()}"`);
+      if (k === 'app') checkStandardPart(b[1], 'hero buy button app');
     }
   }
   const seeApp = hero.match(/<a\b[^>]*\bdata-choice-cta="app"[^>]*>([\s\S]*?)<\/a>/i);
@@ -631,19 +652,24 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
   if (offerAt === -1 || firstTier === -1 || offerAt > firstTier) fail('the Founding 100 offer (#founding-100) must sit above the plan cards');
   const offerCard = (html.slice(offerAt).match(/^[\s\S]*?\n    <\/div>/) || [''])[0];
   const fcta = [...offerCard.matchAll(/<a\b([^>]*\bdata-founding-cta\b[^>]*)>([\s\S]*?)<\/a>/gi)];
-  if (fcta.length !== 1 || !fcta[0][1].includes(`href="${links?.join}"`) || flat(fcta[0][2]) !== PLAN_CTAS[0]) fail(`the Founding 100 offer needs one [data-founding-cta] "Join the Founding 100 — $9.99/month" to ${links?.join}`);
+  if (fcta.length === 1) checkStandardPart(fcta[0][2], 'the Founding 100 offer button');
+  if (!/<div\b[^>]*\bdata-founding-full\b[^>]*\bhidden\b[^>]*>[\s\S]*?the founding 100 is full/i.test(offerCard)) fail('the Founding 100 offer needs a hidden [data-founding-full] block saying "The Founding 100 is full"');
+  if (!/<div\b[^>]*\bdata-founding-open\b[^>]*>/i.test(offerCard)) fail('the Founding 100 offer copy must sit in [data-founding-open] so app.js can hide it once full');
+  if (fcta.length !== 1 || !fcta[0][1].includes(`href="${links?.join}"`) || flat(foundingPart(fcta[0][2])) !== PLAN_CTAS[0]) fail(`the Founding 100 offer needs one [data-founding-cta] "Join the Founding 100 — $9.99/month" to ${links?.join}`);
   if (tiers.length !== 3) fail(`expected 3 plan cards, found ${tiers.length}`);
   tiers.forEach((t, i) => {
     const c = [...t.matchAll(/<a\b([^>]*\bdata-plan-cta\b[^>]*)>([\s\S]*?)<\/a>/gi)];
     if (c.length !== 1) { fail(`plan card ${i + 1} needs exactly one CTA ([data-plan-cta]), found ${c.length}`); return; }
     if (!c[0][1].includes(`href="${PLAN_HREFS[i]}"`)) fail(`plan card ${i + 1} CTA must go to ${PLAN_HREFS[i]}`);
-    if (flat(c[0][2]) !== PLAN_CTAS[i]) fail(`plan card ${i + 1} CTA reads "${stripTags(c[0][2]).trim()}", expected "${PLAN_CTAS[i]}"`);
+    if (i === 0) checkStandardPart(c[0][2], 'the Executive Roundtable CTA');
+    if (flat(i === 0 ? foundingPart(c[0][2]) : c[0][2]) !== PLAN_CTAS[i]) fail(`plan card ${i + 1} CTA reads "${stripTags(c[0][2]).trim()}", expected "${PLAN_CTAS[i]}"`);
     if (i === 0 && !c[0][2].includes('data-price="founding100.monthly"')) fail('the Executive Roundtable CTA price must be the pinned founding100 price');
   });
   // Cancel and refund answers.
   const faqBlock = (k) => (html.match(new RegExp(`<details\\b[^>]*\\bdata-faq="${k}"[^>]*>([\\s\\S]*?)<\\/details>`, 'i')) || [])[1] || '';
   const cancel = norm(stripTags(faqBlock('cancel')));
   if (!cancel.startsWith('can i cancel?') || !cancel.includes('cancel anytime from settings → manage subscription')) fail('FAQ needs "Can I cancel?" answered "Cancel anytime from Settings → Manage subscription"');
+  if (srcDir && !/const FOUNDING_PLACES_PATH = '\/v1\/billing\/founding';/.test(fs.readFileSync(path.join(srcDir, 'services/api/src/index.ts'), 'utf8'))) fail('the join buttons follow APM_LINKS.founding, but aplayer-mode has no GET /v1/billing/founding route');
   if (srcDir && !/app\.get\('\/v1\/billing\/web\/portal'/.test(fs.readFileSync(path.join(srcDir, 'services/api/src/index.ts'), 'utf8'))) fail('the cancel FAQ points at Manage subscription, but aplayer-mode has no GET /v1/billing/web/portal route');
   const refund = norm(stripTags(faqBlock('refund')));
   if (!refund.includes('no refunds as standard') || !refund.includes('case by case')) fail('FAQ needs the BHPC refund answer, stating only the Gumroad listing policy (no refunds as standard; case by case)');
