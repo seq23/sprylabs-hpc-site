@@ -24,6 +24,15 @@ window.APM_LINKS = Object.freeze({
     terms: 'https://app.aplayermode.com/terms',     // Terms of Service (static page in seq23/aplayer-mode apps/mobile/public/terms).
     privacy: 'https://app.aplayermode.com/privacy', // Privacy Policy (static page in seq23/aplayer-mode apps/mobile/public/privacy).
   }),
+  // "Join the Founding 100": straight to the Founding 100 card checkout, before the setup
+  // questions (seq23/aplayer-mode apps/mobile/app/join.tsx, docs/33 §10).
+  join: 'https://app.aplayermode.com/join',
+  // Real testimonials, ONE file in seq23/aplayer-mode (apps/mobile/public/testimonials.json).
+  // The section stays hidden while the file has none.
+  testimonials: 'https://app.aplayermode.com/testimonials.json',
+  // "Get launch updates" sign-ups (seq23/aplayer-mode POST /v1/launch-updates, migration 0095).
+  // The form stays hidden until this endpoint answers the page.
+  launchUpdates: 'https://api.aplayermode.com/v1/launch-updates',
   // The Billionaire High Performance Coach digital product (Gumroad checkout),
   // the same listing download.html links to.
   gumroad: 'https://sprylabs.gumroad.com/l/billionaire-high-performance-coach',
