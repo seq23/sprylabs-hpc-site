@@ -186,6 +186,24 @@ jobs:
             echo "main is covered and no alarm issue is open."
           fi
 
+      # GitHub keeps ONE pending run per concurrency group: a newly queued run
+      # cancels the pending one whatever cancel-in-progress says, so a scheduled
+      # main-automation lane can conclude `cancelled` with zero jobs and nobody
+      # asks for it again (2026-10-10: Daily Citation Intelligence 38056803047,
+      # displaced by a run of this very workflow). This lane already watches main
+      # on a schedule and on every Validate Repo, so it is the one that requeues
+      # it: once, oldest first, only when nothing is pending in the group,
+      # honouring the runtime pause. Logic and pins:
+      # .github/scripts/requeue_displaced_main_automation.mjs and its test.
+      - name: Pin the requeue decision
+        if: ${{ !cancelled() }}
+        run: node .github/scripts/test_requeue_displaced_main_automation.mjs
+      - name: Requeue a displaced scheduled main-automation lane
+        if: ${{ !cancelled() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node .github/scripts/requeue_displaced_main_automation.mjs
+
       - uses: actions/upload-artifact@v7
         if: always()
         with:
@@ -194,3 +212,4 @@ jobs:
           path: |
             artifacts/validation/main-validation-coverage.json
             artifacts/validation/raw-agent-drop-quarantine.json
+            artifacts/validation/main-automation-requeue.json

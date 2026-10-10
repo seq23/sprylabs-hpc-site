@@ -2,7 +2,7 @@
   "schema_version": "2.0",
   "repo": "seq23/sprylabs-hpc-site",
   "generated_at": "2026-07-10T18:30:00Z",
-  "workflow_count": 11,
+  "workflow_count": 10,
   "topology": "full_safe_autonomy_eight_workflow_surface",
   "workflows": [
     {
@@ -206,38 +206,6 @@
       "validation_owner": "simplified workflow topology validators"
     },
     {
-      "path": ".github/workflows/main-automation-requeue.yml",
-      "name": "Main Automation Requeue",
-      "trigger": [
-        "schedule",
-        "workflow_dispatch"
-      ],
-      "primary_command": "node .github/scripts/requeue_displaced_main_automation.mjs",
-      "repo_lane": "validation-control-plane",
-      "current_status": "keep_admitted",
-      "reason": "GitHub keeps one pending run per concurrency group, so a scheduled main-automation lane queued behind a running one is cancelled with zero jobs when a newer run queues (2026-10-10: Daily Citation Intelligence 38056803047). This lane re-dispatches the oldest displaced scheduled lane once, only when nothing is pending in the group, honours the runtime pause, and fails visibly after repeated displacement. It never mutates the repository.",
-      "allowed_runtime_mutations": [
-        "artifacts/validation/main-automation-requeue.json"
-      ],
-      "forbidden_runtime_mutations": [
-        ".github/**",
-        "package.json",
-        "package-lock.json",
-        "scripts/**",
-        "docs/**",
-        "_repo*.json",
-        "_validation_registry.json",
-        "_repo_validation_matrix.json",
-        "data/**",
-        "site/public/**",
-        "dist/**"
-      ],
-      "required_artifacts": [
-        "artifacts/validation/main-automation-requeue.json"
-      ],
-      "validation_owner": "workflow contract, .github/scripts/test_requeue_displaced_main_automation.mjs (Validate Repo plan job)"
-    },
-    {
       "path": ".github/workflows/main-validation-sentinel.yml",
       "name": "Main Validation Sentinel",
       "trigger": [
@@ -248,9 +216,10 @@
       "primary_command": "node .github/scripts/check_main_validation_coverage.mjs",
       "repo_lane": "validation-control-plane",
       "current_status": "keep_admitted",
-      "reason": "A GITHUB_TOKEN push raises no push event, so Validate Repo's `on: push` never fired for any automated writer; all nine github-actions[bot] commits on main have zero Validate Repo runs. This scheduled lane is the only observer an automated writer cannot silence. It reads state and files an issue; it never mutates the repository.",
+      "reason": "A GITHUB_TOKEN push raises no push event, so Validate Repo's `on: push` never fired for any automated writer; all nine github-actions[bot] commits on main have zero Validate Repo runs. This scheduled lane is the only observer an automated writer cannot silence. It reads state and files an issue; it never mutates the repository. It also requeues, once and only when nothing is pending in main-automation, a scheduled lane whose newest run was displaced while pending (cancelled with zero jobs); that is a workflow_dispatch, not a repository write.",
       "allowed_runtime_mutations": [
-        "artifacts/validation/main-validation-coverage.json"
+        "artifacts/validation/main-validation-coverage.json",
+        "artifacts/validation/main-automation-requeue.json"
       ],
       "forbidden_runtime_mutations": [
         ".github/**",
