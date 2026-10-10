@@ -2627,9 +2627,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-PUBLISHED-PAGE-NEVER-RECREATED",
+      "validation_id": "VAL-PUBLISHED-PAGE-NEVER-RECREATED",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:published-page-never-recreated",
+      "order": 254,
+      "severity": "STRONG_WARNING",
+      "release_effect": false,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 262,
+  "entry_count": 263,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3275,6 +3285,10 @@
         {
           "id": "VAL-VALIDATED-MAIN-HANDOFF-GATE",
           "command": "npm run validate:validated-main-handoff-gate"
+        },
+        {
+          "id": "VAL-PUBLISHED-PAGE-NEVER-RECREATED",
+          "command": "npm run validate:published-page-never-recreated"
         }
       ]
     },

@@ -146,6 +146,38 @@ function preexistingForeignPage(rel){
   }catch{return false}
 }
 
+// A page this pipeline created and a LATER agent run asks to create again is a
+// published page, not a new one, and must be planned as a repair.
+//
+// 2026-10-10, Spry Content Release run 38068034223: the 2026-10-10 drop carried
+// "identify unmet needs in the market that my competitor hasn't addressed yet",
+// whose page the 2026-09-12 drop had created. Both rows said create, the page
+// carried our ownership marker (so preexistingForeignPage was false), and it was
+// planned CREATE_NEW_TARGET_PAGE. apply-exact's CREATE branch then rebuilt the
+// published page from the bare template - which has no word-count section,
+// related-page nav, breadcrumb or recommendation summary, because build:all adds
+// those in stages that run BEFORE build:agent-accepted-content, and the converge
+// loop re-applies again after build:all. The page fell from 15,995 to 9,305 bytes
+// (-41.8%) and from 1,093 words to under the 1,080-word insights floor, and
+// authority:scale:freeze stopped the release on FROZEN_OUTPUT_MATERIAL_SHRINK.
+//
+// "Published" is read from the frozen accepted-output baseline, not from the
+// file existing: that registry only moves at authority:scale:freeze, so a page
+// CREATED earlier in this same run stays a create on every later plan pass of
+// the run (the CREATE rebuild is what keeps a new page byte-idempotent), and
+// becomes a repair from the next run on.
+const FROZEN_REGISTRY=path.join(ROOT,'data/release/frozen_output_registry.json');
+function frozenPublishedPaths(){
+  try{
+    const d=JSON.parse(fs.readFileSync(FROZEN_REGISTRY,'utf8'));
+    return new Set(Object.values(d.records||{}).map(r=>String(r.path||'')).filter(Boolean));
+  }catch{return new Set()}
+}
+const FROZEN_PUBLISHED=frozenPublishedPaths();
+function publishedAgentPage(rel, published=FROZEN_PUBLISHED){
+  return Boolean(rel)&&published.has(String(rel))&&fs.existsSync(path.join(ROOT,rel));
+}
+
 // A page's NAMED FRAMEWORK and its REQUIRED HEADING are two different things and
 // this plan used to conflate them.
 //
@@ -278,7 +310,8 @@ for(const [pathValue,entries] of groups){
   // source intent said create. Planning it as a create makes the create-only
   // contract demand an agent ownership marker the page cannot honestly carry.
   const isRepair=(!wantsCreate&&(primary.page_family==='intended_winner_repair'||repairIntent))
-    ||(primary.page_family==='intended_winner_repair'&&preexistingForeignPage(pathValue));
+    ||(primary.page_family==='intended_winner_repair'&&preexistingForeignPage(pathValue))
+    ||publishedAgentPage(pathValue);
   const operation=isRepair?'REPAIR_INTENDED_WINNER_PAGE':'CREATE_NEW_TARGET_PAGE';
   if(operation==='CREATE_NEW_TARGET_PAGE'&&!hasMeasuredDemand(demandQueries,primary.query)){
     const reason=noMeasuredDemandReason(primary.query);
