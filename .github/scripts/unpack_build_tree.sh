@@ -20,7 +20,7 @@ if [ ! -s "$TAR" ]; then
   exit 1
 fi
 tar --exclude=./.github -xf "$TAR"
-entries="$(tar -tf "$TAR" | grep -vc '^\./\.github\(/\|$\)' || true)"
+entries="$(tar -tf "$TAR" | awk '!/^\.\/\.github(\/|$)/{n++} END{print n+0}')"
 if [ "${entries:-0}" -lt 100 ]; then
   echo "[unpack-build-tree] FAIL: unpacked ${entries:-0} entries; the shards would validate an empty tree" >&2
   exit 1

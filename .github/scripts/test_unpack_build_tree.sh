@@ -28,8 +28,8 @@ if (cd "$work/new" && bash "$here/unpack_build_tree.sh" "$work/absent.tar" >/dev
 
 # Every unpack site in Validate Repo goes through the helper.
 wf="$repo_root/.github/workflows/validate-repo.yml"
-sites="$(grep -c 'run: bash .github/scripts/unpack_build_tree.sh' "$wf" || true)"
+sites="$(awk 'index($0, "run: bash .github/scripts/unpack_build_tree.sh"){n++} END{print n+0}' "$wf")"
 [ "${sites:-0}" -ge 1 ] || fail "validate-repo.yml unpacks the built tree nowhere through unpack_build_tree.sh; this check examined nothing"
-raw="$(grep -nE 'tar[[:space:]]+-xf[[:space:]]+"\$RUNNER_TEMP/spry-build-tree\.tar"[[:space:]]*$' "$wf" || true)"
+raw="$(awk '/tar[[:space:]]+-xf[[:space:]]+"\$RUNNER_TEMP\/spry-build-tree\.tar"[[:space:]]*$/{print NR": "$0}' "$wf")"
 [ -z "$raw" ] || fail "validate-repo.yml unpacks the whole built tree with a raw tar: $raw"
 echo "[test:unpack-build-tree] PASS: .github stays the checkout's; ${sites} unpack site(s) use the helper"
