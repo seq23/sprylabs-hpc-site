@@ -1,0 +1,49 @@
+name: Main Automation Requeue
+
+# Every writer of main queues on `concurrency: group: main-automation`, and
+# GitHub keeps ONE pending run per group: a newly queued run cancels the pending
+# one regardless of cancel-in-progress. A scheduled lane displaced that way
+# concludes `cancelled` with zero jobs and nobody asks for it again
+# (2026-10-10: Daily Citation Intelligence run 38056803047). This lane finds a
+# scheduled main-automation lane whose newest run on main was displaced and
+# dispatches it once, only when no run is pending in the group, so the newest
+# run of every scheduled lane is one that did its work.
+# Logic and its pins: .github/scripts/requeue_displaced_main_automation.mjs and
+# .github/scripts/test_requeue_displaced_main_automation.mjs.
+
+on:
+  schedule:
+    - cron: "7,37 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+# Its own group, deliberately NOT main-automation: it never writes main, and
+# sitting in that group would make it one more run that displaces a lane.
+concurrency:
+  group: main-automation-requeue
+  cancel-in-progress: false
+
+jobs:
+  requeue:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - name: Pin the requeue decision
+        run: node .github/scripts/test_requeue_displaced_main_automation.mjs
+      - name: Requeue a displaced scheduled lane
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node .github/scripts/requeue_displaced_main_automation.mjs
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: main-automation-requeue-${{ github.run_id }}
+          if-no-files-found: error
+          path: artifacts/validation/main-automation-requeue.json

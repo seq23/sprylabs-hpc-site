@@ -6,7 +6,10 @@ import {classifyBhpcPageFamily, pathForBhpcPageFamily} from './bhpc_page_family_
 function safeRelative(rel = '') {
   let value = String(rel || '').replace(/^\/+/, '');
   value = value.replace(/^(?:billionairehighperformancecoach\.com|spryexecutiveos\.com)\//i, '');
-  if (!value || /^n\/?a(?:\/index\.html)?$/i.test(value) || value.includes('..') || path.isAbsolute(value)) return '';
+  // Whitespace or an encoded space is never a site path; it is an agent's
+  // "no matching page" prose that was resolved as a URL (see
+  // isPlaceholderPageRef in bhpc_agent_common.mjs).
+  if (!value || /^n\/?a(?:\/index\.html)?$/i.test(value) || /\s|%20/i.test(value) || value.includes('..') || path.isAbsolute(value)) return '';
   return value;
 }
 
