@@ -70,6 +70,10 @@ jobs:
         # planned. A coverage gate is worth what its failure cases are worth, so
         # they are exercised on every run rather than trusted.
         run: node .github/scripts/test_validation_shards.mjs
+      - name: A cached built tree must not overwrite the commit's own workflows
+        run: bash .github/scripts/test_unpack_build_tree.sh
+      - name: A displaced scheduled lane must be requeued, once, without displacing another
+        run: node .github/scripts/test_requeue_displaced_main_automation.mjs
       - name: Hash the build inputs
         id: key
         # Everything the producers read. A validator-only change leaves this
@@ -169,7 +173,7 @@ jobs:
           # oversized deployable assets and the tree tar is ~292 MiB.
           path: ${{ runner.temp }}
       - name: Unpack the built tree
-        run: tar -xf "$RUNNER_TEMP/spry-build-tree.tar"
+        run: bash .github/scripts/unpack_build_tree.sh
       - name: Run this shard
         run: node .github/scripts/validation_shards.mjs run --shard "${{ matrix.shard }}" --shards "$SHARD_COUNT"
       - uses: actions/upload-artifact@v7
@@ -221,7 +225,7 @@ jobs:
           name: spry-build-tree-${{ github.run_id }}
           path: ${{ runner.temp }}
       - name: Unpack the built tree
-        run: tar -xf "$RUNNER_TEMP/spry-build-tree.tar"
+        run: bash .github/scripts/unpack_build_tree.sh
       - uses: actions/download-artifact@v7
         with:
           pattern: spry-shard-receipt-${{ github.run_id }}-*

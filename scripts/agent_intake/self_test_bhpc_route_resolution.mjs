@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
-import {ROOT, writeJson, parseVelocityJson, repoPathFromIntendedWinnerPage, repoPathThroughSiteRedirect, loadExactSiteRedirects} from './bhpc_agent_common.mjs';
+import {ROOT, readJson, writeJson, parseVelocityJson, repoPathFromIntendedWinnerPage, repoPathThroughSiteRedirect, loadExactSiteRedirects, classifyRow, isPlaceholderPageRef} from './bhpc_agent_common.mjs';
 import {resolveBhpcAgentRoute} from '../lib/bhpc_agent_route_resolver.mjs';
 import {requiredBlockTypesForPageFamily} from '../lib/bhpc_agent_block_schema.mjs';
 import {groupBhpcSemanticEntries, renderBhpcRecordEvidence} from '../lib/bhpc_agent_semantic_contract.mjs';
@@ -244,12 +244,44 @@ const unprotectedControl = buildBhpcAcceptanceEntry({
 }, {run_date: '2099-01-04', scope: 'bhpc'});
 expect('an unprotected existing page stays REQUIRED (the block is not blanket)', /^faq(\/index)?\.html$/.test(unprotectedControl.implementation_path) && fs.existsSync(path.join(ROOT, unprotectedControl.implementation_path)) && !BHPC_PROTECTED_BUYER_PAGES.includes(unprotectedControl.implementation_path) && unprotectedControl.acceptance_status === 'REQUIRED', JSON.stringify({path: unprotectedControl.implementation_path, status: unprotectedControl.acceptance_status, reason: unprotectedControl.blocked_reason}));
 
+// Placeholder page references. The 2026-10-10 BHPC drop wrote "no matching
+// page" in the Intended Winner Page cell for five queries; it was resolved as a
+// relative URL to no%20matching%20page/index.html, five unrelated queries were
+// merged onto that invented page, and Spry Content Release (run 38059697209)
+// failed at bhpc-agent-exact-trace. The class is agent prose in a page cell,
+// so every phrasing is pinned, not only that day's.
+const placeholderPhrases = ['no matching page', 'No matching page', 'no page', 'none yet', 'N/A', 'none', 'TBD', '-', 'no%20matching%20page'];
+let placeholderCasesExamined = 0;
+for (const phrase of placeholderPhrases) {
+  placeholderCasesExamined += 1;
+  expect(`placeholder "${phrase}" is recognised as no page`, isPlaceholderPageRef(phrase) === true);
+  expect(`placeholder "${phrase}" never resolves to a repo path`, repoPathFromIntendedWinnerPage(phrase) === null, String(repoPathFromIntendedWinnerPage(phrase)));
+  const row = classifyRow({query: 'how to use AI to stress-test a business decision', intended_winner_page: phrase, repo_file_path: phrase, action_tier: 'outperform', patch_needed: 'Y', fix_recommendation: 'There is no matching page covering this query.'}, '', {scope: 'bhpc', source_section: 'results'});
+  expect(`placeholder "${phrase}" leaves no intended winner`, row.intended_winner_page === '' && row.intended_winner_path === '', JSON.stringify({p: row.intended_winner_page, w: row.intended_winner_path}));
+  expect(`placeholder "${phrase}" routes as a create, not a repair of an invented page`, row.operation === 'CREATE_NEW_TARGET_PAGE', row.operation);
+  expect(`placeholder "${phrase}" yields a query-specific path with no whitespace or encoded space`, Boolean(row.implementation_path) && !/\s|%20/i.test(row.implementation_path) && /stress-test/.test(row.implementation_path), row.implementation_path);
+  const route = resolveBhpcAgentRoute({...row, intended_winner_path: 'no%20matching%20page/index.html'});
+  expect(`resolver refuses an encoded placeholder path (${phrase})`, !/\s|%20/i.test(route.implementation_path || ''), JSON.stringify(route));
+}
+// Real URLs and paths are untouched by the placeholder rule.
+for (const real of ['https://billionairehighperformancecoach.com/faq.html', 'faq.html', 'insights/identity-based-discipline-meaning.html']) {
+  placeholderCasesExamined += 1;
+  expect(`real page reference "${real}" is not a placeholder`, isPlaceholderPageRef(real) === false);
+}
+// The live manifest, not only fixtures: no acceptance entry may name a path
+// carrying whitespace or an encoded space. Zero entries examined is a failure.
+const liveManifestEntries = readJson('data/report_fixes/agent_acceptance_manifest.generated.json', {entries: []}).entries || [];
+expect('live acceptance manifest examined at least one entry', liveManifestEntries.length > 0, `entries=${liveManifestEntries.length}`);
+const placeholderPathEntries = liveManifestEntries.filter(e => /\s|%20/i.test(String(e.implementation_path || '')) || /\s|%20/i.test(String(e.intended_winner_path || '')));
+expect('no live acceptance entry targets a placeholder path', placeholderPathEntries.length === 0, placeholderPathEntries.slice(0, 5).map(e => `${e.record_id}:${e.implementation_path}`).join(', '));
+expect('placeholder cases examined', placeholderCasesExamined > 0, `examined=${placeholderCasesExamined}`);
+
 const report = {
   schema_version: '1.0',
   validator: 'bhpc-route-resolution-self-test',
   generated_at: new Date().toISOString(),
   status: errors.length ? 'FAIL' : 'PASS',
-  cases: {redirectCases, unambiguousTitleTypo, ambiguousTitleTypo, existingPathTypo, newPageSpec, evidenceBackedSpec, bareDomainSpec, unrelatedEvidenceSpec, existingCreateRoute, unsupportedSpec, reconciledConflict, rawAcceptanceConflicts, semantic_group_count: semanticGroups.length, derived_heading: derivedHeading},
+  cases: {redirectCases, unambiguousTitleTypo, ambiguousTitleTypo, existingPathTypo, newPageSpec, evidenceBackedSpec, bareDomainSpec, unrelatedEvidenceSpec, existingCreateRoute, unsupportedSpec, reconciledConflict, rawAcceptanceConflicts, semantic_group_count: semanticGroups.length, derived_heading: derivedHeading, placeholder_cases_examined: placeholderCasesExamined, live_manifest_entries_examined: liveManifestEntries.length},
   errors
 };
 writeJson('artifacts/validation/bhpc-route-resolution-self-test.json', report);

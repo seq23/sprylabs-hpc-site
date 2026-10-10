@@ -146,9 +146,31 @@ export function manifestAllowedByExactPolicy(entry, policy = loadExactPolicy()) 
   return true;
 }
 
+// A page reference is an http(s) URL or a site path. Neither ever contains
+// whitespace: a real URL or repo path with a space is malformed, and the site
+// ships no file whose name has one. What does contain whitespace is the prose
+// an agent artifact writes into the "Intended Winner Page" / "Repo File Path"
+// cell when there is no page - "no matching page", "no page", "none yet".
+//
+// Before this rule, repoPathFromIntendedWinnerPage resolved that prose as a
+// relative URL. The 2026-10-10 BHPC drop named "no matching page" for five
+// unrelated queries; each became intended_winner_path
+// "no%20matching%20page/index.html", the five were merged onto that one
+// invented page, and Spry Content Release (run 38059697209) stopped at
+// bhpc-agent-exact-trace with 2-bhpc-056/057 unprovable on it. isBlankish only
+// knew n/a and none, so every new phrasing of "no page" was a new break.
+// A placeholder now resolves to NO intended winner, so the row routes as the
+// new-page opportunity it is, and the dropped text is kept as provenance.
+export function isPlaceholderPageRef(value) {
+  const text = String(value ?? '').replace(/\s+/g, ' ').trim();
+  if (!text) return true;
+  if (/^(?:n\/?a|none|null|undefined|unknown|tbd|-+)$/i.test(text)) return true;
+  return /\s|%20/i.test(text);
+}
+
 export function repoPathFromIntendedWinnerPage(url, policy = loadExactPolicy()) {
   const raw = String(url || '').trim();
-  if (!raw || /^n\/?a$/i.test(raw)) return null;
+  if (isPlaceholderPageRef(raw)) return null;
   try {
     const parsed = raw.startsWith('http') ? new URL(raw) : new URL(raw, 'https://billionairehighperformancecoach.com');
     const allowed = new Set(policy.allowed_intended_winner_hosts || ['billionairehighperformancecoach.com', 'spryexecutiveos.com']);
@@ -385,7 +407,7 @@ function pick(row, keys) {
 
 function pathFromRepoFilePath(value = '') {
   const raw = compact(value).replace(/^\/+/, '');
-  if (!raw || /^n\/?a$/i.test(raw) || raw.includes('..') || path.isAbsolute(raw)) return '';
+  if (isPlaceholderPageRef(raw) || raw.includes('..') || path.isAbsolute(raw)) return '';
   if (/^https?:\/\//i.test(raw)) return repoPathFromIntendedWinnerPage(raw) || '';
   return repoPathThroughSiteRedirect(raw).path;
 }
@@ -412,7 +434,10 @@ export function classifyRow(row, htmlDigestText = '', context = {}) {
   const fixRecommendation = stringifyField(fixRecommendationRaw);
   const gapRaw = pick(row, ['gap','gap_found','issue','finding','recommendation','action','notes','why_worth_building','reason']) || (typeof row.fix_recommendation === 'object' ? row.fix_recommendation?.gap : '');
   const gap = stringifyField(gapRaw);
-  const intendedWinnerPage = stringifyField(seo?.target_url || pick(row, ['intended_winner_page','page_url','target_url','url','page','target_page','intended_page','recommended_url','winner_url']));
+  const intendedWinnerPageRaw = stringifyField(seo?.target_url || pick(row, ['intended_winner_page','page_url','target_url','url','page','target_page','intended_page','recommended_url','winner_url']));
+  // See isPlaceholderPageRef: prose such as "no matching page" names NO page.
+  const intendedWinnerPlaceholder = intendedWinnerPageRaw && isPlaceholderPageRef(intendedWinnerPageRaw) ? intendedWinnerPageRaw : '';
+  const intendedWinnerPage = intendedWinnerPlaceholder ? '' : intendedWinnerPageRaw;
   const declaredRepoPath = pathFromRepoFilePath(seo?.target_filepath || pick(row, ['repo_file_path','intended_winner_path','implementation_path','target_filepath']));
   const explicitMaintain = context.source_section === 'wins' || /^(maintain page|no action|no gap)$/i.test(compact(fixRecommendation)) || (/maintain page/i.test(compact(fixRecommendation)) && /no gap|cited directly|direct citation win/i.test(`${compact(fixRecommendation)} ${compact(gap)} ${combined}`));
   const patchNeeded = isNoActionSeo(seo) ? false : (seo ? ['repair_existing','build_new','consolidate'].includes(seo.page_decision) : (!explicitMaintain && (boolish(pick(row, ['patch_needed_y_n','patch_needed','fix_needed'])) || /patch|fix|not cited|gap|weak|missing|absent|outperform|page fix|authority|no incumbent/i.test(combined))));
@@ -475,6 +500,7 @@ export function classifyRow(row, htmlDigestText = '', context = {}) {
     cited_source: cited.trim().slice(0, 180),
     gap: gap.trim().slice(0, 700),
     intended_winner_page: String(intendedWinnerPage || '').trim(),
+    ...(intendedWinnerPlaceholder ? { intended_winner_placeholder_dropped: intendedWinnerPlaceholder } : {}),
     intended_winner_path: intendedPath || '',
     ...(intendedWinnerRedirectedFrom ? { intended_winner_redirected_from: intendedWinnerRedirectedFrom } : {}),
     declared_repo_path: declaredRepoPath || '',
