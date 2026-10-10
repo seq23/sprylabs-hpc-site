@@ -57,28 +57,26 @@ permissions:
   issues: write
   pull-requests: write
 
-concurrency:
-  # main-automation, not a private group: the quarantine step writes main, and
-  # every writer of main queues on this one group so two lanes never push
-  # against each other. Cost: a tick can wait behind a release lane. The
-  # coverage read is cheap and the release lane is the thing moving main.
-  group: main-automation
-  cancel-in-progress: false
+# NO workflow-level concurrency. This lane used to queue on main-automation as a
+# whole, and GitHub keeps ONE pending run per group: a newer queued run cancels
+# the pending one whatever cancel-in-progress says. Being the most frequent
+# queuer (every Validate Repo on main, plus every four hours) the sentinel both
+# bumped other lanes (Daily Citation Intelligence 38056803047, 2026-10-10
+# 13:44Z) and was bumped itself (scheduled run 38067914749, 16:31Z, by a
+# manual Spry Content Release dispatch) - for a coverage read that never
+# writes. Only the quarantine job writes main, so only it is serialized on
+# main-automation; the read, the alarm and the requeue run unqueued and cannot
+# be displaced. test_requeue_displaced_main_automation.mjs pins this shape.
 
 jobs:
   sentinel:
     runs-on: ubuntu-latest
-    # 10 covered the read-only check. The quarantine path converges the tree
-    # through the writer helper before it pushes, which is a build:all on a cold
-    # runner; the helper's own bound governs that, this only has to outlast it.
-    timeout-minutes: 45
+    timeout-minutes: 15
+    outputs:
+      state: ${{ steps.coverage.outputs.state }}
+      head_sha: ${{ steps.coverage.outputs.head_sha }}
     steps:
       - uses: actions/checkout@v7
-        with:
-          # The quarantine removes the drop at the exact SHA the coverage check
-          # judged; a shallow clone of a main that has since moved cannot reset
-          # to it.
-          fetch-depth: 0
       - uses: actions/setup-node@v7
         with:
           node-version: 24
@@ -145,33 +143,6 @@ jobs:
           # affected commit now, not once per check.
           exit 1
 
-      - name: Quarantine a raw agent drop off a red main
-        # Runs after the alarm even though the alarm step exits 1, and only on a
-        # RED verdict: an uncovered or pending commit is not yet known to be
-        # broken, and a covered one needs nothing. The script itself decides
-        # whether HEAD is a raw direct drop and names its refusal otherwise; it
-        # never touches a merge, a bot release, or a drop that came through a
-        # pull request.
-        if: always() && steps.coverage.outputs.state == 'red'
-        id: quarantine
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-          GH_TOKEN: ${{ github.token }}
-          HEAD_SHA: ${{ steps.coverage.outputs.head_sha }}
-          # What the writer helper replays if main advances under the push: this
-          # script again, which re-reads HEAD and stops (main_moved_on) instead of
-          # deleting from a tree it has not classified.
-          WORKFLOW_ARGV: node .github/scripts/quarantine_raw_agent_drop.mjs --execute
-        run: |
-          set -euo pipefail
-          ALARM_ISSUE="$(gh issue list --state open --label main-validation --limit 1 --json number -q '.[0].number' || true)"
-          export ALARM_ISSUE
-          node .github/scripts/quarantine_raw_agent_drop.mjs --execute
-          if [ -n "$ALARM_ISSUE" ] && grep -q '^intake_branch=' "$GITHUB_OUTPUT"; then
-            intake_branch="$(grep '^intake_branch=' "$GITHUB_OUTPUT" | tail -1 | cut -d= -f2-)"
-            gh issue comment "$ALARM_ISSUE" --body "Main Validation Sentinel run ${GITHUB_RUN_ID} quarantined the raw agent drop at \`${HEAD_SHA}\` off main: it is preserved on \`${intake_branch}\` and Agent Drop Intake is absorbing it from there. main has been returned to its last validated tree and a Validate Repo run has been requested for the new HEAD; this issue closes when that run is green."
-          fi
-
       - name: Close the alarm once main is covered again
         if: steps.coverage.outcome == 'success' && steps.coverage.outputs.state == 'covered'
         env:
@@ -211,5 +182,65 @@ jobs:
           if-no-files-found: error
           path: |
             artifacts/validation/main-validation-coverage.json
-            artifacts/validation/raw-agent-drop-quarantine.json
             artifacts/validation/main-automation-requeue.json
+
+  quarantine:
+    # Runs after the alarm even though the alarm step fails the sentinel job,
+    # and only on a RED verdict: an uncovered or pending commit is not yet known
+    # to be broken, and a covered one needs nothing.
+    needs: sentinel
+    if: ${{ always() && needs.sentinel.outputs.state == 'red' }}
+    runs-on: ubuntu-latest
+    # The quarantine converges the tree through the writer helper before it
+    # pushes, which is a build:all on a cold runner; the helper's own bound
+    # governs that, this only has to outlast it.
+    timeout-minutes: 45
+    # The one step here that writes main queues with every other writer of main
+    # so two lanes never push against each other.
+    concurrency:
+      group: main-automation
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # The quarantine removes the drop at the exact SHA the coverage check
+          # judged; a shallow clone of a main that has since moved cannot reset
+          # to it.
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Quarantine a raw agent drop off a red main
+        # The script itself decides whether HEAD is a raw direct drop and names
+        # its refusal otherwise; it never touches a merge, a bot release, or a
+        # drop that came through a pull request.
+        id: quarantine
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ needs.sentinel.outputs.head_sha }}
+          # What the writer helper replays if main advances under the push: this
+          # script again, which re-reads HEAD and stops (main_moved_on) instead of
+          # deleting from a tree it has not classified.
+          WORKFLOW_ARGV: node .github/scripts/quarantine_raw_agent_drop.mjs --execute
+        run: |
+          set -euo pipefail
+          if ! ALARM_ISSUE="$(gh issue list --state open --label main-validation --limit 1 --json number -q '.[0].number')"; then
+            echo "::warning::could not read the open main-validation alarm issue; the quarantine still runs and its receipt names the outcome, but the issue gets no comment"
+            ALARM_ISSUE=""
+          fi
+          export ALARM_ISSUE
+          node .github/scripts/quarantine_raw_agent_drop.mjs --execute
+          if [ -n "$ALARM_ISSUE" ] && grep -q '^intake_branch=' "$GITHUB_OUTPUT"; then
+            intake_branch="$(grep '^intake_branch=' "$GITHUB_OUTPUT" | tail -1 | cut -d= -f2-)"
+            gh issue comment "$ALARM_ISSUE" --body "Main Validation Sentinel run ${GITHUB_RUN_ID} quarantined the raw agent drop at \`${HEAD_SHA}\` off main: it is preserved on \`${intake_branch}\` and Agent Drop Intake is absorbing it from there. main has been returned to its last validated tree and a Validate Repo run has been requested for the new HEAD; this issue closes when that run is green."
+          fi
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: raw-agent-drop-quarantine-${{ github.run_id }}
+          if-no-files-found: error
+          path: artifacts/validation/raw-agent-drop-quarantine.json
