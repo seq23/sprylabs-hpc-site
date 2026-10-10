@@ -32,7 +32,6 @@ import {fileURLToPath} from 'node:url';
 export const GROUP = 'main-automation';
 export const MAX_AGE_HOURS = 23;
 export const REQUEUE_LIMIT = 4;
-const BOT = 'github-actions[bot]';
 const PENDING = new Set(['queued', 'pending', 'waiting', 'requested']);
 
 // One source of truth: the workflow files. A lane is in scope when it is
@@ -59,13 +58,16 @@ function isDisplaced(run) {
   return run && run.status === 'completed' && run.conclusion === 'cancelled' && run.job_count === 0;
 }
 
-// A displaced run is ours to requeue when it was the lane's own schedule, or a
-// plain re-dispatch of it by this script (bot actor, default run name). A
-// dispatch carrying inputs (e.g. an agent-drop absorb, titled differently) is
-// its dispatcher's to re-ask; requeuing it with defaults would run other work.
+// A displaced run is requeued with the lane's default inputs whenever those
+// defaults ARE the work that was lost: a schedule, a push or a workflow_run
+// run, or a dispatch under the lane's own name - including a person's manual
+// dispatch, since a bumped manual run is otherwise the lane's newest result
+// forever. A dispatch carrying inputs that retitle the run (an agent-drop
+// absorb, "Spry Content Release: absorb ...") is its dispatcher's to re-ask;
+// requeuing it with defaults would run other work.
 function requeueable(run, lane) {
-  if (run.event === 'schedule') return true;
-  return run.event === 'workflow_dispatch' && run.actor === BOT && run.display_title === lane.name;
+  if (['schedule', 'push', 'workflow_run'].includes(run.event)) return true;
+  return run.event === 'workflow_dispatch' && run.display_title === lane.name;
 }
 
 /**

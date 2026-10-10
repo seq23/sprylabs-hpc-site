@@ -91,11 +91,17 @@ function assess(inputs) {
   must(typeof sentinel === 'string', `${SENTINEL} is missing`);
   if (sentinel) {
     must(sentinel.includes('quarantine_raw_agent_drop.mjs --execute'), `${SENTINEL} does not run quarantine_raw_agent_drop.mjs --execute; the sentinel is back to alarming without acting`);
-    must(/if:\s*always\(\)\s*&&\s*steps\.coverage\.outputs\.state\s*==\s*'red'/.test(sentinel), `${SENTINEL} quarantine step is not gated on always() && steps.coverage.outputs.state == 'red'`);
+    // The quarantine is its own job (the only one serialized on main-automation,
+    // so the coverage read cannot be bumped from the group's pending slot); it
+    // reads the verdict through the sentinel job's outputs, which must carry
+    // the coverage step's own values.
+    must(/if:\s*\$\{\{\s*always\(\)\s*&&\s*needs\.sentinel\.outputs\.state\s*==\s*'red'\s*\}\}/.test(sentinel), `${SENTINEL} quarantine job is not gated on always() && needs.sentinel.outputs.state == 'red'`);
+    must(/^\s+state:\s*\$\{\{\s*steps\.coverage\.outputs\.state\s*\}\}\s*$/m.test(sentinel), `${SENTINEL} sentinel job does not export the coverage verdict's state; the quarantine gate would read nothing`);
+    must(/^\s+head_sha:\s*\$\{\{\s*steps\.coverage\.outputs\.head_sha\s*\}\}\s*$/m.test(sentinel), `${SENTINEL} sentinel job does not export the coverage verdict's head_sha`);
     for (const scope of ['contents: write', 'pull-requests: write', 'actions: write']) {
       must(sentinel.includes(scope), `${SENTINEL} lacks "${scope}"; the quarantine cannot create the branch, open the pull request, or request validation without it`);
     }
-    must(/HEAD_SHA:\s*\$\{\{\s*steps\.coverage\.outputs\.head_sha\s*\}\}/.test(sentinel), `${SENTINEL} does not hand the coverage verdict's head_sha to the quarantine; acting on any other SHA is acting on the wrong commit`);
+    must(/HEAD_SHA:\s*\$\{\{\s*needs\.sentinel\.outputs\.head_sha\s*\}\}/.test(sentinel), `${SENTINEL} does not hand the coverage verdict's head_sha to the quarantine; acting on any other SHA is acting on the wrong commit`);
   }
   must(typeof script === 'string', `${SCRIPT} is missing`);
   if (script) {
@@ -174,7 +180,7 @@ const broken = [
   ['instructions lose "never push to main"', (i) => ({...i, doc: (i.doc || '').replace(NEVER_MAIN_SENTENCE, 'Push to main when convenient')}), NEVER_MAIN_SENTENCE],
   ['instructions lose the branch', (i) => ({...i, doc: (i.doc || '').replaceAll('agent-drop/', 'some-branch/')}), 'agent-drop/'],
   ['sentinel stops executing the quarantine', (i) => ({...i, sentinel: (i.sentinel || '').replaceAll('--execute', '')}), '--execute'],
-  ['sentinel gate widened off red', (i) => ({...i, sentinel: (i.sentinel || '').replace("steps.coverage.outputs.state == 'red'", "steps.coverage.outputs.state != 'covered'")}), 'gated on'],
+  ['sentinel gate widened off red', (i) => ({...i, sentinel: (i.sentinel || '').replace("needs.sentinel.outputs.state == 'red'", "needs.sentinel.outputs.state != 'covered'")}), 'gated on'],
   ['sentinel loses contents: write', (i) => ({...i, sentinel: (i.sentinel || '').replace('contents: write', 'contents: read')}), 'contents: write'],
   ['quarantine forgets the pull-request refusal', (i) => ({...i, script: (i.script || '').replaceAll('arrived_through_pull_request', 'x')}), 'arrived through a pull request'],
   ['quarantine bypasses the helper', (i) => ({...i, script: (i.script || '').replaceAll('commit_and_push_if_changed.sh', 'git push origin HEAD:main')}), 'commit_and_push_if_changed.sh'],

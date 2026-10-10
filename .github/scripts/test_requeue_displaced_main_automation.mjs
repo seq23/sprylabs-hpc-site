@@ -3,6 +3,7 @@
 // 2026-10-10 displacement and its neighbours, and checks that discovery over
 // the real .github/workflows finds the lanes it governs. Zero lanes examined
 // is a failure: a requeue that can see no lane cannot requeue one.
+import fs from 'node:fs';
 import {discoverLanes, decideRequeue, REQUEUE_LIMIT} from './requeue_displaced_main_automation.mjs';
 
 const errors = [];
@@ -67,6 +68,44 @@ expect('one requeue per tick, oldest displacement first', twoDisplaced.action ==
 
 const none = decideRequeue({lanes: [], now, paused: false, runs: {}});
 expect('zero lanes examined fails', none.action === 'fail' && /^examined_zero_lanes/.test(none.stop), JSON.stringify(none));
+
+// The sentinel's read must not be bumpable. Its scheduled run 38067914749
+// (2026-10-10 16:30Z) sat in the main-automation pending slot and was cancelled
+// by a manual Spry Content Release dispatch at 16:31:48Z. Only the job that
+// writes main (quarantine) may queue on the group; the coverage read, the alarm
+// and this requeue run unqueued, so the one lane that requeues others can
+// itself never be displaced.
+const sentinelText = fs.readFileSync('.github/workflows/main-validation-sentinel.yml', 'utf8');
+const sentinelLane = lanes.find(l => l.file === 'main-validation-sentinel.yml');
+expect('the sentinel has no workflow-level concurrency', !/^concurrency:/m.test(sentinelText));
+const groupAt = [...sentinelText.matchAll(/^\s*group:\s*main-automation\s*$/gm)].map(m => m.index);
+const quarantineAt = sentinelText.search(/^  quarantine:\s*$/m);
+const requeueAt = sentinelText.indexOf('requeue_displaced_main_automation.mjs');
+expect('exactly one main-automation group in the sentinel, on the quarantine job', groupAt.length === 1 && quarantineAt > 0 && groupAt[0] > quarantineAt, JSON.stringify({groupAt, quarantineAt}));
+expect('the requeue runs in the unqueued sentinel job, before the quarantine job', requeueAt > 0 && requeueAt < quarantineAt, JSON.stringify({requeueAt, quarantineAt}));
+expect('the sentinel is still a requeueable lane (its quarantine queues on the group)', sentinelLane?.scheduled === true && sentinelLane?.dispatchable === true, JSON.stringify(sentinelLane));
+
+const LS = [...L, {file: 'main-validation-sentinel.yml', name: 'Main Validation Sentinel', scheduled: true, dispatchable: true}];
+const sentinelBumped = (contentRelease) => decideRequeue({lanes: LS, now: new Date('2026-10-10T16:40:00Z'), paused: false, runs: {
+  'main-validation-sentinel.yml': [{...displaced(38067914749, '2026-10-10T16:30:08Z'), display_title: 'Main Validation Sentinel'}, ok(38067627004, '2026-10-10T16:25:50Z', 'workflow_run')],
+  'daily-citation-intelligence.yml': [{id: 38067668073, event: 'workflow_dispatch', status: 'in_progress', conclusion: null, created_at: '2026-10-10T16:26:28Z', actor: 'github-actions[bot]', display_title: 'Daily Citation Intelligence'}],
+  'spry-content-release.yml': [contentRelease],
+}});
+const manualPending = {id: 38068034223, event: 'workflow_dispatch', status: 'pending', conclusion: null, job_count: null, created_at: '2026-10-10T16:31:48Z', actor: 'seq23', display_title: 'Spry Content Release'};
+const whilePending = sentinelBumped(manualPending);
+expect('sentinel bumped while a manual dispatch is pending: no dispatch into the occupied pending slot', whilePending.action === 'stop' && /^group_has_pending_run/.test(whilePending.stop) && whilePending.displaced.some(d => d.file === 'main-validation-sentinel.yml'), JSON.stringify(whilePending));
+const afterPending = sentinelBumped({...manualPending, status: 'completed', conclusion: 'success'});
+expect('sentinel bumped, slot free again: the sentinel itself is requeued', afterPending.action === 'requeue' && afterPending.target.file === 'main-validation-sentinel.yml', JSON.stringify(afterPending));
+const inProgressOnly = decideRequeue({lanes: LS, now, paused: false, runs: {
+  'daily-citation-intelligence.yml': [displaced(1, '2026-10-10T13:43:12Z')],
+  'spry-content-release.yml': [{...manualPending, status: 'in_progress'}],
+}});
+expect('a RUNNING holder does not block a requeue (the dispatch waits in the free pending slot)', inProgressOnly.action === 'requeue', JSON.stringify(inProgressOnly));
+
+const manualBumped = decideRequeue({lanes: L, now, paused: false, runs: {'spry-content-release.yml': [displaced(4, '2026-10-10T14:00:00Z', {event: 'workflow_dispatch', actor: 'seq23', display_title: 'Spry Content Release'})]}});
+expect('a bumped manual dispatch under the lane\'s own name is requeued', manualBumped.action === 'requeue' && manualBumped.target.run_id === 4, JSON.stringify(manualBumped));
+const pushBumped = decideRequeue({lanes: L, now, paused: false, runs: {'spry-content-release.yml': [displaced(5, '2026-10-10T13:35:41Z', {event: 'push', display_title: 'citation-velocity: bhpc run 2026-10-10'})]}});
+expect('a bumped push run is requeued', pushBumped.action === 'requeue' && pushBumped.target.run_id === 5, JSON.stringify(pushBumped));
 
 if (errors.length) {
   console.error(`[test:main-automation-requeue] FAIL: ${errors.length} of ${cases} case(s)`);
