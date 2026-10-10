@@ -2,17 +2,17 @@
   "schema_version": "1.0",
   "status": "PASS",
   "drop_root": "data/report_fixes/agent_runs",
-  "runs_discovered": 17,
+  "runs_discovered": 18,
   "verticals": [
     "bhpc"
   ],
-  "requirements_evaluated": 1184,
-  "outstanding_total": 11,
-  "outstanding_pages": 3,
+  "requirements_evaluated": 1246,
+  "outstanding_total": 38,
+  "outstanding_pages": 9,
   "carry_limit": 120,
   "carry_saturated": false,
   "outstanding_unaccounted": 0,
-  "page_ledgers_checked": 113,
+  "page_ledgers_checked": 117,
   "orphaned_ledger_records": 0,
   "per_run": [
     {
@@ -233,19 +233,48 @@
       "acceptance_entries": 72,
       "required": 63,
       "blocked": 8,
-      "satisfied": 61,
-      "outstanding": 2,
+      "satisfied": 57,
+      "outstanding": 6,
       "outstanding_examples": [
         {
-          "id": "2026-09-26-bhpc-json_new_page_opportunities-001",
-          "path": "insights/ask-me-the-hardest-questions-about-my-business-plan.html",
+          "id": "2026-09-26-bhpc-011",
+          "path": "ai-accountability-partner/index.html",
           "reasons": [
-            "target_missing"
+            "marker_absent",
+            "required_string_absent:1",
+            "required_block_absent:direct_answer,definition_callout,checklist,protocol,prompt_template"
           ]
         },
         {
-          "id": "2026-09-26-bhpc-json_new_page_opportunities-002",
-          "path": "answers/what-are-the-highest-leverage-actions-i-should-take-today.html",
+          "id": "2026-09-26-bhpc-053",
+          "path": "ai-accountability-partner/index.html",
+          "reasons": [
+            "marker_absent",
+            "required_string_absent:2",
+            "required_block_absent:direct_answer,definition_callout,checklist,protocol,source_block,cta_callout,prompt_template"
+          ]
+        },
+        {
+          "id": "2026-09-26-bhpc-054",
+          "path": "ai-accountability-partner/index.html",
+          "reasons": [
+            "marker_absent",
+            "required_string_absent:2",
+            "required_block_absent:direct_answer,definition_callout,checklist,protocol,source_block,cta_callout,prompt_template"
+          ]
+        },
+        {
+          "id": "2026-09-26-bhpc-055",
+          "path": "ai-accountability-partner/index.html",
+          "reasons": [
+            "marker_absent",
+            "required_string_absent:2",
+            "required_block_absent:direct_answer,definition_callout,checklist,protocol,source_block,cta_callout,prompt_template"
+          ]
+        },
+        {
+          "id": "2026-09-26-bhpc-json_new_page_opportunities-001",
+          "path": "insights/ask-me-the-hardest-questions-about-my-business-plan.html",
           "reasons": [
             "target_missing"
           ]
@@ -260,9 +289,36 @@
       "acceptance_entries": 51,
       "required": 42,
       "blocked": 8,
-      "satisfied": 37,
-      "outstanding": 5,
+      "satisfied": 34,
+      "outstanding": 8,
       "outstanding_examples": [
+        {
+          "id": "2026-10-03-bhpc-011",
+          "path": "ai-accountability-partner/index.html",
+          "reasons": [
+            "marker_absent",
+            "required_string_absent:1",
+            "required_block_absent:direct_answer"
+          ]
+        },
+        {
+          "id": "2026-10-03-bhpc-043",
+          "path": "ai-accountability-partner/index.html",
+          "reasons": [
+            "marker_absent",
+            "required_string_absent:1",
+            "required_block_absent:direct_answer,checklist,protocol,source_block,cta_callout,prompt_template"
+          ]
+        },
+        {
+          "id": "2026-10-03-bhpc-044",
+          "path": "ai-accountability-partner/index.html",
+          "reasons": [
+            "marker_absent",
+            "required_string_absent:1",
+            "required_block_absent:direct_answer,checklist,protocol,source_block,cta_callout,prompt_template"
+          ]
+        },
         {
           "id": "2026-10-03-bhpc-json_new_page_opportunities-001",
           "path": "insights/best-ai-coaching-tools-2026.html",
@@ -276,24 +332,51 @@
           "reasons": [
             "target_missing"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "run_date": "2026-10-10",
+      "vertical": "bhpc",
+      "manifest_status": "ABSORBED",
+      "declared_records": 63,
+      "acceptance_entries": 69,
+      "required": 62,
+      "blocked": 6,
+      "satisfied": 42,
+      "outstanding": 20,
+      "outstanding_examples": [
         {
-          "id": "2026-10-03-bhpc-json_new_page_opportunities-003",
-          "path": "insights/ai-coach-vs-human-coach-cost.html",
+          "id": "2026-10-10-bhpc-015",
+          "path": "insights/best-executive-coach-for-saas-founders.html",
           "reasons": [
             "target_missing"
           ]
         },
         {
-          "id": "2026-10-03-bhpc-json_new_page_opportunities-004",
-          "path": "insights/how-to-stay-accountable-without-a-coach.html",
+          "id": "2026-10-10-bhpc-016",
+          "path": "insights/how-to-use-ai-to-stress-test-a-business-decision.html",
           "reasons": [
             "target_missing"
           ]
         },
         {
-          "id": "2026-10-03-bhpc-json_new_page_opportunities-005",
-          "path": "insights/ai-accountability-coach-apps-compared.html",
+          "id": "2026-10-10-bhpc-017",
+          "path": "insights/best-ai-coaching-app-for-founders-in-2026.html",
+          "reasons": [
+            "target_missing"
+          ]
+        },
+        {
+          "id": "2026-10-10-bhpc-018",
+          "path": "insights/how-to-use-chatgpt-to-plan-my-week-as-a-founder.html",
+          "reasons": [
+            "target_missing"
+          ]
+        },
+        {
+          "id": "2026-10-10-bhpc-019",
+          "path": "answers/how-to-get-executive-coaching-when-i-can-t-afford-a-coach.html",
           "reasons": [
             "target_missing"
           ]

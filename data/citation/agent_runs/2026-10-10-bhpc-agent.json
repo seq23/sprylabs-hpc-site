@@ -1,0 +1,884 @@
+{
+  "schema_version": "1.2",
+  "run_id": "2026-10-10-bhpc-agent",
+  "generated_at": "2026-10-10T17:37:02.735Z",
+  "scope": "bhpc",
+  "artifact_contract": "CSV + optional JSON + HTML + manifest",
+  "exact_implementation_policy": "data/report_fixes/agent_exact_implementation_policy.json",
+  "queries_tested": 63,
+  "json_scoreboard_total": null,
+  "json_pages_to_build": 6,
+  "cited_domains": 19,
+  "wins": 14,
+  "new_fixes": 63,
+  "pending": 0,
+  "findings": [
+    {
+      "path": "ai-executive-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The page lacks a direct, decision-oriented comparison of AI executive coaching with human coaching, including when each is a better fit and when to escalate to a person.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-coach-vs-human-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The page lacks founder-specific startup workflows and an actionable example of how a founder could use an AI coach, which are central to the query and prominent in Gemini’s answer and the cited founder-coach pages.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-accountability-system-for-entrepreneurs.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The target page’s content cannot be verified from the supplied scrape. The citation opportunity is to make the query’s specific need explicit: a repeatable entrepreneur-focused loop with check-in cadence, proof of execution, analysis, adjustment, and ready-to-use prompts. Gemini supplies those operational details, while Perplexity cites a sibling page rather than the intended page.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "can-ai-replace-an-executive-coach-for-startups.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "A clear, usable trigger-and-handoff rule for when AI startup coaching should stop and a human coach or specialist should take over. Gemini describes generic guardrails and handoffs, while Perplexity’s cited sources cover startup coaching and general boundary setting; neither supplied result establishes this as a specific, actionable boundary on the intended page.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "download.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The page capture provides no verifiable, explicit audience statement. Gemini instead interprets the brand name as a human coach for current billionaires, UHNWIs, fund managers, and celebrity athletes, without identifying the intended audience or distinguishing the AI system from bespoke human coaching.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "faq.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "There is no verified, brand-specific audience definition that distinguishes Billionaire High Performance Coach from Dan Peña’s QLA program or corrects the unsupported claims that it is only for billion-scale dealmakers and excludes solopreneurs.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-daily-planning-prompt-for-busy-founders.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The page lacks a runnable, question-by-question copy-paste prompt and a concrete sequence for turning its answers into calendar blocks and reviewing the result. Gemini supplies an extensive founder template, manual steps, calendar instructions, and an AI prompt; the cited Perplexity sources include copy/paste prompts and founder-planning guides.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "topics/burnout-recovery/index.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The page lacks an understandable burnout-signs overview, a sequenced recovery plan from immediate stabilization through changing the underlying stressor and gradual return, and clear guidance on when to seek professional support.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "product.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The supplied page content does not establish the product’s specific operating process. Gemini instead describes an assumed human billionaire-coaching service with audits, biometric optimization, and 24/7 crisis access; Perplexity cites a sibling overview and download page rather than the intended product page.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "topics/accountability-consistency/index.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "Gemini offers separate consistency and accountability tips but no explicit recurring loop that connects a commitment, evidence of follow-through, weekly review, and adjustment. The target page’s supplied content is unavailable, so whether it already contains this exact element cannot be verified.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "case-studies/startup-ceo-investor-week/index.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The page lacks a metric intake and a repeatable workflow that converts the founder’s actual numbers into likely investor questions and a realistic, feedback-led rehearsal.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/the-container-method-why-time-blocks-work-better-than-to-do-lists.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The page lacks an operational five-minute section-switch protocol that distinguishes the assistant’s prompting role from the external timer’s alert, and defines what happens when the user returns.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "what-should-i-work-on/too-many-tasks-what-now/index.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The page lacks a task-by-task emotional-drain rubric and a ranked output. It offers a generic priority-and-scope procedure, but no way to identify which tasks feel most draining or why.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-vs-human-coaching/index.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The page lacks a concrete, reusable two-stage method for matching the user's tone while separately assessing the realism of their claim or plan.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/best-executive-coach-for-saas-founders.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "There is no matching page covering how SaaS founders should choose an executive coach by ARR or funding stage, SaaS-specific needs, coaching style, and verifiable experience. Competitor roundups and Gemini’s response provide named coaches or firms and explain their areas of fit; our site has no page to answer or substantiate that comparison.",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/how-to-use-ai-to-stress-test-a-business-decision.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "There is no owned page matching the query. The competing material and Gemini answer cover adversarial review, pre-mortems, scenarios, assumptions, and stakeholder perspectives; the missing owned asset is a practical, decision-specific workflow that turns those tests into observable warning signals, mitigations, and pause-or-reverse criteria.",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/best-ai-coaching-app-for-founders-in-2026.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "There is no matching page covering the best AI coaching app for founders. Competitor answers provide app roundups and category-based recommendations, while the Gemini response names F4S, Wave, Yoodli/Poised, and BetterUp/Torch without linked evidence. The missing element is an evidence-backed, founder-specific comparison that helps readers choose between those distinct use cases.",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/how-to-use-chatgpt-to-plan-my-week-as-a-founder.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "There is no page covering the complete founder-specific weekly-planning workflow Gemini supplied: inputs, weekly goal selection, task triage, schedule creation, delegation, calendar formatting, and a mid-week reset.",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/how-to-get-executive-coaching-when-i-can-t-afford-a-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "There is no matching page answering how to access executive coaching at low or no cost. The surfaced answers cover employer funding, trainee coaches, peer coaching, groups, and AI, but our domain has no page to provide a structured, sourced path through those options.",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-coach-vs-human-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "bhpc agent signal",
+      "operation": "NO_ACTION_MAINTAIN",
+      "implementation_required": false,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-executive-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "AI Executive Coach vs coaching",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "case-studies/startup-ceo-investor-week/index.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "rehearse for the toughest questions investors will ask based on my current metrics",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/the-container-method-why-time-blocks-work-better-than-to-do-lists.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "start the timer and prompt me to switch sections every 5 minutes",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "what-should-i-work-on/too-many-tasks-what-now/index.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "analyze my task list for emotional impact which items are most draining",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-vs-human-coaching/index.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "mirror the energy of what i'm saying and tell me if i'm being realistic",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-executive-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The page does not answer the comparison intent that the cited sources target: how AI executive coaching differs from human coaching and when each is appropriate.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-executive-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "No direct AI-versus-human comparison with decision criteria or a clear rule for choosing between the two.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-coach-vs-human-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The cited pages are specifically positioned around AI coaching for founders or businesses, while the target page offers a general AI-versus-human comparison without founder-specific guidance.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-coach-vs-human-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The answer directly addresses founder tasks such as idea validation, fundraising, go-to-market, operations, and decision-making, then supplies prompts and distinguishes AI support from human coaching. The target page’s comparison is not tailored to those workflows.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-accountability-system-for-entrepreneurs.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "Perplexity cites a related page on the same domain, but not the intended entrepreneur accountability-system page. The response text is unavailable, so content coverage cannot be assessed.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-accountability-system-for-entrepreneurs.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The answer does not mention or cite the brand or target page; it gives a self-contained generic implementation guide.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "can-ai-replace-an-executive-coach-for-startups.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "A related page on our other domain is cited, but the intended page is not shown among the citations. The available evidence does not show a specific AI-to-human replacement threshold or handoff protocol.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "can-ai-replace-an-executive-coach-for-startups.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The answer does not mention or cite the intended page and treats the phrase as a generic term rather than grounding its replacement boundary in startup coaching.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "download.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The source list shows our download page is cited, but without the response text it is not possible to assess whether the audience question was answered directly.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "download.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "Does not mention our brand or identify the actual system’s intended audience; it substitutes speculative billionaire and elite-investor personas.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "faq.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "Perplexity cites the brand’s domain, but the intended FAQ page is not among the valid supplied citations. The available citation list does not show whether the answer clearly explains who the brand is for.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "faq.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The response associates the name with Dan Peña and QLA, then gives a generic, extreme-risk-tolerance profile instead of identifying this brand’s audience and distinguishing its offering from QLA.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-daily-planning-prompt-for-busy-founders.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "Perplexity does not cite the target page. Its cited sources indicate relevant competing prompt and founder-planning coverage, including copy/paste material; the answer text is unavailable for a more specific content comparison.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-daily-planning-prompt-for-busy-founders.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "Gemini does not cite or mention the brand. Its answer gives a much more executable template and use sequence than the page currently provides, including energy and delegation checks, calendar blocking, and an evening review.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "topics/burnout-recovery/index.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The cited sources direct the query to external health and recovery guidance rather than our page. The response text is unavailable, so its precise coverage and ordering cannot be confirmed.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "topics/burnout-recovery/index.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "Gemini does not mention or cite our domain. It covers burnout signs, immediate stabilization, several recovery dimensions, and medical escalation that the page does not currently explain; its response also truncates mid-section.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "product.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "Perplexity cites BHPC sibling pages but not product.html, leaving the intended product page without a direct, product-specific explanation of its operating steps.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "product.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "Does not mention the brand or identify the product; it presents a speculative human-coaching model rather than explaining how the BHPC product works.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "topics/accountability-consistency/index.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "Perplexity already cites the intended topic hub, but also cites external sources. The response body is unavailable, so its content-level gaps cannot be assessed.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "topics/accountability-consistency/index.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "No Spry brand or page handoff; the answer gives generic tactics without an explicit integrated accountability-to-consistency operating loop.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "case-studies/startup-ceo-investor-week/index.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "The cited sources cover investor questions and preparation, while this page only describes generic pressure management and sequencing; it does not connect current metrics to likely questions or provide a rehearsal drill.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "case-studies/startup-ceo-investor-week/index.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "Gemini directly offers metric-based rehearsal, but the page provides no metric intake, investor-question generation, or answer-feedback method.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/the-container-method-why-time-blocks-work-better-than-to-do-lists.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The cited results point to external timer and implementation sources rather than the target page, which lacks a concise five-minute section-switch workflow with an explicit user check-in step.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "insights/the-container-method-why-time-blocks-work-better-than-to-do-lists.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The answer provides a useful timer workflow, but the target page does not offer a copyable five-minute section-switch protocol or clarify that a standard text chat cannot proactively alert the user.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "what-should-i-work-on/too-many-tasks-what-now/index.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The cited material addresses emotional sorting, stress reduction, or mental-load audits, while the target page only provides a general execution loop and does not assess emotional load item by item.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "what-should-i-work-on/too-many-tasks-what-now/index.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The response offers useful categories but no scoring rubric, ranked task list, or next-step recommendation; the target page currently has no emotional-impact analysis either.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-vs-human-coaching/index.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "The listed sources concern text or social mirroring and conversation advice, not a method for matching a user's energy while independently testing whether their idea is realistic.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "ai-vs-human-coaching/index.html",
+      "domain": "spryexecutiveos.com",
+      "issue": "Gemini handles the conversational setup well, but gives no explicit way to separate tone matching from an evidence-based realism check and does not cite or hand off to the target page.",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/best-executive-coach-for-saas-founders.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "No matching page exists, and Perplexity cites competitor founder and startup-coach roundups rather than a page from our site.",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/best-executive-coach-for-saas-founders.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "No matching page exists. The response gives named coach and firm recommendations, but our site has no SaaS-founder comparison or independently verifiable evidence to support recommendations.",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/how-to-use-ai-to-stress-test-a-business-decision.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "No matching page exists in our content for this query, while Perplexity cites several external sources on AI stress tests and scenario analysis.",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/how-to-use-ai-to-stress-test-a-business-decision.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "No matching page exists; there is no owned guide to serve as a canonical resource for the context checklist, stress-test methods, and decision follow-through.",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/best-ai-coaching-app-for-founders-in-2026.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "No matching page exists to earn a citation; Perplexity cites several 2026 app or platform roundups, including founder/startup-oriented coverage.",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/best-ai-coaching-app-for-founders-in-2026.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "No matching page exists to provide a citable founder-specific app comparison; Gemini instead gives uncited category recommendations and app examples.",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/how-to-use-chatgpt-to-plan-my-week-as-a-founder.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "Perplexity cites other sources and no matching page exists on our domain to cover this query.",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/how-to-use-chatgpt-to-plan-my-week-as-a-founder.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "No matching page exists to answer or receive a handoff for founder-focused weekly planning with ChatGPT.",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/how-to-get-executive-coaching-when-i-can-t-afford-a-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "No matching page exists to explain low-cost access routes or help readers choose among providers, training coaches, peer options, and AI support.",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    },
+    {
+      "path": "agent/bhpc/how-to-get-executive-coaching-when-i-can-t-afford-a-coach.html",
+      "domain": "billionairehighperformancecoach.com",
+      "issue": "No matching page exists to answer the query or distinguish affordable coaching options from lower-cost substitutes.",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "implementation_required": true,
+      "blocked_reason": ""
+    }
+  ],
+  "opportunities": [
+    {
+      "query": "AI Executive Coach vs coaching",
+      "path": "ai-executive-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI coach for founders",
+      "path": "ai-coach-vs-human-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how to use Entrepreneur AI Accountability Loop",
+      "path": "ai-accountability-system-for-entrepreneurs.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how to use Startup Coaching Replacement Boundary",
+      "path": "can-ai-replace-an-executive-coach-for-startups.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "who Billionaire High Performance Coach is for",
+      "path": "download.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "who is Billionaire High Performance Coach for",
+      "path": "faq.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how to use Founder Daily Planning Prompt",
+      "path": "ai-daily-planning-prompt-for-busy-founders.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how to burnout & recovery",
+      "path": "topics/burnout-recovery/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how Billionaire High Performance Coach works",
+      "path": "product.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Accountability & Consistency",
+      "path": "topics/accountability-consistency/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "rehearse for the toughest questions investors will ask based on my current metrics",
+      "path": "case-studies/startup-ceo-investor-week/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "start the timer and prompt me to switch sections every 5 minutes",
+      "path": "insights/the-container-method-why-time-blocks-work-better-than-to-do-lists.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "analyze my task list for emotional impact which items are most draining",
+      "path": "what-should-i-work-on/too-many-tasks-what-now/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "mirror the energy of what i'm saying and tell me if i'm being realistic",
+      "path": "ai-vs-human-coaching/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "best executive coach for SaaS founders",
+      "path": "agent/bhpc/best-executive-coach-for-saas-founders.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "how to use AI to stress-test a business decision",
+      "path": "agent/bhpc/how-to-use-ai-to-stress-test-a-business-decision.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "best AI coaching app for founders in 2026",
+      "path": "agent/bhpc/best-ai-coaching-app-for-founders-in-2026.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "how to use ChatGPT to plan my week as a founder",
+      "path": "agent/bhpc/how-to-use-chatgpt-to-plan-my-week-as-a-founder.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "how to get executive coaching when I can't afford a coach",
+      "path": "agent/bhpc/how-to-get-executive-coaching-when-i-can-t-afford-a-coach.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "bhpc agent signal",
+      "path": "ai-coach-vs-human-coach.html",
+      "operation": "NO_ACTION_MAINTAIN"
+    },
+    {
+      "query": "AI Executive Coach vs coaching",
+      "path": "ai-executive-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "rehearse for the toughest questions investors will ask based on my current metrics",
+      "path": "case-studies/startup-ceo-investor-week/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "start the timer and prompt me to switch sections every 5 minutes",
+      "path": "insights/the-container-method-why-time-blocks-work-better-than-to-do-lists.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "analyze my task list for emotional impact which items are most draining",
+      "path": "what-should-i-work-on/too-many-tasks-what-now/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "mirror the energy of what i'm saying and tell me if i'm being realistic",
+      "path": "ai-vs-human-coaching/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI Executive Coach vs coaching",
+      "path": "ai-executive-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI Executive Coach vs coaching",
+      "path": "ai-executive-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI coach for founders",
+      "path": "ai-coach-vs-human-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "AI coach for founders",
+      "path": "ai-coach-vs-human-coach.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how to use Entrepreneur AI Accountability Loop",
+      "path": "ai-accountability-system-for-entrepreneurs.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how to use Entrepreneur AI Accountability Loop",
+      "path": "ai-accountability-system-for-entrepreneurs.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how to use Startup Coaching Replacement Boundary",
+      "path": "can-ai-replace-an-executive-coach-for-startups.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how to use Startup Coaching Replacement Boundary",
+      "path": "can-ai-replace-an-executive-coach-for-startups.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "who Billionaire High Performance Coach is for",
+      "path": "download.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "who Billionaire High Performance Coach is for",
+      "path": "download.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "who is Billionaire High Performance Coach for",
+      "path": "faq.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "who is Billionaire High Performance Coach for",
+      "path": "faq.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how to use Founder Daily Planning Prompt",
+      "path": "ai-daily-planning-prompt-for-busy-founders.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how to use Founder Daily Planning Prompt",
+      "path": "ai-daily-planning-prompt-for-busy-founders.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how to burnout & recovery",
+      "path": "topics/burnout-recovery/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how to burnout & recovery",
+      "path": "topics/burnout-recovery/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how Billionaire High Performance Coach works",
+      "path": "product.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "how Billionaire High Performance Coach works",
+      "path": "product.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Accountability & Consistency",
+      "path": "topics/accountability-consistency/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "Accountability & Consistency",
+      "path": "topics/accountability-consistency/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "rehearse for the toughest questions investors will ask based on my current metrics",
+      "path": "case-studies/startup-ceo-investor-week/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "rehearse for the toughest questions investors will ask based on my current metrics",
+      "path": "case-studies/startup-ceo-investor-week/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "start the timer and prompt me to switch sections every 5 minutes",
+      "path": "insights/the-container-method-why-time-blocks-work-better-than-to-do-lists.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "start the timer and prompt me to switch sections every 5 minutes",
+      "path": "insights/the-container-method-why-time-blocks-work-better-than-to-do-lists.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "analyze my task list for emotional impact which items are most draining",
+      "path": "what-should-i-work-on/too-many-tasks-what-now/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "analyze my task list for emotional impact which items are most draining",
+      "path": "what-should-i-work-on/too-many-tasks-what-now/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "mirror the energy of what i'm saying and tell me if i'm being realistic",
+      "path": "ai-vs-human-coaching/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "mirror the energy of what i'm saying and tell me if i'm being realistic",
+      "path": "ai-vs-human-coaching/index.html",
+      "operation": "REPAIR_INTENDED_WINNER_PAGE"
+    },
+    {
+      "query": "best executive coach for SaaS founders",
+      "path": "agent/bhpc/best-executive-coach-for-saas-founders.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "best executive coach for SaaS founders",
+      "path": "agent/bhpc/best-executive-coach-for-saas-founders.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "how to use AI to stress-test a business decision",
+      "path": "agent/bhpc/how-to-use-ai-to-stress-test-a-business-decision.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "how to use AI to stress-test a business decision",
+      "path": "agent/bhpc/how-to-use-ai-to-stress-test-a-business-decision.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "best AI coaching app for founders in 2026",
+      "path": "agent/bhpc/best-ai-coaching-app-for-founders-in-2026.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "best AI coaching app for founders in 2026",
+      "path": "agent/bhpc/best-ai-coaching-app-for-founders-in-2026.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "how to use ChatGPT to plan my week as a founder",
+      "path": "agent/bhpc/how-to-use-chatgpt-to-plan-my-week-as-a-founder.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "how to use ChatGPT to plan my week as a founder",
+      "path": "agent/bhpc/how-to-use-chatgpt-to-plan-my-week-as-a-founder.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "how to get executive coaching when I can't afford a coach",
+      "path": "agent/bhpc/how-to-get-executive-coaching-when-i-can-t-afford-a-coach.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "how to get executive coaching when I can't afford a coach",
+      "path": "agent/bhpc/how-to-get-executive-coaching-when-i-can-t-afford-a-coach.html",
+      "operation": "CREATE_NEW_TARGET_PAGE"
+    },
+    {
+      "query": "best executive coach for SaaS founders",
+      "path": "insights/best-executive-coach-for-saas-founders.html",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "blocked_reason": "",
+      "source": "json_new_page_opportunities"
+    },
+    {
+      "query": "how to use AI to stress-test a business decision",
+      "path": "insights/how-to-use-ai-to-stress-test-a-business-decision.html",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "blocked_reason": "",
+      "source": "json_new_page_opportunities"
+    },
+    {
+      "query": "best AI coaching app for founders in 2026",
+      "path": "insights/best-ai-coaching-app-for-founders-in-2026.html",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "blocked_reason": "",
+      "source": "json_new_page_opportunities"
+    },
+    {
+      "query": "how to use ChatGPT to plan my week as a founder",
+      "path": "insights/how-to-use-chatgpt-to-plan-my-week-as-a-founder.html",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "blocked_reason": "",
+      "source": "json_new_page_opportunities"
+    },
+    {
+      "query": "how to get executive coaching when I can't afford a coach",
+      "path": "answers/how-to-get-executive-coaching-when-i-can-t-afford-a-coach.html",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "blocked_reason": "",
+      "source": "json_new_page_opportunities"
+    },
+    {
+      "query": "identify unmet needs in the market that my competitor hasn't addressed yet",
+      "path": "insights/identify-unmet-needs-in-the-market-that-my-competitor-hasn-t-addressed-yet.html",
+      "operation": "CREATE_NEW_TARGET_PAGE",
+      "blocked_reason": "",
+      "source": "json_new_page_opportunities"
+    }
+  ],
+  "interpretation": {
+    "measurement_status": "AGENT_DIGEST_ABSORBED_WITH_EXACT_IMPLEMENTATION_METADATA",
+    "reason": "The digest preserves intended destination, operation, implementation path, and JSON pages-to-build specs when present. Exact application is planned and traced by the agent exact implementation lane."
+  }
+}
