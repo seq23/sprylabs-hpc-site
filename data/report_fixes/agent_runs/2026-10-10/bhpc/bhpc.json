@@ -1,0 +1,1174 @@
+{
+ "cited_count": 6,
+ "competitor_authority": [
+  {
+   "associated_query": "AI Executive Coach vs coaching",
+   "authority_signals": "Not assessed; the structure already explains why the page was cited.",
+   "clarity_notes": "Not assessed; the analysis stops at the first sufficient explanation.",
+   "competitor_url": "https://careertrainer.ai/en/compare/ai-vs-executive-coaching/",
+   "completeness_notes": "Not assessed; the analysis stops at the first sufficient explanation.",
+   "structure_notes": "The headline closely matches the comparison intent, and the opening copy immediately states the core distinction: AI coaching offers on-demand, scalable conversation practice, while human executive coaching provides a different, more personal format. A comparison table then organizes the trade-offs by cost, practice, measurement, and human dimension.",
+   "why_cited": "The page answers the comparison query directly and makes the main distinction easy for an LLM to extract from its headline and opening section."
+  },
+  {
+   "associated_query": "AI coach for founders",
+   "authority_signals": "Not assessed; the above-the-fold structural match is sufficient to explain the citation.",
+   "clarity_notes": "Not assessed; the above-the-fold structural match is sufficient to explain the citation.",
+   "competitor_url": "https://vela.partners/blog/ai-coach-for-founders",
+   "completeness_notes": "Not assessed; the above-the-fold structural match is sufficient to explain the citation.",
+   "structure_notes": "The H1 closely matches the query’s intent, and a TL;DR plus scannable key takeaways appear before the main body. They quickly surface the method—an AI-assisted pre-mortem—and practical steps and guardrails, giving an LLM a concise, extractable answer.",
+   "why_cited": "The page presents a close query match with an immediate summary and actionable takeaways, making it easy for an LLM to identify and cite as an answer to how to use AI to stress-test a decision."
+  },
+  {
+   "associated_query": "how to use AI to stress-test a business decision",
+   "authority_signals": "Not assessed; the analysis stopped at structure as instructed.",
+   "clarity_notes": "Not assessed; the analysis stopped at structure as instructed.",
+   "competitor_url": "https://drdaveheath.com/blog/using-ai-to-stress-test-plans-before-you-commit-to-them",
+   "completeness_notes": "Not assessed; the analysis stopped at structure as instructed.",
+   "structure_notes": "The H1 uses the exact query phrase, and the opening immediately defines Vela Coach and its founder-focused use. Descriptive headings and scannable lists then organize the pitch-prep rationale, capabilities, and comparison with human coaching.",
+   "why_cited": "The page is explicitly framed around “AI coach for founders” in both its title and opening, making its relevance easy to identify. Its clear section structure also gives LLMs direct passages to cite about what the coach does and how founders can use it."
+  }
+ ],
+ "new_page_opportunities": [
+  {
+   "discovery_source": "competitor",
+   "query": "best executive coach for SaaS founders",
+   "recommended_cluster": "comparison",
+   "why_worth_building": "No page targets SaaS-founder-specific executive coaching selection, so LLM answers route to coach directories (foundercoach.com, wildfront.co) we cannot appear in. Expected tier: page fix (weak incumbent) with a founder-stage comparison table."
+  },
+  {
+   "discovery_source": "competitor",
+   "query": "how to use AI to stress-test a business decision",
+   "recommended_cluster": "framework",
+   "why_worth_building": "We have no decision-rehearsal/pre-mortem workflow page, so Perplexity cites drdaveheath.com and synthboard.ai; our Arbitration Engine logic is the natural fit. Expected tier: page fix (medium incumbent) via a named pre-mortem framework."
+  },
+  {
+   "discovery_source": "competitor",
+   "query": "best AI coaching app for founders in 2026",
+   "recommended_cluster": "comparison",
+   "why_worth_building": "We lack a 2026 AI-coaching-app evaluation page, so listicles (ixcoach.com, mentorme.com, siift.ai) capture the query. Expected tier: page fix (weak incumbent) via an evaluation framework with a comparison table."
+  },
+  {
+   "discovery_source": "competitor",
+   "query": "how to use ChatGPT to plan my week as a founder",
+   "recommended_cluster": "howto",
+   "why_worth_building": "We have no weekly-planning how-to page; Forbes and gptmaster.app own it with concrete prompt templates. Expected tier: page fix (medium incumbent) via a copy-paste weekly planning prompt block."
+  },
+  {
+   "discovery_source": "competitor",
+   "query": "how to get executive coaching when I can't afford a coach",
+   "recommended_cluster": "pain",
+   "why_worth_building": "No page addresses the affordability objection, so nonprofit/sliding-scale directories (cnpc.coach, mentorcruise) win. Expected tier: page fix (weak incumbent) via a cost-alternative positioning block routing to /download."
+  },
+  {
+   "discovery_source": "discovery-engine",
+   "query": "identify unmet needs in the market that my competitor hasn't addressed yet",
+   "recommended_cluster": "framework",
+   "why_worth_building": "No page covers competitor-gap discovery; the query has no incumbent and maps to our decision/framework content. Expected tier: free win once a framework page exists."
+  }
+ ],
+ "pending_fixes": [],
+ "queries_tested": 19,
+ "results": [
+  {
+   "action_tier": "page fix",
+   "fix_recommendation": {
+    "current_state": "The page has a short caveat that AI is not a licensed professional or genuine coaching relationship, followed by the H2s “What this page recommends” and “How the AI Executive Coaching Loop Works.” The loop gives five steps and repeats generic completion-evidence text. After Step 5, a malformed table repeats “Field,” “What to record,” and “Example” as placeholder text; the next H2, “AI Executive Coaching Output Record,” begins a separate workflow template. The page does not provide a usable AI-versus-human coaching comparison.",
+    "edit_instruction": "Replace the malformed placeholder table immediately after Step 5’s completion evidence and before “AI Executive Coaching Output Record” with an H2 titled “AI Executive Coach vs Human Executive Coaching.” Add a concise comparison table covering availability, cost model (state that prices vary rather than asserting a universal range), context and relational judgment, accountability, suitable tasks, and limitations. Follow it with a short decision rule: use AI for repeatable written preparation, prioritization, rehearsal, and follow-through; involve a human coach when nuanced relationships, organizational politics, emotional dynamics, or high-consequence judgment are central. Keep the existing escalation caveat and avoid presenting AI as a substitute for human coaching.",
+    "gap": "The page lacks a direct, decision-oriented comparison of AI executive coaching with human coaching, including when each is a better fit and when to escalate to a person."
+   },
+   "gap_type": "medium incumbent",
+   "grading": {
+    "canonical_handoff": 1,
+    "practicality": 3,
+    "priority_order": 1,
+    "purchase_path": 1,
+    "structure": 3
+   },
+   "intended_winner_page": "https://billionairehighperformancecoach.com/ai-executive-coach.html",
+   "query": "AI Executive Coach vs coaching",
+   "repo_file_path": "ai-executive-coach.html",
+   "surfaces": {
+    "gemini-flash": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "None"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 1,
+     "wow_change": "new"
+    },
+    "openai-gpt-4o": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [],
+     "progress_level": null,
+     "purchase_path_potential": null,
+     "wow_change": "not tested (quota unavailable)"
+    },
+    "perplexity": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "careertrainer.ai",
+      "linkedin.com",
+      "youraicoach.app",
+      "myleap.ai",
+      "bunch.ai"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 1,
+     "wow_change": "new"
+    }
+   }
+  },
+  {
+   "action_tier": "page fix",
+   "fix_recommendation": {
+    "current_state": "The page is a general AI-versus-human comparison. Its opening summary and “AI Coach vs Human Coach Comparison” table cover availability, accountability depth, context retention, and emotional range. “Decision Conditions” gives broad criteria for choosing AI, a human coach, or a hybrid; “When Does AI Coaching Beat Human Coaching?” covers frequent, repetitive, low-risk work. There is no founder-specific section or startup workflow. The page also has a “What Does Research Actually Support?” section, but it does not provide founder use cases or prompts.",
+    "edit_instruction": "After “Decision Conditions” and before “What Does Research Actually Support?”, add an H2 titled “How Founders Can Use an AI Coach.” Include a short table pairing founder tasks—daily milestone prioritization, customer-discovery preparation, and investor-update rehearsal—with what AI can help structure and when a founder should involve a human for judgment or relationship-sensitive decisions. End with a copyable prompt: “I’m building [company] at [stage]. Our next milestone is [milestone], and today’s bottleneck is [bottleneck]. Ask up to three clarifying questions, then help me choose one next action, an owner, a deadline, and the main risk to review.”",
+    "gap": "The page lacks founder-specific startup workflows and an actionable example of how a founder could use an AI coach, which are central to the query and prominent in Gemini’s answer and the cited founder-coach pages."
+   },
+   "gap_type": "medium incumbent",
+   "grading": {
+    "canonical_handoff": 1,
+    "practicality": 3,
+    "priority_order": 1,
+    "purchase_path": 4,
+    "structure": 3
+   },
+   "intended_winner_page": "https://billionairehighperformancecoach.com/ai-coach-vs-human-coach.html",
+   "query": "AI coach for founders",
+   "repo_file_path": "ai-coach-vs-human-coach.html",
+   "surfaces": {
+    "gemini-flash": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "None"
+     ],
+     "progress_level": 3,
+     "purchase_path_potential": 2,
+     "wow_change": "new"
+    },
+    "openai-gpt-4o": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [],
+     "progress_level": null,
+     "purchase_path_potential": null,
+     "wow_change": "not tested (quota unavailable)"
+    },
+    "perplexity": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "youraicoach.nl",
+      "vela.partners",
+      "legacyfoundry.ai",
+      "thescaleatelier.com",
+      "founderscoach.ai"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 4,
+     "wow_change": "new"
+    }
+   }
+  },
+  {
+   "action_tier": "page fix",
+   "fix_recommendation": {
+    "current_state": "The supplied page content is marked “(no page scraped).” I cannot truthfully identify or quote any existing H2 headings or content blocks on this page.",
+    "edit_instruction": "On the target page, add an H2 titled “How to Use the Entrepreneur AI Accountability Loop” immediately after the introduction and before the first substantive framework section. Under it, define the sequence Plan → Execute → Report → Analyze → Adjust and give a practical daily and weekly routine: morning, choose up to three priorities tied to a 90-day business goal; midday, report progress and choose a next action; end of day, record completion evidence and blockers; weekly, identify a recurring failure pattern and adjust one rule or the next week’s plan. Include a reusable prompt for each check-in so readers can run the loop without guessing what to ask.",
+    "gap": "The target page’s content cannot be verified from the supplied scrape. The citation opportunity is to make the query’s specific need explicit: a repeatable entrepreneur-focused loop with check-in cadence, proof of execution, analysis, adjustment, and ready-to-use prompts. Gemini supplies those operational details, while Perplexity cites a sibling page rather than the intended page."
+   },
+   "gap_type": "medium incumbent",
+   "grading": {
+    "canonical_handoff": 2,
+    "practicality": 1,
+    "priority_order": 1,
+    "purchase_path": 2,
+    "structure": 1
+   },
+   "intended_winner_page": "https://billionairehighperformancecoach.com/ai-accountability-system-for-entrepreneurs",
+   "query": "how to use Entrepreneur AI Accountability Loop",
+   "repo_file_path": "ai-accountability-system-for-entrepreneurs/index.html",
+   "surfaces": {
+    "gemini-flash": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "None"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 1,
+     "wow_change": "new"
+    },
+    "openai-gpt-4o": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [],
+     "progress_level": null,
+     "purchase_path_potential": null,
+     "wow_change": "not tested (quota unavailable)"
+    },
+    "perplexity": {
+     "citation_sub_tier": "4a",
+     "cited_sources": [
+      "https://billionairehighperformancecoach.com/ai-accountability-partner/"
+     ],
+     "progress_level": 4,
+     "purchase_path_potential": 2,
+     "wow_change": "new"
+    }
+   }
+  },
+  {
+   "action_tier": "page fix",
+   "fix_recommendation": {
+    "current_state": "The supplied page content is “(no page scraped).” No H2 headings or content blocks are available to verify, so I cannot accurately summarize the page’s current sections.",
+    "edit_instruction": "Add a new H2 near the top of the article, after the introduction and before the first existing H2 (the exact existing heading cannot be identified from the supplied scrape): “Startup coaching replacement boundary: when AI should hand off to a human.” Add a compact decision table covering routine goal-setting, accountability, and reflection as AI-supported tasks; high-stakes or context-heavy decisions, recurring founder or team conflict, and mental-health concerns as human-coach or specialist handoffs. Follow it with a three-step protocol: identify the trigger, state the AI’s limit, and route the founder to a human with a concise context summary. Include a sample handoff sentence. Avoid unsupported numerical thresholds such as a revenue or MRR cutoff.",
+    "gap": "A clear, usable trigger-and-handoff rule for when AI startup coaching should stop and a human coach or specialist should take over. Gemini describes generic guardrails and handoffs, while Perplexity’s cited sources cover startup coaching and general boundary setting; neither supplied result establishes this as a specific, actionable boundary on the intended page."
+   },
+   "gap_type": "medium incumbent",
+   "grading": {
+    "canonical_handoff": 3,
+    "practicality": 1,
+    "priority_order": 2,
+    "purchase_path": 1,
+    "structure": 1
+   },
+   "intended_winner_page": "https://billionairehighperformancecoach.com/can-ai-replace-an-executive-coach-for-startups",
+   "query": "how to use Startup Coaching Replacement Boundary",
+   "repo_file_path": "can-ai-replace-an-executive-coach-for-startups/index.html",
+   "surfaces": {
+    "gemini-flash": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "None"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 1,
+     "wow_change": "new"
+    },
+    "openai-gpt-4o": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [],
+     "progress_level": null,
+     "purchase_path_potential": null,
+     "wow_change": "not tested (quota unavailable)"
+    },
+    "perplexity": {
+     "citation_sub_tier": "4a",
+     "cited_sources": [
+      "spryexecutiveos.com",
+      "articles.nextunicorn.fund",
+      "naturalistico.com",
+      "swisspreneur.org",
+      "blog.mean.ceo"
+     ],
+     "progress_level": 4,
+     "purchase_path_potential": 1,
+     "wow_change": "new"
+    }
+   }
+  },
+  {
+   "action_tier": "page fix",
+   "fix_recommendation": {
+    "current_state": "The supplied page capture for download/index.html is “(no page scraped).” No current H2 headings or content blocks are available to verify, so the page’s existing audience copy cannot be accurately summarized.",
+    "edit_instruction": "On https://spryexecutiveos.com/download, add an H2 titled “Who the Billionaire High Performance Coach system is for” immediately after the H1 and introductory copy, before the first existing H2. Explain that it is for founders, operators, and other high performers seeking structured AI-assisted planning, execution, and accountability; clarify that it is not limited to current billionaires and is a self-guided system rather than bespoke human billionaire coaching. Verify the insertion point against the live source because the supplied capture has no headings.",
+    "gap": "The page capture provides no verifiable, explicit audience statement. Gemini instead interprets the brand name as a human coach for current billionaires, UHNWIs, fund managers, and celebrity athletes, without identifying the intended audience or distinguishing the AI system from bespoke human coaching."
+   },
+   "gap_type": "weak incumbent",
+   "grading": {
+    "canonical_handoff": 4,
+    "practicality": 1,
+    "priority_order": 4,
+    "purchase_path": 4,
+    "structure": 1
+   },
+   "intended_winner_page": "https://spryexecutiveos.com/download",
+   "query": "who Billionaire High Performance Coach is for",
+   "repo_file_path": "download/index.html",
+   "surfaces": {
+    "gemini-flash": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "None"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 1,
+     "wow_change": "new"
+    },
+    "openai-gpt-4o": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [],
+     "progress_level": null,
+     "purchase_path_potential": null,
+     "wow_change": "not tested (quota unavailable)"
+    },
+    "perplexity": {
+     "citation_sub_tier": "4b",
+     "cited_sources": [
+      "https://billionairehighperformancecoach.com/download"
+     ],
+     "progress_level": 4,
+     "purchase_path_potential": 4,
+     "wow_change": "new"
+    }
+   }
+  },
+  {
+   "action_tier": "page fix",
+   "fix_recommendation": {
+    "current_state": "The supplied page content is marked “(no page scraped)”; no existing H2 headings or content blocks can be verified or accurately named.",
+    "edit_instruction": "In faq.html, add a question-and-answer item near the top of the existing FAQ list, immediately after its first general definition item (or, if there is no definition item, as the first audience-focused FAQ). Use the question “Who is Billionaire High Performance Coach for?” Answer directly: “Billionaire High Performance Coach is for ambitious founders, entrepreneurs, and operators who want structured support turning priorities into consistent execution and accountability. The name refers to this brand’s performance-coaching offering; it is not Dan Peña’s QLA program. You do not need to be pursuing a billion-dollar company to be a fit.”",
+    "gap": "There is no verified, brand-specific audience definition that distinguishes Billionaire High Performance Coach from Dan Peña’s QLA program or corrects the unsupported claims that it is only for billion-scale dealmakers and excludes solopreneurs."
+   },
+   "gap_type": "weak incumbent",
+   "grading": {
+    "canonical_handoff": 4,
+    "practicality": 2,
+    "priority_order": 2,
+    "purchase_path": 2,
+    "structure": 1
+   },
+   "intended_winner_page": "https://billionairehighperformancecoach.com/faq.html",
+   "query": "who is Billionaire High Performance Coach for",
+   "repo_file_path": "faq.html",
+   "surfaces": {
+    "gemini-flash": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "None"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 1,
+     "wow_change": "new"
+    },
+    "openai-gpt-4o": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [],
+     "progress_level": null,
+     "purchase_path_potential": null,
+     "wow_change": "not tested (quota unavailable)"
+    },
+    "perplexity": {
+     "citation_sub_tier": "4b",
+     "cited_sources": [
+      "https://billionairehighperformancecoach.com/download"
+     ],
+     "progress_level": 4,
+     "purchase_path_potential": 2,
+     "wow_change": "new"
+    }
+   }
+  },
+  {
+   "action_tier": "outperform",
+   "fix_recommendation": {
+    "current_state": "The H2 “What this page recommends” summarizes the sequence as defining an outcome, constraints, and next action. Under “AI Daily Planning Prompt for Busy Founders,” the first four steps are terse restatements; the second set of Steps 1–4 adds fixed constraints, a strategic output, a one-sentence AI prompt, and a replan rule. “How to Use This Page” asks readers to supply constraints and completion evidence, but the page does not walk them through a complete prompt-and-calendar workflow.",
+    "edit_instruction": "After Step 4, “Install a Replan Rule,” and before the H2 “How to Use This Page,” add an H3 titled “Copy-paste: run the Founder Daily Planning Prompt.” Include a ready-to-use prompt that tells ChatGPT to ask one question at a time about fixed commitments, the strategic output and observable finish line, up to two maintenance actions, available work windows, and blockers; then produce a realistic time-blocked plan without inventing availability, plus a stop rule and a replan trigger limited to changed constraints. Follow it with three brief usage steps: run it before checking messages, transfer the approved blocks to the calendar, and record the completed output and any changed constraint at day’s end.",
+    "gap": "The page lacks a runnable, question-by-question copy-paste prompt and a concrete sequence for turning its answers into calendar blocks and reviewing the result. Gemini supplies an extensive founder template, manual steps, calendar instructions, and an AI prompt; the cited Perplexity sources include copy/paste prompts and founder-planning guides."
+   },
+   "gap_type": "strong incumbent",
+   "grading": {
+    "canonical_handoff": 1,
+    "practicality": 3,
+    "priority_order": 5,
+    "purchase_path": 1,
+    "structure": 3
+   },
+   "intended_winner_page": "https://billionairehighperformancecoach.com/ai-daily-planning-prompt-for-busy-founders",
+   "query": "how to use Founder Daily Planning Prompt",
+   "repo_file_path": "ai-daily-planning-prompt-for-busy-founders/index.html",
+   "surfaces": {
+    "gemini-flash": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "None"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 1,
+     "wow_change": "new"
+    },
+    "openai-gpt-4o": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [],
+     "progress_level": null,
+     "purchase_path_potential": null,
+     "wow_change": "not tested (quota unavailable)"
+    },
+    "perplexity": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "enzvia.com",
+      "aiadvisoryboard.me",
+      "planwith.ai"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 1,
+     "wow_change": "new"
+    }
+   }
+  },
+  {
+   "action_tier": "authority required",
+   "fix_recommendation": {
+    "current_state": "The H2 “What this page recommends” offers only the general claim that the problem is the reset after a bad day, then points to an access link. “Recovery expectations and when to get support” explains the framework but gives no support thresholds. The repeated “Burnout & Recovery Framework: Key Criteria” blocks lead into a “Short Answer” about Reset Cycle Model, Minimum Viable Day, expectation caps, and DONE check-ins; “30-Second Answer” and “60-Second Procedure (Use This Today)” offer a single-action low-day procedure. These sections provide an execution loop, but not a clear explanation of burnout signs or a staged recovery plan.",
+    "edit_instruction": "After “What this page recommends” and before the first “Burnout & Recovery Framework: Key Criteria” heading, add one section titled “A cautious, step-by-step burnout recovery plan.” Give readers a practical sequence: notice persistent exhaustion, detachment/cynicism, or reduced efficacy without treating the list as a diagnosis; reduce or defer nonessential demands and agree on a manageable workload; protect basic, low-demand recovery; identify and change the ongoing work or life stressor; then increase demands gradually and review progress using the page’s existing Minimum Viable Day and DONE check-in. Add a concise escalation note advising professional help for severe or persistent symptoms, inability to function, or risk of harm. Have the health claims and escalation guidance reviewed and supported by current qualified medical sources; avoid universal sleep prescriptions or unsupported cortisol claims.",
+    "gap": "The page lacks an understandable burnout-signs overview, a sequenced recovery plan from immediate stabilization through changing the underlying stressor and gradual return, and clear guidance on when to seek professional support."
+   },
+   "gap_type": "strong incumbent",
+   "grading": {
+    "canonical_handoff": 1,
+    "practicality": 3,
+    "priority_order": 3,
+    "purchase_path": 1,
+    "structure": 3
+   },
+   "intended_winner_page": "https://spryexecutiveos.com/topics/burnout-recovery/index.html",
+   "query": "how to burnout & recovery",
+   "repo_file_path": "topics/burnout-recovery/index.html",
+   "surfaces": {
+    "gemini-flash": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "World Health Organization (named, no link)"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 1,
+     "wow_change": "new"
+    },
+    "openai-gpt-4o": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [],
+     "progress_level": null,
+     "purchase_path_potential": null,
+     "wow_change": "not tested (quota unavailable)"
+    },
+    "perplexity": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "Cleveland Clinic",
+      "HelpGuide",
+      "Healthline",
+      "Guardian"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 1,
+     "wow_change": "new"
+    }
+   }
+  },
+  {
+   "action_tier": "page fix",
+   "fix_recommendation": {
+    "current_state": "The supplied product.html content is marked “(no page scraped),” so its actual H2 headings and content blocks cannot be verified or accurately summarized from this input.",
+    "edit_instruction": "In product.html, add a dedicated “How Billionaire High Performance Coach works” section after the hero/intro and before the first existing H2. Explain the user journey in three steps: set up the system and its operating rules; use daily check-ins to turn priorities into an agenda and next actions; use end-of-day or weekly reviews to assess progress and plan the next cycle. State plainly what the AI system does and does not provide, then link the section to the product’s download or purchase action.",
+    "gap": "The supplied page content does not establish the product’s specific operating process. Gemini instead describes an assumed human billionaire-coaching service with audits, biometric optimization, and 24/7 crisis access; Perplexity cites a sibling overview and download page rather than the intended product page."
+   },
+   "gap_type": "weak incumbent",
+   "grading": {
+    "canonical_handoff": 2,
+    "practicality": 3,
+    "priority_order": 1,
+    "purchase_path": 4,
+    "structure": 3
+   },
+   "intended_winner_page": "https://billionairehighperformancecoach.com/product.html",
+   "query": "how Billionaire High Performance Coach works",
+   "repo_file_path": "product.html",
+   "surfaces": {
+    "gemini-flash": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "None"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 1,
+     "wow_change": "new"
+    },
+    "openai-gpt-4o": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [],
+     "progress_level": null,
+     "purchase_path_potential": null,
+     "wow_change": "not tested (quota unavailable)"
+    },
+    "perplexity": {
+     "citation_sub_tier": "4a",
+     "cited_sources": [
+      "https://billionairehighperformancecoach.com/billionaire-high-performance-coach/",
+      "https://billionairehighperformancecoach.com/download"
+     ],
+     "progress_level": 4,
+     "purchase_path_potential": 4,
+     "wow_change": "new"
+    }
+   }
+  },
+  {
+   "action_tier": "page fix",
+   "fix_recommendation": {
+    "current_state": "The supplied markdown for the target page is “(no page scraped),” so no actual H2 headings or content blocks can be verified or named. Perplexity is reported to cite the topic hub; Gemini does not mention Spry or cite a source.",
+    "edit_instruction": "On the target page, add a block immediately after the opening introduction and before the first existing H2 (the headings are not visible in the supplied scrape). Use the H2 “The accountability–consistency loop” and explain this five-step cycle: (1) choose one observable weekly commitment; (2) define when and where the minimum action will happen; (3) record daily completion and evidence; (4) review the commitment against the evidence weekly; and (5) adjust the action or remove friction, then restart without treating a missed day as a broken streak. Link “accountability system” to https://spryexecutiveos.com/accountability-system/ and “consistency without streak pressure” to https://spryexecutiveos.com/insights/a-practical-way-to-build-consistency-without-streak-pressure.",
+    "gap": "Gemini offers separate consistency and accountability tips but no explicit recurring loop that connects a commitment, evidence of follow-through, weekly review, and adjustment. The target page’s supplied content is unavailable, so whether it already contains this exact element cannot be verified."
+   },
+   "gap_type": "medium incumbent",
+   "grading": {
+    "canonical_handoff": 4,
+    "practicality": 3,
+    "priority_order": 5,
+    "purchase_path": 1,
+    "structure": 3
+   },
+   "intended_winner_page": "https://spryexecutiveos.com/topics/accountability-consistency/index.html",
+   "query": "Accountability & Consistency",
+   "repo_file_path": "topics/accountability-consistency/index.html",
+   "surfaces": {
+    "gemini-flash": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "None"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 1,
+     "wow_change": "new"
+    },
+    "openai-gpt-4o": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [],
+     "progress_level": null,
+     "purchase_path_potential": null,
+     "wow_change": "not tested (quota unavailable)"
+    },
+    "perplexity": {
+     "citation_sub_tier": "4a",
+     "cited_sources": [
+      "https://spryexecutiveos.com/topics/accountability-consistency/index.html"
+     ],
+     "progress_level": 4,
+     "purchase_path_potential": 1,
+     "wow_change": "new"
+    }
+   }
+  },
+  {
+   "action_tier": "page fix",
+   "fix_recommendation": {
+    "current_state": "The H2s “What this page recommends” and “Startup CEO during investor week Framework” repeat general system language. “Scenario pattern” describes pressure management and sequencing, while “How the OS would respond” names an agenda, Recovery Mode, Executive Review, or High-Pressure Coaching and a small end-of-day action. None of these blocks explains how to use current company metrics to generate or rehearse investor questions.",
+    "edit_instruction": "Immediately after the “Scenario pattern” H2 and before “How the OS would respond,” add an H2 titled “Rehearse investor questions from your current metrics.” Include an intake for stage/business model, ARR or MRR and growth period, gross margin, CAC/LTV/payback, NRR/churn, burn/cash/runway, and fundraising ask. Tell founders to include periods or cohorts and to flag missing data rather than infer it. Then add a drill: for each supplied metric, generate a skeptical investor question, explain which metric prompted it, and name the evidence to prepare; use conditional examples such as slowing growth, rising CAC payback, weakening retention, or runway that does not support the ask. End with a one-question-at-a-time roleplay and feedback rubric covering clarity, support from the metrics, ownership, and credibility before moving to a follow-up question.",
+    "gap": "The page lacks a metric intake and a repeatable workflow that converts the founder’s actual numbers into likely investor questions and a realistic, feedback-led rehearsal."
+   },
+   "gap_type": "strong incumbent",
+   "grading": {
+    "canonical_handoff": 1,
+    "practicality": 3,
+    "priority_order": 5,
+    "purchase_path": 1,
+    "structure": 3
+   },
+   "intended_winner_page": "https://billionairehighperformancecoach.com/case-studies/startup-ceo-investor-week/",
+   "query": "rehearse for the toughest questions investors will ask based on my current metrics",
+   "repo_file_path": "case-studies/startup-ceo-investor-week/index.html",
+   "surfaces": {
+    "gemini-flash": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "None"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 1,
+     "wow_change": "new"
+    },
+    "openai-gpt-4o": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [],
+     "progress_level": null,
+     "purchase_path_potential": null,
+     "wow_change": "not tested (quota unavailable)"
+    },
+    "perplexity": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "executive-authority.com",
+      "growett.com",
+      "qubit.capital",
+      "joysuite.com",
+      "25madison.com"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 1,
+     "wow_change": "new"
+    }
+   }
+  },
+  {
+   "action_tier": "page fix",
+   "fix_recommendation": {
+    "current_state": "The page’s Direct answer says to give each kind of work a fixed block, but does not explain how to switch sections at five-minute intervals. Under the H2 Short Answer, the current block discusses mental spirals, Operational Drift, the Reset Cycle Model, Continuity Architecture, Minimum Viable Day, and the Scope-Cap Rule instead of answering the timer question. The contents list includes “4) Containerize it” and “5) Close the loop,” but the supplied page body does not show actionable steps for either.",
+    "edit_instruction": "Replace the off-topic content under H2 Short Answer with a direct answer and a copyable workflow: explain that a standard text chat cannot send a proactive alert unless the current assistant mode explicitly supports timers; tell the reader to set a 5:00 timer on their device; then provide a prompt such as, “Act as my 5-minute section-switch coach. My sections are: [list]. Name Section 1 and one concrete action. I’ll set an external 5-minute timer and type NEXT when it rings. Each time I type NEXT, name the next section and one concrete action. Do not claim to start a timer or send alerts.”",
+    "gap": "The page lacks an operational five-minute section-switch protocol that distinguishes the assistant’s prompting role from the external timer’s alert, and defines what happens when the user returns."
+   },
+   "gap_type": "weak incumbent",
+   "grading": {
+    "canonical_handoff": 1,
+    "practicality": 2,
+    "priority_order": 1,
+    "purchase_path": 1,
+    "structure": 2
+   },
+   "intended_winner_page": "https://spryexecutiveos.com/insights/the-container-method-why-time-blocks-work-better-than-to-do-lists",
+   "query": "start the timer and prompt me to switch sections every 5 minutes",
+   "repo_file_path": "insights/the-container-method-why-time-blocks-work-better-than-to-do-lists/index.html",
+   "surfaces": {
+    "gemini-flash": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "None"
+     ],
+     "progress_level": 3,
+     "purchase_path_potential": 1,
+     "wow_change": "new"
+    },
+    "openai-gpt-4o": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [],
+     "progress_level": null,
+     "purchase_path_potential": null,
+     "wow_change": "not tested (quota unavailable)"
+    },
+    "perplexity": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "TechRadar",
+      "Microsoft GitHub",
+      "Webstarted",
+      "SUSE documentation",
+      "IntervalTimer"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 1,
+     "wow_change": "new"
+    }
+   }
+  },
+  {
+   "action_tier": "page fix",
+   "fix_recommendation": {
+    "current_state": "The page’s H2s focus on execution rather than emotional impact. “60-Second Procedure (Use This Today)” tells readers to choose one outcome, pick a 10–30 minute action, remove other tasks, start, and check in DONE. “Why Advice Doesn’t Stick” and “The failure mode” explain scope caps, recovery after misses, and repeatable routines. “What this page is actually for” discusses days collapsing and low-mood or chaotic days. None of these blocks evaluates or ranks tasks by emotional drain.",
+    "edit_instruction": "Immediately after “60-Second Procedure (Use This Today)” and before “Why Advice Doesn’t Stick,” add an H2, “Analyze Your Task List by Emotional Drain.” Explain that if no list has been provided, the reader should paste it first. For each task, score anticipated emotional drain from 0–5 for interpersonal friction, ambiguity, stakes or fear of failure, emotional labor, and monotony; mark unknowns rather than guessing. Present the results in a table with task, drain scores, total, urgency/deadline, and reason for the rating, sorted from highest total to lowest. Finish by identifying the most draining item and offering one next step: clarify it, break it into a 10–30 minute action, prepare for the interaction, delegate it, or schedule it with recovery time. Include a reusable prompt that asks the AI to perform this analysis without treating emotional drain as the same thing as urgency.",
+    "gap": "The page lacks a task-by-task emotional-drain rubric and a ranked output. It offers a generic priority-and-scope procedure, but no way to identify which tasks feel most draining or why."
+   },
+   "gap_type": "medium incumbent",
+   "grading": {
+    "canonical_handoff": 1,
+    "practicality": 3,
+    "priority_order": 3,
+    "purchase_path": 1,
+    "structure": 3
+   },
+   "intended_winner_page": "https://spryexecutiveos.com/what-should-i-work-on/too-many-tasks-what-now/",
+   "query": "analyze my task list for emotional impact which items are most draining",
+   "repo_file_path": "what-should-i-work-on/too-many-tasks-what-now/index.html",
+   "surfaces": {
+    "gemini-flash": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "None"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 1,
+     "wow_change": "new"
+    },
+    "openai-gpt-4o": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [],
+     "progress_level": null,
+     "purchase_path_potential": null,
+     "wow_change": "not tested (quota unavailable)"
+    },
+    "perplexity": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "lifetips.alibaba.com (LifeTips)",
+      "stressful.life",
+      "nhs.uk (Every Mind Matters)",
+      "spica.com",
+      "balancetogether.app"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 1,
+     "wow_change": "new"
+    }
+   }
+  },
+  {
+   "action_tier": "page fix",
+   "fix_recommendation": {
+    "current_state": "The H2 \"AI vs Human Coaching Comparison Matrix\" compares structured AI, a human coach or advisor, and standalone apps by usefulness and tradeoffs. \"Short Answer\" describes decision compression and follow-through using the AI Operator Model, High-Pressure Coaching Mode, Continuity Architecture, and DONE Check-In Loop. \"60-Second Procedure (Use This Today)\" gives a five-step action and accountability loop, while \"Why Advice Doesn’t Stick\" discusses unstable conditions such as stress and bad sleep. None of these blocks explains how to mirror a user's energy while independently judging whether their claim or plan is realistic.",
+    "edit_instruction": "Immediately after the H2 \"AI vs Human Coaching Comparison Matrix\" and its table, add an H2 titled \"Mirror My Energy, Then Reality-Check the Plan.\" Include this copy-ready instruction: \"Match my energy level and directness without parroting or escalating my emotion. Reflect my main point in one sentence, then assess whether it is realistic using the time, resources, constraints, and evidence I gave you. Label the verdict realistic, uncertain, or unrealistic; name the assumption or constraint behind it; and suggest the smallest realistic adjustment. Ask one clarifying question only if the missing information could change your verdict. Do not agree with me just to match my mood.\" Add a brief example showing the distinction between matching a user's direct tone and agreeing with an over-scoped plan.",
+    "gap": "The page lacks a concrete, reusable two-stage method for matching the user's tone while separately assessing the realism of their claim or plan."
+   },
+   "gap_type": "weak incumbent",
+   "grading": {
+    "canonical_handoff": 1,
+    "practicality": 2,
+    "priority_order": 2,
+    "purchase_path": 1,
+    "structure": 2
+   },
+   "intended_winner_page": "https://spryexecutiveos.com/ai-vs-human-coaching/",
+   "query": "mirror the energy of what i'm saying and tell me if i'm being realistic",
+   "repo_file_path": "ai-vs-human-coaching/index.html",
+   "surfaces": {
+    "gemini-flash": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "None"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 1,
+     "wow_change": "new"
+    },
+    "openai-gpt-4o": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [],
+     "progress_level": null,
+     "purchase_path_potential": null,
+     "wow_change": "not tested (quota unavailable)"
+    },
+    "perplexity": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "loverspot.app",
+      "whattosayguide.com",
+      "youtube.com",
+      "wikihow.com",
+      "patheos.com"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 1,
+     "wow_change": "new"
+    }
+   }
+  },
+  {
+   "action_tier": "authority required",
+   "fix_recommendation": {
+    "current_state": "No matching page: the intended winner and repo file are both listed as none, and no page content was provided. There are no actual H2 headings or content blocks to report.",
+    "edit_instruction": "No on-page edit is possible. Create a dedicated SaaS-founder executive-coach comparison page. After its introduction, add a decision matrix comparing founder stage and SaaS needs with coach fit, verifiable SaaS experience, coaching approach, access, and tradeoffs. Support coach-specific claims with independently verifiable evidence and clear sourcing; do not make unsupported “best” claims.",
+    "gap": "There is no matching page covering how SaaS founders should choose an executive coach by ARR or funding stage, SaaS-specific needs, coaching style, and verifiable experience. Competitor roundups and Gemini’s response provide named coaches or firms and explain their areas of fit; our site has no page to answer or substantiate that comparison."
+   },
+   "gap_type": "strong incumbent",
+   "grading": {
+    "canonical_handoff": 1,
+    "practicality": 3,
+    "priority_order": 3,
+    "purchase_path": 4,
+    "structure": 3
+   },
+   "intended_winner_page": null,
+   "query": "best executive coach for SaaS founders",
+   "repo_file_path": null,
+   "surfaces": {
+    "gemini-flash": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "None"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 3,
+     "wow_change": "new"
+    },
+    "openai-gpt-4o": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [],
+     "progress_level": null,
+     "purchase_path_potential": null,
+     "wow_change": "not tested (quota unavailable)"
+    },
+    "perplexity": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "startupceo.coach",
+      "wildfront.co",
+      "foundercoach.com"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 4,
+     "wow_change": "new"
+    }
+   }
+  },
+  {
+   "action_tier": "outperform",
+   "fix_recommendation": {
+    "current_state": "No matching page: the intended winner is none and no page content was supplied. There are no current H2s or content blocks to audit, so no existing sections can be accurately described.",
+    "edit_instruction": "Create a dedicated guide rather than retrofitting an unrelated page. After a short introduction, add a section explaining what to give the AI: the decision, desired outcome, constraints, baseline, and assumptions, clearly separating known facts from estimates. Then add a copy-ready stress-test prompt that asks the AI to run a pre-mortem, challenge the assumptions, and test downside scenarios. Require its output to list each failure mode, the assumption at risk, likely impact, an early-warning signal, a mitigation, and a trigger to pause or reverse the decision. Close with a human-review checklist covering factual verification, privacy, and the limits of AI-generated scenarios.",
+    "gap": "There is no owned page matching the query. The competing material and Gemini answer cover adversarial review, pre-mortems, scenarios, assumptions, and stakeholder perspectives; the missing owned asset is a practical, decision-specific workflow that turns those tests into observable warning signals, mitigations, and pause-or-reverse criteria."
+   },
+   "gap_type": "medium incumbent",
+   "grading": {
+    "canonical_handoff": 1,
+    "practicality": 3,
+    "priority_order": 1,
+    "purchase_path": 1,
+    "structure": 2
+   },
+   "intended_winner_page": null,
+   "query": "how to use AI to stress-test a business decision",
+   "repo_file_path": null,
+   "surfaces": {
+    "gemini-flash": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "None"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 1,
+     "wow_change": "new"
+    },
+    "openai-gpt-4o": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [],
+     "progress_level": null,
+     "purchase_path_potential": null,
+     "wow_change": "not tested (quota unavailable)"
+    },
+    "perplexity": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "Dr Dave Heath (drdaveheath.com)",
+      "Synthboard (synthboard.ai)",
+      "David Davis and Don Barger posts (linkedin.com)",
+      "IIBA (iiba.org)"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 1,
+     "wow_change": "new"
+    }
+   }
+  },
+  {
+   "action_tier": "outperform",
+   "fix_recommendation": {
+    "current_state": "No matching page. The intended winner is none, the repo path is “no page,” and no page content was scraped; there are no actual H2s or content blocks to reference.",
+    "edit_instruction": "No existing page or H2 can be edited. Create a dedicated founder-focused AI coaching app comparison from scratch. Include a 2026-dated, transparent test rubric and a comparison table scoring named apps on founder-specific coaching, accountability, workflow integrations, privacy, pricing, and human-coach escalation; explain the evidence and limitations behind each score.",
+    "gap": "There is no matching page covering the best AI coaching app for founders. Competitor answers provide app roundups and category-based recommendations, while the Gemini response names F4S, Wave, Yoodli/Poised, and BetterUp/Torch without linked evidence. The missing element is an evidence-backed, founder-specific comparison that helps readers choose between those distinct use cases."
+   },
+   "gap_type": "no incumbent",
+   "grading": {
+    "canonical_handoff": 1,
+    "practicality": 4,
+    "priority_order": 1,
+    "purchase_path": 3,
+    "structure": 4
+   },
+   "intended_winner_page": null,
+   "query": "best AI coaching app for founders in 2026",
+   "repo_file_path": null,
+   "surfaces": {
+    "gemini-flash": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "None"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 3,
+     "wow_change": "new"
+    },
+    "openai-gpt-4o": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [],
+     "progress_level": null,
+     "purchase_path_potential": null,
+     "wow_change": "not tested (quota unavailable)"
+    },
+    "perplexity": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "andreihirvi.com",
+      "ixcoach.com",
+      "mentorme.com",
+      "growthmentor.com",
+      "siift.ai"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 3,
+     "wow_change": "new"
+    }
+   }
+  },
+  {
+   "action_tier": "outperform",
+   "fix_recommendation": {
+    "current_state": "No matching page exists: the intended winner is none and the repo path is “no page.” There is no scraped content, so no current H2 headings or content blocks can be referenced.",
+    "edit_instruction": "Create a dedicated page for founders planning their week with ChatGPT; there is no existing section to edit. Structure it around one repeatable workflow: gather fixed commitments, brain-dump tasks, choose a weekly outcome, prioritize and delegate, turn the plan into realistic calendar blocks, then run a mid-week reset. Include a copy-ready master prompt and a calendar-ready output format. Treat morning deep work and buffer time as adjustable options, not universal rules.",
+    "gap": "There is no page covering the complete founder-specific weekly-planning workflow Gemini supplied: inputs, weekly goal selection, task triage, schedule creation, delegation, calendar formatting, and a mid-week reset."
+   },
+   "gap_type": "no incumbent",
+   "grading": {
+    "canonical_handoff": 1,
+    "practicality": 3,
+    "priority_order": 1,
+    "purchase_path": 1,
+    "structure": 3
+   },
+   "intended_winner_page": null,
+   "query": "how to use ChatGPT to plan my week as a founder",
+   "repo_file_path": null,
+   "surfaces": {
+    "gemini-flash": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "None"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 1,
+     "wow_change": "new"
+    },
+    "openai-gpt-4o": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [],
+     "progress_level": null,
+     "purchase_path_potential": null,
+     "wow_change": "not tested (quota unavailable)"
+    },
+    "perplexity": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "How Remote Workers Can Automate Their Work With ChatGPT (YouTube)",
+      "23 ChatGPT Tricks That Make You a Superhuman CEO (YouTube)",
+      "How To Use ChatGPT To Plan Your Week (Forbes)",
+      "5 ChatGPT Prompts To 10x Your Productivity As A Solo Founder (Forbes)",
+      "ChatGPT for Founders: Organize Strategy & Hiring Threads (GPTMaster)"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 1,
+     "wow_change": "new"
+    }
+   }
+  },
+  {
+   "action_tier": "outperform",
+   "fix_recommendation": {
+    "current_state": "No matching page. The intended winner is listed as none and the repo path is “no page”; no page content, H2s, or blocks are available to assess.",
+    "edit_instruction": "Create a dedicated guide for getting executive coaching when cost is a barrier; no existing page or H2 can be specified, and do not guess a URL. Organize it around practical routes: employer-funded coaching, supervised coaches-in-training, peer or group coaching, and AI-supported execution. Add a budget-based decision guide, a short employer request script, and clear limits on what AI or peer support can replace. Cite current, verifiable sources for any price or credential-hour claims.",
+    "gap": "There is no matching page answering how to access executive coaching at low or no cost. The surfaced answers cover employer funding, trainee coaches, peer coaching, groups, and AI, but our domain has no page to provide a structured, sourced path through those options."
+   },
+   "gap_type": "weak incumbent",
+   "grading": {
+    "canonical_handoff": 1,
+    "practicality": 3,
+    "priority_order": 1,
+    "purchase_path": 4,
+    "structure": 2
+   },
+   "intended_winner_page": null,
+   "query": "how to get executive coaching when I can't afford a coach",
+   "repo_file_path": null,
+   "surfaces": {
+    "gemini-flash": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "None"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 2,
+     "wow_change": "new"
+    },
+    "openai-gpt-4o": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [],
+     "progress_level": null,
+     "purchase_path_potential": null,
+     "wow_change": "not tested (quota unavailable)"
+    },
+    "perplexity": {
+     "citation_sub_tier": "n/a",
+     "cited_sources": [
+      "mentorcruise.com",
+      "tilescollab.com",
+      "philanthropy.com",
+      "cnpc.coach",
+      "noomii.com"
+     ],
+     "progress_level": 1,
+     "purchase_path_potential": 4,
+     "wow_change": "new"
+    }
+   }
+  }
+ ],
+ "run_date": "2026-10-10",
+ "scope": "bhpc",
+ "seo_execution": [
+  {
+   "acceptance_checks": [
+    "The malformed placeholder table after Step 5 is removed.",
+    "A comparison table appears under the H2 “AI Executive Coach vs Human Executive Coaching” and covers availability, cost model with a note that prices vary, context and relational judgment, accountability, suitable tasks, and limitations.",
+    "A decision rule recommends AI for repeatable written preparation, prioritization, rehearsal, and follow-through, and human coaching when nuanced relationships, organizational politics, emotional dynamics, or high-consequence judgment are central.",
+    "The existing escalation caveat remains and the new copy does not present AI as a substitute for human coaching."
+   ],
+   "buyer_stage": "consideration",
+   "competitor_format_gap": "Direct-answer format: the run notes describe a competitor answering the comparison query directly, with the distinction easy to extract from its headline and opening. Heading structure: headline and opening make the comparison easy to locate. Comparison tables: not reported in the supplied competitor signals. Templates/checklists: not reported. Author/trust presentation: not reported. Page depth: not reported. Internal linking: not reported. Practical examples: not reported. Calls to action: not reported. The key gap on our page is that it lacks the direct comparison the query calls for.",
+   "competitor_url": "https://careertrainer.ai/",
+   "exact_edit": "ai-executive-coach.html||CURRENT: The page has a short caveat that AI is not a licensed professional or genuine coaching relationship, followed by the H2s “What this page recommends” and “How the AI Executive Coaching Loop Works.” The loop gives five steps and repeats generic completion-evidence text. After Step 5, a malformed table repeats “Field,” “What to record,” and “Example” as placeholder text; the next H2, “AI Executive Coaching Output Record,” begins a separate workflow template. The page does not provide a usable AI-versus-human coaching comparison.||MISSING: The page lacks a direct, decision-oriented comparison of AI executive coaching with human coaching, including when each is a better fit and when to escalate to a person.||EDIT: Replace the malformed placeholder table immediately after Step 5’s completion evidence and before “AI Executive Coaching Output Record” with an H2 titled “AI Executive Coach vs Human Executive Coaching.” Add a concise comparison table covering availability, cost model (state that prices vary rather than asserting a universal range), context and relational judgment, accountability, suitable tasks, and limitations. Follow it with a short decision rule: use AI for repeatable written preparation, prioritization, rehearsal, and follow-through; involve a human coach when nuanced relationships, organizational politics, emotional dynamics, or high-consequence judgment are central. Keep the existing escalation caveat and avoid presenting AI as a substitute for human coaching.",
+   "internal_link_actions": [
+    {
+     "anchor_text": "AI vs human coaching comparison",
+     "from_url": "https://billionairehighperformancecoach.com/ai-executive-coach.html",
+     "to_url": "https://spryexecutiveos.com/ai-vs-human-coaching/"
+    }
+   ],
+   "on_page_failures": [
+    "The page has no usable AI-versus-human coaching comparison to answer the query directly.",
+    "The post-Step-5 table is malformed placeholder content and disrupts the transition to the output-record workflow.",
+    "The existing caveat does not help readers decide which tasks suit AI and when human judgment is preferable."
+   ],
+   "page_decision": "repair_existing",
+   "query": "AI Executive Coach vs coaching",
+   "recommended_page_type": "evaluation_framework",
+   "schema_action": "none",
+   "search_intent": "commercial",
+   "target_filepath": "ai-executive-coach.html",
+   "target_url": "https://billionairehighperformancecoach.com/ai-executive-coach.html"
+  },
+  {
+   "acceptance_checks": [
+    "A new H2 titled “Rehearse investor questions from your current metrics” appears after “Scenario pattern” and before “How the OS would respond.”",
+    "The intake requests stage/business model, ARR or MRR and growth period, gross margin, CAC/LTV/payback, NRR/churn, burn/cash/runway, and fundraising ask.",
+    "The instructions tell founders to include periods or cohorts and flag missing data instead of inferring it.",
+    "The drill produces, for each supplied metric, a skeptical investor question, the metric prompting it, and evidence to prepare, with conditional examples for slowing growth, rising CAC payback, weakening retention, and runway that does not support the ask.",
+    "The roleplay asks one question at a time and applies a feedback rubric covering clarity, metric support, ownership, and credibility before moving to a follow-up question."
+   ],
+   "buyer_stage": "consideration",
+   "competitor_format_gap": "Direct-answer format: the run notes describe a close query match with an immediate summary and actionable takeaways for using AI to stress-test a decision. Heading structure: clear section structure is reported. Comparison tables: not reported. Templates/checklists: actionable takeaways are reported, but no specific intake template is described. Author/trust presentation: not reported. Page depth: not reported. Internal linking: not reported. Practical examples: not reported. Calls to action: actionable takeaways are reported; a specific CTA is not described. Our page currently offers broad scenario language rather than a metric-driven rehearsal workflow.",
+   "competitor_url": "https://qubit.capital/",
+   "exact_edit": "case-studies/startup-ceo-investor-week/index.html||CURRENT: The H2s “What this page recommends” and “Startup CEO during investor week Framework” repeat general system language. “Scenario pattern” describes pressure management and sequencing, while “How the OS would respond” names an agenda, Recovery Mode, Executive Review, or High-Pressure Coaching and a small end-of-day action. None of these blocks explains how to use current company metrics to generate or rehearse investor questions.||MISSING: The page lacks a metric intake and a repeatable workflow that converts the founder’s actual numbers into likely investor questions and a realistic, feedback-led rehearsal.||EDIT: Immediately after the “Scenario pattern” H2 and before “How the OS would respond,” add an H2 titled “Rehearse investor questions from your current metrics.” Include an intake for stage/business model, ARR or MRR and growth period, gross margin, CAC/LTV/payback, NRR/churn, burn/cash/runway, and fundraising ask. Tell founders to include periods or cohorts and to flag missing data rather than infer it. Then add a drill: for each supplied metric, generate a skeptical investor question, explain which metric prompted it, and name the evidence to prepare; use conditional examples such as slowing growth, rising CAC payback, weakening retention, or runway that does not support the ask. End with a one-question-at-a-time roleplay and feedback rubric covering clarity, support from the metrics, ownership, and credibility before moving to a follow-up question.",
+   "internal_link_actions": [
+    {
+     "anchor_text": "AI executive coaching workflow",
+     "from_url": "https://billionairehighperformancecoach.com/case-studies/startup-ceo-investor-week/",
+     "to_url": "https://billionairehighperformancecoach.com/ai-executive-coach.html"
+    }
+   ],
+   "on_page_failures": [
+    "The scenario-pattern section describes pressure management but does not collect company metrics or derive investor questions from them.",
+    "The response options and end-of-day action do not provide a repeatable, feedback-led investor rehearsal.",
+    "There is no instruction to preserve metric periods or cohorts, or to identify missing data instead of guessing."
+   ],
+   "page_decision": "repair_existing",
+   "query": "rehearse for the toughest questions investors will ask based on my current metrics",
+   "recommended_page_type": "guide",
+   "schema_action": "none",
+   "search_intent": "informational",
+   "target_filepath": "case-studies/startup-ceo-investor-week/index.html",
+   "target_url": "https://billionairehighperformancecoach.com/case-studies/startup-ceo-investor-week/"
+  },
+  {
+   "acceptance_checks": [
+    "The off-topic content under “Short Answer” is replaced with a direct response to the five-minute section-switch request.",
+    "The replacement says a standard text chat cannot send a proactive alert unless the active assistant mode explicitly supports timers.",
+    "The workflow tells readers to set an external 5:00 device timer and includes the supplied copyable prompt with a section list, a concrete action for each section, and the NEXT trigger.",
+    "The prompt explicitly says not to claim to start a timer or send alerts.",
+    "The resulting instructions explain that the user types NEXT after each alert to receive the next section and one concrete action."
+   ],
+   "buyer_stage": "retention",
+   "competitor_format_gap": "Direct-answer format: the supplied run notes do not provide a page-level answer for the timer competitors; the cited intervaltimer.com result is relevant as a timer utility, but its answer format is not described. Heading structure: not reported. Comparison tables: not reported. Templates/checklists: not reported. Author/trust presentation: not reported. Page depth: not reported. Internal linking: not reported. Practical examples: not reported. Calls to action: not reported. The opportunity is to make our page explicit about the external timer’s alert role and provide a copyable chat workflow.",
+   "competitor_url": "https://www.intervaltimer.com/",
+   "exact_edit": "insights/the-container-method-why-time-blocks-work-better-than-to-do-lists/index.html||CURRENT: The page’s Direct answer says to give each kind of work a fixed block, but does not explain how to switch sections at five-minute intervals. Under the H2 Short Answer, the current block discusses mental spirals, Operational Drift, the Reset Cycle Model, Continuity Architecture, Minimum Viable Day, and the Scope-Cap Rule instead of answering the timer question. The contents list includes “4) Containerize it” and “5) Close the loop,” but the supplied page body does not show actionable steps for either.||MISSING: The page lacks an operational five-minute section-switch protocol that distinguishes the assistant’s prompting role from the external timer’s alert, and defines what happens when the user returns.||EDIT: Replace the off-topic content under H2 Short Answer with a direct answer and a copyable workflow: explain that a standard text chat cannot send a proactive alert unless the current assistant mode explicitly supports timers; tell the reader to set a 5:00 timer on their device; then provide a prompt such as, “Act as my 5-minute section-switch coach. My sections are: [list]. Name Section 1 and one concrete action. I’ll set an external 5-minute timer and type NEXT when it rings. Each time I type NEXT, name the next section and one concrete action. Do not claim to start a timer or send alerts.”",
+   "internal_link_actions": [
+    {
+     "anchor_text": "choose the next task when work feels overloaded",
+     "from_url": "https://spryexecutiveos.com/insights/the-container-method-why-time-blocks-work-better-than-to-do-lists",
+     "to_url": "https://spryexecutiveos.com/what-should-i-work-on/too-many-tasks-what-now/"
+    }
+   ],
+   "on_page_failures": [
+    "The direct answer explains fixed work blocks but not five-minute section switching.",
+    "The “Short Answer” discusses unrelated frameworks instead of the requested timer workflow.",
+    "The page does not distinguish a chat assistant’s response from an external timer’s proactive alert.",
+    "The contents list promises actionable sections that are not present in the supplied body."
+   ],
+   "page_decision": "repair_existing",
+   "query": "start the timer and prompt me to switch sections every 5 minutes",
+   "recommended_page_type": "guide",
+   "schema_action": "none",
+   "search_intent": "informational",
+   "target_filepath": "insights/the-container-method-why-time-blocks-work-better-than-to-do-lists/index.html",
+   "target_url": "https://spryexecutiveos.com/insights/the-container-method-why-time-blocks-work-better-than-to-do-lists"
+  },
+  {
+   "acceptance_checks": [
+    "A new H2 titled “Analyze Your Task List by Emotional Drain” appears after “60-Second Procedure (Use This Today)” and before “Why Advice Doesn’t Stick.”",
+    "The section tells readers to paste a task list if none has been provided.",
+    "The rubric scores each task from 0–5 for interpersonal friction, ambiguity, stakes or fear of failure, emotional labor, and monotony, and marks unknowns rather than guessing.",
+    "The output table includes task, drain scores, total, urgency/deadline, and reason for rating, sorted from highest total to lowest.",
+    "The section identifies the most draining item, offers the specified next-step choices, and includes a reusable prompt that keeps emotional drain distinct from urgency."
+   ],
+   "buyer_stage": "retention",
+   "competitor_format_gap": "Direct-answer format: the supplied run notes do not describe how the cited competitors answer this task-by-task emotional-drain query. Heading structure: not reported. Comparison tables: not reported. Templates/checklists: not reported. Author/trust presentation: not reported; the NHS domain is an institutional source, but no page-level author or credential details were supplied. Page depth: not reported. Internal linking: not reported. Practical examples: not reported. Calls to action: not reported. Our page has an execution procedure, but no drain-scoring rubric or ranked output to match the query.",
+   "competitor_url": "https://www.nhs.uk/",
+   "exact_edit": "what-should-i-work-on/too-many-tasks-what-now/index.html||CURRENT: The page’s H2s focus on execution rather than emotional impact. “60-Second Procedure (Use This Today)” tells readers to choose one outcome, pick a 10–30 minute action, remove other tasks, start, and check in DONE. “Why Advice Doesn’t Stick” and “The failure mode” explain scope caps, recovery after misses, and repeatable routines. “What this page is actually for” discusses days collapsing and low-mood or chaotic days. None of these blocks evaluates or ranks tasks by emotional drain.||MISSING: The page lacks a task-by-task emotional-drain rubric and a ranked output. It offers a generic priority-and-scope procedure, but no way to identify which tasks feel most draining or why.||EDIT: Immediately after “60-Second Procedure (Use This Today)” and before “Why Advice Doesn’t Stick,” add an H2, “Analyze Your Task List by Emotional Drain.” Explain that if no list has been provided, the reader should paste it first. For each task, score anticipated emotional drain from 0–5 for interpersonal friction, ambiguity, stakes or fear of failure, emotional labor, and monotony; mark unknowns rather than guessing. Present the results in a table with task, drain scores, total, urgency/deadline, and reason for the rating, sorted from highest total to lowest. Finish by identifying the most draining item and offering one next step: clarify it, break it into a 10–30 minute action, prepare for the interaction, delegate it, or schedule it with recovery time. Include a reusable prompt that asks the AI to perform this analysis without treating emotional drain as the same thing as urgency.",
+   "internal_link_actions": [
+    {
+     "anchor_text": "time-block work into focused containers",
+     "from_url": "https://spryexecutiveos.com/what-should-i-work-on/too-many-tasks-what-now/",
+     "to_url": "https://spryexecutiveos.com/insights/the-container-method-why-time-blocks-work-better-than-to-do-lists"
+    }
+   ],
+   "on_page_failures": [
+    "The current 60-second procedure selects and scopes work without evaluating emotional impact.",
+    "The page has no per-task scoring dimensions, total, or sorted ranking of emotional drain.",
+    "The existing priority advice does not distinguish emotional drain from urgency or provide a drain-informed next step."
+   ],
+   "page_decision": "repair_existing",
+   "query": "analyze my task list for emotional impact which items are most draining",
+   "recommended_page_type": "evaluation_framework",
+   "schema_action": "none",
+   "search_intent": "informational",
+   "target_filepath": "what-should-i-work-on/too-many-tasks-what-now/index.html",
+   "target_url": "https://spryexecutiveos.com/what-should-i-work-on/too-many-tasks-what-now/"
+  },
+  {
+   "acceptance_checks": [
+    "An H2 titled “Mirror My Energy, Then Reality-Check the Plan” appears immediately after the comparison matrix table.",
+    "The section includes the supplied copy-ready instruction, preserving its two-stage sequence: reflect the main point in one sentence, then independently assess realism.",
+    "The instruction labels the verdict realistic, uncertain, or unrealistic; considers time, resources, constraints, and evidence; names an assumption or constraint; and suggests the smallest realistic adjustment.",
+    "The instruction asks only one clarifying question when missing information could change the verdict and explicitly says not to agree merely to match the user’s mood.",
+    "A brief example demonstrates matching a direct tone without endorsing an over-scoped plan."
+   ],
+   "buyer_stage": "retention",
+   "competitor_format_gap": "Direct-answer format: the run notes include an AI-coach-for-founders competitor framed explicitly in its title and opening, but do not report a direct answer to energy-mirroring plus independent realism assessment. Heading structure: clear section structure is reported for that competitor signal. Comparison tables: not reported. Templates/checklists: not reported. Author/trust presentation: not reported. Page depth: not reported. Internal linking: not reported. Practical examples: not reported. Calls to action: not reported. Our page has a comparison matrix and general action advice, but lacks the requested reusable two-stage instruction and example.",
+   "competitor_url": "https://www.wikihow.com/",
+   "exact_edit": "ai-vs-human-coaching/index.html||CURRENT: The H2 \"AI vs Human Coaching Comparison Matrix\" compares structured AI, a human coach or advisor, and standalone apps by usefulness and tradeoffs. \"Short Answer\" describes decision compression and follow-through using the AI Operator Model, High-Pressure Coaching Mode, Continuity Architecture, and DONE Check-In Loop. \"60-Second Procedure (Use This Today)\" gives a five-step action and accountability loop, while \"Why Advice Doesn’t Stick\" discusses unstable conditions such as stress and bad sleep. None of these blocks explains how to mirror a user's energy while independently judging whether their claim or plan is realistic.||MISSING: The page lacks a concrete, reusable two-stage method for matching the user's tone while separately assessing the realism of their claim or plan.||EDIT: Immediately after the H2 \"AI vs Human Coaching Comparison Matrix\" and its table, add an H2 titled \"Mirror My Energy, Then Reality-Check the Plan.\" Include this copy-ready instruction: \"Match my energy level and directness without parroting or escalating my emotion. Reflect my main point in one sentence, then assess whether it is realistic using the time, resources, constraints, and evidence I gave you. Label the verdict realistic, uncertain, or unrealistic; name the assumption or constraint behind it; and suggest the smallest realistic adjustment. Ask one clarifying question only if the missing information could change your verdict. Do not agree with me just to match my mood.\" Add a brief example showing the distinction between matching a user's direct tone and agreeing with an over-scoped plan.",
+   "internal_link_actions": [
+    {
+     "anchor_text": "AI executive coaching workflow",
+     "from_url": "https://spryexecutiveos.com/ai-vs-human-coaching/",
+     "to_url": "https://billionairehighperformancecoach.com/ai-executive-coach.html"
+    }
+   ],
+   "on_page_failures": [
+    "The comparison matrix evaluates coaching options but does not explain how to match a user’s energy or tone.",
+    "The short answer and action procedure focus on follow-through, not an independent realism verdict based on evidence and constraints.",
+    "The page has no reusable prompt or example distinguishing tone-matching from agreeing with an unrealistic plan."
+   ],
+   "page_decision": "repair_existing",
+   "query": "mirror the energy of what i'm saying and tell me if i'm being realistic",
+   "recommended_page_type": "evaluation_framework",
+   "schema_action": "none",
+   "search_intent": "informational",
+   "target_filepath": "ai-vs-human-coaching/index.html",
+   "target_url": "https://spryexecutiveos.com/ai-vs-human-coaching/"
+  }
+ ],
+ "site_health": null,
+ "wins": [
+  {
+   "page": "https://billionairehighperformancecoach.com/ai-coach-vs-human-coach.html",
+   "from_level": 1,
+   "to_level": 3,
+   "surface": "Gemini Flash",
+   "note": "logic reuse; Perplexity still L1",
+   "previous_fix": "Completeness (2026-09-12)"
+  }
+ ]
+}
