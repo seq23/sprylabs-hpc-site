@@ -1,7 +1,7 @@
 {
   "schema_version": "3.0",
   "generated_at": "2026-08-09T16:46:00Z",
-  "rebaselined_at": "2026-10-09",
+  "rebaselined_at": "2026-10-10",
   "rebaseline_reason": "append_only_regeneration_no_raw_pin_rewritten",
   "baseline_reason": "reader_visible_absorption_coverage_rebaseline: the four DERIVED absorber outputs for runs 2026-06-27 and 2026-07-04 (agent_run_manifest.json and normalized_agent_runs/*.json) are re-pinned because scripts/agent_intake/bhpc_agent_common.mjs now resolves intended_winner_path from the intended winner URL in preference to a hand-typed repo_file_path, and NORMALIZATION_CONTRACT_VERSION was bumped to 1.5 so the already-ABSORBED runs re-normalize under it. Every RAW agent artifact in this tier - bhpc.csv, bhpc.html, bhpc.json - is byte-identical and was NOT re-pinned; the evidence did not change, the conclusion drawn from it did, deliberately, and the result is measured at the reader document by validate:agent-artifact-absorption-trigger. Previous: approved_current_state_after_site_public_layout_migration_and_protected_agent_runtime_proof",
   "note": "Tiers are split by LIFECYCLE, because a hash pin can only be right about files that are not supposed to change.\n\nimmutable_evidence - RAW agent evidence: everything the external agent dropped in a run folder except the manifest. A record of fact. It must never change, a byte change is a defect, and a hash pin is TRUE of it. Append-only: protected-baseline:rebaseline refuses to rewrite a pin whose bytes changed. Completeness is checked against the tree, not against this list, so a run that arrives unpinned is an error rather than a silence.\nagent_declared_manifest - the RAW half of agent_run_manifest.json. The agent declares source/run_date/csv_path/html_path; the absorber writes the rest back over the top. Splitting by file would give one half the wrong lifecycle either way, so the split is by field: this pins the canonical hash of the declared fields only.\nderived_reproducible - DERIVED absorber output. A function of raw evidence plus the current normalization contract, so it is SUPPOSED to change when the contract changes and a hash pin asserts something untrue of it. Pinning it here fired PROTECTED_BASELINE_DRIFT on four correctly-behaving files every time the contract moved, and the only response available was to re-pin - which teaches the reader to re-pin reflexively. It is asserted reproducible from raw instead, by validate:derived-absorber-reproducibility, which also catches the stale or hand-edited derivative a re-pinned hash would wave through.\nfrozen_derived - derived output of runs before the exact-implementation cutover, which the policy never re-normalizes. Nothing regenerates them, so a hash pin IS true of them. validate:ownership refuses to let a live run sit here.\nrevenue_surface - download.html, which produced real sales. Drift is an error. Pinned to the normalized form: that is what the freeze accepted and what the repo's own repair produces idempotently.\ntooling - maintained scripts that are expected to change. Byte-pinning them bought noise and no safety, so they are checked for existence and non-emptiness instead. The real risk there is deletion or truncation, not modification.",
@@ -59,7 +59,10 @@
         "data/report_fixes/agent_runs/2026-09-26/bhpc/bhpc.json": "90e4623bfa70f5d1e60ad935ec6696b5f32717ab3cbff2f508bf54ba569cd555",
         "data/report_fixes/agent_runs/2026-10-03/bhpc/bhpc.csv": "55d4e3a3d2f0f1ff32b9f41cfea4f998c4ca61804f19cd7764460594e75ba332",
         "data/report_fixes/agent_runs/2026-10-03/bhpc/bhpc.html": "8ab0aae88b463f43d26eeb1876eb10e1f01e0298a7037b557c493b0c13fa6502",
-        "data/report_fixes/agent_runs/2026-10-03/bhpc/bhpc.json": "203552a2e7442accec64238ca57fa4369bae8a3d6981e34da2308c8a9b549f7d"
+        "data/report_fixes/agent_runs/2026-10-03/bhpc/bhpc.json": "203552a2e7442accec64238ca57fa4369bae8a3d6981e34da2308c8a9b549f7d",
+        "data/report_fixes/agent_runs/2026-10-10/bhpc/bhpc.csv": "6b8f3b47326e1818f83a0205f61f8795c52a378994a322b63eee6edd8884cfe9",
+        "data/report_fixes/agent_runs/2026-10-10/bhpc/bhpc.html": "0561ae935fc1f6f343a740c11d88a3d1f8ac0c14d3c521e9c2eb62cfa1bbe99b",
+        "data/report_fixes/agent_runs/2026-10-10/bhpc/bhpc.json": "0455ff612c8a55b26305d23a6e5b336a1d84fe83e296897cef75099ee2992842"
       }
     },
     "agent_declared_manifest": {
@@ -94,7 +97,8 @@
         "data/report_fixes/agent_runs/2026-09-12/bhpc/agent_run_manifest.json": "916ce914d3978889ed56c2f7a7f97208b6d954147bf05143d70cab345b3a26f9",
         "data/report_fixes/agent_runs/2026-09-19/bhpc/agent_run_manifest.json": "ce70bd1ab81aa60fca495699cc2a49caba3907c0513f4d74d86ed0faa4e18407",
         "data/report_fixes/agent_runs/2026-09-26/bhpc/agent_run_manifest.json": "f0e6a31125a1f00f63eec455c942f02c6add6174fda9c7a32f1e8e2219495249",
-        "data/report_fixes/agent_runs/2026-10-03/bhpc/agent_run_manifest.json": "9233b8b56b7c0c55a4f5d3f32f303bc80fe50c546157409630108e6ff96f2948"
+        "data/report_fixes/agent_runs/2026-10-03/bhpc/agent_run_manifest.json": "9233b8b56b7c0c55a4f5d3f32f303bc80fe50c546157409630108e6ff96f2948",
+        "data/report_fixes/agent_runs/2026-10-10/bhpc/agent_run_manifest.json": "c95f0b6c5944cfc4e10828ebb58638bfb7387c66d7cf3d739c9cdfbe1fcf29f6"
       }
     },
     "frozen_derived": {
