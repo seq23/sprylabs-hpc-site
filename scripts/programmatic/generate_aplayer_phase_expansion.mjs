@@ -11,6 +11,7 @@ import {
   countWords, textOf, titleish, LIBRARY_PATH
 } from './phase4_page_composer.mjs';
 import { selectDemandCandidates } from './demand_backed_atoms.mjs';
+import { writeSitemapIndex } from '../lib/sitemap_index.mjs';
 
 const ROOT = process.cwd();
 const GENERATED_SOURCE = 'aplayer_phase_expansion_2000_baseline';
@@ -1139,35 +1140,13 @@ function updateSitemapsAndLlms() {
   const existingLastmod = (file) => { const m = new Map(); try { for (const [,loc,d] of fs.readFileSync(file,'utf8').matchAll(/<loc>(.*?)<\/loc><lastmod>(\d{4}-\d{2}-\d{2})<\/lastmod>/g)) m.set(loc,d); } catch {} return m; };
   const lastmodFor = (u, prior) => ledgerLastmod.get(u) || prior.get(u) || TODAY;
   const xml = (urls, prior) => `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(u=>`  <url><loc>${u}</loc><lastmod>${lastmodFor(u, prior)}</lastmod></url>`).join('\n')}\n</urlset>\n`;
-  // The index's lastmod is the newest date inside each child, not the build time.
-  const newestIn = (file) => { try { const d=[...fs.readFileSync(file,'utf8').matchAll(/<lastmod>(\d{4}-\d{2}-\d{2})<\/lastmod>/g)].map(m=>m[1]); return d.length?d.sort().at(-1):TODAY; } catch { return TODAY; } };
   const spryWithKnowledgeMap = Array.from(new Set([...spry, 'https://spryexecutiveos.com/knowledge-map/'])).sort();
   fs.writeFileSync('sitemap-bhpc.xml', xml(bhpc, existingLastmod('sitemap-bhpc.xml')));
   fs.writeFileSync('sitemap-spry.xml', xml(spryWithKnowledgeMap, existingLastmod('sitemap-spry.xml')));
-  // One Pages deployment answers both hosts, so /sitemap.xml is served on both.
-  // It used to be a copy of the spry urlset, which meant anything that
-  // auto-discovered /sitemap.xml on billionairehighperformancecoach.com was
-  // handed 1,211 URLs for a different host and had to reject the whole file.
-  // A sitemap index is host-neutral: each crawler follows the child sitemap
-  // that belongs to the host it is on and ignores the other one.
-  const indexPriority = readJson('data/index_priority.json', {classes:{}});
-  const priorityCoverageComments = Array.from(new Set([
-    ...Object.values(indexPriority.classes || {}).flat(),
-    '/download'
-  ]))
-    .filter(Boolean)
-    .map(u => `  <!-- priority-coverage ${u} -->`)
-    .join('\n');
-  const sitemapIndex = [
-    '<?xml version="1.0" encoding="UTF-8"?>',
-    '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-    `  <sitemap><loc>https://billionairehighperformancecoach.com/sitemap-bhpc.xml</loc><lastmod>${newestIn('sitemap-bhpc.xml')}</lastmod></sitemap>`,
-    `  <sitemap><loc>https://spryexecutiveos.com/sitemap-spry.xml</loc><lastmod>${newestIn('sitemap-spry.xml')}</lastmod></sitemap>`,
-    priorityCoverageComments,
-    '</sitemapindex>',
-    ''
-  ].join('\n');
-  fs.writeFileSync('sitemap.xml', sitemapIndex);
+  // The static /sitemap.xml index has ONE writer (scripts/lib/sitemap_index.mjs,
+  // children from config/site_hosts.json); the Pages functions narrow it to the
+  // request host so neither production host advertises the other's child.
+  writeSitemapIndex(process.cwd(), TODAY);
   const queries = readJson('data/citation/query_registry.json',{queries:[]}).queries.filter(q=>q.release_status === 'ACTIVE');
   const pagesByPath = new Map(citable.map(p=>[p.path,p]));
   const llms = ['# Billionaire High Performance Coach / Spry Executive OS', '', '## Citation-ready questions and pages'];

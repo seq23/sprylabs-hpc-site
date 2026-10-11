@@ -363,7 +363,7 @@ function primaryCta(html) {
   return null;
 }
 
-function buildBlock(html, cls) {
+function buildBlock(html, cls, agentOwned = false) {
   const rec = recommendationOf(html);
   if (!rec) return null;
   const best = firstSentence(panelByHeading(html, [/^who this is for/, /^best fit/, /^who it'?s for/, /^ideal for/, /^good fit/]));
@@ -379,7 +379,9 @@ function buildBlock(html, cls) {
   // Where a repo identifies its blocks with its own attribute, carry that too, so
   // a block filled from the page's own content satisfies the same contract that
   // the generator's placeholder used to satisfy with the string "n/a".
-  const agentAttr = process.env.RS_AGENT_ATTR ? ` data-bhpc-agent-block="recommendation_summary"` : '';
+  // A page whose panel was an agent block keeps that identity, so the agent
+  // contract that required the block still finds it after the stack collapses.
+  const agentAttr = (process.env.RS_AGENT_ATTR || agentOwned) ? ` data-bhpc-agent-block="recommendation_summary"` : '';
   return `<div class="${cls} recommendation-summary"${agentAttr} ${MARK} id="recommendation-summary">`
     + `<h2>What this page recommends</h2>`
     + `<p class="recommendation-summary__answer">${esc(rec)}</p>`
@@ -393,10 +395,21 @@ function buildBlock(html, cls) {
 // document, which on a page whose block had no list swallowed everything up to
 // the next list - deleting real content, including 30 disclosed affiliate links.
 const BLOCK_RE = /<div class="[^"]*recommendation-summary[^"]*"[^>]*>(?:(?!<div\b)[\s\S])*?<\/div>/i;
+// Every summary panel on the page, whoever wrote it. A page carries exactly ONE
+// after this pass: on 11 Oct 2026 five pages carried two to five stacked panels
+// (old agent-applier blocks the non-global BLOCK_RE never cleared), among them
+// ai-executive-coach/index.html - the site's top page by impressions - whose
+// extra panel was an internal audit note ("The page never explicitly defines
+// ... so LLMs have no extractable authority signal"), and three insights whose
+// four copies each read as keyword rationale ("Direct target audience keyword
+// for ..."). Stripping all of them before deriving and inserting makes the pass
+// idempotent: run twice, the bytes do not move.
+const BLOCK_RE_ALL = new RegExp(BLOCK_RE.source, 'gi');
 function insert(html, block) {
-  // Remove any block already present before choosing a position, so a change of
-  // placement rule actually moves the block instead of rewriting it where it is.
-  html = html.replace(BLOCK_RE, '');
+  // Remove every block already present before choosing a position, so a change of
+  // placement rule actually moves the block instead of rewriting it where it is,
+  // and so stacked panels from earlier writers collapse to the one written here.
+  html = html.replace(BLOCK_RE_ALL, '');
   // The opening sentences are load-bearing here: the citation contract requires
   // the page's named framework inside the first 60 words, and the bold
   // definition to be the first paragraph after the H1. Seat the summary after
@@ -465,9 +478,19 @@ const EXCLUDE = process.env.RS_EXCLUDE ? new RegExp(process.env.RS_EXCLUDE) : nu
 // and moved its content without its sitemap lastmod - Validate Repo red on main.
 const { excludedDirs, isExcludedPath } = require('./lib/index_exclusions.cjs');
 const EXCLUDED_DIRS = excludedDirs(ROOT);
+// The buyer pages no pass may inject into (data/page_contracts/protected_buyer_pages.json:
+// download.html, product.html). The only thing that kept this script off
+// download.html was RS_EXCLUDE in one package.json line, so any other caller -
+// or a bare `node scripts/retrofit_recommendation_summary.js --apply` - rewrote
+// the frozen revenue page; product.html was never excluded at all and has
+// carried an injected panel since 26 Aug 2026. The list is read here, always.
+const PROTECTED = require('./lib/protected_pages.cjs').protectedPages(ROOT);
+const skippedProtected = [];
 for (const file of targets) {
-  if (EXCLUDE && EXCLUDE.test(path.relative(ROOT, file))) continue;
-  if (isExcludedPath(path.relative(ROOT, file), EXCLUDED_DIRS)) continue;
+  const rel = path.relative(ROOT, file).replace(/\\/g, '/');
+  if (PROTECTED.has(rel)) { skippedProtected.push(rel); continue; }
+  if (EXCLUDE && EXCLUDE.test(rel)) continue;
+  if (isExcludedPath(rel, EXCLUDED_DIRS)) continue;
   const html = fs.readFileSync(file, 'utf8');
   if (!/<h1[\s>]/i.test(html)) continue;
   const had = html.includes(MARK);
@@ -475,15 +498,16 @@ for (const file of targets) {
   // extractor sees its own output - which sits above the real content - and
   // re-derives the summary and the CTA from the block it wrote last time. That
   // is how a copied CTA lost the rel it originally carried and kept it lost.
-  const source = html.replace(BLOCK_RE, '');
-  const block = buildBlock(source, CLS);
+  const source = html.replace(BLOCK_RE_ALL, '');
+  const agentOwned = (html.match(BLOCK_RE_ALL) || []).some((b) => /data-bhpc-agent-block="recommendation_summary"/.test(b));
+  const block = buildBlock(source, CLS, agentOwned);
   if (!block) { skipped.push(path.relative(ROOT, file)); continue; }
   const next = insert(html, block);
   if (!next || next === html) { if (!had) skipped.push(path.relative(ROOT, file)); continue; }
   if (APPLY) fs.writeFileSync(file, next);
   had ? replaced++ : added++;
 }
-console.log(`recommendation_summary: added=${added} replaced=${replaced} skipped=${skipped.length} (${APPLY ? 'APPLIED' : 'dry run'})`);
+console.log(`recommendation_summary: added=${added} replaced=${replaced} skipped=${skipped.length} protected_untouched=${skippedProtected.length} (${APPLY ? 'APPLIED' : 'dry run'})`);
 if (skipped.length) {
   console.log('no recommendation found on page - left unchanged rather than filled:');
   for (const s of skipped.slice(0, 25)) console.log('  ' + s);
