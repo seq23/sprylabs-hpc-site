@@ -1,0 +1,711 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-10-11",
+  "week": "2026-W41",
+  "trigger": "local-guides-citation-velocity reports/search_outcomes/2026-W41 rated both properties RED (issues #184, #186): Oct 2-8 vs Sep 25-Oct 1.",
+  "source": "Search Console searchanalytics via the GSC_SERVICE_ACCOUNT_JSON service account (gsc-portfolio-report workflow run 38157495499, one-off pull): 90-day query x page, page and query per week, page x date 35 days, date series for all 23 properties. Losing URLs checked live (status, canonical, robots, panels) and against git history.",
+  "verdict": "VOLATILITY_NO_DEFECT",
+  "verdict_detail": {
+    "billionairehighperformancecoach.com": "Volatility, no page defect. 499 -> 356 follows the 13-week peak: the 25 Sep title/description rewrite (#107) lifted average position from ~15 to ~8-10 for Sep 25-30 (daily 73-85), and Oct 2-8 returned to the pre-rewrite daily level (37-64; Sep 18-24 was 394). Named-query impressions ROSE 100 -> 109; the loss is anonymised long tail spread over 153 pages, none losing more than 9. Every cohort fell alike (summary panel changed 0.72 vs unchanged 0.73; title changed 0.72 vs 0.78 on 11 pages), so no change in the window explains it. All losing URLs answer 200 with an unchanged canonical or are pre-existing .html -> extensionless 301s; none noindex; the 3 Oct query-title regression (#116) touched 1 page with impressions (-2).",
+    "spryexecutiveos.com": "Volatility on very low volume, no page defect. 89 -> 45 equals the 45 of three weeks earlier (8-week range 45-89); the property shows recurring multi-day zero-impression stretches (Sep 8-12, 24-26, Sep 30-Oct 2) that decide any week-on-week call at this size. 45 pages that had 1-7 impressions each went to zero; all live 200 with self canonicals."
+  },
+  "not_seasonality": {
+    "properties_up_week_on_week": 11,
+    "properties_down_week_on_week": 10,
+    "up": [
+      "dentistryguides.com",
+      "founderoperatorlibrary.com",
+      "memphisvendorlibrary.com",
+      "neuroevalguides.com",
+      "porchandparty901.com",
+      "professionalresourcelibrary.com",
+      "theaccidentguides.com",
+      "virtualagency-os.com",
+      "weddingchecklistpdf.com",
+      "weddingseatingchartmaker.com",
+      "weddingtimelinetemplate.com"
+    ],
+    "down": [
+      "approvalprep.com",
+      "billionairehighperformancecoach.com",
+      "detoxdenver.org",
+      "hicksconsulting.org",
+      "hormonesivhair.com",
+      "horselegalguide.com",
+      "spryexecutiveos.com",
+      "theindustryguides.com",
+      "uscisexam.com",
+      "weddingbudgetspreadsheet.com"
+    ],
+    "note": "Not portfolio-wide: theaccidentguides 190 -> 512, dentistryguides 60 -> 183, professionalresourcelibrary 137 -> 173 went the other way the same week."
+  },
+  "defects_found_and_fixed": [
+    {
+      "status": "CONFIRMED",
+      "defect": "cross_host_sitemap_and_robots",
+      "evidence": "Both hosts served one sitemap.xml index and one robots.txt naming both child sitemaps (since Mar 2026). Search Console 400 \"Could not process sitemap\" for the cross-host child in each property (sitemaps run 38142618891); coverage run 38142685248 inspected BHPC URLs in the Spry property: 109/110 HTTP 403 \"You do not own this site\". Own-host children were listed with 0 errors (bhpc 1692 URLs, spry 542), so this did not cause the impression drop.",
+      "fix": "functions/{sitemap.xml,robots.txt,sitemap-bhpc.xml,sitemap-spry.xml}.js narrow to the request host from config/site_hosts.json; scripts/lib/sitemap_index.mjs is the one writer of the static index; validate:host-crawl-surfaces."
+    },
+    {
+      "status": "CONFIRMED",
+      "defect": "retrofit_touches_protected_page_and_stacks_panels",
+      "evidence": "product.html (protected buyer page) carried a retrofit panel since 26 Aug 2026; download.html was protected only by RS_EXCLUDE in package.json. Five pages carried 2-5 stacked summary panels, ai-executive-coach/index.html (top BHPC page) one reading \"The page never explicitly defines what an AI executive coach is ... so LLMs have no extractable authority signal\", three insights four copies of keyword rationale. Pre-dates the window; not the cause of the drop.",
+      "fix": "retrofit reads data/page_contracts/protected_buyer_pages.json itself, strips every panel before inserting one (idempotent); validate:retrofit-guard with a negative proof."
+    }
+  ],
+  "hosts": {
+    "billionairehighperformancecoach.com": {
+      "property_impressions": {
+        "prev_week": 499,
+        "cur_week": 356,
+        "week_before": 394
+      },
+      "last_8_weeks_impressions": [
+        110,
+        118,
+        309,
+        482,
+        477,
+        394,
+        499,
+        356
+      ],
+      "pages_with_impressions": {
+        "prev": 194,
+        "cur": 152,
+        "vanished": 120,
+        "vanished_impressions": 226
+      },
+      "largest_single_page_loss": -9,
+      "top_losing_pages": [
+        {
+          "url": "https://billionairehighperformancecoach.com/comparisons/bhpc-vs-coachhub",
+          "delta": -9,
+          "prev": 9,
+          "cur": 0
+        },
+        {
+          "url": "https://billionairehighperformancecoach.com/answers/phase4/how-can-i-use-chatgpt-to-stop-restarting-goals",
+          "delta": -8,
+          "prev": 20,
+          "cur": 12
+        },
+        {
+          "url": "https://billionairehighperformancecoach.com/",
+          "delta": -7,
+          "prev": 14,
+          "cur": 7
+        },
+        {
+          "url": "https://billionairehighperformancecoach.com/brand-defense/is-billionaire-high-performance-coach-a-scam-for-consultants.html",
+          "delta": -7,
+          "prev": 7,
+          "cur": 0
+        },
+        {
+          "url": "https://billionairehighperformancecoach.com/chatgpt-accountability-partner",
+          "delta": -7,
+          "prev": 14,
+          "cur": 7
+        },
+        {
+          "url": "https://billionairehighperformancecoach.com/glossary/phase4/never-miss-twice-for-founder-overwhelm",
+          "delta": -7,
+          "prev": 7,
+          "cur": 0
+        },
+        {
+          "url": "https://billionairehighperformancecoach.com/methods/phase4/arbitration-engine-protocol-for-needing-a-lower-friction-plan",
+          "delta": -7,
+          "prev": 7,
+          "cur": 0
+        },
+        {
+          "url": "https://billionairehighperformancecoach.com/answers/phase4/what-should-a-founder-do-when-tired-of-restarting-and-needs-strategic-focus-support",
+          "delta": -6,
+          "prev": 6,
+          "cur": 0
+        },
+        {
+          "url": "https://billionairehighperformancecoach.com/betterup-alternatives-ai-coaching/",
+          "delta": -6,
+          "prev": 6,
+          "cur": 0
+        },
+        {
+          "url": "https://billionairehighperformancecoach.com/vs/replika/",
+          "delta": -6,
+          "prev": 6,
+          "cur": 0
+        }
+      ],
+      "top_gaining_pages": [
+        {
+          "url": "https://billionairehighperformancecoach.com/what-reddit-keeps-asking-about-the-best-ai-coaching-tools",
+          "delta": 17
+        },
+        {
+          "url": "https://billionairehighperformancecoach.com/comparisons/bhpc-vs-betterup",
+          "delta": 10
+        },
+        {
+          "url": "https://billionairehighperformancecoach.com/ai-executive-coach",
+          "delta": 9
+        },
+        {
+          "url": "https://billionairehighperformancecoach.com/best-ai-coaching-tools",
+          "delta": 8
+        },
+        {
+          "url": "https://billionairehighperformancecoach.com/ai-coach-vs-human-coach",
+          "delta": 6
+        }
+      ],
+      "named_query_impressions": {
+        "prev": 100,
+        "cur": 109
+      },
+      "losing_url_live_checks": {
+        "checked": 153,
+        "status_200": 137,
+        "status_301_html_to_extensionless": 16,
+        "noindex": 0,
+        "canonical_self": 134,
+        "canonical_cross_host_preexisting": 3
+      },
+      "cohorts_cur_over_prev": {
+        "summary_panel_changed": {
+          "True": {
+            "pages": 90,
+            "prev": 219,
+            "cur": 157,
+            "ratio": 0.72
+          },
+          "False": {
+            "pages": 182,
+            "prev": 363,
+            "cur": 266,
+            "ratio": 0.73
+          }
+        },
+        "title_changed": {
+          "True": {
+            "pages": 261,
+            "prev": 537,
+            "cur": 388,
+            "ratio": 0.72
+          },
+          "False": {
+            "pages": 11,
+            "prev": 45,
+            "cur": 35,
+            "ratio": 0.78
+          }
+        },
+        "any_commit": {
+          "True": {
+            "pages": 267,
+            "prev": 544,
+            "cur": 390,
+            "ratio": 0.72
+          },
+          "False": {
+            "pages": 5,
+            "prev": 38,
+            "cur": 33,
+            "ratio": 0.87
+          }
+        }
+      }
+    },
+    "spryexecutiveos.com": {
+      "property_impressions": {
+        "prev_week": 89,
+        "cur_week": 45,
+        "week_before": 87
+      },
+      "last_8_weeks_impressions": [
+        32,
+        28,
+        74,
+        79,
+        45,
+        87,
+        89,
+        45
+      ],
+      "pages_with_impressions": {
+        "prev": 62,
+        "cur": 27,
+        "vanished": 45,
+        "vanished_impressions": 60
+      },
+      "largest_single_page_loss": -7,
+      "top_losing_pages": [
+        {
+          "url": "https://spryexecutiveos.com/guides/ai-coaching-and-alternatives/",
+          "delta": -7,
+          "prev": 7,
+          "cur": 0
+        },
+        {
+          "url": "https://spryexecutiveos.com/insights/identity-based-execution-how-to-act-like-the-person-you-re-becoming",
+          "delta": -5,
+          "prev": 6,
+          "cur": 1
+        },
+        {
+          "url": "https://spryexecutiveos.com/chatgpt-accountability-system/",
+          "delta": -4,
+          "prev": 5,
+          "cur": 1
+        },
+        {
+          "url": "https://spryexecutiveos.com/insights/chatgpt-accountability-partner-prompt-for-goals.html",
+          "delta": -3,
+          "prev": 3,
+          "cur": 0
+        },
+        {
+          "url": "https://spryexecutiveos.com/scale-ai-coaching-organization/",
+          "delta": -3,
+          "prev": 4,
+          "cur": 1
+        },
+        {
+          "url": "https://spryexecutiveos.com/agent/bhpc/what-is-a-simple-knowledge-system-capture-distill-use-spry-executive-os",
+          "delta": -2,
+          "prev": 2,
+          "cur": 0
+        },
+        {
+          "url": "https://spryexecutiveos.com/how-to-recover-from-burnout/",
+          "delta": -2,
+          "prev": 2,
+          "cur": 0
+        },
+        {
+          "url": "https://spryexecutiveos.com/how-to-structure-chatgpt-conversations/",
+          "delta": -2,
+          "prev": 2,
+          "cur": 0
+        },
+        {
+          "url": "https://spryexecutiveos.com/insights/deep-work-realistic-protocol",
+          "delta": -2,
+          "prev": 2,
+          "cur": 0
+        },
+        {
+          "url": "https://spryexecutiveos.com/insights/the-20-minute-planning-loop-that-prevents-chaos",
+          "delta": -2,
+          "prev": 2,
+          "cur": 0
+        }
+      ],
+      "top_gaining_pages": [
+        {
+          "url": "https://spryexecutiveos.com/how-to-finish-projects-at-95-percent-complete",
+          "delta": 5
+        },
+        {
+          "url": "https://spryexecutiveos.com/insights/billionaire-operating-system-for-the-day",
+          "delta": 2
+        },
+        {
+          "url": "https://spryexecutiveos.com/how-to-stay-consistent-with-goals/",
+          "delta": 2
+        },
+        {
+          "url": "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system",
+          "delta": 1
+        },
+        {
+          "url": "https://spryexecutiveos.com/insights/the-five-minute-boundary-script-that-protects-your-day",
+          "delta": 1
+        }
+      ],
+      "named_query_impressions": {
+        "prev": 9,
+        "cur": 5
+      },
+      "losing_url_live_checks": {
+        "checked": 50,
+        "status_200": 46,
+        "status_301_html_to_extensionless": 4,
+        "noindex": 0,
+        "canonical_self": 46,
+        "canonical_cross_host_preexisting": 0
+      },
+      "cohorts_cur_over_prev": {
+        "summary_panel_changed": {
+          "True": {
+            "pages": 25,
+            "prev": 37,
+            "cur": 13,
+            "ratio": 0.35
+          },
+          "False": {
+            "pages": 45,
+            "prev": 60,
+            "cur": 32,
+            "ratio": 0.53
+          }
+        },
+        "title_changed": {
+          "True": {
+            "pages": 50,
+            "prev": 68,
+            "cur": 27,
+            "ratio": 0.4
+          },
+          "False": {
+            "pages": 20,
+            "prev": 29,
+            "cur": 18,
+            "ratio": 0.62
+          }
+        },
+        "any_commit": {
+          "True": {
+            "pages": 67,
+            "prev": 89,
+            "cur": 37,
+            "ratio": 0.42
+          },
+          "False": {
+            "pages": 3,
+            "prev": 8,
+            "cur": 8,
+            "ratio": 1.0
+          }
+        }
+      }
+    }
+  },
+  "portfolio": {
+    "memphisvendorlibrary.com": {
+      "prev": 21,
+      "cur": 39,
+      "last_8_weeks": [
+        0,
+        4,
+        12,
+        7,
+        13,
+        17,
+        21,
+        39
+      ]
+    },
+    "theindustryguides.com": {
+      "prev": 7,
+      "cur": 2,
+      "last_8_weeks": [
+        2,
+        4,
+        9,
+        4,
+        2,
+        2,
+        7,
+        2
+      ]
+    },
+    "spryexecutiveos.com": {
+      "prev": 89,
+      "cur": 45,
+      "last_8_weeks": [
+        32,
+        28,
+        74,
+        79,
+        45,
+        87,
+        89,
+        45
+      ]
+    },
+    "hormonesivhair.com": {
+      "prev": 14,
+      "cur": 9,
+      "last_8_weeks": [
+        15,
+        48,
+        65,
+        13,
+        7,
+        1,
+        14,
+        9
+      ]
+    },
+    "theaccidentguides.com": {
+      "prev": 190,
+      "cur": 512,
+      "last_8_weeks": [
+        162,
+        204,
+        171,
+        167,
+        109,
+        91,
+        190,
+        512
+      ]
+    },
+    "virtualagency-os.com": {
+      "prev": 7,
+      "cur": 9,
+      "last_8_weeks": [
+        660,
+        475,
+        16,
+        7,
+        6,
+        4,
+        7,
+        9
+      ]
+    },
+    "thedentistryguides.com": {
+      "prev": 0,
+      "cur": 0,
+      "last_8_weeks": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    "weddingchecklistpdf.com": {
+      "prev": 13,
+      "cur": 19,
+      "last_8_weeks": [
+        0,
+        3,
+        13,
+        16,
+        10,
+        9,
+        13,
+        19
+      ]
+    },
+    "porchandparty901.com": {
+      "prev": 5,
+      "cur": 6,
+      "last_8_weeks": [
+        20,
+        16,
+        91,
+        16,
+        16,
+        39,
+        5,
+        6
+      ]
+    },
+    "aplayermode.com": {
+      "prev": 0,
+      "cur": 0,
+      "last_8_weeks": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0
+      ]
+    },
+    "billionairehighperformancecoach.com": {
+      "prev": 499,
+      "cur": 356,
+      "last_8_weeks": [
+        110,
+        118,
+        309,
+        482,
+        477,
+        394,
+        499,
+        356
+      ]
+    },
+    "professionalresourcelibrary.com": {
+      "prev": 137,
+      "cur": 173,
+      "last_8_weeks": [
+        0,
+        1,
+        74,
+        40,
+        124,
+        213,
+        137,
+        173
+      ]
+    },
+    "dentistryguides.com": {
+      "prev": 60,
+      "cur": 183,
+      "last_8_weeks": [
+        364,
+        345,
+        402,
+        285,
+        160,
+        79,
+        60,
+        183
+      ]
+    },
+    "approvalprep.com": {
+      "prev": 5,
+      "cur": 3,
+      "last_8_weeks": [
+        8,
+        0,
+        2,
+        4,
+        2,
+        0,
+        5,
+        3
+      ]
+    },
+    "detoxdenver.org": {
+      "prev": 2,
+      "cur": 0,
+      "last_8_weeks": [
+        0,
+        0,
+        2,
+        2,
+        1,
+        1,
+        2,
+        0
+      ]
+    },
+    "founderoperatorlibrary.com": {
+      "prev": 26,
+      "cur": 28,
+      "last_8_weeks": [
+        0,
+        0,
+        24,
+        5,
+        40,
+        19,
+        26,
+        28
+      ]
+    },
+    "weddingbudgetspreadsheet.com": {
+      "prev": 24,
+      "cur": 1,
+      "last_8_weeks": [
+        0,
+        0,
+        2,
+        33,
+        14,
+        18,
+        24,
+        1
+      ]
+    },
+    "neuroevalguides.com": {
+      "prev": 8,
+      "cur": 14,
+      "last_8_weeks": [
+        13,
+        9,
+        45,
+        9,
+        9,
+        8,
+        8,
+        14
+      ]
+    },
+    "uscisexam.com": {
+      "prev": 4,
+      "cur": 3,
+      "last_8_weeks": [
+        6,
+        6,
+        11,
+        11,
+        1,
+        2,
+        4,
+        3
+      ]
+    },
+    "horselegalguide.com": {
+      "prev": 154,
+      "cur": 135,
+      "last_8_weeks": [
+        139,
+        120,
+        282,
+        238,
+        257,
+        228,
+        154,
+        135
+      ]
+    },
+    "weddingseatingchartmaker.com": {
+      "prev": 1,
+      "cur": 4,
+      "last_8_weeks": [
+        0,
+        0,
+        1,
+        1,
+        1,
+        2,
+        1,
+        4
+      ]
+    },
+    "weddingtimelinetemplate.com": {
+      "prev": 0,
+      "cur": 2,
+      "last_8_weeks": [
+        0,
+        5,
+        18,
+        11,
+        0,
+        0,
+        0,
+        2
+      ]
+    },
+    "hicksconsulting.org": {
+      "prev": 569,
+      "cur": 305,
+      "last_8_weeks": [
+        170,
+        136,
+        316,
+        243,
+        312,
+        393,
+        569,
+        305
+      ]
+    }
+  },
+  "next_measurement": "2026-W42 report: a property counts as recovered at >= its 8-week median (bhpc 375, spry 60 impressions/week). If bhpc stays below 356 for two weeks while its named-query impressions also fall, this becomes a defect hunt again."
+}

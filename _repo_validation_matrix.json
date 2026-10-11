@@ -2647,9 +2647,29 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-HOST-CRAWL-SURFACES",
+      "validation_id": "VAL-HOST-CRAWL-SURFACES",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:host-crawl-surfaces",
+      "order": 256,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-RETROFIT-GUARD",
+      "validation_id": "VAL-RETROFIT-GUARD",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:retrofit-guard",
+      "order": 257,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 264,
+  "entry_count": 266,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3303,6 +3323,14 @@
         {
           "id": "VAL-ZERO-PAID-LLM",
           "command": "npm run validate:zero-paid-llm"
+        },
+        {
+          "id": "VAL-HOST-CRAWL-SURFACES",
+          "command": "npm run validate:host-crawl-surfaces"
+        },
+        {
+          "id": "VAL-RETROFIT-GUARD",
+          "command": "npm run validate:retrofit-guard"
         }
       ]
     },

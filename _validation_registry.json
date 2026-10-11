@@ -8504,8 +8504,68 @@
         "MX-ZERO-PAID-LLM"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-HOST-CRAWL-SURFACES",
+      "status": "ADMITTED",
+      "name": "validate:host-crawl-surfaces",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "One Pages deployment served one sitemap.xml index and one robots.txt naming both hosts' child sitemaps; Search Console returned 400 for the cross-host child in each property and the portfolio coverage run inspected the other host's URLs (109/110 Spry inspections 403, 11 Oct 2026). The check runs the real per-host narrowing code and fails if either host's sitemap.xml or robots.txt names another host, a child sitemap carries another host's URL, or the static index gains a second writer.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:host-crawl-surfaces",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-host-crawl-surfaces/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-11",
+      "matrix_ids": [
+        "MX-HOST-CRAWL-SURFACES"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-RETROFIT-GUARD",
+      "status": "ADMITTED",
+      "name": "validate:retrofit-guard",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "retrofit:recommendation-summary was kept off download.html only by one package.json env line, injected a panel into protected product.html (since 26 Aug 2026), and its non-global block pattern left 2-5 stacked panels on five pages including internal audit notes on ai-executive-coach. The check runs the real script on a scratch tree with no env exclusions and fails if a protected or excluded page moves, a stacked page keeps more than one panel, or a second run changes bytes.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:retrofit-guard",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-retrofit-guard/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-11",
+      "matrix_ids": [
+        "MX-RETROFIT-GUARD"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 271,
+  "record_count": 273,
   "generated_at": "2026-08-08T23:30:00Z"
 }
