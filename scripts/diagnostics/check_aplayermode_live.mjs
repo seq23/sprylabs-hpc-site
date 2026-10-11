@@ -14,7 +14,13 @@ const HOST = process.env.APM_LIVE_HOST || 'https://aplayermode.com';
 const LABEL = '[check:aplayermode-live]';
 const failures = [];
 const fail = (m) => failures.push(m);
-const get = (p, opts = {}) => fetch(HOST + p, { redirect: 'manual', headers: { 'user-agent': 'Mozilla/5.0 (aplayermode live check)', 'cache-control': 'no-cache' }, ...opts });
+// Every request is bounded (15 s) and every body is read or cancelled, so the check
+// always ends: an unread body kept the first version open past any useful wait.
+const get = async (p) => {
+  const r = await fetch(HOST + p, { redirect: 'manual', signal: AbortSignal.timeout(15000), headers: { 'user-agent': 'Mozilla/5.0 (aplayermode live check)' } });
+  const text = await r.text();
+  return { status: r.status, headers: r.headers, text: async () => text };
+};
 
 const FILES = [
   ['/robots.txt', /^text\/plain/, (t) => t.includes('Sitemap: https://aplayermode.com/sitemap.xml') && /User-agent: GPTBot/.test(t) && /User-agent: ClaudeBot/.test(t)],
@@ -53,3 +59,4 @@ for (const p of ['/download', '/guides/', '/sitemap-bhpc.xml', '/llms-full.txt']
 }
 if (failures.length) { for (const f of failures) console.error(`${LABEL} FAIL ${f}`); console.error(`${LABEL} FAIL (${failures.length}) - ${checked} URLs`); process.exit(1); }
 console.log(`${LABEL} PASS - ${checked} URLs on ${HOST}`);
+process.exit(0);
