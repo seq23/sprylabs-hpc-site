@@ -54,6 +54,10 @@ EXCLUDED = {
     "reports/answer-surface-dashboard.html",
 } | NEVER_CITABLE
 EXCLUDED_PREFIXES = ("templates/", "artifacts/", "fixtures/", "node_modules/", ".git/", "answers/phase4/", "use-cases/phase4/", "vs/phase4/", "glossary/phase4/", "methods/phase4/", "brand-defense/", "platforms/phase4/")
+# Not pages of the shared sites (config/index_exclusions.json, the one list):
+# aplayermode/ is indexable on aplayermode.com only, so it must never enter the
+# citable set, the registries or the shared sitemaps; amazon/ is noindex by design.
+EXCLUDED_PREFIXES += tuple(f"{d}/" for d in json.loads((ROOT / "config/index_exclusions.json").read_text(encoding="utf-8"))["dirs"])
 CITATION_REPAIR_WARNINGS = []
 
 BHPC_PRODUCT_PATHS = {'index.html','download.html','product.html','billionaire-high-performance-coach/index.html','billionaire-high-performance-coach.html'}
