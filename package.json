@@ -52,7 +52,7 @@
     "build:admin": "npm run admin:build",
     "build:agent-accepted-content": "npm run agent:bhpc:compile-acceptance && npm run agent:bhpc:plan-exact && npm run agent:bhpc:apply-exact && npm run retrofit:recommendation-summary",
     "build:all": "bash scripts/build/cached_build_all.sh",
-    "build:all:uncached": "npm run build:generated-content && npm run build:postprocess && npm run build:aplayer-phase-expansion && npm run build:agent-accepted-content && npm run repair:dual-domain-metadata && npm run repair:published-agent-blocks && npm run retrofit:recommendation-summary && node scripts/internal/build_navigation_structure.mjs && npm run build:visible-faq && npm run repair:health-boundary",
+    "build:all:uncached": "npm run build:generated-content && npm run build:postprocess && npm run build:aplayer-phase-expansion && npm run build:agent-accepted-content && npm run repair:dual-domain-metadata && npm run repair:published-agent-blocks && npm run retrofit:recommendation-summary && node scripts/internal/build_navigation_structure.mjs && npm run build:visible-faq && npm run repair:health-boundary && npm run build:demand-families && npm run repair:single-faqpage",
     "build:aplayer-phase-expansion": "node scripts/programmatic/generate_aplayer_phase_expansion.mjs",
     "build:authority": "node scripts/build_authority_papers.js",
     "build:comparison": "node scripts/build_comparison_pages.js",
@@ -128,7 +128,7 @@
     "release:cleanup": "node scripts/release/not_applicable.mjs cleanup",
     "release:close-lifecycle": "npm run release:postpush && npm run release:report",
     "release:complete-traffic-qualified-spine": "npm run release:controlled-citation-intelligence && npm run validate:batch-de-completion",
-    "release:content-finalize": "npm run self-heal:generated-content && npm run build:manual-expansion && npm run build:aplayer-phase-expansion && npm run agent:bhpc:plan-exact && npm run agent:bhpc:apply-exact && npm run self-heal:generated-content && npm run repair:visible-content-artifacts && npm run repair:published-agent-blocks && npm run retrofit:recommendation-summary && npm run agent:bhpc:trace-exact && npm run repair:programmatic-registry-owners && npm run repair:health-boundary && npm run agent:bhpc:admit-created && npm run validate:programmatic-admission && npm run validate:bhpc-page-family-contract && npm run validate:bhpc-rich-new-page-contract && npm run validate:bhpc-no-marker-only-agent-pass && node scripts/validation/validate_claim_safety.mjs && node scripts/validation/validate_no_keyword_swap_pages.mjs",
+    "release:content-finalize": "npm run self-heal:generated-content && npm run build:manual-expansion && npm run build:aplayer-phase-expansion && npm run agent:bhpc:plan-exact && npm run agent:bhpc:apply-exact && npm run self-heal:generated-content && npm run repair:visible-content-artifacts && npm run repair:published-agent-blocks && npm run retrofit:recommendation-summary && npm run agent:bhpc:trace-exact && npm run repair:programmatic-registry-owners && npm run repair:health-boundary && npm run build:demand-families && npm run repair:single-faqpage && npm run agent:bhpc:admit-created && npm run validate:programmatic-admission && npm run validate:bhpc-page-family-contract && npm run validate:bhpc-rich-new-page-contract && npm run validate:bhpc-no-marker-only-agent-pass && node scripts/validation/validate_claim_safety.mjs && node scripts/validation/validate_no_keyword_swap_pages.mjs",
     "release:content:intelligence": "node scripts/citation_intelligence/apply_release_plan.mjs",
     "release:controlled-citation-intelligence": "npm run release:daily-citation-intelligence && npm run validate:traffic-qualified-suite && npm run validate:browserless-mock-backup && npm run validate:controlled-release-readiness",
     "release:converge-before-freeze": "bash .github/scripts/converge_tree_before_commit.sh freeze",
@@ -425,7 +425,10 @@
     "validate:published-page-never-recreated": "node scripts/agent_intake/self_test_published_page_never_recreated.mjs",
     "validate:zero-paid-llm": "node scripts/validators/validate_zero_paid_llm.mjs",
     "validate:host-crawl-surfaces": "node scripts/validators/validate_host_crawl_surfaces.mjs",
-    "validate:retrofit-guard": "node scripts/validators/validate_retrofit_guard.mjs"
+    "validate:retrofit-guard": "node scripts/validators/validate_retrofit_guard.mjs",
+    "build:demand-families": "node scripts/validation/python_runtime.mjs run scripts/search_intelligence/apply_demand_families.py --apply",
+    "repair:single-faqpage": "node scripts/validation/python_runtime.mjs run scripts/repair/single_faqpage.py --apply",
+    "validate:demand-families": "node scripts/validators/validate_demand_families.mjs"
   },
   "engines": {
     "node": ">=24.0.0"

@@ -2667,9 +2667,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-DEMAND-FAMILIES",
+      "validation_id": "VAL-DEMAND-FAMILIES",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:demand-families",
+      "order": 258,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 266,
+  "entry_count": 267,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3331,6 +3341,10 @@
         {
           "id": "VAL-RETROFIT-GUARD",
           "command": "npm run validate:retrofit-guard"
+        },
+        {
+          "id": "VAL-DEMAND-FAMILIES",
+          "command": "npm run validate:demand-families"
         }
       ]
     },
