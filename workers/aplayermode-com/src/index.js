@@ -10,6 +10,11 @@
  *   /                      -> the page (fetched from the Pages origin)
  *   /aplayermode/<file>    -> the page's own files (CSS, JS, config.js, images)
  *   SHARED_ASSETS          -> the few site-wide files the page also loads
+ *   ROOT_FILES             -> the domain's own crawl files (robots.txt,
+ *                             sitemap.xml, llms.txt, site.webmanifest,
+ *                             apple-touch-icon.png), committed under aplayermode/
+ *                             and fetched from the Pages origin like any asset
+ *                             (indexable since 10 Oct 2026, owner)
  *   /aplayermode/          -> 301 to / (one URL per page)
  *   /amazon/*              -> 301 to billionairehighperformancecoach.com/amazon/*
  *                             (zone Redirect Rule b4d8a48c answers first; this
@@ -39,6 +44,15 @@ export const SHARED_ASSETS = new Set([
   '/assets/img/manual-preview-mobile-5.png',
 ]);
 
+// aplayermode.com's own root-level crawl and icon files, served from aplayermode/.
+export const ROOT_FILES = Object.freeze({
+  '/robots.txt': '/aplayermode/robots.txt',
+  '/sitemap.xml': '/aplayermode/sitemap.xml',
+  '/llms.txt': '/aplayermode/llms.txt',
+  '/site.webmanifest': '/aplayermode/site.webmanifest',
+  '/apple-touch-icon.png': '/aplayermode/img/apple-touch-icon.png',
+});
+
 /** Pure routing decision, exported for the validator. */
 export function route(pathname) {
   if (pathname === '/' || pathname === '/index.html') return { kind: 'page', upstream: PAGE_PATH };
@@ -46,6 +60,7 @@ export function route(pathname) {
   if (pathname === '/aplayermode' || pathname === PAGE_PATH || pathname === `${PAGE_PATH}index.html`) return { kind: 'redirect', location: '/', keepQuery: true };
   if (pathname.startsWith(PAGE_PATH) && !pathname.includes('..')) return { kind: 'asset', upstream: pathname };
   if (SHARED_ASSETS.has(pathname)) return { kind: 'asset', upstream: pathname };
+  if (Object.prototype.hasOwnProperty.call(ROOT_FILES, pathname)) return { kind: 'asset', upstream: ROOT_FILES[pathname] };
   return { kind: 'redirect', location: '/', keepQuery: false };
 }
 

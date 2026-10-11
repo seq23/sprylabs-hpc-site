@@ -52,6 +52,18 @@
  *      Give Advice" h2 and the BetterUp line each shown once outside the folded
  *      "Full product description"; and no copy that claims the digital product
  *      enforces anything on its own.
+ *  11. A page search and answer engines cannot use (owner, 10 Oct 2026): it is
+ *      "index, follow" with no noindex anywhere; og/twitter tags, icons and a
+ *      1200x630 og image served from aplayermode.com; the Clarity map equals
+ *      data/clarity_projects.json and resolves on aplayermode.com; one JSON-LD
+ *      @graph (Organization, WebSite, WebPage with speakable, SoftwareApplication
+ *      with one Offer per plan priced from the price file, Product with the
+ *      Gumroad offer, FAQPage mirroring the visible Q&A); a 40-60 word "A Player
+ *      Mode is" definition under the h1; robots.txt/sitemap.xml/llms.txt/
+ *      site.webmanifest/apple-touch-icon.png committed and routed by the Worker;
+ *      and the page kept out of the shared sites' indexes by
+ *      config/index_exclusions.json (with amazon/), never by a robots meta.
+ *      The live twin is scripts/diagnostics/check_aplayermode_live.mjs.
  *   8. A page that drifts from the app's design system. The app's theme
  *      (seq23/aplayer-mode apps/mobile/src/theme/tokens.ts) is pinned in
  *      config/aplayermode_theme_tokens.json with a source note. aplayermode.css
@@ -189,6 +201,9 @@ const FORBIDDEN = [[/billionaire\s+mindset/i, '"Billionaire Mindset" (use "Billi
 for (const file of [PAGE, ...SCRIPTS]) {
   let text = read(file);
   if (file === PAGE && trialBlocks.length === 1) text = text.replace(trialBlocks[0][0], ' ');
+  // The JSON-LD FAQPage repeats the visible FAQ word for word (checked in "indexable on
+  // aplayermode.com" below: every Question must mirror visible text), so it is not scanned twice.
+  if (file === PAGE) text = text.replace(/<script\b[^>]*type="application\/ld\+json"[^>]*>[\s\S]*?<\/script>/gi, ' ');
   for (const [re, what] of FORBIDDEN) if (re.test(text)) fail(`${file} contains ${what}`);
 }
 
@@ -493,15 +508,22 @@ if (themeSrc) {
 // refused anywhere in the page.
 const PUBLIC_CANONICAL = 'https://aplayermode.com/';
 const robots = (html.match(/<meta\b[^>]*name="robots"[^>]*content="([^"]*)"/i) || [])[1];
-if (robots !== 'noindex, follow') fail(`robots meta is ${JSON.stringify(robots)}; expected "noindex, follow" (public, kept out of the shared sites' generated indexes)`);
+if (robots !== 'index, follow') fail(`robots meta is ${JSON.stringify(robots)}; expected "index, follow" (indexable on aplayermode.com since 10 Oct 2026; kept out of the shared sites' indexes by config/index_exclusions.json, never by noindex)`);
+if (/noindex/i.test(html.replace(/<!--[\s\S]*?-->/g, ''))) fail('the page carries "noindex" somewhere (meta or header hint); it is indexable on aplayermode.com');
 const canonTags = [...html.matchAll(/<link\b[^>]*rel="canonical"[^>]*>/gi)];
 if (canonTags.length !== 1) fail(`expected exactly one <link rel="canonical">, found ${canonTags.length}`);
 const canon = (html.match(/<link\b[^>]*rel="canonical"[^>]*href="([^"]+)"/i) || [])[1];
 if (canon !== PUBLIC_CANONICAL) fail(`canonical is ${canon}; expected ${PUBLIC_CANONICAL}`);
 const ogUrl = (html.match(/<meta\b[^>]*property="og:url"[^>]*content="([^"]+)"/i) || [])[1];
 if (ogUrl !== PUBLIC_CANONICAL) fail(`og:url is ${ogUrl}; expected ${PUBLIC_CANONICAL}`);
+// Every JSON-LD @id is on aplayermode.com except the shared Spry Labs organization node; every
+// url is on aplayermode.com except that organization's own url/logo and the Gumroad listing
+// (read from the price file). Nothing names the old BHPC /aplayermode/ address.
+const SPRY_ORG_ID = 'https://billionairehighperformancecoach.com/#organization';
+const OFFSITE_URLS = new Set(['https://billionairehighperformancecoach.com/', 'https://billionairehighperformancecoach.com/assets/spry-logo.png', pinned.bhpc_digital_product?.url].filter(Boolean));
 for (const m of html.matchAll(/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi)) {
-  for (const u of m[1].matchAll(/"(?:url|@id)"\s*:\s*"([^"]+)"/g)) if (!u[1].startsWith(PUBLIC_CANONICAL)) fail(`JSON-LD url ${u[1]} is not on ${PUBLIC_CANONICAL}`);
+  for (const u of m[1].matchAll(/"@id"\s*:\s*"([^"]+)"/g)) if (!u[1].startsWith(PUBLIC_CANONICAL) && u[1] !== SPRY_ORG_ID) fail(`JSON-LD @id ${u[1]} is not on ${PUBLIC_CANONICAL}`);
+  for (const u of m[1].matchAll(/"url"\s*:\s*"([^"]+)"/g)) if (!u[1].startsWith(PUBLIC_CANONICAL) && !OFFSITE_URLS.has(u[1])) fail(`JSON-LD url ${u[1]} is not on ${PUBLIC_CANONICAL} (nor the Spry Labs org url/logo or the Gumroad listing)`);
 }
 if (/billionairehighperformancecoach\.com\/aplayermode/i.test(html)) fail('the page still names billionairehighperformancecoach.com/aplayermode, which only redirects to aplayermode.com');
 
@@ -600,11 +622,23 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
   // Hero order at 375px (owner, 8 Oct 2026): h1, the cognitive-load lead (a real
   // sentence, so it is also the page's direct answer), the five role chips, the
   // "$20 ChatGPT" sub-line, the two buy buttons, then the full role descriptions.
-  const afterH1 = hero.slice(hero.search(/<\/h1>/i) + 5);
+  const afterH1Raw = hero.slice(hero.search(/<\/h1>/i) + 5);
+  // Owner, 10 Oct 2026: directly under the h1, a 40-60 word definition starting
+  // "A Player Mode is" (the page's quotable answer); the cognitive-load lead follows it.
+  const def = afterH1Raw.match(/^\s*<p\b[^>]*\bid="what-is-a-player-mode"[^>]*\bdata-definition\b[^>]*>([\s\S]*?)<\/p>/i);
+  const defText = def ? stripTags(def[1]).replace(/\s+/g, ' ').trim() : '';
+  const defWords = defText ? defText.split(' ').length : 0;
+  if (!def) fail('the element directly under the h1 must be the definition <p id="what-is-a-player-mode" data-definition>');
+  else {
+    if (!defText.startsWith('A Player Mode is ')) fail(`the definition must start "A Player Mode is", found "${defText.slice(0, 40)}"`);
+    if (defWords < 40 || defWords > 60) fail(`the definition is ${defWords} words; it must be 40-60`);
+    for (const w of ['five-role executive team', 'app', 'Billionaire High Performance Coach OS', 'one-time', 'For founders']) if (!defText.includes(w)) fail(`the definition must say "${w}" (what it is, the app or the one-time OS, who it is for)`);
+  }
+  const afterH1 = def ? afterH1Raw.slice(def.index + def[0].length) : afterH1Raw;
   const LEAD_BIG = 'reduce your cognitive load.';
   const LEAD = 'reduce your cognitive load. stop holding every project, role, rule and reset in your head. five roles carry it with you:';
   const lead = afterH1.match(/^\s*<p\b[^>]*\bdata-hero-lead\b[^>]*>(\s*<strong\b[^>]*>([\s\S]*?)<\/strong>[\s\S]*?)<\/p>/i);
-  if (!lead || norm(stripTags(lead[2])) !== LEAD_BIG || norm(stripTags(lead[1])) !== LEAD) fail(`the element directly under the h1 must be [data-hero-lead]: a bold "Reduce your cognitive load." then "Stop holding every project, role, rule and reset in your head. Five roles carry it with you:"`);
+  if (!lead || norm(stripTags(lead[2])) !== LEAD_BIG || norm(stripTags(lead[1])) !== LEAD) fail(`the element directly under the definition must be [data-hero-lead]: a bold "Reduce your cognitive load." then "Stop holding every project, role, rule and reset in your head. Five roles carry it with you:"`);
   const SUB = 'your $20 chatgpt gives advice. this makes tomorrow actually happen.';
   const seq = afterH1.match(/^\s*<p\b[^>]*\bdata-hero-lead\b[^>]*>[\s\S]*?<\/p>\s*<ul\b[^>]*\bdata-role-chips\b[^>]*>[\s\S]*?<\/ul>\s*<p\b[^>]*\bdata-hero-sub\b[^>]*>([\s\S]*?)<\/p>\s*<div\b[^>]*\bdata-hero-ctas\b[^>]*>([\s\S]*?)<\/div>\s*<div\b[^>]*\bdata-roles\b/i);
   if (!seq || norm(stripTags(seq[1])) !== SUB) fail('hero order must be: h1, [data-hero-lead], [data-role-chips], [data-hero-sub] "Your $20 ChatGPT gives advice. This makes tomorrow actually happen.", [data-hero-ctas], then [data-roles]');
@@ -699,6 +733,166 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
   if (/books appointments/i.test(stripTags(html))) fail('Autopilot requests appointments by email; it does not "book appointments"');
   const where = compare && (compare[1].match(/<tr>\s*<td>Where it runs<\/td>\s*<td>[\s\S]*?<\/td>\s*<td>([\s\S]*?)<\/td>/i) || [])[1];
   if (!where || norm(stripTags(where)) !== 'web and android today; iphone soon') fail('compare "Where it runs" for the app must read "Web and Android today; iPhone soon"');
+}
+
+// ---------------------------------------------------------------- 11. indexable on aplayermode.com (owner, 10 Oct 2026)
+// The page is index, follow on its own domain, carries its own head tags, JSON-LD
+// and crawl files, and stays out of the shared sites' generated indexes through
+// config/index_exclusions.json (the one list), never through a robots meta.
+{
+  const U = PUBLIC_CANONICAL;
+  const meta = (attr, name) => [...html.matchAll(new RegExp(`<meta\\b[^>]*${attr}="${name}"[^>]*>`, 'gi'))].map((m) => (m[0].match(/content="([^"]*)"/) || [])[1]);
+  const one = (attr, name) => { const v = meta(attr, name); if (v.length !== 1) fail(`expected exactly one <meta ${attr}="${name}">, found ${v.length}`); return decode(v[0] ?? ''); };
+  const title = decode(stripTags((html.match(/<title>([\s\S]*?)<\/title>/i) || [])[1] || '').trim());
+  const desc = decode((html.match(/<meta\b[^>]*name="description"[^>]*content="([^"]*)"/i) || [])[1] || '');
+  // Head tags.
+  if (one('property', 'og:type') !== 'website') fail('og:type must be "website"');
+  if (one('property', 'og:site_name') !== 'A Player Mode') fail('og:site_name must be "A Player Mode"');
+  if (one('property', 'og:title') !== title) fail('og:title must equal the <title>');
+  if (one('property', 'og:description') !== desc) fail('og:description must equal the meta description');
+  if (one('name', 'twitter:title') !== title) fail('twitter:title must equal the <title>');
+  if (one('name', 'twitter:description') !== desc) fail('twitter:description must equal the meta description');
+  if (one('name', 'twitter:card') !== 'summary_large_image') fail('twitter:card must be summary_large_image');
+  const OG_IMG = `${U}aplayermode/img/og.png`;
+  if (one('property', 'og:image') !== OG_IMG || one('name', 'twitter:image') !== OG_IMG) fail(`og:image and twitter:image must both be ${OG_IMG} (served from the aplayermode.com host)`);
+  const ogFile = path.join(ROOT, 'aplayermode/img/og.png');
+  if (!fs.existsSync(ogFile)) fail('aplayermode/img/og.png is not committed');
+  else {
+    const b = fs.readFileSync(ogFile);
+    const w = b.readUInt32BE(16), h = b.readUInt32BE(20);
+    if (b.toString('ascii', 1, 4) !== 'PNG' || w !== 1200 || h !== 630) fail(`aplayermode/img/og.png must be a 1200x630 PNG, found ${w}x${h}`);
+    if (b.length > 400000) fail('aplayermode/img/og.png is over 400 KB');
+  }
+  if (one('property', 'og:image:width') !== '1200' || one('property', 'og:image:height') !== '630') fail('og:image:width/height must be 1200/630');
+  const linkHref = (rel) => (html.match(new RegExp(`<link\\b[^>]*rel="${rel}"[^>]*href="([^"]+)"`, 'i')) || [])[1];
+  const ICONS = [['icon', '/favicon.ico'], ['apple-touch-icon', '/aplayermode/img/apple-touch-icon.png'], ['manifest', '/aplayermode/site.webmanifest']];
+  for (const [rel, href] of ICONS) {
+    if (linkHref(rel) !== href) fail(`<link rel="${rel}"> must be ${href}, found ${linkHref(rel)}`);
+    else if (!fs.existsSync(path.join(ROOT, href.slice(1)))) fail(`${href} is not committed`);
+  }
+  // Clarity: the loader map baked into the page is exactly data/clarity_projects.json and resolves on aplayermode.com.
+  const clarityCfg = JSON.parse(read('data/clarity_projects.json')).projects || {};
+  const loader = html.match(/<script data-clarity-loader>[\s\S]*?\}\)\(window,document,(\{[^}]*\})\)<\/script>/);
+  if (!clarityCfg['aplayermode.com']) fail('data/clarity_projects.json has no aplayermode.com project');
+  if (!loader) fail('the Clarity loader ([data-clarity-loader]) is missing from the page');
+  else {
+    const map = JSON.parse(loader[1]);
+    if (JSON.stringify(map) !== JSON.stringify(clarityCfg)) fail(`the page's Clarity map ${loader[1]} differs from data/clarity_projects.json ${JSON.stringify(clarityCfg)} (install_clarity.js never rewrites a page that already has a loader: update it by hand)`);
+    if (!map['aplayermode.com']) fail('the page\'s Clarity map does not resolve on aplayermode.com');
+  }
+
+  // JSON-LD: one @graph with the approved node types, prices from the price file, FAQ mirroring visible text.
+  const ld = [...html.matchAll(/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi)];
+  if (ld.length !== 1) fail(`expected exactly one JSON-LD block, found ${ld.length}`);
+  let graph = [];
+  try { graph = ld.length ? JSON.parse(ld[0][1])['@graph'] || [] : []; } catch (e) { fail(`JSON-LD does not parse: ${e.message}`); }
+  const node = (type) => graph.filter((n) => n['@type'] === type);
+  for (const t of ['Organization', 'WebSite', 'WebPage', 'SoftwareApplication', 'Product', 'FAQPage']) if (node(t).length !== 1) fail(`JSON-LD @graph needs exactly one ${t}, found ${node(t).length}`);
+  const org = node('Organization')[0] || {};
+  if (org.name !== 'Spry Labs' || !org.url || !org.logo) fail('JSON-LD Organization must be Spry Labs with url and logo');
+  for (const u of org.sameAs || []) if (!['https://spryexecutiveos.com/', 'https://sprylabs.gumroad.com/'].includes(u)) fail(`Organization sameAs ${u} is not a Spry Labs property the repo already uses`);
+  if ((node('WebSite')[0] || {}).url !== U) fail(`JSON-LD WebSite url must be ${U}`);
+  const app = node('SoftwareApplication')[0] || {};
+  if (app.name !== 'A Player Mode' || !app.applicationCategory || !app.operatingSystem) fail('JSON-LD SoftwareApplication must be "A Player Mode" with applicationCategory and operatingSystem');
+  if (/\biOS\b/i.test(app.operatingSystem || '') && !links?.stores?.appStore) fail('SoftwareApplication claims iOS but APM_LINKS.stores.appStore is empty (iPhone is not live yet)');
+  const offers = Array.isArray(app.offers) ? app.offers : [];
+  const planRows = Object.values(pinned.plan_prices);
+  if (offers.length !== planRows.length) fail(`SoftwareApplication needs one Offer per plan (${planRows.length}), found ${offers.length}`);
+  for (const p of planRows) {
+    const o = offers.find((x) => x.name === p.displayName);
+    const want = (p.monthlyUsdCents / 100).toFixed(2);
+    if (!o) { fail(`no JSON-LD Offer for plan ${p.displayName}`); continue; }
+    if (o.price !== want || o.priceCurrency !== 'USD' || o.priceSpecification?.price !== want || o.priceSpecification?.billingDuration !== 'P1M') fail(`JSON-LD Offer ${p.displayName} is ${o.price}/${o.priceSpecification?.price}; the price file says ${want} USD per month`);
+  }
+  const prod = node('Product')[0] || {};
+  const bo = prod.offers || {};
+  if (prod.name !== 'Billionaire High Performance Coach OS') fail('JSON-LD Product must be "Billionaire High Performance Coach OS"');
+  if (bo.price !== (pinned.bhpc_digital_product.oneTimeUsdCents / 100).toFixed(2) || bo.priceCurrency !== 'USD' || bo.url !== pinned.bhpc_digital_product.url) fail(`JSON-LD Product offer must be ${(pinned.bhpc_digital_product.oneTimeUsdCents / 100).toFixed(2)} USD at ${pinned.bhpc_digital_product.url} (the price file)`);
+  // Compared with whitespace removed: stripTags spaces out inline price spans ("$9.99 /mo").
+  const squash = (t) => norm(t).replace(/\s+/g, '');
+  const visibleNorm = norm(stripTags(html));
+  const visibleSquash = squash(stripTags(html));
+  const qs = (node('FAQPage')[0] || {}).mainEntity || [];
+  if (qs.length < FAQ_QS.length) fail(`FAQPage has ${qs.length} questions; it must carry at least the ${FAQ_QS.length} approved FAQ questions`);
+  const REPHRASED = { 'what does a-player mode actually mean?': 'what a-player mode actually means' };
+  for (const q of qs) {
+    const name = norm(q.name || ''); const ans = norm(q.acceptedAnswer?.text || '');
+    if (!visibleNorm.includes(REPHRASED[name] || name)) fail(`FAQPage question "${q.name}" is not a question visible on the page`);
+    // Every sentence of the answer is visible on the page word for word (an answer may skip a sentence, never add one).
+    const sentences = (q.acceptedAnswer?.text || '').split(/(?<=[.!?])\s+/).filter(Boolean);
+    if (!ans || sentences.some((x) => !visibleSquash.includes(squash(x)))) fail(`FAQPage answer to "${q.name}" is not the page's visible answer word for word`);
+    if (ans.split(' ').length > 80) fail(`FAQPage answer to "${q.name}" is ${ans.split(' ').length} words; keep answers to snippet length (80)`);
+  }
+  for (const q of FAQ_QS) if (!qs.some((x) => norm(x.name || '') === q)) fail(`FAQPage is missing the approved question "${q}"`);
+  const sel = (node('WebPage')[0] || {}).speakable?.cssSelector || [];
+  if (JSON.stringify(sel) !== JSON.stringify(['#what-is-a-player-mode', '#faq'])) fail(`WebPage speakable cssSelector must be ["#what-is-a-player-mode","#faq"], found ${JSON.stringify(sel)}`);
+  for (const id of sel) if (!html.includes(`id="${id.slice(1)}"`)) fail(`speakable selector ${id} matches nothing on the page`);
+
+  // The domain's crawl files: committed under aplayermode/, served at the root by the Worker.
+  const w = await import(pathToFileURL(path.join(ROOT, 'workers', 'aplayermode-com', 'src', 'index.js')).href);
+  const ROOT_FILES = { '/robots.txt': 'aplayermode/robots.txt', '/sitemap.xml': 'aplayermode/sitemap.xml', '/llms.txt': 'aplayermode/llms.txt', '/site.webmanifest': 'aplayermode/site.webmanifest', '/apple-touch-icon.png': 'aplayermode/img/apple-touch-icon.png' };
+  for (const [p, file] of Object.entries(ROOT_FILES)) {
+    const r = w.route(p);
+    if (r.kind !== 'asset' || r.upstream !== `/${file}`) fail(`Worker route(${p}) must serve /${file}; got ${JSON.stringify(r)}`);
+    if (!fs.existsSync(path.join(ROOT, file))) fail(`${file} is not committed`);
+  }
+  for (const p of ['/sitemap-bhpc.xml', '/llms-full.txt', '/guides/', '/index.xml']) if (w.route(p).kind !== 'redirect') fail(`Worker must still 301 ${p} to /`);
+  const agents = (t) => [...t.matchAll(/^User-agent:\s*(\S+)/gim)].map((m) => m[1]).sort();
+  const apmRobots = read('aplayermode/robots.txt');
+  if (JSON.stringify(agents(apmRobots)) !== JSON.stringify(agents(read('robots.txt')))) fail('aplayermode/robots.txt must welcome exactly the agents the root robots.txt names');
+  if (/^Disallow:\s*\S/im.test(apmRobots)) fail('aplayermode/robots.txt disallows something; the page is indexable');
+  const sm = [...apmRobots.matchAll(/^Sitemap:\s*(\S+)/gim)].map((m) => m[1]);
+  if (JSON.stringify(sm) !== JSON.stringify([`${U}sitemap.xml`])) fail(`aplayermode/robots.txt must name exactly one Sitemap: ${U}sitemap.xml`);
+  const sitemap = read('aplayermode/sitemap.xml');
+  const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+  if (JSON.stringify(locs) !== JSON.stringify([U])) fail(`aplayermode/sitemap.xml must list exactly ${U}, found ${JSON.stringify(locs)}`);
+  const lastmod = (sitemap.match(/<lastmod>(\d{4}-\d{2}-\d{2})<\/lastmod>/) || [])[1];
+  if (!lastmod || Number.isNaN(Date.parse(lastmod)) || Date.parse(lastmod) > Date.now() + 86400000) fail(`aplayermode/sitemap.xml needs a real <lastmod> date (not in the future), found ${lastmod}`);
+  else {
+    // Real lastmod: never older than the last commit that changed the page (full clones only;
+    // a shallow clone reports the grafted tip for every file).
+    const { execFileSync } = await import('node:child_process');
+    try {
+      const shallow = execFileSync('git', ['rev-parse', '--is-shallow-repository'], { cwd: ROOT, encoding: 'utf8' }).trim() === 'true';
+      const last = shallow ? '' : execFileSync('git', ['log', '-1', '--format=%cs', '--', PAGE], { cwd: ROOT, encoding: 'utf8' }).trim();
+      if (last && last > lastmod) fail(`aplayermode/sitemap.xml lastmod ${lastmod} is older than the last change to ${PAGE} (${last}); bump it`);
+    } catch { notes.push('git unavailable; sitemap lastmod checked for format only'); }
+  }
+  const llms = read('aplayermode/llms.txt');
+  if (!/^# A Player Mode\n\n> A Player Mode is /.test(llms)) fail('aplayermode/llms.txt must open "# A Player Mode" then a "> A Player Mode is ..." summary');
+  const llmsAllowed = new Set([...allowedAmounts, ...planRows.map((p) => usd(p.annualUsdCents))]);
+  for (const m of llms.matchAll(/\$\d[\d,]*\.\d{2}\b/g)) if (!llmsAllowed.has(m[0])) fail(`aplayermode/llms.txt names ${m[0]}, which is not in the price file`);
+  for (const p of planRows) for (const c of [p.monthlyUsdCents, p.annualUsdCents]) if (!llms.includes(usd(c))) fail(`aplayermode/llms.txt is missing ${p.displayName} ${usd(c)} from the price file`);
+  if (!llms.includes(`$${pinned.bhpc_digital_product.oneTimeUsdCents / 100} once`) || !llms.includes(pinned.bhpc_digital_product.url)) fail('aplayermode/llms.txt must give the digital product\'s one-time price and Gumroad link from the price file');
+  if (/free\s+trial/i.test(llms.replace(/There is no free trial\./, ''))) fail('aplayermode/llms.txt may say "free trial" only as "There is no free trial."');
+  try { const mf = JSON.parse(read('aplayermode/site.webmanifest')); if (mf.name !== 'A Player Mode' || !(mf.icons || []).every((i) => fs.existsSync(path.join(ROOT, i.src.slice(1))))) fail('aplayermode/site.webmanifest must be named "A Player Mode" and every icon must be committed'); } catch (e) { fail(`aplayermode/site.webmanifest: ${e.message}`); }
+
+  // Kept out of the shared sites' indexes by the one exclusion list, not by noindex.
+  const exCfg = JSON.parse(read('config/index_exclusions.json'));
+  const exDirs = Object.keys(exCfg.dirs || {});
+  for (const d of ['aplayermode', 'amazon']) if (!exDirs.includes(d)) fail(`config/index_exclusions.json must list ${d}/`);
+  const READERS = { 'scripts/lib/site_pages.js': 'index_exclusions.cjs', 'scripts/internal/build_navigation_structure.mjs': 'index_exclusions.cjs', 'scripts/citation/apply_citation_program.py': 'config/index_exclusions.json', 'scripts/content/build_visible_faq_sections.py': 'config/index_exclusions.json', 'scripts/lib/sitemap_ledger.mjs': 'index_exclusions.cjs' };
+  for (const [f, needle] of Object.entries(READERS)) if (!read(f).includes(needle)) fail(`${f} no longer reads the exclusion list (${needle}); aplayermode/ would leak into the shared sites' indexes`);
+  const { createRequire } = await import('node:module');
+  const req = createRequire(import.meta.url);
+  const sitePages = req(path.join(ROOT, 'scripts/lib/site_pages.js'));
+  const leaked = sitePages.listSitePages(ROOT).filter((r) => exDirs.includes(r.split('/')[0]));
+  if (leaked.length) fail(`listSitePages() still returns excluded pages: ${leaked.slice(0, 3).join(', ')}`);
+  // Absent from every generated index, registry, sitemap and llms file of the shared sites.
+  const INDEX_FILES = ['sitemap.xml', 'sitemap-bhpc.xml', 'sitemap-spry.xml', 'llms.txt', 'llms-full.txt', 'answers.json', 'atlas.json', 'data/citation/citable_pages.json', 'artifacts/validation/internal-navigation-structure.json'];
+  const walkFiles = (dir, out = []) => { if (!fs.existsSync(dir)) return out; for (const e of fs.readdirSync(dir, { withFileTypes: true })) { const f = path.join(dir, e.name); if (e.isDirectory()) walkFiles(f, out); else if (/\.(html|xml|json|txt)$/.test(e.name)) out.push(path.relative(ROOT, f)); } return out; };
+  const scanned = [...INDEX_FILES.filter((f) => fs.existsSync(path.join(ROOT, f))), ...walkFiles(path.join(ROOT, 'guides')), ...walkFiles(path.join(ROOT, 'sitemaps'))];
+  if (scanned.length < 5) fail(`Rule 0: only ${scanned.length} index/registry files found to scan for excluded pages`);
+  const EXCL_RE = new RegExp(`(?:https?://[a-z0-9.-]+)?/(?:${exDirs.join('|')})/|"(?:${exDirs.join('|')})/[^"]*\\.html"|aplayermode\\.com`, 'i');
+  for (const f of new Set(scanned)) {
+    const t = fs.readFileSync(path.join(ROOT, f), 'utf8');
+    const m = t.match(EXCL_RE);
+    if (m) fail(`${f} names an excluded page (${m[0]}); aplayermode/ and amazon/ never enter the shared sites' indexes`);
+  }
+  notes.push(`index exclusion: ${exDirs.join(', ')} absent from ${new Set(scanned).size} index/registry files`);
+  // /amazon/ keeps its own noindex contract.
+  const amazonIdx = path.join(ROOT, 'amazon/index.html');
+  if (!fs.existsSync(amazonIdx) || !/<meta\b(?=[^>]*name="robots")[^>]*content="[^"]*noindex/i.test(fs.readFileSync(amazonIdx, 'utf8'))) fail('amazon/index.html must stay noindex');
 }
 
 // ---------------------------------------------------------------- report

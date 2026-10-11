@@ -54,7 +54,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync, spawnSync } from 'node:child_process';
-import { ROOT, LEDGER_PATH, LEDGER_RECEIPT_PATH, contentHash, parseSitemaps, fileForLoc, ledgerDerivationReceipt } from '../lib/sitemap_ledger.mjs';
+import { ROOT, LEDGER_PATH, LEDGER_RECEIPT_PATH, contentHash, parseSitemaps, fileForLoc, ledgerDerivationReceipt, isSharedSitemapPath } from '../lib/sitemap_ledger.mjs';
 
 const LANE_FILE = 'data/workflows/workflow_topology.json';
 const LANE = 'spry-content-release';
@@ -244,7 +244,7 @@ function fileForLocIn(paths, loc) {
 }
 /** Sitemaps as committed at HEAD, parsed the same way parseSitemaps() parses disk. */
 function parseSitemapsAtHead(paths) {
-  const files = [...paths].filter((f) => /(^|\/)sitemap[^/]*\.xml$/i.test(f) && !/^(node_modules|\.build|\.pages-output|dist)\//.test(f));
+  const files = [...paths].filter((f) => /(^|\/)sitemap[^/]*\.xml$/i.test(f) && !/^(node_modules|\.build|\.pages-output|dist)\//.test(f) && isSharedSitemapPath(f));
   const out = [];
   for (const f of files) {
     let text;

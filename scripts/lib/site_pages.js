@@ -26,6 +26,7 @@
 const fs = require('fs');
 const path = require('path');
 const { IGNORED_DIRS } = require('./repo_walk.cjs');
+const { excludedDirs } = require('./index_exclusions.cjs');
 
 const ROOT = process.cwd();
 
@@ -42,6 +43,9 @@ const NON_PAGE_DIRS = new Set([
   '.github',
   'scripts', 'docs', 'config', 'data', 'reports', 'artifacts',
   'fixtures', 'tests', 'templates', 'logs',
+  // Served from this repo but not pages of the two shared sites
+  // (config/index_exclusions.json): aplayermode/ belongs to aplayermode.com.
+  ...excludedDirs(ROOT),
 ]);
 
 const NOINDEX_A = /<meta[^>]+name=["']robots["'][^>]+content=["'][^"']*noindex/i;

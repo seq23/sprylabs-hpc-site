@@ -161,7 +161,10 @@ const DENY_TOP = new Set(['.git', '.claude', '.github', '.build', '.pages-output
   // templates/ holds page skeletons with {{h1}} placeholders, not pages. The
   // same exclusion exists in repair_dual_domain_metadata.js and
   // validate_money_link_floor.js.
-  'templates', '_ops']);
+  'templates', '_ops',
+  // Not pages of the shared sites (config/index_exclusions.json): aplayermode/
+  // is indexable on aplayermode.com only; amazon/ is noindex by design.
+  ...requireCjs(path.join(ROOT, 'scripts/lib/index_exclusions.cjs')).excludedDirs(ROOT)]);
 const NEVER_LISTED = new Set(['index.html', '404.html', 'admin.html', 'download.html']);
 const PLACEHOLDER_RE = /\{\{[^}]+\}\}|<%|%>|TODO_PLACEHOLDER/i;
 const RELATED_BLOCK_RE = /<section\b[^>]*data-internal-nav="related"[^>]*>[\s\S]*?<\/section>/gi;

@@ -76,6 +76,9 @@ DENY_TOP = {
     "docs", "tests", "fixtures", "config", "content", "functions", "seo", "LICENSES",
     "dist", "admin", "coverage", "test-results", "playwright-report", "templates", "_ops",
 }
+# Not pages of the shared sites (config/index_exclusions.json, the one list):
+# aplayermode/ is indexable on aplayermode.com only; amazon/ is noindex by design.
+DENY_TOP |= set(json.loads((ROOT / "config/index_exclusions.json").read_text(encoding="utf-8"))["dirs"])
 
 MARKER = 'data-faq-source="page-sections"'
 BLOCK_RE = re.compile(
