@@ -8564,8 +8564,38 @@
         "MX-RETROFIT-GUARD"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-DEMAND-FAMILIES",
+      "status": "ADMITTED",
+      "name": "validate:demand-families",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Neither site had a demand pass: titles, definitions and FAQs were not built from the queries Search Console measures, and 32 pages (the homepage among them) carried two or three FAQPage nodes. The check fails when a host's demand_families.json is missing or strengthens anything but 8 measured families, an FAQ target is not a measured query, a strengthened page does not carry the section for the file's current content hash (stale), its title/CTA ref/question H2s/FAQ are missing, the homepage does not link it, or any page carries more than one FAQPage.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:demand-families",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-demand-families/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-11",
+      "matrix_ids": [
+        "MX-DEMAND-FAMILIES"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 273,
+  "record_count": 274,
   "generated_at": "2026-08-08T23:30:00Z"
 }
