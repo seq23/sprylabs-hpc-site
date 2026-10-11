@@ -1532,27 +1532,11 @@ def update_discovery(pages,queries,frameworks):
             return ledger_lastmod.get(u) or existing.get(u) or TODAY
         xml='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+"\n".join(f'  <url><loc>{u}</loc><lastmod>{lastmod_for(u)}</lastmod></url>' for u in sorted(urls))+"\n</urlset>\n"
         fp.write_text(xml,encoding="utf-8")
-    # One Pages deployment answers both hosts, so /sitemap.xml is served on both.
-    # It has to be a host-neutral sitemap index: a urlset here would hand one
-    # host a file full of the other host's URLs, which is rejected wholesale.
-    # The index's lastmod is the newest date inside each child sitemap, not the
-    # build time: it tells a crawler when that child last actually changed.
-    def _child_newest(child):
-        cp=ROOT/child
-        if not cp.exists(): return TODAY
-        dates=re.findall(r'<lastmod>(\d{4}-\d{2}-\d{2})</lastmod>',cp.read_text(encoding="utf-8"))
-        return max(dates) if dates else TODAY
-    root_map=ROOT/"sitemap.xml"
-    if root_map.exists():
-        existing=root_map.read_text(encoding="utf-8")
-        comments="\n".join(line for line in existing.splitlines() if "priority-coverage" in line)
-        lines=['<?xml version="1.0" encoding="UTF-8"?>',
-               '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-               f'  <sitemap><loc>https://billionairehighperformancecoach.com/sitemap-bhpc.xml</loc><lastmod>{_child_newest("sitemap-bhpc.xml")}</lastmod></sitemap>',
-               f'  <sitemap><loc>https://spryexecutiveos.com/sitemap-spry.xml</loc><lastmod>{_child_newest("sitemap-spry.xml")}</lastmod></sitemap>']
-        if comments: lines.append(comments)
-        lines.append('</sitemapindex>')
-        root_map.write_text("\n".join(lines)+"\n",encoding="utf-8")
+    # The static /sitemap.xml index has ONE writer, scripts/lib/sitemap_index.mjs
+    # (children from config/site_hosts.json); the Pages functions narrow it to
+    # the request host. This program used to keep its own copy of the index.
+    import subprocess
+    subprocess.run(["node","scripts/lib/sitemap_index.mjs"],cwd=str(ROOT),check=True,env={**os.environ,"SITEMAP_TODAY":TODAY})
     browser_contract=ROOT/"config/validation/browser_suite_contract.json"
     if browser_contract.exists():
         contract=json.loads(browser_contract.read_text(encoding="utf-8"))
