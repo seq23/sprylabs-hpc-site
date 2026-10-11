@@ -44,15 +44,32 @@ export function foreignChild(pathname, host) {
   return Object.entries(HOSTS).some(([h, v]) => v.child_sitemap === file && h !== host);
 }
 
+// The static file's validators (ETag / Last-Modified) describe the UN-narrowed
+// bytes, which do not change when only the narrowing does. Passing a
+// conditional request through let the static asset answer 304, and Cloudflare's
+// edge then kept serving the copy it cached before the fix: on 11 Oct 2026 the
+// bare /robots.txt still named both hosts (cf-cache-status: REVALIDATED) while
+// /robots.txt?x was narrowed. So the asset is always fetched unconditionally and
+// the narrowed response carries no validators of its own.
+const CONDITIONAL = ['If-None-Match', 'If-Modified-Since', 'If-Match', 'If-Unmodified-Since', 'If-Range'];
+export function unconditional(request) {
+  const headers = new Headers(request.headers);
+  for (const h of CONDITIONAL) headers.delete(h);
+  return new Request(request.url, { method: request.method, headers });
+}
+
 async function narrowed(context, transform, contentType) {
   const host = ownerHost(new URL(context.request.url).hostname);
-  const res = await context.next();
-  if (!host || !res.ok) return res;
+  if (!host) return context.next();
+  const res = await context.next(unconditional(context.request));
+  if (!res.ok) return res;
   const body = transform(await res.text(), host);
   const headers = new Headers(res.headers);
   headers.set('Content-Type', contentType);
   headers.delete('Content-Length');
   headers.delete('ETag');
+  headers.delete('Last-Modified');
+  headers.set('Cache-Control', 'public, max-age=3600');
   headers.set('X-Host-Narrowed', host);
   return new Response(body, { status: 200, headers });
 }

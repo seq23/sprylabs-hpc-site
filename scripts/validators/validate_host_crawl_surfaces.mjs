@@ -91,6 +91,31 @@ if (new Set(rawIdx).size < 2 || new Set(rawRobots).size < 2) fail.push('negative
 const crafted = `<sitemapindex>\n  <sitemap><loc>https://${hosts[0]}/a.xml</loc></sitemap>\n  <sitemap><loc>https://${hosts[1]}/b.xml</loc></sitemap>\n</sitemapindex>`;
 if (locsOf(M.narrowSitemapIndex(crafted, hosts[0]), 'sitemap').some((u) => hostOf(u) !== hosts[0])) fail.push('negative proof: crafted cross-host index survives narrowing');
 
+// 6. A conditional request must not reach the static asset: its validators
+// describe the un-narrowed bytes, so a 304 let the edge keep the pre-fix copy
+// (bare /robots.txt still named both hosts on 11 Oct 2026, REVALIDATED).
+{
+  const STATIC = { '/robots.txt': staticRobots, '/sitemap.xml': staticIndex };
+  for (const [route, serve] of [['/robots.txt', M.serveRobots], ['/sitemap.xml', M.serveSitemapIndex]]) {
+    for (const host of hosts) {
+      const request = new Request(`https://${host}${route}`, { headers: { 'If-None-Match': '"stale-etag"', 'If-Modified-Since': 'Sat, 10 Oct 2026 00:00:00 GMT' } });
+      let sawConditional = false;
+      const context = { request, next: async (r) => {
+        const req = r || request;
+        if (CONDITIONAL_SEEN(req)) { sawConditional = true; return new Response(null, { status: 304, headers: { ETag: '"stale-etag"' } }); }
+        return new Response(STATIC[route], { status: 200, headers: { ETag: '"static"', 'Last-Modified': 'Sat, 10 Oct 2026 00:00:00 GMT' } });
+      } };
+      const res = await serve(context);
+      const body = await res.text();
+      if (sawConditional || res.status !== 200) fail.push(`${host}${route}: a conditional request reached the static asset (status ${res.status}); the edge would keep its stale copy`);
+      if (res.headers.get('ETag') || res.headers.get('Last-Modified')) fail.push(`${host}${route}: narrowed response carries the static file's validators`);
+      const named = route === '/robots.txt' ? robotsSitemaps(body) : locsOf(body, 'sitemap');
+      if (!named.length || named.some((u) => hostOf(u) !== host)) fail.push(`${host}${route}: served ${JSON.stringify(named)}`);
+    }
+  }
+}
+function CONDITIONAL_SEEN(req) { return ['If-None-Match', 'If-Modified-Since'].some((h) => req.headers.has(h)); }
+
 fs.rmSync(tmp, { recursive: true, force: true });
 if (fail.length) { console.error(`[validate:host-crawl-surfaces] FAIL (${fail.length})`); for (const f of fail) console.error('  - ' + f); process.exit(1); }
-console.log(`[validate:host-crawl-surfaces] PASS: ${hosts.length} hosts; each host's sitemap.xml and robots.txt name only its own child; children own-host only; one writer; negative proof held`);
+console.log(`[validate:host-crawl-surfaces] PASS: ${hosts.length} hosts; each host's sitemap.xml and robots.txt name only its own child; children own-host only; one writer; conditional requests never reach the static asset; negative proof held`);
