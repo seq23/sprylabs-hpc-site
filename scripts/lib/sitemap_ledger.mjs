@@ -12,8 +12,14 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { spawnSync } from 'node:child_process';
+import { createRequire } from 'node:module';
 
 export const ROOT = process.cwd();
+// Top-level directories that are not pages of the shared sites (config/index_exclusions.json).
+// aplayermode/sitemap.xml is aplayermode.com's own sitemap; its <loc> https://aplayermode.com/
+// would otherwise resolve to this repo's root index.html.
+export const EXCLUDED_DIRS = createRequire(import.meta.url)(path.join(ROOT, 'scripts/lib/index_exclusions.cjs')).excludedDirs(ROOT);
+export const isSharedSitemapPath = (rel) => !EXCLUDED_DIRS.has(String(rel).replace(/\\/g, '/').split('/')[0]);
 export const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 /** The visible text of a page. Markup, scripts and styles are excluded on
@@ -36,7 +42,7 @@ export function sitemapFiles(dir = ROOT, out = []) {
   for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
     if (/^(node_modules|\.git|\.build|\.pages-output|dist)$/.test(e.name)) continue;
     const full = path.join(dir, e.name);
-    if (e.isDirectory()) sitemapFiles(full, out);
+    if (e.isDirectory()) { if (dir !== ROOT || !EXCLUDED_DIRS.has(e.name)) sitemapFiles(full, out); }
     else if (/^sitemap.*\.xml$/i.test(e.name)) out.push(full);
   }
   return out;

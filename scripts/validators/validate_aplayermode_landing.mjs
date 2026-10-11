@@ -871,7 +871,7 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
   const exCfg = JSON.parse(read('config/index_exclusions.json'));
   const exDirs = Object.keys(exCfg.dirs || {});
   for (const d of ['aplayermode', 'amazon']) if (!exDirs.includes(d)) fail(`config/index_exclusions.json must list ${d}/`);
-  const READERS = { 'scripts/lib/site_pages.js': 'index_exclusions.cjs', 'scripts/internal/build_navigation_structure.mjs': 'index_exclusions.cjs', 'scripts/citation/apply_citation_program.py': 'config/index_exclusions.json', 'scripts/content/build_visible_faq_sections.py': 'config/index_exclusions.json' };
+  const READERS = { 'scripts/lib/site_pages.js': 'index_exclusions.cjs', 'scripts/internal/build_navigation_structure.mjs': 'index_exclusions.cjs', 'scripts/citation/apply_citation_program.py': 'config/index_exclusions.json', 'scripts/content/build_visible_faq_sections.py': 'config/index_exclusions.json', 'scripts/lib/sitemap_ledger.mjs': 'index_exclusions.cjs' };
   for (const [f, needle] of Object.entries(READERS)) if (!read(f).includes(needle)) fail(`${f} no longer reads the exclusion list (${needle}); aplayermode/ would leak into the shared sites' indexes`);
   const { createRequire } = await import('node:module');
   const req = createRequire(import.meta.url);
