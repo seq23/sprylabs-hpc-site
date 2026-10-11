@@ -48,8 +48,12 @@ export function tokenize(s) {
   const stop = new Set(['with','from','that','this','what','when','where','which','your','about','into','using','used','best','system','should','would','could','have','does','need','ways','help','make','more','than','through','without','people','their']);
   return [...new Set(String(s || '').toLowerCase().split(/[^a-z0-9]+/).filter((x) => x.length >= 3 && !stop.has(x)))];
 }
+// A provider the owner switched off (DISABLED_BY_OWNER_POLICY, see
+// config/llm_routing.json) is not a failing provider: it is left out of the
+// overall, so GSC alone being OK reads as OK. All-disabled is still UNAVAILABLE.
+export const DISABLED_BY_OWNER_POLICY = 'DISABLED_BY_OWNER_POLICY';
 export function providerOverall(states) {
-  const vals = Object.values(states || {});
+  const vals = Object.values(states || {}).filter((x) => x !== DISABLED_BY_OWNER_POLICY);
   if (vals.length && vals.every((x) => x === OK)) return OK;
   if (vals.some((x) => x === OK || x === DEGRADED)) return DEGRADED;
   return UNAVAILABLE;

@@ -91,8 +91,15 @@ check('the contract records why the previous provider was retired', () => {
 });
 
 const probe = fs.readFileSync('scripts/llm_citation_probe.mjs', 'utf8');
+// Gemini was removed from the probe on 11 Oct 2026 (owner: "nothing should be
+// paid"): grounded mode is the paid OpenRouter web plugin behind CONFIRM_PAID,
+// knowledge mode is the free router. Stricter than the old pin: no Gemini path
+// at all, grounded calls only through the gated OpenRouter function.
 check('grounded mode in the probe cannot route to gemini', () => {
-  assert.ok(/GROUNDED \? 'openrouter'/.test(probe), 'grounded mode must be pinned to openrouter');
+  assert.ok(!probe.includes('generativelanguage.googleapis.com'), 'the probe must not reach Google GenAI at all');
+  assert.ok(/GROUNDED \? await askOpenRouterGrounded\(/.test(probe), 'grounded mode must be pinned to the OpenRouter web plugin');
+  assert.ok(/if \(GROUNDED && !paidLaneAllowed\(process\.env\.CONFIRM_PAID\)\)/.test(probe), 'grounded (paid) mode must refuse without CONFIRM_PAID');
+  assert.ok(/: await askFree\(q\)/.test(probe), 'knowledge mode must go through the free router');
 });
 check('a citation rate is only recorded against answered observations', () => {
   assert.ok(probe.includes('answered ? Number(((100 * cited) / answered)'),

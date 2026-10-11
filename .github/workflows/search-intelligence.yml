@@ -12,6 +12,14 @@ on:
         required: true
         type: boolean
         default: true
+      confirm_paid:
+        # Owner, 11 Oct 2026: "nothing should be paid". Grounded observation is
+        # billed per request (OpenRouter web plugin); without this it records
+        # DISABLED_BY_OWNER_POLICY and calls nothing. GSC truth stays free and daily.
+        description: "Run the PAID grounded-search observation (billed per call)"
+        required: false
+        type: boolean
+        default: false
       max_grounded_queries:
         description: "Maximum grounded-search observations this run"
         required: true
@@ -65,7 +73,8 @@ jobs:
           # Grounded observation is served by OpenRouter's web plugin. Gemini grounded
           # search is hard-blocked on this project's key (429 RESOURCE_EXHAUSTED on any
           # call carrying tools:[{google_search:{}}], reproduced across three models).
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENROUTER_API_KEY: ${{ github.event_name == 'workflow_dispatch' && inputs.confirm_paid && secrets.OPENROUTER_API_KEY || '' }}
+          CONFIRM_PAID: ${{ github.event_name == 'workflow_dispatch' && inputs.confirm_paid && 'true' || 'false' }}
           GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
           GSC_SITE_URL_SPRY: ${{ secrets.GSC_SITE_URL_SPRY }}
           GSC_SITE_URL_BHPC: ${{ secrets.GSC_SITE_URL_BHPC }}
@@ -79,7 +88,8 @@ jobs:
           # Grounded observation is served by OpenRouter's web plugin. Gemini grounded
           # search is hard-blocked on this project's key (429 RESOURCE_EXHAUSTED on any
           # call carrying tools:[{google_search:{}}], reproduced across three models).
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          OPENROUTER_API_KEY: ${{ github.event_name == 'workflow_dispatch' && inputs.confirm_paid && secrets.OPENROUTER_API_KEY || '' }}
+          CONFIRM_PAID: ${{ github.event_name == 'workflow_dispatch' && inputs.confirm_paid && 'true' || 'false' }}
           GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
           GSC_SITE_URL_SPRY: ${{ secrets.GSC_SITE_URL_SPRY }}
           GSC_SITE_URL_BHPC: ${{ secrets.GSC_SITE_URL_BHPC }}

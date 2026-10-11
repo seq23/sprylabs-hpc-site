@@ -46,7 +46,16 @@ for(const file of scanFiles){
 }
 
 const obs=readJson('data/search_intelligence/live_search_observations.json',{});
-if(obs.provider_state!=='OK'&&obs.status_is_healthy===true)errors.push('unavailable grounded provider marked healthy');
+// DISABLED_BY_OWNER_POLICY (11 Oct 2026, config/llm_routing.json) is healthy by
+// policy, and only when it is provably inert: the routing config lists this lane
+// as paid, the file cites that policy, and not one call was attempted.
+if(obs.provider_state==='DISABLED_BY_OWNER_POLICY'){
+  const routing=readJson('config/llm_routing.json',{});
+  if(!routing?.paid_lanes?.search_intelligence_grounded_observation)errors.push('grounded observation reports DISABLED_BY_OWNER_POLICY but config/llm_routing.json does not list search_intelligence_grounded_observation as a paid lane');
+  if(obs.disabled_by?.policy!=='config/llm_routing.json')errors.push('DISABLED_BY_OWNER_POLICY without disabled_by.policy=config/llm_routing.json');
+  if(Number(obs.budget?.calls_attempted||0)!==0)errors.push(`DISABLED_BY_OWNER_POLICY yet ${obs.budget?.calls_attempted} paid call(s) attempted`);
+  if((obs.observations||[]).some(o=>o&&o.status==='OBSERVED'))errors.push('DISABLED_BY_OWNER_POLICY yet observations are marked OBSERVED');
+}else if(obs.provider_state!=='OK'&&obs.status_is_healthy===true)errors.push('unavailable grounded provider marked healthy');
 const g=readJson('data/search_intelligence/gsc_truth.json',{});
 if(g.provider_state!=='OK'&&g.status_is_healthy===true)errors.push('unavailable GSC marked healthy');
 // Health has to be backed by rows the provider actually returned. The previous
