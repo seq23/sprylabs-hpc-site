@@ -8474,8 +8474,38 @@
         "MX-PUBLISHED-PAGE-NEVER-RECREATED"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-ZERO-PAID-LLM",
+      "status": "ADMITTED",
+      "name": "validate:zero-paid-llm",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Daily Citation Intelligence and Search Intelligence called openai/gpt-4o-mini with OpenRouter's per-request web plugin on every schedule (about 25 + 48 paid calls a day) after the owner said nothing should be paid (11 Oct 2026). The check fails when config/llm_routing.json holds a non-$0 or non-:free model, a non-zero max_cost_usd, a paid fallback or no dated pricing snapshot; when any script calls a model provider outside scripts/lib/free_llm_router.mjs or an ungated paid lane; and when a scheduled workflow exposes a model-provider secret or an ungated CONFIRM_PAID to a step a schedule can reach.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:zero-paid-llm",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-zero-paid-llm/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-11",
+      "matrix_ids": [
+        "MX-ZERO-PAID-LLM"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 270,
+  "record_count": 271,
   "generated_at": "2026-08-08T23:30:00Z"
 }

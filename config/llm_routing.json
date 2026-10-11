@@ -1,0 +1,60 @@
+{
+  "schema_version": "1.0",
+  "policy": {
+    "owner_instruction": "nothing should be paid ... cut the probes and make them free (owner, 11 Oct 2026)",
+    "max_cost_usd": 0,
+    "provider": "openrouter",
+    "endpoint": "https://openrouter.ai/api/v1/chat/completions",
+    "fallback_to_paid": false,
+    "on_no_free_model": "NAMED_STOP_NO_FREE_MODEL: exit 0 with a receipt, nothing generated",
+    "on_nonzero_cost": "FAIL_LOUD: a response reporting usage.cost > 0 throws and the run exits non-zero",
+    "router": "scripts/lib/free_llm_router.mjs",
+    "guard": "npm run validate:zero-paid-llm"
+  },
+  "pricing_snapshot": {
+    "source": "GET https://openrouter.ai/api/v1/models (unauthenticated)",
+    "taken_at": "2026-10-11",
+    "selection_rule": "pricing.prompt == \"0\" && pricing.completion == \"0\" (and request/web_search absent or \"0\"), context_length >= 32000, text output, general instruct model; meta-routers (openrouter/free) excluded because they choose the model for us",
+    "free_models_seen": 19
+  },
+  "free_models": [
+    {
+      "id": "nvidia/nemotron-3-ultra-550b-a55b:free",
+      "why": "strongest free general instruct model in the snapshot (550B MoE)",
+      "context_length": 1000000,
+      "pricing": { "prompt": "0", "completion": "0" }
+    },
+    {
+      "id": "google/gemma-4-31b-it:free",
+      "why": "non-reasoning instruct model: answers inside a small max_tokens budget",
+      "context_length": 262144,
+      "pricing": { "prompt": "0", "completion": "0" }
+    },
+    {
+      "id": "nvidia/nemotron-3-super-120b-a12b:free",
+      "why": "second NVIDIA family on a different upstream pool from the Ultra",
+      "context_length": 262144,
+      "pricing": { "prompt": "0", "completion": "0" }
+    },
+    {
+      "id": "thinkingmachines/inkling:free",
+      "why": "different vendor, last resort before the named stop",
+      "context_length": 1048576,
+      "pricing": { "prompt": "0", "completion": "0" }
+    }
+  ],
+  "paid_lanes": {
+    "_rule": "A lane listed here costs money on every call (OpenRouter's web plugin bills per request whatever the model). It is off every schedule and runs only on workflow_dispatch with confirm_paid: true; otherwise its script records DISABLED_BY_OWNER_POLICY and exits 0 having called nothing.",
+    "citation_probe_grounded": {
+      "script": "scripts/llm_citation_probe.mjs",
+      "workflow": ".github/workflows/daily-citation-intelligence.yml",
+      "was": "daily 13:37 UTC, 25 grounded calls/run on openai/gpt-4o-mini + web plugin"
+    },
+    "search_intelligence_grounded_observation": {
+      "script": "scripts/search_intelligence/observe_live_search.mjs",
+      "workflow": ".github/workflows/search-intelligence.yml",
+      "was": "daily 13:23 UTC, up to 24 grounded calls x 2 passes/run on openai/gpt-4o-mini + web plugin (parallel engine)"
+    }
+  },
+  "disabled_state": "DISABLED_BY_OWNER_POLICY"
+}

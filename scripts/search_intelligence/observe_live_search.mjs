@@ -2,6 +2,12 @@
 import fs from 'node:fs';
 import { readJson, writeJson, stamp, sha256, OK, DEGRADED, UNAVAILABLE } from './lib/core.mjs';
 import { citationRefs, answerText } from '../lib/openrouter_web_citations.mjs';
+import { paidLaneAllowed, paidLaneStopMessage, DISABLED_STATE } from '../lib/free_llm_router.mjs';
+// PAID LANE (owner, 11 Oct 2026: "nothing should be paid"): the web plugin bills per
+// request whatever the model, so this observer calls nothing unless CONFIRM_PAID=true,
+// which search-intelligence.yml sets only on workflow_dispatch with confirm_paid: true.
+// Otherwise it records provider_state DISABLED_BY_OWNER_POLICY - healthy by policy,
+// never evidence about whether the pages are cited.
 // OpenRouter bills the web plugin per REQUEST on the parallel engine with 10
 // results included - measured at $0.00127/call on this account against ~$0.04
 // on the default engine's per-result billing. Identical url_citation schema.
@@ -65,11 +71,13 @@ const rotation=selectRotating(targets,budget);
 let observations=[],state=UNAVAILABLE,note=null,attempted=0,failures=0;
 if(fs.existsSync(importPath)){
   const d=JSON.parse(fs.readFileSync(importPath,'utf8')); observations=Array.isArray(d)?d:(d.observations||[]); observations=observations.map(x=>({...x,observation_kind:'grounded_search_observation',is_literal_serp_rank:false})); state=OK; note='Imported grounded-search evidence.';
+}else if(!paidLaneAllowed()){
+  state=DISABLED_STATE; note=paidLaneStopMessage('search:observe'); console.log(note);
 }else if(apiKey && budget>0){
   for(const t of rotation.batch){attempted++;try{observations.push(await observe(t))}catch(e){failures++;observations.push({target_id:t.target_id,query:t.query,status:'FAILED',failure_reason:String(e.message||e),observation_kind:'grounded_search_observation',is_literal_serp_rank:false,own_domain_referenced:null,referenced_domains:[]})}}
   state=failures===0?OK:observations.some(x=>x.status==='OBSERVED')?DEGRADED:UNAVAILABLE; note=failures?`${failures}/${attempted} grounded observation calls failed.`:null;
 }else note=`No grounded-search credential (${cfg.credential_env||'OPENROUTER_API_KEY'}) or provider export was available. UNTESTED, not disproven: this records that no call was made, and must never be read as evidence about whether these pages are cited.`;
-writeJson('data/search_intelligence/live_search_observations.json',{schema_version:'1.1',generated_at:stamp(),provider_state:state,overall_status:state,status_is_healthy:state===OK,observation_kind:'grounded_search_observation',is_literal_serp_rank:false,budget:{eligible_targets:targets.length,call_budget:budget,calls_attempted:attempted,call_failures:failures},rotation:{cursor_path:CURSOR_PATH,window_start:rotation.start,window_size:rotation.batch.length,next_index:(attempted>0&&observations.filter((x)=>x&&x.status!=='FAILED').length>0)?rotation.next:rotation.start,observed:observations.filter((x)=>x&&x.status!=='FAILED').length,target_ids:rotation.batch.map(t=>t.target_id)},unavailable_note:state===OK?null:note,observations});
+writeJson('data/search_intelligence/live_search_observations.json',{schema_version:'1.1',generated_at:stamp(),provider_state:state,overall_status:state,status_is_healthy:state===OK||state===DISABLED_STATE,disabled_by:state===DISABLED_STATE?{policy:'config/llm_routing.json',state:DISABLED_STATE}:null,observation_kind:'grounded_search_observation',is_literal_serp_rank:false,budget:{eligible_targets:targets.length,call_budget:budget,calls_attempted:attempted,call_failures:failures},rotation:{cursor_path:CURSOR_PATH,window_start:rotation.start,window_size:rotation.batch.length,next_index:(attempted>0&&observations.filter((x)=>x&&x.status!=='FAILED').length>0)?rotation.next:rotation.start,observed:observations.filter((x)=>x&&x.status!=='FAILED').length,target_ids:rotation.batch.map(t=>t.target_id)},unavailable_note:state===OK?null:note,observations});
 // Advance the cursor only when this run actually OBSERVED something.
 //
 // The guard used to be `attempted > 0`, and `attempted` increments before the

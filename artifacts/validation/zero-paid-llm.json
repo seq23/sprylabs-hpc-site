@@ -1,0 +1,27 @@
+{
+  "checked_at": "2026-10-11T15:58:02.360Z",
+  "free_models": [
+    "nvidia/nemotron-3-ultra-550b-a55b:free",
+    "google/gemma-4-31b-it:free",
+    "nvidia/nemotron-3-super-120b-a12b:free",
+    "thinkingmachines/inkling:free"
+  ],
+  "model_callers": [
+    "scripts/llm_citation_probe.mjs",
+    "scripts/search_intelligence/observe_live_search.mjs"
+  ],
+  "workflows_scanned": 10,
+  "scheduled_workflows": [
+    ".github/workflows/daily-citation-intelligence.yml",
+    ".github/workflows/main-validation-sentinel.yml",
+    ".github/workflows/search-intelligence.yml",
+    ".github/workflows/spry-content-release.yml"
+  ],
+  "provider_secret_refs": [
+    ".github/workflows/daily-citation-intelligence.yml:85",
+    ".github/workflows/search-intelligence.yml:76",
+    ".github/workflows/search-intelligence.yml:91"
+  ],
+  "errors": [],
+  "status": "PASS"
+}

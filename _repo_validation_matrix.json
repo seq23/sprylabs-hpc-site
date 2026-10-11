@@ -2637,9 +2637,19 @@
       "severity": "STRONG_WARNING",
       "release_effect": false,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-ZERO-PAID-LLM",
+      "validation_id": "VAL-ZERO-PAID-LLM",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:zero-paid-llm",
+      "order": 255,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 263,
+  "entry_count": 264,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3289,6 +3299,10 @@
         {
           "id": "VAL-PUBLISHED-PAGE-NEVER-RECREATED",
           "command": "npm run validate:published-page-never-recreated"
+        },
+        {
+          "id": "VAL-ZERO-PAID-LLM",
+          "command": "npm run validate:zero-paid-llm"
         }
       ]
     },
