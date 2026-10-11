@@ -19,28 +19,40 @@
   },
   "free_models": [
     {
+      "id": "nvidia/nemotron-3-super-120b-a12b:free",
+      "why": "measured first: answered 24/25 queries on dispatch run 38154936131 (11 Oct 2026)",
+      "context_length": 262144,
+      "pricing": {
+        "prompt": "0",
+        "completion": "0"
+      }
+    },
+    {
       "id": "nvidia/nemotron-3-ultra-550b-a55b:free",
-      "why": "strongest free general instruct model in the snapshot (550B MoE)",
+      "why": "strongest free model in the snapshot, but returned an empty answer on 24/25 queries in run 38154936131 (reasoning consumed the token budget)",
       "context_length": 1000000,
-      "pricing": { "prompt": "0", "completion": "0" }
+      "pricing": {
+        "prompt": "0",
+        "completion": "0"
+      }
     },
     {
       "id": "google/gemma-4-31b-it:free",
-      "why": "non-reasoning instruct model: answers inside a small max_tokens budget",
+      "why": "non-reasoning instruct model; HTTP 429 (upstream rate limit) on 24/25 in run 38154936131",
       "context_length": 262144,
-      "pricing": { "prompt": "0", "completion": "0" }
-    },
-    {
-      "id": "nvidia/nemotron-3-super-120b-a12b:free",
-      "why": "second NVIDIA family on a different upstream pool from the Ultra",
-      "context_length": 262144,
-      "pricing": { "prompt": "0", "completion": "0" }
+      "pricing": {
+        "prompt": "0",
+        "completion": "0"
+      }
     },
     {
       "id": "thinkingmachines/inkling:free",
       "why": "different vendor, last resort before the named stop",
       "context_length": 1048576,
-      "pricing": { "prompt": "0", "completion": "0" }
+      "pricing": {
+        "prompt": "0",
+        "completion": "0"
+      }
     }
   ],
   "paid_lanes": {
