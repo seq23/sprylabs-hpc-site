@@ -18,7 +18,11 @@ export const ROOT = process.cwd();
 // Top-level directories that are not pages of the shared sites (config/index_exclusions.json).
 // aplayermode/sitemap.xml is aplayermode.com's own sitemap; its <loc> https://aplayermode.com/
 // would otherwise resolve to this repo's root index.html.
-export const EXCLUDED_DIRS = createRequire(import.meta.url)(path.join(ROOT, 'scripts/lib/index_exclusions.cjs')).excludedDirs(ROOT);
+// A tree without the list (the self-tests' scratch repositories) excludes nothing; this repo's
+// list is pinned by validate_aplayermode_landing.
+export const EXCLUDED_DIRS = fs.existsSync(path.join(ROOT, 'config/index_exclusions.json'))
+  ? createRequire(import.meta.url)('./index_exclusions.cjs').excludedDirs(ROOT)
+  : new Set();
 export const isSharedSitemapPath = (rel) => !EXCLUDED_DIRS.has(String(rel).replace(/\\/g, '/').split('/')[0]);
 export const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
