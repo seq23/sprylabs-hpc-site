@@ -34,9 +34,9 @@ const fail = [];
 const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
 const hosts = Object.keys(JSON.parse(read('config/site_hosts.json')).hosts);
 const faqCount = (h) => (String(h).match(/"@type"\s*:\s*"FAQPage"/g) || []).length;
-// Same hash as apply_demand_families.py: sha256 of json.dumps(content, sort_keys=True, ensure_ascii=False, separators=(",", ":"))[:16].
+// Same hash as apply_demand_families.py: sha256 of serialize_schema(key-sorted content)[:16].
 const sortKeys = (v) => Array.isArray(v) ? v.map(sortKeys) : (v && typeof v === 'object') ? Object.fromEntries(Object.keys(v).sort().map((k) => [k, sortKeys(v[k])])) : v;
-const hashOf = (c) => crypto.createHash('sha256').update(JSON.stringify(sortKeys(c)), 'utf8').digest('hex').slice(0, 16);
+const hashOf = (c) => crypto.createHash('sha256').update(JSON.stringify(sortKeys(c)).replace(/</g, '\\u003c'), 'utf8').digest('hex').slice(0, 16);
 const decode = (s) => String(s).replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#x27;|&#39;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/\s+/g, ' ').trim();
 const STOP = new Set(['the', 'and', 'for', 'what', 'how', 'is', 'a', 'an', 'to', 'of', 'vs', 'with', 'in', 'on', 'it', 'are', 'does', 'do', 'i', 'my']);
 const words = (s) => String(s).toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').split(/\s+/).filter((w) => w && !STOP.has(w));

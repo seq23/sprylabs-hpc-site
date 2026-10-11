@@ -48,7 +48,11 @@ for sub in ("_vendor", "citation", "lib", "content"):
 
 from bs4 import BeautifulSoup  # noqa: E402
 from extraction_contract import visible_faq_pairs  # noqa: E402
-from build_visible_faq_sections import upsert_faq_schema, BLOCK_RE as PAGE_SECTIONS_FAQ_RE  # noqa: E402
+# CITATION_PAGE_SCHEMA is written only through the one serializer: upsert_faq_schema
+# re-emits the block with citation_page_schema.serialize_schema, and the page's
+# mainEntityOfPage is left exactly as main_entity_of_page() wrote it.
+from citation_page_schema import serialize_schema, main_entity_of_page  # noqa: E402,F401
+from build_visible_faq_sections import upsert_faq_schema, BLOCK_RE as PAGE_SECTIONS_FAQ_RE, py_json  # noqa: E402
 
 ARGS = sys.argv[1:]
 APPLY = "--apply" in ARGS
@@ -63,11 +67,24 @@ HUB_RE = re.compile(r'<section\b[^>]*\bdata-demand-hub="true"[^>]*>.*?</section>
 PANEL_RE = re.compile(r'<div class="[^"]*recommendation-summary[^"]*"[^>]*>(?:(?!<div\b)[\s\S])*?</div>', re.I)
 OPENING_RE = re.compile(r'^[\s\S]{0,400}?<p class="(?:citation-definition|answer-first)"[\s\S]*?</p>', re.I)
 
-esc = lambda s: htmllib.escape(str(s), quote=True)
+# Text is escaped the way the later BeautifulSoup passes re-serialize it (& < >
+# only), attributes additionally escape the double quote, so no later pass in
+# the build rewrites these bytes and the tree stays at its fixed point.
+esc = lambda s: htmllib.escape(str(s), quote=False)
+attr = lambda s: htmllib.escape(str(s), quote=False).replace('"', "&quot;")
+
+
+def _sorted(value):
+    if isinstance(value, dict):
+        return {k: _sorted(value[k]) for k in sorted(value)}
+    if isinstance(value, list):
+        return [_sorted(v) for v in value]
+    return value
 
 
 def content_hash(content: dict) -> str:
-    return hashlib.sha256(json.dumps(content, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode("utf-8")).hexdigest()[:16]
+    """sha256 of the key-sorted content in the one serializer's form (16 hex)."""
+    return hashlib.sha256(serialize_schema(_sorted(content)).encode("utf-8")).hexdigest()[:16]
 
 
 def definition_html(term: str, definition: str) -> str:
@@ -79,20 +96,20 @@ def definition_html(term: str, definition: str) -> str:
 def render_section(fid: str, c: dict) -> str:
     qs = "".join(f"<h2>{esc(s['question'])}</h2><p>{esc(s['answer'])}</p>" for s in c["question_sections"])
     facts = "".join(f"<li>{esc(f)}</li>" for f in c["facts"])
-    return (f'<section class="card demand-answer" data-demand-family="{esc(fid)}" data-demand-hash="{content_hash(c)}" id="demand-{esc(fid)}">'
+    return (f'<section class="card demand-answer" data-demand-family="{attr(fid)}" data-demand-hash="{content_hash(c)}" id="demand-{attr(fid)}">'
             f'<p class="demand-definition">{definition_html(c["definition_term"], c["definition"])}</p>'
             f'{qs}<h3>Key facts</h3><ul class="demand-facts">{facts}</ul>'
-            f'<p class="demand-cta"><a class="btn" href="{esc(c["cta"]["href"])}">{esc(c["cta"]["text"])}</a></p></section>')
+            f'<p class="demand-cta"><a class="btn" href="{attr(c["cta"]["href"])}">{esc(c["cta"]["text"])}</a></p></section>')
 
 
 def render_faq(fid: str, c: dict) -> str:
     body = "".join(f"<h3>{esc(q['question'])}</h3><p>{esc(q['answer'])}</p>" for q in c["faq"])
-    return (f'<section class="card faq" data-visible-faq="true" data-demand-faq="{esc(fid)}" id="demand-faq">'
+    return (f'<section class="card faq" data-visible-faq="true" data-demand-faq="{attr(fid)}" id="demand-faq">'
             f'<h2>Frequently asked questions</h2>{body}</section>')
 
 
 def set_title(html: str, title: str) -> str:
-    t = esc(title)
+    t = attr(title)
     html = re.sub(r"<title>.*?</title>", lambda _: f"<title>{t}</title>", html, count=1, flags=re.S)
     for key in ('property="og:title"', 'name="twitter:title"'):
         html = re.sub(r'<meta content="[^"]*" ' + re.escape(key), lambda _: f'<meta content="{t}" {key}', html)
@@ -146,6 +163,8 @@ def load_families():
 
 
 def main() -> int:
+    if py_json is not serialize_schema:
+        raise SystemExit("[apply-demand-families] FAIL: build_visible_faq_sections no longer serializes through citation_page_schema.serialize_schema")
     fams = load_families()
     changed, unchanged, hub = [], 0, []
     for host, fam in fams:
@@ -181,7 +200,7 @@ def main() -> int:
     # Homepage: one hub linking every strengthened page.
     home = ROOT / HOMEPAGE
     before = home.read_text(encoding="utf-8")
-    items = "".join(f'<li><a href="{esc(h)}">{esc(t)}</a></li>' for h, t in hub)
+    items = "".join(f'<li><a href="{attr(h)}">{esc(t)}</a></li>' for h, t in hub)
     block = (f'<section class="card" data-demand-hub="true" id="most-searched"><h2>Most-searched questions</h2>'
              f'<p>The questions people search for most on these sites, each answered on its own page.</p><ul>{items}</ul></section>')
     after = seat_before_related(before, block, HUB_RE)

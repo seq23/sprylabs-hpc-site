@@ -29,6 +29,7 @@ sys.dont_write_bytecode = True
 SCRIPTS = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(SCRIPTS / "lib"))
 from citation_page_schema import serialize_schema  # noqa: E402
+from repo_walk import is_ignored_dir  # noqa: E402  (the shared walk boundary: never descends into .claude/ worktrees)
 
 ARGS = sys.argv[1:]
 APPLY = "--apply" in ARGS
@@ -102,9 +103,10 @@ def pages():
     for dp, dn, fn in os.walk(ROOT):
         rel = os.path.relpath(dp, ROOT)
         rel = "" if rel == "." else rel
-        if rel and SKIP.search(rel):
+        if rel and (SKIP.search(rel) or is_ignored_dir(os.path.basename(rel), rel)):
             dn[:] = []
             continue
+        dn[:] = [d for d in dn if not is_ignored_dir(d, f"{rel}/{d}" if rel else d)]
         found += [Path(dp) / f for f in fn if f.endswith(".html")]
     return sorted(found)
 
