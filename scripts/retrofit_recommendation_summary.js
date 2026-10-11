@@ -459,8 +459,15 @@ let added = 0, replaced = 0, skipped = [];
 // Some files are under a protected baseline (a page that has produced revenue,
 // for example). Their hashes are asserted elsewhere, so leave them alone.
 const EXCLUDE = process.env.RS_EXCLUDE ? new RegExp(process.env.RS_EXCLUDE) : null;
+// Directories that are not pages of the shared sites (config/index_exclusions.json):
+// aplayermode/ is its own domain's hand-built landing page. On 11 Oct 2026 this
+// retrofit injected a shared-site summary into it (both join labels run together)
+// and moved its content without its sitemap lastmod - Validate Repo red on main.
+const { excludedDirs, isExcludedPath } = require('./lib/index_exclusions.cjs');
+const EXCLUDED_DIRS = excludedDirs(ROOT);
 for (const file of targets) {
   if (EXCLUDE && EXCLUDE.test(path.relative(ROOT, file))) continue;
+  if (isExcludedPath(path.relative(ROOT, file), EXCLUDED_DIRS)) continue;
   const html = fs.readFileSync(file, 'utf8');
   if (!/<h1[\s>]/i.test(html)) continue;
   const had = html.includes(MARK);

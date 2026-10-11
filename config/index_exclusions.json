@@ -2,6 +2,7 @@
   "purpose": "Top-level directories this repo serves that are NOT pages of billionairehighperformancecoach.com or spryexecutiveos.com, so no generator may list them in the shared sites' guide indexes, navigation hubs, citation registries, visible-FAQ pass, sitemaps or llms files, and no shared-site page validator may count them. The exclusion lives here, not in a robots meta: aplayermode/ is indexable on its own domain (owner, 10 Oct 2026) and must still stay out of the shared sites' indexes; amazon/ is noindex by its own contract AND listed here.",
   "readers": [
     "scripts/lib/index_exclusions.cjs (node: site_pages.js, internal/build_navigation_structure.mjs, lib/sitemap_ledger.mjs + validation/validate_lastmod_ledger_final.mjs)",
+    "scripts/retrofit_recommendation_summary.js (node, via index_exclusions.cjs)",
     "scripts/citation/apply_citation_program.py (EXCLUDED_PREFIXES)",
     "scripts/content/build_visible_faq_sections.py (DENY_TOP)"
   ],

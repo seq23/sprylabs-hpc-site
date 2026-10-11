@@ -83,6 +83,7 @@ import { pathToFileURL } from 'node:url';
 
 const ROOT = process.cwd();
 const LABEL = '[validate:aplayermode-landing]';
+const DATE = /^\d{4}-\d{2}-\d{2}$/;
 const PAGE = process.env.APM_LANDING_PAGE || 'aplayermode/index.html';
 const CONFIG_JS = process.env.APM_LANDING_CONFIG || 'aplayermode/config.js';
 const PRICES = process.env.APM_LANDING_PRICES || 'config/aplayermode_plan_prices.json';
@@ -849,15 +850,20 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
   const lastmod = (sitemap.match(/<lastmod>(\d{4}-\d{2}-\d{2})<\/lastmod>/) || [])[1];
   if (!lastmod || Number.isNaN(Date.parse(lastmod)) || Date.parse(lastmod) > Date.now() + 86400000) fail(`aplayermode/sitemap.xml needs a real <lastmod> date (not in the future), found ${lastmod}`);
   else {
-    // Real lastmod: never older than the last commit that changed the page (full clones only;
-    // a shallow clone reports the grafted tip for every file).
-    const { execFileSync } = await import('node:child_process');
-    try {
-      const shallow = execFileSync('git', ['rev-parse', '--is-shallow-repository'], { cwd: ROOT, encoding: 'utf8' }).trim() === 'true';
-      const last = shallow ? '' : execFileSync('git', ['log', '-1', '--format=%cs', '--', PAGE], { cwd: ROOT, encoding: 'utf8' }).trim();
-      if (last && last > lastmod) fail(`aplayermode/sitemap.xml lastmod ${lastmod} is older than the last change to ${PAGE} (${last}); bump it`);
-    } catch { notes.push('git unavailable; sitemap lastmod checked for format only'); }
+    // Real lastmod, from content not commit dates: the record (hash of the body's visible
+    // text -> date) must describe the page as it is now, and the sitemap must carry its date.
+    // A commit date moves on any automated touch; a content hash moves only on content.
+    const apmLm = await import(pathToFileURL(path.join(ROOT, 'scripts', 'aplayermode_sitemap_lastmod.mjs')).href);
+    let rec = null; try { rec = JSON.parse(read(apmLm.RECORD)); } catch {}
+    const hash = apmLm.pageContentHash(html);
+    if (!rec || !DATE.test(rec.lastmod || '')) fail(`${apmLm.RECORD} is missing or has no lastmod date; run npm run sitemap:aplayermode:lastmod`);
+    else if (rec.content_hash !== hash) fail(`${PAGE} content changed (hash ${hash}) but ${apmLm.RECORD} still records ${rec.content_hash} (${rec.lastmod}); run npm run sitemap:aplayermode:lastmod`);
+    else if (rec.lastmod !== lastmod) fail(`aplayermode/sitemap.xml lastmod ${lastmod} is not the recorded date ${rec.lastmod} for the page's current content; run npm run sitemap:aplayermode:lastmod`);
+    if (!/aplayermode_sitemap_lastmod\.mjs/.test(JSON.parse(read('package.json')).scripts?.['sitemap:lastmod:content'] || '')) fail('npm run sitemap:lastmod:content no longer re-derives aplayermode.com\'s lastmod record');
   }
+  // A shared-site retrofit never writes into this page (11 Oct 2026: the recommendation-summary
+  // retrofit injected a block with both join labels run together).
+  if (html.includes('data-content-block="recommendation_summary"')) fail(`${PAGE} carries a shared-site recommendation_summary block; scripts/retrofit_recommendation_summary.js must skip config/index_exclusions.json dirs`);
   const llms = read('aplayermode/llms.txt');
   if (!/^# A Player Mode\n\n> A Player Mode is /.test(llms)) fail('aplayermode/llms.txt must open "# A Player Mode" then a "> A Player Mode is ..." summary');
   const llmsAllowed = new Set([...allowedAmounts, ...planRows.map((p) => usd(p.annualUsdCents))]);
@@ -871,7 +877,7 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
   const exCfg = JSON.parse(read('config/index_exclusions.json'));
   const exDirs = Object.keys(exCfg.dirs || {});
   for (const d of ['aplayermode', 'amazon']) if (!exDirs.includes(d)) fail(`config/index_exclusions.json must list ${d}/`);
-  const READERS = { 'scripts/lib/site_pages.js': 'index_exclusions.cjs', 'scripts/internal/build_navigation_structure.mjs': 'index_exclusions.cjs', 'scripts/citation/apply_citation_program.py': 'config/index_exclusions.json', 'scripts/content/build_visible_faq_sections.py': 'config/index_exclusions.json', 'scripts/lib/sitemap_ledger.mjs': 'index_exclusions.cjs' };
+  const READERS = { 'scripts/lib/site_pages.js': 'index_exclusions.cjs', 'scripts/retrofit_recommendation_summary.js': 'index_exclusions.cjs', 'scripts/internal/build_navigation_structure.mjs': 'index_exclusions.cjs', 'scripts/citation/apply_citation_program.py': 'config/index_exclusions.json', 'scripts/content/build_visible_faq_sections.py': 'config/index_exclusions.json', 'scripts/lib/sitemap_ledger.mjs': 'index_exclusions.cjs' };
   for (const [f, needle] of Object.entries(READERS)) if (!read(f).includes(needle)) fail(`${f} no longer reads the exclusion list (${needle}); aplayermode/ would leak into the shared sites' indexes`);
   const { createRequire } = await import('node:module');
   const req = createRequire(import.meta.url);
