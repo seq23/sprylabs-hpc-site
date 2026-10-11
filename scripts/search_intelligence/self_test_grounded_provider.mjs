@@ -98,7 +98,7 @@ const probe = fs.readFileSync('scripts/llm_citation_probe.mjs', 'utf8');
 check('grounded mode in the probe cannot route to gemini', () => {
   assert.ok(!probe.includes('generativelanguage.googleapis.com'), 'the probe must not reach Google GenAI at all');
   assert.ok(/GROUNDED \? await askOpenRouterGrounded\(/.test(probe), 'grounded mode must be pinned to the OpenRouter web plugin');
-  assert.ok(/if \(GROUNDED && !paidLaneAllowed\(\)\)/.test(probe), 'grounded (paid) mode must refuse without CONFIRM_PAID');
+  assert.ok(/if \(GROUNDED && !paidLaneAllowed\(process\.env\.CONFIRM_PAID\)\)/.test(probe), 'grounded (paid) mode must refuse without CONFIRM_PAID');
   assert.ok(/: await askFree\(q\)/.test(probe), 'knowledge mode must go through the free router');
 });
 check('a citation rate is only recorded against answered observations', () => {

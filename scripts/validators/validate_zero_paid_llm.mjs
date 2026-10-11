@@ -56,7 +56,7 @@ for (const f of codeFiles) {
   if (!calls || !PROVIDER_HOST.test(src)) continue;
   evidence.model_callers.push(f);
   if (paidScripts.includes(f)) {
-    if (!/paidLaneAllowed\(\)/.test(src)) errors.push(`${f}: paid lane does not gate on paidLaneAllowed() (CONFIRM_PAID)`);
+    if (!/paidLaneAllowed\(process\.env\.CONFIRM_PAID\)/.test(src)) errors.push(`${f}: paid lane does not gate on paidLaneAllowed(process.env.CONFIRM_PAID)`);
     continue;
   }
   errors.push(`${f}: calls a model provider outside the free router (${ROUTER}) and is not a gated paid lane in ${ROUTING}`);

@@ -125,8 +125,11 @@ async function askOpenRouterGrounded(query, model) {
 
 // Knowledge (FREE). Every call goes through the free router; no paid fallback.
 let routerStop = null;
+let keyLabelPrinted = false;
+let lastKeyLabel = null;
 async function askFree(query) {
   const r = await freeChat({ messages: [{ role: 'user', content: query }], maxTokens: 1200, timeoutMs: REQUEST_TIMEOUT_MS, apiKey: orKey });
+  if (!keyLabelPrinted) { keyLabelPrinted = true; console.log(`  [free-router] key_label ${JSON.stringify(r.key_label)}`); lastKeyLabel = r.key_label; }
   for (const a of r.attempts) console.log(`  [free-router] ${a.model} -> ${a.status}${a.error ? ` (${a.error.slice(0, 80)})` : ''}`);
   if (!r.ok) { routerStop = r; return { ok: false, error: `${r.stop}: ${r.reason}`, stop: r.stop }; }
   return { ok: true, answer: r.answer, uris: [], model: r.model };
@@ -143,7 +146,7 @@ function recordSkip(reason, state) {
   fs.writeFileSync(path.join(ROOT, OUT), JSON.stringify(skipDoc, null, 2) + '\n');
 }
 
-if (GROUNDED && !paidLaneAllowed()) {
+if (GROUNDED && !paidLaneAllowed(process.env.CONFIRM_PAID)) {
   const msg = paidLaneStopMessage('citation-probe');
   recordSkip(msg, DISABLED_STATE);
   console.log(msg);
@@ -200,7 +203,7 @@ const prior = fs.existsSync(path.join(ROOT, OUT))
   ? JSON.parse(fs.readFileSync(path.join(ROOT, OUT), 'utf8'))
   : { schema_version: '1.0', runs: [] };
 prior.runs = (prior.runs || []).slice(-49);
-prior.runs.push({ run_at: now, provider: PROVIDER, engines, mode: MODE, queries: queries.length, observations });
+prior.runs.push({ run_at: now, provider: PROVIDER, engines, mode: MODE, queries: queries.length, key_label: lastKeyLabel, observations });
 
 const cited = observations.filter((o) => o.self_cited).length;
 const errored = observations.filter((o) => o.status === 'provider_error').length;
@@ -233,9 +236,9 @@ console.log(answered
 // The free router's named stops are a receipt, not a failure: nothing was
 // generated, nothing was paid, and the reason is recorded by name.
 if (!answered && routerStop) {
-  recordSkip(`${routerStop.stop}: ${routerStop.reason}`, routerStop.stop);
+  recordSkip(`${routerStop.stop}: ${routerStop.reason}; key_label=${JSON.stringify(lastKeyLabel)}`, routerStop.stop);
   console.log(`citation probe: NAMED STOP ${routerStop.stop} - ${routerStop.reason}. Nothing generated, $0 spent.`);
   process.exit(0);
 }
-if (!GROUNDED) console.log(`citation probe RECEIPT: free router, ${answered} answered, models used: ${[...new Set(observations.filter((o) => o.status === 'observed').map((o) => o.engine))].join(', ')}, cost_usd=0`);
+if (!GROUNDED) console.log(`citation probe RECEIPT: free router, ${answered} answered, models used: ${[...new Set(observations.filter((o) => o.status === 'observed').map((o) => o.engine))].join(', ')}, cost_usd=0, key_label=${JSON.stringify(lastKeyLabel)}`);
 process.exit(answered ? 0 : 1);

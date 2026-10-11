@@ -71,7 +71,7 @@ const rotation=selectRotating(targets,budget);
 let observations=[],state=UNAVAILABLE,note=null,attempted=0,failures=0;
 if(fs.existsSync(importPath)){
   const d=JSON.parse(fs.readFileSync(importPath,'utf8')); observations=Array.isArray(d)?d:(d.observations||[]); observations=observations.map(x=>({...x,observation_kind:'grounded_search_observation',is_literal_serp_rank:false})); state=OK; note='Imported grounded-search evidence.';
-}else if(!paidLaneAllowed()){
+}else if(!paidLaneAllowed(process.env.CONFIRM_PAID)){
   state=DISABLED_STATE; note=paidLaneStopMessage('search:observe'); console.log(note);
 }else if(apiKey && budget>0){
   for(const t of rotation.batch){attempted++;try{observations.push(await observe(t))}catch(e){failures++;observations.push({target_id:t.target_id,query:t.query,status:'FAILED',failure_reason:String(e.message||e),observation_kind:'grounded_search_observation',is_literal_serp_rank:false,own_domain_referenced:null,referenced_domains:[]})}}

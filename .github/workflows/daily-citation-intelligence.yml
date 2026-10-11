@@ -68,6 +68,13 @@ jobs:
       - name: Run autonomous zero-dollar gap-filling lane
         if: steps.runtime.outputs.run == 'true'
         run: npm run workflow:zero-dollar-autonomous
+      - name: Identify the OpenRouter key (label and limits only, never the key)
+        # Free-routing receipt: which key the repo secret is and what it may spend.
+        # Prints only label, limit, usage, is_free_tier, limit_remaining.
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        run: node --input-type=module -e "import { keyInfo } from './scripts/lib/free_llm_router.mjs'; console.log('[free-router] key_label ' + JSON.stringify(await keyInfo(process.env.OPENROUTER_API_KEY)));"
       - name: Observe whether answer engines cite us
         # The probe shipped in seven repos and was invoked by none of them, so no
         # citation observation was ever taken. Grounded mode reads the pages the
