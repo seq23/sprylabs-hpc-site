@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-10-11T14:45:25.934Z",
+  "generated_at": "2026-10-12T13:54:55.062Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 252,
+  "admitted_hard_fail_count": 256,
   "reviewed_count": 8,
-  "unreviewed_count": 244,
+  "unreviewed_count": 248,
   "suggested_review_counts": {
     "REVIEW_REQUIRED": 195,
     "EXISTING_REPAIR_AVAILABLE": 8,
-    "TRUE_BLOCKER": 31,
-    "REVIEW_WARNING_BOUNDARY": 18
+    "TRUE_BLOCKER": 33,
+    "REVIEW_WARNING_BOUNDARY": 20
   },
   "unresolved_review_counts": {
     "REVIEW_REQUIRED": 195,
     "EXISTING_REPAIR_AVAILABLE": 8,
-    "TRUE_BLOCKER": 31,
-    "REVIEW_WARNING_BOUNDARY": 10
+    "TRUE_BLOCKER": 33,
+    "REVIEW_WARNING_BOUNDARY": 12
   },
   "migration_status_counts": {
-    "UNREVIEWED": 244,
+    "UNREVIEWED": 248,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -3823,6 +3823,66 @@
         "MX-VALIDATED-MAIN-HANDOFF-GATE"
       ],
       "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-ZERO-PAID-LLM",
+      "name": "validate:zero-paid-llm",
+      "command": "npm run validate:zero-paid-llm",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Daily Citation Intelligence and Search Intelligence called openai/gpt-4o-mini with OpenRouter's per-request web plugin on every schedule (about 25 + 48 paid calls a day) after the owner said nothing should be paid (11 Oct 2026). The check fails when config/llm_routing.json holds a non-$0 or non-:free model, a non-zero max_cost_usd, a paid fallback or no dated pricing snapshot; when any script calls a model provider outside scripts/lib/free_llm_router.mjs or an ungated paid lane; and when a scheduled workflow exposes a model-provider secret or an ungated CONFIRM_PAID to a step a schedule can reach.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-ZERO-PAID-LLM"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-HOST-CRAWL-SURFACES",
+      "name": "validate:host-crawl-surfaces",
+      "command": "npm run validate:host-crawl-surfaces",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "One Pages deployment served one sitemap.xml index and one robots.txt naming both hosts' child sitemaps; Search Console returned 400 for the cross-host child in each property and the portfolio coverage run inspected the other host's URLs (109/110 Spry inspections 403, 11 Oct 2026). The check runs the real per-host narrowing code and fails if either host's sitemap.xml or robots.txt names another host, a child sitemap carries another host's URL, or the static index gains a second writer.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-HOST-CRAWL-SURFACES"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-RETROFIT-GUARD",
+      "name": "validate:retrofit-guard",
+      "command": "npm run validate:retrofit-guard",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "retrofit:recommendation-summary was kept off download.html only by one package.json env line, injected a panel into protected product.html (since 26 Aug 2026), and its non-global block pattern left 2-5 stacked panels on five pages including internal audit notes on ai-executive-coach. The check runs the real script on a scratch tree with no env exclusions and fails if a protected or excluded page moves, a stacked page keeps more than one panel, or a second run changes bytes.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-RETROFIT-GUARD"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-DEMAND-FAMILIES",
+      "name": "validate:demand-families",
+      "command": "npm run validate:demand-families",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Neither site had a demand pass: titles, definitions and FAQs were not built from the queries Search Console measures, and 32 pages (the homepage among them) carried two or three FAQPage nodes. The check fails when a host's demand_families.json is missing or strengthens anything but 8 measured families, an FAQ target is not a measured query, a strengthened page does not carry the section for the file's current content hash (stale), its title/CTA ref/question H2s/FAQ are missing, the homepage does not link it, or any page carries more than one FAQPage.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-DEMAND-FAMILIES"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
       "migration_status": "UNREVIEWED",
       "decision": null,
       "evidence": []

@@ -1,18 +1,18 @@
 {
   "schema_version": "1.1",
-  "generated_at": "2026-10-11T13:34:45.509Z",
-  "provider_state": "OK",
-  "overall_status": "OK",
-  "status_is_healthy": true,
+  "generated_at": "2026-10-12T13:54:40.413Z",
+  "provider_state": "DEGRADED",
+  "overall_status": "DEGRADED",
+  "status_is_healthy": false,
   "provider_states": {
     "gsc": "OK",
-    "grounded_search": "OK",
-    "competitor": "OK"
+    "grounded_search": "DISABLED_BY_OWNER_POLICY",
+    "competitor": "UNAVAILABLE"
   },
   "diagnosis_count": 120,
   "actionable_count": 120,
-  "evidence_backed_count": 24,
-  "unavailable_note": null,
+  "evidence_backed_count": 0,
+  "unavailable_note": "One or more provider lanes are degraded or unavailable; repairs require actual evidence.",
   "diagnoses": [
     {
       "target_id": "si_01a19f2474bb7e8e",
@@ -29,1091 +29,25 @@
       "route_match_title": "How to Use AI for Executive Coaching and Accountability",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
+        "google_search_console"
       ],
       "findings": [
         {
           "code": "GSC_NO_ROW_FOR_TARGET",
           "basis": "google_search_console",
           "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 9 other domain(s) and not an owned domain."
         }
       ],
-      "confidence": "EVIDENCE_BACKED",
+      "confidence": "PARTIAL_EVIDENCE",
       "actionable": true,
-      "priority": 33,
+      "priority": 8,
       "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "alexandria.unisg.ch",
-        "arxiv.org",
-        "exa.ai",
-        "github.com",
-        "jmir.org",
-        "joinreframeapp.com",
-        "macrotracking.ai",
-        "phiand.ai",
-        "pmc.ncbi.nlm.nih.gov"
-      ],
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_0ca0b0a2bebfa8d2",
-      "query": "AI accountability system for athletes and missed-day recovery",
-      "intent": "solution_seeking",
-      "audience": "athletes",
-      "use_case": "missed_day_recovery",
-      "source_type": "tiktok",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery",
-      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery",
-      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 28,
-      "route_match_title": "BHPC vs accountability app for missed-day recovery",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 6 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "athletedata.health",
-        "athleteos.dev",
-        "github.com",
-        "journals.plos.org",
-        "mwm.ai",
-        "orreco.ai"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_17d4233a039a0359",
-      "query": "AI accountability system for busy parents and weight loss adherence",
-      "intent": "solution_seeking",
-      "audience": "busy_parents",
-      "use_case": "weight_loss_adherence",
-      "source_type": "quora",
-      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 22,
-      "route_match_title": "How to Use AI for Executive Coaching and Accountability",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 10 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "accountabilitypartner360.com",
-        "actibhealth.com",
-        "elio.fit",
-        "eylo.club",
-        "goalwizeai.com",
-        "livelyxkitchen.com",
-        "mayai.health",
-        "nutrismarts.ai",
-        "nutrition-research-journal.com",
-        "pecofy.com"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_380df4e86a03d148",
-      "query": "AI accountability system for busy parents and career acceleration",
-      "intent": "solution_seeking",
-      "audience": "busy_parents",
-      "use_case": "career_acceleration",
-      "source_type": "quora",
-      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 22,
-      "route_match_title": "How to Use AI for Executive Coaching and Accountability",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 10 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "alphamothers.com",
-        "emellow.io",
-        "empla.io",
-        "exhale.bot",
-        "mentalloadai.com",
-        "peppi.io",
-        "propelyourself.substack.com",
-        "rosieai.ai",
-        "thebossbestie.com",
-        "unsiloed.life"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_3bcf09a452ec6f84",
-      "query": "AI accountability system for creators and performance routines",
-      "intent": "solution_seeking",
-      "audience": "creators",
-      "use_case": "performance_routines",
-      "source_type": "tiktok",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
-      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
-      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 22,
-      "route_match_title": "BHPC vs accountability app for behavioral follow-through",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 9 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "channelgrade.com",
-        "cognipal.ai",
-        "creatorscore.io",
-        "github.com",
-        "homeangel.io",
-        "kitsuneai.co",
-        "learn.indexbox.io",
-        "publishedai.app",
-        "vidsrank.com"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_3be2d769919e35d4",
-      "query": "AI accountability system for athletes and delegation",
-      "intent": "solution_seeking",
-      "audience": "athletes",
-      "use_case": "delegation",
-      "source_type": "tiktok",
-      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 22,
-      "route_match_title": "How to Use AI for Executive Coaching and Accountability",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 9 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "arxiv.org",
-        "ascendia.org.pl",
-        "exa.ai",
-        "frontiersin.org",
-        "link.springer.com",
-        "olympics.com",
-        "players.news",
-        "stillmed.olympics.com",
-        "tiffin.edu"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_40328d5f1ec878f9",
-      "query": "AI accountability system for athletes and behavior reframing",
-      "intent": "solution_seeking",
-      "audience": "athletes",
-      "use_case": "behavior_reframing",
-      "source_type": "reddit",
-      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 14,
-      "route_match_title": "How to Use AI for Executive Coaching and Accountability",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 9 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "aiveda.io",
-        "arxiv.org",
-        "dl.acm.org",
-        "echodepthsports.com",
-        "leadthegame.newzenler.com",
-        "link.springer.com",
-        "medrxiv.org",
-        "mind-champs.com",
-        "playreflect.com"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_43465940583c8669",
-      "query": "AI accountability system for creators and fitness consistency",
-      "intent": "solution_seeking",
-      "audience": "creators",
-      "use_case": "fitness_consistency",
-      "source_type": "forums",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/answers/phase4/what-should-a-founder-do-when-working-without-a-chief-of-staff-and-needs-accountability-support",
-      "owned_route": "/answers/phase4/what-should-a-founder-do-when-working-without-a-chief-of-staff-and-needs-accountability-support",
-      "owned_file": "answers/phase4/what-should-a-founder-do-when-working-without-a-chief-of-staff-and-needs-accountability-support.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 20,
-      "route_match_title": "Accountability for a founder working without a chief of staff",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 10 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "creatorclone.fit",
-        "dl.acm.org",
-        "github.com",
-        "github.laiyagushi.com",
-        "keepon.ai",
-        "outsidecontext.com",
-        "twinsona.com",
-        "wpl.dev",
-        "yuniq.app",
-        "zoviz.com"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_44cfb54349dd64d5",
-      "query": "AI accountability system for athletes and multi-project management",
-      "intent": "solution_seeking",
-      "audience": "athletes",
-      "use_case": "multi_project_management",
-      "source_type": "quora",
-      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 22,
-      "route_match_title": "How to Use AI for Executive Coaching and Accountability",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 5 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "athoz.ai",
-        "gameplan.io",
-        "github.com",
-        "github.laiyagushi.com",
-        "sportsnest.ai"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_4f48e2d431578c28",
-      "query": "AI accountability system for operators and performance routines",
-      "intent": "solution_seeking",
-      "audience": "operators",
-      "use_case": "performance_routines",
-      "source_type": "reddit",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
-      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
-      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 22,
-      "route_match_title": "BHPC vs accountability app for behavioral follow-through",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 9 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "aiagentgovernance.org",
-        "aicomply.dev",
-        "arxiv.org",
-        "brutor.ai",
-        "cfvasignal.com",
-        "docs.airaproof.com",
-        "humanintel.net",
-        "orfonline.org",
-        "technologystewardship.org"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_58fc6e627be4746e",
-      "query": "AI accountability system for body goal users and goal tracking",
-      "intent": "solution_seeking",
-      "audience": "body_goal_users",
-      "use_case": "goal_tracking",
-      "source_type": "forums",
-      "expected_owned_url": "https://spryexecutiveos.com/insights/how-chatgpt-can-improve-personal-accountability-and-goal-tracking",
-      "owned_route": "/insights/how-chatgpt-can-improve-personal-accountability-and-goal-tracking",
-      "owned_file": "insights/how-chatgpt-can-improve-personal-accountability-and-goal-tracking.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 20,
-      "route_match_title": "How ChatGPT can improve personal accountability and goal tracking",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 8 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "abody.ai",
-        "apps.apple.com",
-        "frontiersin.org",
-        "github.com",
-        "nutrition-research-journal.com",
-        "oak-ai-strength-diet-coach.appstor.io",
-        "readfutureproof.com",
-        "watchmycal-ai-calorie-snap.appstor.io"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_7c62fff05d1cb9fe",
-      "query": "AI accountability system for decision-fatigue users and fitness consistency",
-      "intent": "solution_seeking",
-      "audience": "decision_fatigue_users",
-      "use_case": "fitness_consistency",
-      "source_type": "google_paa",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/answers/phase4/what-should-a-founder-do-when-facing-decision-fatigue-and-needs-accountability-support",
-      "owned_route": "/answers/phase4/what-should-a-founder-do-when-facing-decision-fatigue-and-needs-accountability-support",
-      "owned_file": "answers/phase4/what-should-a-founder-do-when-facing-decision-fatigue-and-needs-accountability-support.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 22,
-      "route_match_title": "Accountability for a founder facing decision fatigue",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 10 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "accountabilitypartner360.com",
-        "dorsi.ai",
-        "elio.fit",
-        "fitnudge.app",
-        "github.com",
-        "neww.ai",
-        "overlord.app",
-        "taity.ai",
-        "taskcoach.ai",
-        "vitaverse.ai"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_7e356c6936c1d7b4",
-      "query": "AI accountability system for athletes and weekly review",
-      "intent": "solution_seeking",
-      "audience": "athletes",
-      "use_case": "weekly_review",
-      "source_type": "reddit",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/chatgpt-prompts-for-weekly-review-and-planning",
-      "owned_route": "/chatgpt-prompts-for-weekly-review-and-planning",
-      "owned_file": "chatgpt-prompts-for-weekly-review-and-planning.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 16,
-      "route_match_title": "ChatGPT Prompts for Weekly Review and Planning",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 7 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "athenae.io",
-        "athlenote.com",
-        "completeaitraining.com",
-        "exa.ai",
-        "github.com",
-        "playreflect.com",
-        "tekzai.io"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_839405db00d5a42a",
-      "query": "AI accountability system for decision-fatigue users and workout execution",
-      "intent": "solution_seeking",
-      "audience": "decision_fatigue_users",
-      "use_case": "workout_execution",
-      "source_type": "youtube",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/answers/phase4/what-should-a-founder-do-when-facing-decision-fatigue-and-needs-accountability-support",
-      "owned_route": "/answers/phase4/what-should-a-founder-do-when-facing-decision-fatigue-and-needs-accountability-support",
-      "owned_file": "answers/phase4/what-should-a-founder-do-when-facing-decision-fatigue-and-needs-accountability-support.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 22,
-      "route_match_title": "Accountability for a founder facing decision fatigue",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 9 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "aidonis.ai",
-        "dorsi.ai",
-        "fitnessai.com",
-        "fitnessgen.app",
-        "github.com",
-        "overlord.app",
-        "pulsecoach.app",
-        "taity.ai",
-        "taskcoach.ai"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_8b24330d41a274e1",
-      "query": "accountability partner vs traditional coaching for students and early-career professionals",
-      "intent": "commercial_comparison",
-      "audience": "students_early_career",
-      "use_case": "missed_day_recovery",
-      "source_type": "google_paa",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery",
-      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery",
-      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 29,
-      "route_match_title": "BHPC vs accountability app for missed-day recovery",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 10 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "berxi.com",
-        "bespoke.fit",
-        "blog.cohorty.app",
-        "daily-pact.com",
-        "doitify.com",
-        "giodella.com",
-        "ilty.co",
-        "mentorme.com",
-        "thementors.store",
-        "usekaido.com"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_8cbe2eed91c5800b",
-      "query": "AI accountability system for body goal users and emotional reset",
-      "intent": "solution_seeking",
-      "audience": "body_goal_users",
-      "use_case": "emotional_reset",
-      "source_type": "reddit",
-      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 22,
-      "route_match_title": "How to Use AI for Executive Coaching and Accountability",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 8 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "apps.apple.com",
-        "freudly.ai",
-        "github.com",
-        "humanfactors.jmir.org",
-        "jmir.org",
-        "mwm.ai",
-        "phiand.ai",
-        "tammyfogarty.com"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_920b554b61e1c432",
-      "query": "AI accountability system for athletes and self-trust rebuilding",
-      "intent": "solution_seeking",
-      "audience": "athletes",
-      "use_case": "self_trust_rebuilding",
-      "source_type": "youtube",
-      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 22,
-      "route_match_title": "How to Use AI for Executive Coaching and Accountability",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 8 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "aisel.aisnet.org",
-        "exa.ai",
-        "frontiersin.org",
-        "game-nexus.org",
-        "link.springer.com",
-        "mdpi.com",
-        "olympics.com",
-        "stillmed.olympics.com"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_d49870451e734665",
-      "query": "AI accountability system for body goal users and chief-of-staff operating rhythm",
-      "intent": "solution_seeking",
-      "audience": "body_goal_users",
-      "use_case": "chief_of_staff_operating_rhythm",
-      "source_type": "reddit",
-      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 22,
-      "route_match_title": "How to Use AI for Executive Coaching and Accountability",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 7 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "askachiefofstaff.substack.com",
-        "brev.io",
-        "github.com",
-        "mgmt.beehiiv.com",
-        "nutrition-research-journal.com",
-        "research.google",
-        "rhythms.ai"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_d7347e6c2ad7641f",
-      "query": "AI accountability system for athletes and overplanning",
-      "intent": "solution_seeking",
-      "audience": "athletes",
-      "use_case": "overplanning",
-      "source_type": "reddit",
-      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 22,
-      "route_match_title": "How to Use AI for Executive Coaching and Accountability",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 8 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "athletedata.health",
-        "exa.ai",
-        "github.com",
-        "link.springer.com",
-        "mdpi.com",
-        "ncra.ucd.ie",
-        "olympics.com",
-        "stillmed.olympics.com"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_dac4bef6f4dc2289",
-      "query": "AI accountability system for consistency strugglers and nutrition discipline",
-      "intent": "solution_seeking",
-      "audience": "consistency_strugglers",
-      "use_case": "nutrition_discipline",
-      "source_type": "x_twitter",
-      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
-      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 22,
-      "route_match_title": "How to Use AI for Executive Coaching and Accountability",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 8 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "accountabilitypartner360.com",
-        "coachguido.com",
-        "nouriagent.com",
-        "nutriaiwellness.com",
-        "nutrition-research-journal.com",
-        "nutritracker.io",
-        "pmc.ncbi.nlm.nih.gov",
-        "trygoals.app"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
-      },
-      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
-    },
-    {
-      "target_id": "si_e7ee975fdc793033",
-      "query": "AI accountability system for consistency strugglers and workout execution",
-      "intent": "solution_seeking",
-      "audience": "consistency_strugglers",
-      "use_case": "workout_execution",
-      "source_type": "reddit",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/whitepapers/state-of-accountability-and-consistency",
-      "owned_route": "/whitepapers/state-of-accountability-and-consistency",
-      "owned_file": "whitepapers/state-of-accountability-and-consistency.html",
-      "ownership": "legacy_eligible",
-      "route_match_score": 20,
-      "route_match_title": "State of Accountability And Consistency: Execution Patterns, AI…",
-      "source": "data/intake/query_universe.json",
-      "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
-      ],
-      "findings": [
-        {
-          "code": "GSC_NO_ROW_FOR_TARGET",
-          "basis": "google_search_console",
-          "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_COMPETITORS_NOT_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced 10 other domain(s) and not an owned domain."
-        }
-      ],
-      "confidence": "EVIDENCE_BACKED",
-      "actionable": true,
-      "priority": 33,
-      "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": false,
-      "competitor_domains": [
-        "aiworkoutbuddy.app",
-        "coachguido.com",
-        "dlnext.acm.org",
-        "jonmango.com",
-        "nutritracker.io",
-        "outsidecontext.com",
-        "povver.ai",
-        "saga.coach",
-        "styrki.com",
-        "volitiontrainer.com"
-      ],
-      "provider_states": {
-        "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1149,8 +83,45 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_0ca0b0a2bebfa8d2",
+      "query": "AI accountability system for athletes and missed-day recovery",
+      "intent": "solution_seeking",
+      "audience": "athletes",
+      "use_case": "missed_day_recovery",
+      "source_type": "tiktok",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery",
+      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery",
+      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 28,
+      "route_match_title": "BHPC vs accountability app for missed-day recovery",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1186,8 +157,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1223,8 +194,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1260,8 +231,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1297,8 +268,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1334,8 +305,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1354,34 +325,62 @@
       "route_match_title": "the structured AI accountability system Vs Coaching",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
+        "google_search_console"
       ],
       "findings": [
         {
           "code": "GSC_NO_ROW_FOR_TARGET",
           "basis": "google_search_console",
           "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced an owned domain; this is surfacing observation, not rank."
         }
       ],
-      "confidence": "EVIDENCE_BACKED",
+      "confidence": "PARTIAL_EVIDENCE",
       "actionable": true,
       "priority": 8,
       "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": true,
-      "competitor_domains": [
-        "cliffsnotes.com",
-        "coursesidekick.com"
-      ],
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_17d4233a039a0359",
+      "query": "AI accountability system for busy parents and weight loss adherence",
+      "intent": "solution_seeking",
+      "audience": "busy_parents",
+      "use_case": "weight_loss_adherence",
+      "source_type": "quora",
+      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 22,
+      "route_match_title": "How to Use AI for Executive Coaching and Accountability",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1417,8 +416,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1454,8 +453,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1491,8 +490,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1528,8 +527,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1565,8 +564,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1602,8 +601,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1639,8 +638,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1676,8 +675,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1713,8 +712,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1750,8 +749,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1770,40 +769,25 @@
       "route_match_title": "BHPC vs accountability app for behavioral follow-through",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
+        "google_search_console"
       ],
       "findings": [
         {
           "code": "GSC_NO_ROW_FOR_TARGET",
           "basis": "google_search_console",
           "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced an owned domain; this is surfacing observation, not rank."
         }
       ],
-      "confidence": "EVIDENCE_BACKED",
+      "confidence": "PARTIAL_EVIDENCE",
       "actionable": true,
       "priority": 8,
       "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": true,
-      "competitor_domains": [
-        "aseyi.com",
-        "github.com",
-        "goaspi.com",
-        "gobrightbusiness.com",
-        "myzone.ai",
-        "octavius.ai",
-        "shane.logsdon.io",
-        "withpilot.ai"
-      ],
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1839,8 +823,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1876,8 +860,119 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_380df4e86a03d148",
+      "query": "AI accountability system for busy parents and career acceleration",
+      "intent": "solution_seeking",
+      "audience": "busy_parents",
+      "use_case": "career_acceleration",
+      "source_type": "quora",
+      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 22,
+      "route_match_title": "How to Use AI for Executive Coaching and Accountability",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_3bcf09a452ec6f84",
+      "query": "AI accountability system for creators and performance routines",
+      "intent": "solution_seeking",
+      "audience": "creators",
+      "use_case": "performance_routines",
+      "source_type": "tiktok",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
+      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
+      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 22,
+      "route_match_title": "BHPC vs accountability app for behavioral follow-through",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_3be2d769919e35d4",
+      "query": "AI accountability system for athletes and delegation",
+      "intent": "solution_seeking",
+      "audience": "athletes",
+      "use_case": "delegation",
+      "source_type": "tiktok",
+      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 22,
+      "route_match_title": "How to Use AI for Executive Coaching and Accountability",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1913,8 +1008,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1950,8 +1045,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -1987,8 +1082,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2024,8 +1119,45 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_40328d5f1ec878f9",
+      "query": "AI accountability system for athletes and behavior reframing",
+      "intent": "solution_seeking",
+      "audience": "athletes",
+      "use_case": "behavior_reframing",
+      "source_type": "reddit",
+      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 14,
+      "route_match_title": "How to Use AI for Executive Coaching and Accountability",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2061,8 +1193,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2098,8 +1230,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2135,8 +1267,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2172,8 +1304,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2209,8 +1341,45 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_43465940583c8669",
+      "query": "AI accountability system for creators and fitness consistency",
+      "intent": "solution_seeking",
+      "audience": "creators",
+      "use_case": "fitness_consistency",
+      "source_type": "forums",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/answers/phase4/what-should-a-founder-do-when-working-without-a-chief-of-staff-and-needs-accountability-support",
+      "owned_route": "/answers/phase4/what-should-a-founder-do-when-working-without-a-chief-of-staff-and-needs-accountability-support",
+      "owned_file": "answers/phase4/what-should-a-founder-do-when-working-without-a-chief-of-staff-and-needs-accountability-support.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 20,
+      "route_match_title": "Accountability for a founder working without a chief of staff",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2246,8 +1415,45 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_44cfb54349dd64d5",
+      "query": "AI accountability system for athletes and multi-project management",
+      "intent": "solution_seeking",
+      "audience": "athletes",
+      "use_case": "multi_project_management",
+      "source_type": "quora",
+      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 22,
+      "route_match_title": "How to Use AI for Executive Coaching and Accountability",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2283,8 +1489,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2320,8 +1526,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2357,8 +1563,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2394,8 +1600,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2431,8 +1637,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2468,8 +1674,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2505,8 +1711,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2542,8 +1748,45 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_4f48e2d431578c28",
+      "query": "AI accountability system for operators and performance routines",
+      "intent": "solution_seeking",
+      "audience": "operators",
+      "use_case": "performance_routines",
+      "source_type": "reddit",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
+      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
+      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 22,
+      "route_match_title": "BHPC vs accountability app for behavioral follow-through",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2579,8 +1822,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2616,8 +1859,45 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_58fc6e627be4746e",
+      "query": "AI accountability system for body goal users and goal tracking",
+      "intent": "solution_seeking",
+      "audience": "body_goal_users",
+      "use_case": "goal_tracking",
+      "source_type": "forums",
+      "expected_owned_url": "https://spryexecutiveos.com/insights/how-chatgpt-can-improve-personal-accountability-and-goal-tracking",
+      "owned_route": "/insights/how-chatgpt-can-improve-personal-accountability-and-goal-tracking",
+      "owned_file": "insights/how-chatgpt-can-improve-personal-accountability-and-goal-tracking.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 20,
+      "route_match_title": "How ChatGPT can improve personal accountability and goal tracking",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2653,8 +1933,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2690,8 +1970,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2727,8 +2007,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2764,8 +2044,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2801,8 +2081,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2838,8 +2118,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2875,8 +2155,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2912,8 +2192,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2949,8 +2229,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -2986,8 +2266,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3023,8 +2303,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3060,8 +2340,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3097,8 +2377,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3134,8 +2414,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3171,8 +2451,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3208,8 +2488,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3245,8 +2525,45 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_7c62fff05d1cb9fe",
+      "query": "AI accountability system for decision-fatigue users and fitness consistency",
+      "intent": "solution_seeking",
+      "audience": "decision_fatigue_users",
+      "use_case": "fitness_consistency",
+      "source_type": "google_paa",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/answers/phase4/what-should-a-founder-do-when-facing-decision-fatigue-and-needs-accountability-support",
+      "owned_route": "/answers/phase4/what-should-a-founder-do-when-facing-decision-fatigue-and-needs-accountability-support",
+      "owned_file": "answers/phase4/what-should-a-founder-do-when-facing-decision-fatigue-and-needs-accountability-support.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 22,
+      "route_match_title": "Accountability for a founder facing decision fatigue",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3282,8 +2599,45 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_7e356c6936c1d7b4",
+      "query": "AI accountability system for athletes and weekly review",
+      "intent": "solution_seeking",
+      "audience": "athletes",
+      "use_case": "weekly_review",
+      "source_type": "reddit",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/chatgpt-prompts-for-weekly-review-and-planning",
+      "owned_route": "/chatgpt-prompts-for-weekly-review-and-planning",
+      "owned_file": "chatgpt-prompts-for-weekly-review-and-planning.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 16,
+      "route_match_title": "ChatGPT Prompts for Weekly Review and Planning",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3319,8 +2673,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3336,7 +2690,7 @@
       "owned_file": "comparisons/bhpc-vs-torch.html",
       "ownership": "legacy_eligible",
       "route_match_score": 15,
-      "route_match_title": "BHPC vs Torch: Coaching Alternative for Execution Systems",
+      "route_match_title": "Torch Coaching Alternatives: Torch and Hone vs AI Coaching",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
         "google_search_console"
@@ -3356,8 +2710,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3393,8 +2747,45 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_839405db00d5a42a",
+      "query": "AI accountability system for decision-fatigue users and workout execution",
+      "intent": "solution_seeking",
+      "audience": "decision_fatigue_users",
+      "use_case": "workout_execution",
+      "source_type": "youtube",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/answers/phase4/what-should-a-founder-do-when-facing-decision-fatigue-and-needs-accountability-support",
+      "owned_route": "/answers/phase4/what-should-a-founder-do-when-facing-decision-fatigue-and-needs-accountability-support",
+      "owned_file": "answers/phase4/what-should-a-founder-do-when-facing-decision-fatigue-and-needs-accountability-support.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 22,
+      "route_match_title": "Accountability for a founder facing decision fatigue",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3430,8 +2821,45 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_8b24330d41a274e1",
+      "query": "accountability partner vs traditional coaching for students and early-career professionals",
+      "intent": "commercial_comparison",
+      "audience": "students_early_career",
+      "use_case": "missed_day_recovery",
+      "source_type": "google_paa",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery",
+      "owned_route": "/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery",
+      "owned_file": "vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 29,
+      "route_match_title": "BHPC vs accountability app for missed-day recovery",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3467,8 +2895,45 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_8cbe2eed91c5800b",
+      "query": "AI accountability system for body goal users and emotional reset",
+      "intent": "solution_seeking",
+      "audience": "body_goal_users",
+      "use_case": "emotional_reset",
+      "source_type": "reddit",
+      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 22,
+      "route_match_title": "How to Use AI for Executive Coaching and Accountability",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3504,8 +2969,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3524,40 +2989,62 @@
       "route_match_title": "BHPC vs accountability app for behavioral follow-through",
       "source": "data/intake/query_universe.json",
       "evidence_used": [
-        "google_search_console",
-        "grounded_search_observation"
+        "google_search_console"
       ],
       "findings": [
         {
           "code": "GSC_NO_ROW_FOR_TARGET",
           "basis": "google_search_console",
           "detail": "No Search Console row for this query in the collected window."
-        },
-        {
-          "code": "GROUNDED_REFERENCES_OWN_DOMAIN",
-          "basis": "grounded_search_observation",
-          "detail": "Grounded answer referenced an owned domain; this is surfacing observation, not rank."
         }
       ],
-      "confidence": "EVIDENCE_BACKED",
+      "confidence": "PARTIAL_EVIDENCE",
       "actionable": true,
       "priority": 8,
       "gsc_query_metrics": null,
-      "grounded_own_domain_referenced": true,
-      "competitor_domains": [
-        "foundermodeon.com",
-        "github.com",
-        "octavius.ai",
-        "qrush.pro",
-        "shane.logsdon.io",
-        "trycofounder.com",
-        "trysteward.org",
-        "withpilot.ai"
-      ],
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_920b554b61e1c432",
+      "query": "AI accountability system for athletes and self-trust rebuilding",
+      "intent": "solution_seeking",
+      "audience": "athletes",
+      "use_case": "self_trust_rebuilding",
+      "source_type": "youtube",
+      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 22,
+      "route_match_title": "How to Use AI for Executive Coaching and Accountability",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3593,8 +3080,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3630,8 +3117,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3667,8 +3154,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3704,8 +3191,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3741,8 +3228,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3778,8 +3265,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3815,8 +3302,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3852,8 +3339,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3889,8 +3376,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3926,8 +3413,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -3963,8 +3450,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4000,8 +3487,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4037,8 +3524,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4074,8 +3561,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4111,8 +3598,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4148,8 +3635,45 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_d49870451e734665",
+      "query": "AI accountability system for body goal users and chief-of-staff operating rhythm",
+      "intent": "solution_seeking",
+      "audience": "body_goal_users",
+      "use_case": "chief_of_staff_operating_rhythm",
+      "source_type": "reddit",
+      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 22,
+      "route_match_title": "How to Use AI for Executive Coaching and Accountability",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4185,8 +3709,45 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_d7347e6c2ad7641f",
+      "query": "AI accountability system for athletes and overplanning",
+      "intent": "solution_seeking",
+      "audience": "athletes",
+      "use_case": "overplanning",
+      "source_type": "reddit",
+      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 22,
+      "route_match_title": "How to Use AI for Executive Coaching and Accountability",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4222,8 +3783,45 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_dac4bef6f4dc2289",
+      "query": "AI accountability system for consistency strugglers and nutrition discipline",
+      "intent": "solution_seeking",
+      "audience": "consistency_strugglers",
+      "use_case": "nutrition_discipline",
+      "source_type": "x_twitter",
+      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_route": "/how-to-use-ai-for-executive-coaching-and-accountability",
+      "owned_file": "how-to-use-ai-for-executive-coaching-and-accountability.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 22,
+      "route_match_title": "How to Use AI for Executive Coaching and Accountability",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4259,8 +3857,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4296,8 +3894,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4333,8 +3931,45 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
+      },
+      "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
+    },
+    {
+      "target_id": "si_e7ee975fdc793033",
+      "query": "AI accountability system for consistency strugglers and workout execution",
+      "intent": "solution_seeking",
+      "audience": "consistency_strugglers",
+      "use_case": "workout_execution",
+      "source_type": "reddit",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/whitepapers/state-of-accountability-and-consistency",
+      "owned_route": "/whitepapers/state-of-accountability-and-consistency",
+      "owned_file": "whitepapers/state-of-accountability-and-consistency.html",
+      "ownership": "legacy_eligible",
+      "route_match_score": 20,
+      "route_match_title": "State of Accountability And Consistency: Execution Patterns, AI…",
+      "source": "data/intake/query_universe.json",
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "findings": [
+        {
+          "code": "GSC_NO_ROW_FOR_TARGET",
+          "basis": "google_search_console",
+          "detail": "No Search Console row for this query in the collected window."
+        }
+      ],
+      "confidence": "PARTIAL_EVIDENCE",
+      "actionable": true,
+      "priority": 8,
+      "gsc_query_metrics": null,
+      "grounded_own_domain_referenced": null,
+      "competitor_domains": [],
+      "provider_states": {
+        "gsc": "OK",
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4370,8 +4005,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4407,8 +4042,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4444,8 +4079,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4481,8 +4116,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4518,8 +4153,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4555,8 +4190,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4592,8 +4227,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4629,8 +4264,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4666,8 +4301,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4703,8 +4338,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4740,8 +4375,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4777,8 +4412,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     },
@@ -4814,8 +4449,8 @@
       "competitor_domains": [],
       "provider_states": {
         "gsc": "OK",
-        "grounded_search": "OK",
-        "competitor": "OK"
+        "grounded_search": "DISABLED_BY_OWNER_POLICY",
+        "competitor": "UNAVAILABLE"
       },
       "truth_boundary": "Uses only named evidence. Grounded observation is not Google rank."
     }
