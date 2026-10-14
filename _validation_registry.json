@@ -8594,8 +8594,38 @@
         "MX-DEMAND-FAMILIES"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-GENERATORS-KEEP-DEMAND-PAGES",
+      "status": "ADMITTED",
+      "name": "validate:generators-keep-demand-pages",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Spry Content Release went red on 12 and 13 Oct 2026: build:comparison (content:pipeline) re-rendered comparisons/bhpc-vs-betterup.html, a demand-family primary page since #133, with a flat CITATION_PAGE_SCHEMA and no @graph, so apply_demand_families.py in release:content-finalize could not carry its FAQPage and failed the lane. Every check validated the committed tree, which was correct, so nothing saw the generator undo it. The check copies the working tree, runs every page generator the release cycle runs, fails when any strengthened family's primary page lost its @graph schema, runs the demand pass on the copy and fails when it fails or a family's section, hash or FAQPage node did not survive; it hard-fails on zero families or zero primary pages rewritten by a generator.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:generators-keep-demand-pages",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-generators-keep-demand-pages/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-14",
+      "matrix_ids": [
+        "MX-GENERATORS-KEEP-DEMAND-PAGES"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 274,
+  "record_count": 275,
   "generated_at": "2026-08-08T23:30:00Z"
 }
