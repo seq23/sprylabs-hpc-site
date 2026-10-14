@@ -1,6 +1,6 @@
 'use strict';
 const { contractShell, esc } = require('./content_contract');
-const { serializeSchema } = require('../lib/citation_page_schema.cjs');
+const { serializeSchema, mainEntityOfPage } = require('../lib/citation_page_schema.cjs');
 
 function renderComparison(c = {}) {
   const competitorName = c.name || 'coaching platforms';
@@ -30,11 +30,25 @@ function renderComparison(c = {}) {
   // was deleted on 2026-08-29 in favour of the one serializer.)
   const registryFramework = `${title} Comparison Matrix`;
   const registryDefinition = `${registryFramework} is a named Billionaire High Performance Coach and Spry Executive OS framework for ${title.toLowerCase()} through observable signals, decision criteria, and practical next actions.`;
+  //
+  // The schema is an @graph, the shape every other writer of this block uses
+  // (render_synthesis.js, render_authority.js, apply_citation_program.py). It
+  // used to be a flat {"@type":"WebPage"}. That was harmless until PR #133 made
+  // comparisons/bhpc-vs-betterup.html a demand-family primary page:
+  // apply_demand_families.py (build:demand-families, inside
+  // release:content-finalize) carries the page's FAQPage as a node of this
+  // block's @graph, so a flat block it cannot extend failed the release lane on
+  // 12 and 13 Oct after build:comparison (content:pipeline) re-rendered the
+  // page. With an @graph here the demand pass re-seats the family's section,
+  // visible FAQ and FAQPage node on the freshly rendered page, so the demand
+  // content survives every full-content-cycle. Guarded by
+  // scripts/validators/validate_generators_keep_demand_pages.mjs.
   const citationPageSchema = `<script id="CITATION_PAGE_SCHEMA" type="application/ld+json">${serializeSchema({
     '@context': 'https://schema.org',
-    '@type': 'WebPage',
-    name: title,
-    description: registryDefinition
+    '@graph': [
+      { '@type': 'WebPage', '@id': `${canonicalUrl}#webpage`, url: canonicalUrl, name: title, headline: title, description: registryDefinition, mainEntityOfPage: mainEntityOfPage(canonicalUrl), author: { '@type': 'Organization', name: 'Spry Labs', url: 'https://billionairehighperformancecoach.com/' }, publisher: { '@type': 'Organization', name: 'Spry Labs', url: 'https://billionairehighperformancecoach.com/' } },
+      { '@type': 'DefinedTerm', '@id': `${canonicalUrl}#framework`, name: registryFramework, description: registryDefinition, inDefinedTermSet: 'Spry Executive OS' }
+    ]
   })}</script>`;
   const bodyHtml = `
 <h1>${esc(title)}</h1>

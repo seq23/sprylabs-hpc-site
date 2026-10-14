@@ -428,7 +428,8 @@
     "validate:retrofit-guard": "node scripts/validators/validate_retrofit_guard.mjs",
     "build:demand-families": "node scripts/validation/python_runtime.mjs run scripts/search_intelligence/apply_demand_families.py --apply",
     "repair:single-faqpage": "node scripts/validation/python_runtime.mjs run scripts/repair/single_faqpage.py --apply",
-    "validate:demand-families": "node scripts/validators/validate_demand_families.mjs"
+    "validate:demand-families": "node scripts/validators/validate_demand_families.mjs",
+    "validate:generators-keep-demand-pages": "node scripts/validators/validate_generators_keep_demand_pages.mjs"
   },
   "engines": {
     "node": ">=24.0.0"
