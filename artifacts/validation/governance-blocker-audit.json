@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-10-14T13:33:00.444Z",
+  "generated_at": "2026-10-14T15:14:08.315Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 256,
+  "admitted_hard_fail_count": 257,
   "reviewed_count": 8,
-  "unreviewed_count": 248,
+  "unreviewed_count": 249,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 195,
+    "REVIEW_REQUIRED": 196,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 33,
     "REVIEW_WARNING_BOUNDARY": 20
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 195,
+    "REVIEW_REQUIRED": 196,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 33,
     "REVIEW_WARNING_BOUNDARY": 12
   },
   "migration_status_counts": {
-    "UNREVIEWED": 248,
+    "UNREVIEWED": 249,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -3883,6 +3883,21 @@
         "MX-DEMAND-FAMILIES"
       ],
       "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-GENERATORS-KEEP-DEMAND-PAGES",
+      "name": "validate:generators-keep-demand-pages",
+      "command": "npm run validate:generators-keep-demand-pages",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Spry Content Release went red on 12 and 13 Oct 2026: build:comparison (content:pipeline) re-rendered comparisons/bhpc-vs-betterup.html, a demand-family primary page since #133, with a flat CITATION_PAGE_SCHEMA and no @graph, so apply_demand_families.py in release:content-finalize could not carry its FAQPage and failed the lane. Every check validated the committed tree, which was correct, so nothing saw the generator undo it. The check copies the working tree, runs every page generator the release cycle runs, fails when any strengthened family's primary page lost its @graph schema, runs the demand pass on the copy and fails when it fails or a family's section, hash or FAQPage node did not survive; it hard-fails on zero families or zero primary pages rewritten by a generator.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-GENERATORS-KEEP-DEMAND-PAGES"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",
       "decision": null,
       "evidence": []

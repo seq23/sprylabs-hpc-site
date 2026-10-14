@@ -1,26 +1,26 @@
 {
   "schema_version": "1.0",
   "validator": "validate:health-boundary-reach",
-  "generated_at": "2026-10-11T14:35:47.238Z",
+  "generated_at": "2026-10-14T15:03:52.257Z",
   "gate": "validate:programmatic-admission",
   "producer": "repair:health-boundary",
   "lanes_examined": 3,
   "lanes": [
     {
       "lane": "release:agent-intake",
-      "gate_step_index": 49,
+      "gate_step_index": 51,
       "producer_step_index": 47,
       "compliant": true
     },
     {
       "lane": "release:batch-f-agent-continuity",
-      "gate_step_index": 50,
+      "gate_step_index": 52,
       "producer_step_index": 48,
       "compliant": true
     },
     {
       "lane": "release:content-finalize",
-      "gate_step_index": 13,
+      "gate_step_index": 15,
       "producer_step_index": 11,
       "compliant": true
     }
