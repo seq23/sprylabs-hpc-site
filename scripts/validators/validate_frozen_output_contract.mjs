@@ -66,6 +66,21 @@ let carrying = 0;
 let clean = 0;
 let missingBlob = 0;
 let hashLies = 0;
+let deadLinks = 0;
+const redirectSources = new Set((fs.existsSync(path.join(ROOT, '_redirects')) ? fs.readFileSync(path.join(ROOT, '_redirects'), 'utf8') : '')
+  .split(/\r?\n/).map((l) => l.trim().split(/\s+/)[0]).filter((x) => x && !x.startsWith('#')));
+if (!redirectSources.size) fail('_redirects declares no rules; the dead-link check cannot tell a redirect from a 404.');
+const isFile = (rel) => { const abs = path.join(ROOT, rel); return fs.existsSync(abs) && fs.statSync(abs).isFile(); };
+// "/x/" is served only by x/index.html (x.html alone answers /x/ with a 308, which
+// the link validators count as a dead link); "/x" by x.html or x/index.html.
+function internalHrefResolves(href) {
+  const p = href.split(/[?#]/)[0];
+  if (p === '/' || redirectSources.has(p)) return true;
+  const rel = p.slice(1);
+  if (p.endsWith('/')) return isFile(`${rel}index.html`);
+  if (/\.[a-z0-9]+$/i.test(rel)) return !/\.html$/i.test(rel) || isFile(rel);
+  return isFile(`${rel}.html`) || isFile(`${rel}/index.html`);
+}
 
 for (const [route, rec] of records) {
   const blobRel = rec.blob || '';
@@ -83,6 +98,14 @@ for (const [route, rec] of records) {
     continue;
   }
   const html = raw.toString('utf8');
+  // A frozen blob may not link to a route the tree no longer serves. #137
+  // retired billionaire-high-performance-coach/index.html and fixed the 12 pages
+  // linking to it, but not their blobs, so the next lane's restore() put
+  // href="/billionaire-high-performance-coach/" back (b90f88a69, 16 Oct 2026)
+  // and validate:graph + redirect-and-link-integrity went red on main.
+  for (const lm of html.matchAll(/href="(\/(?:[^"\/][^"]*)?)"/g)) {
+    if (!internalHrefResolves(lm[1])) { deadLinks += 1; problems.push(`${rec.path}: frozen blob links ${lm[1]}, which no file in the tree serves and no _redirects rule catches; restore() would write a dead internal link. Fix the blob (and the page) and re-hash the record.`); }
+  }
   // SCHEMA_SCRIPT_RE is shared and global; exec state must not leak between blobs.
   const m = new RegExp(SCHEMA_SCRIPT_RE.source, SCHEMA_SCRIPT_RE.flags.replace('g', '')).exec(html);
   if (!m) continue;
@@ -138,7 +161,7 @@ if (problems.length) {
   // does NOT normalise them either; it preserves the existing block.
   fail(
     `${problems.length} frozen blob(s) would fail the page contracts if restored ` +
-      `(${missingBlob} missing, ${hashLies} hash mismatch). Fix in this order: ` +
+      `(${missingBlob} missing, ${hashLies} hash mismatch, ${deadLinks} dead internal link(s)). Fix in this order: ` +
       'npm run schema:repair-parity (unscoped) to normalise the pages, confirm ' +
       'npm run validate:citation-schema-serialization passes, then re-freeze with ' +
       'prepare-drift-scope -> freeze -> clear-scope. Re-freezing a reverted tree stores the defect.',
@@ -148,6 +171,6 @@ if (problems.length) {
 
 console.log(
   `[frozen-output-contract] PASS: ${clean} of ${carrying} frozen blob(s) carrying CITATION_PAGE_SCHEMA satisfy ` +
-    `the serialization and mainEntityOfPage contracts; ${records.length} record(s) in the store. ` +
+    `the serialization and mainEntityOfPage contracts; every internal link in ${records.length} frozen record(s) resolves. ` +
     'authority:scale:restore cannot reintroduce a validator failure.',
 );
