@@ -24,7 +24,9 @@ import { QUEUE_FILE } from './pinfeed_lib.mjs';
 export const DATASET = 'aplayermode_pin_visits';
 export const DEFAULT_ACCOUNT_ID = '8d147e242033699dd37c6f5a451f48d2';
 export const SECRET = 'CLOUDFLARE_API_TOKEN';
-export const SQL = `SELECT blob1 AS variant, SUM(_sample_interval) AS visits FROM ${DATASET} WHERE timestamp > NOW() - INTERVAL '7' DAY GROUP BY variant ORDER BY visits DESC FORMAT JSON`;
+// Test visits logged by live verification (PR #138) are not Pinterest traffic.
+export const EXCLUDED_VARIANTS = ['verify-probe'];
+export const SQL = `SELECT blob1 AS variant, SUM(_sample_interval) AS visits FROM ${DATASET} WHERE timestamp > NOW() - INTERVAL '7' DAY AND blob1 NOT IN (${EXCLUDED_VARIANTS.map((v) => `'${v}'`).join(', ')}) GROUP BY variant ORDER BY visits DESC FORMAT JSON`;
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const OUT_DIR = path.join(root, 'reports/pinterest');
