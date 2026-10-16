@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-10-16T13:33:47.945Z",
+  "generated_at": "2026-10-16T15:08:56.076Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 257,
+  "admitted_hard_fail_count": 258,
   "reviewed_count": 8,
-  "unreviewed_count": 249,
+  "unreviewed_count": 250,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 196,
+    "REVIEW_REQUIRED": 197,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 33,
     "REVIEW_WARNING_BOUNDARY": 20
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 196,
+    "REVIEW_REQUIRED": 197,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 33,
     "REVIEW_WARNING_BOUNDARY": 12
   },
   "migration_status_counts": {
-    "UNREVIEWED": 249,
+    "UNREVIEWED": 250,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -3896,6 +3896,21 @@
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-GENERATORS-KEEP-DEMAND-PAGES"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-APLAYERMODE-PINTEREST",
+      "name": "validate:aplayermode-pinterest",
+      "command": "npm run validate:aplayermode-pinterest",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "aplayermode.com Pinterest launch (16 Oct 2026): the domain claim meta could drop off aplayermode.com's homepage or leak onto the BHPC/spryexecutiveos homepage, and the Pinterest RSS feed at /pinfeed.xml could stop being 200 application/rss+xml, drift from its config, lose utm tags, link the checkout or Spry, or point at missing / wrongly sized pin images; the check renders the homepage and feed through the real Worker and fails on each.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-APLAYERMODE-PINTEREST"
       ],
       "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",
