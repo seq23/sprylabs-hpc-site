@@ -2,103 +2,6 @@
   "schema_version": "1.0",
   "runs": [
     {
-      "run_at": "2026-08-26T13:45:41.365Z",
-      "provider": "openrouter",
-      "engines": [
-        "z-ai/glm-5.2:free",
-        "nvidia/nemotron-3-ultra-550b-a55b:free",
-        "thinkingmachines/inkling:free"
-      ],
-      "mode": "knowledge",
-      "queries": 3,
-      "observations": [
-        {
-          "query": "ai coaching tools",
-          "engine": "openrouter:z-ai/glm-5.2:free",
-          "mode": "knowledge",
-          "observed_at": "2026-08-26T13:45:41.365Z",
-          "status": "provider_error",
-          "error": "Provider returned error"
-        },
-        {
-          "query": "ai coaching tools",
-          "engine": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
-          "mode": "knowledge",
-          "observed_at": "2026-08-26T13:45:41.365Z",
-          "status": "observed",
-          "cited_domains": [],
-          "cited_ours": [],
-          "self_cited": false,
-          "named_in_answer": [],
-          "answer_mentions_brand": false
-        },
-        {
-          "query": "ai coaching tools",
-          "engine": "openrouter:thinkingmachines/inkling:free",
-          "mode": "knowledge",
-          "observed_at": "2026-08-26T13:45:41.365Z",
-          "status": "provider_error",
-          "error": "thinkingmachines/inkling:free is only available on agentic harnesses. Try plugging it into a coding agent or productivity app listed on https://openrouter.ai/apps"
-        },
-        {
-          "query": "adhd productivity",
-          "engine": "openrouter:z-ai/glm-5.2:free",
-          "mode": "knowledge",
-          "observed_at": "2026-08-26T13:45:41.365Z",
-          "status": "provider_error",
-          "error": "Provider returned error"
-        },
-        {
-          "query": "adhd productivity",
-          "engine": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
-          "mode": "knowledge",
-          "observed_at": "2026-08-26T13:45:41.365Z",
-          "status": "observed",
-          "cited_domains": [],
-          "cited_ours": [],
-          "self_cited": false,
-          "named_in_answer": [],
-          "answer_mentions_brand": false
-        },
-        {
-          "query": "adhd productivity",
-          "engine": "openrouter:thinkingmachines/inkling:free",
-          "mode": "knowledge",
-          "observed_at": "2026-08-26T13:45:41.365Z",
-          "status": "provider_error",
-          "error": "thinkingmachines/inkling:free is only available on agentic harnesses. Try plugging it into a coding agent or productivity app listed on https://openrouter.ai/apps"
-        },
-        {
-          "query": "ai coach vs movement investigation",
-          "engine": "openrouter:z-ai/glm-5.2:free",
-          "mode": "knowledge",
-          "observed_at": "2026-08-26T13:45:41.365Z",
-          "status": "provider_error",
-          "error": "Provider returned error"
-        },
-        {
-          "query": "ai coach vs movement investigation",
-          "engine": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
-          "mode": "knowledge",
-          "observed_at": "2026-08-26T13:45:41.365Z",
-          "status": "observed",
-          "cited_domains": [],
-          "cited_ours": [],
-          "self_cited": false,
-          "named_in_answer": [],
-          "answer_mentions_brand": false
-        },
-        {
-          "query": "ai coach vs movement investigation",
-          "engine": "openrouter:thinkingmachines/inkling:free",
-          "mode": "knowledge",
-          "observed_at": "2026-08-26T13:45:41.365Z",
-          "status": "provider_error",
-          "error": "thinkingmachines/inkling:free is only available on agentic harnesses. Try plugging it into a coding agent or productivity app listed on https://openrouter.ai/apps"
-        }
-      ]
-    },
-    {
       "run_at": "2026-08-26T13:52:10.427Z",
       "provider": "openrouter",
       "engines": [
@@ -24651,30 +24554,49 @@
           "answer_mentions_brand": false
         }
       ]
+    },
+    {
+      "run_at": "2026-10-16T16:41:35.500Z",
+      "provider": "openrouter",
+      "engines": [
+        "free-router"
+      ],
+      "mode": "knowledge",
+      "queries": 25,
+      "key_label": {
+        "status": "ok",
+        "label": "sk-or-v1-31b...3ab",
+        "limit": 0,
+        "usage": 98.835783896,
+        "is_free_tier": false,
+        "limit_remaining": 0
+      },
+      "observations": []
     }
   ],
   "latest_summary": {
-    "run_at": "2026-10-11T16:27:07.497Z",
+    "run_at": "2026-10-16T16:41:35.500Z",
     "provider": "openrouter",
     "engines": [
       "free-router"
     ],
     "mode": "knowledge",
     "queries": 25,
-    "observations": 25,
-    "answered": 25,
+    "observations": 0,
+    "answered": 0,
     "self_cited": 0,
     "errored": 0,
-    "measurement_state": "MEASURED",
+    "measurement_state": "NOT_MEASURED",
     "_mode_note": "knowledge: counted when the model named us unprompted, with no retrieval. Weaker than a citation and must not be reported as one.",
     "_rate_basis": "self_cited / answered observations. null when the provider answered nothing - an unmeasured run is not a zero.",
-    "self_cited_rate_pct": 0
+    "self_cited_rate_pct": null
   },
   "last_skip": {
-    "at": "2026-10-03T15:03:55.024Z",
-    "provider": "gemini",
+    "at": "2026-10-16T16:41:35.500Z",
+    "provider": "openrouter",
     "mode": "knowledge",
-    "reason": "no credential for provider gemini",
+    "state": "NAMED_STOP_CREDENTIAL_REFUSED",
+    "reason": "NAMED_STOP_CREDENTIAL_REFUSED: OpenRouter key disabled or invalid (HTTP 403); free routing needs an enabled key with a $0 limit; key_label={\"status\":\"ok\",\"label\":\"sk-or-v1-31b...3ab\",\"limit\":0,\"usage\":98.835783896,\"is_free_tier\":false,\"limit_remaining\":0}",
     "queries_ready": 25
   }
 }
