@@ -115,6 +115,14 @@ if cfg_path.exists():
         cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
         config_key_file = (cfg.get("indexnow") or {}).get("key_file")
         config_key = (cfg.get("indexnow") or {}).get("key")
+        # A host with its own key (indexnow.host_keys, e.g. aplayermode.com) is
+        # verified against ITS key file, not the shared hosts' one. Without this
+        # the deploy's host_keys step failed "verification file mismatch" on
+        # the shared key file the first time it ran for real (16 Oct 2026).
+        host_entry = ((cfg.get("indexnow") or {}).get("host_keys") or {}).get(forced_host)
+        if forced_host and host_entry:
+            config_key_file = host_entry.get("key_file")
+            config_key = host_entry.get("key")
     except Exception:
         config_key_file = None
 
@@ -140,6 +148,11 @@ else:
 
 if not verification["ok"] and not dry_run:
     raise SystemExit(f"ERROR: IndexNow key verification file mismatch/missing: {verification['path']}")
+if os.environ.get("INDEXNOW_VERIFY_ONLY") == "1":
+    if not verification["ok"]:
+        raise SystemExit(f"ERROR: IndexNow key verification file mismatch/missing: {verification['path']}")
+    print(f"IndexNow key verified: {verification['path']}")
+    raise SystemExit(0)
 
 chunk_size = 100
 if cfg_path.exists():
