@@ -15,7 +15,8 @@
     "source": "GET https://openrouter.ai/api/v1/models (unauthenticated)",
     "taken_at": "2026-10-11",
     "selection_rule": "pricing.prompt == \"0\" && pricing.completion == \"0\" (and request/web_search absent or \"0\"), context_length >= 32000, text output, general instruct model; meta-routers (openrouter/free) excluded because they choose the model for us",
-    "free_models_seen": 19
+    "free_models_seen": 19,
+    "selection_note": "2026-10-16: thinkingmachines/inkling:free dropped (403 'only available on agentic harnesses' on Daily Citation Intelligence run 38932788448, same reason the siblings dropped it on 11 Oct 2026), google/gemma-4-26b-a4b-it:free added as the fourth fallback"
   },
   "free_models": [
     {
@@ -46,15 +47,19 @@
       }
     },
     {
-      "id": "thinkingmachines/inkling:free",
-      "why": "different vendor, last resort before the named stop",
-      "context_length": 1048576,
+      "id": "google/gemma-4-26b-a4b-it:free",
+      "why": "fourth fallback, as in the sibling repos (approvalprep, dream-wedding-builder, p-n-p, 11 Oct 2026): a smaller non-reasoning Gemma whose upstream rate limit is separate from gemma-4-31b's",
+      "context_length": 262144,
       "pricing": {
         "prompt": "0",
         "completion": "0"
       }
     }
   ],
+  "excluded_models": {
+    "_rule": "Ids here may never appear in free_models; validate:zero-paid-llm enforces it.",
+    "thinkingmachines/inkling:free": "HTTP 403 'only available on agentic harnesses' for chat-completions callers (siblings 11 Oct 2026; this repo run 38932788448, 16 Oct 2026)"
+  },
   "paid_lanes": {
     "_rule": "A lane listed here costs money on every call (OpenRouter's web plugin bills per request whatever the model). It is off every schedule and runs only on workflow_dispatch with confirm_paid: true; otherwise its script records DISABLED_BY_OWNER_POLICY and exits 0 having called nothing.",
     "citation_probe_grounded": {

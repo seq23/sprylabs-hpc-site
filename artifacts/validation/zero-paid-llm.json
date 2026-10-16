@@ -1,9 +1,9 @@
 {
-  "checked_at": "2026-10-11T15:58:02.360Z",
+  "checked_at": "2026-10-16T17:01:08.969Z",
   "free_models": [
+    "nvidia/nemotron-3-super-120b-a12b:free",
     "nvidia/nemotron-3-ultra-550b-a55b:free",
     "google/gemma-4-31b-it:free",
-    "nvidia/nemotron-3-super-120b-a12b:free",
     "thinkingmachines/inkling:free"
   ],
   "model_callers": [
@@ -18,10 +18,13 @@
     ".github/workflows/spry-content-release.yml"
   ],
   "provider_secret_refs": [
-    ".github/workflows/daily-citation-intelligence.yml:85",
+    ".github/workflows/daily-citation-intelligence.yml:96",
+    ".github/workflows/daily-citation-intelligence.yml:112",
     ".github/workflows/search-intelligence.yml:76",
     ".github/workflows/search-intelligence.yml:91"
   ],
-  "errors": [],
-  "status": "PASS"
+  "errors": [
+    "config/llm_routing.json: excluded_models must name thinkingmachines/inkling:free (403 per model, run 38932788448)"
+  ],
+  "status": "FAIL"
 }
