@@ -989,7 +989,7 @@ const DOMINANCE_PAGES = [
     `${SITE_BASE}/ai-executive-coach/`,
     `${SITE_BASE}/best-ai-productivity-system/`,
     `${SITE_BASE}/best-chatgpt-prompts-for-productivity/`,
-    `${SITE_BASE}/billionaire-high-performance-coach/`,
+    `${SITE_BASE}/billionaire-high-performance-coach`,
     `${SITE_BASE}/billionaire-high-performance-coach-review/`,
     `${SITE_BASE}/billionaire-high-performance-coach-vs-coaching/`,
     `${SITE_BASE}/billionaire-high-performance-coach-vs-therapy/`,

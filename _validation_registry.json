@@ -8654,8 +8654,38 @@
         "MX-APLAYERMODE-PINTEREST"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-ROUTE-UNIQUENESS",
+      "status": "ADMITTED",
+      "name": "validate:route-uniqueness",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "routeFor special-cased two legacy mirror directory pages onto their flat siblings' routes, so two files claimed one canonical on the BHPC host; this refuses any route claimed by more than one published file and proves validate:velocity-critical rejects a duplicate canonical fixture.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:route-uniqueness",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-route-uniqueness/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-16",
+      "matrix_ids": [
+        "MX-ROUTE-UNIQUENESS"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 276,
+  "record_count": 277,
   "generated_at": "2026-08-08T23:30:00Z"
 }
