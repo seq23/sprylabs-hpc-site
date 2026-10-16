@@ -11,11 +11,15 @@ const skip = new Set(['.git','.pages-output', 'node_modules','dist','coverage','
 // root (JSON-LD @ids), its root crawl files (workers/aplayermode-com ROOT_FILES), and files committed under aplayermode/ that the
 // workers/aplayermode-com Worker serves at the same path. Anything else (e.g.
 // /download) is still unapproved.
+// The Pinterest feed (aplayermode/pinfeed.xml, 16 Oct 2026) links the root page with
+// Pinterest attribution: only "/?utm_source=pinterest&..." is approved, never another
+// path or query (validate_aplayermode_pinterest.mjs checks the full link).
 function approvedOwnUrl(url){
+  if(url.startsWith('https://aplayermode.com/?utm_source=pinterest&')) return true;
   const m = url.match(/^https:\/\/aplayermode\.com(\/[^?]*?)(#[A-Za-z0-9_-]+)?$/);
   if(!m) return false;
   if(m[2]) return m[1] === '/';
-  if(['/sitemap.xml','/robots.txt','/llms.txt','/site.webmanifest','/apple-touch-icon.png'].includes(m[1])) return true;
+  if(['/sitemap.xml','/robots.txt','/llms.txt','/site.webmanifest','/apple-touch-icon.png','/pinfeed.xml'].includes(m[1])) return true;
   return /^\/aplayermode\/[A-Za-z0-9_./-]+$/.test(m[1]) && !m[1].includes('..') && fs.existsSync(path.join(ROOT, m[1].slice(1)));
 }
 let failures = [];
