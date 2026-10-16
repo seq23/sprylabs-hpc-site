@@ -222,5 +222,6 @@ test('weekly metrics: NAMED STOP PINTEREST_METRICS_UNAVAILABLE naming the secret
   assert.deepEqual(ok.by_variant, { 'modes-03': 4, 'founding-100': 2 });
   assert.match(sent.url, /\/accounts\/[0-9a-f]{32}\/analytics_engine\/sql$/);
   assert.match(sent.init.body, /FROM aplayermode_pin_visits/);
+  assert.match(sent.init.body, /blob1 NOT IN \('verify-probe'\)/, 'live-verification test visits must be excluded from the weekly count');
   assert.equal(sent.init.headers.Authorization, 'Bearer t');
 });
