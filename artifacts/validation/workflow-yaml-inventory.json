@@ -116,40 +116,6 @@
       "validation_owner": "workflow contract, VAL-AGENT-DROP-GATE, VAL-AGENT-DROP-OVERLAY, validation registry"
     },
     {
-      "path": ".github/workflows/aplayermode-pinterest-drip.yml",
-      "name": "aplayermode.com Pinterest drip (weekly refill + metrics)",
-      "trigger": [
-        "schedule",
-        "workflow_dispatch"
-      ],
-      "primary_command": "node scripts/aplayermode/pin_queue.mjs",
-      "repo_lane": "aplayermode-pinterest",
-      "current_status": "keep",
-      "reason": "Owner-approved 16 Oct 2026 daily Pinterest drip for aplayermode.com: weekly refill of the dated pin queue (template copy, $0) and the Pinterest-visit measurement; the daily release happens in the Worker at request time.",
-      "allowed_runtime_mutations": [
-        "aplayermode/data/pinterest/**",
-        "aplayermode/img/pins/drip/**",
-        "reports/pinterest/**"
-      ],
-      "forbidden_runtime_mutations": [
-        ".github/**",
-        "package.json",
-        "package-lock.json",
-        "scripts/**",
-        "workers/**",
-        "docs/**",
-        "config/**",
-        "_repo*.json",
-        "_validation_registry.json",
-        "_repo_validation_matrix.json"
-      ],
-      "required_artifacts": [
-        "aplayermode/data/pinterest/queue.json",
-        "reports/pinterest/aplayermode_metrics.json"
-      ],
-      "validation_owner": "validate:aplayermode-pin-drip + validate:aplayermode-pinterest"
-    },
-    {
       "path": ".github/workflows/daily-citation-intelligence.yml",
       "name": "Daily Citation Intelligence",
       "trigger": [
@@ -175,7 +141,9 @@
         "feed.*",
         "data/routes/public_route_manifest.json",
         "data/routes/critical_browser_route_manifest.json",
-        ".build/**"
+        ".build/**",
+        "aplayermode/data/pinterest/**",
+        "aplayermode/img/pins/drip/**"
       ],
       "forbidden_runtime_mutations": [
         ".github/**",

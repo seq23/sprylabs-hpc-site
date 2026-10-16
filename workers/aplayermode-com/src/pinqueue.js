@@ -7,8 +7,8 @@
  * day its release_date is reached in America/Chicago: no daily deploy, and a weekly
  * refill commit reaches the feed as soon as Pages publishes it (no Worker deploy).
  *
- * The weekly refill (scripts/aplayermode/pin_queue.mjs, run by
- * .github/workflows/aplayermode-pinterest-drip.yml) uses planRefill() and
+ * The weekly refill (scripts/aplayermode/pin_queue.mjs, run on Mondays by
+ * scripts/aplayermode/weekly_pin_drip.sh in the Daily Citation Intelligence lane) uses planRefill() and
  * scheduleVariants(). No I/O here: the Worker, the scripts, the validator and the
  * tests import these same functions (one definition).
  */
