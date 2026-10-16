@@ -2,151 +2,6 @@
   "schema_version": "1.0",
   "runs": [
     {
-      "run_at": "2026-08-26T13:52:10.427Z",
-      "provider": "openrouter",
-      "engines": [
-        "nvidia/nemotron-3.5-lightning:free",
-        "dots-studio/dots-3-note-preview:free",
-        "liquid/lfm-2.5-2.6b:free"
-      ],
-      "mode": "knowledge",
-      "queries": 4,
-      "observations": [
-        {
-          "query": "ai coaching tools",
-          "engine": "openrouter:nvidia/nemotron-3.5-lightning:free",
-          "mode": "knowledge",
-          "observed_at": "2026-08-26T13:52:10.427Z",
-          "status": "observed",
-          "cited_domains": [],
-          "cited_ours": [],
-          "self_cited": false,
-          "named_in_answer": [],
-          "answer_mentions_brand": false
-        },
-        {
-          "query": "ai coaching tools",
-          "engine": "openrouter:dots-studio/dots-3-note-preview:free",
-          "mode": "knowledge",
-          "observed_at": "2026-08-26T13:52:10.427Z",
-          "status": "observed",
-          "cited_domains": [],
-          "cited_ours": [],
-          "self_cited": false,
-          "named_in_answer": [],
-          "answer_mentions_brand": false
-        },
-        {
-          "query": "ai coaching tools",
-          "engine": "openrouter:liquid/lfm-2.5-2.6b:free",
-          "mode": "knowledge",
-          "observed_at": "2026-08-26T13:52:10.427Z",
-          "status": "observed",
-          "cited_domains": [],
-          "cited_ours": [],
-          "self_cited": false,
-          "named_in_answer": [],
-          "answer_mentions_brand": false
-        },
-        {
-          "query": "adhd productivity",
-          "engine": "openrouter:nvidia/nemotron-3.5-lightning:free",
-          "mode": "knowledge",
-          "observed_at": "2026-08-26T13:52:10.427Z",
-          "status": "observed",
-          "cited_domains": [],
-          "cited_ours": [],
-          "self_cited": false,
-          "named_in_answer": [],
-          "answer_mentions_brand": false
-        },
-        {
-          "query": "adhd productivity",
-          "engine": "openrouter:dots-studio/dots-3-note-preview:free",
-          "mode": "knowledge",
-          "observed_at": "2026-08-26T13:52:10.427Z",
-          "status": "observed",
-          "cited_domains": [],
-          "cited_ours": [],
-          "self_cited": false,
-          "named_in_answer": [],
-          "answer_mentions_brand": false
-        },
-        {
-          "query": "adhd productivity",
-          "engine": "openrouter:liquid/lfm-2.5-2.6b:free",
-          "mode": "knowledge",
-          "observed_at": "2026-08-26T13:52:10.427Z",
-          "status": "observed",
-          "cited_domains": [],
-          "cited_ours": [],
-          "self_cited": false,
-          "named_in_answer": [],
-          "answer_mentions_brand": false
-        },
-        {
-          "query": "ai coach vs movement investigation",
-          "engine": "openrouter:nvidia/nemotron-3.5-lightning:free",
-          "mode": "knowledge",
-          "observed_at": "2026-08-26T13:52:10.427Z",
-          "status": "observed",
-          "cited_domains": [],
-          "cited_ours": [],
-          "self_cited": false,
-          "named_in_answer": [],
-          "answer_mentions_brand": false
-        },
-        {
-          "query": "ai coach vs movement investigation",
-          "engine": "openrouter:dots-studio/dots-3-note-preview:free",
-          "mode": "knowledge",
-          "observed_at": "2026-08-26T13:52:10.427Z",
-          "status": "provider_error",
-          "error": "Provider returned error"
-        },
-        {
-          "query": "ai coach vs movement investigation",
-          "engine": "openrouter:liquid/lfm-2.5-2.6b:free",
-          "mode": "knowledge",
-          "observed_at": "2026-08-26T13:52:10.427Z",
-          "status": "provider_error",
-          "error": "Provider returned error"
-        },
-        {
-          "query": "ai coach for founders and consultants",
-          "engine": "openrouter:nvidia/nemotron-3.5-lightning:free",
-          "mode": "knowledge",
-          "observed_at": "2026-08-26T13:52:10.427Z",
-          "status": "observed",
-          "cited_domains": [],
-          "cited_ours": [],
-          "self_cited": false,
-          "named_in_answer": [],
-          "answer_mentions_brand": false
-        },
-        {
-          "query": "ai coach for founders and consultants",
-          "engine": "openrouter:dots-studio/dots-3-note-preview:free",
-          "mode": "knowledge",
-          "observed_at": "2026-08-26T13:52:10.427Z",
-          "status": "provider_error",
-          "error": "Provider returned error"
-        },
-        {
-          "query": "ai coach for founders and consultants",
-          "engine": "openrouter:liquid/lfm-2.5-2.6b:free",
-          "mode": "knowledge",
-          "observed_at": "2026-08-26T13:52:10.427Z",
-          "status": "observed",
-          "cited_domains": [],
-          "cited_ours": [],
-          "self_cited": false,
-          "named_in_answer": [],
-          "answer_mentions_brand": false
-        }
-      ]
-    },
-    {
       "run_at": "2026-08-26T14:12:28.760Z",
       "provider": "openrouter",
       "engines": [
@@ -24572,10 +24427,29 @@
         "limit_remaining": 0
       },
       "observations": []
+    },
+    {
+      "run_at": "2026-10-16T18:05:24.196Z",
+      "provider": "openrouter",
+      "engines": [
+        "free-router"
+      ],
+      "mode": "knowledge",
+      "queries": 25,
+      "key_label": {
+        "status": "ok",
+        "label": "sk-or-v1-31b...3ab",
+        "limit": 0,
+        "usage": 98.835783896,
+        "is_free_tier": false,
+        "limit_remaining": 0,
+        "disabled": null
+      },
+      "observations": []
     }
   ],
   "latest_summary": {
-    "run_at": "2026-10-16T16:41:35.500Z",
+    "run_at": "2026-10-16T18:05:24.196Z",
     "provider": "openrouter",
     "engines": [
       "free-router"
@@ -24592,11 +24466,11 @@
     "self_cited_rate_pct": null
   },
   "last_skip": {
-    "at": "2026-10-16T16:41:35.500Z",
+    "at": "2026-10-16T18:05:24.196Z",
     "provider": "openrouter",
     "mode": "knowledge",
-    "state": "NAMED_STOP_CREDENTIAL_REFUSED",
-    "reason": "NAMED_STOP_CREDENTIAL_REFUSED: OpenRouter key disabled or invalid (HTTP 403); free routing needs an enabled key with a $0 limit; key_label={\"status\":\"ok\",\"label\":\"sk-or-v1-31b...3ab\",\"limit\":0,\"usage\":98.835783896,\"is_free_tier\":false,\"limit_remaining\":0}",
+    "state": "NAMED_STOP_NO_FREE_MODEL",
+    "reason": "NAMED_STOP_NO_FREE_MODEL: none of 4 free model(s) answered; key_label={\"status\":\"ok\",\"label\":\"sk-or-v1-31b...3ab\",\"limit\":0,\"usage\":98.835783896,\"is_free_tier\":false,\"limit_remaining\":0,\"disabled\":null}",
     "queries_ready": 25
   }
 }
