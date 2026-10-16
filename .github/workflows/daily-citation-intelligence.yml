@@ -10,6 +10,13 @@ on:
         required: false
         type: boolean
         default: false
+      pin_drip:
+        # aplayermode.com Pinterest drip: run the weekly refill + metrics today
+        # instead of waiting for Monday (scripts/aplayermode/weekly_pin_drip.sh).
+        description: "Run the aplayermode.com Pinterest weekly refill + metrics now"
+        required: false
+        type: boolean
+        default: false
   schedule:
     - cron: "37 13 * * *"
 env:
@@ -29,6 +36,13 @@ jobs:
   daily-citation-intelligence:
     runs-on: ubuntu-latest
     timeout-minutes: 55
+    # Read by the aplayermode.com Pinterest drip's metrics step, here at job level
+    # so the push helper's replay (WORKFLOW_ARGV) measures too. Absent -> the named
+    # stop PINTEREST_METRICS_UNAVAILABLE, never an unmeasured zero.
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      PIN_DRIP_FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.pin_drip && '1' || '0' }}
     steps:
       - uses: actions/checkout@v7
         with: {fetch-depth: 0}
@@ -68,6 +82,12 @@ jobs:
       - name: Run autonomous zero-dollar gap-filling lane
         if: steps.runtime.outputs.run == 'true'
         run: npm run workflow:zero-dollar-autonomous
+      - name: aplayermode.com Pinterest drip (weekly refill + metrics, Mondays CT)
+        # Owner-approved 16 Oct 2026. The daily release happens in the Worker at
+        # request time; this keeps the dated queue stocked ($0 template copy) and
+        # measures Pinterest-referred visits per pin. Named skip on other days.
+        if: steps.runtime.outputs.run == 'true'
+        run: bash scripts/aplayermode/weekly_pin_drip.sh
       - name: Identify the OpenRouter key (label and limits only, never the key)
         # Free-routing receipt: which key the repo secret is and what it may spend.
         # Prints only label, limit, usage, is_free_tier, limit_remaining.
@@ -107,6 +127,7 @@ jobs:
         env:
           WORKFLOW_ARGV: >-
             npm run workflow:zero-dollar-autonomous &&
+            bash scripts/aplayermode/weekly_pin_drip.sh &&
             node scripts/llm_citation_probe.mjs --limit 25 &&
             npm run validate:ownership &&
             npm run validate:derived-absorber-reproducibility &&

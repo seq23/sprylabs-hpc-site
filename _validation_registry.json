@@ -8684,8 +8684,38 @@
         "MX-ROUTE-UNIQUENESS"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-APLAYERMODE-PIN-DRIP",
+      "status": "ADMITTED",
+      "name": "validate:aplayermode-pin-drip",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "aplayermode.com Pinterest daily drip (16 Oct 2026): the dated queue could release more than one pin a day, run one landing-page section two days running, drop a launch item, ship a variant over Pinterest's title/description limits or with a price, Spry or checkout, reuse a design, or point at a missing pin image; the Worker could stop building /pinfeed.xml at request time in America/Chicago, log IPs or crawler hits as Pinterest visits, or BHPC/spryexecutiveos could start serving a pinfeed; the weekly metrics reader could report an unmeasured zero instead of the named stop PINTEREST_METRICS_UNAVAILABLE. node --test fails on each.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:aplayermode-pin-drip",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-aplayermode-pin-drip/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-16",
+      "matrix_ids": [
+        "MX-APLAYERMODE-PIN-DRIP"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 277,
+  "record_count": 278,
   "generated_at": "2026-08-08T23:30:00Z"
 }

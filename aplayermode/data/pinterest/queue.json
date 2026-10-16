@@ -1,0 +1,975 @@
+{
+  "_comment": "aplayermode.com Pinterest daily drip queue (owner-approved 16 Oct 2026). config.pins_per_day is THE release rate. The Worker (workers/aplayermode-com/src/pinqueue.js buildPinfeedXml) serves /pinfeed.xml from this file at request time: the 5 launch items plus every variant whose release_date <= today in America/Chicago, newest config.max_feed_items; no deploy per day. channel + launch are derived from config/aplayermode_pinfeed.json; variants come from config/aplayermode_pin_angles.json via scripts/aplayermode/pin_queue.mjs (weekly: scripts/aplayermode/weekly_pin_drip.sh, Mondays in the Daily Citation Intelligence lane). Guarded by validate:aplayermode-pinterest and tests/aplayermode/pinqueue.test.mjs.",
+  "config": {
+    "pins_per_day": 1,
+    "timezone": "America/Chicago",
+    "launch_date": "2026-10-16",
+    "drip_start": "2026-10-17",
+    "refill_threshold": 14,
+    "refill_batch": 21,
+    "max_feed_items": 50,
+    "layouts": [
+      "phone",
+      "split",
+      "checklist",
+      "cards",
+      "statement",
+      "numbered",
+      "quote"
+    ],
+    "palettes": [
+      "light",
+      "dark",
+      "sage",
+      "stone"
+    ]
+  },
+  "channel": {
+    "title": "A Player Mode",
+    "description": "A Player Mode is a planning app with a five-role executive team: it builds your plan, has it ready every morning and shrinks bad days, so your brain stops holding everything. Daily and weekly planning help for planners and ADHD-routine seekers."
+  },
+  "launch": [
+    {
+      "slug": "founding-100",
+      "anchor": "founding-100",
+      "pubDate": "2026-10-16T14:00:00Z",
+      "title": "Daily Planner App That Plans Your Day for You: Founding 100 at $9.99/month",
+      "description": "A Player Mode is a planning app with a five-role executive team. Answer easy taps for about 3 minutes and it builds your plan, then has it ready every morning: one priority, a short start, then the day. The first 100 members get Executive Roundtable at $9.99/month for as long as they stay subscribed. No free trial; cancel any time.",
+      "image": {
+        "path": "aplayermode/img/pins/founding-100.png",
+        "length": 226418,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "slug": "weekly-planning",
+      "anchor": "how-it-works",
+      "pubDate": "2026-10-16T14:05:00Z",
+      "title": "Weekly Planning Without Overplanning: A Working Plan in About 3 Minutes",
+      "description": "Stop designing planners you never use. Tap through easy questions, about 3 minutes to a working plan, no essays. A Player Mode builds your one priority, your minimum day, your rules and your first 7 days, and you approve each piece. Then every morning the plan arrives on its own: one priority, a short start, then the day.",
+      "image": {
+        "path": "aplayermode/img/pins/weekly-planning.png",
+        "length": 218660,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "slug": "adhd-morning-routine",
+      "anchor": "app",
+      "pubDate": "2026-10-16T14:10:00Z",
+      "title": "ADHD Morning Routine Help: Max 5 Physical Steps, Then the One Task That Matters",
+      "description": "When starting is the hard part, a plan you have to build yourself is one more task. A Player Mode has your morning order ready at the time you set: feet to the floor, 1 minute of breathing, a glass of water, then your highest-leverage step. Bad days shrink automatically: no catch-up, no guilt. A planning app, not medical advice or treatment.",
+      "image": {
+        "path": "aplayermode/img/pins/adhd-morning-routine.png",
+        "length": 109836,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "slug": "adhd-routine-bad-days",
+      "anchor": "modes",
+      "pubDate": "2026-10-16T14:15:00Z",
+      "title": "ADHD Routine for Bad Days: A Minimum Day With No Catch-Up and No Guilt",
+      "description": "Routines break the day you miss one. In A Player Mode, Recovery mode gives you a minimum day after a bad day or in a low season: no catch-up, no guilt. Executive Review organizes the 3 to 7 things already in your head without adding new ones, and Deep Work protects one focus block. One tap, no paragraphs about how you feel. A planning app, not medical advice.",
+      "image": {
+        "path": "aplayermode/img/pins/adhd-routine-bad-days.png",
+        "length": 118558,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "slug": "mind-body-spirit-planner",
+      "anchor": "pillars",
+      "pubDate": "2026-10-16T14:20:00Z",
+      "title": "Weekly Planner for Mind, Body and Spirit Goals, Covered Without You Deciding",
+      "description": "Planning work, workouts, sleep, faith and family by hand every week is a job in itself. A Player Mode starts every plan with Mind, Body and Spirit on by default and sorts anything else you care about into one of the three. It picks the workout, protects your sleep and makes room for family and faith, at a safe pace, without you guarding the time.",
+      "image": {
+        "path": "aplayermode/img/pins/mind-body-spirit-planner.png",
+        "length": 114557,
+        "width": 1000,
+        "height": 1500
+      }
+    }
+  ],
+  "variants": [
+    {
+      "id": "founding-100-01",
+      "seq": 1,
+      "section": "founding-100",
+      "kicker": "Founding 100",
+      "headline": "Be one of the first 100 members.",
+      "body": "The Founding 100 get Executive Roundtable at a member rate that holds for as long as they stay subscribed.",
+      "points": [
+        "All five executive roles",
+        "Agenda ready every morning",
+        "Minimum day after a miss",
+        "Cancel any time"
+      ],
+      "title": "Founding 100: Join the First 100 Members of a Planning App That Plans Your Day",
+      "description": "A Player Mode is a planning app with a five-role executive team. The first 100 members get Executive Roundtable at a Founding rate that stays the same for as long as they stay subscribed. Your agenda is ready every morning, prioritised, and a missed day becomes a minimum day with no catch-up. Cancel any time.",
+      "layout": "numbered",
+      "palette": "light",
+      "release_date": "2026-10-17",
+      "image": {
+        "path": "aplayermode/img/pins/drip/founding-100-01.png",
+        "length": 81733,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "how-it-works-01",
+      "seq": 2,
+      "section": "how-it-works",
+      "kicker": "Weekly planning",
+      "headline": "A working plan in about 3 minutes.",
+      "body": "Answer easy-tap questions. No essays. Stop any time; nothing is lost.",
+      "points": [
+        "Easy taps, no essays",
+        "About 3 minutes",
+        "Stop any time, nothing lost",
+        "You approve each piece"
+      ],
+      "title": "Weekly Planning in About 3 Minutes: Easy Taps, No Essays, a Working Plan",
+      "description": "Setting up a planner should not take a weekend. A Player Mode asks easy-tap questions, about 3 minutes to a working plan, no essays, and nothing is lost if you stop. It builds your goals, your rules and your minimum day, and you approve each piece. Then every morning the plan is ready.",
+      "layout": "phone",
+      "palette": "sage",
+      "release_date": "2026-10-18",
+      "image": {
+        "path": "aplayermode/img/pins/drip/how-it-works-01.png",
+        "length": 250140,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "app-01",
+      "seq": 3,
+      "section": "app",
+      "kicker": "Morning routine",
+      "headline": "What do I do first this morning?",
+      "body": "Max 5 physical steps, then the one task that matters.",
+      "points": [
+        "Feet to the floor (10 seconds)",
+        "1 minute of breathing",
+        "Glass of water",
+        "First task: your highest-leverage step"
+      ],
+      "title": "ADHD-Friendly Morning Order: Feet to the Floor, Breathe, Water, Then One Task",
+      "description": "When starting is the hard part, a ready order helps. A Player Mode has your morning order ready at the time you set: feet to the floor (10 seconds), 1 minute of breathing, a glass of water, then your highest-leverage step. Max 5 physical steps. A planning app, not medical advice or treatment.",
+      "layout": "quote",
+      "palette": "sage",
+      "release_date": "2026-10-19",
+      "image": {
+        "path": "aplayermode/img/pins/drip/app-01.png",
+        "length": 90828,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "modes-01",
+      "seq": 4,
+      "section": "modes",
+      "kicker": "Coaching modes",
+      "headline": "One tap changes how it coaches you.",
+      "body": "You never have to say how you're feeling in a paragraph. Tap the mode; it adjusts the day and its voice.",
+      "points": [
+        "High-Pressure",
+        "Executive Review",
+        "Recovery",
+        "Sprint",
+        "Deep Work"
+      ],
+      "title": "Five One-Tap Coaching Modes: Change the Day Without Explaining How You Feel",
+      "description": "In A Player Mode you never have to say how you are feeling in a paragraph. Tap a mode and it adjusts the day and its voice: High-Pressure when you are stuck, Executive Review when your head is full, Recovery after a bad day, Sprint near a deadline, Deep Work for one hard task.",
+      "layout": "statement",
+      "palette": "light",
+      "release_date": "2026-10-20",
+      "image": {
+        "path": "aplayermode/img/pins/drip/modes-01.png",
+        "length": 91626,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "pillars-01",
+      "seq": 5,
+      "section": "pillars",
+      "kicker": "Mind, Body, Spirit",
+      "headline": "Mind. Body. Spirit. Covered by default.",
+      "body": "Every plan starts with all three, so the basics are covered without you deciding to cover them.",
+      "points": [
+        "Mind: work, money, learning, focus",
+        "Body: movement, food, sleep",
+        "Spirit: faith, gratitude, family"
+      ],
+      "title": "Mind, Body, Spirit Planner: All Three Covered by Default, No Deciding",
+      "description": "A Player Mode starts every plan with Mind, Body and Spirit on, so the basics are covered without you deciding to cover them. Untick any you do not want it to hold for you; anything else you care about is sorted into one of the three automatically.",
+      "layout": "cards",
+      "palette": "sage",
+      "release_date": "2026-10-21",
+      "image": {
+        "path": "aplayermode/img/pins/drip/pillars-01.png",
+        "length": 98187,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "founding-100-02",
+      "seq": 6,
+      "section": "founding-100",
+      "kicker": "Daily planner app",
+      "headline": "Your agenda, ready every morning.",
+      "body": "Executive Roundtable turns a goal into a plan and the plan into daily steps, prioritised before you wake up.",
+      "points": [
+        "Goal, then plan, then daily steps",
+        "Prioritised every morning",
+        "One question at a time coaching",
+        "1 calendar and 1 inbox connected"
+      ],
+      "title": "Daily Planner App: Your Agenda Ready and Prioritised Every Morning",
+      "description": "Stop rebuilding your to-do list every morning. In A Player Mode's Executive Roundtable plan, your agenda is ready every morning and already prioritised: goal, then plan, then daily steps. It connects one calendar and one inbox, and coaches you one question at a time. Founding 100 places are open on the landing page.",
+      "layout": "quote",
+      "palette": "dark",
+      "release_date": "2026-10-22",
+      "image": {
+        "path": "aplayermode/img/pins/drip/founding-100-02.png",
+        "length": 110022,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "how-it-works-02",
+      "seq": 7,
+      "section": "how-it-works",
+      "kicker": "How it works",
+      "headline": "Tap. Approve. Wake up to the plan.",
+      "body": "Three steps, and you never design anything.",
+      "points": [
+        "Answer easy-tap questions",
+        "It builds your plan; you approve each piece",
+        "It runs your day, every morning"
+      ],
+      "title": "How to Plan Your Week Without Designing a Planner: Tap, Approve, Done",
+      "description": "Three steps in A Player Mode: answer easy-tap questions (about 3 minutes), let it build your Mind, Body, Spirit plan and Tracks while you approve each piece, then wake up to the day already planned: one priority, a short start, then the day. You never design anything.",
+      "layout": "split",
+      "palette": "stone",
+      "release_date": "2026-10-23",
+      "image": {
+        "path": "aplayermode/img/pins/drip/how-it-works-02.png",
+        "length": 238881,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "app-02",
+      "seq": 8,
+      "section": "app",
+      "kicker": "Hard to get out of bed?",
+      "headline": "A 10-minute routine you can do in bed.",
+      "body": "You don't get advice. You get a ready in-bed mobility routine, Pilates-style, no equipment.",
+      "points": [
+        "Belly breathing, knees bent",
+        "Pelvic tilts and knee hugs",
+        "Supine twist and dead bug",
+        "Glute bridges, then stand"
+      ],
+      "title": "10-Minute In-Bed Morning Routine for Days It Is Hard to Get Up (No Equipment)",
+      "description": "\"It's hard to get out of bed.\" A Player Mode does not answer with advice. It gives you a ready 10-minute in-bed mobility routine, Pilates-style with no equipment: belly breathing, pelvic tilts, knee hugs, a supine twist, dead bugs, glute bridges, a figure-4 stretch, then the edge of the bed and stand. A planning app, not medical advice.",
+      "layout": "phone",
+      "palette": "stone",
+      "release_date": "2026-10-24",
+      "image": {
+        "path": "aplayermode/img/pins/drip/app-02.png",
+        "length": 253114,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "modes-02",
+      "seq": 9,
+      "section": "modes",
+      "kicker": "Head too full?",
+      "headline": "Head full? Sort the 3 to 7 things.",
+      "body": "Executive Review adds no new ideas and no re-diagnosis. It organizes what you already know.",
+      "points": [
+        "No new ideas",
+        "No re-diagnosis",
+        "The 3 to 7 things you already know",
+        "In order"
+      ],
+      "title": "Brain Dump Too Big? Executive Review Organizes the 3 to 7 Things You Already Know",
+      "description": "When your head is full, more ideas make it worse. A Player Mode's Executive Review mode adds no new ideas and no re-diagnosis: it organizes the 3 to 7 things you already know into an order you can work. One tap, any time. A planning app, not medical advice.",
+      "layout": "numbered",
+      "palette": "dark",
+      "release_date": "2026-10-25",
+      "image": {
+        "path": "aplayermode/img/pins/drip/modes-02.png",
+        "length": 73337,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "pillars-02",
+      "seq": 10,
+      "section": "pillars",
+      "kicker": "Body",
+      "headline": "The workout picked. Your sleep protected.",
+      "body": "Movement, food, sleep and health routines, at a safe pace.",
+      "points": [
+        "Picks the workout",
+        "Protects your sleep",
+        "Reminds you of health routines",
+        "At a safe pace"
+      ],
+      "title": "Fitness and Sleep Planner: The Workout Picked and Your Sleep Protected",
+      "description": "Planning workouts and bedtimes by hand every week is a job. In A Player Mode the Body pillar picks the workout, protects your sleep and reminds you of the health routine, at a safe pace. It covers movement, food, sleep, weight and health routines. Never diet or medical advice.",
+      "layout": "statement",
+      "palette": "stone",
+      "release_date": "2026-10-26",
+      "image": {
+        "path": "aplayermode/img/pins/drip/pillars-02.png",
+        "length": 75273,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "founding-100-03",
+      "seq": 11,
+      "section": "founding-100",
+      "kicker": "Planner for busy people",
+      "headline": "It catches the promises you drop.",
+      "body": "Radar flags who you owe a reply, so nothing you said yes to slips through the week.",
+      "points": [
+        "Radar catches dropped promises",
+        "Flags who you owe a reply",
+        "Agenda ready every morning",
+        "You do the last step"
+      ],
+      "title": "Planner App That Catches Dropped Promises and Flags Who You Owe a Reply",
+      "description": "Weekly planners hold tasks, not promises. A Player Mode's Radar catches the promises you dropped and flags who you owe a reply, alongside an agenda that is ready and prioritised every morning. It plans and coaches; you do the last step. See the plans and the Founding 100 on the A Player Mode page.",
+      "layout": "phone",
+      "palette": "sage",
+      "release_date": "2026-10-27",
+      "image": {
+        "path": "aplayermode/img/pins/drip/founding-100-03.png",
+        "length": 254017,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "how-it-works-03",
+      "seq": 12,
+      "section": "how-it-works",
+      "kicker": "Morning routine",
+      "headline": "One priority. A short start. Then the day.",
+      "body": "Every morning your plan is ready. On Android it arrives at the time you set.",
+      "points": [
+        "One priority",
+        "A short start",
+        "Then the rest of the day",
+        "Ready at the time you set"
+      ],
+      "title": "Simple Morning Routine Plan: One Priority, a Short Start, Then the Day",
+      "description": "A Player Mode has your plan ready every morning in the same shape: one priority, a short start, then the day. On Android it arrives as a notification at the time you set; on the web it is waiting when you open the app. Bad days shrink automatically, with no catch-up and no guilt.",
+      "layout": "checklist",
+      "palette": "light",
+      "release_date": "2026-10-28",
+      "image": {
+        "path": "aplayermode/img/pins/drip/how-it-works-03.png",
+        "length": 93056,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "app-03",
+      "seq": 13,
+      "section": "app",
+      "kicker": "Goal to daily steps",
+      "headline": "One step a day toward a big goal.",
+      "body": "You pick the goal. It writes the 90-day plan and turns it into one step a day, at a safe pace.",
+      "points": [
+        "Walk 10 minutes today",
+        "Put workout clothes out tonight",
+        "Log what I eat today",
+        "Book a check-up"
+      ],
+      "title": "Turn a Big Goal Into One Step a Day: A 90-Day Plan Written for You",
+      "description": "Big goals stall on the first step. In A Player Mode you pick the goal, for example losing 20 lb, and it writes the 90-day plan and turns it into one step a day at a safe pace: walk 10 minutes today, put workout clothes out tonight, log what you eat, book a check-up. Never diet or medical advice.",
+      "layout": "split",
+      "palette": "light",
+      "release_date": "2026-10-29",
+      "image": {
+        "path": "aplayermode/img/pins/drip/app-03.png",
+        "length": 234720,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "modes-03",
+      "seq": 14,
+      "section": "modes",
+      "kicker": "Stuck or avoiding?",
+      "headline": "Stuck? Get one stabilizing directive.",
+      "body": "High-Pressure mode cuts through the noise and ends with one thing to do now.",
+      "points": [
+        "Cuts through the noise",
+        "No long pep talk",
+        "Ends with one directive",
+        "One tap, any time"
+      ],
+      "title": "Stuck or Procrastinating? High-Pressure Mode Ends With One Stabilizing Directive",
+      "description": "When you are stuck or avoiding something, a long list does not help. A Player Mode's High-Pressure coaching mode cuts through the noise and ends with one stabilizing directive: the one thing to do now. Tap it any time; you never have to explain how you feel.",
+      "layout": "quote",
+      "palette": "sage",
+      "release_date": "2026-10-30",
+      "image": {
+        "path": "aplayermode/img/pins/drip/modes-03.png",
+        "length": 93844,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "pillars-03",
+      "seq": 15,
+      "section": "pillars",
+      "kicker": "Spirit",
+      "headline": "Room for faith, family and gratitude.",
+      "body": "It makes room for them and repeats them on their own, without you guarding the time.",
+      "points": [
+        "Faith and meditation",
+        "Gratitude and nature",
+        "Service",
+        "Family and relationships"
+      ],
+      "title": "Planner With Time for Faith, Family and Gratitude Built In and Protected",
+      "description": "The things that matter most are the first to fall off a busy week. A Player Mode's Spirit pillar makes room for faith, meditation, gratitude, nature, service, family and relationships, and repeats them on their own without you guarding the time.",
+      "layout": "numbered",
+      "palette": "light",
+      "release_date": "2026-10-31",
+      "image": {
+        "path": "aplayermode/img/pins/drip/pillars-03.png",
+        "length": 71238,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "founding-100-04",
+      "seq": 16,
+      "section": "founding-100",
+      "kicker": "Missed a day?",
+      "headline": "Missed yesterday? Get a minimum day.",
+      "body": "No catch-up list, no guilt. The plan shrinks to what still matters and you start again today.",
+      "points": [
+        "No catch-up list",
+        "No guilt",
+        "Just what still matters today",
+        "Back on plan tomorrow"
+      ],
+      "title": "Missed a Day of Your Routine? A Planner That Gives You a Minimum Day, Not Catch-Up",
+      "description": "Most planners punish a missed day with a longer list. In A Player Mode, missing yesterday gets you a minimum day: no catch-up, no guilt, just what still matters today. It is part of every plan, including the Executive Roundtable plan the Founding 100 join. A planning app, not medical advice.",
+      "layout": "split",
+      "palette": "stone",
+      "release_date": "2026-11-01",
+      "image": {
+        "path": "aplayermode/img/pins/drip/founding-100-04.png",
+        "length": 233527,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "how-it-works-04",
+      "seq": 17,
+      "section": "how-it-works",
+      "kicker": "Stop overplanning",
+      "headline": "Stop designing planners. Start the day.",
+      "body": "You answer a few easy taps. It builds the plan and then carries the day.",
+      "points": [
+        "No templates to set up",
+        "No essays to write",
+        "No catch-up after bad days",
+        "One priority every morning"
+      ],
+      "title": "Stop Overplanning: A Planner That Builds the Plan So You Just Start the Day",
+      "description": "If you spend more time designing planners than using them, A Player Mode flips it: you answer a few easy taps and it builds the plan, then carries the day. Every morning: one priority, a short start, then the day. Bad days shrink automatically. You never design anything.",
+      "layout": "cards",
+      "palette": "dark",
+      "release_date": "2026-11-02",
+      "image": {
+        "path": "aplayermode/img/pins/drip/how-it-works-04.png",
+        "length": 99493,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "app-04",
+      "seq": 18,
+      "section": "app",
+      "kicker": "ADHD routine help",
+      "headline": "Starting is the hard part. So it's done for you.",
+      "body": "Your morning order is ready at the time you set, so the first step is already decided.",
+      "points": [
+        "The first step is decided",
+        "Max 5 physical steps",
+        "Then the one task that matters",
+        "Bad days shrink automatically"
+      ],
+      "title": "ADHD Routine Help When Starting Is the Hard Part: Your First Step Already Decided",
+      "description": "If deciding what to do first eats your morning, A Player Mode decides it for you. Your morning order is ready at the time you set: max 5 physical steps, then the one task that matters. Bad days shrink automatically with no catch-up. A planning app, not medical advice or treatment.",
+      "layout": "checklist",
+      "palette": "dark",
+      "release_date": "2026-11-03",
+      "image": {
+        "path": "aplayermode/img/pins/drip/app-04.png",
+        "length": 106276,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "modes-04",
+      "seq": 19,
+      "section": "modes",
+      "kicker": "Deadline close?",
+      "headline": "A short, declared push on one thing.",
+      "body": "Sprint mode is for when a deadline is close: one thing only, for a declared stretch.",
+      "points": [
+        "One thing only",
+        "A declared, short push",
+        "Everything else waits",
+        "Back to normal after"
+      ],
+      "title": "Deadline Close? Sprint Mode Gives You a Short, Declared Push on One Thing Only",
+      "description": "Close to a deadline, the plan should get narrower, not longer. A Player Mode's Sprint mode is a short, declared push on one thing only, and everything else waits until it is done. One tap, any time, and the day and the coaching voice change with it.",
+      "layout": "phone",
+      "palette": "stone",
+      "release_date": "2026-11-04",
+      "image": {
+        "path": "aplayermode/img/pins/drip/modes-04.png",
+        "length": 251782,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "pillars-04",
+      "seq": 20,
+      "section": "pillars",
+      "kicker": "Mind",
+      "headline": "Keep the agenda on what moves the needle.",
+      "body": "The Mind pillar picks the next thing to learn and keeps work to what matters.",
+      "points": [
+        "Work, business and career",
+        "Money",
+        "Learning and focus",
+        "Mental health"
+      ],
+      "title": "Work Planner That Keeps Your Agenda on Work That Moves the Needle",
+      "description": "Busy is not the same as moving forward. A Player Mode's Mind pillar keeps your agenda to work that moves the needle and picks the next thing to learn. It covers work, business and career, money, learning, focus and mental health. A planning app, not medical advice.",
+      "layout": "quote",
+      "palette": "dark",
+      "release_date": "2026-11-05",
+      "image": {
+        "path": "aplayermode/img/pins/drip/pillars-04.png",
+        "length": 87342,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "founding-100-05",
+      "seq": 21,
+      "section": "founding-100",
+      "kicker": "Three plans, five jobs",
+      "headline": "Who does the last step? You choose.",
+      "body": "Every plan does all five jobs. The only difference is who does the last step.",
+      "points": [
+        "Executive Roundtable: you do it",
+        "Executive Suite: you tap yes",
+        "Autopilot: it does it, inside your rules"
+      ],
+      "title": "Planning App With Three Plans: You Do It, You Tap Yes, or It Runs Inside Your Rules",
+      "description": "A Player Mode has three plans and each does all five executive jobs. The difference is who does the last step: in Executive Roundtable you do, in Executive Suite you tap yes and it does it, in Autopilot it handles recurring things on its own inside rules you set and you read the done-list. Founding 100 places are on the page.",
+      "layout": "checklist",
+      "palette": "light",
+      "release_date": "2026-11-06",
+      "image": {
+        "path": "aplayermode/img/pins/drip/founding-100-05.png",
+        "length": 103104,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "how-it-works-05",
+      "seq": 22,
+      "section": "how-it-works",
+      "kicker": "Plan your week",
+      "headline": "Your goals, your rules, your minimum day.",
+      "body": "It builds all three from your taps. You approve each piece before it runs.",
+      "points": [
+        "Your goals",
+        "Your rules",
+        "Your minimum day",
+        "You approve each piece"
+      ],
+      "title": "Weekly Plan Builder: Goals, Rules and a Minimum Day You Approve Piece by Piece",
+      "description": "A weekly plan that survives real life needs three things: goals, rules and a minimum day for when things go wrong. A Player Mode builds all three from a few easy taps, about 3 minutes, and you approve each piece before it runs. Then it has the day ready every morning.",
+      "layout": "statement",
+      "palette": "sage",
+      "release_date": "2026-11-07",
+      "image": {
+        "path": "aplayermode/img/pins/drip/how-it-works-05.png",
+        "length": 77625,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "app-05",
+      "seq": 23,
+      "section": "app",
+      "kicker": "The app that runs your day",
+      "headline": "It runs your day. You just start.",
+      "body": "You answer a few easy taps. It builds the plan and then carries the day.",
+      "points": [
+        "Builds the plan for you",
+        "Ready every morning",
+        "Picks the moves and the order",
+        "Bad days shrink"
+      ],
+      "title": "The Planning App That Runs Your Day: Easy Taps Once, Then Just Start",
+      "description": "A Player Mode is the app that runs your day for you. You answer a few easy taps, it builds the plan, then it carries the day: your morning order, the one task that matters, and a smaller day when things go wrong. You never design anything.",
+      "layout": "cards",
+      "palette": "sage",
+      "release_date": "2026-11-08",
+      "image": {
+        "path": "aplayermode/img/pins/drip/app-05.png",
+        "length": 92441,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "modes-05",
+      "seq": 24,
+      "section": "modes",
+      "kicker": "Focus block",
+      "headline": "Protect one block for one hard task.",
+      "body": "Deep Work mode protects one uninterrupted focus block for the task that matters.",
+      "points": [
+        "One hard task",
+        "One uninterrupted block",
+        "The rest of the day around it",
+        "One tap to turn on"
+      ],
+      "title": "Deep Work Planner: Protect One Uninterrupted Focus Block for One Hard Task",
+      "description": "A focus block only works if the rest of the day respects it. A Player Mode's Deep Work mode protects one uninterrupted focus block for one hard task and plans the rest of the day around it. Tap it on any time.",
+      "layout": "split",
+      "palette": "light",
+      "release_date": "2026-11-09",
+      "image": {
+        "path": "aplayermode/img/pins/drip/modes-05.png",
+        "length": 232188,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "pillars-05",
+      "seq": 25,
+      "section": "pillars",
+      "kicker": "Whole-life planner",
+      "headline": "Everything you care about, in three places.",
+      "body": "Anything else you care about is sorted into Mind, Body or Spirit automatically.",
+      "points": [
+        "Sorted automatically",
+        "Untick any pillar",
+        "Nothing to categorize",
+        "One plan for all of it"
+      ],
+      "title": "Whole-Life Planner: Everything You Care About Sorted Into Mind, Body or Spirit",
+      "description": "Life planners fall apart when every goal needs its own page. A Player Mode sorts anything you care about into Mind, Body or Spirit automatically, so one plan holds all of it. All three are on by default; untick any you do not want it to hold for you.",
+      "layout": "phone",
+      "palette": "sage",
+      "release_date": "2026-11-10",
+      "image": {
+        "path": "aplayermode/img/pins/drip/pillars-05.png",
+        "length": 254152,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "founding-100-06",
+      "seq": 26,
+      "section": "founding-100",
+      "kicker": "Life admin planner",
+      "headline": "Bills, birthdays, renewals: handled.",
+      "body": "Executive Suite tracks them and prepares each one for a one-tap approve.",
+      "points": [
+        "Birthdays and appointments tracked",
+        "Bills and renewals prepared",
+        "Drafts the replies you owe",
+        "Flags subscriptions you waste money on"
+      ],
+      "title": "Life Admin Planner: Birthdays, Bills, Renewals and Appointments Ready to Approve",
+      "description": "Executive Suite in A Player Mode runs the life admin a paper planner only lists: birthdays, bills, renewals and appointments are tracked and prepared for a one-tap approve. It drafts the replies you owe, proposes the calendar fix and flags subscriptions you are wasting money on. It acts when you tap yes.",
+      "layout": "cards",
+      "palette": "dark",
+      "release_date": "2026-11-11",
+      "image": {
+        "path": "aplayermode/img/pins/drip/founding-100-06.png",
+        "length": 106810,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "how-it-works-06",
+      "seq": 27,
+      "section": "how-it-works",
+      "kicker": "Planning for bad weeks",
+      "headline": "Bad days shrink automatically.",
+      "body": "No catch-up, no guilt. The plan gets smaller instead of you falling behind.",
+      "points": [
+        "The day shrinks, not you",
+        "No catch-up list",
+        "No guilt",
+        "Tomorrow starts clean"
+      ],
+      "title": "A Weekly Planner for Real Life: Bad Days Shrink Automatically, No Catch-Up",
+      "description": "Plans break when one bad day turns into a pile of catch-up. In A Player Mode, bad days shrink automatically: no catch-up, no guilt, and tomorrow's plan is still ready in the morning. Answer easy taps once, about 3 minutes, and it carries the days after that.",
+      "layout": "numbered",
+      "palette": "stone",
+      "release_date": "2026-11-12",
+      "image": {
+        "path": "aplayermode/img/pins/drip/how-it-works-06.png",
+        "length": 77781,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "app-06",
+      "seq": 28,
+      "section": "app",
+      "kicker": "No more decision fatigue",
+      "headline": "You don't get advice. You get the plan.",
+      "body": "Ask for help and it hands you the ready routine, with the moves and the order picked.",
+      "points": [
+        "The routine, not tips",
+        "The order already picked",
+        "Sized for today",
+        "At a safe pace"
+      ],
+      "title": "Less Decision Fatigue: A Planner That Hands You the Ready Routine, Not Tips",
+      "description": "Advice is one more thing to decide about. When something is hard, A Player Mode hands you the ready routine with the moves and the order already picked, like a 10-minute in-bed mobility routine on a hard morning, or one safe step a day toward a 90-day goal. A planning app, not medical advice.",
+      "layout": "statement",
+      "palette": "stone",
+      "release_date": "2026-11-13",
+      "image": {
+        "path": "aplayermode/img/pins/drip/app-06.png",
+        "length": 80862,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "modes-06",
+      "seq": 29,
+      "section": "modes",
+      "kicker": "Low season",
+      "headline": "Low season? A minimum day, no guilt.",
+      "body": "Recovery mode is for after a bad day or a low season: a minimum day, no catch-up.",
+      "points": [
+        "A minimum day",
+        "No catch-up",
+        "No guilt",
+        "One tap, any time"
+      ],
+      "title": "Routine for Low-Energy Seasons: Recovery Mode Gives a Minimum Day, No Guilt",
+      "description": "Routines collapse in low seasons because they expect your best days. A Player Mode's Recovery mode gives you a minimum day after a bad day or in a low season: no catch-up, no guilt. One tap, no paragraph about how you feel. A planning app, not medical advice or treatment.",
+      "layout": "checklist",
+      "palette": "dark",
+      "release_date": "2026-11-14",
+      "image": {
+        "path": "aplayermode/img/pins/drip/modes-06.png",
+        "length": 93410,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "pillars-06",
+      "seq": 30,
+      "section": "pillars",
+      "kicker": "Weekly balance",
+      "headline": "A balanced week without the spreadsheet.",
+      "body": "Work, workouts, sleep, faith and family all get a place in the plan.",
+      "points": [
+        "Work that moves the needle",
+        "Workout and sleep",
+        "Faith and family time",
+        "No balancing by hand"
+      ],
+      "title": "Balanced Weekly Plan Without the Spreadsheet: Work, Body and Family Covered",
+      "description": "Balancing work, workouts, sleep, faith and family by hand every week is exhausting. A Player Mode covers Mind, Body and Spirit by default: it keeps work to what moves the needle, picks the workout, protects your sleep and makes room for family and faith.",
+      "layout": "split",
+      "palette": "stone",
+      "release_date": "2026-11-15",
+      "image": {
+        "path": "aplayermode/img/pins/drip/pillars-06.png",
+        "length": 234264,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "founding-100-07",
+      "seq": 31,
+      "section": "founding-100",
+      "kicker": "Executive Roundtable",
+      "headline": "A five-person executive team in one app.",
+      "body": "It plans and coaches you; you do the last step. All five roles, every morning.",
+      "points": [
+        "Executive Coach",
+        "Executive Assistant",
+        "Chief of Staff",
+        "Accountability Partner",
+        "Mindset Coach"
+      ],
+      "title": "A Five-Role Executive Team in One Planning App: Join the Founding 100",
+      "description": "Executive Roundtable puts five roles in one planning app: Executive Coach, Executive Assistant, Chief of Staff, Accountability Partner and Cognitive Behavioral Mindset Coach. Your agenda is ready every morning, prioritised, and coaching comes one question at a time. The first 100 members join as the Founding 100.",
+      "layout": "statement",
+      "palette": "sage",
+      "release_date": "2026-11-16",
+      "image": {
+        "path": "aplayermode/img/pins/drip/founding-100-07.png",
+        "length": 81707,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "how-it-works-07",
+      "seq": 32,
+      "section": "how-it-works",
+      "kicker": "Nothing is lost",
+      "headline": "Stop any time. Pick up where you left off.",
+      "body": "Setup is easy taps, about 3 minutes, and nothing you answered is lost if you stop.",
+      "points": [
+        "Easy-tap questions",
+        "Stop any time",
+        "Nothing is lost",
+        "A working plan in about 3 minutes"
+      ],
+      "title": "Planner Setup You Can Stop Any Time: Easy Taps, Nothing Lost, About 3 Minutes",
+      "description": "Long planner setups are where good intentions go to die. A Player Mode's setup is easy-tap questions, about 3 minutes to a working plan, and you can stop any time without losing anything. It builds your goals, rules and minimum day, and you approve each piece.",
+      "layout": "quote",
+      "palette": "light",
+      "release_date": "2026-11-17",
+      "image": {
+        "path": "aplayermode/img/pins/drip/how-it-works-07.png",
+        "length": 94770,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "app-07",
+      "seq": 33,
+      "section": "app",
+      "kicker": "Healthy habits planner",
+      "headline": "Small daily steps. A safe pace.",
+      "body": "It turns a health goal into one small step a day you can actually do.",
+      "points": [
+        "Walk 10 minutes",
+        "Clothes out the night before",
+        "Log what you eat",
+        "Book a check-up"
+      ],
+      "title": "Healthy Habit Planner: One Small Daily Step at a Safe Pace, Picked for You",
+      "description": "Healthy habits stick when the daily step is small. A Player Mode turns a health goal into one step a day at a safe pace, such as a 10-minute walk, workout clothes out the night before, logging what you eat or booking a check-up. Never diet or medical advice.",
+      "layout": "numbered",
+      "palette": "light",
+      "release_date": "2026-11-18",
+      "image": {
+        "path": "aplayermode/img/pins/drip/app-07.png",
+        "length": 79753,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "modes-07",
+      "seq": 34,
+      "section": "modes",
+      "kicker": "ADHD-friendly planning",
+      "headline": "Tap how today is. The plan follows.",
+      "body": "Stuck, overloaded, low, rushed or focused: one tap and the day adjusts.",
+      "points": [
+        "Stuck: High-Pressure",
+        "Overloaded: Executive Review",
+        "Low: Recovery",
+        "Rushed: Sprint",
+        "Focused: Deep Work"
+      ],
+      "title": "ADHD-Friendly Planning: Tap How Today Is and the Plan Adjusts in One Tap",
+      "description": "Some days you are stuck, some days overloaded, some days low. In A Player Mode one tap matches the day: High-Pressure when stuck, Executive Review when your head is full, Recovery when low, Sprint near a deadline, Deep Work to focus. No paragraphs about feelings. A planning app, not medical advice.",
+      "layout": "cards",
+      "palette": "sage",
+      "release_date": "2026-11-19",
+      "image": {
+        "path": "aplayermode/img/pins/drip/modes-07.png",
+        "length": 106281,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "pillars-07",
+      "seq": 35,
+      "section": "pillars",
+      "kicker": "Self-care planner",
+      "headline": "Self-care that repeats on its own.",
+      "body": "Gratitude, nature, meditation and family time come back each week without you guarding it.",
+      "points": [
+        "Repeats on its own",
+        "No guarding the time",
+        "Gratitude and nature",
+        "Family and relationships"
+      ],
+      "title": "Self-Care Planner That Repeats On Its Own: Gratitude, Nature and Family Time",
+      "description": "Self-care slips when it depends on remembering. In A Player Mode the Spirit pillar makes room for gratitude, nature, meditation, service and family time, and repeats them on their own without you guarding the time. On by default in every plan.",
+      "layout": "checklist",
+      "palette": "light",
+      "release_date": "2026-11-20",
+      "image": {
+        "path": "aplayermode/img/pins/drip/pillars-07.png",
+        "length": 99402,
+        "width": 1000,
+        "height": 1500
+      }
+    }
+  ]
+}

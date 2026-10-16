@@ -1,8 +1,9 @@
 /**
- * Pure builder for aplayermode.com's Pinterest RSS feed (aplayermode/pinfeed.xml).
- * No I/O beyond reading the repo's own config files, so the build script and the
- * validator produce the SAME bytes: the validator rebuilds the feed in memory and
- * fails when the committed file differs (one definition, no drift).
+ * Node-side helpers for aplayermode.com's Pinterest feed. The feed itself is built
+ * at request time by the Worker (workers/aplayermode-com/src/pinqueue.js) from
+ * aplayermode/data/pinterest/queue.json; launchBlock() derives that file's launch
+ * items and channel from config/aplayermode_pinfeed.json, so the build script, the
+ * weekly refill and the validator produce the SAME bytes (one definition, no drift).
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -10,7 +11,8 @@ import path from 'node:path';
 export const PIN_WIDTH = 1000;
 export const PIN_HEIGHT = 1500;
 export const PIN_DIR = 'aplayermode/img/pins';
-export const FEED_FILE = 'aplayermode/pinfeed.xml';
+export const QUEUE_FILE = 'aplayermode/data/pinterest/queue.json';
+export const DRIP_DIR = 'aplayermode/img/pins/drip';
 export const CONFIG_FILE = 'config/aplayermode_pinfeed.json';
 export const PRICES_FILE = 'config/aplayermode_plan_prices.json';
 
@@ -29,43 +31,6 @@ export function loadConfig(root) {
 
 export const pinPath = (item) => `${PIN_DIR}/${item.slug}.png`;
 export const pinUrl = (cfg, item) => new URL(`/${pinPath(item)}`, cfg.site).toString();
-export const itemLink = (cfg, item) => `${cfg.site}?${cfg.utm}&utm_content=${item.slug}#${item.anchor}`;
-
-const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-
-/** RSS 2.0 with media:content. sizes: { [pinPath]: bytes } for enclosure length. */
-export function buildFeedXml(cfg, sizes) {
-  const items = [...cfg.items].sort((a, b) => Date.parse(b.pubDate) - Date.parse(a.pubDate));
-  const latest = new Date(Math.max(...items.map((i) => Date.parse(i.pubDate)))).toUTCString();
-  const out = [
-    '<?xml version="1.0" encoding="UTF-8"?>',
-    '<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">',
-    '<channel>',
-    `<title>${esc(cfg.channel.title)}</title>`,
-    `<link>${esc(cfg.site)}</link>`,
-    `<description>${esc(cfg.channel.description)}</description>`,
-    '<language>en-us</language>',
-    `<lastBuildDate>${latest}</lastBuildDate>`,
-  ];
-  for (const item of items) {
-    const img = pinUrl(cfg, item);
-    const len = sizes[pinPath(item)];
-    if (!Number.isInteger(len) || len <= 0) throw new Error(`no size for ${pinPath(item)}`);
-    out.push(
-      '<item>',
-      `<title>${esc(item.title)}</title>`,
-      `<link>${esc(itemLink(cfg, item))}</link>`,
-      `<guid isPermaLink="false">aplayermode-pin-${esc(item.slug)}</guid>`,
-      `<description>${esc(item.description)}</description>`,
-      `<pubDate>${new Date(item.pubDate).toUTCString()}</pubDate>`,
-      `<enclosure url="${esc(img)}" length="${len}" type="image/png"/>`,
-      `<media:content url="${esc(img)}" type="image/png" medium="image" width="${PIN_WIDTH}" height="${PIN_HEIGHT}"/>`,
-      '</item>',
-    );
-  }
-  out.push('</channel>', '</rss>', '');
-  return out.join('\n');
-}
 
 export function fileSizes(root, cfg) {
   return Object.fromEntries(cfg.items.map((i) => [pinPath(i), fs.statSync(path.join(root, pinPath(i))).size]));
@@ -75,4 +40,23 @@ export function fileSizes(root, cfg) {
 export function pngSize(buf) {
   if (buf.length < 24 || buf.readUInt32BE(0) !== 0x89504e47 || buf.toString('ascii', 12, 16) !== 'IHDR') return null;
   return { width: buf.readUInt32BE(16), height: buf.readUInt32BE(20) };
+}
+
+/** The queue's channel + launch items, derived from config/aplayermode_pinfeed.json and the committed pin sizes. */
+export function launchBlock(root) {
+  const cfg = loadConfig(root);
+  const sizes = fileSizes(root, cfg);
+  return {
+    channel: { title: cfg.channel.title, description: cfg.channel.description },
+    launch: cfg.items.map((i) => ({
+      slug: i.slug, anchor: i.anchor, pubDate: i.pubDate, title: i.title, description: i.description,
+      image: { path: pinPath(i), length: sizes[pinPath(i)], width: PIN_WIDTH, height: PIN_HEIGHT },
+    })),
+  };
+}
+
+/** ids on the aplayermode.com page: the only fragments a pin may link. */
+export function pageIds(root) {
+  const html = fs.readFileSync(path.join(root, 'aplayermode/index.html'), 'utf8');
+  return new Set([...html.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1]));
 }

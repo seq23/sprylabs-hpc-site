@@ -15,11 +15,20 @@
  *                             apple-touch-icon.png), committed under aplayermode/
  *                             and fetched from the Pages origin like any asset
  *                             (indexable since 10 Oct 2026, owner)
- *   /pinfeed.xml           -> the Pinterest RSS feed (aplayermode/pinfeed.xml),
- *                             served as application/rss+xml; /pinfeed and
- *                             /pinfeed/ 301 to it (one canonical feed URL).
- *                             Built by scripts/aplayermode/build_pinterest_assets.mjs,
- *                             guarded by validate_aplayermode_pinterest.mjs.
+ *   /pinfeed.xml           -> the Pinterest RSS feed, built HERE at request time
+ *                             (./pinqueue.js buildPinfeedXml) from
+ *                             aplayermode/data/pinterest/queue.json on the Pages
+ *                             origin: the 5 launch items plus every drip variant
+ *                             whose release_date <= today in America/Chicago,
+ *                             newest 50. A new pin appears each day with no deploy,
+ *                             and the weekly refill reaches it once Pages publishes.
+ *                             application/rss+xml; /pinfeed and /pinfeed/ 301 to it.
+ *                             Guarded by validate_aplayermode_pinterest.mjs.
+ *   PIN_VISITS             -> a page request carrying utm_source=pinterest writes
+ *                             one Analytics Engine data point (utm_content, campaign,
+ *                             medium; no IP, no user agent, no cookie), skipping
+ *                             crawlers. Read weekly by
+ *                             scripts/aplayermode/collect_pin_metrics.mjs.
  *   /aplayermode/          -> 301 to / (one URL per page)
  *   /amazon/*              -> 301 to billionairehighperformancecoach.com/amazon/*
  *                             (zone Redirect Rule b4d8a48c answers first; this
@@ -34,6 +43,8 @@
  * Deploy: npx wrangler deploy --config workers/aplayermode-com/wrangler.jsonc
  * Guarded by scripts/validators/validate_aplayermode_landing.mjs.
  */
+import { buildPinfeedXml, chicagoDate } from './pinqueue.js';
+
 export const ORIGIN = 'https://sprylabs-hpc-site.pages.dev';
 export const PAGE_PATH = '/aplayermode/';
 export const BHPC = 'https://billionairehighperformancecoach.com';
@@ -56,31 +67,46 @@ export const ROOT_FILES = Object.freeze({
   '/llms.txt': '/aplayermode/llms.txt',
   '/site.webmanifest': '/aplayermode/site.webmanifest',
   '/apple-touch-icon.png': '/aplayermode/img/apple-touch-icon.png',
-  '/pinfeed.xml': '/aplayermode/pinfeed.xml',
 });
 
-// Root files whose Content-Type the Pages origin cannot know (it serves .xml as XML).
-export const CONTENT_TYPES = Object.freeze({
-  '/pinfeed.xml': 'application/rss+xml; charset=utf-8',
-});
 export const FEED_PATH = '/pinfeed.xml';
+export const QUEUE_PATH = '/aplayermode/data/pinterest/queue.json';
+export const FEED_TYPE = 'application/rss+xml; charset=utf-8';
+// Crawlers (Pinterest's own included) never count as a Pinterest-referred visit.
+const BOT_UA = /bot|crawl|spider|slurp|preview|pinterest|facebookexternalhit|headless|lighthouse/i;
 
 /** Pure routing decision, exported for the validator. */
 export function route(pathname) {
   if (pathname === '/' || pathname === '/index.html') return { kind: 'page', upstream: PAGE_PATH };
+  if (pathname === FEED_PATH) return { kind: 'feed', upstream: QUEUE_PATH };
   if (pathname === '/amazon' || pathname.startsWith('/amazon/')) return { kind: 'redirect', location: BHPC + pathname, keepQuery: true };
   if (pathname === '/pinfeed' || pathname === '/pinfeed/') return { kind: 'redirect', location: FEED_PATH, keepQuery: false };
   if (pathname === '/aplayermode' || pathname === PAGE_PATH || pathname === `${PAGE_PATH}index.html`) return { kind: 'redirect', location: '/', keepQuery: true };
   if (pathname.startsWith(PAGE_PATH) && !pathname.includes('..')) return { kind: 'asset', upstream: pathname };
   if (SHARED_ASSETS.has(pathname)) return { kind: 'asset', upstream: pathname };
-  if (Object.prototype.hasOwnProperty.call(ROOT_FILES, pathname)) return { kind: 'asset', upstream: ROOT_FILES[pathname], contentType: CONTENT_TYPES[pathname] };
+  if (Object.prototype.hasOwnProperty.call(ROOT_FILES, pathname)) return { kind: 'asset', upstream: ROOT_FILES[pathname] };
   return { kind: 'redirect', location: '/', keepQuery: false };
+}
+
+/** One data point per Pinterest-referred page view: utm values only, never IP/UA/cookies. */
+export function pinVisitPoint(url, userAgent) {
+  if (url.searchParams.get('utm_source') !== 'pinterest' || BOT_UA.test(userAgent || '')) return null;
+  const clip = (v) => String(v || '').slice(0, 96);
+  const content = clip(url.searchParams.get('utm_content')) || '(none)';
+  return { indexes: [content], blobs: [content, clip(url.searchParams.get('utm_campaign')), clip(url.searchParams.get('utm_medium'))], doubles: [1] };
+}
+
+async function serveFeed(request, upstreamPath) {
+  const upstream = await fetch(ORIGIN + upstreamPath, { headers: { accept: 'application/json' }, redirect: 'manual', cf: { cacheTtl: 300 } });
+  if (upstream.status !== 200) return new Response(`pin queue unavailable (origin ${upstream.status})`, { status: 502 });
+  const xml = buildPinfeedXml(await upstream.json(), chicagoDate(new Date()));
+  return new Response(request.method === 'HEAD' ? null : xml, { status: 200, headers: { 'content-type': FEED_TYPE, 'cache-control': 'public, max-age=900' } });
 }
 
 const FORWARD_HEADERS = ['accept', 'accept-encoding', 'accept-language', 'if-none-match', 'if-modified-since', 'range', 'user-agent'];
 
 export default {
-  async fetch(request) {
+  async fetch(request, env = {}) {
     const url = new URL(request.url);
     if (request.method !== 'GET' && request.method !== 'HEAD') {
       return new Response('Method Not Allowed', { status: 405, headers: { Allow: 'GET, HEAD' } });
@@ -91,6 +117,11 @@ export default {
       if (r.keepQuery) target.search = url.search;
       return new Response(null, { status: 301, headers: { Location: target.toString(), 'Cache-Control': 'public, max-age=3600' } });
     }
+    if (r.kind === 'feed') return serveFeed(request, r.upstream);
+    if (r.kind === 'page' && env.PIN_VISITS) {
+      const point = pinVisitPoint(url, request.headers.get('user-agent'));
+      if (point) { try { env.PIN_VISITS.writeDataPoint(point); } catch { /* measurement never breaks the page */ } }
+    }
     const headers = new Headers();
     for (const h of FORWARD_HEADERS) { const v = request.headers.get(h); if (v) headers.set(h, v); }
     const upstream = await fetch(ORIGIN + r.upstream + url.search, { method: request.method, headers, redirect: 'manual' });
@@ -99,7 +130,6 @@ export default {
     }
     const out = new Response(upstream.body, upstream);
     out.headers.delete('location');
-    if (r.contentType && upstream.status === 200) out.headers.set('content-type', r.contentType);
     return out;
   },
 };

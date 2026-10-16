@@ -4,7 +4,8 @@
  *   aplayermode/img/pins/<slug>.png      1000x1500 pins, one per feed item
  *   aplayermode/img/pinterest/avatar.png  square profile image
  *   aplayermode/img/pinterest/banner.png  16:9 profile cover
- *   aplayermode/pinfeed.xml               RSS 2.0, served at https://aplayermode.com/pinfeed.xml
+ *   aplayermode/data/pinterest/queue.json channel + launch items (the Worker builds
+ *                                         https://aplayermode.com/pinfeed.xml from it)
  *
  * Colours come from config/aplayermode_theme_tokens.json (the app's pinned palette),
  * type is the app's Outfit / Nunito Sans, and the only picture is the real app
@@ -12,12 +13,13 @@
  * Output is committed; the validator (validate_aplayermode_pinterest.mjs) checks it.
  *
  *   node scripts/aplayermode/build_pinterest_assets.mjs            # images + feed
- *   node scripts/aplayermode/build_pinterest_assets.mjs --feed-only
+ *   node scripts/aplayermode/build_pinterest_assets.mjs --feed-only   # queue launch block only
+ * Drip pins (aplayermode/img/pins/drip/) are rendered by scripts/aplayermode/pin_queue.mjs.
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { loadConfig, buildFeedXml, fileSizes, pinPath, PIN_WIDTH, PIN_HEIGHT, FEED_FILE } from './pinfeed_lib.mjs';
+import { loadConfig, launchBlock, pinPath, PIN_WIDTH, PIN_HEIGHT, QUEUE_FILE } from './pinfeed_lib.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const cfg = loadConfig(root);
@@ -131,5 +133,9 @@ if (!feedOnly) {
     await browser.close();
   }
 }
-fs.writeFileSync(path.join(root, FEED_FILE), buildFeedXml(cfg, fileSizes(root, cfg)));
-console.log(`[pinterest] wrote ${FEED_FILE} with ${cfg.items.length} items`);
+const queuePath = path.join(root, QUEUE_FILE);
+const queue = JSON.parse(fs.readFileSync(queuePath, 'utf8'));
+Object.assign(queue, launchBlock(root));
+const ordered = { _comment: queue._comment, config: queue.config, channel: queue.channel, launch: queue.launch, variants: queue.variants };
+fs.writeFileSync(queuePath, `${JSON.stringify(ordered, null, 2)}\n`);
+console.log(`[pinterest] wrote ${QUEUE_FILE} launch block with ${cfg.items.length} items`);

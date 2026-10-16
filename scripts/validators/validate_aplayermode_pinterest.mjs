@@ -13,8 +13,17 @@
  *      spryexecutiveos.com; every other committed .html is scanned too).
  *   2. A feed at https://aplayermode.com/pinfeed.xml that is not 200
  *      application/rss+xml, not well-formed RSS 2.0, or differs from what
- *      scripts/aplayermode/pinfeed_lib.mjs builds from config/aplayermode_pinfeed.json
- *      (one definition, no hand edits).
+ *      workers/aplayermode-com/src/pinqueue.js builds from
+ *      aplayermode/data/pinterest/queue.json for today in America/Chicago; a queue
+ *      whose channel/launch block differs from config/aplayermode_pinfeed.json
+ *      (one definition, no hand edits); a static pinfeed file anywhere the Pages
+ *      project publishes, or a pinfeed route on any host but aplayermode.com
+ *      (billionairehighperformancecoach.com and spryexecutiveos.com serve none).
+ *   2b. Daily drip (16 Oct 2026): fewer than 30 queued variants; a launch item
+ *      dropped; pins_per_day not 1; an undated variant; one before drip_start; one
+ *      section on two consecutive days; a variant on a section the page lacks; a
+ *      price, Spry or checkout in variant copy. The feed is also built as of the
+ *      last release date, so EVERY queued pin is checked by rule 3 before its day.
  *   3. Fewer than 3 items; an item missing title (<=100 chars) / link /
  *      description (<=500 chars) / pubDate / enclosure / media:content; a link
  *      that is not aplayermode.com with utm_source=pinterest, utm_medium=organic,
@@ -30,7 +39,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { loadConfig, buildFeedXml, fileSizes, pngSize, FEED_FILE, PIN_WIDTH, PIN_HEIGHT } from '../aplayermode/pinfeed_lib.mjs';
+import { loadConfig, launchBlock, pngSize, QUEUE_FILE, PIN_WIDTH, PIN_HEIGHT } from '../aplayermode/pinfeed_lib.mjs';
+import { addDays, buildPinfeedXml, chicagoDate } from '../../workers/aplayermode-com/src/pinqueue.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const META = '<meta name="p:domain_verify" content="d7a730694bec0d2a36fc4d789e496d5e"/>';
@@ -46,7 +56,7 @@ globalThis.fetch = async (input) => {
   if (rel === '' || rel.endsWith('/')) rel += 'index.html';
   const file = path.join(root, rel);
   if (!file.startsWith(root + path.sep) || !fs.existsSync(file) || !fs.statSync(file).isFile()) return new Response('not found', { status: 404 });
-  const type = rel.endsWith('.html') ? 'text/html; charset=utf-8' : rel.endsWith('.xml') ? 'application/xml' : rel.endsWith('.png') ? 'image/png' : 'application/octet-stream';
+  const type = rel.endsWith('.html') ? 'text/html; charset=utf-8' : rel.endsWith('.json') ? 'application/json' : rel.endsWith('.xml') ? 'application/xml' : rel.endsWith('.png') ? 'image/png' : 'application/octet-stream';
   return new Response(fs.readFileSync(file), { status: 200, headers: { 'content-type': type } });
 };
 const worker = (await import(pathToFileURL(path.join(root, 'workers/aplayermode-com/src/index.js')).href)).default;
@@ -79,8 +89,45 @@ const feed = await feedRes.text();
 if (feedRes.status !== 200) fail(`/pinfeed.xml answered ${feedRes.status}`);
 if (!/^application\/rss\+xml\b/.test(feedRes.headers.get('content-type') || '')) fail(`/pinfeed.xml Content-Type is ${feedRes.headers.get('content-type')}, not application/rss+xml`);
 const cfg = loadConfig(root);
-const expected = buildFeedXml(cfg, fileSizes(root, cfg));
-if (fs.readFileSync(path.join(root, FEED_FILE), 'utf8') !== expected) fail(`${FEED_FILE} differs from the build; run node scripts/aplayermode/build_pinterest_assets.mjs --feed-only`);
+const queue = JSON.parse(fs.readFileSync(path.join(root, QUEUE_FILE), 'utf8'));
+const today = chicagoDate();
+if (feed !== buildPinfeedXml(queue, today)) fail(`/pinfeed.xml served by the Worker differs from buildPinfeedXml(${QUEUE_FILE}, ${today})`);
+const block = launchBlock(root);
+if (JSON.stringify({ channel: queue.channel, launch: queue.launch }) !== JSON.stringify(block)) fail(`${QUEUE_FILE} channel/launch differ from config/aplayermode_pinfeed.json; run node scripts/aplayermode/build_pinterest_assets.mjs --feed-only`);
+
+// No pinfeed on BHPC / spryexecutiveos: no static feed file the Pages project could
+// publish, no Pages Function or _redirects rule for it, and the Worker that builds
+// it is routed to aplayermode.com only.
+const allTracked = execFileSync('git', ['ls-files'], { cwd: root, encoding: 'utf8' }).split('\n').filter(Boolean);
+for (const rel of allTracked) {
+  if (/pinfeed/i.test(path.basename(rel)) && !/^(workers|scripts|tests|config)\//.test(rel)) fail(`${rel}: a static pinfeed file would be served on billionairehighperformancecoach.com / spryexecutiveos.com by Pages`);
+  if (/^functions\//.test(rel) && /pinfeed/i.test(fs.readFileSync(path.join(root, rel), 'utf8'))) fail(`${rel}: a Pages Function mentions pinfeed; the feed belongs to aplayermode.com only`);
+}
+if (/pinfeed/i.test(fs.readFileSync(path.join(root, '_redirects'), 'utf8'))) fail('_redirects routes a pinfeed on the Pages hosts');
+const wr = fs.readFileSync(path.join(root, 'workers/aplayermode-com/wrangler.jsonc'), 'utf8');
+const patterns = [...wr.matchAll(/"pattern":\s*"([^"]+)"/g)].map((m) => m[1]);
+if (!patterns.length || patterns.some((p) => !p.startsWith('aplayermode.com/'))) fail(`aplayermode-com Worker routes ${JSON.stringify(patterns)}: must be aplayermode.com/* only`);
+
+// 2b. Daily drip queue.
+const ids = pageIds;
+const variants = queue.variants || [];
+if (variants.length < 30) fail(`queue holds ${variants.length} variants; at least 30 required`);
+if (queue.config.pins_per_day !== 1) fail(`pins_per_day is ${queue.config.pins_per_day}; the owner approved 1`);
+if (queue.launch.length !== 5 || queue.launch.map((i) => i.slug).join() !== cfg.items.map((i) => i.slug).join()) fail('the 5 launch items must keep their queue entries');
+const byDate = new Map();
+for (const v of variants) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(v.release_date || '')) { fail(`${v.id}: no release_date`); continue; }
+  if (v.release_date < queue.config.drip_start) fail(`${v.id}: release ${v.release_date} before drip_start ${queue.config.drip_start}`);
+  if (!ids.has(v.section)) fail(`${v.id}: section #${v.section} is not an id on the aplayermode.com page`);
+  if (/\$\s?\d|\bspry\b|pay\.rev\.cat|gumroad/i.test([v.title, v.description, v.headline, v.body, ...(v.points || [])].join(' '))) fail(`${v.id}: copy carries a price, Spry or a checkout`);
+  byDate.set(v.release_date, [...(byDate.get(v.release_date) || []), v.section]);
+}
+for (const [d, secs] of byDate) {
+  if (secs.length > queue.config.pins_per_day) fail(`${d}: ${secs.length} pins on one day`);
+  for (const s of secs) if ((byDate.get(addDays(d, -1)) || []).includes(s)) fail(`${d}: section #${s} two days running`);
+}
+const lastDay = variants.reduce((m, v) => (v.release_date > m ? v.release_date : m), today);
+const fullFeed = buildPinfeedXml(queue, lastDay);
 
 function wellFormed(xml) {
   if (!xml.startsWith('<?xml version="1.0" encoding="UTF-8"?>')) return 'missing XML declaration';
@@ -105,12 +152,20 @@ if (/pay\.rev\.cat|gumroad|spry/i.test(feed)) fail('feed links the checkout or c
 
 // 3. Items.
 const unesc = (s) => s.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
-const items = [...feed.matchAll(/<item>([\s\S]*?)<\/item>/g)].map((m) => m[1]);
+const itemsOf = (xml) => [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].map((m) => m[1]);
+const items = itemsOf(feed);
 if (items.length < 3) fail(`feed has ${items.length} items; at least 3 required`);
+const fullItems = itemsOf(fullFeed);
+const expectFull = Math.min(queue.config.max_feed_items, queue.launch.length + variants.length);
+if (fullItems.length !== expectFull) fail(`feed as of ${lastDay} has ${fullItems.length} items, expected ${expectFull}`);
+if (wellFormed(fullFeed)) fail(`feed as of ${lastDay} is not well-formed XML: ${wellFormed(fullFeed)}`);
 const tag = (x, t) => { const m = x.match(new RegExp(`<${t}(?:\\s[^>]*)?>([\\s\\S]*?)</${t}>`)); return m ? unesc(m[1]) : null; };
 let images = 0;
-for (const [i, x] of items.entries()) {
-  const at = `item ${i + 1}`;
+const checked = new Set();
+for (const [i, [when, x]] of [...items.map((it) => ['today', it]), ...fullItems.map((it) => [lastDay, it])].entries()) {
+  const at = `item ${i + 1} (feed as of ${when})`;
+  if (checked.has(x)) continue;
+  checked.add(x);
   const title = tag(x, 'title'); const link = tag(x, 'link'); const desc = tag(x, 'description'); const date = tag(x, 'pubDate');
   if (!title || title.length > 100) fail(`${at}: title missing or over 100 chars (${title && title.length})`);
   if (!desc || desc.length > 500) fail(`${at}: description missing or over 500 chars (${desc && desc.length})`);
@@ -123,6 +178,8 @@ for (const [i, x] of items.entries()) {
     const page = await get(u.toString());
     if (page.status !== 200) fail(`${at}: link ${link} answered ${page.status} through the Worker`);
     if (u.hash && !pageIds.has(u.hash.slice(1))) fail(`${at}: link fragment ${u.hash} is not an id on the aplayermode.com page`);
+    const guid = tag(x, 'guid') || '';
+    if (u.searchParams.get('utm_content') !== guid.replace(/^aplayermode-pin-/, '')) fail(`${at}: utm_content ${u.searchParams.get('utm_content')} is not the pin id ${guid}`);
   }
   const enc = x.match(/<enclosure url="([^"]+)" length="(\d+)" type="image\/png"\/>/);
   const media = x.match(/<media:content url="([^"]+)" type="image\/png" medium="image" width="(\d+)" height="(\d+)"\/>/);
@@ -155,4 +212,4 @@ if (errors.length) {
   for (const e of errors) console.error(`  - ${e}`);
   process.exit(1);
 }
-console.log(`[validate:aplayermode-pinterest] PASS: meta on aplayermode.com only (${scanned} other pages scanned), feed ${items.length} items, ${images} pin images 1000x1500 served 200`);
+console.log(`[validate:aplayermode-pinterest] PASS: meta on aplayermode.com only (${scanned} other pages scanned), feed today ${items.length} items, ${variants.length} queued through ${lastDay}, ${images} distinct items' pins 1000x1500 served 200, no pinfeed on the Pages hosts`);
