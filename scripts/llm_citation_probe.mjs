@@ -130,7 +130,7 @@ let lastKeyLabel = null;
 async function askFree(query) {
   const r = await freeChat({ messages: [{ role: 'user', content: query }], maxTokens: 1200, timeoutMs: REQUEST_TIMEOUT_MS, apiKey: orKey });
   if (!keyLabelPrinted) { keyLabelPrinted = true; console.log(`  [free-router] key_label ${JSON.stringify(r.key_label)}`); lastKeyLabel = r.key_label; }
-  for (const a of r.attempts) console.log(`  [free-router] ${a.model} -> ${a.status}${a.error ? ` (${a.error.slice(0, 80)})` : ''}`);
+  for (const a of r.attempts) console.log(`  [free-router] ${a.model} -> ${a.status}${a.elapsed_ms != null ? ` after ${a.elapsed_ms}ms` : ''}${a.error ? ` (${a.error.slice(0, 80)})` : ''}`);
   if (!r.ok) { routerStop = r; return { ok: false, error: `${r.stop}: ${r.reason}`, stop: r.stop }; }
   return { ok: true, answer: r.answer, uris: [], model: r.model };
 }

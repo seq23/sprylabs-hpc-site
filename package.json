@@ -424,7 +424,7 @@
     "check:aplayermode-live": "node scripts/diagnostics/check_aplayermode_live.mjs",
     "validate:aplayermode-landing": "node scripts/validators/validate_aplayermode_landing.mjs",
     "validate:published-page-never-recreated": "node scripts/agent_intake/self_test_published_page_never_recreated.mjs",
-    "validate:zero-paid-llm": "node scripts/validators/validate_zero_paid_llm.mjs",
+    "validate:zero-paid-llm": "node scripts/validators/validate_zero_paid_llm.mjs && node --test tests/free_llm_router.test.mjs",
     "validate:host-crawl-surfaces": "node scripts/validators/validate_host_crawl_surfaces.mjs",
     "validate:retrofit-guard": "node scripts/validators/validate_retrofit_guard.mjs",
     "build:demand-families": "node scripts/validation/python_runtime.mjs run scripts/search_intelligence/apply_demand_families.py --apply",

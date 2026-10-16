@@ -34,6 +34,11 @@ for (const m of models) {
   if (String(m?.pricing?.prompt) !== '0' || String(m?.pricing?.completion) !== '0') errors.push(`${ROUTING}: ${m?.id} is not priced $0/$0`);
   if (!String(m?.id || '').endsWith(':free')) errors.push(`${ROUTING}: ${m?.id} is not a ":free" variant; a paid id can be priced 0 today and billed tomorrow`);
 }
+// Excluded models (refused per model by OpenRouter, e.g. inkling's 403 "only
+// available on agentic harnesses") may never return to the roster.
+const excluded = Object.keys(routing?.excluded_models || {}).filter((k) => !k.startsWith('_'));
+if (!excluded.includes('thinkingmachines/inkling:free')) errors.push(`${ROUTING}: excluded_models must name thinkingmachines/inkling:free (403 per model, run 38932788448)`);
+for (const id of excluded) if (models.some((m) => m?.id === id)) errors.push(`${ROUTING}: ${id} is in excluded_models (${routing.excluded_models[id]}) but listed in free_models`);
 
 // 2. Model callers in code
 const PROVIDER_HOST = /(openrouter\.ai\/api|generativelanguage\.googleapis\.com|api\.openai\.com|api\.anthropic\.com|api\.perplexity\.ai|serpapi\.com|api\.groq\.com|api\.together\.xyz|api\.mistral\.ai|api\.deepseek\.com)/;
