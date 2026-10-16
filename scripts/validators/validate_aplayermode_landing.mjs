@@ -76,6 +76,7 @@
  *      reachable the pinned copy is also compared to tokens.ts itself.
  */
 import fs from 'node:fs';
+import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import os from 'node:os';
 import path from 'node:path';
@@ -861,6 +862,17 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
     if (fs.existsSync(path.join(ROOT, `${hk.key}.txt`))) fail(`${hk.key}.txt sits at the repo root, so the shared hosts would serve aplayermode.com's key`);
     if (w.route(`/${sharedKey}.txt`).kind !== 'redirect') fail('Worker must not serve the shared hosts\' IndexNow key file on aplayermode.com');
     if (!/host_keys/.test(read('scripts/distribution/deploy_distribution.sh'))) fail('scripts/distribution/deploy_distribution.sh no longer submits indexnow.host_keys hosts on deploy');
+    // Run the real submitter's key verification for this host (no network): it must
+    // accept aplayermode.com's own key file and refuse a key that file does not hold.
+    // 16 Oct 2026: it verified against the shared hosts' key file and refused the
+    // first real aplayermode.com submission; a dry run skipped the check.
+    const urlFile = path.join(os.tmpdir(), `apm-indexnow-${process.pid}.txt`);
+    fs.writeFileSync(urlFile, 'https://aplayermode.com/\n');
+    const verify = (key) => spawnSync('bash', ['scripts/distribution/indexnow_submit.sh', '--key', key, '--host', 'aplayermode.com', '--file', urlFile, '--report', path.join(os.tmpdir(), `apm-indexnow-${process.pid}.json`)], { cwd: ROOT, encoding: 'utf8', env: { ...process.env, INDEXNOW_VERIFY_ONLY: '1', INDEXNOW_DRY_RUN: '0' } });
+    const good = verify(hk.key);
+    if (good.status !== 0) fail(`indexnow_submit.sh refuses aplayermode.com's own key: ${(good.stderr || good.stdout).trim().split('\n').pop()}`);
+    if (verify(sharedKey).status === 0) fail('indexnow_submit.sh accepted the shared hosts\' key for aplayermode.com; the key file check is not reaching the host key');
+    fs.rmSync(urlFile, { force: true });
   }
   const agents = (t) => [...t.matchAll(/^User-agent:\s*(\S+)/gim)].map((m) => m[1]).sort();
   const apmRobots = read('aplayermode/robots.txt');
