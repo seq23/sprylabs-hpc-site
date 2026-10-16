@@ -1,0 +1,66 @@
+name: aplayermode.com Pinterest drip (weekly refill + metrics)
+
+# The daily release needs no workflow: the aplayermode-com Worker builds
+# https://aplayermode.com/pinfeed.xml at request time from
+# aplayermode/data/pinterest/queue.json, releasing one pin a day in America/Chicago.
+#
+# This weekly run (Monday 06:40 CT) keeps that queue stocked ($0: template copy from
+# config/aplayermode_pin_angles.json, Playwright-rendered PNGs, no model call):
+#   1. scripts/aplayermode/pin_queue.mjs: when fewer than 14 pins are unreleased it
+#      plans, renders and dates the next 21. Exits 1 naming PINTEREST_QUEUE_EXHAUSTED
+#      if a refill is due and no new pin can be made.
+#   2. Guards: the drip tests and validate:aplayermode-pinterest.
+#   3. scripts/aplayermode/collect_pin_metrics.mjs: Pinterest-referred visits per pin
+#      from the Worker's Analytics Engine edge log, or the named stop
+#      PINTEREST_METRICS_UNAVAILABLE naming the secret it needs (CLOUDFLARE_API_TOKEN).
+# The commit goes through the shared push helper; Pages publishes it, and the Worker
+# reads the new queue from Pages, so no Worker deploy is needed.
+on:
+  schedule:
+    - cron: "40 11 * * 1"
+  workflow_dispatch:
+env:
+  PUSH_RETRY_ATTEMPTS: 5
+  GITHUB_TOKEN: ${{ github.token }}
+permissions:
+  contents: write
+  # Lets the shared push helper request Validate Repo for the commit it lands.
+  actions: write
+concurrency:
+  group: main-automation
+  cancel-in-progress: false
+jobs:
+  drip:
+    runs-on: ubuntu-latest
+    # npm ci + a 21-pin render is ~3 min, the helper's convergence ~10; fault detector, not a budget.
+    timeout-minutes: 55
+    # Job-level so the push helper's replay (WORKFLOW_ARGV) measures too.
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v7
+        with: {fetch-depth: 0}
+      - name: Sync latest main before install
+        run: |
+          git fetch origin main
+          git reset --hard origin/main
+      - uses: actions/setup-node@v7
+        with: {node-version: 24, cache: npm}
+      - run: npm ci --ignore-scripts
+      - run: npx playwright install --with-deps chromium
+      - name: Refill below threshold, render, date
+        run: node scripts/aplayermode/pin_queue.mjs
+      - name: Drip and feed guards
+        run: npm run validate:aplayermode-pin-drip && npm run validate:aplayermode-pinterest
+      - name: Pinterest-referred visits per pin
+        run: node scripts/aplayermode/collect_pin_metrics.mjs
+      - name: Commit and push
+        env:
+          WORKFLOW_ARGV: >-
+            node scripts/aplayermode/pin_queue.mjs &&
+            npm run validate:aplayermode-pin-drip &&
+            npm run validate:aplayermode-pinterest &&
+            node scripts/aplayermode/collect_pin_metrics.mjs
+        run: |
+          ./.github/scripts/commit_and_push_if_changed.sh "aplayermode.com Pinterest drip: weekly refill and metrics" aplayermode-pinterest-drip

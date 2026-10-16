@@ -2707,9 +2707,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-APLAYERMODE-PIN-DRIP",
+      "validation_id": "VAL-APLAYERMODE-PIN-DRIP",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:aplayermode-pin-drip",
+      "order": 262,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 270,
+  "entry_count": 271,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3391,6 +3401,10 @@
         {
           "id": "VAL-ROUTE-UNIQUENESS",
           "command": "npm run validate:route-uniqueness"
+        },
+        {
+          "id": "VAL-APLAYERMODE-PIN-DRIP",
+          "command": "npm run validate:aplayermode-pin-drip"
         }
       ]
     },
