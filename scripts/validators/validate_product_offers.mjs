@@ -26,7 +26,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
-import { ROOT, publishedHtml, repairHtml } from '../repair/product_offers.mjs';
+import { ROOT, publishedHtml, repairHtml, frozenRevenueSurfaces } from '../repair/product_offers.mjs';
 
 const requireCjs = createRequire(import.meta.url);
 const { bhpcOffer } = requireCjs('../lib/bhpc_offer.cjs');
@@ -84,9 +84,16 @@ export function checkHtml(html, label) {
 const problems = [];
 let products = 0;
 const pages = publishedHtml();
+// Frozen revenue surfaces (download.html, hash-pinned by validate:ownership) are
+// never edited, so they are named here instead of failed; anything else frozen
+// would have to join that one pin first.
+const frozen = frozenRevenueSurfaces();
+const exempt = [];
+if (frozen.size > 1) problems.push(`more than one frozen revenue surface (${[...frozen].join(', ')}); each exemption here must be reviewed`);
 for (const rel of pages) {
   const html = fs.readFileSync(path.join(ROOT, rel), 'utf8');
   if (!html.includes('Product')) continue;
+  if (frozen.has(rel)) { if (checkHtml(html, rel).problems.length) exempt.push(rel); continue; }
   const r = checkHtml(html, rel);
   products += r.products;
   problems.push(...r.problems);
@@ -111,4 +118,4 @@ if (problems.length) {
   if (problems.length > 40) console.error(`  ... and ${problems.length - 40} more`);
   process.exit(1);
 }
-console.log(`${NAME} OK: ${products} Product node(s) on ${pages.length} published pages each carry an offer (${PINNED.price} ${PINNED.priceCurrency} at ${PINNED.url}); emitter and self-test pass`);
+console.log(`${NAME} OK: ${products} Product node(s) on ${pages.length} published pages each carry an offer (${PINNED.price} ${PINNED.priceCurrency} at ${PINNED.url}); emitter and self-test pass${exempt.length ? `; frozen revenue surface left as pinned: ${exempt.join(', ')}` : ''}`);

@@ -11,7 +11,8 @@
  *
  * The node is edited in place: `,"offers":{...}` is inserted before the Product
  * object's closing brace, so the rest of the page and the rest of the JSON-LD
- * block keep their bytes. Reviews and ratings are never added.
+ * block keep their bytes. Reviews and ratings are never added. Frozen revenue
+ * surfaces (download.html) are never touched; the validator names them.
  *
  *   node scripts/repair/product_offers.mjs --apply   rewrite pages that need it
  *   node scripts/repair/product_offers.mjs --check   exit 1 if any page needs it
@@ -44,6 +45,17 @@ export function publishedHtml(root = ROOT) {
     }
   })(root, 0);
   return out.sort();
+}
+
+/**
+ * Pages frozen byte-for-byte as revenue surfaces (download.html: the page behind
+ * the only verified sales). Read from the one hash pin
+ * (artifacts/validation/pre-implementation-protected-hashes.json, tier
+ * revenue_surface, enforced by validate:ownership); never edited here.
+ */
+export function frozenRevenueSurfaces(root = ROOT) {
+  const pin = JSON.parse(fs.readFileSync(path.join(root, 'artifacts/validation/pre-implementation-protected-hashes.json'), 'utf8'));
+  return new Set(Object.keys(pin.tiers?.revenue_surface?.files || {}));
 }
 
 const isProduct = (node) => node && typeof node === 'object' && !Array.isArray(node)
@@ -118,7 +130,9 @@ function main() {
   const offer = bhpcOffer();
   let products = 0;
   const changed = [];
+  const frozen = frozenRevenueSurfaces();
   for (const rel of publishedHtml()) {
+    if (frozen.has(rel)) continue;
     const file = path.join(ROOT, rel);
     const html = fs.readFileSync(file, 'utf8');
     if (!html.includes('Product')) continue;
