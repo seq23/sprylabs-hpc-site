@@ -8624,8 +8624,38 @@
         "MX-GENERATORS-KEEP-DEMAND-PAGES"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-APLAYERMODE-PINTEREST",
+      "status": "ADMITTED",
+      "name": "validate:aplayermode-pinterest",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "aplayermode.com Pinterest launch (16 Oct 2026): the domain claim meta could drop off aplayermode.com's homepage or leak onto the BHPC/spryexecutiveos homepage, and the Pinterest RSS feed at /pinfeed.xml could stop being 200 application/rss+xml, drift from its config, lose utm tags, link the checkout or Spry, or point at missing / wrongly sized pin images; the check renders the homepage and feed through the real Worker and fails on each.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:aplayermode-pinterest",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-aplayermode-pinterest/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-16",
+      "matrix_ids": [
+        "MX-APLAYERMODE-PINTEREST"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 275,
+  "record_count": 276,
   "generated_at": "2026-08-08T23:30:00Z"
 }

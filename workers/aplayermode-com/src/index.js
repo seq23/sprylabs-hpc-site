@@ -15,6 +15,11 @@
  *                             apple-touch-icon.png), committed under aplayermode/
  *                             and fetched from the Pages origin like any asset
  *                             (indexable since 10 Oct 2026, owner)
+ *   /pinfeed.xml           -> the Pinterest RSS feed (aplayermode/pinfeed.xml),
+ *                             served as application/rss+xml; /pinfeed and
+ *                             /pinfeed/ 301 to it (one canonical feed URL).
+ *                             Built by scripts/aplayermode/build_pinterest_assets.mjs,
+ *                             guarded by validate_aplayermode_pinterest.mjs.
  *   /aplayermode/          -> 301 to / (one URL per page)
  *   /amazon/*              -> 301 to billionairehighperformancecoach.com/amazon/*
  *                             (zone Redirect Rule b4d8a48c answers first; this
@@ -51,16 +56,24 @@ export const ROOT_FILES = Object.freeze({
   '/llms.txt': '/aplayermode/llms.txt',
   '/site.webmanifest': '/aplayermode/site.webmanifest',
   '/apple-touch-icon.png': '/aplayermode/img/apple-touch-icon.png',
+  '/pinfeed.xml': '/aplayermode/pinfeed.xml',
 });
+
+// Root files whose Content-Type the Pages origin cannot know (it serves .xml as XML).
+export const CONTENT_TYPES = Object.freeze({
+  '/pinfeed.xml': 'application/rss+xml; charset=utf-8',
+});
+export const FEED_PATH = '/pinfeed.xml';
 
 /** Pure routing decision, exported for the validator. */
 export function route(pathname) {
   if (pathname === '/' || pathname === '/index.html') return { kind: 'page', upstream: PAGE_PATH };
   if (pathname === '/amazon' || pathname.startsWith('/amazon/')) return { kind: 'redirect', location: BHPC + pathname, keepQuery: true };
+  if (pathname === '/pinfeed' || pathname === '/pinfeed/') return { kind: 'redirect', location: FEED_PATH, keepQuery: false };
   if (pathname === '/aplayermode' || pathname === PAGE_PATH || pathname === `${PAGE_PATH}index.html`) return { kind: 'redirect', location: '/', keepQuery: true };
   if (pathname.startsWith(PAGE_PATH) && !pathname.includes('..')) return { kind: 'asset', upstream: pathname };
   if (SHARED_ASSETS.has(pathname)) return { kind: 'asset', upstream: pathname };
-  if (Object.prototype.hasOwnProperty.call(ROOT_FILES, pathname)) return { kind: 'asset', upstream: ROOT_FILES[pathname] };
+  if (Object.prototype.hasOwnProperty.call(ROOT_FILES, pathname)) return { kind: 'asset', upstream: ROOT_FILES[pathname], contentType: CONTENT_TYPES[pathname] };
   return { kind: 'redirect', location: '/', keepQuery: false };
 }
 
@@ -86,6 +99,7 @@ export default {
     }
     const out = new Response(upstream.body, upstream);
     out.headers.delete('location');
+    if (r.contentType && upstream.status === 200) out.headers.set('content-type', r.contentType);
     return out;
   },
 };

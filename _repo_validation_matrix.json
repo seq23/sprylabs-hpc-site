@@ -2687,9 +2687,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-APLAYERMODE-PINTEREST",
+      "validation_id": "VAL-APLAYERMODE-PINTEREST",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:aplayermode-pinterest",
+      "order": 260,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 268,
+  "entry_count": 269,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3359,6 +3369,10 @@
         {
           "id": "VAL-GENERATORS-KEEP-DEMAND-PAGES",
           "command": "npm run validate:generators-keep-demand-pages"
+        },
+        {
+          "id": "VAL-APLAYERMODE-PINTEREST",
+          "command": "npm run validate:aplayermode-pinterest"
         }
       ]
     },

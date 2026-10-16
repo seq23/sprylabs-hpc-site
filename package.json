@@ -429,7 +429,9 @@
     "build:demand-families": "node scripts/validation/python_runtime.mjs run scripts/search_intelligence/apply_demand_families.py --apply",
     "repair:single-faqpage": "node scripts/validation/python_runtime.mjs run scripts/repair/single_faqpage.py --apply",
     "validate:demand-families": "node scripts/validators/validate_demand_families.mjs",
-    "validate:generators-keep-demand-pages": "node scripts/validators/validate_generators_keep_demand_pages.mjs"
+    "validate:generators-keep-demand-pages": "node scripts/validators/validate_generators_keep_demand_pages.mjs",
+    "validate:aplayermode-pinterest": "node scripts/validators/validate_aplayermode_pinterest.mjs",
+    "build:aplayermode-pinterest": "node scripts/aplayermode/build_pinterest_assets.mjs"
   },
   "engines": {
     "node": ">=24.0.0"
