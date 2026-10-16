@@ -29,10 +29,6 @@ def route_for(rel: str) -> str:
     path = str(rel).replace("\\", "/")
     if path == "index.html":
         return "/"
-    if path == "faq/index.html":
-        return "/faq"
-    if path == "billionaire-high-performance-coach/index.html":
-        return "/billionaire-high-performance-coach"
     if path.endswith("/index.html"):
         return "/" + path[: -len("/index.html")] + "/"
     if path in FROZEN_HTML_ROUTES:

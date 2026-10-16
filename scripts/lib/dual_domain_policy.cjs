@@ -24,8 +24,6 @@ const FROZEN_HTML_ROUTES = new Set();
 function routeFor(rel) {
   const p = String(rel).replace(/\\/g, '/');
   if (p === 'index.html') return '/';
-  if (p === 'faq/index.html') return '/faq';
-  if (p === 'billionaire-high-performance-coach/index.html') return '/billionaire-high-performance-coach';
   if (p.endsWith('/index.html')) return '/' + p.slice(0, -'/index.html'.length) + '/';
   if (FROZEN_HTML_ROUTES.has(p)) return '/' + p;
   return '/' + p.replace(/\.html$/, '');

@@ -10,7 +10,7 @@ const INSIGHTS_DIR = path.join(ROOT, 'content', 'insights');
 const DRAFTS_DIR = path.join(INSIGHTS_DIR, '_drafts');
 
 const GUMROAD = 'https://sprylabs.gumroad.com/l/billionaire-high-performance-coach';
-const SITE_FRAMEWORK = '/billionaire-high-performance-coach/';
+const SITE_FRAMEWORK = '/billionaire-high-performance-coach';
 
 const MODEL_LINKS = [
   { name: 'Operational Drift', slug: 'operational-drift' },

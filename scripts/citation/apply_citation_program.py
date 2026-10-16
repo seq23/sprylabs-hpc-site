@@ -60,7 +60,7 @@ EXCLUDED_PREFIXES = ("templates/", "artifacts/", "fixtures/", "node_modules/", "
 EXCLUDED_PREFIXES += tuple(f"{d}/" for d in json.loads((ROOT / "config/index_exclusions.json").read_text(encoding="utf-8"))["dirs"])
 CITATION_REPAIR_WARNINGS = []
 
-BHPC_PRODUCT_PATHS = {'index.html','download.html','product.html','billionaire-high-performance-coach/index.html','billionaire-high-performance-coach.html'}
+BHPC_PRODUCT_PATHS = {'index.html','download.html','product.html','billionaire-high-performance-coach.html'}
 BHPC_ORGANIZATION = {'@type':'Organization','@id':'https://billionairehighperformancecoach.com/#organization','name':'Spry Labs','url':'https://billionairehighperformancecoach.com/','logo':{'@type':'ImageObject','url':'https://billionairehighperformancecoach.com/assets/spry-logo.png'}}
 BHPC_WEBSITE = {'@type':'WebSite','@id':'https://billionairehighperformancecoach.com/#website','name':'Billionaire High Performance Coach','url':'https://billionairehighperformancecoach.com/','publisher':{'@id':'https://billionairehighperformancecoach.com/#organization'}}
 BHPC_MENTION_TERMS = [

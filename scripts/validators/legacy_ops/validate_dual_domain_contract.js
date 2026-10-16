@@ -62,7 +62,7 @@ const minWordChecks = new Map([
   ['pillars/leverage/index.html', 240],
   ['pillars/systems-decisions/index.html', 240],
   ['pillars/accountability/index.html', 240],
-  ['faq/index.html', 300],
+  ['faq.html', 300],
   ['ai-coach-vs-human-coach.html', 420],
   ['chatgpt-vs-executive-coach.html', 420],
   ['best-ai-coaching-tools.html', 420],
