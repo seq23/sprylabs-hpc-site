@@ -1,5 +1,6 @@
 'use strict';
 const CTA_TARGET = 'https://aplayermode.com';
+const { bhpcOffer } = require('../lib/bhpc_offer.cjs');
 const DEFAULT_IMAGE = '/assets/books/og/bhpc-og-black.png';
 const PRODUCT_NAME = 'Billionaire High Performance Coach';
 const PRODUCT_URL = 'https://billionairehighperformancecoach.com/';
@@ -32,7 +33,7 @@ function productSchema({ description, imageUrl, canonicalUrl } = {}) {
     description: normalizeText(description, PRODUCT_DESCRIPTION),
     image: toAbsoluteImage(imageUrl),
     url: canonicalUrl || PRODUCT_URL,
-    offers: { '@type': 'Offer', price: '29', priceCurrency: 'USD', availability: 'https://schema.org/InStock', url: CTA_TARGET }
+    offers: bhpcOffer()
   }, ' data-geo-semantic="true"');
 }
 function softwareApplicationSchema({ description, canonicalUrl } = {}) {

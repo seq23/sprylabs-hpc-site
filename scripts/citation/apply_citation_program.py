@@ -87,7 +87,12 @@ BHPC_PRODUCT_SCHEMA = {
         {'@type':'PropertyValue','name':'Primary use','value':'Daily agenda generation, decision framing, accountability, recovery, and executive review'},
         {'@type':'PropertyValue','name':'Boundary','value':'Educational and organizational framework only; not medical, psychological, legal, financial, therapeutic, or diagnostic advice'},
     ],
-    'potentialAction':{'@type':'BuyAction','target':'https://sprylabs.gumroad.com/l/billionaire-high-performance-coach'}
+    'potentialAction':{'@type':'BuyAction','target':'https://sprylabs.gumroad.com/l/billionaire-high-performance-coach'},
+    # The real one-time Gumroad offer, from the one pinned price file (the same
+    # builder, scripts/lib/bhpc_offer.cjs, so the two never diverge). Search Console failed a bhpc
+    # Product with "Either offers, review or aggregateRating should be
+    # specified" on 16 Oct 2026; ratings and reviews are never invented.
+    'offers':json.loads(__import__('subprocess').run(['node','-e',"process.stdout.write(JSON.stringify(require('./scripts/lib/bhpc_offer.cjs').bhpcOffer()))"],cwd=str(ROOT),check=True,capture_output=True,text=True).stdout),
 }
 
 SPECIAL_COMPARISON_QUERIES = {

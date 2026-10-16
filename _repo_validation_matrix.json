@@ -2717,9 +2717,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-PRODUCT-OFFERS",
+      "validation_id": "VAL-PRODUCT-OFFERS",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:product-offers",
+      "order": 263,
+      "severity": "STRONG_WARNING",
+      "release_effect": false,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 271,
+  "entry_count": 272,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3405,6 +3415,10 @@
         {
           "id": "VAL-APLAYERMODE-PIN-DRIP",
           "command": "npm run validate:aplayermode-pin-drip"
+        },
+        {
+          "id": "VAL-PRODUCT-OFFERS",
+          "command": "npm run validate:product-offers"
         }
       ]
     },

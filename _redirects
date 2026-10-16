@@ -1691,6 +1691,16 @@
 # Recover stale or previously leaked internal source URLs.
 /site/public/* /:splat 301
 
+# Legacy directory-index URLs go straight to the trailing-slash page in ONE hop.
+# Without these, /x/index.html matched `/*.html` below (-> /x/index) and Pages
+# then 308'd /x/index to /x/: two hops. Search Console, 16 Oct 2026, flagged the
+# chain on spryexecutiveos.com (/how-to-stop-doomscrolling/index.html); one
+# Pages deployment answers both hosts, so this fixes billionairehighperformancecoach.com
+# too. scripts/validators/validate_redirect_and_link_integrity.mjs proves every
+# published directory page's /index.html form lands on its page in one hop.
+/index.html / 301
+/*/index.html /:splat/ 301
+
 # Canonicalize legacy HTML URLs before the repository-root compatibility proxy.
 # Without this rule, Pages can expose /site/public during its automatic clean-URL redirect.
 /*.html /:splat 301

@@ -75,4 +75,32 @@ echo "== 2) Submit IndexNow batch URLs =="
 scripts/distribution/indexnow_submit.sh "${submit_args[@]}" --file "$BATCH_FILE" --label batch
 
 echo
+echo "== 3) Submit IndexNow URLs for hosts with their own key (indexnow.host_keys) =="
+# aplayermode.com is served by its own Worker, not the shared Pages hosts, so it
+# carries its own key file and is pinged with that key. Missing host_keys config,
+# an empty URL list or a key file that does not hold the key fails the deploy
+# rather than skipping it silently (16 Oct 2026: Search Console found no key).
+host_keys_tsv="$(ARTIFACT="$ARTIFACT_DIR" node -e "
+const fs=require('fs');
+const c=JSON.parse(fs.readFileSync('distribution.config.json','utf8'));
+const hk=(c.indexnow&&c.indexnow.host_keys)||{};
+const rows=Object.entries(hk);
+if(!rows.length){console.error('ERROR: distribution.config.json indexnow.host_keys is empty');process.exit(1);}
+for(const [host,h] of rows){
+  const k=String(h.key||'').trim();
+  if(!/^[a-f0-9]{8,128}$/.test(k)){console.error('ERROR: '+host+' key is not 8-128 hex chars');process.exit(1);}
+  if(fs.readFileSync(h.key_file,'utf8').trim()!==k){console.error('ERROR: '+h.key_file+' does not hold the '+host+' key');process.exit(1);}
+  const urls=[...fs.readFileSync(h.urls_from,'utf8').matchAll(/<loc>([^<]+)<\\/loc>/g)].map(m=>m[1].trim()).filter(u=>new URL(u).host===host);
+  if(!urls.length){console.error('ERROR: '+h.urls_from+' lists no '+host+' URLs');process.exit(1);}
+  fs.writeFileSync(process.env.ARTIFACT+'/indexnow-'+host+'.txt',urls.join('\\n')+'\\n');
+  process.stdout.write(host+'\\t'+k+'\\n');
+}")"
+while IFS=$'\t' read -r hk_host hk_key; do
+  [[ -n "$hk_host" ]] || continue
+  scripts/distribution/indexnow_submit.sh --key "$hk_key" --host "$hk_host" \
+    --file "${ARTIFACT_DIR}/indexnow-${hk_host}.txt" --label "host-key-${hk_host}" \
+    --report "${REPORT_PATH%.json}-${hk_host}.json"
+done <<< "$host_keys_tsv"
+echo
+
 echo "Done. IndexNow report: $REPORT_PATH"
