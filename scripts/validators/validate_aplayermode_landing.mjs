@@ -76,6 +76,7 @@
  *      reachable the pinned copy is also compared to tokens.ts itself.
  */
 import fs from 'node:fs';
+import { createRequire } from 'node:module';
 import os from 'node:os';
 import path from 'node:path';
 import vm from 'node:vm';
@@ -558,8 +559,12 @@ if (/billionairehighperformancecoach\.com\/aplayermode/i.test(html)) fail('the p
   const MOVED_EXPECTED = ['billionairehighperformancecoach.com', 'spryexecutiveos.com', 'www.billionairehighperformancecoach.com', 'www.spryexecutiveos.com'];
   if (JSON.stringify(moved) !== JSON.stringify(MOVED_EXPECTED)) fail(`functions/aplayermode/index.js MOVED_HOSTS is ${JSON.stringify(moved)}; expected exactly ${JSON.stringify(MOVED_EXPECTED)} (pages.dev must keep serving the page: the Worker fetches it there)`);
   if (!/APLAYERMODE_URL = 'https:\/\/aplayermode\.com\/'/.test(fnSrc) || !/status: 301/.test(fnSrc)) fail('functions/aplayermode/index.js must 301 to https://aplayermode.com/');
+  // The exclusion list moved to scripts/lib/published_surface.cjs (16 Oct 2026) so the
+  // assembler and the validators that walk "every published page" read one list.
   const assemble = fs.readFileSync(path.join(ROOT, 'scripts', 'assemble_pages_output.js'), 'utf8');
-  if (!/^\s*'workers',/m.test(assemble)) fail('scripts/assemble_pages_output.js must exclude workers/ from the Pages output');
+  if (!/require\('\.\/lib\/published_surface\.cjs'\)/.test(assemble)) fail('scripts/assemble_pages_output.js must take its exclusions from scripts/lib/published_surface.cjs');
+  const { excluded: surfaceExcluded } = createRequire(import.meta.url)(path.join(ROOT, 'scripts', 'lib', 'published_surface.cjs'));
+  if (!surfaceExcluded('workers')) fail('scripts/lib/published_surface.cjs must exclude workers/ from the Pages output');
 }
 const visibleText = html.replace(/<script\b[\s\S]*?<\/script>/gi, '').replace(/<!--[\s\S]*?-->/g, '').replace(/<[^>]+>/g, ' ');
 for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /join the beta/i, /bought in the app through the App Store or Google Play/i]) {
@@ -838,6 +843,25 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
     if (!fs.existsSync(path.join(ROOT, file))) fail(`${file} is not committed`);
   }
   for (const p of ['/sitemap-bhpc.xml', '/llms-full.txt', '/guides/', '/index.xml']) if (w.route(p).kind !== 'redirect') fail(`Worker must still 301 ${p} to /`);
+  // IndexNow (16 Oct 2026, Search Console: aplayermode.com had no key). The domain's
+  // OWN key, from distribution.config.json indexnow.host_keys, served at the root by
+  // the Worker from aplayermode/<key>.txt, valid on aplayermode.com only: the shared
+  // hosts' key file is not served here and this key file is not at the shared root.
+  const hk = (JSON.parse(read('distribution.config.json')).indexnow?.host_keys || {})['aplayermode.com'];
+  if (!hk) fail('distribution.config.json indexnow.host_keys has no aplayermode.com entry; aplayermode.com would have no IndexNow key');
+  else {
+    const sharedKey = JSON.parse(read('distribution.config.json')).indexnow.key;
+    if (!/^[a-f0-9]{8,128}$/.test(hk.key || '')) fail('aplayermode.com IndexNow key must be 8-128 lowercase hex characters');
+    if (hk.key === sharedKey) fail('aplayermode.com must carry its own IndexNow key, not the shared hosts\' key');
+    if (w.INDEXNOW_KEY !== hk.key) fail(`Worker INDEXNOW_KEY ${w.INDEXNOW_KEY} is not distribution.config.json's aplayermode.com key ${hk.key}`);
+    if (hk.served_at !== `/${hk.key}.txt` || hk.key_file !== `aplayermode/${hk.key}.txt`) fail('aplayermode.com host_keys served_at/key_file must be /<key>.txt and aplayermode/<key>.txt');
+    const kr = w.route(`/${hk.key}.txt`);
+    if (kr.kind !== 'asset' || kr.upstream !== `/${hk.key_file}`) fail(`Worker route(/${hk.key}.txt) must serve /${hk.key_file}; got ${JSON.stringify(kr)}`);
+    if (!fs.existsSync(path.join(ROOT, hk.key_file)) || read(hk.key_file).trim() !== hk.key) fail(`${hk.key_file} must be committed and hold exactly the key`);
+    if (fs.existsSync(path.join(ROOT, `${hk.key}.txt`))) fail(`${hk.key}.txt sits at the repo root, so the shared hosts would serve aplayermode.com's key`);
+    if (w.route(`/${sharedKey}.txt`).kind !== 'redirect') fail('Worker must not serve the shared hosts\' IndexNow key file on aplayermode.com');
+    if (!/host_keys/.test(read('scripts/distribution/deploy_distribution.sh'))) fail('scripts/distribution/deploy_distribution.sh no longer submits indexnow.host_keys hosts on deploy');
+  }
   const agents = (t) => [...t.matchAll(/^User-agent:\s*(\S+)/gim)].map((m) => m[1]).sort();
   const apmRobots = read('aplayermode/robots.txt');
   if (JSON.stringify(agents(apmRobots)) !== JSON.stringify(agents(read('robots.txt')))) fail('aplayermode/robots.txt must welcome exactly the agents the root robots.txt names');

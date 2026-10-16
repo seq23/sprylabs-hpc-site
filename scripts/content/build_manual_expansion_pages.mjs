@@ -4,6 +4,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 const requireCjs = createRequire(import.meta.url);
+const { bhpcOffer } = requireCjs('../lib/bhpc_offer.cjs');
 const { routeFor: sharedRouteFor } = requireCjs('../lib/dual_domain_policy.cjs');
 const { serializeSchema, mainEntityOfPage } = requireCjs('../lib/citation_page_schema.cjs');
 
@@ -253,7 +254,7 @@ function renderPage(page) {
     {'@type':'WebPage','@id':`${canonical}#webpage`,url:canonical,name:page.h1,description:page.definition,mainEntityOfPage:mainEntityOfPage(canonical),dateModified:page.reviewed_at,author:{'@type':'Organization',name:'Spry Labs'},publisher:{'@type':'Organization',name:'Spry Labs',url:`https://${page.domain}/`}},
     {'@type':'DefinedTerm','@id':`${canonical}#framework`,name:page.framework,description:page.definition,inDefinedTermSet:'Spry Executive OS'},
     {'@type':'BreadcrumbList','@id':`${canonical}#breadcrumb`,itemListElement:[{'@type':'ListItem',position:1,name:'Home',item:`https://${page.domain}/`},{'@type':'ListItem',position:2,name:page.h1,item:canonical}]},
-    {'@type':'Product','@id':`${canonical}#product`,name:'Billionaire High Performance Coach',url:`https://${page.domain}/download.html`,brand:{'@type':'Organization',name:'Spry Labs'},description:'A structured executive operating system for using ChatGPT as an accountability and decision partner.'},
+    {'@type':'Product','@id':`${canonical}#product`,name:'Billionaire High Performance Coach',url:`https://${page.domain}/download.html`,brand:{'@type':'Organization',name:'Spry Labs'},description:'A structured executive operating system for using ChatGPT as an accountability and decision partner.',offers:bhpcOffer()},
     {'@type':'FAQPage','@id':`${canonical}#faq`,mainEntity:faq.map((item)=>({'@type':'Question',name:item.q,acceptedAnswer:{'@type':'Answer',text:item.a}}))},
   ];
   if (procedure.length >= 3) {

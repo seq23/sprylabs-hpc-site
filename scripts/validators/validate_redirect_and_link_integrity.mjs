@@ -24,7 +24,15 @@
  * could ever fire. validate:retired-route-references reads the redirect MAP and
  * asserts a line exists; nothing asserted that the line could be reached.
  *
- * Fails on zero rules, zero pages or zero links examined.
+ *   4. Every published directory page's legacy `/<dir>/index.html` URL (and the
+ *      root `/index.html`) reaches its page in exactly ONE hop, counting both
+ *      the _redirects rules and Pages' own clean-URL redirects (/x.html -> /x,
+ *      /x/index -> /x/). Search Console, 16 Oct 2026: spryexecutiveos.com
+ *      /how-to-stop-doomscrolling/index.html went `/*.html` -> /…/index, then
+ *      Pages 308 -> /…/ (2 hops). The model of Pages' redirects is pinned by a
+ *      self-test against that observed chain.
+ *
+ * Fails on zero rules, zero pages, zero links or zero legacy index URLs examined.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -186,6 +194,54 @@ for (const rel of pages) {
 if (!hrefsChecked) fail('zero internal links examined across the published pages; a link check that reads nothing proves nothing.');
 for (const [href, from] of broken) errors.push(`internal link to a 404: ${href} (from ${from.length} page(s), e.g. ${from.slice(0, 3).join(', ')})`);
 
+// 4. legacy /<dir>/index.html URLs: one hop to the page, Pages' own redirects counted.
+/** Pages' automatic clean-URL redirect for a path the _redirects table let through, or null. */
+function pagesAutoRedirect(p) {
+  let rel;
+  try { rel = decodeURIComponent(p).replace(/^\/+/, ''); } catch { return null; }
+  if (p.endsWith('/index.html')) return p.slice(0, -'index.html'.length);
+  if (p.endsWith('/index')) return p.slice(0, -'index'.length);
+  if (p.endsWith('.html') && isFile(rel)) return p.slice(0, -'.html'.length);
+  if (p.endsWith('/') && p !== '/' && !isFile(`${rel}index.html`) && isFile(`${rel.slice(0, -1)}.html`)) return p.slice(0, -1);
+  if (!p.endsWith('/') && !isFile(rel) && !isFile(`${rel}.html`) && isFile(`${rel}/index.html`)) return `${p}/`;
+  return null;
+}
+/** Every hop a client sees from `p`: _redirects first, then Pages' clean URLs. */
+function clientHops(p, rule = firstRule, auto = pagesAutoRedirect) {
+  const hops = [];
+  let cur = p;
+  for (let i = 0; i < 10; i += 1) {
+    const r = rule(cur);
+    const next = r ? internalPath(targetOf(r)) : auto(cur);
+    if (next === null || next === undefined) return { final: cur, hops };
+    hops.push(next);
+    cur = next;
+  }
+  return { final: undefined, hops, loop: true };
+}
+// Self-test: the table as it stood on 16 Oct 2026 (only `/*.html /:splat`) must
+// reproduce the two-hop chain Search Console saw, or the model is not faithful.
+{
+  const legacy = { index: 0, line: 0, source: '/*.html', target: '/:splat', prefix: '/', suffix: '.html' };
+  const oldRule = (p) => (p.startsWith('/') && p.endsWith('.html') ? { ...legacy, resolvedTarget: p.slice(0, -'.html'.length) } : null);
+  const probe = pages.find((rel) => rel.endsWith('/index.html'));
+  if (!probe) errors.push('no published directory page to self-test the legacy index.html model against');
+  else {
+    const { hops } = clientHops(`/${probe}`, oldRule);
+    if (hops.length !== 2) errors.push(`self-test: the Pages redirect model gives ${hops.length} hop(s) for /${probe} under the old table; Search Console observed 2`);
+  }
+}
+let legacyChecked = 0;
+for (const rel of pages) {
+  if (rel !== 'index.html' && !rel.endsWith('/index.html')) continue;
+  legacyChecked += 1;
+  const want = pageUrl(rel);
+  const { final, hops, loop } = clientHops(`/${rel}`);
+  if (loop) errors.push(`legacy /${rel} loops: ${hops.join(' -> ')}`);
+  else if (hops.length !== 1 || final !== want) errors.push(`legacy /${rel} takes ${hops.length} hop(s) (${hops.join(' -> ') || 'none'}); it must 301 straight to ${want}`);
+}
+if (!legacyChecked) errors.push('zero legacy /<dir>/index.html URLs examined; the published surface has no directory pages to prove');
+
 // 3. Bing-held 404s
 let bingChecked = 0;
 if (!fs.existsSync(BING_FIXTURE)) errors.push(`${path.relative(ROOT, BING_FIXTURE)} is missing`);
@@ -209,4 +265,4 @@ else {
 }
 
 if (errors.length) fail(`${errors.length} problem(s)`, errors);
-console.log(`[validate:redirect-and-link-integrity] OK: ${staticRules.length} exact + ${dynamicRules.length} wildcard rules reachable, single-hop and landing on published pages; ${hrefsChecked} internal links on ${pages.length} pages resolve (${redirecting} via a redirect); ${bingChecked} Bing-held 404s accounted for`);
+console.log(`[validate:redirect-and-link-integrity] OK: ${staticRules.length} exact + ${dynamicRules.length} wildcard rules reachable, single-hop and landing on published pages; ${hrefsChecked} internal links on ${pages.length} pages resolve (${redirecting} via a redirect); ${bingChecked} Bing-held 404s accounted for; ${legacyChecked} legacy index.html URLs reach their page in one hop`);

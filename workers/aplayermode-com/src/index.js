@@ -14,7 +14,12 @@
  *                             sitemap.xml, llms.txt, site.webmanifest,
  *                             apple-touch-icon.png), committed under aplayermode/
  *                             and fetched from the Pages origin like any asset
- *                             (indexable since 10 Oct 2026, owner)
+ *                             (indexable since 10 Oct 2026, owner), and the
+ *                             domain's own IndexNow key file /<INDEXNOW_KEY>.txt
+ *                             (aplayermode/<key>.txt; its own key, so it is valid
+ *                             on aplayermode.com only; distribution.config.json
+ *                             indexnow.host_keys, submitted on every distribution
+ *                             deploy; 16 Oct 2026)
  *   /pinfeed.xml           -> the Pinterest RSS feed, built HERE at request time
  *                             (./pinqueue.js buildPinfeedXml) from
  *                             aplayermode/data/pinterest/queue.json on the Pages
@@ -60,8 +65,12 @@ export const SHARED_ASSETS = new Set([
   '/assets/img/manual-preview-mobile-5.png',
 ]);
 
+// aplayermode.com's own IndexNow key (distribution.config.json indexnow.host_keys).
+export const INDEXNOW_KEY = '1cf2f6839abec33933cb3e6ea81027b8';
+
 // aplayermode.com's own root-level crawl and icon files, served from aplayermode/.
 export const ROOT_FILES = Object.freeze({
+  [`/${INDEXNOW_KEY}.txt`]: `/aplayermode/${INDEXNOW_KEY}.txt`,
   '/robots.txt': '/aplayermode/robots.txt',
   '/sitemap.xml': '/aplayermode/sitemap.xml',
   '/llms.txt': '/aplayermode/llms.txt',

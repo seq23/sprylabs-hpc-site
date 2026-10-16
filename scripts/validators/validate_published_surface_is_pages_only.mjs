@@ -93,7 +93,7 @@ for (const dir of BUILD_INPUT_DIRS) {
   })(p);
   failures.push(
     `build-input directory PUBLISHED: /${dir}/ (${files.length} file(s), e.g. ${files.slice(0, 4).join(', ')}). `
-    + `Add '${dir}' to EXCLUDE in scripts/assemble_pages_output.js - a build input served as a page is a crawlable URL nobody wrote.`,
+    + `Add '${dir}' to EXCLUDE in scripts/lib/published_surface.cjs (read by scripts/assemble_pages_output.js) - a build input served as a page is a crawlable URL nobody wrote.`,
   );
 }
 

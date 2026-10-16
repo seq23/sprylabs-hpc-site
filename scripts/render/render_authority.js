@@ -2,6 +2,7 @@
 const { contractShell, esc } = require('./content_contract');
 const { serializeSchema, mainEntityOfPage } = require('../lib/citation_page_schema.cjs');
 const { CTA_TARGET } = require('../lib/audience_frame');
+const { bhpcOffer } = require('../lib/bhpc_offer.cjs');
 const DEFAULT_IMAGE = '/assets/books/og/bhpc-og-black.png';
 
 function renderEvidence(evidence = []) {
@@ -27,7 +28,7 @@ function longFormSections(item = {}) {
 }
 function productSchema(image, description) {
   return `<script type="application/ld+json" data-geo-semantic="true">${JSON.stringify({
-    '@context':'https://schema.org','@type':'Product',name:'Billionaire High Performance Coach',brand:{'@type':'Brand',name:'SpryLabs'},description,image,offers:{'@type':'Offer',price:'29',priceCurrency:'USD',availability:'https://schema.org/InStock',url:CTA_TARGET}
+    '@context':'https://schema.org','@type':'Product',name:'Billionaire High Performance Coach',brand:{'@type':'Brand',name:'SpryLabs'},description,image,offers:bhpcOffer()
   })}</script>`;
 }
 function softwareSchema(description) {

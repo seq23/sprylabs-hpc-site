@@ -26,32 +26,7 @@ const path = require('path');
 const root = path.resolve(__dirname, '..');
 const out = path.join(root, '.pages-output');
 
-const EXCLUDE = new Set([
-  '.pages-output', 'dist', 'node_modules', '.git', '.github', '.gitignore',
-  '.nvmrc', '.build', '.validation-cache', '.validation-runtime',
-  'scripts', 'data', 'reports', 'artifacts', 'docs', 'tests', 'fixtures',
-  'config', 'content', 'functions', 'seo', 'LICENSES',
-  // workers/ holds the aplayermode.com Worker source; it deploys on its own.
-  'workers',
-  // templates/ holds the raw Mustache sources the generators render FROM. They
-  // are not pages, but the root deploy published them anyway, so
-  // https://spryexecutiveos.com/templates/answer_page and eleven siblings
-  // answered 200 on both hostnames - each one an unrendered template carrying
-  // `href="{{canonical}}"`, which resolves to /templates/{{canonical}} and 404s,
-  // plus hard links to every other template that kept the island crawlable.
-  // Ahrefs Site Audit, 3 September 2026, reported this as the whole of the
-  // Spryexecutiveos error budget: "Page has links to broken page: 3",
-  // "4XX page: 2", "404 page: 2" against Errors 7.
-  'templates',
-  'package.json', 'package-lock.json', 'requirements-validation.txt',
-  'playwright.config.mjs', 'wrangler.toml',
-  'distribution.config.json', 'distribution.config.example.json',
-]);
-// Repo contracts and docs at the root: _repo_*.json, _validation_*.json and
-// every top-level markdown file.
-const excluded = (name) => EXCLUDE.has(name)
-  || /^_(repo|validation|artifact|baseline)[-_]/.test(name)
-  || name.endsWith('.md');
+const { excluded } = require('./lib/published_surface.cjs');
 
 let copied = 0;
 function copyInto(srcDir, outDir, depth) {
