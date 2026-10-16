@@ -6,11 +6,11 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { freeChat, loadRouting, resetKeyInfoCache, REASONING_BUDGET_TOKENS } from '../scripts/lib/free_llm_router.mjs';
+import { freeChat, keyInfo, loadRouting, resetKeyInfoCache, REASONING_HEADROOM_TOKENS, FIRST_REASONING, RETRY_REASONING } from '../scripts/lib/free_llm_router.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const MODELS = loadRouting(ROOT).free_models.map((m) => m.id);
-const json = (status, body) => ({ ok: status >= 200 && status < 300, status, json: async () => body });
+const json = (status, body, headers = {}) => ({ ok: status >= 200 && status < 300, status, headers: { get: (k) => headers[k.toLowerCase()] ?? null }, text: async () => JSON.stringify(body) });
 const KEY_OK = json(200, { data: { label: 'test', limit: 0, usage: 0, is_free_tier: false, limit_remaining: 0, disabled: false } });
 
 // chatByModel: model id -> response (default: answered at cost 0).
@@ -20,13 +20,15 @@ function fakeFetch(chatByModel, keyRes = KEY_OK) {
     if (String(url).endsWith('/auth/key')) return keyRes;
     const body = JSON.parse(init.body);
     calls.push(body);
-    const r = chatByModel[body.model];
+    let r = chatByModel[body.model];
+    if (Array.isArray(r)) r = r.shift();
+    if (typeof r === 'function') return r(body, init);
     if (r) return r;
     return json(200, { model: body.model, usage: { cost: 0 }, choices: [{ message: { content: `answer from ${body.model}` }, finish_reason: 'stop' }] });
   };
   return { impl, calls };
 }
-const ask = (fetchImpl) => { resetKeyInfoCache(); return freeChat({ messages: [{ role: 'user', content: 'q' }], apiKey: 'sk-test', fetchImpl, root: ROOT }); };
+const ask = (fetchImpl, extra = {}) => { resetKeyInfoCache(); return freeChat({ messages: [{ role: 'user', content: 'q' }], apiKey: 'sk-test', fetchImpl, root: ROOT, sleepImpl: async () => {}, ...extra }); };
 
 test('roster has at least two models, all :free, and inkling is gone', () => {
   assert.ok(MODELS.length >= 2);
@@ -85,15 +87,73 @@ test('$0 guarantees: non-zero cost throws FAIL_LOUD; requests pin allow_fallback
   const { impl, calls } = fakeFetch({ [MODELS[0]]: json(200, { usage: { cost: 0.0001 }, choices: [{ message: { content: 'x' } }] }) });
   await assert.rejects(ask(impl), /FAIL_LOUD/);
   assert.deepEqual(calls[0].provider, { allow_fallbacks: false });
-  assert.deepEqual(calls[0].reasoning, { max_tokens: REASONING_BUDGET_TOKENS, exclude: true });
-  assert.equal(calls[0].max_tokens, 1200 + REASONING_BUDGET_TOKENS);
+  assert.deepEqual(calls[0].reasoning, { effort: 'low', exclude: true });
+  assert.deepEqual(FIRST_REASONING, { effort: 'low', exclude: true });
+  assert.equal(calls[0].max_tokens, 1200 + REASONING_HEADROOM_TOKENS);
+  assert.ok(calls[0].max_tokens >= 3000, 'a reasoning model needs a realistic budget');
 });
 
-test('empty answer records its finish_reason and moves on', async () => {
-  const { impl } = fakeFetch({ [MODELS[0]]: json(200, { usage: { cost: 0 }, choices: [{ message: { content: '' }, finish_reason: 'length' }] }) });
+test('empty answer with finish_reason=stop records it and moves to the next model', async () => {
+  const { impl, calls } = fakeFetch({ [MODELS[0]]: json(200, { usage: { cost: 0 }, choices: [{ message: { content: '' }, finish_reason: 'stop' }] }) });
   const r = await ask(impl);
   assert.equal(r.ok, true);
-  assert.deepEqual(r.attempts[0], { model: MODELS[0], status: 'empty_answer', error: 'finish_reason=length' });
+  assert.equal(r.model, MODELS[1]);
+  assert.deepEqual(r.attempts[0], { model: MODELS[0], status: 'empty_answer', error: 'finish_reason=stop' });
+  assert.equal(calls.length, 2);
+});
+
+test('empty answer with finish_reason=length retries the SAME model once with reasoning off', async () => {
+  const { impl, calls } = fakeFetch({ [MODELS[0]]: [
+    json(200, { usage: { cost: 0 }, choices: [{ message: { content: '' }, finish_reason: 'length' }] }),
+    json(200, { model: MODELS[0], usage: { cost: 0 }, choices: [{ message: { content: 'real answer' }, finish_reason: 'stop' }] }),
+  ] });
+  const r = await ask(impl);
+  assert.equal(r.ok, true);
+  assert.equal(r.model, MODELS[0]);
+  assert.equal(r.answer, 'real answer');
+  assert.deepEqual(calls.map((c) => c.model), [MODELS[0], MODELS[0]]);
+  assert.deepEqual(calls[1].reasoning, RETRY_REASONING);
+  assert.deepEqual(calls[1].provider, { allow_fallbacks: false });
+});
+
+test('a timeout while the BODY downloads is a timeout with elapsed_ms, not an empty answer', async () => {
+  const slowBody = (body, init) => ({ ok: true, status: 200, headers: { get: () => null }, text: () => new Promise((_, reject) => {
+    init.signal.addEventListener('abort', () => { const e = new Error('This operation was aborted'); e.name = 'AbortError'; reject(e); });
+  }) });
+  const { impl } = fakeFetch({ [MODELS[0]]: slowBody });
+  const r = await ask(impl, { timeoutMs: 20 });
+  assert.equal(r.ok, true);
+  assert.equal(r.attempts[0].status, 'timeout');
+  assert.equal(typeof r.attempts[0].elapsed_ms, 'number');
+  assert.ok(r.attempts[0].elapsed_ms >= 15);
+});
+
+test('429 with a short Retry-After is honoured once on the same model', async () => {
+  const waits = [];
+  const { impl, calls } = fakeFetch({ [MODELS[0]]: [json(429, { error: { message: 'rate limited' } }, { 'retry-after': '2' })] });
+  const r = await ask(impl, { sleepImpl: async (ms) => { waits.push(ms); } });
+  assert.equal(r.ok, true);
+  assert.equal(r.model, MODELS[0]);
+  assert.deepEqual(waits, [2000]);
+  assert.deepEqual(calls.map((c) => c.model), [MODELS[0], MODELS[0]]);
+});
+
+test('429 is retried at most once per model, and a long Retry-After is not waited for', async () => {
+  const waits = [];
+  const { impl, calls } = fakeFetch({
+    [MODELS[0]]: [json(429, {}, { 'retry-after': '1' }), json(429, {}, { 'retry-after': '1' })],
+    [MODELS[1]]: [json(429, {}, { 'retry-after': '120' })],
+  });
+  const r = await ask(impl, { sleepImpl: async (ms) => { waits.push(ms); } });
+  assert.equal(r.ok, true);
+  assert.equal(r.model, MODELS[2]);
+  assert.deepEqual(waits, [1000]);
+  assert.deepEqual(calls.map((c) => c.model), [MODELS[0], MODELS[0], MODELS[1], MODELS[2]]);
+});
+
+test('keyInfo: a failed body read is an error, never an ok key with null fields', async () => {
+  const info = await keyInfo('sk-test', async () => ({ ok: true, status: 200, text: async () => { throw new Error('socket hang up'); } }));
+  assert.equal(info.status, 'error');
 });
 
 test('excluded_models in the routing config names inkling with its reason', () => {
