@@ -91,7 +91,11 @@ const OR_MODELS = loadRouting(ROOT).free_models.map((m) => m.id);
 
 // Free models are heavily shared and some hang. A timed-out model is recorded as
 // an error against that model, not as an absence of citations.
-const REQUEST_TIMEOUT_MS = Number(process.env.PROBE_TIMEOUT_MS || 25000);
+// 90 s, not 25 s: the :free roster leads with reasoning models, which took ~57 s for
+// a real answer on 16 Oct (WPP-llm run 38939796065) and timed out at 25 s here
+// (run 38943733421). A router stop ends the probe after one query, so the worst
+// case stays one roster pass; 25 answered queries x 90 s fits the 55-minute job.
+const REQUEST_TIMEOUT_MS = Number(process.env.PROBE_TIMEOUT_MS || 90000);
 async function withTimeout(fn) {
   const ctrl = new AbortController();
   const t = setTimeout(() => ctrl.abort(), REQUEST_TIMEOUT_MS);

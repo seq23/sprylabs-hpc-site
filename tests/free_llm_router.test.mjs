@@ -160,3 +160,12 @@ test('excluded_models in the routing config names inkling with its reason', () =
   const cfg = JSON.parse(fs.readFileSync(path.join(ROOT, 'config/llm_routing.json'), 'utf8'));
   assert.match(cfg.excluded_models['thinkingmachines/inkling:free'], /agentic harnesses/);
 });
+
+test('citation probe gives reasoning models a realistic per-request timeout (>= 60 s default)', () => {
+  // Run 38943733421 (16 Oct 2026): nemotron-super timed out at the old 25 s default and the
+  // probe answered nothing; a real answer took ~57 s (WPP-llm run 38939796065).
+  const src = fs.readFileSync(path.join(ROOT, 'scripts/llm_citation_probe.mjs'), 'utf8');
+  const m = src.match(/REQUEST_TIMEOUT_MS = Number\(process\.env\.PROBE_TIMEOUT_MS \|\| (\d+)\)/);
+  assert.ok(m, 'REQUEST_TIMEOUT_MS default not found');
+  assert.ok(Number(m[1]) >= 60000, `probe default timeout ${m[1]} ms is below 60 s`);
+});
