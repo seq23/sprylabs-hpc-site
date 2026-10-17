@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-10-16T15:08:56.076Z",
+  "generated_at": "2026-10-17T13:30:17.321Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 258,
+  "admitted_hard_fail_count": 260,
   "reviewed_count": 8,
-  "unreviewed_count": 250,
+  "unreviewed_count": 252,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 197,
+    "REVIEW_REQUIRED": 198,
     "EXISTING_REPAIR_AVAILABLE": 8,
-    "TRUE_BLOCKER": 33,
+    "TRUE_BLOCKER": 34,
     "REVIEW_WARNING_BOUNDARY": 20
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 197,
+    "REVIEW_REQUIRED": 198,
     "EXISTING_REPAIR_AVAILABLE": 8,
-    "TRUE_BLOCKER": 33,
+    "TRUE_BLOCKER": 34,
     "REVIEW_WARNING_BOUNDARY": 12
   },
   "migration_status_counts": {
-    "UNREVIEWED": 250,
+    "UNREVIEWED": 252,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -3911,6 +3911,36 @@
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-APLAYERMODE-PINTEREST"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-ROUTE-UNIQUENESS",
+      "name": "validate:route-uniqueness",
+      "command": "npm run validate:route-uniqueness",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "routeFor special-cased two legacy mirror directory pages onto their flat siblings' routes, so two files claimed one canonical on the BHPC host; this refuses any route claimed by more than one published file and proves validate:velocity-critical rejects a duplicate canonical fixture.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-ROUTE-UNIQUENESS"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-APLAYERMODE-PIN-DRIP",
+      "name": "validate:aplayermode-pin-drip",
+      "command": "npm run validate:aplayermode-pin-drip",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "aplayermode.com Pinterest daily drip (16 Oct 2026): the dated queue could release more than one pin a day, run one landing-page section two days running, drop a launch item, ship a variant over Pinterest's title/description limits or with a price, Spry or checkout, reuse a design, or point at a missing pin image; the Worker could stop building /pinfeed.xml at request time in America/Chicago, log IPs or crawler hits as Pinterest visits, or BHPC/spryexecutiveos could start serving a pinfeed; the weekly metrics reader could report an unmeasured zero instead of the named stop PINTEREST_METRICS_UNAVAILABLE. node --test fails on each.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-APLAYERMODE-PIN-DRIP"
       ],
       "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",
