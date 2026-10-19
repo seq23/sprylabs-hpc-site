@@ -8744,8 +8744,38 @@
         "MX-PRODUCT-OFFERS"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-GENERATED-DIR-SWEEP",
+      "status": "ADMITTED",
+      "name": "validate:generated-dir-sweep",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "generate_aplayer_phase_expansion.mjs rm -rf'd brand-defense/ and deleted the navigation hub brand-defense/index.html that build_navigation_structure.mjs owns; validate:frozen-output-contract then failed 101 frozen blobs linking /brand-defense/ and Spry Content Release went red on main (17-18 Oct 2026). The check proves the sweep keeps every marker-signed hub, removes generated pages, and that the generator has no recursive rmSync left.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:generated-dir-sweep",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-generated-dir-sweep/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-19",
+      "matrix_ids": [
+        "MX-GENERATED-DIR-SWEEP"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 279,
+  "record_count": 280,
   "generated_at": "2026-08-08T23:30:00Z"
 }

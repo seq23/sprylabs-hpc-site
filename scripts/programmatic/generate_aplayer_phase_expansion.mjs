@@ -12,6 +12,7 @@ import {
 } from './phase4_page_composer.mjs';
 import { selectDemandCandidates } from './demand_backed_atoms.mjs';
 import { writeSitemapIndex } from '../lib/sitemap_index.mjs';
+import { sweepGeneratedDir } from '../lib/generated_dir_sweep.mjs';
 
 const ROOT = process.cwd();
 const GENERATED_SOURCE = 'aplayer_phase_expansion_2000_baseline';
@@ -132,12 +133,18 @@ function removeGeneratedRecords() {
   manifest.candidates = (manifest.candidates || []).filter(row => !isGeneratedRow(row));
   manifest.generated_at = TODAY;
   writeJson('data/content/programmatic_candidate_manifest.json', manifest);
-  const dirs = GENERATED_DIRS;
-  for (const d of dirs) {
-    const fp = path.join(ROOT,d);
-    if (fs.existsSync(fp)) fs.rmSync(fp,{recursive:true,force:true});
-  }
+  for (const d of GENERATED_DIRS) sweepGeneratedDir(path.join(ROOT,d));
 }
+// A generated dir is swept file by file, never rm -rf'd: brand-defense/ is also
+// a navigation SECTION, and its hub (brand-defense/index.html, plus any
+// topics/<id>/index.html) is written by scripts/internal/build_navigation_structure.mjs,
+// not by this script. Deleting the whole dir took the hub with it, and in
+// release:content-finalize nothing rebuilds it before the selfheal profile, so
+// 101 frozen blobs linking /brand-defense/ failed validate:frozen-output-contract
+// and turned Spry Content Release red (18 Oct 2026, run 39135874388). A file
+// carrying the navigation hub marker belongs to that script and is left alone;
+// scripts/lib/generated_dir_sweep.mjs is the one implementation, and
+// scripts/validation/self_test_generated_dir_sweep.mjs proves it.
 
 const concepts = [
   {key:'never miss twice', framework:'Never Miss Twice Continuity Protocol', anchor:'never-miss-twice', value:'prevents one missed day from becoming identity-level drift'},

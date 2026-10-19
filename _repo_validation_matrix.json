@@ -2727,9 +2727,19 @@
       "severity": "STRONG_WARNING",
       "release_effect": false,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-GENERATED-DIR-SWEEP",
+      "validation_id": "VAL-GENERATED-DIR-SWEEP",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:generated-dir-sweep",
+      "order": 264,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 272,
+  "entry_count": 273,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3419,6 +3429,10 @@
         {
           "id": "VAL-PRODUCT-OFFERS",
           "command": "npm run validate:product-offers"
+        },
+        {
+          "id": "VAL-GENERATED-DIR-SWEEP",
+          "command": "npm run validate:generated-dir-sweep"
         }
       ]
     },
@@ -3613,6 +3627,10 @@
         {
           "id": "VAL-REDIRECT-AND-LINK-INTEGRITY",
           "command": "npm run validate:redirect-and-link-integrity"
+        },
+        {
+          "id": "VAL-GENERATED-DIR-SWEEP",
+          "command": "npm run validate:generated-dir-sweep"
         }
       ]
     },
@@ -3735,6 +3753,10 @@
         {
           "id": "VAL-AGENT-CREATED-PAGE-DEMAND-GATE",
           "command": "npm run validate:agent-created-page-demand-gate"
+        },
+        {
+          "id": "VAL-GENERATED-DIR-SWEEP",
+          "command": "npm run validate:generated-dir-sweep"
         }
       ]
     }
