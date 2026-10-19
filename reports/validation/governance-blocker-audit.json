@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-10-18T13:30:31.226Z",
+  "generated_at": "2026-10-19T14:50:55.485Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 260,
+  "admitted_hard_fail_count": 261,
   "reviewed_count": 8,
-  "unreviewed_count": 252,
+  "unreviewed_count": 253,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 198,
+    "REVIEW_REQUIRED": 199,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 34,
     "REVIEW_WARNING_BOUNDARY": 20
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 198,
+    "REVIEW_REQUIRED": 199,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 34,
     "REVIEW_WARNING_BOUNDARY": 12
   },
   "migration_status_counts": {
-    "UNREVIEWED": 252,
+    "UNREVIEWED": 253,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -3941,6 +3941,21 @@
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-APLAYERMODE-PIN-DRIP"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-GENERATED-DIR-SWEEP",
+      "name": "validate:generated-dir-sweep",
+      "command": "npm run validate:generated-dir-sweep",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "generate_aplayer_phase_expansion.mjs rm -rf'd brand-defense/ and deleted the navigation hub brand-defense/index.html that build_navigation_structure.mjs owns; validate:frozen-output-contract then failed 101 frozen blobs linking /brand-defense/ and Spry Content Release went red on main (17-18 Oct 2026). The check proves the sweep keeps every marker-signed hub, removes generated pages, and that the generator has no recursive rmSync left.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-GENERATED-DIR-SWEEP"
       ],
       "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",
