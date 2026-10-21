@@ -195,7 +195,7 @@ test('aplayermode.com Worker: page and files cached per Pages build, feed and re
   // A Pages deploy: once the build id is re-read, the old entry is never served.
   pagesBuild = 'pagesbuild-2';
   const later = Date.now() + (w.BUILD_ID_TTL_SECONDS + 1) * 1000;
-  cache.store.delete('https://aplayermode.com/__edge/pages-build-id');
+  cache.store.delete(w.BUILD_ID_KEY);
   assert.equal(await w.pagesBuildId(cache, later), 'pagesbuild-2');
   assert.equal((await get('/')).headers.get(EDGE_CACHE_HEADER), 'MISS', 'new Pages build must miss');
 });

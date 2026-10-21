@@ -124,7 +124,7 @@ async function serveFeed(request, upstreamPath) {
 
 export const BUILD_ID_PATH = '/build-id.txt';
 export const BUILD_ID_TTL_SECONDS = 60;
-const BUILD_ID_KEY = 'https://aplayermode.com/__edge/pages-build-id';
+export const BUILD_ID_KEY = 'https://edge-cache.invalid/aplayermode/pages-build-id';
 let memoBuild = { id: '', at: 0 };
 
 /** The Pages build id, from memory, then the edge cache, then the origin (max BUILD_ID_TTL_SECONDS old). '' = unknown = no caching. */
