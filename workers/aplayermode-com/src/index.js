@@ -45,10 +45,20 @@
  * (functions/aplayermode/index.js). An origin redirect is never followed; it is
  * answered 502 so a misconfiguration fails loudly instead of looping.
  *
+ * EDGE CACHE (21 Oct 2026): the page and its files are answered from
+ * caches.default (functions/_lib/edge_cache.js, x-edge-cache: HIT|MISS|BYPASS)
+ * instead of a pages.dev round trip on every request. The key carries the Pages
+ * build id (ORIGIN/build-id.txt, stamped by scripts/assemble_pages_output.js,
+ * re-read at most once a minute) and this Worker's own version id, so a Pages
+ * deploy is picked up within BUILD_ID_TTL_SECONDS and a Worker deploy at once.
+ * The feed, redirects and anything non-200 are never cached.
+ *
  * Deploy: npx wrangler deploy --config workers/aplayermode-com/wrangler.jsonc
- * Guarded by scripts/validators/validate_aplayermode_landing.mjs.
+ * Guarded by scripts/validators/validate_aplayermode_landing.mjs and
+ * tests/edge_cache.test.mjs.
  */
 import { buildPinfeedXml, chicagoDate } from './pinqueue.js';
+import { serveWithEdgeCache } from '../../../functions/_lib/edge_cache.js';
 
 export const ORIGIN = 'https://sprylabs-hpc-site.pages.dev';
 export const PAGE_PATH = '/aplayermode/';
@@ -58,11 +68,11 @@ export const SHARED_ASSETS = new Set([
   '/favicon.ico',
   '/assets/domain-context.js',
   '/assets/img/os-system-image.png',
-  '/assets/img/manual-preview-mobile-1.png',
-  '/assets/img/manual-preview-mobile-2.png',
-  '/assets/img/manual-preview-mobile-3.png',
-  '/assets/img/manual-preview-mobile-4.png',
-  '/assets/img/manual-preview-mobile-5.png',
+  '/assets/img/manual-preview-mobile-1.webp',
+  '/assets/img/manual-preview-mobile-2.webp',
+  '/assets/img/manual-preview-mobile-3.webp',
+  '/assets/img/manual-preview-mobile-4.webp',
+  '/assets/img/manual-preview-mobile-5.webp',
 ]);
 
 // aplayermode.com's own IndexNow key (distribution.config.json indexnow.host_keys).
@@ -112,10 +122,32 @@ async function serveFeed(request, upstreamPath) {
   return new Response(request.method === 'HEAD' ? null : xml, { status: 200, headers: { 'content-type': FEED_TYPE, 'cache-control': 'public, max-age=900' } });
 }
 
+export const BUILD_ID_PATH = '/build-id.txt';
+export const BUILD_ID_TTL_SECONDS = 60;
+const BUILD_ID_KEY = 'https://aplayermode.com/__edge/pages-build-id';
+let memoBuild = { id: '', at: 0 };
+
+/** The Pages build id, from memory, then the edge cache, then the origin (max BUILD_ID_TTL_SECONDS old). '' = unknown = no caching. */
+export async function pagesBuildId(cache, now = Date.now()) {
+  if (memoBuild.id && now - memoBuild.at < BUILD_ID_TTL_SECONDS * 1000) return memoBuild.id;
+  try {
+    const cached = cache ? await cache.match(BUILD_ID_KEY) : null;
+    if (cached) { memoBuild = { id: (await cached.text()).trim(), at: now }; return memoBuild.id; }
+  } catch { /* fall through to the origin */ }
+  try {
+    const res = await fetch(ORIGIN + BUILD_ID_PATH, { redirect: 'manual' });
+    const id = res.status === 200 ? (await res.text()).trim() : '';
+    if (!/^[\w.-]{4,80}$/.test(id)) return '';
+    memoBuild = { id, at: now };
+    if (cache) await cache.put(BUILD_ID_KEY, new Response(id, { headers: { 'cache-control': `public, max-age=${BUILD_ID_TTL_SECONDS}` } })).catch(() => {});
+    return id;
+  } catch { return ''; }
+}
+
 const FORWARD_HEADERS = ['accept', 'accept-encoding', 'accept-language', 'if-none-match', 'if-modified-since', 'range', 'user-agent'];
 
 export default {
-  async fetch(request, env = {}) {
+  async fetch(request, env = {}, ctx = {}) {
     const url = new URL(request.url);
     if (request.method !== 'GET' && request.method !== 'HEAD') {
       return new Response('Method Not Allowed', { status: 405, headers: { Allow: 'GET, HEAD' } });
@@ -131,14 +163,27 @@ export default {
       const point = pinVisitPoint(url, request.headers.get('user-agent'));
       if (point) { try { env.PIN_VISITS.writeDataPoint(point); } catch { /* measurement never breaks the page */ } }
     }
-    const headers = new Headers();
-    for (const h of FORWARD_HEADERS) { const v = request.headers.get(h); if (v) headers.set(h, v); }
-    const upstream = await fetch(ORIGIN + r.upstream + url.search, { method: request.method, headers, redirect: 'manual' });
-    if (upstream.status >= 300 && upstream.status < 400 && upstream.status !== 304) {
-      return new Response(`origin redirected ${r.upstream} (status ${upstream.status}); refusing to follow`, { status: 502 });
-    }
-    const out = new Response(upstream.body, upstream);
-    out.headers.delete('location');
-    return out;
+    const fetchOrigin = async () => {
+      const headers = new Headers();
+      for (const h of FORWARD_HEADERS) { const v = request.headers.get(h); if (v) headers.set(h, v); }
+      const upstream = await fetch(ORIGIN + r.upstream + url.search, { method: request.method, headers, redirect: 'manual' });
+      if (upstream.status >= 300 && upstream.status < 400 && upstream.status !== 304) {
+        return new Response(`origin redirected ${r.upstream} (status ${upstream.status}); refusing to follow`, { status: 502 });
+      }
+      const out = new Response(upstream.body, upstream);
+      out.headers.delete('location');
+      return out;
+    };
+    const cache = typeof caches !== 'undefined' ? caches.default : null;
+    const pagesBuild = request.method === 'GET' ? await pagesBuildId(cache) : '';
+    const workerVersion = (env.CF_VERSION_METADATA && env.CF_VERSION_METADATA.id) || 'v0';
+    return serveWithEdgeCache({
+      request,
+      buildId: pagesBuild ? `${pagesBuild}.${workerVersion}` : '',
+      cache,
+      waitUntil: typeof ctx.waitUntil === 'function' ? (p) => ctx.waitUntil(p) : null,
+      fetchOrigin,
+      htmlOnly: false,
+    });
   },
 };

@@ -94,4 +94,19 @@ if (!fs.existsSync(path.join(out, 'index.html'))) {
   process.exit(1);
 }
 
+// Edge HTML cache build stamp (functions/_lib/edge_cache.js). On Cloudflare Pages
+// the build command runs before functions/ is compiled, so the stamp written here
+// is the BUILD_ID the deployed middleware keys its cache with: a new deploy looks
+// under new keys and never serves the previous build's pages. build-id.txt carries
+// the same id for the aplayermode.com Worker, which caches pages it fetches from
+// this project. Locally (no CF_PAGES) nothing is written and the cache stays off.
+if (process.env.CF_PAGES === '1') {
+  const sha = String(process.env.CF_PAGES_COMMIT_SHA || 'nosha').slice(0, 12);
+  const buildId = `${sha}-${Date.now().toString(36)}`;
+  fs.writeFileSync(path.join(root, 'functions', '_lib', 'build_id.js'),
+    `// Stamped by scripts/assemble_pages_output.js on Cloudflare Pages.\nexport const BUILD_ID = ${JSON.stringify(buildId)};\n`);
+  fs.writeFileSync(path.join(out, 'build-id.txt'), buildId + '\n');
+  console.log(`assemble: edge cache BUILD_ID ${buildId}`);
+}
+
 console.log(`assemble: ${copied} files into .pages-output/ (sitemap URLs verified)`);

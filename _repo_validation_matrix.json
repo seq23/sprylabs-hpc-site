@@ -2737,9 +2737,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-EDGE-CACHE",
+      "validation_id": "VAL-EDGE-CACHE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:edge-cache",
+      "order": 265,
+      "severity": "STRONG_WARNING",
+      "release_effect": false,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 273,
+  "entry_count": 274,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3433,6 +3443,10 @@
         {
           "id": "VAL-GENERATED-DIR-SWEEP",
           "command": "npm run validate:generated-dir-sweep"
+        },
+        {
+          "id": "VAL-EDGE-CACHE",
+          "command": "npm run validate:edge-cache"
         }
       ]
     },
