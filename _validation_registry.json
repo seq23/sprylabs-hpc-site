@@ -8774,8 +8774,38 @@
         "MX-GENERATED-DIR-SWEEP"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-EDGE-CACHE",
+      "status": "ADMITTED",
+      "name": "validate:edge-cache",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Edge HTML cache (21 Oct 2026): every BHPC, spryexecutiveos and aplayermode.com page was DYNAMIC (aplayermode.com re-fetched pages.dev per request). The Pages middleware and the aplayermode.com Worker now answer pages from caches.default keyed host+path+build. This fails if a static page stops being cached on the second request, if /api, admin, checkout, billing, Stripe, Gumroad, join/sign-up, login, forms, POST/HEAD, non-tracking query strings, Authorization or the admin cookie, redirects, errors, Set-Cookie or no-store responses could be stored, if an unstamped build caches, if a new Pages build could serve the old page, or if the Founding 100 count were server-rendered into a cached page.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "STRONG_WARNING",
+      "command": "npm run validate:edge-cache",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-edge-cache/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-21",
+      "matrix_ids": [
+        "MX-EDGE-CACHE"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 280,
+  "record_count": 281,
   "generated_at": "2026-08-08T23:30:00Z"
 }

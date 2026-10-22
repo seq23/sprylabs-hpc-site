@@ -8,6 +8,8 @@
   "preview_urls": false,
   "routes": [{ "pattern": "aplayermode.com/*", "zone_name": "aplayermode.com" }],
   "observability": { "enabled": true },
+  // Edge cache key (src/index.js): a Worker deploy changes this id, so it never serves pages cached by the previous version.
+  "version_metadata": { "binding": "CF_VERSION_METADATA" },
   // Pinterest drip measurement (16 Oct 2026): one data point per utm_source=pinterest
   // page view (utm values only; no IP, UA or cookie). $0 within the Workers Paid
   // allowance. Read by scripts/aplayermode/collect_pin_metrics.mjs (SQL API).
