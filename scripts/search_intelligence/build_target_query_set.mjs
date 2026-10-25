@@ -2,16 +2,18 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { readJson, writeJson, stamp, id, PUBLIC, ROOT, ownerMap, canonicalFromHtml, stripHtml, tokenize } from './lib/core.mjs';
-import { measuredQueries, readExports, pathKey, MEASURED_MIN_IMPRESSIONS } from './lib/measured_targets.mjs';
+import { measuredQueries, readExports, pathKey, demandFamilyFiles, MEASURED_MIN_IMPRESSIONS } from './lib/measured_targets.mjs';
 
 const universe = readJson('data/intake/query_universe.json', { queries: [] }).queries || [];
 const owners = ownerMap();
 const MAX = Number(process.env.SEARCH_INTELLIGENCE_MAX_TARGETS || 120);
 const OUT = process.env.SEARCH_INTELLIGENCE_TARGET_OUT || 'data/search_intelligence/target_query_set.json';
 
+const DEMAND_PAGES = demandFamilyFiles(ROOT);
 const candidates = [];
 for (const [rel, own] of owners.entries()) {
   if (!rel?.endsWith('.html')) continue;
+  if (DEMAND_PAGES.has(rel)) continue; // rebuilt by apply_demand_families.py; a repair there does not survive build:all
   if (own?.owner === 'paid_agent' || own?.protected === true) continue;
   const file = path.join(PUBLIC, rel);
   if (!fs.existsSync(file)) continue;
