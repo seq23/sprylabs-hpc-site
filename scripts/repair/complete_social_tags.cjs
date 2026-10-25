@@ -3,11 +3,19 @@
  * Give every published page the complete social-card head and the icon links
  * (scripts/lib/social_tags.cjs).
  *
- * Runs as the last phase of scripts/repair/repair_dual_domain_metadata.js,
- * after the snippet bounds, because the values are read from the page's own
- * final <title>, meta description and canonical URL. Running it any earlier
- * would copy a title the bounds pass then rewrites, and og:title would
- * disagree with <title> on exactly the pages that needed shortening.
+ * Runs twice, and is idempotent so that costs nothing: as the last phase of
+ * scripts/repair/repair_dual_domain_metadata.js - so any lane that normalizes
+ * page metadata also completes the cards - and again as the LAST step of
+ * build:all:uncached. The second run is the one that matters: six page writers
+ * follow repair:dual-domain-metadata in that chain (the navigation hubs, the
+ * visible FAQ, the health boundary, the demand families, the FAQPage repair and
+ * the product offers), and each writes its own partial head. 1,255 incomplete
+ * cards across 2,264 pages, 25 Oct 2026, were all written after that phase ran.
+ *
+ * The values are read from the page's own final <title>, meta description and
+ * canonical URL, so it must follow the snippet bounds: run any earlier and it
+ * would copy a title the bounds pass then rewrites, leaving og:title disagreeing
+ * with <title> on exactly the pages that needed shortening.
  *
  * Deterministic and idempotent: a page already carrying the right tag is not
  * rewritten; a tag present with the wrong value is replaced in place; a missing
@@ -34,10 +42,11 @@ function headOf(html) {
   const end = html.search(/<\/head>/i);
   return end === -1 ? null : {head: html.slice(0, end), end};
 }
+// The value is delimited by the quote it opened with, not by the next quote of
+// either kind: `content="... 'I'll' ..."` is one attribute.
 function setAttr(tag, attr, value) {
-  if (new RegExp(`\\b${attr}=["'][^"']*["']`, 'i').test(tag)) {
-    return tag.replace(new RegExp(`\\b${attr}=(["'])[^"']*\\1`, 'i'), `${attr}="${B.escapeAttr(value)}"`);
-  }
+  const re = new RegExp(`\\b${attr}=(["'])[\\s\\S]*?\\1`, 'i');
+  if (re.test(tag)) return tag.replace(re, `${attr}="${B.escapeAttr(value)}"`);
   return tag.replace(/<(meta|link)\b/i, (m) => `${m} ${attr}="${B.escapeAttr(value)}"`);
 }
 

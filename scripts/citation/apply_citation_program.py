@@ -1518,6 +1518,15 @@ def llms_txt_lines(active, frameworks):
                      [r for r in priority.get("money", []) if r not in comparison and r not in support])
     lines += section("Comparisons", comparison)
     lines += section("Topic clusters", priority.get("authority", []))
+    # The citation strategy contract's own priority reference pages. These are
+    # the pages the site asks to be cited for, so the orientation file names
+    # them; validate_citation_strategy requires every one of them here and in
+    # llms-full.txt.
+    contract = json.loads((ROOT/"data/citation/citation_strategy_contract.json").read_text(encoding="utf-8"))
+    by_path = {p["path"]: p["canonical_url"] for p in active}
+    reference = [by_path[rel] for rel in contract["layers"]["reference_pages"]["priority_pages"] if rel in by_path]
+    if reference:
+        lines += ["", "## Reference pages"] + [f"- {url}" for url in reference]
     lines += [
         "",
         "## Full index",

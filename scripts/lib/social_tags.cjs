@@ -67,7 +67,11 @@ function metaOf(html, keyName, keyValue) {
   const re = new RegExp(`<meta\\b[^>]*${keyName}=["']${keyValue}["'][^>]*>`, 'i');
   const tag = head.match(re);
   if (!tag) return '';
-  return B.norm(B.decodeEntities((tag[0].match(/\bcontent=["']([^"']*)["']/i) || [])[1] || ''));
+  // The value is delimited by the quote it opened with. Reading it as
+  // [^"']* truncated every title holding an apostrophe - "How Do I Stop the
+  // 'I'll Start in 5 Minutes' Loop..." became "How Do I Stop the" - and the
+  // check then reported og:title disagreeing with a <title> it matched.
+  return B.norm(B.decodeEntities((tag[0].match(/\bcontent=(["'])([\s\S]*?)\1/i) || [])[2] || ''));
 }
 
 /**

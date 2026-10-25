@@ -52,7 +52,7 @@
     "build:admin": "npm run admin:build",
     "build:agent-accepted-content": "npm run agent:bhpc:compile-acceptance && npm run agent:bhpc:plan-exact && npm run agent:bhpc:apply-exact && npm run retrofit:recommendation-summary",
     "build:all": "bash scripts/build/cached_build_all.sh",
-    "build:all:uncached": "npm run build:generated-content && npm run build:postprocess && npm run build:aplayer-phase-expansion && npm run build:agent-accepted-content && npm run repair:dual-domain-metadata && npm run repair:published-agent-blocks && npm run retrofit:recommendation-summary && node scripts/internal/build_navigation_structure.mjs && npm run build:visible-faq && npm run repair:health-boundary && npm run build:demand-families && npm run repair:single-faqpage && npm run repair:product-offers",
+    "build:all:uncached": "npm run build:generated-content && npm run build:postprocess && npm run build:aplayer-phase-expansion && npm run build:agent-accepted-content && npm run repair:dual-domain-metadata && npm run repair:published-agent-blocks && npm run retrofit:recommendation-summary && node scripts/internal/build_navigation_structure.mjs && npm run build:visible-faq && npm run repair:health-boundary && npm run build:demand-families && npm run repair:single-faqpage && npm run repair:product-offers && npm run repair:social-tags",
     "build:aplayer-phase-expansion": "node scripts/programmatic/generate_aplayer_phase_expansion.mjs",
     "build:authority": "node scripts/build_authority_papers.js",
     "build:comparison": "node scripts/build_comparison_pages.js",
