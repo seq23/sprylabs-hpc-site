@@ -4,20 +4,33 @@ name: Validate Repo
 # same producers build the same tree, and every validator the container-prepush
 # profile declares still runs against it. What changed is the shape.
 #
-#   plan          derives the shard map from _repo_validation_matrix.json at run
-#                 time, so a validator added or removed by anyone is picked up on
-#                 the next run. No validator list is hard-coded anywhere.
-#   build         runs the producer steps once, in matrix order, and publishes the
-#                 exact tree the shards validate. Restored from cache when the
-#                 build inputs hash is unchanged.
+#   prepare       derives the shard map from _repo_validation_matrix.json at run
+#                 time, runs the plan-time self-tests, then runs the producer
+#                 steps in matrix order and publishes the exact tree the shards
+#                 validate. Restored from cache when the build inputs hash is
+#                 unchanged.
 #   validate      N runners, each executing its slice and writing a receipt of
 #                 exactly which validator ids it executed.
-#   clean-rebuild runs the two-isolated-rebuild parity check concurrently with
-#                 everything above instead of after it.
+#   clean-rebuild the two-isolated-rebuild parity check. A long suite: it runs on
+#                 main after the merge, not on the pull request.
 #   gate          asserts the union of the receipts equals the set the matrix and
-#                 registry declare, and only then attests.
+#                 registry declare. On main it then attests and hands the commit
+#                 to its consumers; a pull request has nothing to attest and
+#                 nothing to hand over, so it reconciles and stops.
 #
 # Validators are NOT scoped to changed files. Every run validates everything.
+#
+# THE SHAPE OF THE GATE (Search Readiness item h5, 25 Oct 2026: the median
+# pull-request check was 8.3 minutes against a 5-minute target). `plan` and
+# `build` were two jobs that each paid a checkout, a setup-node and an `npm ci`
+# before doing ~20 seconds and ~2.5 minutes of real work; they are one job now.
+# `gate` downloaded and unpacked the 292 MiB tree to reconcile receipts that do
+# not need it. And the two long suites a pull request does not have to wait for
+# - the clean-rebuild parity check (3.4-5.2 min on its own) and the release-time
+# attestation, warnings and cadence steps - now run on main after the merge,
+# where a failure blocks the next production deploy. NO VALIDATOR MOVED: the
+# shard set, the producers and the coverage reconciliation are identical on both
+# events, and `gate` still cannot attest over a failed clean rebuild on main.
 
 on:
   workflow_dispatch:
@@ -48,15 +61,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  plan:
+  prepare:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 45
     outputs:
       matrix: ${{ steps.plan.outputs.matrix }}
       declared: ${{ steps.plan.outputs.declared }}
       build-key: ${{ steps.key.outputs.key }}
     steps:
       - uses: actions/checkout@v7
+        with:
+          # Several validators derive truth from git history - the sitemap
+          # lastmod ledger is checked against an independent git walk, and
+          # build:all derives that ledger the same way. A shallow clone makes
+          # them disagree for a reason that is not real.
+          fetch-depth: 0
+      - name: Validate main-writer coordination and push recovery
+        run: bash .github/scripts/test_commit_and_push_if_changed.sh
       - uses: actions/setup-node@v7
         with:
           node-version: 24
@@ -86,32 +107,16 @@ jobs:
           name: spry-shard-plan-${{ github.run_id }}
           if-no-files-found: error
           path: artifacts/validation/shard-plan.json
-
-  build:
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
-    needs: plan
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          fetch-depth: 0
-      - name: Validate main-writer coordination and push recovery
-        run: bash .github/scripts/test_commit_and_push_if_changed.sh
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 24
-          cache: npm
-      - run: npm ci --ignore-scripts
       - uses: actions/cache@v4
         name: Restore the built tree
         id: tree
         with:
           path: ${{ runner.temp }}/spry-build-tree.tar
-          key: spry-build-tree-v1-${{ needs.plan.outputs.build-key }}
+          key: spry-build-tree-v1-${{ steps.key.outputs.key }}
       - name: Report cache outcome
         # A cache that never hits is worse than none, so the outcome is printed
         # on every run and a hit is proved by the restored tar actually existing.
-        run: bash .github/scripts/report_build_cache.sh "${{ steps.tree.outputs.cache-hit }}" "${{ needs.plan.outputs.build-key }}"
+        run: bash .github/scripts/report_build_cache.sh "${{ steps.tree.outputs.cache-hit }}" "${{ steps.key.outputs.key }}"
       - name: Run the producer steps
         if: steps.tree.outputs.cache-hit != 'true'
         run: node .github/scripts/validation_shards.mjs producers
@@ -148,11 +153,11 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    needs: [plan, build]
+    needs: prepare
     strategy:
       fail-fast: false
       matrix:
-        include: ${{ fromJSON(needs.plan.outputs.matrix) }}
+        include: ${{ fromJSON(needs.prepare.outputs.matrix) }}
     name: validate (${{ matrix.name }})
     steps:
       - uses: actions/checkout@v7
@@ -184,6 +189,11 @@ jobs:
           path: artifacts/validation/shards/shard-${{ matrix.shard }}.json
 
   clean-rebuild:
+    # A long suite by any reading: two full isolated rebuilds of the whole tree,
+    # 3.4-5.2 minutes on its own. It runs on main after the merge, where a
+    # failure blocks the next production deploy, rather than taxing every pull
+    # request (Search Readiness h5).
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -204,7 +214,16 @@ jobs:
   gate:
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    needs: [plan, build, validate, clean-rebuild]
+    needs: [prepare, validate, clean-rebuild]
+    # clean-rebuild does not run on a pull request, and a skipped `needs` job
+    # skips its dependents unless the condition says otherwise. Spelled out
+    # rather than dropped from `needs`, so on main the attestation below still
+    # cannot be issued over a failed clean rebuild.
+    if: >-
+      !cancelled()
+      && needs.prepare.result == 'success'
+      && needs.validate.result == 'success'
+      && (needs.clean-rebuild.result == 'success' || needs.clean-rebuild.result == 'skipped')
     permissions:
       contents: read
       # The hand-off below POSTs to the workflow dispatches endpoint. The root
@@ -221,10 +240,15 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts
       - uses: actions/download-artifact@v7
+        # Only the release-time steps below read the tree. Reconciling receipts
+        # does not, and downloading and unpacking 292 MiB to do it put about a
+        # minute on every pull request's critical path for nothing (h5).
+        if: github.event_name != 'pull_request'
         with:
           name: spry-build-tree-${{ github.run_id }}
           path: ${{ runner.temp }}
       - name: Unpack the built tree
+        if: github.event_name != 'pull_request'
         run: bash .github/scripts/unpack_build_tree.sh
       - uses: actions/download-artifact@v7
         with:
@@ -241,10 +265,14 @@ jobs:
         # _repo_validation_matrix.json and _validation_registry.json.
         run: node .github/scripts/validation_shards.mjs verify --shards "$SHARD_COUNT"
       - name: Warnings and attestation
+        # Release-time, and consumed only by Deploy Distribution, which runs on
+        # main. A pull request has nothing to attest (h5).
+        if: github.event_name != 'pull_request'
         run: |
           npm run validate:warnings
           npm run release:create-attestation
       - name: Cadence gate
+        if: github.event_name != 'pull_request'
         # Blocks publishing faster than the library can be kept inside the
         # 91-day window where pages stay citable. Warnings (library over
         # ceiling, uniform lastmod) are reported without failing the run.
@@ -252,7 +280,9 @@ jobs:
           npm run cadence:gate
           npm run cadence:template-share
       - uses: actions/upload-artifact@v7
-        if: success()
+        # The artifact Deploy Distribution downloads. It is built from the tree,
+        # which a pull-request run deliberately does not fetch.
+        if: success() && github.event_name != 'pull_request'
         with:
           name: spry-validated-${{ github.sha }}
           include-hidden-files: true
