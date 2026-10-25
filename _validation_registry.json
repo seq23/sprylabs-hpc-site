@@ -8804,8 +8804,98 @@
         "MX-EDGE-CACHE"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "SOCIAL-TAGS",
+      "status": "ADMITTED",
+      "name": "validate:social-tags",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Search Readiness item b6 (25 Oct 2026): not one of 2,276 committed pages carried og:image:width/height, 1,966 had no og:site_name, 1,717 no og:type and 1,448 no twitter:card, and the two og images in use were 600x600 and 420x96. Every share and every AI preview rendered from a card the checklist rejects. Refuses an incomplete social-card head, an og:image that is not a committed 1200x630 PNG on the page's own host, width/height that disagree with the file, og:title that disagrees with <title>, and a missing icon/apple-touch-icon/manifest link.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:social-tags",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-social-tags/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-25",
+      "matrix_ids": [
+        "MX-SOCIAL-TAGS"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "LLMS-TXT-SHAPE",
+      "status": "ADMITTED",
+      "name": "validate:llms-txt-shape",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Search Readiness item a7 (25 Oct 2026): /llms.txt was 21,589 words - the whole page index, three times over - where an AI engine expects a short orientation file under about 2,000 words. The full index is llms-full.txt. Refuses an llms.txt over the word cap, missing one of its required sections, not naming both brands, not listing every priority page, or not pointing at llms-full.txt, the sitemap index and the methodology page.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:llms-txt-shape",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-llms-txt-shape/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-25",
+      "matrix_ids": [
+        "MX-LLMS-TXT-SHAPE"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "CANONICAL-HOST",
+      "status": "ADMITTED",
+      "name": "validate:canonical-host",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Search Readiness item a1 (25 Oct 2026): https://www.billionairehighperformancecoach.com/ answered 200 instead of 301-ing to the apex, so every page existed at two addresses and Google was free to split the signals. Pages _redirects cannot match on host, so the rule lives in functions/_lib/canonical_host.js; this proves every public domain's www alias 301s with path and query intact, that the apexes themselves and every *.pages.dev preview are passed through, and that there is no redirect loop.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:canonical-host",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-canonical-host/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-25",
+      "matrix_ids": [
+        "MX-CANONICAL-HOST"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 281,
+  "record_count": 284,
   "generated_at": "2026-08-08T23:30:00Z"
 }

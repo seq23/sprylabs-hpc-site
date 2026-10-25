@@ -2747,9 +2747,39 @@
       "severity": "STRONG_WARNING",
       "release_effect": false,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-SOCIAL-TAGS",
+      "validation_id": "SOCIAL-TAGS",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:social-tags",
+      "order": 266,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-LLMS-TXT-SHAPE",
+      "validation_id": "LLMS-TXT-SHAPE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:llms-txt-shape",
+      "order": 267,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-CANONICAL-HOST",
+      "validation_id": "CANONICAL-HOST",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:canonical-host",
+      "order": 268,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 274,
+  "entry_count": 277,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3447,6 +3477,18 @@
         {
           "id": "VAL-EDGE-CACHE",
           "command": "npm run validate:edge-cache"
+        },
+        {
+          "id": "SOCIAL-TAGS",
+          "command": "npm run validate:social-tags"
+        },
+        {
+          "id": "LLMS-TXT-SHAPE",
+          "command": "npm run validate:llms-txt-shape"
+        },
+        {
+          "id": "CANONICAL-HOST",
+          "command": "npm run validate:canonical-host"
         }
       ]
     },

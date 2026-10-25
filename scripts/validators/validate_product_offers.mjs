@@ -20,13 +20,18 @@
  *   4. a Product carries review or aggregateRating (never invented);
  *   5. the shared emitter (render/content_contract.js completeStructuredData)
  *      produces a Product that fails 2-3;
- *   6. zero Product nodes were examined (Rule 0), or the checker and the repair
- *      cannot be shown to act on a page with an offer-less Product (self-test).
+ *   6. a price the JSON-LD claims is not stated in the page's visible text.
+ *      Markup the visible page does not support is treated as deceptive and can
+ *      cost every rich result on the domain (Search Readiness item c5: 25 Oct
+ *      2026, 64 pages claimed 49.00 and 4 said so where a reader could see it);
+ *   7. zero Product nodes were examined (Rule 0), or the checker and the repair
+ *      cannot be shown to act on a page with an offer-less Product and on a
+ *      page whose claimed price is invisible (self-test).
  */
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
-import { ROOT, publishedHtml, repairHtml, frozenRevenueSurfaces } from '../repair/product_offers.mjs';
+import { ROOT, publishedHtml, repairHtml, frozenRevenueSurfaces, claimedOfferPrices, priceIsVisible, applyVisiblePrice } from '../repair/product_offers.mjs';
 
 const requireCjs = createRequire(import.meta.url);
 const { bhpcOffer } = requireCjs('../lib/bhpc_offer.cjs');
@@ -97,6 +102,9 @@ for (const rel of pages) {
   const r = checkHtml(html, rel);
   products += r.products;
   problems.push(...r.problems);
+  for (const price of claimedOfferPrices(html)) {
+    if (!priceIsVisible(html, price)) problems.push(`${rel}: JSON-LD claims the price ${price} but the visible page never states it; run npm run repair:product-offers`);
+  }
 }
 
 // 5. the shared emitter
@@ -110,6 +118,16 @@ if (!checkHtml(bare, 'self-test').problems.some((p) => p.includes('no offers')))
 const repaired = repairHtml(bare);
 if (repaired.added !== 1 || checkHtml(repaired.html, 'self-test repaired').problems.length) problems.push('self-test: repair:product-offers did not give an offer-less Product the pinned offer');
 if (!checkHtml(bare.replace('"name":"x"', `"name":"x","offers":${JSON.stringify({ ...PINNED, price: '29' })}`), 'self-test').problems.some((p) => p.includes('pinned'))) problems.push('self-test: the checker passed a Gumroad offer at a price that is not the pinned one');
+
+// 6b. self-test: an invisible claimed price is caught, and the repair makes it visible.
+{
+  const hidden = '<html><body><p class="product-anchor">anchor</p>' +
+    `<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Product","name":"x","offers":${JSON.stringify(PINNED)}}]}</script>` +
+    '</body></html>';
+  if (priceIsVisible(hidden, PINNED.price)) problems.push('self-test: a page that never states its price was read as stating it');
+  const fixed = applyVisiblePrice(hidden);
+  if (!fixed.placed || !priceIsVisible(fixed.html, PINNED.price)) problems.push('self-test: repair:product-offers did not make a claimed price visible');
+}
 
 if (!products) problems.push(`zero Product nodes examined across ${pages.length} published pages; a check that reads nothing proves nothing`);
 if (problems.length) {

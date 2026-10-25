@@ -1,7 +1,7 @@
 'use strict';
 /**
  * One definition of the search-snippet bounds every indexable page must meet:
- * a <title> of 30-70 characters and a meta description of 110-160 characters,
+ * a <title> of 30-65 characters and a meta description of 110-160 characters,
  * each unique across the site.
  *
  * Why these numbers. Bing Webmaster Tools, 25 Sep 2026, SEO rule 118 ("meta
@@ -29,7 +29,13 @@
  */
 
 const TITLE_MIN = 30;
-const TITLE_MAX = 70;
+// 65, not 70. Google truncates a result title at roughly 600px, which is about
+// 60-65 characters; the Search Readiness checklist (item b1) asks for 30-65 and
+// reported 305 committed pages above it on 25 Oct 2026 - every one of them a
+// title whose tail no searcher ever sees. The ladder in titleCandidates()
+// already drops the brand suffix before it cuts, so most of those lose a
+// suffix rather than a word.
+const TITLE_MAX = 65;
 const DESC_MIN = 110;
 const DESC_MAX = 160;
 
@@ -41,6 +47,15 @@ const EXEMPT_PAGES = new Set(['download.html']);
 const BRANDS = {
   'spryexecutiveos.com': 'Spry Executive OS',
   'billionairehighperformancecoach.com': 'Billionaire High Performance Coach',
+};
+// The form a title uses when the full product name will not fit. The site's own
+// comparison pages already abbreviate it this way. Without this rung, a 29-
+// character core under a 34-character brand had no candidate at all between
+// "too short alone" and "too long with the brand", and five pages ended with an
+// unresolved title.
+const SHORT_BRANDS = {
+  'spryexecutiveos.com': 'Spry Executive OS',
+  'billionairehighperformancecoach.com': 'BHPC',
 };
 
 const NAMED_ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', rsquo: '’', lsquo: '‘', rdquo: '”', ldquo: '“', mdash: '—', ndash: '–', hellip: '…', rarr: '→' };
@@ -121,12 +136,16 @@ function titleCandidates(title, host) {
     .replace(/\s+[—–]\s+Spry Executive OS\b/gi, '')
     .replace(/Billionaire High Performance Coach/g, 'BHPC'));
   const brand = BRANDS[host] || '';
+  const shortBrand = SHORT_BRANDS[host] || '';
   const out = [];
   if (brand) out.push(`${core} | ${brand}`);
+  if (shortBrand && shortBrand !== brand) out.push(`${core} | ${shortBrand}`);
   out.push(core);
   if (brand) out.push(`${short} | ${brand}`);
+  if (shortBrand && shortBrand !== brand) out.push(`${short} | ${shortBrand}`);
   out.push(short);
   out.push(cutWords(short, TITLE_MAX));
+  if (shortBrand && shortBrand !== brand) out.push(`${cutWords(short, TITLE_MAX - shortBrand.length - 3)} | ${shortBrand}`);
   return [...new Set(out)].filter(inTitleRange);
 }
 
@@ -149,7 +168,7 @@ function descriptionCandidates(desc) {
 }
 
 module.exports = {
-  TITLE_MIN, TITLE_MAX, DESC_MIN, DESC_MAX, EXEMPT_PAGES, BRANDS,
+  TITLE_MIN, TITLE_MAX, DESC_MIN, DESC_MAX, EXEMPT_PAGES, BRANDS, SHORT_BRANDS,
   decodeEntities, escapeText, escapeAttr, norm, titleOf, descriptionOf, META_DESC_RE,
   inTitleRange, inDescRange, cutWords, titleCore, titleCandidates, descriptionCandidates,
 };

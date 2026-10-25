@@ -439,7 +439,12 @@
     "validate:aplayermode-pin-drip": "node --test tests/aplayermode/pinqueue.test.mjs",
     "validate:edge-cache": "node --test tests/edge_cache.test.mjs",
     "aplayermode:pin-queue": "node scripts/aplayermode/pin_queue.mjs",
-    "aplayermode:pin-metrics": "node scripts/aplayermode/collect_pin_metrics.mjs"
+    "aplayermode:pin-metrics": "node scripts/aplayermode/collect_pin_metrics.mjs",
+    "validate:llms-txt-shape": "node scripts/validators/validate_llms_txt_shape.mjs",
+    "validate:canonical-host": "node --test tests/canonical_host.test.mjs",
+    "validate:social-tags": "node scripts/validators/validate_social_tags.mjs",
+    "repair:social-tags": "node scripts/repair/complete_social_tags.cjs",
+    "check:sites-live": "node scripts/diagnostics/check_sites_live.mjs"
   },
   "engines": {
     "node": ">=24.0.0"
