@@ -82,6 +82,20 @@ if sample and sample[0]['impressions'] < sample[-1]['impressions']:
 if hit['rows'] and hit['rows'][0]['query'].lower() not in TARGETS:
     errors.append('case-insensitive target matching regressed')
 
+# Every measured query must be written out in full (not just the top-25 discard
+# sample), rolled up per query, so the target builder can target what Google shows.
+mq = {m['query']: m for m in filtered.get('measured_queries') or []}
+if len(mq) != 69:
+    errors.append(f'measured_queries must list all 69 measured queries, got {len(mq)}')
+if mq.get('real query 0', {}).get('clicks') != 1 or mq.get('real query 0', {}).get('impressions') != 13:
+    errors.append('measured_queries does not roll up impressions/clicks per query')
+dup = summarize([api_row('Same Query', 3), dict(api_row('same query', 5), keys=['same query', 'https://spryexecutiveos.com/b'])],
+                TARGETS, SITE, '2026-05-26', '2026-08-23', '2026-08-28')['measured_queries']
+if len(dup) != 1 or dup[0]['impressions'] != 8 or dup[0]['top_page'] != 'https://spryexecutiveos.com/b':
+    errors.append(f'measured_queries must merge one query across pages case-insensitively, keeping the top page: {dup}')
+if empty.get('measured_queries') != []:
+    errors.append('an empty response must write an empty measured_queries list')
+
 report = {
     'schema_version': '1.0',
     'status': 'FAIL' if errors else 'PASS',

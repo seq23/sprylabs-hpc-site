@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
 import path from 'node:path';
-import { readJson, writeJson, stamp, id, PUBLIC, ownerMap, canonicalFromHtml, stripHtml, tokenize } from './lib/core.mjs';
+import { readJson, writeJson, stamp, id, PUBLIC, ROOT, ownerMap, canonicalFromHtml, stripHtml, tokenize } from './lib/core.mjs';
+import { measuredQueries, readExports, pathKey, MEASURED_MIN_IMPRESSIONS } from './lib/measured_targets.mjs';
 
 const universe = readJson('data/intake/query_universe.json', { queries: [] }).queries || [];
 const owners = ownerMap();
 const MAX = Number(process.env.SEARCH_INTELLIGENCE_MAX_TARGETS || 120);
+const OUT = process.env.SEARCH_INTELLIGENCE_TARGET_OUT || 'data/search_intelligence/target_query_set.json';
 
 const candidates = [];
 for (const [rel, own] of owners.entries()) {
@@ -48,7 +50,19 @@ for (const q of universe) {
 }
 for (const arr of grouped.values()) arr.sort((a,b)=>(b.source_count||0)-(a.source_count||0)||String(a.query).localeCompare(String(b.query)));
 const keys = [...grouped.keys()].sort();
+// Measured first: every query Google showed us (lib/measured_targets.mjs), so the
+// GSC export's exact-match filter keeps real rows. The universe fills the rest.
+const measured = measuredQueries(readExports(ROOT));
+const byPath = new Map(candidates.map((p) => [pathKey(p.route), p]));
 const selected = []; const seen = new Set(); let round = 0;
+for (const m of measured) {
+  if (selected.length >= MAX) break;
+  seen.add(m.query);
+  selected.push({ query: m.query, intent: null, audience: null, use_case: null, source_type: 'gsc_measured',
+    measured: { impressions_28d: m.impressions, clicks_28d: m.clicks, top_page: m.top_page || null },
+    measured_page: byPath.get(pathKey(m.top_page)) || null });
+}
+const measuredCount = selected.length;
 while (selected.length < MAX) {
   let added = false;
   for (const key of keys) {
@@ -64,7 +78,9 @@ while (selected.length < MAX) {
 }
 
 const targets = selected.map((q) => {
-  const match = scorePage(q);
+  // A measured query keeps the page Google ranks for it when that page is ours to
+  // repair (non-agent); otherwise it maps by relevance like every other target.
+  const match = q.measured_page ? { page: q.measured_page, score: 100 } : scorePage(q);
   return {
     target_id: `si_${id(String(q.query).toLowerCase())}`,
     query: q.query,
@@ -78,11 +94,13 @@ const targets = selected.map((q) => {
     ownership: match.page.owner,
     route_match_score: match.score,
     route_match_title: match.page.title,
-    source: 'data/intake/query_universe.json'
+    source: q.source_type === 'gsc_measured' ? 'google_search_console_measured_query' : 'data/intake/query_universe.json',
+    ...(q.measured ? { measured: q.measured } : {})
   };
 });
-writeJson('data/search_intelligence/target_query_set.json', {
-  schema_version:'1.1', generated_at:stamp(), overall_status:'READY', status_is_healthy:true,
-  target_count:targets.length, mapping_method:'query_to_existing_non_agent_page_token_relevance', targets
+writeJson(OUT, {
+  schema_version:'1.2', generated_at:stamp(), overall_status:'READY', status_is_healthy:true,
+  target_count:targets.length, measured_target_count:measuredCount, measured_min_impressions:MEASURED_MIN_IMPRESSIONS,
+  mapping_method:'gsc_measured_queries_first_then_query_universe_token_relevance', targets
 });
-console.log(`[search:targets] ${targets.length}`);
+console.log(`[search:targets] ${targets.length} (${measuredCount} measured by Search Console)`);
