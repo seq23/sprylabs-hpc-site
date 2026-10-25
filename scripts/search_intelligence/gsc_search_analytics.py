@@ -28,6 +28,11 @@ import sys
 from datetime import date, timedelta
 
 DISCARDED_SAMPLE_LIMIT = 25
+# Every query Google measured, rolled up (impressions, clicks, top page). The
+# target builder reads this so the next day's target set contains the queries
+# Google actually shows: a 120-phrase set built only from the intake universe
+# matched 0 of 124 real rows (25 Oct 2026). Capped so the export stays small.
+MEASURED_QUERY_LIMIT = 500
 
 
 def summarize(raw, queries, site, start, end, collected_at):
@@ -62,6 +67,23 @@ def summarize(raw, queries, site, start, end, collected_at):
 
     discarded.sort(key=lambda d: (-d['impressions'], -d['clicks'], d['query']))
 
+    by_query = {}
+    for r in raw:
+        keys = r.get('keys') or ['', '']
+        q = str(keys[0] or '').strip().lower()
+        if not q:
+            continue
+        page = keys[1] if len(keys) > 1 else ''
+        m = by_query.setdefault(q, {'query': q, 'impressions': 0, 'clicks': 0, 'top_page': page, '_top': -1})
+        imp = r.get('impressions', 0) or 0
+        m['impressions'] += imp
+        m['clicks'] += r.get('clicks', 0) or 0
+        if imp > m['_top']:
+            m['top_page'], m['_top'] = page, imp
+    measured_queries = sorted(by_query.values(), key=lambda m: (-m['impressions'], -m['clicks'], m['query']))
+    for m in measured_queries:
+        m.pop('_top', None)
+
     return {
         'provider': 'google_search_console',
         'site_url': site,
@@ -89,6 +111,7 @@ def summarize(raw, queries, site, start, end, collected_at):
             'discarded_sample_limit': DISCARDED_SAMPLE_LIMIT,
             'discarded_sample': discarded[:DISCARDED_SAMPLE_LIMIT],
         },
+        'measured_queries': measured_queries[:MEASURED_QUERY_LIMIT],
         'rows': rows,
     }
 

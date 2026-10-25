@@ -23,6 +23,14 @@ if [ -n "${GSC_SERVICE_ACCOUNT_JSON:-}" ]; then
   if [ -n "${GSC_SITE_URL_SPRY:-}" ]; then
     python3 scripts/search_intelligence/gsc_search_analytics.py .gsc-service-account.json "$GSC_SITE_URL_SPRY" data/search_intelligence/target_query_set.json data/search_intelligence/provider_inputs/gsc_spry.json
   fi
+  # Daily index coverage per host (150 URL Inspections each), read by the
+  # portfolio's weekly search-outcome report for its indexed-share column.
+  if [ -n "${GSC_SITE_URL_BHPC:-}" ]; then
+    python3 scripts/search_intelligence/collect_index_coverage.py .gsc-service-account.json "$GSC_SITE_URL_BHPC" billionairehighperformancecoach.com sitemap-bhpc.xml
+  fi
+  if [ -n "${GSC_SITE_URL_SPRY:-}" ]; then
+    python3 scripts/search_intelligence/collect_index_coverage.py .gsc-service-account.json "$GSC_SITE_URL_SPRY" spryexecutiveos.com sitemap-spry.xml
+  fi
 else
   echo "GSC credential unavailable; truth lane will report UNAVAILABLE."
 fi
