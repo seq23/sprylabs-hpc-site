@@ -20,6 +20,7 @@ A run where every inspection fails leaves the previous file as it was and prints
 NAMED STOP line (exit 0): a bad day never blanks evidence. Exit 1 only on bad usage.
 
 Usage: collect_index_coverage.py <service-account.json> <site-url> <host> <sitemap.xml>
+Guard: scripts/search_intelligence/self_test_index_coverage.py (validate:search-measurement-truthfulness).
 """
 from __future__ import annotations
 
