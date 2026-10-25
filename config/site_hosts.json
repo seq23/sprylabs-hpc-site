@@ -1,8 +1,14 @@
 {
-  "purpose": "The ONE map of which host owns which child sitemap. One Pages deployment answers both hosts from one tree, so the static sitemap.xml and robots.txt name both children; functions/_lib/host_crawl_surfaces.js narrows them per request host, and scripts/lib/sitemap_index.mjs writes the static index from this same list. Guarded by scripts/validators/validate_host_crawl_surfaces.mjs.",
+  "purpose": "The ONE map of which host owns which child sitemap. One Pages deployment answers both hosts from one tree, so the static sitemap.xml and robots.txt name both children; functions/_lib/host_crawl_surfaces.js narrows them per request host, and scripts/lib/sitemap_index.mjs writes the static index from this same list. Guarded by scripts/validators/validate_host_crawl_surfaces.mjs. It also carries each host's default social card (og_image): the 1200x630 PNG served from that host, read by scripts/lib/social_tags.cjs and by scripts/citation/apply_citation_program.py, which used to hard-code a 600x600 image on both hosts and overwrite og:image with it on every build.",
   "origin": "Until 11 Oct 2026 both hosts served one sitemap index and one robots.txt naming both hosts' child sitemaps. Search Console rejects a cross-host child (HTTP 400 'Could not process sitemap' in the portfolio sitemaps run 38142618891) and the coverage run inspected the other host's URLs in each property (109 of 110 Spry inspections 403 'You do not own this site').",
   "hosts": {
-    "billionairehighperformancecoach.com": { "child_sitemap": "sitemap-bhpc.xml" },
-    "spryexecutiveos.com": { "child_sitemap": "sitemap-spry.xml" }
+    "billionairehighperformancecoach.com": {
+      "child_sitemap": "sitemap-bhpc.xml",
+      "og_image": "/assets/og/default-billionairehighperformancecoach.png"
+    },
+    "spryexecutiveos.com": {
+      "child_sitemap": "sitemap-spry.xml",
+      "og_image": "/assets/og/default-spryexecutiveos.png"
+    }
   }
 }

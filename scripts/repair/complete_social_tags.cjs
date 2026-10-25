@@ -20,6 +20,12 @@
  * Deterministic and idempotent: a page already carrying the right tag is not
  * rewritten; a tag present with the wrong value is replaced in place; a missing
  * one is inserted immediately before </head> in the order the module lists.
+ *
+ * Inserted tags are written in the form BeautifulSoup emits - attributes in
+ * alphabetical order, self-closing - because several repairs in this build
+ * re-serialize whole pages through it. Writing `property=... content=...>` left
+ * 419 pages that the next build rewrote byte-for-byte to the same meaning,
+ * which is drift to every guard that compares a tree to its rebuild.
  * download.html is frozen and never touched (the caller excludes it).
  *
  * Usage (standalone): node scripts/repair/complete_social_tags.cjs [--dry-run]
@@ -64,11 +70,11 @@ function applyTo({root = ROOT, rel, html}) {
       const next = setAttr(existing[0], 'content', value);
       if (next !== existing[0]) head = head.replace(existing[0], next);
     } else {
-      inserts.push(`<meta ${keyName}="${keyValue}" content="${B.escapeAttr(value)}">`);
+      inserts.push(`<meta content="${B.escapeAttr(value)}" ${keyName}="${keyValue}"/>`);
     }
   }
   for (const [rev, href] of iconLinks) {
-    if (!linkTagRe(rev).test(head)) inserts.push(`<link rel="${rev}" href="${href}">`);
+    if (!linkTagRe(rev).test(head)) inserts.push(`<link href="${href}" rel="${rev}"/>`);
   }
   if (!inserts.length && head === parts.head) return html;
   return head + (inserts.length ? `\n${inserts.join('\n')}\n` : '') + html.slice(parts.end);

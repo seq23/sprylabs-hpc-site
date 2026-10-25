@@ -28,11 +28,22 @@ const fs = require('fs');
 const path = require('path');
 const B = require('./search_snippet_bounds.cjs');
 
-/** The 1200x630 card for each canonical host, served from that host. */
-const DEFAULT_OG_IMAGE = {
-  'billionairehighperformancecoach.com': '/assets/og/default-billionairehighperformancecoach.png',
-  'spryexecutiveos.com': '/assets/og/default-spryexecutiveos.png',
-};
+/**
+ * The 1200x630 card for each canonical host, served from that host. Read from
+ * config/site_hosts.json, the one host map, because the citation program
+ * (Python) writes og:image too and the two must not be able to disagree: it
+ * hard-coded a 600x630 image on both hosts, overwrote og:image with it on every
+ * build, and derived the CITATION_PAGE_SCHEMA image from whatever og:image said
+ * at that moment - so this pass, which runs last, left the schema one whole
+ * build behind and 419 governed surfaces drifting every run.
+ */
+const DEFAULT_OG_IMAGE = Object.fromEntries(
+  Object.entries(JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'config/site_hosts.json'), 'utf8')).hosts)
+    .map(([host, cfg]) => [host, cfg.og_image]),
+);
+for (const [host, href] of Object.entries(DEFAULT_OG_IMAGE)) {
+  if (!href) throw new Error(`config/site_hosts.json: ${host} has no og_image; every host needs its own 1200x630 card`);
+}
 const ICON_LINKS = [
   ['icon', '/favicon.ico'],
   ['apple-touch-icon', '/apple-touch-icon.png'],

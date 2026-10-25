@@ -51,6 +51,26 @@ TODAY = "2026-06-20"
 # The author identity llms.txt states. One source: data/entities/author_profile.json,
 # the same file validate_citation_strategy reads, so the crawl file and the page
 # schema cannot name two different authors.
+# The default social card per host. One map (config/site_hosts.json), shared with
+# scripts/lib/social_tags.cjs, because both this program and the social-tag repair
+# write og:image. This used to be a hard-coded
+# "https://billionairehighperformancecoach.com/assets/img/bhpc-hero-square.png"
+# in two places - a 600x600 image, stamped on both hosts, rewritten on every
+# build - and the CITATION_PAGE_SCHEMA image is derived from whatever og:image
+# says at that moment, so the repair that corrected it afterwards left the schema
+# one whole build behind on 419 governed surfaces.
+_SITE_HOSTS = json.loads((ROOT / "config/site_hosts.json").read_text(encoding="utf-8"))["hosts"]
+_DEFAULT_HOST = "billionairehighperformancecoach.com"
+
+def social_image_for(canonical: str) -> str:
+    """The 1200x630 card for the host this page is canonical on."""
+    host = _DEFAULT_HOST
+    if canonical:
+        match = re.match(r"https?://([^/]+)", canonical)
+        if match and match.group(1) in _SITE_HOSTS:
+            host = match.group(1)
+    return f"https://{host}{_SITE_HOSTS[host]['og_image']}"
+
 _AUTHOR_PROFILE = json.loads((ROOT / "data/entities/author_profile.json").read_text(encoding="utf-8"))
 AUTHOR_NAME = _AUTHOR_PROFILE["name"]
 AUTHOR_ROLE = _AUTHOR_PROFILE["role"]
@@ -543,7 +563,7 @@ def ensure_meta(soup: BeautifulSoup, h1: str, definition: str, canonical: str):
     if not og:
         og=soup.new_tag("meta",attrs={"property":"og:url"}); head.append(og)
     og["content"] = canonical
-    social_image="https://billionairehighperformancecoach.com/assets/img/bhpc-hero-square.png"
+    social_image=social_image_for(canonical)
     for attr in [("property","og:image"),("name","twitter:image")]:
         tag=soup.find("meta",attrs={attr[0]:attr[1]})
         if not tag:
@@ -779,7 +799,7 @@ def shell(path: str, spec: dict) -> str:
     head.append(soup.new_tag("meta",attrs={"name":"description","content":spec["definition"]}))
     head.append(soup.new_tag("link",rel="canonical",href=canonical))
     head.append(soup.new_tag("meta",attrs={"property":"og:url","content":canonical}))
-    social_image="https://billionairehighperformancecoach.com/assets/img/bhpc-hero-square.png"
+    social_image=social_image_for(canonical)
     head.append(soup.new_tag("meta",attrs={"property":"og:image","content":social_image}))
     head.append(soup.new_tag("meta",attrs={"name":"twitter:image","content":social_image}))
     head.append(soup.new_tag("meta",attrs={"name":"robots","content":"index,follow"}))
