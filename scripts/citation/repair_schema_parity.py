@@ -17,7 +17,7 @@ sys.path.insert(0, str(VALIDATION_DIR))
 from page_scope import repair_paths as validation_repair_paths
 LIB_DIR = Path(__file__).resolve().parents[1] / 'lib'
 sys.path.insert(0, str(LIB_DIR))
-from citation_page_schema import serialize_schema, main_entity_of_page
+from citation_page_schema import serialize_schema, main_entity_of_page, organization_node
 ROOT=Path.cwd()
 ACTIVE_SCOPE=ROOT/'data/release/active_mutation_scope.json'
 
@@ -223,11 +223,10 @@ def update_schema(path: Path):
                 'name': norm(author.get_text(' ',strip=True)),
                 'url': urljoin(canonical, author.get('href',''))
             },
-            'publisher': {
-                '@type': 'Organization',
-                'name': 'Spry Labs',
-                'logo': {'@type': 'ImageObject', 'url': 'https://billionairehighperformancecoach.com/assets/books/og/bhpc-og-black.png'}
-            },
+            # One definition: config/organization.json (Search Readiness c1).
+            # This dict used to carry name and logo only, so it dropped url and
+            # sameAs on 66 pages every build, after the JS repair had added them.
+            'publisher': organization_node(),
             'image': {'@type': 'ImageObject', 'url': ogurl}
         })
     elif article:

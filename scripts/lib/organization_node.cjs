@@ -1,4 +1,6 @@
 'use strict';
+const fs = require('fs');
+const path = require('path');
 /**
  * One definition of the publisher Organization every published page declares.
  *
@@ -36,15 +38,25 @@
  * scripts/validators/validate_organization_node.mjs.
  */
 
-/** The organization's canonical home. /spry-labs is a BHPC-owned route. */
-const ORG_HOST = 'https://billionairehighperformancecoach.com';
-const ORG_NAME = 'Spry Labs';
-const ORG_URL = `${ORG_HOST}/spry-labs`;
+/**
+ * The values live in config/organization.json, NOT here: the citation program
+ * (Python) writes author and publisher on every governed page too, and a
+ * constant in this file is invisible to it. On 25 Oct 2026 that is exactly what
+ * happened - this repair completed 2,264 pages and repair_schema_parity.py,
+ * which runs later in container-prepush, rewrote 66 of them from its own dict
+ * with name and logo only. Two writers of one node is the defect; one config
+ * both languages read is the fix, the same shape config/site_hosts.json already
+ * uses for each host's og_image.
+ */
+const CONFIG = JSON.parse(fs.readFileSync(path.join(__dirname, '..', '..', 'config/organization.json'), 'utf8'));
 
-/** assets/spry-logo.png, the logo the repo already uses, read as 420x96. */
-const LOGO_PATH = '/assets/spry-logo.png';
-const LOGO_WIDTH = 420;
-const LOGO_HEIGHT = 96;
+const ORG_NAME = CONFIG.name;
+const ORG_URL = CONFIG.url;
+const ORG_HOST = new URL(ORG_URL).origin;
+
+const LOGO_PATH = new URL(CONFIG.logo.url).pathname;
+const LOGO_WIDTH = CONFIG.logo.width;
+const LOGO_HEIGHT = CONFIG.logo.height;
 
 /**
  * The organization's own verifiable web presence. Each one answers 200 and each
@@ -57,15 +69,15 @@ const LOGO_HEIGHT = 96;
  * guides hubs for the string. A sameAs on 2,264 pages would have walked that
  * property into every one of them, so the contract wins and the link stays off.
  */
-const SAME_AS = Object.freeze([
-  'https://spryexecutiveos.com/',
-  'https://sprylabs.gumroad.com/',
-  'https://www.sequoiataylor.com',
-]);
+const SAME_AS = Object.freeze([...CONFIG.sameAs]);
+
+for (const href of [ORG_URL, CONFIG.logo.url, ...SAME_AS]) {
+  if (!/^https:\/\//.test(href)) throw new Error(`config/organization.json: ${href} must be an absolute https URL`);
+}
 
 const LOGO = Object.freeze({
   '@type': 'ImageObject',
-  url: `${ORG_HOST}${LOGO_PATH}`,
+  url: CONFIG.logo.url,
   width: LOGO_WIDTH,
   height: LOGO_HEIGHT,
 });
@@ -115,21 +127,34 @@ function missingFields(node) {
 }
 
 /**
- * Complete one node in place. Returns the fields it filled in.
- * An existing value is never overwritten except a logo given as a bare string,
- * which becomes the ImageObject the rest of the tree already uses, and a name
- * that is absent.
+ * Bring one node to the one definition, in place. Returns the fields it changed.
+ *
+ * It NORMALIZES rather than only filling gaps, and that is load-bearing. Three
+ * writers in this repo each had their own idea of this node: the citation
+ * program used url https://billionairehighperformancecoach.com/,
+ * scripts/render/content_contract.js used https://spryexecutiveos.com/ with its
+ * own one-item sameAs, and scripts/render/render_insight.js and
+ * render_authority.js wrote the publisher logo as /assets/books/og/bhpc-og-black.png.
+ * Filling only the gaps left all three in place, so a page built by one and
+ * repaired by another ended the build with a different Organization than the
+ * snapshot taken mid-chain had hashed - two pages drifted on every single build,
+ * which is the non-convergence the extraction-surface guard exists to catch.
+ *
+ * Item c1's own reason says why normalizing is also the right answer and not
+ * just the convergent one: "Consistent naming across every page is what makes
+ * the site citable as one thing." One entity, one url, one logo, one sameAs.
+ *
+ * A node naming anyone else is never reached - see isOwnOrganization.
  */
 function completeOrganization(node) {
-  const filled = [];
+  const changed = [];
   const want = organizationFields();
   for (const key of ['name', 'url', 'logo', 'sameAs']) {
-    const v = node[key];
-    const absent = v === undefined || v === null || v === '' || (Array.isArray(v) && v.length === 0);
-    if (absent) { node[key] = want[key]; filled.push(key); continue; }
-    if (key === 'logo' && typeof v === 'string') { node.logo = want.logo; filled.push('logo'); }
+    if (JSON.stringify(node[key]) === JSON.stringify(want[key])) continue;
+    node[key] = want[key];
+    changed.push(key);
   }
-  return filled;
+  return changed;
 }
 
 /** Walk every node of a parsed JSON-LD payload, deepest last. */

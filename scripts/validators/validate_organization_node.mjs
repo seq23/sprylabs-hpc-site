@@ -55,13 +55,19 @@ for (const rel of pages) {
       // A node naming someone else is theirs, and is not ours to complete.
       if (!O.isOwnOrganization(node)) return;
       const missing = O.missingFields(node);
-      if (missing.length) fail(`${rel}: Organization lacks ${missing.join(', ')}`);
-      const same = [].concat(node.sameAs ?? []);
-      if (same.length) withSameAs += 1;
-      for (const u of same) {
-        if (!O.SAME_AS.includes(u)) fail(`${rel}: Organization sameAs ${u} is not declared in scripts/lib/organization_node.cjs`);
+      if (missing.length) { fail(`${rel}: Organization lacks ${missing.join(', ')}`); return; }
+      if ([].concat(node.sameAs ?? []).length) withSameAs += 1;
+      // Not just present - EQUAL to the one definition. Three writers each had
+      // their own url, logo and sameAs for this one organization, and two pages
+      // drifted on every build because a page built by one and repaired by
+      // another ended up with a different node than the snapshot had hashed.
+      // One entity, one url, one logo, one sameAs, on every page.
+      const want = O.organizationFields();
+      for (const key of ['name', 'url', 'logo', 'sameAs']) {
+        if (JSON.stringify(node[key]) !== JSON.stringify(want[key])) {
+          fail(`${rel}: Organization ${key} is ${JSON.stringify(node[key])}; config/organization.json says ${JSON.stringify(want[key])}`);
+        }
       }
-      if (node.name && String(node.name) !== O.ORG_NAME) fail(`${rel}: own Organization is named "${node.name}"; the one definition says "${O.ORG_NAME}"`);
     });
   }
   if (!found) fail(`${rel}: no Organization node at all`);
@@ -80,4 +86,4 @@ if (failures.length) {
   console.error(`${LABEL} FAIL (${failures.length}) - ${pages.length} pages, ${nodes} Organization nodes`);
   process.exit(1);
 }
-console.log(`${LABEL} PASS - ${pages.length} pages, ${nodes} Organization nodes, ${withSameAs} carrying the declared sameAs (${O.SAME_AS.length} URLs)`);
+console.log(`${LABEL} PASS - ${pages.length} pages, ${nodes} Organization nodes, ${withSameAs} equal to config/organization.json (${O.SAME_AS.length} sameAs URLs)`);
