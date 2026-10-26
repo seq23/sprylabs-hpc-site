@@ -2847,9 +2847,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-ROUTE-OWNER-HOST",
+      "validation_id": "ROUTE-OWNER-HOST",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:route-owner-host",
+      "order": 276,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 284,
+  "entry_count": 285,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3583,6 +3593,10 @@
         {
           "id": "SCHEMA-SUPPORTED",
           "command": "npm run validate:schema-supported"
+        },
+        {
+          "id": "ROUTE-OWNER-HOST",
+          "command": "npm run validate:route-owner-host"
         }
       ]
     },

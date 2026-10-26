@@ -34,6 +34,7 @@ head, a tag or a schema node, fix it in the one definition and let the repair ap
 | The social-card head and icon links | `scripts/lib/social_tags.cjs` | `repair:social-tags` | `validate:social-tags` |
 | The publisher Organization node | `scripts/lib/organization_node.cjs` | `repair:organization-node` | `validate:organization-node` |
 | One canonical host per domain | `functions/_lib/canonical_host.js` | — (edge) | `validate:canonical-host` |
+| One 200 per route across hosts | `functions/_lib/route_owner_host.js` | `build:route-owner-table` | `validate:route-owner-host` |
 
 Never edit `dist/` or generated page output to fix a page: find the writer above, change it, and
 rebuild. A fix made in built output is gone on the next build.

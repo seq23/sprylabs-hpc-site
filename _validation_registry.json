@@ -9107,8 +9107,38 @@
         "MX-SCHEMA-SUPPORTED"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "ROUTE-OWNER-HOST",
+      "status": "ADMITTED",
+      "name": "validate:route-owner-host",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Search Readiness item a2 (25 Oct 2026): https://spryexecutiveos.com/ answered 200 with rel=canonical pointing at billionairehighperformancecoach.com, a homepage the spry host's own sitemap does not claim. One Pages deployment answers both hosts from one tree, so every page was served twice and a canonical is only a hint - a duplicate answering 200 is still a duplicate Google may index. functions/_lib/route_owner_host.js 301s a BHPC-owned route off the spry host, reading a table generated from the canonical each page carries. This proves the homepage redirects, every spry-owned route does not, unknown paths pass through so they still 404 (item a9), files, crawl surfaces, operator surfaces and previews are untouched, and that the table matches both the generator and every page's own rel=canonical.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:route-owner-host",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-route-owner-host/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-26",
+      "matrix_ids": [
+        "MX-ROUTE-OWNER-HOST"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 291,
+  "record_count": 292,
   "generated_at": "2026-08-08T23:30:00Z"
 }
