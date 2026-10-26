@@ -17,6 +17,19 @@ CREDENTIAL_GATED={
   'google':'google-auth, installed by the workflow step that supplies GSC_SERVICE_ACCOUNT_JSON',
   'googleapiclient':'google-api-python-client, installed by the workflow step that supplies GSC_SERVICE_ACCOUNT_JSON',
 }
+# Local authoring tools. Scripts a person runs by hand to (re)produce bytes that
+# ship COMMITTED in the repository, whose dependency is deliberately absent from
+# the validation container: pinning it would install a package no validated path
+# imports, which is the same mistake CREDENTIAL_GATED above exists to avoid.
+#
+# This is not an allowlist you can hide a dependency behind. Below, a module
+# claimed here is accepted ONLY while every file importing it is unreachable
+# from package.json and .github - the moment CI actually runs one of those
+# files, the exemption stops applying and the import must be pinned like any
+# other.
+LOCAL_AUTHORING={
+  'PIL':'Pillow, used only by scripts/assets/build_brand_images.py to regenerate the committed icon and og-image PNGs by hand; the PNGs ship in the repository and no CI job has fonts or Pillow',
+}
 # Read-only by default so the check can be armed inside a validator profile.
 # --write is the deliberate act that refreshes the committed contract artifact.
 WRITE='--write' in sys.argv
@@ -51,12 +64,36 @@ for line in REQ.read_text().splitlines():
     m=re.match(r'([A-Za-z0-9_.-]+)==(.+)$',line)
     if not m: errors.append(f'unpinned requirement: {line}'); continue
     reqs[m.group(1).lower()]={'name':m.group(1),'version':m.group(2)}
-third={}; unknown=[]; gated=[]
+# What CI can actually reach: every npm script body plus every workflow file.
+# A local-authoring exemption is void for a file named in either.
+_invocation_text=''
+try:
+    _pkg=json.loads((ROOT/'package.json').read_text(encoding='utf-8'))
+    _invocation_text+='\n'.join(str(v) for v in (_pkg.get('scripts') or {}).values())
+except Exception as _e:
+    errors.append(f'package.json could not be read ({_e}); local-authoring exemptions cannot be checked for reachability')
+_wf=ROOT/'.github'
+if _wf.is_dir():
+    for _f in _wf.rglob('*'):
+        if _f.is_file() and _f.suffix in {'.yml','.yaml','.sh','.mjs','.js'}:
+            _invocation_text+='\n'+_f.read_text(encoding='utf-8',errors='ignore')
+
+third={}; unknown=[]; gated=[]; authoring=[]
 for mod,paths in sorted(imports.items()):
     if mod in stdlib or mod in local_roots or mod.startswith('_'): continue
     if mod in OPTIONAL: continue
     if mod in CREDENTIAL_GATED:
         gated.append({'module':mod,'reason':CREDENTIAL_GATED[mod],'files':sorted(paths)})
+        continue
+    if mod in LOCAL_AUTHORING:
+        reached=sorted(f for f in paths if f in _invocation_text)
+        if reached:
+            errors.append(
+                f'{mod} is declared a local authoring dependency, but CI invokes '
+                f'{", ".join(reached)}; pin its package in requirements-validation.txt '
+                f'and map it in PACKAGE_MAP instead of exempting it')
+        else:
+            authoring.append({'module':mod,'reason':LOCAL_AUTHORING[mod],'files':sorted(paths)})
         continue
     pkg=PACKAGE_MAP.get(mod)
     if pkg:
@@ -76,7 +113,7 @@ for rel in files:
 # Rule 0: a scan that examined nothing is a broken scan, not a pass.
 if not files:
     errors.append('scanned zero Python files under scripts/; a dependency contract that inspects nothing must not pass')
-report={'schema_version':'1.0','status':'FAIL' if errors else 'PASS','python_files_scanned':len(files),'requirements':reqs,'third_party_imports':third,'credential_gated_imports':gated,'unknown_imports':unknown,'errors':errors}
+report={'schema_version':'1.0','status':'FAIL' if errors else 'PASS','python_files_scanned':len(files),'requirements':reqs,'third_party_imports':third,'credential_gated_imports':gated,'local_authoring_imports':authoring,'unknown_imports':unknown,'errors':errors}
 if WRITE:
     OUT.parent.mkdir(parents=True,exist_ok=True); OUT.write_text(json.dumps(report,indent=2)+'\n')
 elif OUT.exists():

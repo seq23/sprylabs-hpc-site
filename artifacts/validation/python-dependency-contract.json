@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "status": "PASS",
-  "python_files_scanned": 48,
+  "python_files_scanned": 49,
   "requirements": {
     "beautifulsoup4": {
       "name": "beautifulsoup4",
@@ -73,6 +73,15 @@
         "scripts/queries/ingest_gsc_evidence.py",
         "scripts/search_intelligence/collect_index_coverage.py",
         "scripts/search_intelligence/gsc_search_analytics.py"
+      ]
+    }
+  ],
+  "local_authoring_imports": [
+    {
+      "module": "PIL",
+      "reason": "Pillow, used only by scripts/assets/build_brand_images.py to regenerate the committed icon and og-image PNGs by hand; the PNGs ship in the repository and no CI job has fonts or Pillow",
+      "files": [
+        "scripts/assets/build_brand_images.py"
       ]
     }
   ],

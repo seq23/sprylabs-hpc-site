@@ -1,15 +1,76 @@
 {
   "schema_version": "1.0",
-  "status": "PASS",
-  "scope": "pending",
+  "status": "FAIL",
+  "scope": "committed",
   "ledger": "data/sitemap/lastmod_ledger.json",
   "pages_examined": 4476,
   "committed_ledger_vs_committed_tree": {
     "ran": true,
-    "scope": "pending",
+    "scope": "committed",
     "pages_examined": 2238,
-    "mismatched": 0,
-    "examples": []
+    "mismatched": 1242,
+    "examples": [
+      {
+        "file": "index.html",
+        "ledger": "df9602f940e8cf938043ebd7",
+        "head": "6722307787b76627c1f2f1f7",
+        "lastmod": "2026-10-11"
+      },
+      {
+        "file": "ai-accountability-coach-for-founders.html",
+        "ledger": "0ff5e375cc2f823cbe589284",
+        "head": "dc66f4af0a98a56f238d2a81",
+        "lastmod": "2026-09-25"
+      },
+      {
+        "file": "ai-accountability-system-for-entrepreneurs.html",
+        "ledger": "5e4de7d1ca643579a41008e2",
+        "head": "fb26a8754849807caac4a59c",
+        "lastmod": "2026-10-10"
+      },
+      {
+        "file": "ai-business-coach/index.html",
+        "ledger": "3f55cc393f2c37ed9eb951e5",
+        "head": "4da2566b638fd2a073c8c2db",
+        "lastmod": "2026-10-25"
+      },
+      {
+        "file": "ai-coach-vs-therapist/index.html",
+        "ledger": "f106ea47314de464706ec019",
+        "head": "298f2aada0606d64cc2303af",
+        "lastmod": "2026-10-25"
+      },
+      {
+        "file": "ai-daily-planning-prompt-for-busy-founders.html",
+        "ledger": "078e2abab7078f60afe695c2",
+        "head": "99df3d9b433e5ca42c79f6d7",
+        "lastmod": "2026-10-10"
+      },
+      {
+        "file": "ai-executive-coach/index.html",
+        "ledger": "c802f1b7941fb7bf87be3b14",
+        "head": "6f806b3a7ce26bba337d23c8",
+        "lastmod": "2026-10-11"
+      },
+      {
+        "file": "ai-life-coach/index.html",
+        "ledger": "6a2e9bd3c3d4e498601c2a24",
+        "head": "c810e44c7036ef7f91ea8c1a",
+        "lastmod": "2026-10-25"
+      },
+      {
+        "file": "ai-workflow-for-founders.html",
+        "ledger": "73d04faded948acec58482cc",
+        "head": "03783178ed3b2e703933fb0d",
+        "lastmod": "2026-10-03"
+      },
+      {
+        "file": "answers/phase4/demand/ai-coach-for-founders-and-consultants.html",
+        "ledger": "ccd3e9d7a9d4ffbb486b6dd5",
+        "head": "123648a71ca9dc1ea14b6582",
+        "lastmod": "2026-10-25"
+      }
+    ]
   },
   "rederived_ledger_vs_working_tree": {
     "ran": true,
@@ -31,5 +92,7 @@
     "offenders": []
   },
   "notes": [],
-  "errors": []
+  "errors": [
+    "1242 of 2238 committed page(s) do not match the ledger committed alongside them. The ledger was derived before a stage that rewrote these pages. Re-derive with `npm run sitemap:lastmod:content` AFTER the last stage that mutates page HTML, and commit the result with the pages."
+  ]
 }
