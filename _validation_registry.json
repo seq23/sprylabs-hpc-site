@@ -9229,8 +9229,38 @@
         "MX-HOST-CONSOLIDATION"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "HOMEPAGE-TRUST-LINKS",
+      "status": "ADMITTED",
+      "name": "validate:homepage-trust-links",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Validate Repo run 40347544796 (26 Oct 2026): the daily-citation-intelligence lane ran authority:scale:restore, which reverted index.html to a frozen blob older than the hand-added About/author/methodology footer links; no generator wrote them back and the lane pushed c0a62f0e1 to main without running validate:citation-strategy. Refuses a tree where build:postprocess does not run repair:homepage-trust-links before build_404.js, where the writer cannot restore the links into the frozen homepage blob, where the committed homepage lacks them, or where commit_and_push_if_changed.sh stops running validate:citation-strategy between convergence and staging.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:homepage-trust-links",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-homepage-trust-links/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-26",
+      "matrix_ids": [
+        "MX-HOMEPAGE-TRUST-LINKS"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 295,
+  "record_count": 296,
   "generated_at": "2026-08-08T23:30:00Z"
 }

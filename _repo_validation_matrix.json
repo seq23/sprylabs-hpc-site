@@ -2887,9 +2887,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-HOMEPAGE-TRUST-LINKS",
+      "validation_id": "HOMEPAGE-TRUST-LINKS",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:homepage-trust-links",
+      "order": 280,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 288,
+  "entry_count": 289,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3635,6 +3645,10 @@
         {
           "id": "VAL-HOST-CONSOLIDATION",
           "command": "npm run validate:host-consolidation"
+        },
+        {
+          "id": "HOMEPAGE-TRUST-LINKS",
+          "command": "npm run validate:homepage-trust-links"
         }
       ]
     },
