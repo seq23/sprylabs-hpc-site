@@ -9169,8 +9169,68 @@
         "MX-WF-APLAYERMODE-WORKER-DEPLOY"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-SITEMAP-CANONICAL-ON-OWN-HOST",
+      "status": "ADMITTED",
+      "name": "validate:sitemap-canonical-on-own-host",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "26 Oct 2026: sitemap-bhpc.xml listed /ai-vs-human-coaching/ and /what-should-i-work-on/too-many-tasks-what-now/ while both pages declared a spryexecutiveos.com canonical, because apply_citation_program.py kept its own host list (default bhpc) while dual_domain_policy.cjs defaults to spry. Every URL in a host's child sitemap must resolve to a page whose canonical is on that host; a missing or empty sitemap, or zero resolved pages, fails.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:sitemap-canonical-on-own-host",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-sitemap-canonical-on-own-host/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-26",
+      "matrix_ids": [
+        "MX-SITEMAP-CANONICAL-ON-OWN-HOST"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-HOST-CONSOLIDATION",
+      "status": "ADMITTED",
+      "name": "validate:host-consolidation",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Portfolio check Brief 5 (25 Oct 2026): four spryexecutiveos.com AI-executive-coach pages split bhpc's measured queries. They must 301 in one hop to their bhpc equivalents on both hosts (no loop, targets exist), and no child sitemap may list them or another host's URL (the 11 Oct bug).",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:host-consolidation",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-host-consolidation/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-26",
+      "matrix_ids": [
+        "MX-HOST-CONSOLIDATION"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 293,
+  "record_count": 295,
   "generated_at": "2026-08-08T23:30:00Z"
 }

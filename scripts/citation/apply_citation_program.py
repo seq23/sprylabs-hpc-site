@@ -81,6 +81,11 @@ EXCLUDED = {
     "knowledge-map/index.html",
     "reports/answer-surface-dashboard.html",
 } | NEVER_CITABLE
+# Routes retired onto a bhpc page answer a 301 at the edge, so they are not
+# citable pages of either host (config/host_consolidations.json, the one list).
+CONSOLIDATED = {r["source_file"] for r in json.loads((ROOT / "config/host_consolidations.json").read_text(encoding="utf-8"))["routes"]}
+CONSOLIDATED_REASON = "Consolidated onto billionairehighperformancecoach.com and 301'd at the edge (config/host_consolidations.json)"
+EXCLUDED |= CONSOLIDATED
 EXCLUDED_PREFIXES = ("templates/", "artifacts/", "fixtures/", "node_modules/", ".git/", "answers/phase4/", "use-cases/phase4/", "vs/phase4/", "glossary/phase4/", "methods/phase4/", "brand-defense/", "platforms/phase4/")
 # Not pages of the shared sites (config/index_exclusions.json, the one list):
 # aplayermode/ is indexable on aplayermode.com only, so it must never enter the
@@ -478,17 +483,6 @@ PRODUCT_ROOT_PATHS = {
     "chatgpt-as-accountability-partner-for-solopreneurs.html",
     "ai-vs-human-executive-coach-pros-cons-for-entrepreneurs.html",
 }
-SPRY_ROOT_PATHS = {
-    "arbitration-engine.html",
-    "productivity-apps-more-work-than-actual-work.html",
-    "ai-system-to-manage-my-entire-life.html",
-    "productivity-system-that-sticks-long-term.html",
-    "how-to-stay-consistent-without-relying-on-motivation.html",
-    "five-minute-procrastination-loop-destroying-income.html",
-    "productive-morning-routine-immediately-after-waking-up.html",
-    "how-to-finish-projects-at-95-percent-complete.html",
-    "entrepreneurs-daily-tasks-eliminated-with-automation.html",
-}
 
 
 def load_manual_pages() -> dict[str, dict]:
@@ -529,17 +523,33 @@ def load_manual_redirects() -> dict[str, dict]:
 
 MANUAL_REDIRECTS = load_manual_redirects()
 
+# The canonical URL comes from the ONE route-ownership definition,
+# scripts/lib/dual_domain_policy.cjs, through scripts/lib/canonical_url_cli.cjs -
+# the same computation repair_dual_domain_metadata.js stamps on every page. This
+# used to be a host list of its own that defaulted to
+# billionairehighperformancecoach.com while the policy defaults to
+# spryexecutiveos.com; by 26 Oct 2026 that had put a bhpc title, a bhpc
+# citable_pages row and a bhpc sitemap entry on /ai-vs-human-coaching/ and
+# /what-should-i-work-on/too-many-tasks-what-now/, which carry a spry canonical.
+# Guarded by validate:sitemap-canonical-on-own-host.
+_POLICY_CANONICALS: dict[str, str] = {}
+
+
+def _policy_canonicals(paths: list[str]) -> dict[str, str]:
+    import subprocess
+    root = Path(__file__).resolve().parents[2]
+    res = subprocess.run(["node", str(root / "scripts/lib/canonical_url_cli.cjs")], input=json.dumps(paths),
+                         capture_output=True, text=True, cwd=str(root), check=True)
+    return json.loads(res.stdout)
+
+
 def canonical_for(path: str) -> str:
     if path in MANUAL_PAGES:
         return f"https://{MANUAL_PAGES[path]['domain']}" + route_for(path)
-    spry_prefixes=("insights/","continuity-collapse-pattern/","how-to-stay-consistent/","atlas.html","pillars/","topics/","models/","answers/","clusters/","whitepapers/","coverage/","reports/","ai-execution-atlas/")
-    if path.startswith("comparisons/bhpc-vs-"):
-        host="https://billionairehighperformancecoach.com/"
-    elif path.startswith("comparisons/") or path in SPRY_ROOT_PATHS or path.startswith(spry_prefixes):
-        host="https://spryexecutiveos.com/"
-    else:
-        host="https://billionairehighperformancecoach.com/"
-    return host.rstrip("/") + route_for(path)
+    if path not in _POLICY_CANONICALS:
+        batch = [path] if _POLICY_CANONICALS else sorted({path, *PRIORITY, *NEW_PAGES, *MANUAL_PAGES})
+        _POLICY_CANONICALS.update(_policy_canonicals(batch))
+    return _POLICY_CANONICALS[path]
 
 def ensure_meta(soup: BeautifulSoup, h1: str, definition: str, canonical: str):
     head=soup.head or soup
@@ -1436,7 +1446,7 @@ def build_registries(records: list[dict]):
         owner = canonical_owner_by_path.get(path, {})
         canonical_query = owner.get("query") or spec["h1"]
         bypath[path]={"path":path,"canonical_url":canonical_for(path),"canonical_domain":re.sub(r"^https?://([^/]+).*$",r"\1",canonical_for(path)),"query":canonical_query,"framework":spec["framework"],"extraction_type":owner.get("intent_class") or spec["type"],"schema_type":"HowTo" if (owner.get("intent_class") or spec["type"])=="howto" else "DefinedTerm","status":"ACTIVE","definition":spec["definition"],"priority":True,"canonical_owner_metadata":owner}
-    exclusions=[{"path":x,"status":"EXCLUDED","exclusion_reason":(NEVER_CITABLE_REASON if x in NEVER_CITABLE else "Owner-approved exclusion or non-public operator surface")} for x in sorted(EXCLUDED)]
+    exclusions=[{"path":x,"status":"EXCLUDED","exclusion_reason":(NEVER_CITABLE_REASON if x in NEVER_CITABLE else CONSOLIDATED_REASON if x in CONSOLIDATED else "Owner-approved exclusion or non-public operator surface")} for x in sorted(EXCLUDED)]
     pages=sorted(bypath.values(),key=lambda x:x["path"])+exclusions
     (d/"citable_pages.json").write_text(json.dumps({"version":"1.0","generated_at":TODAY,"pages":pages},indent=2,ensure_ascii=False)+"\n")
     # query grouping

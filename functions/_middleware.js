@@ -13,6 +13,7 @@
 import { serveWithEdgeCache, isPagePath } from './_lib/edge_cache.js';
 import { canonicalHostResponse } from './_lib/canonical_host.js';
 import { routeOwnerResponse } from './_lib/route_owner_host.js';
+import { consolidationResponse } from './_lib/host_consolidation.js';
 import { BUILD_ID } from './_lib/build_id.js';
 
 export async function onRequest(context) {
@@ -24,6 +25,10 @@ export async function onRequest(context) {
   // Then the route's owner host, so a page served on both hosts answers 200 on
   // only one. After the host rule (so www. is already an apex) and before the
   // cache (a redirect is never worth an entry). See functions/_lib/route_owner_host.js.
+  // Routes retired onto a bhpc page (functions/_lib/host_consolidation.js), before
+  // the owner rule so a consolidated route takes one hop, not two.
+  const consolidated = consolidationResponse(request);
+  if (consolidated) return consolidated;
   const owner = routeOwnerResponse(request);
   if (owner) return owner;
   if (!isPagePath(new URL(request.url).pathname)) return context.next();

@@ -35,6 +35,8 @@ head, a tag or a schema node, fix it in the one definition and let the repair ap
 | The publisher Organization node | `scripts/lib/organization_node.cjs` | `repair:organization-node` | `validate:organization-node` |
 | One canonical host per domain | `functions/_lib/canonical_host.js` | — (edge) | `validate:canonical-host` |
 | One 200 per route across hosts | `functions/_lib/route_owner_host.js` | `build:route-owner-table` | `validate:route-owner-host` |
+| Routes retired onto a bhpc page | `functions/_lib/host_consolidation.js` | — (edge) | `validate:host-consolidation` |
+| A sitemap page's canonical is on its own host | `dual_domain_policy.cjs`, read by Python through `scripts/lib/canonical_url_cli.cjs` | `repair:dual-domain-metadata` | `validate:sitemap-canonical-on-own-host` |
 
 Never edit `dist/` or generated page output to fix a page: find the writer above, change it, and
 rebuild. A fix made in built output is gone on the next build.
