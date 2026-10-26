@@ -8806,6 +8806,66 @@
       "not_applicable_reason": null
     },
     {
+      "validation_id": "VAL-TITLE-BRAND-MATCHES-HOST",
+      "status": "ADMITTED",
+      "name": "validate:title-brand-matches-host",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "25 Oct 2026: apply_repairs.mjs (snippet_alignment) and build_navigation_structure.mjs hub titles hard-coded '| Spry Executive OS', putting the sibling site's name on 34 billionairehighperformancecoach.com hub pages. Every indexable title that ends in a site name must name the host the page is published on (host_brand.cjs). Zero pages examined or zero branded titles fails.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:title-brand-matches-host",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-title-brand-matches-host/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-26",
+      "matrix_ids": [
+        "MX-TITLE-BRAND-MATCHES-HOST"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-BUILD-INPUT-HASH-COVERS-TREE",
+      "status": "ADMITTED",
+      "name": "validate:build-input-hash-covers-tree",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "PR #147, 25 Oct 2026: Validate Repo's build cache key left out artifacts/ and reports/, so an artifacts-only commit was a cache HIT and the cached tar put the previous commit's artifacts/ back over the checkout; validate:python-dependency-contract failed on bytes never committed. Every tracked path outside .github must be in the key; an artifacts-only change must move it, a workflow-only change must not.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:build-input-hash-covers-tree",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-build-input-hash-covers-tree/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-26",
+      "matrix_ids": [
+        "MX-BUILD-INPUT-HASH-COVERS-TREE"
+      ],
+      "not_applicable_reason": null
+    },
+    {
       "validation_id": "SOCIAL-TAGS",
       "status": "ADMITTED",
       "name": "validate:social-tags",
@@ -8959,6 +9019,6 @@
       "not_applicable_reason": null
     }
   ],
-  "record_count": 284,
+  "record_count": 283,
   "generated_at": "2026-08-08T23:30:00Z"
 }

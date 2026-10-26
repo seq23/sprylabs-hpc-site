@@ -6,13 +6,32 @@
 # `git ls-files -s` lists mode + blob sha + path for every tracked file, so the
 # key is a true content hash of the checked-out commit, not a timestamp.
 #
-# Deliberately over-broad: it covers the whole tracked tree except the outputs
-# and receipts the build itself writes, and except the workflow files, which no
-# producer reads. A key that is too broad only costs a rebuild; a key that is too
-# narrow ships a stale tree, which is a correctness bug.
+# Deliberately over-broad: it covers EVERY tracked file the cached tree can put
+# back over a checkout. unpack_build_tree.sh extracts the whole tar except
+# .github, so every tracked path outside .github is in the key; only the workflow
+# files are left out (no producer reads them, and unpack never restores them).
+# A key that is too broad only costs a rebuild; a key that is too narrow ships a
+# stale tree, which is a correctness bug.
+#
+# It used to leave out artifacts/, reports/, logs/, test-results/,
+# playwright-report/, releases/ and .build/ as "outputs the build writes". But
+# committed files live there too - validators read artifacts/ as committed
+# input. PR #147, 25 Oct 2026: commit 283765cc1 changed only
+# artifacts/validation/python-dependency-contract.json, the key did not move, the
+# build was a cache HIT, the tar put the PREVIOUS commit's copy back over the
+# checkout, and validate:python-dependency-contract failed on bytes the commit
+# did not contain. Guarded by validate:build-input-hash-covers-tree
+# (.github/scripts/test_build_input_hash.sh).
+#
+# BUILD_INPUT_HASH_LIST=1 prints the hashed paths instead, so the guard can
+# prove coverage against `git ls-files` rather than trust this comment.
 set -euo pipefail
 
-listing="$(git ls-files -s | grep -Ev '\s(artifacts|reports|logs|test-results|playwright-report|releases|\.build|\.github/workflows)/' | sort)"
+listing="$(git ls-files -s | grep -Ev '\s\.github/workflows/' | sort)"
+if [ "${BUILD_INPUT_HASH_LIST:-}" = "1" ]; then
+  printf '%s\n' "$listing" | cut -f2-
+  exit 0
+fi
 count="$(printf '%s\n' "$listing" | grep -c . || true)"
 
 if [ "${count:-0}" -lt 100 ]; then

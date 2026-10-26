@@ -2749,11 +2749,31 @@
       "status": "ADMITTED"
     },
     {
+      "matrix_id": "MX-TITLE-BRAND-MATCHES-HOST",
+      "validation_id": "VAL-TITLE-BRAND-MATCHES-HOST",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:title-brand-matches-host",
+      "order": 266,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-BUILD-INPUT-HASH-COVERS-TREE",
+      "validation_id": "VAL-BUILD-INPUT-HASH-COVERS-TREE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:build-input-hash-covers-tree",
+      "order": 267,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
       "matrix_id": "MX-SOCIAL-TAGS",
       "validation_id": "SOCIAL-TAGS",
       "lane": "validation-control-plane",
       "command": "npm run validate:social-tags",
-      "order": 266,
+      "order": 268,
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
@@ -2763,7 +2783,7 @@
       "validation_id": "LLMS-TXT-SHAPE",
       "lane": "validation-control-plane",
       "command": "npm run validate:llms-txt-shape",
-      "order": 267,
+      "order": 269,
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
@@ -2773,7 +2793,7 @@
       "validation_id": "CANONICAL-HOST",
       "lane": "validation-control-plane",
       "command": "npm run validate:canonical-host",
-      "order": 268,
+      "order": 270,
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
@@ -2783,7 +2803,7 @@
       "validation_id": "VAL-WF-WEEKLY-OUTCOME-REPORT",
       "lane": "validation-control-plane",
       "command": ".github/workflows/weekly-outcome-report.yml",
-      "order": 269,
+      "order": 271,
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
@@ -2793,13 +2813,13 @@
       "validation_id": "WEEKLY-OUTCOME-REPORT",
       "lane": "validation-control-plane",
       "command": "npm run validate:weekly-outcome-report",
-      "order": 270,
+      "order": 272,
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
     }
   ],
-  "entry_count": 277,
+  "entry_count": 276,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2855,23 +2875,15 @@
           "command": "npm run validate:extraction-surface-guard:check"
         },
         {
-          "id": "validate:llms-txt-shape",
-          "command": "npm run validate:llms-txt-shape"
-        },
-        {
-          "id": "validate:social-tags",
+          "id": "SOCIAL-TAGS",
           "command": "npm run validate:social-tags"
         },
         {
-          "id": "validate:search-snippet-bounds",
-          "command": "npm run validate:search-snippet-bounds"
+          "id": "LLMS-TXT-SHAPE",
+          "command": "npm run validate:llms-txt-shape"
         },
         {
-          "id": "validate:product-offers",
-          "command": "npm run validate:product-offers"
-        },
-        {
-          "id": "validate:canonical-host",
+          "id": "CANONICAL-HOST",
           "command": "npm run validate:canonical-host"
         },
         {
@@ -3523,16 +3535,12 @@
           "command": "npm run validate:edge-cache"
         },
         {
-          "id": "SOCIAL-TAGS",
-          "command": "npm run validate:social-tags"
+          "id": "VAL-TITLE-BRAND-MATCHES-HOST",
+          "command": "npm run validate:title-brand-matches-host"
         },
         {
-          "id": "LLMS-TXT-SHAPE",
-          "command": "npm run validate:llms-txt-shape"
-        },
-        {
-          "id": "CANONICAL-HOST",
-          "command": "npm run validate:canonical-host"
+          "id": "VAL-BUILD-INPUT-HASH-COVERS-TREE",
+          "command": "npm run validate:build-input-hash-covers-tree"
         }
       ]
     },
@@ -3731,6 +3739,14 @@
         {
           "id": "VAL-GENERATED-DIR-SWEEP",
           "command": "npm run validate:generated-dir-sweep"
+        },
+        {
+          "id": "VAL-TITLE-BRAND-MATCHES-HOST",
+          "command": "npm run validate:title-brand-matches-host"
+        },
+        {
+          "id": "VAL-BUILD-INPUT-HASH-COVERS-TREE",
+          "command": "npm run validate:build-input-hash-covers-tree"
         }
       ]
     },
