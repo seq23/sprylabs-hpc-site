@@ -173,7 +173,9 @@
       "repo_lane": "distribution",
       "current_status": "keep_admitted",
       "reason": "aplayermode.com is served by a dedicated Worker, not by the Pages project, and nothing deployed it: the About page, the real 404 and the route table that serves them landed on main 25 Oct 2026 and were still unreachable on 26 Oct, failing Search Readiness a5, a9, b1 and c2 for one reason. This lane deploys workers/aplayermode-com on main and proves the result on the live apex with check:aplayermode-live, which also had no caller. It reads the repository and deploys; it never writes the repository.",
-      "allowed_runtime_mutations": [],
+      "allowed_runtime_mutations": [
+        "artifacts/validation/aplayermode-worker-deploy.json"
+      ],
       "forbidden_runtime_mutations": [
         ".github/**",
         "package.json",
@@ -187,7 +189,9 @@
         "site/public/**",
         "dist/**"
       ],
-      "required_artifacts": [],
+      "required_artifacts": [
+        "artifacts/validation/aplayermode-worker-deploy.json"
+      ],
       "validation_owner": "workflow inventory, validate:aplayermode-landing (offline twin), check:aplayermode-live (post-deploy proof)"
     },
     {

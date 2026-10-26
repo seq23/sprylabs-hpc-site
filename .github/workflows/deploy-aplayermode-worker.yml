@@ -34,6 +34,9 @@ on:
       - 'scripts/diagnostics/check_aplayermode_live.mjs'
       - '.github/workflows/deploy-aplayermode-worker.yml'
 
+env:
+  NODE_OPTIONS: --max-old-space-size=3072
+
 permissions:
   contents: read
 
@@ -55,6 +58,9 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 24
+          cache: npm
+
+      - run: npm ci --ignore-scripts
 
       - name: The deploy credential must be present and able to write Workers
         # Checked read-only and BEFORE the deploy, so a token that cannot deploy is a
@@ -82,6 +88,24 @@ jobs:
 
       - name: Deploy the aplayermode.com Worker
         run: npx --yes wrangler@4 deploy --config workers/aplayermode-com/wrangler.jsonc
+
+      - name: Record that the deploy happened
+        # Rule 0: this lane may not exit 0 having done nothing. The receipt names the
+        # commit that was deployed, so an undeployed Worker is visible as a missing or
+        # stale receipt rather than as a live site nobody compared to the repository.
+        env:
+          DEPLOYED_COMMIT: ${{ github.sha }}
+          DEPLOY_RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          node scripts/distribution/write_aplayermode_deploy_receipt.mjs
+
+      - name: Publish the deploy receipt
+        uses: actions/upload-artifact@v7
+        with:
+          name: aplayermode-worker-deploy-${{ github.run_id }}
+          if-no-files-found: error
+          path: artifacts/validation/aplayermode-worker-deploy.json
 
       - name: Prove it on the live apex
         # The deploy returns before every edge has the new version, so the proof is
