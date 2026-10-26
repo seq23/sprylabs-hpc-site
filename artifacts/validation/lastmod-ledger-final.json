@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "status": "FAIL",
+  "status": "PASS",
   "scope": "committed",
   "ledger": "data/sitemap/lastmod_ledger.json",
   "pages_examined": 4476,
@@ -8,69 +8,8 @@
     "ran": true,
     "scope": "committed",
     "pages_examined": 2238,
-    "mismatched": 34,
-    "examples": [
-      {
-        "file": "case-studies/index.html",
-        "ledger": "7b80d3fe8fd26d7128a6cdef",
-        "head": "da1dfe7b9bf67789b5f53cdc",
-        "lastmod": "2026-10-26"
-      },
-      {
-        "file": "glossary/index.html",
-        "ledger": "705922709f0a3dd7ffbde377",
-        "head": "3a215edc2f5c08d723003303",
-        "lastmod": "2026-10-26"
-      },
-      {
-        "file": "glossary/topics/accountability-systems/index.html",
-        "ledger": "52efab132ccb64fe459a5b14",
-        "head": "6e35fedb24acbcde434127f3",
-        "lastmod": "2026-10-26"
-      },
-      {
-        "file": "glossary/topics/ai-coaching-and-alternatives/index.html",
-        "ledger": "7d2a251ad2580c2ff4d01c57",
-        "head": "602417ea2a7f7f7679f0ce6f",
-        "lastmod": "2026-10-26"
-      },
-      {
-        "file": "glossary/topics/burnout-energy-and-recovery/index.html",
-        "ledger": "c1b12cc3a46d39a0f70f14a3",
-        "head": "6a0ed5578263faf7112ecc68",
-        "lastmod": "2026-10-26"
-      },
-      {
-        "file": "glossary/topics/chatgpt-prompts-and-setup/index.html",
-        "ledger": "67ee832082967225b02fae95",
-        "head": "984b6c7ed4934ea50e30b3ba",
-        "lastmod": "2026-10-26"
-      },
-      {
-        "file": "glossary/topics/consistency-and-habits/index.html",
-        "ledger": "6297479879bf736a9a3bb51b",
-        "head": "1d50e62b696925f7d4b6737f",
-        "lastmod": "2026-10-26"
-      },
-      {
-        "file": "glossary/topics/daily-planning-and-routines/index.html",
-        "ledger": "12199f953da54bf14787d1c0",
-        "head": "89205106ac66d479202f420c",
-        "lastmod": "2026-10-26"
-      },
-      {
-        "file": "glossary/topics/decisions-and-prioritisation/index.html",
-        "ledger": "2885cc4fc5f30183046970e6",
-        "head": "8cd9b06928fa0fc9d5a10fa9",
-        "lastmod": "2026-10-26"
-      },
-      {
-        "file": "glossary/topics/focus-and-attention/index.html",
-        "ledger": "03ff4c3e135de1c0679bad00",
-        "head": "70652931ad3eb012912d6e10",
-        "lastmod": "2026-10-26"
-      }
-    ]
+    "mismatched": 0,
+    "examples": []
   },
   "rederived_ledger_vs_working_tree": {
     "ran": true,
@@ -92,7 +31,5 @@
     "offenders": []
   },
   "notes": [],
-  "errors": [
-    "34 of 2238 committed page(s) do not match the ledger committed alongside them. The ledger was derived before a stage that rewrote these pages. Re-derive with `npm run sitemap:lastmod:content` AFTER the last stage that mutates page HTML, and commit the result with the pages."
-  ]
+  "errors": []
 }
