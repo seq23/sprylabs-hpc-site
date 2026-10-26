@@ -2,7 +2,7 @@
   "schema_version": "2.0",
   "repo": "seq23/sprylabs-hpc-site",
   "generated_at": "2026-07-10T18:30:00Z",
-  "workflow_count": 10,
+  "workflow_count": 12,
   "topology": "full_safe_autonomy_eight_workflow_surface",
   "workflows": [
     {
@@ -161,6 +161,38 @@
         "reports/**"
       ],
       "validation_owner": "simplified workflow topology validators"
+    },
+    {
+      "path": ".github/workflows/deploy-aplayermode-worker.yml",
+      "name": "Deploy aplayermode.com Worker",
+      "trigger": [
+        "workflow_dispatch",
+        "push"
+      ],
+      "primary_command": "npx wrangler deploy --config workers/aplayermode-com/wrangler.jsonc",
+      "repo_lane": "distribution",
+      "current_status": "keep_admitted",
+      "reason": "aplayermode.com is served by a dedicated Worker, not by the Pages project, and nothing deployed it: the About page, the real 404 and the route table that serves them landed on main 25 Oct 2026 and were still unreachable on 26 Oct, failing Search Readiness a5, a9, b1 and c2 for one reason. This lane deploys workers/aplayermode-com on main and proves the result on the live apex with check:aplayermode-live, which also had no caller. It reads the repository and deploys; it never writes the repository.",
+      "allowed_runtime_mutations": [
+        "artifacts/validation/aplayermode-worker-deploy.json"
+      ],
+      "forbidden_runtime_mutations": [
+        ".github/**",
+        "package.json",
+        "package-lock.json",
+        "scripts/**",
+        "docs/**",
+        "_repo*.json",
+        "_validation_registry.json",
+        "_repo_validation_matrix.json",
+        "data/**",
+        "site/public/**",
+        "dist/**"
+      ],
+      "required_artifacts": [
+        "artifacts/validation/aplayermode-worker-deploy.json"
+      ],
+      "validation_owner": "workflow inventory, validate:aplayermode-landing (offline twin), check:aplayermode-live (post-deploy proof)"
     },
     {
       "path": ".github/workflows/deploy-distribution.yml",

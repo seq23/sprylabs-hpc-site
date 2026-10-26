@@ -914,6 +914,29 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
     if (!/Spry Labs/.test(ab)) fail('the About page must name the publisher, Spry Labs');
     if (/<meta[^>]*noindex/i.test(ab)) fail('the About page must be indexable');
   }
+  // route() names the committed FILE; originPath() is the URL that file is REQUESTED AT on the
+  // Pages origin. Pages serves an .html file extensionless and 301s `/x.html` -> `/x`, and this
+  // Worker answers 502 rather than follow an origin redirect - so an origin fetch that keeps the
+  // .html suffix made /about/ and every 404 a 502 (landed 25 Oct 2026, unreachable until 26 Oct).
+  // Checked here because no offline validator can see the live origin.
+  if (typeof w.originPath !== 'function') fail('the Worker must export originPath(), the one definition of the origin request path');
+  else {
+    for (const f of [w.ABOUT_FILE, w.NOT_FOUND_FILE]) {
+      if (!f.endsWith('.html')) continue;
+      const want = f.slice(0, -'.html'.length);
+      if (w.originPath(f) !== want) fail(`originPath(${f}) must be ${want}, got ${w.originPath(f)}`);
+    }
+    for (const keep of ['/aplayermode/', '/aplayermode/img/og.png', w.QUEUE_PATH]) {
+      if (w.originPath(keep) !== keep) fail(`originPath(${keep}) must be unchanged, got ${w.originPath(keep)}`);
+    }
+    // Every origin fetch must go through it. A new `ORIGIN + <path>` added without originPath()
+    // reintroduces the 502 silently, so the source itself is read.
+    const src = read('workers/aplayermode-com/src/index.js');
+    for (const bare of src.match(/ORIGIN \+ (?!originPath\()[A-Za-z_$][\w.$]*/g) || []) {
+      if (bare.endsWith('BUILD_ID_PATH')) continue; // build-id.txt is not an .html page
+      fail(`${bare} fetches the origin without originPath(); an .html upstream 301s there and is answered 502`);
+    }
+  }
   // The home page links it, or no engine finds the author (Search Readiness c6).
   if (!/href="\/about\/"/.test(html)) fail(`${PAGE} does not link the About page (/about/)`);
   // IndexNow (16 Oct 2026, Search Console: aplayermode.com had no key). The domain's

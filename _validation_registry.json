@@ -9137,8 +9137,40 @@
         "MX-ROUTE-OWNER-HOST"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-WF-APLAYERMODE-WORKER-DEPLOY",
+      "status": "ADMITTED",
+      "name": "deploy-aplayermode-worker.yml",
+      "check_type": "workflow",
+      "owning_lane": "distribution",
+      "risk_prevented": "aplayermode.com is served by a dedicated Worker (workers/aplayermode-com), not by the Pages project, and nothing deployed it. The About page, the real 404 and the route() table that serves them landed on main 25 Oct 2026 and were still unreachable on 26 Oct: /about/ and every made-up path 301'd home, failing Search Readiness a5, a9, b1 and c2 at once. A soft 404 also hid every dead inbound link and every typo from Search Console.",
+      "existing_coverage_gap": "validate:aplayermode-landing proves the Worker's route table offline on every pull request, but nothing put that proven code in front of a visitor, and check:aplayermode-live - the post-deploy proof - had no caller anywhere in the repository. Pages self-deploys on green main; this Worker needed a human to remember npx wrangler deploy.",
+      "scope": [
+        "github-actions",
+        "cloudflare-workers",
+        "aplayermode.com"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/deploy-aplayermode-worker.yml",
+      "implementation_path": ".github/workflows/deploy-aplayermode-worker.yml",
+      "environment": "ci",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/validation/aplayermode-worker-deploy.json plus the check:aplayermode-live result in the run log",
+      "runtime_budget_seconds": 720,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted as the deploy lane for the aplayermode.com Worker. It verifies its Cloudflare credential read-only first (a token without Workers Scripts:Edit is a named stop naming the permission to add), deploys, writes a receipt naming the deployed commit, then proves the live apex with check:aplayermode-live - so a deploy that lands the wrong thing fails the workflow instead of going unnoticed.",
+      "decision_date": "2026-10-26",
+      "matrix_ids": [
+        "MX-WF-APLAYERMODE-WORKER-DEPLOY"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 292,
+  "record_count": 293,
   "generated_at": "2026-08-08T23:30:00Z"
 }

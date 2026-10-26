@@ -109,6 +109,16 @@ export const NOT_FOUND_FILE = '/aplayermode/404.html';
 // because a real page of that name exists on billionairehighperformancecoach.com.
 export const REDIRECT_HOME = Object.freeze(['/download', '/guides', '/sitemap-bhpc.xml', '/llms-full.txt', '/index.xml']);
 
+// route() names the COMMITTED FILE it serves (so the validator can check the file
+// exists); this is the path that file is REQUESTED AT on the origin. Cloudflare
+// Pages serves an .html file at its extensionless URL and 301s `/x.html` -> `/x`,
+// and this Worker refuses to follow an origin redirect - so fetching the .html
+// path verbatim answered 502 for /about/ and for every 404 (Search Readiness a5,
+// a9, b1, c2; the pages landed 25 Oct 2026 and were unreachable until 26 Oct).
+// One definition, used at every origin fetch below and read by
+// scripts/validators/validate_aplayermode_landing.mjs.
+export const originPath = (file) => (file.endsWith('.html') ? file.slice(0, -'.html'.length) : file);
+
 export const FEED_PATH = '/pinfeed.xml';
 export const QUEUE_PATH = '/aplayermode/data/pinterest/queue.json';
 export const FEED_TYPE = 'application/rss+xml; charset=utf-8';
@@ -148,7 +158,7 @@ export function pinVisitPoint(url, userAgent) {
 
 /** The apex's own 404 page, answered with a 404 status (never a 200, never a redirect home). */
 async function serveNotFound(request, upstreamPath) {
-  const upstream = await fetch(ORIGIN + upstreamPath, { headers: { accept: 'text/html' }, redirect: 'manual', cf: { cacheTtl: 300 } });
+  const upstream = await fetch(ORIGIN + originPath(upstreamPath), { headers: { accept: 'text/html' }, redirect: 'manual', cf: { cacheTtl: 300 } });
   const html = upstream.status === 200 ? await upstream.text() : '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Not found | A Player Mode</title></head><body><h1>Not found</h1><p><a href="/">Go to A Player Mode</a></p></body></html>';
   return new Response(request.method === 'HEAD' ? null : html, {
     status: 404,
@@ -157,7 +167,7 @@ async function serveNotFound(request, upstreamPath) {
 }
 
 async function serveFeed(request, upstreamPath) {
-  const upstream = await fetch(ORIGIN + upstreamPath, { headers: { accept: 'application/json' }, redirect: 'manual', cf: { cacheTtl: 300 } });
+  const upstream = await fetch(ORIGIN + originPath(upstreamPath), { headers: { accept: 'application/json' }, redirect: 'manual', cf: { cacheTtl: 300 } });
   if (upstream.status !== 200) return new Response(`pin queue unavailable (origin ${upstream.status})`, { status: 502 });
   const xml = buildPinfeedXml(await upstream.json(), chicagoDate(new Date()));
   return new Response(request.method === 'HEAD' ? null : xml, { status: 200, headers: { 'content-type': FEED_TYPE, 'cache-control': 'public, max-age=900' } });
@@ -208,7 +218,7 @@ export default {
     const fetchOrigin = async () => {
       const headers = new Headers();
       for (const h of FORWARD_HEADERS) { const v = request.headers.get(h); if (v) headers.set(h, v); }
-      const upstream = await fetch(ORIGIN + r.upstream + url.search, { method: request.method, headers, redirect: 'manual' });
+      const upstream = await fetch(ORIGIN + originPath(r.upstream) + url.search, { method: request.method, headers, redirect: 'manual' });
       if (upstream.status >= 300 && upstream.status < 400 && upstream.status !== 304) {
         return new Response(`origin redirected ${r.upstream} (status ${upstream.status}); refusing to follow`, { status: 502 });
       }

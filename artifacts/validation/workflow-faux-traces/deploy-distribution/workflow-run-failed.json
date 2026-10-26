@@ -16,7 +16,11 @@
     "Verify attestation and deploy IndexNow distribution",
     "Submit per-domain Search Console sitemaps and inspect priority URLs when configured",
     "Publish Search Console measurement evidence",
-    "Fail the run if Search Console ingestion crashed"
+    "Fail the run if Search Console ingestion crashed",
+    "actions/checkout@v7",
+    "actions/setup-node@v7",
+    "live-check:step-3",
+    "Crawl files, icons, og image, schema, redirects and the IndexNow key, live"
   ],
   "assertions": [
     "exact validated artifact identity required",
