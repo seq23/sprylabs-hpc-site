@@ -3,6 +3,10 @@ import fs from 'node:fs';
 import crypto from 'node:crypto';
 import {readJson,writeJson,stamp,ownerMap,safePublicFile} from './lib/core.mjs';
 import {esc,repairMarker,repairBlockHtml,insertRepairBlock} from './lib/repair_block.mjs';
+import {createRequire} from 'node:module';
+// Each host carries its own name: a bhpc page gets "| Billionaire High Performance Coach", never
+// the sibling site's. Guarded by validate:title-brand-matches-host.
+const {brandForRoute}=createRequire(import.meta.url)('../lib/host_brand.cjs');
 const apply=process.argv.includes('--write')||process.env.SEARCH_SELF_HEAL_WRITE==='1';const r=readJson('data/search_intelligence/repair_candidates.json',{candidates:[]});const owners=ownerMap();const ledger=readJson('data/search_intelligence/repair_ledger.json',{schema_version:'1.1',repairs:[]});const existing=new Set((ledger.repairs||[]).map(x=>x.repair_id));const receipts=[];const sha=x=>crypto.createHash('sha256').update(x).digest('hex');
 // A ledger entry used to retire a repair_id permanently. That made the loop one-shot:
 // once applied, a repair was never re-attempted even if the page later lost the block,
@@ -13,8 +17,8 @@ const apply=process.argv.includes('--write')||process.env.SEARCH_SELF_HEAL_WRITE
 const blockPresent=(c)=>{const f=safePublicFile(c.owned_route);return fs.existsSync(f.path)&&fs.readFileSync(f.path,'utf8').includes(repairMarker(c.repair_id));};
 for(const c of r.candidates||[]){if(existing.has(c.repair_id)&&blockPresent(c))continue;const f=safePublicFile(c.owned_route);const own=owners.get(f.rel);if(own?.owner==='paid_agent'||own?.protected===true){receipts.push({...c,status:'BLOCKED_AGENT_OWNED'});continue}if(!fs.existsSync(f.path)){receipts.push({...c,status:'BLOCKED_MISSING_PAGE'});continue}const before=fs.readFileSync(f.path,'utf8');let after=before;
   if(c.repair_type==='snippet_alignment'){
-    const oldTitle=(after.match(/<title[^>]*>([\s\S]*?)<\/title>/i)||[,''])[1];const queryTitle=`${c.query} | Spry Executive OS`;if(oldTitle&&!oldTitle.toLowerCase().includes(String(c.query).toLowerCase()))after=after.replace(/<title[^>]*>[\s\S]*?<\/title>/i,`<title>${esc(queryTitle.slice(0,90))}</title>`);
-    const newDesc=`${c.query}: practical Spry Executive OS guidance, decision criteria, and next actions for readers evaluating this problem.`.slice(0,158);after=after.replace(/<meta\b([^>]*?)name=["']description["']([^>]*?)content=["'][^"']*["']([^>]*?)>/i,`<meta$1name="description"$2content="${esc(newDesc)}"$3>`);
+    const oldTitle=(after.match(/<title[^>]*>([\s\S]*?)<\/title>/i)||[,''])[1];const brand=brandForRoute(c.owned_route);const queryTitle=`${c.query} | ${brand}`;if(oldTitle&&!oldTitle.toLowerCase().includes(String(c.query).toLowerCase()))after=after.replace(/<title[^>]*>[\s\S]*?<\/title>/i,`<title>${esc(queryTitle.slice(0,90))}</title>`);
+    const newDesc=`${c.query}: practical ${brand} guidance, decision criteria, and next actions for readers evaluating this problem.`.slice(0,158);after=after.replace(/<meta\b([^>]*?)name=["']description["']([^>]*?)content=["'][^"']*["']([^>]*?)>/i,`<meta$1name="description"$2content="${esc(newDesc)}"$3>`);
   }
   if(!after.includes(repairMarker(c.repair_id))){
     const block=repairBlockHtml(c);after=insertRepairBlock(after,block);

@@ -18,9 +18,12 @@
 // wrapper cannot use that script's key; it needs a key that sees the working
 // tree, not the index.
 //
-// The exclude list is kept identical to build_input_hash.sh's on purpose —
-// same directories are pure build receipts/logs, never a generator input, in
-// both contexts. If that list changes there, change it here too.
+// This exclude list is about GENERATOR inputs: restore_build_cache.mjs writes
+// back only the files a real build:all changed, so a committed file under
+// artifacts/ the build never touches is not overwritten by a local hit.
+// build_input_hash.sh no longer mirrors it (25 Oct 2026, PR #147): the CI tar is
+// the WHOLE tree and is extracted over the checkout, so that key must cover
+// every tracked path outside .github, artifacts/ included.
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
