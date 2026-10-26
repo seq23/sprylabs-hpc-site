@@ -24,6 +24,7 @@ import { createRequire } from 'node:module';
 const requireCjs = createRequire(import.meta.url);
 const ROOT = process.cwd();
 const { routeFor, hostFor } = requireCjs(path.join(ROOT, 'scripts/lib/dual_domain_policy.cjs'));
+const { brandForRoute } = requireCjs(path.join(ROOT, 'scripts/lib/host_brand.cjs'));
 const { serializeSchema, mainEntityOfPage, SCHEMA_SCRIPT_RE } = requireCjs(path.join(ROOT, 'scripts/lib/citation_page_schema.cjs'));
 const snippetBounds = requireCjs(path.join(ROOT, 'scripts/lib/search_snippet_bounds.cjs'));
 
@@ -260,8 +261,10 @@ function hubDescription(prefix, examples, blurb) {
 function midSentence(name) {
   return String(name).replace(/^([A-Z])([a-z]+\b)/, (_m, a, b) => a.toLowerCase() + b);
 }
-function hubTitle(parts) {
-  const withBrand = `${parts.join(' | ')} | Spry Executive OS`;
+// The suffix is the hub's own host's name (scripts/lib/host_brand.cjs): a
+// billionairehighperformancecoach.com hub said "| Spry Executive OS" until 25 Oct 2026.
+function hubTitle(parts, route) {
+  const withBrand = `${parts.join(' | ')} | ${brandForRoute(route)}`;
   return withBrand.length <= snippetBounds.TITLE_MAX ? withBrand : parts.join(' | ');
 }
 
@@ -302,7 +305,7 @@ for (const [section, topics] of bySection) {
         hubs.push({
           rel, route, host: hostFor(route), kind: 'topic',
           h1: `${label} in ${sectionName.toLowerCase()}`,
-          title: hubTitle([label, sectionName]),
+          title: hubTitle([label, sectionName], route),
           description: hubDescription(
             `${sectionName} on ${midSentence(topic.name)}${chunks.length > 1 ? ` (part ${idx + 1} of ${chunks.length})` : ''}: ${chunk.length} ${chunk.length === 1 ? 'page' : 'pages'}`,
             chunk.map((pg) => pg.h1),
@@ -323,7 +326,7 @@ for (const [section, topics] of bySection) {
   hubs.push({
     rel: sectionRel, route: sectionRoute, host: sectionHost, kind: 'section',
     h1: `${sectionName}: the full index`,
-    title: hubTitle([`${sectionName} index`]),
+    title: hubTitle([`${sectionName} index`], sectionRoute),
     description: hubDescription(
       `${(SECTION_BLURB.get(section) || sectionName).replace(/\.$/, '')}: ${total} pages${total > MAX_LINKS_PER_HUB ? `, grouped into ${topics.size} topics` : ''}`,
       total > MAX_LINKS_PER_HUB ? [...topics.values()].map((t) => midSentence(t.name)) : sectionLinks.map((l) => l.text),

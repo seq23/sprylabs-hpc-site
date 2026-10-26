@@ -2747,9 +2747,29 @@
       "severity": "STRONG_WARNING",
       "release_effect": false,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-TITLE-BRAND-MATCHES-HOST",
+      "validation_id": "VAL-TITLE-BRAND-MATCHES-HOST",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:title-brand-matches-host",
+      "order": 266,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-BUILD-INPUT-HASH-COVERS-TREE",
+      "validation_id": "VAL-BUILD-INPUT-HASH-COVERS-TREE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:build-input-hash-covers-tree",
+      "order": 267,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 274,
+  "entry_count": 276,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3447,6 +3467,14 @@
         {
           "id": "VAL-EDGE-CACHE",
           "command": "npm run validate:edge-cache"
+        },
+        {
+          "id": "VAL-TITLE-BRAND-MATCHES-HOST",
+          "command": "npm run validate:title-brand-matches-host"
+        },
+        {
+          "id": "VAL-BUILD-INPUT-HASH-COVERS-TREE",
+          "command": "npm run validate:build-input-hash-covers-tree"
         }
       ]
     },
@@ -3645,6 +3673,14 @@
         {
           "id": "VAL-GENERATED-DIR-SWEEP",
           "command": "npm run validate:generated-dir-sweep"
+        },
+        {
+          "id": "VAL-TITLE-BRAND-MATCHES-HOST",
+          "command": "npm run validate:title-brand-matches-host"
+        },
+        {
+          "id": "VAL-BUILD-INPUT-HASH-COVERS-TREE",
+          "command": "npm run validate:build-input-hash-covers-tree"
         }
       ]
     },

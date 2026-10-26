@@ -443,7 +443,9 @@
     "validate:aplayermode-pin-drip": "node --test tests/aplayermode/pinqueue.test.mjs",
     "validate:edge-cache": "node --test tests/edge_cache.test.mjs",
     "aplayermode:pin-queue": "node scripts/aplayermode/pin_queue.mjs",
-    "aplayermode:pin-metrics": "node scripts/aplayermode/collect_pin_metrics.mjs"
+    "aplayermode:pin-metrics": "node scripts/aplayermode/collect_pin_metrics.mjs",
+    "validate:title-brand-matches-host": "node scripts/validators/validate_title_brand_matches_host.mjs",
+    "validate:build-input-hash-covers-tree": "bash .github/scripts/test_build_input_hash.sh"
   },
   "engines": {
     "node": ">=24.0.0"
