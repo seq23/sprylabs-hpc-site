@@ -1,7 +1,7 @@
 'use strict';
 /**
  * One definition of the search-snippet bounds every indexable page must meet:
- * a <title> of 30-65 characters and a meta description of 110-160 characters,
+ * a <title> of 30-65 characters and a meta description of 120-160 characters,
  * each unique across the site.
  *
  * Why these numbers. Bing Webmaster Tools, 25 Sep 2026, SEO rule 118 ("meta
@@ -36,7 +36,19 @@ const TITLE_MIN = 30;
 // already drops the brand suffix before it cuts, so most of those lose a
 // suffix rather than a word.
 const TITLE_MAX = 65;
-const DESC_MIN = 110;
+// 120, not 110. The Search Readiness checklist (item b2) asks for 120-160 and
+// reported spryexecutiveos.com pages at 118 characters on 25 Oct 2026 - inside
+// this repo's bound and outside the checklist's, which is two definitions of
+// "long enough" disagreeing. 50 committed pages sat in the 110-119 gap. Google
+// shows roughly 155-160 characters of a desktop snippet; under about 120 the
+// snippet is padded out with text Google picks from the page instead, which is
+// the thing a written description exists to prevent.
+//
+// Raising it needs no new padding logic: a description below the floor is not
+// in range, so descriptionCandidates() returns nothing for it and the repair
+// falls through to leadTexts() - the page's OWN paragraphs. That is the rung
+// this file already insists on, and nothing is invented.
+const DESC_MIN = 120;
 const DESC_MAX = 160;
 
 // download.html is the revenue page; its bytes are frozen at a known hash and

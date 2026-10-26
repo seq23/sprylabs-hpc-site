@@ -9077,8 +9077,38 @@
         "MX-CLAUDE-MD-COST-RULE"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "SCHEMA-SUPPORTED",
+      "status": "ADMITTED",
+      "name": "validate:schema-supported",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Search Readiness item c5 (25 Oct 2026): 12 of 7,832 Question nodes asked something that appeared nowhere on the page - the page title with a '?' added, or 'How does <brand> answer <title>?' - and one FAQPage had no visible copy at all. Markup without matching content is treated as deceptive and can cost every rich result on the domain. The schema-parity check already in the build missed them because it reads the citable-pages registry and the visible-FAQ builder's own block; this reads the whole indexable surface, sharing its definition of visible with the repair (scripts/lib/schema_supported.cjs). An invisible Offer price fails here rather than being deleted, so the revenue claim reaches a person.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:schema-supported",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-schema-supported/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-26",
+      "matrix_ids": [
+        "MX-SCHEMA-SUPPORTED"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 290,
+  "record_count": 291,
   "generated_at": "2026-08-08T23:30:00Z"
 }

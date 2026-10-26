@@ -2837,9 +2837,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-SCHEMA-SUPPORTED",
+      "validation_id": "SCHEMA-SUPPORTED",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:schema-supported",
+      "order": 275,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 283,
+  "entry_count": 284,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3569,6 +3579,10 @@
         {
           "id": "CLAUDE-MD-COST-RULE",
           "command": "npm run validate:claude-md-cost-rule"
+        },
+        {
+          "id": "SCHEMA-SUPPORTED",
+          "command": "npm run validate:schema-supported"
         }
       ]
     },
