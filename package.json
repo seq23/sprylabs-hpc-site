@@ -460,7 +460,9 @@
     "repair:unsupported-schema": "node scripts/repair/strip_unsupported_schema.cjs",
     "validate:schema-supported": "node scripts/validators/validate_schema_supported.mjs",
     "build:route-owner-table": "node scripts/build/build_route_owner_table.mjs",
-    "validate:route-owner-host": "node --test tests/route_owner_host.test.mjs"
+    "validate:route-owner-host": "node --test tests/route_owner_host.test.mjs",
+    "validate:sitemap-canonical-on-own-host": "node scripts/validators/validate_sitemap_canonical_on_own_host.mjs",
+    "validate:host-consolidation": "node --test tests/host_consolidation.test.mjs"
   },
   "engines": {
     "node": ">=24.0.0"

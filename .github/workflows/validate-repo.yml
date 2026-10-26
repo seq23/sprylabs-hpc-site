@@ -51,7 +51,10 @@ env:
   # as validators land - the remaining 176s would have to more than double before
   # any other shard reached the pole - and `verify` fails on timing drift, so
   # this number is re-checked against reality rather than trusted.
-  SHARD_COUNT: '4'
+  # Six shards, not four (26 Oct 2026, Search Readiness h5: median PR check 6.3
+  # min against a 5-minute target). Four shards ran up to 2.7 min of validators
+  # on run 40303094526; six spread the same set thinner.
+  SHARD_COUNT: '6'
 
 permissions:
   contents: read
@@ -246,7 +249,14 @@ jobs:
           # clone cost 36s of a 49s job on run 40298041831, all of it on the
           # critical path (h5). The release-time steps below DO read history, so
           # on main the depth stays 0.
+          # Depth 1 alone did not help: run 40303094526 still spent 36s, because
+          # the cost is the 318 MB working tree, not the history. On a pull
+          # request the checkout is sparse (cone mode: .github/ plus every root
+          # file - the matrix, the registry, package.json and its lock) and
+          # blob-less, so only those files are fetched. Main keeps the full tree.
           fetch-depth: ${{ github.event_name == 'pull_request' && 1 || 0 }}
+          sparse-checkout: ${{ github.event_name == 'pull_request' && '.github' || '' }}
+          filter: ${{ github.event_name == 'pull_request' && 'blob:none' || '' }}
       - uses: actions/setup-node@v7
         with:
           node-version: 24
