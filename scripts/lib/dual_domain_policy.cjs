@@ -61,7 +61,7 @@ function hostFor(route, publishedHostOverrides = new Map()) {
 const EXTERNAL_CANONICALS = new Map([
   ['/aplayermode/', 'https://aplayermode.com/'],
   ['/aplayermode/about', 'https://aplayermode.com/about/'],
-  ['/aplayermode/404', 'https://aplayermode.com/'],
+  ['/aplayermode/404', 'https://aplayermode.com/404'],
 ]);
 
 function canonicalUrlFor(route, publishedHostOverrides = new Map()) {

@@ -123,6 +123,10 @@ export function route(pathname) {
   if (pathname === '/pinfeed' || pathname === '/pinfeed/') return { kind: 'redirect', location: FEED_PATH, keepQuery: false };
   if (pathname === '/aplayermode' || pathname === PAGE_PATH || pathname === `${PAGE_PATH}index.html`) return { kind: 'redirect', location: '/', keepQuery: true };
   if (pathname === ABOUT_PATH) return { kind: 'asset', upstream: ABOUT_FILE };
+  // Cloudflare Pages answers 404.html at /404 on the shared hosts; the error page's canonical names
+  // that URL, so this host answers it the same way rather than leaving the canonical pointing at a
+  // path that does not exist. The page is noindex either way.
+  if (pathname === '/404' || pathname === '/404.html') return { kind: 'asset', upstream: NOT_FOUND_FILE };
   if (pathname === '/about' || pathname === '/about/index.html') return { kind: 'redirect', location: ABOUT_PATH, keepQuery: true };
   if (pathname.startsWith(PAGE_PATH) && !pathname.includes('..')) return { kind: 'asset', upstream: pathname };
   if (SHARED_ASSETS.has(pathname)) return { kind: 'asset', upstream: pathname };
