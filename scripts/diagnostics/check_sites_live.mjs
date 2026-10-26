@@ -28,6 +28,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
+import { routeOwnerRedirect } from '../../functions/_lib/route_owner_host.js';
 
 const require = createRequire(import.meta.url);
 const ROOT = process.cwd();
@@ -97,7 +98,20 @@ for (const host of HOSTS) {
     fail(`https://www.${host}/start-here must 301 to ${base}/start-here; got ${www.status} ${www.headers.get('location') || ''}`);
   }
 
-  // The homepage, as an engine sees it.
+  // The homepage, as an engine sees it. Where the route-owner table gives "/"
+  // to the other host (spryexecutiveos.com since #153, Search Readiness a2),
+  // the only correct answer is a 301 to exactly that owner URL - a 200 there
+  // is the duplicate #153 removed, and the owner's homepage is checked in its
+  // own iteration. Until 26 Oct 2026 this demanded a 200 on both hosts, so
+  // Deploy Distribution went red on every main commit after #153.
+  const ownerHome = routeOwnerRedirect(`${base}/`);
+  if (ownerHome) {
+    const r = await get(`${base}/`);
+    if (r.status !== 301 || r.headers.get('location') !== ownerHome) {
+      fail(`${base}/ must 301 to its route owner ${ownerHome}; got ${r.status} ${r.headers.get('location') || ''}`);
+    }
+    continue;
+  }
   const home = await get(`${base}/`);
   if (home.status !== 200) fail(`${base}/ answered ${home.status}`);
   const html = home.text;
