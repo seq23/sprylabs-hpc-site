@@ -260,13 +260,26 @@ const fileExists = (p) => {
   const clean = decodeURIComponent(p.split(/[?#]/)[0]).replace(/^\//, '');
   return [clean, path.join(clean, 'index.html'), `${clean}.html`].some((c) => c && fs.existsSync(path.join(ROOT, c)) && fs.statSync(path.join(ROOT, c)).isFile());
 };
+// The Worker is the only authority on what aplayermode.com serves. Checking a root path against
+// the repository alone passed links the Worker sends somewhere else: about.html exists at the
+// repository ROOT (the BHPC page), so href="/about" looked like a valid internal link while the
+// apex 301'd it home (25 Oct 2026). Every root path on this page must be a path route() SERVES.
+const APEX = await import(pathToFileURL(path.join(ROOT, 'workers', 'aplayermode-com', 'src', 'index.js')).href);
+/** The repository file the Worker serves for a root path, or null when it serves no file. */
+const apexServes = (ref) => {
+  let decoded = ref; try { decoded = decodeURIComponent(ref); } catch { /* keep it raw */ }
+  const r = APEX.route(decoded.split(/[?#]/)[0] || '/');
+  return (r.kind === 'asset' || r.kind === 'page' || r.kind === 'feed') ? (r.upstream ?? null) : null;
+};
 for (const ref of refs) {
   if (ref === '' || ref === '#' || /^javascript:/i.test(ref)) { fail(`empty or dead link: href/src="${ref}"`); continue; }
   if (ref.startsWith('#')) { if (!ids.has(ref.slice(1))) fail(`in-page link ${ref} has no matching id`); continue; }
   if (/^https?:\/\//i.test(ref)) { if (!EXTERNAL_ALLOW.has(ref)) fail(`external link ${ref} is not in the allow-list (APM_LINKS.gumroad, APM_LINKS.beta.webApp, APM_LINKS.join)`); continue; }
   if (/^(mailto|tel):/i.test(ref)) continue;
   if (!ref.startsWith('/')) { fail(`relative link "${ref}" breaks when the page moves to aplayermode.com; use a root path`); continue; }
-  if (!fileExists(ref)) fail(`internal link ${ref} resolves to no committed file`);
+  const upstream = apexServes(ref);
+  if (!upstream) { fail(`internal link ${ref} is not served on aplayermode.com: the Worker's route() answers ${JSON.stringify(APEX.route(ref.split(/[?#]/)[0]))}`); continue; }
+  if (!fileExists(upstream)) fail(`internal link ${ref} is served from ${upstream}, which is no committed file`);
 }
 
 // Download buttons: one per route, never an <a> in the static page, always a "soon" label.
@@ -545,11 +558,20 @@ if (/billionairehighperformancecoach\.com\/aplayermode/i.test(html)) fail('the p
   if (localRefs.length === 0) fail('Rule 0: the page loads no local file; the Worker asset check would check nothing');
   for (const ref of new Set(localRefs)) {
     const r = w.route(ref);
-    if (r.kind !== 'asset' || r.upstream !== ref) fail(`page loads ${ref} but the aplayermode.com Worker does not serve it (route = ${JSON.stringify(r)})`);
+    // The Worker may serve a root path from a different file (/about/ -> aplayermode/about.html),
+    // so what matters is that it serves an ASSET and that the file behind it is committed.
+    if (r.kind !== 'asset' || !r.upstream || !fileExists(r.upstream)) fail(`page loads ${ref} but the aplayermode.com Worker does not serve a committed file for it (route = ${JSON.stringify(r)})`);
   }
-  for (const [p, loc] of [['/aplayermode/', '/'], ['/download', '/'], ['/admin.html', '/'], ['/about.html', '/'], ['/amazon/', 'https://billionairehighperformancecoach.com/amazon/'], ['/amazon/x/', 'https://billionairehighperformancecoach.com/amazon/x/']]) {
+  for (const [p, loc] of [['/aplayermode/', '/'], ['/download', '/'], ['/amazon/', 'https://billionairehighperformancecoach.com/amazon/'], ['/amazon/x/', 'https://billionairehighperformancecoach.com/amazon/x/']]) {
     const r = w.route(p);
     if (r.kind !== 'redirect' || r.location !== loc) fail(`Worker route(${p}) must 301 to ${loc}; got ${JSON.stringify(r)}`);
+  }
+  // The shared hosts' own pages are NEVER served here. They answer the apex's 404 page rather than
+  // a 301 home (25 Oct 2026: a soft 404 hid every dead link); either way nothing of theirs leaks.
+  for (const p of ['/admin.html', '/admin/', '/about.html', '/adhd-tips/']) {
+    const r = w.route(p);
+    if (r.kind === 'asset' || r.kind === 'page') fail(`Worker route(${p}) serves a shared-host page on aplayermode.com: ${JSON.stringify(r)}`);
+    if (r.kind !== 'notfound') fail(`Worker route(${p}) must answer the apex 404 page; got ${JSON.stringify(r)}`);
   }
   for (const s of w.SHARED_ASSETS) if (!fs.existsSync(path.join(ROOT, s.slice(1)))) fail(`Worker SHARED_ASSETS lists ${s}, which is no committed file`);
   const wcfg = fs.readFileSync(path.join(workerDir, 'wrangler.jsonc'), 'utf8');
@@ -752,6 +774,11 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
   const one = (attr, name) => { const v = meta(attr, name); if (v.length !== 1) fail(`expected exactly one <meta ${attr}="${name}">, found ${v.length}`); return decode(v[0] ?? ''); };
   const title = decode(stripTags((html.match(/<title>([\s\S]*?)<\/title>/i) || [])[1] || '').trim());
   const desc = decode((html.match(/<meta\b[^>]*name="description"[^>]*content="([^"]*)"/i) || [])[1] || '');
+  // The snippet band: a longer description is cut off mid-sentence in the result (it was 281
+  // characters until 25 Oct 2026, Search Readiness b2). Measured on the raw attribute, which is
+  // what a crawler reads.
+  const rawDesc = (html.match(/<meta\b[^>]*name="description"[^>]*content="([^"]*)"/i) || [])[1] || '';
+  if (rawDesc.length < 120 || rawDesc.length > 160) fail(`the meta description is ${rawDesc.length} characters; keep it 120-160`);
   // Head tags.
   if (one('property', 'og:type') !== 'website') fail('og:type must be "website"');
   if (one('property', 'og:site_name') !== 'A Player Mode') fail('og:site_name must be "A Player Mode"');
@@ -821,10 +848,13 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
   const visibleSquash = squash(stripTags(html));
   const qs = (node('FAQPage')[0] || {}).mainEntity || [];
   if (qs.length < FAQ_QS.length) fail(`FAQPage has ${qs.length} questions; it must carry at least the ${FAQ_QS.length} approved FAQ questions`);
-  const REPHRASED = { 'what does a-player mode actually mean?': 'what a-player mode actually means' };
+  // No alias list: every FAQPage question appears on the page WORD FOR WORD. The one alias here
+  // ("what a-player mode actually means" standing in for the question) is exactly the gap an
+  // outside reader of the markup reports as a question the page does not answer, so the heading
+  // became the question instead (Search Readiness c5, 25 Oct 2026).
   for (const q of qs) {
     const name = norm(q.name || ''); const ans = norm(q.acceptedAnswer?.text || '');
-    if (!visibleNorm.includes(REPHRASED[name] || name)) fail(`FAQPage question "${q.name}" is not a question visible on the page`);
+    if (!visibleNorm.includes(name)) fail(`FAQPage question "${q.name}" is not a question visible on the page, word for word`);
     // Every sentence of the answer is visible on the page word for word (an answer may skip a sentence, never add one).
     const sentences = (q.acceptedAnswer?.text || '').split(/(?<=[.!?])\s+/).filter(Boolean);
     if (!ans || sentences.some((x) => !visibleSquash.includes(squash(x)))) fail(`FAQPage answer to "${q.name}" is not the page's visible answer word for word`);
@@ -843,7 +873,40 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
     if (r.kind !== 'asset' || r.upstream !== `/${file}`) fail(`Worker route(${p}) must serve /${file}; got ${JSON.stringify(r)}`);
     if (!fs.existsSync(path.join(ROOT, file))) fail(`${file} is not committed`);
   }
-  for (const p of ['/sitemap-bhpc.xml', '/llms-full.txt', '/guides/', '/index.xml']) if (w.route(p).kind !== 'redirect') fail(`Worker must still 301 ${p} to /`);
+  // Sibling-host paths the outside world links to still go home rather than 404.
+  for (const p of ['/sitemap-bhpc.xml', '/llms-full.txt', '/guides/', '/index.xml', '/download']) {
+    const r = w.route(p);
+    if (r.kind !== 'redirect' || r.location !== '/') fail(`Worker must still 301 ${p} to / (got ${JSON.stringify(r)})`);
+  }
+  // A REAL 404, not a soft one. Every made-up path answers the apex's own 404 page with a 404
+  // status; it used to 301 home, which made every typo and every dead inbound link look like the
+  // homepage to Google and kept broken links out of Search Console (Search Readiness a9).
+  for (const p of ['/nope', '/nope/', '/a/b/c', '/wp-login.php', '/adhd-tips/']) {
+    const r = w.route(p);
+    if (r.kind !== 'notfound' || r.upstream !== w.NOT_FOUND_FILE) fail(`Worker must answer ${p} with the 404 page, got ${JSON.stringify(r)}`);
+  }
+  if (!fs.existsSync(path.join(ROOT, w.NOT_FOUND_FILE.slice(1)))) fail(`${w.NOT_FOUND_FILE.slice(1)} is not committed`);
+  else {
+    const nf = read(w.NOT_FOUND_FILE.slice(1));
+    if (!/<meta name="robots" content="noindex/i.test(nf)) fail('the 404 page must be noindex');
+    if (!nf.includes('href="/"')) fail('the 404 page must link back to the home page');
+  }
+  // The About page: who publishes this, for an answer engine that needs an author to cite.
+  const about = w.route('/about/');
+  if (about.kind !== 'asset' || about.upstream !== w.ABOUT_FILE) fail(`Worker route(/about/) must serve ${w.ABOUT_FILE}, got ${JSON.stringify(about)}`);
+  const aboutBare = w.route('/about');
+  if (aboutBare.kind !== 'redirect' || aboutBare.location !== '/about/') fail(`Worker route(/about) must 301 to /about/, got ${JSON.stringify(aboutBare)}`);
+  if (!fs.existsSync(path.join(ROOT, w.ABOUT_FILE.slice(1)))) fail(`${w.ABOUT_FILE.slice(1)} is not committed`);
+  else {
+    const ab = read(w.ABOUT_FILE.slice(1));
+    const abDesc = (ab.match(/<meta\b[^>]*name="description"[^>]*content="([^"]*)"/i) || [])[1] || '';
+    if (abDesc.length < 120 || abDesc.length > 160) fail(`the About page's meta description is ${abDesc.length} characters; keep it 120-160`);
+    if (!/<link rel="canonical" href="https:\/\/aplayermode\.com\/about\/">/.test(ab)) fail('the About page needs rel=canonical https://aplayermode.com/about/');
+    if (!/Spry Labs/.test(ab)) fail('the About page must name the publisher, Spry Labs');
+    if (/<meta[^>]*noindex/i.test(ab)) fail('the About page must be indexable');
+  }
+  // The home page links it, or no engine finds the author (Search Readiness c6).
+  if (!/href="\/about\/"/.test(html)) fail(`${PAGE} does not link the About page (/about/)`);
   // IndexNow (16 Oct 2026, Search Console: aplayermode.com had no key). The domain's
   // OWN key, from distribution.config.json indexnow.host_keys, served at the root by
   // the Worker from aplayermode/<key>.txt, valid on aplayermode.com only: the shared
@@ -860,7 +923,7 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
     if (kr.kind !== 'asset' || kr.upstream !== `/${hk.key_file}`) fail(`Worker route(/${hk.key}.txt) must serve /${hk.key_file}; got ${JSON.stringify(kr)}`);
     if (!fs.existsSync(path.join(ROOT, hk.key_file)) || read(hk.key_file).trim() !== hk.key) fail(`${hk.key_file} must be committed and hold exactly the key`);
     if (fs.existsSync(path.join(ROOT, `${hk.key}.txt`))) fail(`${hk.key}.txt sits at the repo root, so the shared hosts would serve aplayermode.com's key`);
-    if (w.route(`/${sharedKey}.txt`).kind !== 'redirect') fail('Worker must not serve the shared hosts\' IndexNow key file on aplayermode.com');
+    if (w.route(`/${sharedKey}.txt`).kind === 'asset') fail('Worker must not serve the shared hosts\' IndexNow key file on aplayermode.com');
     if (!/host_keys/.test(read('scripts/distribution/deploy_distribution.sh'))) fail('scripts/distribution/deploy_distribution.sh no longer submits indexnow.host_keys hosts on deploy');
     // Run the real submitter's key verification for this host (no network): it must
     // accept aplayermode.com's own key file and refuse a key that file does not hold.
@@ -880,21 +943,32 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
   if (/^Disallow:\s*\S/im.test(apmRobots)) fail('aplayermode/robots.txt disallows something; the page is indexable');
   const sm = [...apmRobots.matchAll(/^Sitemap:\s*(\S+)/gim)].map((m) => m[1]);
   if (JSON.stringify(sm) !== JSON.stringify([`${U}sitemap.xml`])) fail(`aplayermode/robots.txt must name exactly one Sitemap: ${U}sitemap.xml`);
+  // The sitemap lists EVERY page this host publishes and nothing else: the landing page and, since
+  // 25 Oct 2026, the About page. Both come from PAGES in the lastmod script, so the sitemap, the
+  // record and the Worker's routes cannot disagree about what aplayermode.com has.
+  const apmLm = await import(pathToFileURL(path.join(ROOT, 'scripts', 'aplayermode_sitemap_lastmod.mjs')).href);
   const sitemap = read('aplayermode/sitemap.xml');
   const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
-  if (JSON.stringify(locs) !== JSON.stringify([U])) fail(`aplayermode/sitemap.xml must list exactly ${U}, found ${JSON.stringify(locs)}`);
-  const lastmod = (sitemap.match(/<lastmod>(\d{4}-\d{2}-\d{2})<\/lastmod>/) || [])[1];
-  if (!lastmod || Number.isNaN(Date.parse(lastmod)) || Date.parse(lastmod) > Date.now() + 86400000) fail(`aplayermode/sitemap.xml needs a real <lastmod> date (not in the future), found ${lastmod}`);
-  else {
-    // Real lastmod, from content not commit dates: the record (hash of the body's visible
-    // text -> date) must describe the page as it is now, and the sitemap must carry its date.
+  const wantLocs = apmLm.PAGES.map((x) => x.loc);
+  if (JSON.stringify(locs) !== JSON.stringify(wantLocs)) fail(`aplayermode/sitemap.xml must list exactly ${JSON.stringify(wantLocs)}, found ${JSON.stringify(locs)}`);
+  if (wantLocs[0] !== U) fail(`the first sitemap URL must be the canonical ${U}, found ${wantLocs[0]}`);
+  const lastmods = [...sitemap.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)].map((m) => m[1]);
+  if (lastmods.length !== wantLocs.length) fail(`aplayermode/sitemap.xml needs one <lastmod> per URL, found ${lastmods.length} for ${wantLocs.length}`);
+  for (const d of lastmods) if (!DATE.test(d) || Number.isNaN(Date.parse(d)) || Date.parse(d) > Date.now() + 86400000) fail(`aplayermode/sitemap.xml has a <lastmod> that is not a real past date: ${d}`);
+  {
+    // Real lastmod, from content not commit dates: the record (hash of each page's visible body
+    // text -> date) must describe the pages as they are now, and the sitemap must carry its dates.
     // A commit date moves on any automated touch; a content hash moves only on content.
-    const apmLm = await import(pathToFileURL(path.join(ROOT, 'scripts', 'aplayermode_sitemap_lastmod.mjs')).href);
-    let rec = null; try { rec = JSON.parse(read(apmLm.RECORD)); } catch {}
-    const hash = apmLm.pageContentHash(html);
-    if (!rec || !DATE.test(rec.lastmod || '')) fail(`${apmLm.RECORD} is missing or has no lastmod date; run npm run sitemap:aplayermode:lastmod`);
-    else if (rec.content_hash !== hash) fail(`${PAGE} content changed (hash ${hash}) but ${apmLm.RECORD} still records ${rec.content_hash} (${rec.lastmod}); run npm run sitemap:aplayermode:lastmod`);
-    else if (rec.lastmod !== lastmod) fail(`aplayermode/sitemap.xml lastmod ${lastmod} is not the recorded date ${rec.lastmod} for the page's current content; run npm run sitemap:aplayermode:lastmod`);
+    let rec = null; try { rec = JSON.parse(read(apmLm.RECORD)); } catch { /* missing */ }
+    const entries = apmLm.entriesOf(rec);
+    if (entries.length !== apmLm.PAGES.length) fail(`${apmLm.RECORD} records ${entries.length} pages; PAGES declares ${apmLm.PAGES.length}. Run npm run sitemap:aplayermode:lastmod`);
+    apmLm.PAGES.forEach((pg, i) => {
+      const e = entries.find((x) => x.page === pg.page);
+      const hash = apmLm.pageContentHash(pg.page === PAGE ? html : read(pg.page));
+      if (!e || !DATE.test(e.lastmod || '')) fail(`${apmLm.RECORD} has no dated entry for ${pg.page}; run npm run sitemap:aplayermode:lastmod`);
+      else if (e.content_hash !== hash) fail(`${pg.page} content changed (hash ${hash}) but ${apmLm.RECORD} still records ${e.content_hash} (${e.lastmod}); run npm run sitemap:aplayermode:lastmod`);
+      else if (e.lastmod !== lastmods[i]) fail(`aplayermode/sitemap.xml lastmod ${lastmods[i]} for ${pg.loc} is not the recorded date ${e.lastmod}; run npm run sitemap:aplayermode:lastmod`);
+    });
     if (!/aplayermode_sitemap_lastmod\.mjs/.test(JSON.parse(read('package.json')).scripts?.['sitemap:lastmod:content'] || '')) fail('npm run sitemap:lastmod:content no longer re-derives aplayermode.com\'s lastmod record');
   }
   // A shared-site retrofit never writes into this page (11 Oct 2026: the recommendation-summary

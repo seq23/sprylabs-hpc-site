@@ -4,7 +4,16 @@
 - **Expected root name:** `sprylabs-hpc-site`
 - **Repository class:** Level 2 generated static publishing and authority system
 - **Primary branch:** `main`
-- **Public domains:** `billionairehighperformancecoach.com`, `spryexecutiveos.com`
+- **Public domains:** `billionairehighperformancecoach.com`, `spryexecutiveos.com`, `aplayermode.com`
+- **aplayermode.com:** the A Player Mode landing page, its About page and its own crawl files live in
+  `aplayermode/` and are served at the apex by `workers/aplayermode-com` (route `aplayermode.com/*`),
+  which fetches them from the Pages origin. The host is NOT served by `seq23/aplayer-mode`, which is the
+  Expo app and the API on `app.aplayermode.com` / `api.aplayermode.com`. Declared here 25 Oct 2026 after
+  the Search Readiness audit checked this site against the app repo and reported six items as missing.
+- **aplayermode.com Worker deploy:** Cloudflare Pages self-deploys on a green `main`, which publishes the
+  files; a change to the Worker's own routing also needs
+  `npx wrangler deploy --config workers/aplayermode-com/wrangler.jsonc`, then
+  `npm run check:aplayermode-live` to prove it.
 - **Package manager:** npm using `package-lock.json`
 - **Node authority:** Node 24
 - **Browser surface:** public static pages plus passwordless noindex operator surfaces `/admin/` and `/agency/`
