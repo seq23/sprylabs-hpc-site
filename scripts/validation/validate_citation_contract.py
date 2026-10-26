@@ -258,7 +258,13 @@ for f in frameworks:
     if nf in normalized_frameworks: warnings.append(f"normalized framework collision: {f.get('name')!r} and {normalized_frameworks[nf]}")
     else: normalized_frameworks[nf]=f.get('name')
 
-llms=(ROOT/'llms.txt').read_text(errors='ignore')
+# The index, not the orientation file. Every active query must stay reachable
+# from a crawl file, and since Search Readiness a7 that file is llms-full.txt:
+# llms.txt is capped at 2,000 words and carries orientation plus a pointer to
+# the full index. Checking llms.txt here would have demanded back the 2,233
+# query rows the cap exists to keep out. citation:warn and
+# validate:llms-full-coverage read llms-full.txt for the same reason.
+llms=(ROOT/'llms-full.txt').read_text(errors='ignore')
 answers_raw=(ROOT/'answers.json').read_text(errors='ignore')
 # A bare `except: answer_items=[]` could not tell a corrupt or restructured
 # answers.json apart from one that legitimately holds no items: either way the
@@ -292,7 +298,7 @@ for item in answer_items:
                 if isinstance(entry,str):
                     answer_query_norms.add(norm(entry))
 for q in queries:
-    if q['query'] not in llms: warnings.append(f"llms.txt missing query: {q['query']}")
+    if q['query'] not in llms: warnings.append(f"llms-full.txt missing query: {q['query']}")
     if norm(q['query']) not in answer_query_norms and q['query'] not in answers_raw: warnings.append(f"answers.json missing query: {q['query']}")
 
 out=ROOT/'artifacts/diagnostics/container-current/validate-citation-contract';out.mkdir(parents=True,exist_ok=True)

@@ -51,14 +51,18 @@ for (const item of items) {
   const route = routeFor(item.answer_page);
   if (!answerIndex.includes(route)) warnings.push(`answers.json missing ${item.answer_page} (route ${route})`);
 }
-const llms = read('llms.txt');
+// The full index, not the orientation file: llms.txt stopped carrying the query
+// list on 25 Oct 2026 (Search Readiness a7 - it was 21,589 words). Every
+// priority query must still be reachable from a crawl file, and llms-full.txt
+// is the one that lists them, query by query, with framework and definition.
+const llms = read('llms-full.txt');
 for (const item of items) {
-  if (!llms.includes(item.query)) warnings.push(`llms.txt missing query entry: ${item.query}`);
+  if (!llms.includes(item.query)) warnings.push(`llms-full.txt missing query entry: ${item.query}`);
 }
 if (warnings.length) {
   console.log(`[citation:warn] WARN: ${warnings.length} citation-readiness warning(s)`);
   for (const warning of warnings.slice(0, 120)) console.log(` - ${warning}`);
 } else {
-  console.log(`[citation:warn] OK: ${items.length} priority citation rows have direct answers, answer pages, schema markers, and llms.txt entries`);
+  console.log(`[citation:warn] OK: ${items.length} priority citation rows have direct answers, answer pages, schema markers, and llms-full.txt entries`);
 }
 process.exit(warnings.length ? 1 : 0);

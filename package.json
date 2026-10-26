@@ -52,7 +52,7 @@
     "build:admin": "npm run admin:build",
     "build:agent-accepted-content": "npm run agent:bhpc:compile-acceptance && npm run agent:bhpc:plan-exact && npm run agent:bhpc:apply-exact && npm run retrofit:recommendation-summary",
     "build:all": "bash scripts/build/cached_build_all.sh",
-    "build:all:uncached": "npm run build:generated-content && npm run build:postprocess && npm run build:aplayer-phase-expansion && npm run build:agent-accepted-content && npm run repair:dual-domain-metadata && npm run repair:published-agent-blocks && npm run retrofit:recommendation-summary && node scripts/internal/build_navigation_structure.mjs && npm run build:visible-faq && npm run repair:health-boundary && npm run build:demand-families && npm run repair:single-faqpage && npm run repair:product-offers && npm run repair:search-intelligence-blocks",
+    "build:all:uncached": "npm run build:generated-content && npm run build:postprocess && npm run build:aplayer-phase-expansion && npm run build:agent-accepted-content && npm run repair:dual-domain-metadata && npm run repair:published-agent-blocks && npm run retrofit:recommendation-summary && node scripts/internal/build_navigation_structure.mjs && npm run build:visible-faq && npm run repair:health-boundary && npm run build:demand-families && npm run repair:single-faqpage && npm run repair:product-offers && npm run repair:search-intelligence-blocks && npm run repair:social-tags",
     "build:aplayer-phase-expansion": "node scripts/programmatic/generate_aplayer_phase_expansion.mjs",
     "build:authority": "node scripts/build_authority_papers.js",
     "build:comparison": "node scripts/build_comparison_pages.js",
@@ -445,7 +445,15 @@
     "aplayermode:pin-queue": "node scripts/aplayermode/pin_queue.mjs",
     "aplayermode:pin-metrics": "node scripts/aplayermode/collect_pin_metrics.mjs",
     "validate:title-brand-matches-host": "node scripts/validators/validate_title_brand_matches_host.mjs",
-    "validate:build-input-hash-covers-tree": "bash .github/scripts/test_build_input_hash.sh"
+    "validate:build-input-hash-covers-tree": "bash .github/scripts/test_build_input_hash.sh",
+    "report:weekly-outcome": "node scripts/reports/build_weekly_outcome_report.mjs",
+    "self-test:weekly-outcome-report": "node scripts/reports/self_test_weekly_outcome_report.mjs",
+    "validate:weekly-outcome-report": "node scripts/validators/validate_weekly_outcome_report.mjs",
+    "validate:llms-txt-shape": "node scripts/validators/validate_llms_txt_shape.mjs",
+    "validate:canonical-host": "node --test tests/canonical_host.test.mjs",
+    "validate:social-tags": "node scripts/validators/validate_social_tags.mjs",
+    "repair:social-tags": "node scripts/repair/complete_social_tags.cjs",
+    "check:sites-live": "node scripts/diagnostics/check_sites_live.mjs"
   },
   "engines": {
     "node": ">=24.0.0"

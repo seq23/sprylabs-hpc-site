@@ -4,7 +4,12 @@ const path = require('path');
 const ROOT = process.cwd();
 const publishedPath = path.join(ROOT, 'data/reddit/published_manifest.json');
 const sitemapPath = path.join(ROOT, 'sitemap-spry.xml');
-const llmsPath = path.join(ROOT, 'llms.txt');
+// The full index, not the orientation file. Since Search Readiness a7 llms.txt
+// is a ~292-word orientation file capped at 2,000 words and llms-full.txt
+// carries every page; requiring a published page here would have asked the
+// whole index back into the file the cap exists to keep small. Same move as
+// validate_citation_contract.py, citation:warn and validate:llms-full-coverage.
+const llmsPath = path.join(ROOT, 'llms-full.txt');
 const coveragePath = path.join(ROOT, 'knowledge-map/knowledge-map.json');
 
 if (!fs.existsSync(publishedPath)) {
@@ -99,7 +104,7 @@ for (const item of items) {
   }
 
   if (llms && !llms.includes(expectedUrl)) {
-    errors.push(`${item.target_file}: missing from llms.txt`);
+    errors.push(`${item.target_file}: missing from llms-full.txt`);
   }
 
   if (coverageRoutes.size && !coverageRoutes.has(item.route)) {

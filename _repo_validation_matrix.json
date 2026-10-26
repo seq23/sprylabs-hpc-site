@@ -2767,9 +2767,59 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-SOCIAL-TAGS",
+      "validation_id": "SOCIAL-TAGS",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:social-tags",
+      "order": 268,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-LLMS-TXT-SHAPE",
+      "validation_id": "LLMS-TXT-SHAPE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:llms-txt-shape",
+      "order": 269,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-CANONICAL-HOST",
+      "validation_id": "CANONICAL-HOST",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:canonical-host",
+      "order": 270,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-WF-WEEKLY-OUTCOME-REPORT",
+      "validation_id": "VAL-WF-WEEKLY-OUTCOME-REPORT",
+      "lane": "validation-control-plane",
+      "command": ".github/workflows/weekly-outcome-report.yml",
+      "order": 271,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-WEEKLY-OUTCOME-REPORT",
+      "validation_id": "WEEKLY-OUTCOME-REPORT",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:weekly-outcome-report",
+      "order": 272,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 276,
+  "entry_count": 281,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2823,6 +2873,22 @@
         {
           "id": "VAL-EXTRACTION-SURFACE-GUARD-CHECK",
           "command": "npm run validate:extraction-surface-guard:check"
+        },
+        {
+          "id": "SOCIAL-TAGS",
+          "command": "npm run validate:social-tags"
+        },
+        {
+          "id": "LLMS-TXT-SHAPE",
+          "command": "npm run validate:llms-txt-shape"
+        },
+        {
+          "id": "CANONICAL-HOST",
+          "command": "npm run validate:canonical-host"
+        },
+        {
+          "id": "validate:weekly-outcome-report",
+          "command": "npm run validate:weekly-outcome-report"
         },
         {
           "id": "VAL-QUERY-OWNER-UNIQUENESS",

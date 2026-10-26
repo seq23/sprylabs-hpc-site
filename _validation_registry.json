@@ -8864,8 +8864,161 @@
         "MX-BUILD-INPUT-HASH-COVERS-TREE"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "SOCIAL-TAGS",
+      "status": "ADMITTED",
+      "name": "validate:social-tags",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Search Readiness item b6 (25 Oct 2026): not one of 2,276 committed pages carried og:image:width/height, 1,966 had no og:site_name, 1,717 no og:type and 1,448 no twitter:card, and the two og images in use were 600x600 and 420x96. Every share and every AI preview rendered from a card the checklist rejects. Refuses an incomplete social-card head, an og:image that is not a committed 1200x630 PNG on the page's own host, width/height that disagree with the file, og:title that disagrees with <title>, and a missing icon/apple-touch-icon/manifest link.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:social-tags",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-social-tags/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-25",
+      "matrix_ids": [
+        "MX-SOCIAL-TAGS"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "LLMS-TXT-SHAPE",
+      "status": "ADMITTED",
+      "name": "validate:llms-txt-shape",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Search Readiness item a7 (25 Oct 2026): /llms.txt was 21,589 words - the whole page index, three times over - where an AI engine expects a short orientation file under about 2,000 words. The full index is llms-full.txt. Refuses an llms.txt over the word cap, missing one of its required sections, not naming both brands, not listing every priority page, or not pointing at llms-full.txt, the sitemap index and the methodology page.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:llms-txt-shape",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-llms-txt-shape/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-25",
+      "matrix_ids": [
+        "MX-LLMS-TXT-SHAPE"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "CANONICAL-HOST",
+      "status": "ADMITTED",
+      "name": "validate:canonical-host",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Search Readiness item a1 (25 Oct 2026): https://www.billionairehighperformancecoach.com/ answered 200 instead of 301-ing to the apex, so every page existed at two addresses and Google was free to split the signals. Pages _redirects cannot match on host, so the rule lives in functions/_lib/canonical_host.js; this proves every public domain's www alias 301s with path and query intact, that the apexes themselves and every *.pages.dev preview are passed through, and that there is no redirect loop.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:canonical-host",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-canonical-host/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-25",
+      "matrix_ids": [
+        "MX-CANONICAL-HOST"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-WF-WEEKLY-OUTCOME-REPORT",
+      "status": "ADMITTED",
+      "name": "weekly-outcome-report.yml",
+      "check_type": "workflow",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Search Readiness item i9 (25 Oct 2026): nothing reported outcomes per site week over week, so a drop went unnoticed for a month, and no list of red sites closed itself. This lane reports both hosts' impressions, clicks, queries and index coverage against the previous week from the collectors' own measurements, and keeps exactly one self-closing issue per red site.",
+      "existing_coverage_gap": "Every other scheduled lane is daily or four-hourly and reports on the build, not on outcomes. daily-citation-intelligence measures surfaces produced; nothing measured what search did with them, per site, over a week.",
+      "scope": [
+        "github-actions",
+        "search-outcomes",
+        "billionairehighperformancecoach.com",
+        "spryexecutiveos.com"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/weekly-outcome-report.yml",
+      "implementation_path": ".github/workflows/weekly-outcome-report.yml",
+      "environment": "ci",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "reports/weekly_outcome_report.json plus the per-site weekly-outcome-report issues",
+      "runtime_budget_seconds": 600,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted as the weekly outcome reporter for both hosts. The report runs against real collector output (2026-W44: bhpc 390 impressions/1 click, spry 20/0) and its red rule is proven in both directions by self-test:weekly-outcome-report, including that a fall on a base under 20 impressions is noise and not a red.",
+      "decision_date": "2026-10-25",
+      "matrix_ids": [
+        "MX-WF-WEEKLY-OUTCOME-REPORT"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "WEEKLY-OUTCOME-REPORT",
+      "status": "ADMITTED",
+      "name": "validate:weekly-outcome-report",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Search Readiness item i9 asks only that a workflow run on a weekly cron and name a report, which a workflow that merely mentions one would satisfy while reporting nothing. This asserts the whole chain: a genuinely weekly cron, that it reaches the builder and the self-test, that the builder reads the collectors rather than inventing numbers, that the delivery reads the report that was built, that it can close an issue as well as open one, and that every RED site states its reason.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:weekly-outcome-report",
+      "implementation_path": "scripts/validators/validate_weekly_outcome_report.mjs",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-weekly-outcome-report/summary.json",
+      "runtime_budget_seconds": 60,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted with the i9 build. Proven negatively: a daily cron, a workflow that drops the builder step, a delivery that never closes an issue and a RED site with no stated reason each fail it.",
+      "decision_date": "2026-10-25",
+      "matrix_ids": [
+        "MX-WEEKLY-OUTCOME-REPORT"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 283,
+  "record_count": 288,
   "generated_at": "2026-08-08T23:30:00Z"
 }

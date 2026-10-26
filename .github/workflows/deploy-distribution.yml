@@ -190,3 +190,34 @@ jobs:
         run: |
           node scripts/distribution/assert_step_outcome.mjs .build/gsc/queries-ingest-outcome-spry.json
           node scripts/distribution/assert_step_outcome.mjs .build/gsc/queries-ingest-outcome-bhpc.json
+
+  # Search Readiness item h4: the build can pass and the edge can still serve the
+  # wrong thing (a Worker that 301'd robots.txt did). Every other check in this
+  # repository reads the committed tree; this one reads what the internet gets,
+  # on both hosts, after the deploy. It is the only check that can see a
+  # difference between the two.
+  live-check:
+    needs: deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Crawl files, icons, og image, schema, redirects and the IndexNow key, live
+        # Cloudflare Pages publishes the new build on its own schedule after the
+        # commit lands, so a check run the instant this job starts can legitimately
+        # still see the previous build. Retried on a bounded loop - six attempts,
+        # 45 s apart, about four and a half minutes - and failed for real after
+        # that. A propagation lag is not a defect; a lag that never ends is.
+        run: |
+          for attempt in 1 2 3 4 5 6; do
+            if npm run check:sites-live; then exit 0; fi
+            echo "attempt $attempt failed; the deploy may not have propagated yet"
+            [ "$attempt" -lt 6 ] && sleep 45
+          done
+          echo "::error::the live check still fails after six attempts over four minutes"
+          exit 1
