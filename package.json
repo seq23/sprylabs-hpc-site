@@ -52,7 +52,7 @@
     "build:admin": "npm run admin:build",
     "build:agent-accepted-content": "npm run agent:bhpc:compile-acceptance && npm run agent:bhpc:plan-exact && npm run agent:bhpc:apply-exact && npm run retrofit:recommendation-summary",
     "build:all": "bash scripts/build/cached_build_all.sh",
-    "build:all:uncached": "npm run build:generated-content && npm run build:postprocess && npm run build:aplayer-phase-expansion && npm run build:agent-accepted-content && npm run repair:dual-domain-metadata && npm run repair:published-agent-blocks && npm run retrofit:recommendation-summary && node scripts/internal/build_navigation_structure.mjs && npm run build:visible-faq && npm run repair:health-boundary && npm run build:demand-families && npm run repair:single-faqpage && npm run repair:product-offers && npm run repair:search-intelligence-blocks && npm run repair:social-tags",
+    "build:all:uncached": "npm run build:generated-content && npm run build:postprocess && npm run build:aplayer-phase-expansion && npm run build:agent-accepted-content && npm run repair:dual-domain-metadata && npm run repair:published-agent-blocks && npm run retrofit:recommendation-summary && node scripts/internal/build_navigation_structure.mjs && npm run build:visible-faq && npm run repair:health-boundary && npm run build:demand-families && npm run repair:single-faqpage && npm run repair:product-offers && npm run repair:search-intelligence-blocks && npm run repair:social-tags && npm run repair:organization-node && npm run repair:unsupported-schema && npm run build:route-owner-table",
     "build:aplayer-phase-expansion": "node scripts/programmatic/generate_aplayer_phase_expansion.mjs",
     "build:authority": "node scripts/build_authority_papers.js",
     "build:comparison": "node scripts/build_comparison_pages.js",
@@ -453,7 +453,14 @@
     "validate:canonical-host": "node --test tests/canonical_host.test.mjs",
     "validate:social-tags": "node scripts/validators/validate_social_tags.mjs",
     "repair:social-tags": "node scripts/repair/complete_social_tags.cjs",
-    "check:sites-live": "node scripts/diagnostics/check_sites_live.mjs"
+    "check:sites-live": "node scripts/diagnostics/check_sites_live.mjs",
+    "repair:organization-node": "node scripts/repair/complete_organization_node.cjs",
+    "validate:organization-node": "node scripts/validators/validate_organization_node.mjs",
+    "validate:claude-md-cost-rule": "node --test tests/claude_md_cost_rule.test.mjs",
+    "repair:unsupported-schema": "node scripts/repair/strip_unsupported_schema.cjs",
+    "validate:schema-supported": "node scripts/validators/validate_schema_supported.mjs",
+    "build:route-owner-table": "node scripts/build/build_route_owner_table.mjs",
+    "validate:route-owner-host": "node --test tests/route_owner_host.test.mjs"
   },
   "engines": {
     "node": ">=24.0.0"

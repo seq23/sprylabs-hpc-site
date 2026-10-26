@@ -12,7 +12,7 @@ if VENDOR_DIR.is_dir():
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "lib"))
 from repo_walk import IGNORED_DIRS as REPO_WALK_IGNORED
 from route_policy import route_for  # noqa: E402
-from citation_page_schema import serialize_schema, main_entity_of_page  # noqa: E402
+from citation_page_schema import serialize_schema, main_entity_of_page, organization_node  # noqa: E402
 
 from bs4 import BeautifulSoup, Comment, NavigableString, Tag
 from extraction_contract import extract_article_steps, extract_scope_procedure_candidates, extract_scope_steps, validate_extraction
@@ -89,7 +89,9 @@ EXCLUDED_PREFIXES += tuple(f"{d}/" for d in json.loads((ROOT / "config/index_exc
 CITATION_REPAIR_WARNINGS = []
 
 BHPC_PRODUCT_PATHS = {'index.html','download.html','product.html','billionaire-high-performance-coach.html'}
-BHPC_ORGANIZATION = {'@type':'Organization','@id':'https://billionairehighperformancecoach.com/#organization','name':'Spry Labs','url':'https://billionairehighperformancecoach.com/','logo':{'@type':'ImageObject','url':'https://billionairehighperformancecoach.com/assets/spry-logo.png'}}
+# One definition: config/organization.json (Search Readiness c1). The @id stays
+# as it was - it is the node's identity and other nodes reference it.
+BHPC_ORGANIZATION = organization_node(**{'@id':'https://billionairehighperformancecoach.com/#organization'})
 BHPC_WEBSITE = {'@type':'WebSite','@id':'https://billionairehighperformancecoach.com/#website','name':'Billionaire High Performance Coach','url':'https://billionairehighperformancecoach.com/','publisher':{'@id':'https://billionairehighperformancecoach.com/#organization'}}
 BHPC_MENTION_TERMS = [
     {'@type':'DefinedTerm','@id':'https://billionairehighperformancecoach.com/#a-player-mode','name':'A-player mode','description':'The operating state the product helps users practice: clearer priorities, cleaner execution, faster recovery, and less self-renegotiation. It is not the product name.'},
@@ -690,8 +692,8 @@ def add_schema(soup: BeautifulSoup, path: str, spec: dict):
     if author_name:
         page_entity['author']={'@type':'Person','name':author_name,'url':author_url}
     else:
-        page_entity['author']={'@type':'Organization','name':'Spry Labs','url':'https://billionairehighperformancecoach.com/'}
-    page_entity['publisher']={'@type':'Organization','name':'Spry Labs','url':'https://billionairehighperformancecoach.com/','logo':{'@type':'ImageObject','url':'https://billionairehighperformancecoach.com/assets/spry-logo.png'}}
+        page_entity['author']=organization_node()
+    page_entity['publisher']=organization_node()
     if path in BHPC_PRODUCT_PATHS:
         page_entity['isPartOf']={'@id':'https://billionairehighperformancecoach.com/#website'}
         page_entity['about']={'@id':'https://billionairehighperformancecoach.com/#product'}
@@ -714,9 +716,9 @@ def add_schema(soup: BeautifulSoup, path: str, spec: dict):
         graph.append(BHPC_WEBSITE)
         graph.extend(BHPC_MENTION_TERMS)
     if path in {'about.html','spry-labs.html'}:
-        graph.append({'@type':'Organization','@id':_absolute_url(canonical,'/about#organization'),'name':'Spry Labs','url':_absolute_url(canonical,'/about')})
+        graph.append(organization_node(**{'@id':_absolute_url(canonical,'/about#organization')}))
     if path in {'author.html','sequoia-taylor.html'}:
-        graph.append({'@type':'Person','@id':_absolute_url(canonical,'/author#person'),'name':'S.L. Taylor','url':_absolute_url(canonical,'/author'),'worksFor':{'@type':'Organization','name':'Spry Labs'}})
+        graph.append({'@type':'Person','@id':_absolute_url(canonical,'/author#person'),'name':'S.L. Taylor','url':_absolute_url(canonical,'/author'),'worksFor':organization_node()})
     script=soup.new_tag('script', id='CITATION_PAGE_SCHEMA', type='application/ld+json')
     # One serializer. This pass was already compact; routing it through the
     # shared module is what stops it drifting apart from the other writers again.
