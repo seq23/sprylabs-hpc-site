@@ -64,3 +64,27 @@ export function pathKey(urlOrRoute) {
   p = p.replace(/index\.html$/i, '').replace(/\.html$/i, '').replace(/\/+$/, '');
   return (p || '/').toLowerCase();
 }
+
+/**
+ * Files rebuilt by apply_demand_families.py on every build:all. Their title, meta
+ * and FAQ are governed there, so a search-intelligence repair on them is stripped
+ * by the next build and the ledger then claims a block that is gone (main went red
+ * on executive-coach-cost/index.html, 25 Oct 2026). The target set never maps a
+ * target onto these pages.
+ */
+export function demandFamilyFiles(root = process.cwd()) {
+  const dir = path.join(root, 'data/search_intelligence');
+  const out = new Set();
+  let hosts = [];
+  try { hosts = fs.readdirSync(dir, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name); } catch { return out; }
+  for (const h of hosts) {
+    const f = path.join(dir, h, 'demand_families.json');
+    if (!fs.existsSync(f)) continue;
+    let doc; try { doc = JSON.parse(fs.readFileSync(f, 'utf8')); } catch { continue; }
+    for (const fam of doc.families || []) {
+      const file = fam?.primary_page?.file;
+      if (file) { out.add(file); out.add(file.replace(/\.html$/, '/index.html')); out.add(file.replace(/\/index\.html$/, '.html')); }
+    }
+  }
+  return out;
+}

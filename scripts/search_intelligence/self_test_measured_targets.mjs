@@ -11,7 +11,7 @@
 //      so the export's exact-match filter keeps those rows.
 import fs from 'node:fs';
 import { execFileSync } from 'node:child_process';
-import { measuredQueries, readExports, pathKey, MEASURED_MIN_IMPRESSIONS } from './lib/measured_targets.mjs';
+import { measuredQueries, readExports, pathKey, demandFamilyFiles, MEASURED_MIN_IMPRESSIONS } from './lib/measured_targets.mjs';
 
 const errors = [];
 const eq = (name, got, want) => { if (JSON.stringify(got) !== JSON.stringify(want)) errors.push(`${name}: expected ${JSON.stringify(want)}, got ${JSON.stringify(got)}`); };
@@ -50,6 +50,12 @@ eq('measured_target_count', set.measured_target_count, Math.min(want.length, max
 for (const t of set.targets) {
   if (!t.owned_file || !fs.existsSync(t.owned_file)) errors.push(`target ${t.query} has no existing owned file`);
 }
+// 3. No target lands on a page apply_demand_families.py rebuilds: a repair there is
+//    stripped by build:all and the ledger then claims a block that is gone.
+const demand = demandFamilyFiles();
+if (!demand.size) errors.push('found zero demand-family pages; the exclusion cannot reach what it governs');
+const onDemand = set.targets.filter((t) => demand.has(t.owned_file));
+if (onDemand.length) errors.push(`${onDemand.length} target(s) mapped onto demand-family pages, e.g. ${onDemand[0].query} -> ${onDemand[0].owned_file}`);
 // What the export filter would keep from what Google returned (sample rows on disk).
 let kept = 0;
 for (const d of exportsNow) for (const r of [...(d.rows || []), ...(d.target_query_filter?.discarded_sample || [])]) {
