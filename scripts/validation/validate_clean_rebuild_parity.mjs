@@ -34,6 +34,7 @@ import os from 'node:os';
 import crypto from 'node:crypto';
 import {spawnSync} from 'node:child_process';
 import {fail,pass,writeSummary} from './common.mjs';
+import {treeManifest as manifestOf} from './tree_manifest.mjs';
 
 const LABEL='[validate:clean-rebuild-parity]';
 const git=(cwd,args,opts={})=>{
@@ -65,17 +66,14 @@ function publicSnapshot(base){
   for(const rel of publicFiles(base)) o[rel]=hashFile(path.join(base,rel));
   return o;
 }
-/** path -> blob id for every tracked and new non-ignored file after the build. */
+/**
+ * path -> blob id for every tracked and new non-ignored file after the build.
+ * The dependency directory is made ignored rather than named in a pathspec
+ * (scripts/validation/tree_manifest.mjs explains what naming it cost).
+ */
 function treeManifest(base){
-  // node_modules is a symlink here, which the `node_modules/` ignore rule (a directory rule) does not match.
-  git(base,['add','-A','--','.',':(exclude)node_modules']);
-  const o={};
-  for(const rec of git(base,['ls-files','-s','-z']).split('\0')){
-    if(!rec) continue;
-    const m=rec.match(/^(\d+) ([0-9a-f]+) \d\t(.*)$/s);
-    if(m) o[m[3]]=`${m[1]}:${m[2]}`;
-  }
-  return o;
+  try{ return manifestOf(base); }
+  catch(e){ fail(`${LABEL} FAIL: ${e.message}`); }
 }
 function headManifest(base){
   const o={};
