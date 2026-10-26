@@ -14,11 +14,16 @@ const skip = new Set(['.git','.pages-output', 'node_modules','dist','coverage','
 // The Pinterest feed (aplayermode/pinfeed.xml, 16 Oct 2026) links the root page with
 // Pinterest attribution: only "/?utm_source=pinterest&..." is approved, never another
 // path or query (validate_aplayermode_pinterest.mjs checks the full link).
+// The host's own PAGES, each a path the Worker serves from a committed file: the landing page, the
+// About page (Search Readiness c6) and the error page, which Cloudflare Pages answers at /404 on the
+// shared hosts and the Worker answers the same way here. A JSON-LD @id anchors onto a page URL.
+const OWN_PAGES = ['/', '/about/', '/404'];
 function approvedOwnUrl(url){
   if(url.startsWith('https://aplayermode.com/?utm_source=pinterest&')) return true;
   const m = url.match(/^https:\/\/aplayermode\.com(\/[^?]*?)(#[A-Za-z0-9_-]+)?$/);
   if(!m) return false;
-  if(m[2]) return m[1] === '/';
+  if(m[2]) return OWN_PAGES.includes(m[1]);
+  if(OWN_PAGES.includes(m[1])) return true;
   if(['/sitemap.xml','/robots.txt','/llms.txt','/site.webmanifest','/apple-touch-icon.png','/pinfeed.xml'].includes(m[1])) return true;
   return /^\/aplayermode\/[A-Za-z0-9_./-]+$/.test(m[1]) && !m[1].includes('..') && fs.existsSync(path.join(ROOT, m[1].slice(1)));
 }

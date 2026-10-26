@@ -164,6 +164,15 @@ function pageUrl(rel) {
   if (rel.endsWith('/index.html')) return `/${rel.slice(0, -'index.html'.length)}`;
   return `/${rel.replace(/\.html$/, '')}`;
 }
+// Directories this repo builds whose pages are published on a host of their own
+// (config/index_exclusions.json). Their root-relative links are resolved by that host's Worker,
+// not by this Pages surface: /about/ on aplayermode.com is aplayermode/about.html, which would
+// look like a 404 measured against spryexecutiveos.com. Those links are not unchecked - the
+// aplayermode.com Worker's route() answers for every one of them in
+// scripts/validators/validate_aplayermode_landing.mjs, which refuses a root path the Worker does
+// not serve from a committed file, and check_aplayermode_live.mjs proves it on the live host.
+const OWN_HOST_DIRS = new Map([['aplayermode/', 'https://aplayermode.com']]);
+const baseHostFor = (rel) => { for (const [dir, host] of OWN_HOST_DIRS) if (rel.startsWith(dir)) return host; return 'https://spryexecutiveos.com'; };
 const pages = listHtml(OUT);
 if (!pages.length) fail('the published surface holds zero HTML pages.');
 let hrefsChecked = 0;
@@ -171,7 +180,7 @@ let redirecting = 0;
 const broken = new Map();
 for (const rel of pages) {
   const html = fs.readFileSync(path.join(OUT, rel), 'utf8');
-  const base = `https://spryexecutiveos.com${pageUrl(rel)}`;
+  const base = `${baseHostFor(rel)}${pageUrl(rel)}`;
   for (const m of html.matchAll(/<a\b[^>]*?\shref=(["'])([^"']*)\1/gi)) {
     const raw = m[2].replace(/&amp;/g, '&').trim();
     if (!raw || raw.startsWith('#') || /^(mailto|tel|javascript|data):/i.test(raw) || raw.includes('{{')) continue;

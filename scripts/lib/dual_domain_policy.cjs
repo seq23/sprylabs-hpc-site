@@ -54,8 +54,14 @@ function hostFor(route, publishedHostOverrides = new Map()) {
 // workers/aplayermode-com, and /aplayermode/ on both shared hosts 301s there
 // (functions/aplayermode/index.js). host + route would name a URL that only
 // redirects, so every canonical consumer asks canonicalUrlFor instead.
+// Every page under aplayermode/ is published on aplayermode.com, not on a shared host: the
+// landing page at /, the About page at /about/ (Search Readiness c6, 25 Oct 2026) and the error
+// page, which is noindex and names the host's home page rather than a BHPC URL that does not
+// exist. Without an entry here the repair pass stamps the shared host onto them.
 const EXTERNAL_CANONICALS = new Map([
   ['/aplayermode/', 'https://aplayermode.com/'],
+  ['/aplayermode/about', 'https://aplayermode.com/about/'],
+  ['/aplayermode/404', 'https://aplayermode.com/404'],
 ]);
 
 function canonicalUrlFor(route, publishedHostOverrides = new Map()) {

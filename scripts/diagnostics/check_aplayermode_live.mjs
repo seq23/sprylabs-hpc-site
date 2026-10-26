@@ -57,6 +57,26 @@ for (const p of ['/download', '/guides/', '/sitemap-bhpc.xml', '/llms-full.txt']
   const r = await get(p); checked += 1;
   if (r.status !== 301 || r.headers.get('location') !== `${HOST}/`) fail(`${p} must 301 to ${HOST}/, got ${r.status} ${r.headers.get('location')}`);
 }
+// A REAL 404 for a path this host does not have. It used to 301 home, so every typo and every dead
+// inbound link looked like the homepage to Google (Search Readiness a9, 25 Oct 2026).
+for (const p of [`/no-such-page-${Date.now().toString(36)}/`, '/about.html', '/admin.html']) {
+  const r = await get(p); checked += 1;
+  if (r.status !== 404) fail(`${p} must answer 404, got ${r.status}${r.headers.get('location') ? ` -> ${r.headers.get('location')}` : ''}`);
+  else {
+    const t = await r.text();
+    if (!/noindex/i.test(t) || !t.includes('href="/"')) fail(`${p} answered 404 but not with the apex 404 page (noindex, a link home)`);
+  }
+}
+// The About page: the publisher an answer engine can cite, and the home page links it.
+{
+  const r = await get('/about/'); checked += 1;
+  const t = r.status === 200 ? await r.text() : '';
+  if (r.status !== 200) fail(`/about/ must answer 200, got ${r.status}${r.headers.get('location') ? ` -> ${r.headers.get('location')}` : ''}`);
+  else if (!/<link rel="canonical" href="https:\/\/aplayermode\.com\/about\/">/.test(t) || !/Spry Labs/.test(t)) fail('/about/ is not the About page (canonical + the publisher Spry Labs)');
+  const bare = await get('/about'); checked += 1;
+  if (bare.status !== 301 || bare.headers.get('location') !== `${HOST}/about/`) fail(`/about must 301 to ${HOST}/about/, got ${bare.status} ${bare.headers.get('location')}`);
+  if (!/href="\/about\/"/.test(html)) fail('/ does not link the About page');
+}
 if (failures.length) { for (const f of failures) console.error(`${LABEL} FAIL ${f}`); console.error(`${LABEL} FAIL (${failures.length}) - ${checked} URLs`); process.exit(1); }
 console.log(`${LABEL} PASS - ${checked} URLs on ${HOST}`);
 process.exit(0);
