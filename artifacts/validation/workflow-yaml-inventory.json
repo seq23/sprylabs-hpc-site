@@ -417,6 +417,40 @@
         "reports/**"
       ],
       "validation_owner": "simplified workflow topology validators"
+    },
+    {
+      "path": ".github/workflows/weekly-outcome-report.yml",
+      "name": "Weekly Outcome Report",
+      "trigger": [
+        "schedule",
+        "workflow_dispatch"
+      ],
+      "primary_command": "npm run report:weekly-outcome",
+      "repo_lane": "validation-control-plane",
+      "current_status": "keep_admitted",
+      "reason": "Search Readiness item i9: nothing reported per-site outcomes week over week, so a drop could go unnoticed for a month, and no red list closed itself. Mondays it reads gsc_truth.json and each host's index_coverage.json, compares them against the same files at the newest commit at least seven days old, writes the report to reports/, emails it through Resend when a key is configured, and keeps exactly one self-closing issue per red site. It reads state and reports: it writes nothing back to the repository, which is why the prior week comes from git rather than from a history file it would have to commit.",
+      "allowed_runtime_mutations": [
+        "reports/weekly_outcome_report.json",
+        "reports/weekly_outcome_report.md"
+      ],
+      "forbidden_runtime_mutations": [
+        ".github/**",
+        "package.json",
+        "package-lock.json",
+        "scripts/**",
+        "docs/**",
+        "_repo*.json",
+        "_validation_registry.json",
+        "_repo_validation_matrix.json",
+        "data/**",
+        "site/public/**",
+        "dist/**"
+      ],
+      "required_artifacts": [
+        "reports/weekly_outcome_report.json",
+        "reports/weekly_outcome_report.md"
+      ],
+      "validation_owner": "validate:weekly-outcome-report"
     }
   ]
 }

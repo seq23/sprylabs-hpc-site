@@ -2777,6 +2777,26 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-WF-WEEKLY-OUTCOME-REPORT",
+      "validation_id": "VAL-WF-WEEKLY-OUTCOME-REPORT",
+      "lane": "validation-control-plane",
+      "command": ".github/workflows/weekly-outcome-report.yml",
+      "order": 269,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-WEEKLY-OUTCOME-REPORT",
+      "validation_id": "WEEKLY-OUTCOME-REPORT",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:weekly-outcome-report",
+      "order": 270,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
   "entry_count": 277,
@@ -2853,6 +2873,10 @@
         {
           "id": "validate:canonical-host",
           "command": "npm run validate:canonical-host"
+        },
+        {
+          "id": "validate:weekly-outcome-report",
+          "command": "npm run validate:weekly-outcome-report"
         },
         {
           "id": "VAL-QUERY-OWNER-UNIQUENESS",
