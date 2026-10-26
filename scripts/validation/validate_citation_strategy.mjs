@@ -7,6 +7,7 @@ const { routeFor } = requireCjs('../lib/dual_domain_policy.cjs');
 const { fileForRoute } = requireCjs('../lib/route_resolution.cjs');
 import path from 'node:path';
 import {readJson,fail,pass,writeSummary} from './common.mjs';
+import {requiredHomepageTrustLinks,linksRoute} from '../lib/homepage_trust_links.mjs';
 const errors=[];
 const contract=readJson('data/citation/citation_strategy_contract.json');
 const pages=readJson('data/citation/citable_pages.json').pages.filter(x=>x.status==='ACTIVE');
@@ -76,10 +77,13 @@ if(!String(author.credential_policy||'').includes('No professional')) errors.pus
 // The pages must exist as published files AND be linked from index.html.
 {
   const home=fs.readFileSync('index.html','utf8');
-  const required=[['/about','the About page'],[String(author.canonical_author_page||'/author'),'the author page'],[String(author.methodology_url||'/citation-methodology'),'the methodology page']];
-  for(const [route,label] of required){
+  // One list, shared with the writer (scripts/repair/homepage_trust_links.mjs,
+  // run in build:postprocess), so the check and the output cannot disagree.
+  const required=requiredHomepageTrustLinks(author);
+  if(required.length<3) errors.push(`homepage trust links: ${required.length} defined, expected the About, author and methodology pages`);
+  for(const {route,label} of required){
     if(!fileForRoute(process.cwd(), route)) errors.push(`${label} (${route}) is not a published page`);
-    if(!new RegExp(`href=["']${route}/?["']`).test(home)) errors.push(`the homepage does not link ${label} (${route}); an engine cannot reach who is speaking`);
+    if(!linksRoute(home, route)) errors.push(`the homepage does not link ${label} (${route}); an engine cannot reach who is speaking`);
   }
 }
 // The per-page citation checks (one H1, canonical, extraction block, named author,
