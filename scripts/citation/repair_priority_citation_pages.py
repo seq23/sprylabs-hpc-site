@@ -35,7 +35,18 @@ def accepted_definition(item):
     return item['framework'] + ': ' + (item.get('opening_contains') or ('explains the operating decision behind ' + item['h1']))
 
 def append_query_exports(active):
-    for name in ('llms.txt','llms-full.txt'):
+    # The query coverage index goes to llms-full.txt only. llms.txt is the
+    # orientation file an AI engine reads first (Search Readiness a7): what the
+    # site is, how to cite it, where the key pages are, and a pointer to
+    # llms-full.txt. Appending every active query and URL here is what made it
+    # 28,436 words against a 2,000-word cap, and it was the third writer doing
+    # it - apply_citation_program.py and generate_aplayer_phase_expansion.mjs
+    # were already moved off llms.txt. Coverage is unchanged and still
+    # asserted, on the file that is contractually the index:
+    # validate:llms-full-coverage, citation:warn and validate:citation-contract
+    # all read llms-full.txt, and validate:llms-txt-shape caps llms.txt and
+    # requires it to point at the full index.
+    for name in ('llms-full.txt',):
         llms=ROOT/name
         lt=llms.read_text(encoding='utf-8',errors='ignore') if llms.exists() else ''
         rows=[]
