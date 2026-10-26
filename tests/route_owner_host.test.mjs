@@ -120,3 +120,39 @@ test('the table agrees with every page\'s own rel=canonical', () => {
   }
   assert.ok(checked > 2000, `expected the whole published surface, checked ${checked}`);
 });
+
+// The post-deploy live check (scripts/diagnostics/check_sites_live.mjs) is a
+// consumer of this rule. Until 26 Oct 2026 it kept its own assumption that every
+// host's "/" answers 200, so the correct a2 deploy turned Deploy Distribution red
+// (runs 40280677766, 40301109839, 40305380597). Its expectations now come from
+// planHost(), which reads this rule; these tests hold it to that.
+test('the live check expects exactly what the route-owner rule does, on every host', async () => {
+  const { planHost } = await import('../scripts/diagnostics/check_sites_live.mjs');
+  const hosts = Object.keys(JSON.parse(fs.readFileSync(path.join(ROOT, 'config/site_hosts.json'), 'utf8')).hosts);
+  assert.ok(hosts.length >= 2, `expected both shared hosts, found ${hosts.length}`);
+  let checked = 0;
+  for (const host of hosts) {
+    const plan = planHost(host);
+    // "/" is either owned (no redirect expected) or expected to 301 exactly where the edge sends it.
+    assert.equal(plan.homeRedirect, routeOwnerRedirect(`https://${host}/`), `${host}: home expectation drifted from the rule`);
+    // The 200 checks never run on a route the edge redirects.
+    assert.equal(routeOwnerRedirect(plan.landing.url), null, `${host}: landing ${plan.landing.url} is a route the edge 301s`);
+    // The page checked is one this host's canonical claims, with types to hold it to.
+    assert.equal(new URL(plan.landing.canonical).hostname, host, `${host}: landing canonical ${plan.landing.canonical} is on another host`);
+    assert.ok(plan.landing.types.length > 0, `${host}: landing ${plan.landing.route} declares no JSON-LD types to check`);
+    checked += 1;
+  }
+  assert.equal(checked, hosts.length);
+});
+
+test('the spry host is planned as a 301 home plus a spry-owned landing page', async () => {
+  const { planHost } = await import('../scripts/diagnostics/check_sites_live.mjs');
+  const plan = planHost(SPRY_HOST);
+  assert.equal(plan.homeRedirect, `https://${BHPC_HOST}/`);
+  assert.notEqual(plan.landing.route, '/');
+  assert.equal(BHPC_ROUTES.has(plan.landing.route), false);
+  const bhpc = planHost(BHPC_HOST);
+  assert.equal(bhpc.homeRedirect, null);
+  assert.equal(bhpc.landing.route, '/');
+  for (const t of ['WebPage', 'Product']) assert.ok(bhpc.landing.types.includes(t), `BHPC homepage floor lacks ${t}`);
+});

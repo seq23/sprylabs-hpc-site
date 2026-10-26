@@ -18,8 +18,18 @@
  *   - the IndexNow key file not answering with the key
  *   - a made-up path that does not 404 (a soft 404 hides every broken link)
  *   - www.<host> not 301-ing to <host> (one canonical host)
- *   - a homepage missing its canonical, its complete social card, the
+ *   - a landing page missing its canonical, its complete social card, the
  *     1200x630 og:image width/height pair, or its JSON-LD @graph types
+ *   - a homepage the route-owner rule 301s (functions/_lib/route_owner_host.js)
+ *     that does not 301 to its owner host
+ *
+ * Which page is a host's landing page is not hard-coded: it is read from the
+ * same rule the edge runs (planHost below). Until 26 Oct 2026 this check
+ * assumed every host's "/" answers 200; item a2 made https://spryexecutiveos.com/
+ * a deliberate 301 to billionairehighperformancecoach.com, and Deploy
+ * Distribution went red on a correct deploy (runs 40280677766, 40301109839,
+ * 40305380597) because this file kept its own idea of the routes.
+ * Guarded offline by tests/route_owner_host.test.mjs.
  *   - a measured redirect from _redirects that stops redirecting
  *
  * Bounded: every request has a 15 s timeout and its body is read or discarded,
@@ -28,14 +38,77 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
+import { pathToFileURL } from 'node:url';
+import { routeOwnerRedirect } from '../../functions/_lib/route_owner_host.js';
 
 const require = createRequire(import.meta.url);
 const ROOT = process.cwd();
+const { listIndexablePages } = require(path.join(ROOT, 'scripts/lib/site_pages.js'));
+const { routeFor } = require(path.join(ROOT, 'scripts/lib/dual_domain_policy.cjs'));
 const LABEL = '[check:sites-live]';
 const HOSTS = Object.keys(JSON.parse(fs.readFileSync(path.join(ROOT, 'config/site_hosts.json'), 'utf8')).hosts);
 const CHILD = JSON.parse(fs.readFileSync(path.join(ROOT, 'config/site_hosts.json'), 'utf8')).hosts;
 const { DEFAULT_OG_IMAGE, OG_WIDTH, OG_HEIGHT } = require(path.join(ROOT, 'scripts/lib/social_tags.cjs'));
 const INDEXNOW_KEY = fs.readFileSync(path.join(ROOT, 'indexnow.txt'), 'utf8').trim();
+
+/** The @graph @types a page's JSON-LD declares. */
+export function graphTypes(html) {
+  return [...html.matchAll(/<script[^>]*application\/ld\+json[^>]*>([\s\S]*?)<\/script>/g)]
+    .flatMap((m) => { try { return JSON.parse(m[1])['@graph'] || []; } catch { return []; } })
+    .flatMap((n) => [].concat(n['@type'] || []));
+}
+
+/** The href of a page's rel=canonical, or null. */
+export function canonicalOf(html) {
+  const tag = html.match(/<link[^>]*rel=["']canonical["'][^>]*>/i);
+  const href = tag && tag[0].match(/href=["']([^"']+)["']/i);
+  return href ? href[1] : null;
+}
+
+let routeFiles;
+/** Committed file for a published route, from the same routeFor the build uses. */
+function fileForRoute(route) {
+  if (!routeFiles) {
+    routeFiles = new Map();
+    for (const rel of listIndexablePages(ROOT)) routeFiles.set(routeFor(rel), rel);
+  }
+  return routeFiles.get(route) || null;
+}
+
+/** Routes a host's own committed child sitemap claims, in order. */
+function sitemapRoutes(host) {
+  const xml = fs.readFileSync(path.join(ROOT, CHILD[host].child_sitemap), 'utf8');
+  return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)]
+    .map((m) => new URL(m[1].trim()))
+    .filter((u) => u.hostname === host)
+    .map((u) => u.pathname);
+}
+
+/**
+ * What the live check expects of a host, read from the committed tree and the
+ * route-owner rule the edge runs - never from a list kept here.
+ *   homeRedirect: where "/" must 301 to, or null when the host owns "/"
+ *   landing: the page the metadata checks run on - "/" when the host owns it,
+ *            otherwise the first route of its own sitemap the rule leaves alone
+ */
+export function planHost(host) {
+  const base = `https://${host}`;
+  const homeRedirect = routeOwnerRedirect(`${base}/`);
+  const candidates = homeRedirect ? sitemapRoutes(host) : ['/'];
+  const route = candidates.find((r) => !routeOwnerRedirect(`${base}${r}`) && fileForRoute(r));
+  if (!route) throw new Error(`${LABEL} ${host}: no route this host owns has a committed page to check`);
+  const rel = fileForRoute(route);
+  const html = fs.readFileSync(path.join(ROOT, rel), 'utf8');
+  const types = new Set(graphTypes(html));
+  // The homepage's floor stays: it is the product page.
+  if (route === '/') for (const t of ['WebPage', 'Product']) types.add(t);
+  return {
+    host,
+    base,
+    homeRedirect,
+    landing: { route, rel, url: `${base}${route}`, canonical: canonicalOf(html), types: [...types].sort() },
+  };
+}
 
 const failures = [];
 const fail = (m) => failures.push(m);
@@ -56,8 +129,10 @@ async function get(url, { redirect = 'manual' } = {}) {
   }
 }
 
+async function main() {
 for (const host of HOSTS) {
-  const base = `https://${host}`;
+  const plan = planHost(host);
+  const base = plan.base;
   const files = [
     // Per host, robots.txt names that host's OWN child sitemap: Search Console
     // rejects a cross-host child (config/site_hosts.json).
@@ -97,29 +172,39 @@ for (const host of HOSTS) {
     fail(`https://www.${host}/start-here must 301 to ${base}/start-here; got ${www.status} ${www.headers.get('location') || ''}`);
   }
 
-  // The homepage, as an engine sees it.
-  const home = await get(`${base}/`);
-  if (home.status !== 200) fail(`${base}/ answered ${home.status}`);
+  // The homepage. Where the route-owner rule sends "/" to its owner host, the
+  // edge must do exactly that; the 200 checks then run on a page this host owns.
+  if (plan.homeRedirect) {
+    const r = await get(`${base}/`);
+    if (r.status !== 301 || r.headers.get('location') !== plan.homeRedirect) {
+      fail(`${base}/ must 301 to ${plan.homeRedirect} (functions/_lib/route_owner_host.js); got ${r.status} ${r.headers.get('location') || ''}`);
+    }
+  }
+
+  // The landing page, as an engine sees it.
+  const { url, canonical, types } = plan.landing;
+  const home = await get(url);
+  if (home.status !== 200) fail(`${url} answered ${home.status}${home.headers.get('location') ? ` -> ${home.headers.get('location')}` : ''}`);
   const html = home.text;
-  if (/noindex/i.test(home.headers.get('x-robots-tag') || '')) fail(`${base}/ sends X-Robots-Tag: ${home.headers.get('x-robots-tag')}`);
-  if (!new RegExp(`rel=["']canonical["']`).test(html)) fail(`${base}/ has no canonical link`);
+  if (/noindex/i.test(home.headers.get('x-robots-tag') || '')) fail(`${url} sends X-Robots-Tag: ${home.headers.get('x-robots-tag')}`);
+  const liveCanonical = canonicalOf(html);
+  if (!liveCanonical) fail(`${url} has no canonical link`);
+  else if (canonical && liveCanonical !== canonical) fail(`${url} canonical is ${liveCanonical}; the repository committed ${canonical}`);
   for (const [attr, value] of [
     ['property', 'og:title'], ['property', 'og:description'], ['property', 'og:type'],
     ['property', 'og:url'], ['property', 'og:site_name'], ['property', 'og:image'],
     ['name', 'twitter:card'],
   ]) {
-    if (!new RegExp(`${attr}=["']${value}["']`).test(html)) fail(`${base}/ lacks <meta ${attr}="${value}">`);
+    if (!new RegExp(`${attr}=["']${value}["']`).test(html)) fail(`${url} lacks <meta ${attr}="${value}">`);
   }
   for (const [prop, value] of [['og:image:width', OG_WIDTH], ['og:image:height', OG_HEIGHT]]) {
     const m = html.match(new RegExp(`<meta[^>]*property=["']${prop}["'][^>]*content=["'](\\d+)["']|<meta[^>]*content=["'](\\d+)["'][^>]*property=["']${prop}["']`));
     const got = m && (m[1] || m[2]);
-    if (String(got) !== String(value)) fail(`${base}/ ${prop} is ${got || 'absent'}, expected ${value}`);
+    if (String(got) !== String(value)) fail(`${url} ${prop} is ${got || 'absent'}, expected ${value}`);
   }
-  const graph = [...html.matchAll(/<script[^>]*application\/ld\+json[^>]*>([\s\S]*?)<\/script>/g)]
-    .flatMap((m) => { try { return JSON.parse(m[1])['@graph'] || []; } catch { return []; } })
-    .flatMap((n) => [].concat(n['@type'] || []));
-  if (!graph.length) fail(`${base}/ has no parseable JSON-LD @graph`);
-  for (const t of ['WebPage', 'Product']) if (!graph.includes(t)) fail(`${base}/ JSON-LD lacks ${t}`);
+  const graph = graphTypes(html);
+  if (!graph.length) fail(`${url} has no parseable JSON-LD @graph`);
+  for (const t of types) if (!graph.includes(t)) fail(`${url} JSON-LD lacks ${t}`);
 }
 
 // A measured redirect: the first 301 the committed _redirects declares must
@@ -148,3 +233,6 @@ if (failures.length) {
   process.exit(1);
 }
 console.log(`${LABEL} PASS - ${checked} URLs on ${HOSTS.join(', ')}`);
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) await main();
