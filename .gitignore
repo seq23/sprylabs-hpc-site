@@ -1,4 +1,9 @@
-node_modules
+node_modules/
+# ...and the symlink, which the pattern above cannot match. audit-worktree.sh
+# symlinks node_modules into every scratch worktree, and a trailing-slash
+# pattern matches a directory only, so `git add -A` staged a 120000 blob
+# pointing at an absolute local path and broke validate:repair-fixture-capability.
+/node_modules
 artifacts/diagnostics/
 test-results/
 playwright-report/
