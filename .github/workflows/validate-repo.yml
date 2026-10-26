@@ -95,6 +95,12 @@ jobs:
         run: bash .github/scripts/test_unpack_build_tree.sh
       - name: A displaced scheduled lane must be requeued, once, without displacing another
         run: node .github/scripts/test_requeue_displaced_main_automation.mjs
+      - name: The parity manifest must keep node_modules out whatever shape it has
+        # The parity job itself runs only on main (it is a long suite), so the
+        # command it indexes a clone with is pinned here, on every pull request,
+        # against both a symlinked and a real node_modules. A runner git upgrade
+        # broke it on main on 2026-10-25 with every pull request green.
+        run: node .github/scripts/test_clean_rebuild_tree_manifest.mjs
       - name: Hash the build inputs
         id: key
         # Everything the producers read. A validator-only change leaves this
