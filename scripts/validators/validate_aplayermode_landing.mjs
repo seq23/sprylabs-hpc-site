@@ -1080,6 +1080,67 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
   }
 }
 
+// ---------------------------------------------------------------- 12. every OTHER page this host publishes
+// Section 11 proves the landing page's card and head in depth. It reads one file
+// (PAGE), so for every other page aplayermode.com publishes it proved nothing:
+// about.html shipped with no og:image:width/height and no BreadcrumbList while
+// this validator was green (Search Readiness b6 and c2, 26 Oct 2026). The scope
+// is apmLm.PAGES - the same list the sitemap, the lastmod record and the Worker
+// routes are already reconciled against - so a third page is covered the day it
+// is added rather than the day someone remembers to widen a validator.
+{
+  const lm = await import(pathToFileURL(path.join(ROOT, 'scripts', 'aplayermode_sitemap_lastmod.mjs')).href);
+  const OG_IMG = `${PUBLIC_CANONICAL}aplayermode/img/og.png`;
+  const secondary = lm.PAGES.filter((pg) => pg.page !== PAGE);
+  if (!secondary.length) fail('aplayermode_sitemap_lastmod.mjs PAGES declares only the landing page; this section would check nothing');
+  for (const pg of secondary) {
+    const h = read(pg.page);
+    const at = (attr, name) => [...h.matchAll(new RegExp(`<meta\\b[^>]*${attr}="${name}"[^>]*>`, 'gi'))].map((m) => (m[0].match(/content="([^"]*)"/) || [])[1]);
+    const one = (attr, name) => { const v = at(attr, name); if (v.length !== 1) { fail(`${pg.page}: expected exactly one <meta ${attr}="${name}">, found ${v.length}`); return null; } return decode(v[0] ?? ''); };
+    const title = decode(stripTags((h.match(/<title>([\s\S]*?)<\/title>/i) || [])[1] || '').trim());
+    const desc = decode((h.match(/<meta\b[^>]*name="description"[^>]*content="([^"]*)"/i) || [])[1] || '');
+    if (!title) fail(`${pg.page}: no <title>`);
+    if (!desc) fail(`${pg.page}: no meta description`);
+
+    // The complete card, including the dimensions a preview needs to lay the
+    // image out before it has fetched it. The pixel values are not free-floating:
+    // section 11 has already proved the committed og.png really is 1200x630.
+    if (one('property', 'og:type') !== 'website') fail(`${pg.page}: og:type must be "website"`);
+    if (one('property', 'og:site_name') !== 'A Player Mode') fail(`${pg.page}: og:site_name must be "A Player Mode"`);
+    const ogTitle = one('property', 'og:title');
+    if (ogTitle !== null && !ogTitle) fail(`${pg.page}: og:title is empty`);
+    if (one('property', 'og:description') !== desc) fail(`${pg.page}: og:description must equal the meta description`);
+    if (one('property', 'og:url') !== pg.loc) fail(`${pg.page}: og:url must be ${pg.loc}`);
+    if (one('property', 'og:image') !== OG_IMG) fail(`${pg.page}: og:image must be ${OG_IMG} (this host's own image, not another domain's)`);
+    if (one('property', 'og:image:width') !== '1200' || one('property', 'og:image:height') !== '630') fail(`${pg.page}: og:image:width/height must be 1200/630`);
+    if (one('name', 'twitter:card') !== 'summary_large_image') fail(`${pg.page}: twitter:card must be summary_large_image`);
+    if (one('name', 'twitter:image') !== OG_IMG) fail(`${pg.page}: twitter:image must be ${OG_IMG}`);
+    const canon = (h.match(/<link\b[^>]*rel="canonical"[^>]*href="([^"]+)"/i) || [])[1];
+    if (canon !== pg.loc) fail(`${pg.page}: canonical is ${canon}; expected ${pg.loc}`);
+
+    // An inner page states where it sits. Engines read the page-to-site
+    // relationship from this, and it is what c2 asks every inner page for.
+    const lds = [...h.matchAll(/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi)];
+    if (lds.length !== 1) { fail(`${pg.page}: expected exactly one JSON-LD block, found ${lds.length}`); continue; }
+    let g = [];
+    try { g = JSON.parse(lds[0][1])['@graph'] || []; } catch (e) { fail(`${pg.page}: JSON-LD does not parse: ${e.message}`); continue; }
+    const crumbs = g.filter((n) => n['@type'] === 'BreadcrumbList');
+    if (crumbs.length !== 1) { fail(`${pg.page}: JSON-LD @graph needs exactly one BreadcrumbList on an inner page, found ${crumbs.length}`); continue; }
+    const items = crumbs[0].itemListElement || [];
+    if (items.length < 2) fail(`${pg.page}: the BreadcrumbList has ${items.length} item(s); an inner page's trail starts at the home page and ends at itself`);
+    const positions = items.map((x) => x.position);
+    if (JSON.stringify(positions) !== JSON.stringify(items.map((_, i) => i + 1))) fail(`${pg.page}: BreadcrumbList positions must be 1..${items.length}, found ${JSON.stringify(positions)}`);
+    if (items[0]?.item !== PUBLIC_CANONICAL) fail(`${pg.page}: the first breadcrumb must be ${PUBLIC_CANONICAL}, found ${items[0]?.item}`);
+    if (items[items.length - 1]?.item !== pg.loc) fail(`${pg.page}: the last breadcrumb must be the page itself (${pg.loc}), found ${items[items.length - 1]?.item}`);
+    for (const it of items) if (!it.name) fail(`${pg.page}: a breadcrumb ListItem has no name`);
+    // The trail is only worth anything if every stop on it is a page this host
+    // actually publishes.
+    const known = new Set(lm.PAGES.map((x) => x.loc));
+    for (const it of items) if (!known.has(it.item)) fail(`${pg.page}: breadcrumb points at ${it.item}, which is not a page aplayermode.com publishes`);
+    notes.push(`${pg.page}: complete card and a ${items.length}-step breadcrumb trail`);
+  }
+}
+
 const summary = `${tokensChecked} theme tokens, ${priceEls.length} prices, ${refs.length} links, ${linkEls.length} download buttons, ${uniquePoints.length} BHPC selling points, ${h1s.length} h1, ${ORDER.length} sections in order, ${FAQ_QS.length} FAQ questions`;
 for (const n of notes) console.log(`${LABEL} note: ${n}`);
 if (failures.length) {
