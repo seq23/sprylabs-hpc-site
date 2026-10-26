@@ -8,6 +8,8 @@ Outputs:
 */
 
 const fs = require("fs");
+// The one definition of the publisher Organization (Search Readiness item c1).
+const { organizationNode } = require('./lib/organization_node.cjs');
 const path = require("path");
 // One build clock (SOURCE_DATE_EPOCH, else the HEAD commit time), never the wall
 // clock: a wall-clock "today" made two clones of one commit differ after a UTC
@@ -266,7 +268,10 @@ function renderHtml(report) {
       "operating models",
       "accountability",
       "decision support"
-    ]
+    ],
+    // Search Readiness item c1: every page says which entity it belongs to.
+    // This was the one page on the site with no Organization node at all.
+    publisher: organizationNode()
   };
 
   const supplementalGeoSchema = {

@@ -2817,9 +2817,29 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-ORGANIZATION-NODE",
+      "validation_id": "ORGANIZATION-NODE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:organization-node",
+      "order": 273,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-CLAUDE-MD-COST-RULE",
+      "validation_id": "CLAUDE-MD-COST-RULE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:claude-md-cost-rule",
+      "order": 274,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 281,
+  "entry_count": 283,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3541,6 +3561,14 @@
         {
           "id": "VAL-BUILD-INPUT-HASH-COVERS-TREE",
           "command": "npm run validate:build-input-hash-covers-tree"
+        },
+        {
+          "id": "ORGANIZATION-NODE",
+          "command": "npm run validate:organization-node"
+        },
+        {
+          "id": "CLAUDE-MD-COST-RULE",
+          "command": "npm run validate:claude-md-cost-rule"
         }
       ]
     },

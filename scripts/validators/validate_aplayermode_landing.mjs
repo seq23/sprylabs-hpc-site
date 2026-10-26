@@ -83,6 +83,10 @@ import path from 'node:path';
 import vm from 'node:vm';
 import { pathToFileURL } from 'node:url';
 
+// The one definition of the publisher Organization's approved sameAs list
+// (Search Readiness item c1). See scripts/lib/organization_node.cjs.
+const { SAME_AS: ORG_SAME_AS } = createRequire(import.meta.url)('../lib/organization_node.cjs');
+
 const ROOT = process.cwd();
 const LABEL = '[validate:aplayermode-landing]';
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
@@ -797,7 +801,12 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
   for (const t of ['Organization', 'WebSite', 'WebPage', 'SoftwareApplication', 'Product', 'FAQPage']) if (node(t).length !== 1) fail(`JSON-LD @graph needs exactly one ${t}, found ${node(t).length}`);
   const org = node('Organization')[0] || {};
   if (org.name !== 'Spry Labs' || !org.url || !org.logo) fail('JSON-LD Organization must be Spry Labs with url and logo');
-  for (const u of org.sameAs || []) if (!['https://spryexecutiveos.com/', 'https://sprylabs.gumroad.com/'].includes(u)) fail(`Organization sameAs ${u} is not a Spry Labs property the repo already uses`);
+  // The approved sameAs list has ONE definition (scripts/lib/organization_node.cjs,
+  // Search Readiness item c1). Read it rather than keep a second copy here: this
+  // check used to hold a hand-copied subset of two, which is how the list and
+  // its guard drift into disagreeing.
+  for (const u of org.sameAs || []) if (!ORG_SAME_AS.includes(u)) fail(`Organization sameAs ${u} is not a Spry Labs property the repo already uses (scripts/lib/organization_node.cjs)`);
+  for (const u of ORG_SAME_AS) if (!(org.sameAs || []).includes(u)) fail(`Organization sameAs is missing ${u}, which scripts/lib/organization_node.cjs declares`);
   if ((node('WebSite')[0] || {}).url !== U) fail(`JSON-LD WebSite url must be ${U}`);
   const app = node('SoftwareApplication')[0] || {};
   if (app.name !== 'A Player Mode' || !app.applicationCategory || !app.operatingSystem) fail('JSON-LD SoftwareApplication must be "A Player Mode" with applicationCategory and operatingSystem');

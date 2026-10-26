@@ -9017,8 +9017,68 @@
         "MX-WEEKLY-OUTCOME-REPORT"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "ORGANIZATION-NODE",
+      "status": "ADMITTED",
+      "name": "validate:organization-node",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Search Readiness item c1 (25 Oct 2026): all 3,480 Organization nodes on the site named Spry Labs and not one carried sameAs, because ten generators each wrote their own partial set, so AI engines had no complete entity to attach a page to. One definition in scripts/lib/organization_node.cjs, one repair in scripts/repair/complete_organization_node.cjs; this proves every published page carries name, url, logo and sameAs, that no page is missing an Organization entirely, and that no sameAs outside the declared list can be invented to make it green.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:organization-node",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-organization-node/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-26",
+      "matrix_ids": [
+        "MX-ORGANIZATION-NODE"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "CLAUDE-MD-COST-RULE",
+      "status": "ADMITTED",
+      "name": "validate:claude-md-cost-rule",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Search Readiness item i10 (25 Oct 2026): docs/cost/zero-paid-llm.md had existed since 11 Oct but the repo had no CLAUDE.md at all, so the nothing-paid rule was in a document nothing an agent reads first pointed at - a rule no code reads is a wish. This reads CLAUDE.md for the sentence, proves the document it links exists and that every .md link resolves, proves the validator it names is a real script, proves config/llm_routing.json still pins max_cost_usd 0 with fallback_to_paid false, and reads the one-definition contract table so it cannot name a file or npm script that is not there.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:claude-md-cost-rule",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-claude-md-cost-rule/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-26",
+      "matrix_ids": [
+        "MX-CLAUDE-MD-COST-RULE"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 288,
+  "record_count": 290,
   "generated_at": "2026-08-08T23:30:00Z"
 }
