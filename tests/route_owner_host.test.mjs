@@ -89,8 +89,16 @@ test('the .html form resolves to the same route as the clean URL', () => {
   assert.equal(routeKeyFor('/'), '/');
   assert.equal(routeKeyFor('/answers/'), '/answers/');
   if (BHPC_ROUTES.has('/download')) {
-    assert.equal(routeOwnerRedirect(`https://${SPRY_HOST}/download.html`), `https://${BHPC_HOST}/download.html`);
+    assert.equal(routeOwnerRedirect(`https://${SPRY_HOST}/download.html`), `https://${BHPC_HOST}/download`);
   }
+});
+
+test('an HTML route reaches its canonical owner in one hop, keeping attribution', () => {
+  const res = routeOwnerResponse(get(`https://${SPRY_HOST}/download.html?utm_source=guide&ref=a%20b`));
+  assert.equal(res.status, 301);
+  const target = res.headers.get('location');
+  assert.equal(target, `https://${BHPC_HOST}/download?utm_source=guide&ref=a%20b`);
+  assert.equal(routeOwnerRedirect(target), null);
 });
 
 test('the committed table is exactly what the generator derives from the canonicals', () => {

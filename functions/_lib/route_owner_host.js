@@ -81,6 +81,9 @@ export function routeOwnerRedirect(url) {
   const route = routeKeyFor(pathname);
   if (!BHPC_ROUTES.has(route)) return null;
   parsed.hostname = BHPC_HOST;
+  // The table's route is already canonical. Keeping .html here sent visitors
+  // through a second Pages redirect after changing hosts (Ahrefs, 27 Oct).
+  parsed.pathname = route;
   return parsed.toString();
 }
 
