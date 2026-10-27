@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-10-26T15:37:28.038Z",
+  "generated_at": "2026-10-27T13:43:16.167Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 275,
+  "admitted_hard_fail_count": 276,
   "reviewed_count": 8,
-  "unreviewed_count": 267,
+  "unreviewed_count": 268,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 201,
+    "REVIEW_REQUIRED": 202,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 37,
     "REVIEW_WARNING_BOUNDARY": 29
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 201,
+    "REVIEW_REQUIRED": 202,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 37,
     "REVIEW_WARNING_BOUNDARY": 21
   },
   "migration_status_counts": {
-    "UNREVIEWED": 267,
+    "UNREVIEWED": 268,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -4168,6 +4168,21 @@
         "MX-HOST-CONSOLIDATION"
       ],
       "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "HOMEPAGE-TRUST-LINKS",
+      "name": "validate:homepage-trust-links",
+      "command": "npm run validate:homepage-trust-links",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Validate Repo run 40347544796 (26 Oct 2026): the daily-citation-intelligence lane ran authority:scale:restore, which reverted index.html to a frozen blob older than the hand-added About/author/methodology footer links; no generator wrote them back and the lane pushed c0a62f0e1 to main without running validate:citation-strategy. Refuses a tree where build:postprocess does not run repair:homepage-trust-links before build_404.js, where the writer cannot restore the links into the frozen homepage blob, where the committed homepage lacks them, or where commit_and_push_if_changed.sh stops running validate:citation-strategy between convergence and staging.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-HOMEPAGE-TRUST-LINKS"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",
       "decision": null,
       "evidence": []
