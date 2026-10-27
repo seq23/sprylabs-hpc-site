@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "self_test": "named-stop-exit-code",
-  "generated_at": "2026-10-26T15:27:08.065Z",
+  "generated_at": "2026-10-27T14:42:38.909Z",
   "script": ".github/scripts/converge_tree_before_commit.sh",
   "assertions_executed": 8,
   "assertions": [
@@ -43,7 +43,7 @@
     {
       "assertion": "a pending .html is not swallowed by the no-governed stop",
       "passed": true,
-      "detail": "exit 254; output \"[converge] 1 governed surface path(s) pending out of 1 (self-test); converging before commit.\\n::group::convergence pass 1\\nnpm error code ENOENT\\nnpm error syscall open\\nnpm error path /tmp/named-stop-lrtx4p/package.json\\nnpm error errno -2\\nnpm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/tmp/named-stop-lrtx4p/package.json'\\nnpm error enoent This is related to npm not being able to find a file.\\nnpm error enoent\\nnpm error A complete log of this run can be found in: /home/runner/.npm/_logs/2026-10-26T15_27_08_005Z-debug-0.log\\n\""
+      "detail": "exit 254; output \"[converge] 1 governed surface path(s) pending out of 1 (self-test); converging before commit.\\n::group::convergence pass 1\\nnpm error code ENOENT\\nnpm error syscall open\\nnpm error path /tmp/named-stop-X2IAaS/package.json\\nnpm error errno -2\\nnpm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/tmp/named-stop-X2IAaS/package.json'\\nnpm error enoent This is related to npm not being able to find a file.\\nnpm error enoent\\nnpm error A complete log of this run can be found in: /home/runner/.npm/_logs/2026-10-27T14_42_38_845Z-debug-0.log\\n\""
     }
   ],
   "status": "PASS",
