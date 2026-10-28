@@ -2,7 +2,7 @@
 /**
  * validate:title-brand-matches-host
  *
- * A page whose <title> ends in a site name ("| Spry Executive OS",
+ * Every indexable page must name its own site. A title ending in a site name ("| Spry Executive OS",
  * "| Billionaire High Performance Coach") must name the host that serves it.
  * The host is the one the page is published on (host_brand.cjs
  * publishedHostForRel: citable_pages.json's canonical_domain, else
@@ -34,12 +34,13 @@ let branded = 0;
 for (const rel of pages) {
   const title = B.titleOf(fs.readFileSync(path.join(ROOT, rel), 'utf8'));
   const suffix = H.brandSuffixOf(title);
-  if (!suffix) continue;
-  branded += 1;
+  if (suffix) branded += 1;
   const host = H.publishedHostForRel(rel, ROOT);
   let want;
   try { want = H.brandForHost(host); } catch (e) { errors.push(`${rel}: ${e.message}`); continue; }
-  if (suffix !== want) errors.push(`${rel} (served on ${host}): title ends "| ${suffix}", want "| ${want}": "${title}"`);
+  if (!B.titleNamesHost(title, host)) errors.push(`${rel} (served on ${host}): title does not name its own site: "${title}"`);
+  if (B.titleNamesSibling(title, host)) errors.push(`${rel}: title names a sibling property: "${title}"`);
+  if (suffix && suffix !== want) errors.push(`${rel} (served on ${host}): title ends "| ${suffix}", want "| ${want}": "${title}"`);
 }
 if (!branded) errors.push('zero indexable titles carry a brand suffix, so the check proved nothing - the scan or the suffix pattern is broken');
 
@@ -49,4 +50,4 @@ if (errors.length) {
   if (errors.length > 60) console.error(`  ... and ${errors.length - 60} more`);
   process.exit(1);
 }
-console.log(`${TAG} OK: ${branded} of ${pages.length} indexable titles carry a brand suffix, each naming the host that serves the page`);
+console.log(`${TAG} OK: ${branded} of ${pages.length} indexable titles carry a brand suffix, all ${pages.length} name their own host`);
