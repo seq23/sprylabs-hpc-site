@@ -17,8 +17,12 @@
  * cannot drift into two definitions.
  *
  * What the repair may do, and what it may not:
- *   - an over-long title loses its brand/qualifier suffixes first, then is cut
- *     at a word boundary; an over-long description is cut at the last sentence
+ *   - an over-long title keeps its site's name and loses its own words: the
+ *     full brand, else the short name (SHORT_BRANDS), with the core cut at a
+ *     word boundary to make room. It may drop de-duplication qualifiers and
+ *     abbreviate the product name, but never the site's name - a title that
+ *     does not name its own site fails Search Readiness b10 (28 Oct 2026).
+ *     An over-long description is cut at the last sentence
  *     end that still leaves 110+ characters, else at a word boundary. Both keep
  *     the page's own words - nothing is invented, nothing is appended.
  *   - a SHORT title or description is never padded here. Padding is where
@@ -41,6 +45,18 @@ const EXEMPT_PAGES = new Set(['download.html']);
 const BRANDS = {
   'spryexecutiveos.com': 'Spry Executive OS',
   'billionairehighperformancecoach.com': 'Billionaire High Performance Coach',
+};
+
+// The name a title falls back to when the full brand will not fit in TITLE_MAX.
+// A title may never drop its site's name to make room (Search Readiness b10):
+// "Billionaire High Performance Coach" is 34 of the 70 characters a title has,
+// so a long question could only ever fit the abbreviation the site's own
+// comparison pages already use. Each short name must be declared on its
+// homepage as og:site_name, because that is where the audit reads a site's
+// brands from; validate:title-brand-matches-host fails if it is not.
+const SHORT_BRANDS = {
+  'spryexecutiveos.com': 'Spry Executive OS',
+  'billionairehighperformancecoach.com': 'BHPC',
 };
 
 const NAMED_ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', rsquo: '’', lsquo: '‘', rdquo: '”', ldquo: '“', mdash: '—', ndash: '–', hellip: '…', rarr: '→' };
@@ -121,13 +137,42 @@ function titleCandidates(title, host) {
     .replace(/\s+[—–]\s+Spry Executive OS\b/gi, '')
     .replace(/Billionaire High Performance Coach/g, 'BHPC'));
   const brand = BRANDS[host] || '';
+  const shortBrand = SHORT_BRANDS[host] || brand;
   const out = [];
   if (brand) out.push(`${core} | ${brand}`);
-  out.push(core);
   if (brand) out.push(`${short} | ${brand}`);
-  out.push(short);
-  out.push(cutWords(short, TITLE_MAX));
+  // Every remaining candidate still carries a name. Until 28 Oct 2026 the
+  // ladder fell through to `core`, `short` and a bare cut, so 1,806 of 2,264
+  // indexable titles had quietly lost their site's name to the 70-character cap
+  // and Search Readiness b10 failed on 10 of its 12 sampled pages. The brand is
+  // the last thing to go, not the first: the words are cut around it.
+  if (shortBrand) {
+    const tail = ` | ${shortBrand}`;
+    out.push(`${core}${tail}`);
+    out.push(`${short}${tail}`);
+    out.push(`${cutWords(core, TITLE_MAX - tail.length)}${tail}`);
+    out.push(`${cutWords(short, TITLE_MAX - tail.length)}${tail}`);
+  }
+  if (!brand && !shortBrand) { out.push(core); out.push(short); out.push(cutWords(short, TITLE_MAX)); }
   return [...new Set(out)].filter(inTitleRange);
+}
+
+/**
+ * The title `core` carries on `host`, inside TITLE_MAX and always naming the
+ * site: the full brand when it fits, else the short name, cutting the core's
+ * own words to make room rather than dropping the name.
+ */
+function titleWithBrand(core, host) {
+  const c = titleCore(core);
+  const brand = BRANDS[host] || '';
+  const shortBrand = SHORT_BRANDS[host] || brand;
+  if (!brand && !shortBrand) return cutWords(c, TITLE_MAX);
+  const full = `${c} | ${brand}`;
+  if (brand && full.length <= TITLE_MAX) return full;
+  const tail = ` | ${shortBrand}`;
+  const withShort = `${c}${tail}`;
+  if (withShort.length <= TITLE_MAX) return withShort;
+  return `${cutWords(c, TITLE_MAX - tail.length)}${tail}`;
 }
 
 /** Candidate descriptions for an over-long description, best first. Short ones return []. */
@@ -149,7 +194,7 @@ function descriptionCandidates(desc) {
 }
 
 module.exports = {
-  TITLE_MIN, TITLE_MAX, DESC_MIN, DESC_MAX, EXEMPT_PAGES, BRANDS,
+  TITLE_MIN, TITLE_MAX, DESC_MIN, DESC_MAX, EXEMPT_PAGES, BRANDS, SHORT_BRANDS,
   decodeEntities, escapeText, escapeAttr, norm, titleOf, descriptionOf, META_DESC_RE,
-  inTitleRange, inDescRange, cutWords, titleCore, titleCandidates, descriptionCandidates,
+  inTitleRange, inDescRange, cutWords, titleCore, titleCandidates, titleWithBrand, descriptionCandidates,
 };
