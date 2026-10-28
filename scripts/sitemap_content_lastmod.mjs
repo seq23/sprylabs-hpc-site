@@ -21,9 +21,9 @@
  *     "when did this page last change", and it is why a mass-reserialization
  *     commit does not become every page's lastmod.
  *
- *  3. Afterwards the ledger carries the hash forward. A page whose visible text is
- *     unchanged keeps its recorded date untouched; only a page whose text actually
- *     moved gets today's date.
+ *  3. Content matching HEAD always uses its proven git date. Only pending visible
+ *     edits get today's date. Temporary build output must not leave a false date
+ *     behind after the build restores the committed content.
  *
  *  4. A URL whose file cannot be located, or for which git offers no evidence,
  *     keeps whatever lastmod the sitemap already had. An unknown date is left
@@ -148,57 +148,15 @@ for (const loc of allLocs.keys()) {
   if (f) resolved.set(loc, f); else unresolvable.push(loc);
 }
 
-// Which URLs need a git-derived seed. Two cases:
-//
-//  1. No ledger entry at all - nothing to carry forward.
-//
-//  2. An entry whose evidence is `git_last_visible_content_change`. That record
-//     is not a stored value, it is a CLAIM ABOUT GIT HISTORY, and history keeps
-//     moving underneath it. The unchanged branch below used to replay such a
-//     record verbatim whenever the page hashed the same, so the claim was never
-//     re-checked after the day it was written.
-//
-//     That goes wrong precisely when a page is REVERTED. comparisons/bhpc-vs-
-//     betterup.html oscillated between two visible texts as an unconverged bot
-//     lane rewrote it and a repair put it back:
-//
-//       68c2b7d49  2026-08-31  58fc5c08...   <- ledger recorded 2026-08-31 here
-//       ae39ee266  2026-09-01  9f98bcd6...
-//       776d201e9  2026-09-01  58fc5c08...   <- text restored
-//
-//     After the revert the page hashes exactly what the ledger holds, so it took
-//     the unchanged path and kept 2026-08-31 - while git plainly shows the text
-//     last MOVED on 2026-09-01. self_test_sitemap_lastmod.mjs recomputes the
-//     claim from git and caught the contradiction. A crawler that fetched the
-//     page yesterday gets different bytes today, so 2026-09-01 is the honest
-//     date and the stale claim was under-reporting a real change.
-//
-//     Re-seeding these is evidence-following, not churn: the date only ever
-//     moves to what git proves, never to TODAY, and never backwards.
-const needSeed = [...resolved.entries()]
-  .filter(([loc]) => {
-    const prior = priorByUrl.get(loc);
-    if (!prior?.lastmod) return true;
-    return prior.evidence === 'git_last_visible_content_change';
-  })
-  .map(([, f]) => f);
-const seeded = needSeed.length ? seedDates([...new Set(needSeed)]) : new Map();
-
+// Re-check EVERY committed page, including content_hash_changed records. A build
+// can derive the ledger while a page differs from HEAD, then restore HEAD and
+// derive again. Comparing only with the intermediate ledger dates the unchanged
+// published page "today" on every release. Even later no-op runs retain that lie.
+// Git is the evidence for committed content; the ledger is only carried forward
+// for a genuinely pending edit that has not reached a commit yet.
+const seeded = seedDates([...new Set(resolved.values())]);
 const stats = { seeded_from_git: 0, pending_change_dated_today: 0, unchanged: 0, regressed_claim_corrected: 0, content_changed: 0, kept_existing_no_evidence: 0, unresolvable_file: unresolvable.length };
 
-// A URL new to the ledger is dated from git history - but this deriver runs
-// INSIDE the release, before the commit that carries the page. When the page on
-// disk already differs from every committed version, the newest commit that
-// "moved its visible text" has not been made yet; it is the one this run is
-// about to make. Dating the record from history then under-reports the change
-// by exactly one release, and the --check mode, run on the committed tree by
-// validate:search-measurement-truthfulness, walks git after the commit and
-// contradicts it. That is what turned release commit 2701370e9 red on
-// 2026-09-26: /chatgpt-daily-operator-system/ (ledger 2026-09-20, git
-// 2026-09-26) and /product (ledger 2026-08-26, git 2026-09-26) were both new
-// to the ledger with uncommitted visible changes. So: a new URL whose on-disk
-// visible text is not the text at HEAD is a pending change, and today is its
-// honest date, exactly as it is for a URL the ledger already knew.
 function visibleHashAtHead(file) {
   const h = loadHistory().get(file);
   const blob = h && h.length ? h[0].blob : null;
@@ -223,42 +181,37 @@ for (const [loc, existing] of allLocs) {
   }
   const hash = contentHash(fs.readFileSync(path.join(ROOT, file), 'utf8'));
   const was = priorByUrl.get(loc);
-  if (was && was.content_sha256 === hash) {
+  const unchanged = was && was.content_sha256 === hash;
+  if (unchanged) {
     stats.unchanged += 1;
     stableUrls.add(loc);
-    // A git-evidenced record is a claim about history, so re-check it against
-    // history rather than replaying it. Only ever adopt a NEWER proven date: a
-    // revert moves the page for a crawler even though the text is old.
-    const proven = was.evidence === 'git_last_visible_content_change' ? (seeded.get(file) || null) : null;
-    if (proven && proven > was.lastmod) {
-      stats.regressed_claim_corrected += 1;
-      urls.push({ ...was, lastmod: proven });
-    } else {
-      urls.push(was);
-    }
-    continue;
-  }
-  if (was) {
-    // Visible text moved since the ledger recorded it. That is a real change, and
-    // today is the honest date for it.
-    stats.content_changed += 1;
-    urls.push({ url: loc, source_file: file, content_sha256: hash, lastmod: TODAY, evidence: 'content_hash_changed', first_seen: was.first_seen || was.lastmod || TODAY });
-    continue;
   }
   const gitDate = seeded.get(file) || null;
-  if (!gitDate) {
-    stats.kept_existing_no_evidence += 1;
-    if (existing) urls.push({ url: loc, source_file: file, content_sha256: hash, lastmod: existing, evidence: 'retained_existing_sitemap_value', first_seen: existing });
-    continue;
-  }
   const headHash = visibleHashAtHead(file);
-  if (headHash && headHash !== hash) {
-    stats.pending_change_dated_today += 1;
-    urls.push({ url: loc, source_file: file, content_sha256: hash, lastmod: TODAY, evidence: 'content_hash_changed', first_seen: gitDate });
+  if (gitDate && headHash === hash) {
+    // The released content already exists in git. Correct false build dates in
+    // either direction; an intermediate derivation is not publication evidence.
+    if (was && was.lastmod !== gitDate) stats.regressed_claim_corrected += 1;
+    if (!was) stats.seeded_from_git += 1;
+    urls.push({ url: loc, source_file: file, content_sha256: hash, lastmod: gitDate,
+      evidence: 'git_last_visible_content_change', first_seen: was?.first_seen || gitDate });
     continue;
   }
-  stats.seeded_from_git += 1;
-  urls.push({ url: loc, source_file: file, content_sha256: hash, lastmod: gitDate, evidence: 'git_last_visible_content_change', first_seen: gitDate });
+  if (unchanged) {
+    // An unchanged pending edit keeps the date when it was first recorded.
+    urls.push(was);
+    continue;
+  }
+  if (was || (gitDate && headHash)) {
+    if (was) stats.content_changed += 1;
+    else stats.pending_change_dated_today += 1;
+    urls.push({ url: loc, source_file: file, content_sha256: hash, lastmod: TODAY,
+      evidence: 'content_hash_changed', first_seen: was?.first_seen || was?.lastmod || gitDate || TODAY });
+    continue;
+  }
+  stats.kept_existing_no_evidence += 1;
+  if (existing) urls.push({ url: loc, source_file: file, content_sha256: hash, lastmod: existing,
+    evidence: 'retained_existing_sitemap_value', first_seen: existing });
 }
 urls.sort((a, b) => a.url.localeCompare(b.url));
 
