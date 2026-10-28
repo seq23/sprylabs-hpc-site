@@ -118,7 +118,9 @@ function socialTagsFor({root, rel, html}) {
   const host = hostOf(canonical);
   const title = B.titleOf(html);
   const description = B.descriptionOf(html);
-  const siteName = B.BRANDS[host] || B.BRANDS['billionairehighperformancecoach.com'];
+  // The established short name matches the compact brand used in search titles;
+  // the homepage WebSite node retains the full public name.
+  const siteName = B.SHORT_BRANDS[host] || B.BRANDS[host] || B.BRANDS['billionairehighperformancecoach.com'];
   const image = ogImageFor({root, html, host});
   const absolute = `https://${host || 'billionairehighperformancecoach.com'}${image.pathname}`;
   // A directory index is the entry point to a section; everything else is a

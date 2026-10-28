@@ -106,8 +106,7 @@ function boundSearchSnippets({ dryRun = false } = {}) {
       const core = B.titleCore(title);
       const label = sectionLabel(rel);
       if (label) {
-        cands.push(`${core} | ${label}`);
-        cands.push(`${B.cutWords(core, B.TITLE_MAX - label.length - 3)} | ${label}`);
+        cands.push(...B.titleCandidates(`${core} ${label}`, host));
       }
       // Last resort: the page's own slug. A root page that carries another
       // page's heading (the agent appliers have done this) is still named by
@@ -115,9 +114,7 @@ function boundSearchSnippets({ dryRun = false } = {}) {
       const slug = rel.replace(/\/index\.html$|\.html$/, '').split('/').pop().replace(/-+/g, ' ').trim();
       if (slug) {
         const named = slug[0].toUpperCase() + slug.slice(1);
-        const brand = B.BRANDS[host];
-        if (brand) cands.push(`${named} | ${brand}`);
-        cands.push(named);
+        cands.push(...B.titleCandidates(named, host));
         // The slug's tail is what actually tells a family of near-identical
         // agent pages apart ("... for founders", "... with ai"), and it is the
         // only rung that stays unique once the siblings have taken every cut of
@@ -131,7 +128,7 @@ function boundSearchSnippets({ dryRun = false } = {}) {
           }
         }
       }
-      const pick = cands.filter(B.inTitleRange).find((c) => !takenTitles.has(c));
+      const pick = cands.filter(B.inTitleRange).filter((c) => !B.BRANDS[host] || (B.titleNamesHost(c, host) && !B.titleNamesSibling(c, host))).find((c) => !takenTitles.has(c));
       if (pick) newTitle = pick;
       else if (B.inTitleRange(title) || title.length > B.TITLE_MAX) unresolved.push({ path: rel, field: 'title', value: title });
       takenTitles.add(newTitle);

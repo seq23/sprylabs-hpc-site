@@ -24,7 +24,6 @@ import { createRequire } from 'node:module';
 const requireCjs = createRequire(import.meta.url);
 const ROOT = process.cwd();
 const { routeFor, hostFor } = requireCjs(path.join(ROOT, 'scripts/lib/dual_domain_policy.cjs'));
-const { brandForRoute } = requireCjs(path.join(ROOT, 'scripts/lib/host_brand.cjs'));
 const { serializeSchema, mainEntityOfPage, SCHEMA_SCRIPT_RE } = requireCjs(path.join(ROOT, 'scripts/lib/citation_page_schema.cjs'));
 const snippetBounds = requireCjs(path.join(ROOT, 'scripts/lib/search_snippet_bounds.cjs'));
 
@@ -264,8 +263,7 @@ function midSentence(name) {
 // The suffix is the hub's own host's name (scripts/lib/host_brand.cjs): a
 // billionairehighperformancecoach.com hub said "| Spry Executive OS" until 25 Oct 2026.
 function hubTitle(parts, route) {
-  const withBrand = `${parts.join(' | ')} | ${brandForRoute(route)}`;
-  return withBrand.length <= snippetBounds.TITLE_MAX ? withBrand : parts.join(' | ');
+  return snippetBounds.titleCandidates(parts.join(' | '), hostFor(route))[0];
 }
 
 function sectionHubRel(section) {

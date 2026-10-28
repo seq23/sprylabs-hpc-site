@@ -17,8 +17,8 @@
  * cannot drift into two definitions.
  *
  * What the repair may do, and what it may not:
- *   - an over-long title loses its brand/qualifier suffixes first, then is cut
- *     at a word boundary; an over-long description is cut at the last sentence
+ *   - a title keeps its own site name, shortening the core at a word boundary
+ *     when necessary; an over-long description is cut at the last sentence
  *     end that still leaves 110+ characters, else at a word boundary. Both keep
  *     the page's own words - nothing is invented, nothing is appended.
  *   - a SHORT title or description is never padded here. Padding is where
@@ -33,8 +33,7 @@ const TITLE_MIN = 30;
 // 60-65 characters; the Search Readiness checklist (item b1) asks for 30-65 and
 // reported 305 committed pages above it on 25 Oct 2026 - every one of them a
 // title whose tail no searcher ever sees. The ladder in titleCandidates()
-// already drops the brand suffix before it cuts, so most of those lose a
-// suffix rather than a word.
+// reserves room for the site name before cutting the core.
 const TITLE_MAX = 65;
 // 120, not 110. The Search Readiness checklist (item b2) asks for 120-160 and
 // reported spryexecutiveos.com pages at 118 characters on 25 Oct 2026 - inside
@@ -136,29 +135,44 @@ function titleCore(t) {
   return norm(core);
 }
 
-/** Candidate titles for an over-long title, best first. Short titles return []. */
+/** A title names the host using its full name or its established short name. */
+function titleNamesHost(title, host) {
+  const normName = (s) => norm(s).toLowerCase().replace(/[^a-z0-9]/g, '');
+  const t = normName(title);
+  return [BRANDS[host], SHORT_BRANDS[host]].filter(Boolean).some((b) => t.includes(normName(b)));
+}
+
+/** A legacy product label must not credit a sibling property in search. */
+function titleNamesSibling(title, host) {
+  const t = norm(title).toLowerCase().replace(/[^a-z0-9]/g, '');
+  return Object.entries(BRANDS).some(([h, b]) => h !== host && t.includes(b.toLowerCase().replace(/[^a-z0-9]/g, '')))
+    || t.includes('aplayermode');
+}
+
+/** Candidates always retain the host's name, including titles already in range. */
 function titleCandidates(title, host) {
   const t = norm(title);
-  if (inTitleRange(t)) return [t];
-  if (t.length < TITLE_MIN) return [];
-  const core = titleCore(t);
-  // The product name is 34 characters; inside a title it is abbreviated the
-  // way the site's own comparison pages already abbreviate it.
-  const short = norm(core
-    .replace(/\s+[—–]\s+Spry Executive OS\b/gi, '')
-    .replace(/Billionaire High Performance Coach/g, 'BHPC'));
   const brand = BRANDS[host] || '';
-  const shortBrand = SHORT_BRANDS[host] || '';
+  const shortBrand = SHORT_BRANDS[host] || brand;
+  if (!brand) return inTitleRange(t) ? [t] : [cutWords(t, TITLE_MAX)].filter(inTitleRange);
   const out = [];
-  if (brand) out.push(`${core} | ${brand}`);
-  if (shortBrand && shortBrand !== brand) out.push(`${core} | ${shortBrand}`);
-  out.push(core);
-  if (brand) out.push(`${short} | ${brand}`);
-  if (shortBrand && shortBrand !== brand) out.push(`${short} | ${shortBrand}`);
-  out.push(short);
-  out.push(cutWords(short, TITLE_MAX));
-  if (shortBrand && shortBrand !== brand) out.push(`${cutWords(short, TITLE_MAX - shortBrand.length - 3)} | ${shortBrand}`);
-  return [...new Set(out)].filter(inTitleRange);
+  if (inTitleRange(t) && titleNamesHost(t, host) && !titleNamesSibling(t, host)) out.push(t);
+  let core = titleCore(t);
+  // The phase4 generator's former product label is now a separate property.
+  // Keep the route and visible question, but name this product in its snippet.
+  if (host === 'billionairehighperformancecoach.com') core = core.replace(/\bA[ -]player mode\b/gi, shortBrand);
+  core = core.replace(/Billionaire High Performance Coach/gi, SHORT_BRANDS['billionairehighperformancecoach.com']);
+  if (host !== 'spryexecutiveos.com') core = core.replace(/Spry Executive OS/gi, 'Spry');
+  const short = core;
+  for (const c of [...new Set([core, short])]) {
+    if (titleNamesHost(c, host)) out.push(c, cutWords(c, TITLE_MAX));
+    for (const name of [...new Set([brand, shortBrand])]) out.push(`${c} | ${name}`);
+    for (const name of [...new Set([shortBrand, brand])]) {
+      const tail = ` | ${name}`;
+      out.push(`${cutWords(c, TITLE_MAX - tail.length)}${tail}`);
+    }
+  }
+  return [...new Set(out)].filter(inTitleRange).filter((t) => titleNamesHost(t, host) && !titleNamesSibling(t, host));
 }
 
 /** Candidate descriptions for an over-long description, best first. Short ones return []. */
@@ -182,5 +196,5 @@ function descriptionCandidates(desc) {
 module.exports = {
   TITLE_MIN, TITLE_MAX, DESC_MIN, DESC_MAX, EXEMPT_PAGES, BRANDS, SHORT_BRANDS,
   decodeEntities, escapeText, escapeAttr, norm, titleOf, descriptionOf, META_DESC_RE,
-  inTitleRange, inDescRange, cutWords, titleCore, titleCandidates, descriptionCandidates,
+  inTitleRange, inDescRange, cutWords, titleCore, titleCandidates, titleNamesHost, titleNamesSibling, descriptionCandidates,
 };
