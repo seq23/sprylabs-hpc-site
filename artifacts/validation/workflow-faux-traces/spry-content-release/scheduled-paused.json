@@ -11,15 +11,22 @@
   ],
   "skipped_steps": [
     "actions/checkout@v7",
+    "Lay the agent drop onto main's tip",
     "actions/setup-node@v7",
-    "release:step-5",
+    "release:step-6",
+    "actions/cache@v4",
     "Cadence headroom",
     "Resolve release mode",
     "Run governed Spry content release",
     "Rebuild ownership and admin snapshots",
+    "Converge the tree the release is about to commit",
     "Cadence gate",
+    "Named stop when autopublishing is paused",
     "Record the released URL set as the new cadence baseline",
-    "Commit validated Spry content release"
+    "Commit validated Spry content release",
+    "Close the drop once it is on main",
+    "Name the refusal on the drop",
+    "Keep the pages a failing contract named"
   ],
   "assertions": [
     "runtime/commit guard honored",

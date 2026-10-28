@@ -50,7 +50,7 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { spawnSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { REPAIRS } from '../selfheal/repairs.mjs';
 
@@ -291,6 +291,23 @@ function sh(command, cwd) {
   return { code: result.status === null ? 1 : result.status, out: `${result.stdout || ''}${result.stderr || ''}` };
 }
 
+// The fixture commands run concurrently, one scratch worktree each (26 Oct 2026,
+// Search Readiness h5): run serially, the nine fixtures took 167 s and were the
+// single longest step on the merge gate's critical path. Each fixture already
+// owned its tree state (resetWorktree between runs), so giving each its own
+// worktree changes nothing it proves; results are re-ordered to REPAIRS order.
+function shAsync(command, cwd) {
+  return new Promise((resolve) => {
+    const child = spawn('sh', ['-c', command], { cwd, stdio: ['ignore', 'pipe', 'pipe'] });
+    let out = '';
+    child.stdout.on('data', (d) => { out += d; });
+    child.stderr.on('data', (d) => { out += d; });
+    child.on('error', (e) => resolve({ code: 1, out: `${out}${e.message}` }));
+    child.on('close', (code) => resolve({ code: code === null ? 1 : code, out }));
+  });
+}
+const CONCURRENCY = Math.max(1, Number(process.env.REPAIR_FIXTURE_CONCURRENCY) || Math.min(4, os.cpus().length));
+
 function lastLine(out) { return String(out).trim().split('\n').filter(Boolean).pop() || '(no output)'; }
 
 /** The validator command the PROFILE actually runs for this step id. */
@@ -328,10 +345,10 @@ function resetWorktree(scratch) {
   if (reset.code !== 0) throw new Error(`could not restore the scratch worktree between fixtures: ${lastLine(reset.out)}`);
 }
 
-function runFixture(stepId, fixture, repairCommand, validateCommand, scratch) {
+async function runFixture(stepId, fixture, repairCommand, validateCommand, scratch) {
   resetWorktree(scratch);
 
-  const baseline = sh(validateCommand, scratch);
+  const baseline = await shAsync(validateCommand, scratch);
   if (baseline.code !== 0) {
     errors.push(`validator_already_failing:${stepId} - \`${validateCommand}\` fails on the untouched tree, so a repair cannot be proven capable against a constructed fault here. Fix the tree first. Output: ${lastLine(baseline.out)}`);
     return false;
@@ -343,19 +360,19 @@ function runFixture(stepId, fixture, repairCommand, validateCommand, scratch) {
     return false;
   }
 
-  const before = sh(validateCommand, scratch);
+  const before = await shAsync(validateCommand, scratch);
   if (before.code === 0) {
     errors.push(`fixture_does_not_fail:${stepId} - the fixture (${what}) was expected to make \`${validateCommand}\` fail, and it passed. A repair proven against a state that was never broken proves nothing; the fixture has drifted from the real failure mode.`);
     return false;
   }
 
-  const repair = sh(repairCommand, scratch);
+  const repair = await shAsync(repairCommand, scratch);
   if (repair.code !== 0) {
     errors.push(`repair_refuses_its_own_case:${stepId} - fixture (${what}) makes the validator fail, and the registered repair \`${repairCommand}\` then exited ${repair.code} instead of repairing it. Self-heal cannot converge on this: the repair is registered for a condition it will not act on. Output: ${lastLine(repair.out)}`);
     return false;
   }
 
-  const after = sh(validateCommand, scratch);
+  const after = await shAsync(validateCommand, scratch);
   if (after.code !== 0) {
     errors.push(`repair_does_not_clear:${stepId} - fixture (${what}); \`${repairCommand}\` exited 0 but \`${validateCommand}\` still fails afterwards. This is the deadlock shape: self-heal will run this repair to its attempt budget and never converge. Output: ${lastLine(after.out)}`);
     return false;
@@ -365,7 +382,7 @@ function runFixture(stepId, fixture, repairCommand, validateCommand, scratch) {
   return true;
 }
 
-function main() {
+async function main() {
   const matrixPath = path.join(ROOT, MATRIX_REL);
   if (!fs.existsSync(matrixPath)) {
     console.error(`[validate:repair-fixture-capability] FAIL: ${MATRIX_REL} does not exist, so no registered validator command could be resolved and this test examined zero repairs. Repair capability is UNKNOWN, not proven.`);
@@ -392,31 +409,44 @@ function main() {
     }
   }
 
-  const { dir, scratch } = makeWorktree();
-  let behaviouralOk = 0;
   const treeBefore = porcelain(ROOT);
-  try {
-    for (const id of stepIds) {
-      const repairCommand = REPAIRS[id].command;
-      if (!FIXTURES[id]) {
-        examined.push({ id, repair_command: repairCommand, behavioural: 'NO_FIXTURE', reason: UNFIXTURABLE[id] || null });
-        continue;
-      }
-      const { command: validateCommand, why } = validatorCommandFor(id, matrix);
-      if (!validateCommand) {
-        errors.push(`validator_command_unresolvable:${id} - a repair is registered for this step but it ${why} in ${MATRIX_REL}, so nothing can be proven about the repair. Either the step id drifted or the validator left every profile.`);
-        examined.push({ id, repair_command: repairCommand, behavioural: 'FAIL' });
-        continue;
-      }
-      const ok = runFixture(id, FIXTURES[id], repairCommand, validateCommand, scratch);
-      if (ok) behaviouralOk += 1;
-      else examined.push({ id, repair_command: repairCommand, validate_command: validateCommand, behavioural: 'FAIL' });
+  const jobs = [];
+  for (const id of stepIds) {
+    const repairCommand = REPAIRS[id].command;
+    if (!FIXTURES[id]) {
+      examined.push({ id, repair_command: repairCommand, behavioural: 'NO_FIXTURE', reason: UNFIXTURABLE[id] || null });
+      continue;
     }
+    const { command: validateCommand, why } = validatorCommandFor(id, matrix);
+    if (!validateCommand) {
+      errors.push(`validator_command_unresolvable:${id} - a repair is registered for this step but it ${why} in ${MATRIX_REL}, so nothing can be proven about the repair. Either the step id drifted or the validator left every profile.`);
+      examined.push({ id, repair_command: repairCommand, behavioural: 'FAIL' });
+      continue;
+    }
+    jobs.push({ id, repairCommand, validateCommand });
+  }
+  const trees = [];
+  let behaviouralOk = 0;
+  try {
+    for (let i = 0; i < Math.min(CONCURRENCY, jobs.length); i += 1) trees.push(makeWorktree());
+    let next = 0;
+    await Promise.all(trees.map(async ({ scratch }) => {
+      while (next < jobs.length) {
+        const { id, repairCommand, validateCommand } = jobs[next++];
+        const ok = await runFixture(id, FIXTURES[id], repairCommand, validateCommand, scratch);
+        if (ok) behaviouralOk += 1;
+        else examined.push({ id, repair_command: repairCommand, validate_command: validateCommand, behavioural: 'FAIL' });
+      }
+    }));
   } finally {
-    sh(`git worktree remove --force ${JSON.stringify(scratch)}`, ROOT);
-    fs.rmSync(dir, { recursive: true, force: true });
+    for (const { dir, scratch } of trees) {
+      sh(`git worktree remove --force ${JSON.stringify(scratch)}`, ROOT);
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
     sh('git worktree prune', ROOT);
   }
+  const order = new Map(stepIds.map((id, i) => [id, i]));
+  examined.sort((x, y) => order.get(x.id) - order.get(y.id));
 
   // Nothing permanent may have moved. Every induction happened in the worktree;
   // if the production tree differs, a fixture escaped its sandbox and that is
@@ -456,4 +486,4 @@ function main() {
   console.log(`[validate:repair-fixture-capability] PASS: examined ${stepIds.length} registered repair(s) across ${report.distinct_repair_commands} distinct repair command(s); ${behaviouralOk} proven to clear a genuinely failing fixture (floor ${FIXTURE_FLOOR}). Declared uncovered, with a recorded reason: ${uncovered.join(', ') || 'none'}.`);
 }
 
-main();
+await main();

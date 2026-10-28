@@ -1,0 +1,17 @@
+{
+  "purpose": "The ONE definition of the publisher Organization every published page declares: name, url, logo and sameAs (Search Readiness checklist item c1). Read by scripts/lib/organization_node.cjs (JS: the generators, the repair and the validator) and by scripts/citation/apply_citation_program.py and scripts/citation/repair_schema_parity.py (Python: the citation program, which writes author/publisher on every governed page). It is a config file and not a constant in either language because both of them write this node, and a constant in one is invisible to the other - the same reason config/site_hosts.json holds each host's og_image.",
+  "origin": "25 Oct 2026: all 3,480 Organization nodes on the site named Spry Labs and not one carried sameAs, because ten generators each wrote their own partial set. The JS repair completed them, and then repair_schema_parity.py - which runs later in container-prepush - rewrote 66 pages' publisher from its own hard-coded dict with name and logo only, dropping url and sameAs again. Two writers of one node is the defect; this file is the fix.",
+  "truth_boundary": "sameAs holds ONLY the organization's own verifiable web presence, per data/entities/authority_signal_manifest.json: 'Only actually-known author, publisher, source, sameAs ... signals are claimed.' Every URL here answered 200 on 25 Oct 2026. No press, podcast, Wikidata or academic link is claimed. aplayermode.com is ours but deliberately absent: config/index_exclusions.json keeps it out of the shared sites' indexes, and a sameAs on 2,264 pages would walk it into every one of them.",
+  "name": "Spry Labs",
+  "url": "https://billionairehighperformancecoach.com/spry-labs",
+  "logo": {
+    "url": "https://billionairehighperformancecoach.com/assets/spry-logo.png",
+    "width": 420,
+    "height": 96
+  },
+  "sameAs": [
+    "https://spryexecutiveos.com/",
+    "https://sprylabs.gumroad.com/",
+    "https://www.sequoiataylor.com"
+  ]
+}

@@ -2767,9 +2767,139 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-SOCIAL-TAGS",
+      "validation_id": "SOCIAL-TAGS",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:social-tags",
+      "order": 268,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-LLMS-TXT-SHAPE",
+      "validation_id": "LLMS-TXT-SHAPE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:llms-txt-shape",
+      "order": 269,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-CANONICAL-HOST",
+      "validation_id": "CANONICAL-HOST",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:canonical-host",
+      "order": 270,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-WF-WEEKLY-OUTCOME-REPORT",
+      "validation_id": "VAL-WF-WEEKLY-OUTCOME-REPORT",
+      "lane": "validation-control-plane",
+      "command": ".github/workflows/weekly-outcome-report.yml",
+      "order": 271,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-WEEKLY-OUTCOME-REPORT",
+      "validation_id": "WEEKLY-OUTCOME-REPORT",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:weekly-outcome-report",
+      "order": 272,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-ORGANIZATION-NODE",
+      "validation_id": "ORGANIZATION-NODE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:organization-node",
+      "order": 273,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-CLAUDE-MD-COST-RULE",
+      "validation_id": "CLAUDE-MD-COST-RULE",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:claude-md-cost-rule",
+      "order": 274,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-SCHEMA-SUPPORTED",
+      "validation_id": "SCHEMA-SUPPORTED",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:schema-supported",
+      "order": 275,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-ROUTE-OWNER-HOST",
+      "validation_id": "ROUTE-OWNER-HOST",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:route-owner-host",
+      "order": 276,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-WF-APLAYERMODE-WORKER-DEPLOY",
+      "validation_id": "VAL-WF-APLAYERMODE-WORKER-DEPLOY",
+      "lane": "distribution",
+      "command": ".github/workflows/deploy-aplayermode-worker.yml",
+      "order": 277,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-SITEMAP-CANONICAL-ON-OWN-HOST",
+      "validation_id": "VAL-SITEMAP-CANONICAL-ON-OWN-HOST",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:sitemap-canonical-on-own-host",
+      "order": 278,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-HOST-CONSOLIDATION",
+      "validation_id": "VAL-HOST-CONSOLIDATION",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:host-consolidation",
+      "order": 279,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-HOMEPAGE-TRUST-LINKS",
+      "validation_id": "HOMEPAGE-TRUST-LINKS",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:homepage-trust-links",
+      "order": 280,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 276,
+  "entry_count": 289,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -2823,6 +2953,22 @@
         {
           "id": "VAL-EXTRACTION-SURFACE-GUARD-CHECK",
           "command": "npm run validate:extraction-surface-guard:check"
+        },
+        {
+          "id": "SOCIAL-TAGS",
+          "command": "npm run validate:social-tags"
+        },
+        {
+          "id": "LLMS-TXT-SHAPE",
+          "command": "npm run validate:llms-txt-shape"
+        },
+        {
+          "id": "CANONICAL-HOST",
+          "command": "npm run validate:canonical-host"
+        },
+        {
+          "id": "validate:weekly-outcome-report",
+          "command": "npm run validate:weekly-outcome-report"
         },
         {
           "id": "VAL-QUERY-OWNER-UNIQUENESS",
@@ -3475,6 +3621,34 @@
         {
           "id": "VAL-BUILD-INPUT-HASH-COVERS-TREE",
           "command": "npm run validate:build-input-hash-covers-tree"
+        },
+        {
+          "id": "ORGANIZATION-NODE",
+          "command": "npm run validate:organization-node"
+        },
+        {
+          "id": "CLAUDE-MD-COST-RULE",
+          "command": "npm run validate:claude-md-cost-rule"
+        },
+        {
+          "id": "SCHEMA-SUPPORTED",
+          "command": "npm run validate:schema-supported"
+        },
+        {
+          "id": "ROUTE-OWNER-HOST",
+          "command": "npm run validate:route-owner-host"
+        },
+        {
+          "id": "VAL-SITEMAP-CANONICAL-ON-OWN-HOST",
+          "command": "npm run validate:sitemap-canonical-on-own-host"
+        },
+        {
+          "id": "VAL-HOST-CONSOLIDATION",
+          "command": "npm run validate:host-consolidation"
+        },
+        {
+          "id": "HOMEPAGE-TRUST-LINKS",
+          "command": "npm run validate:homepage-trust-links"
         }
       ]
     },
@@ -3681,6 +3855,14 @@
         {
           "id": "VAL-BUILD-INPUT-HASH-COVERS-TREE",
           "command": "npm run validate:build-input-hash-covers-tree"
+        },
+        {
+          "id": "VAL-SITEMAP-CANONICAL-ON-OWN-HOST",
+          "command": "npm run validate:sitemap-canonical-on-own-host"
+        },
+        {
+          "id": "VAL-HOST-CONSOLIDATION",
+          "command": "npm run validate:host-consolidation"
         }
       ]
     },

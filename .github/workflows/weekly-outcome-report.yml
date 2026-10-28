@@ -1,0 +1,75 @@
+name: Weekly Outcome Report
+
+# Search Readiness item i9.
+#
+# "Without a report nobody notices a drop for a month. Without self-closing
+# issues the list rots."
+#
+# Monday morning, week over week per site, from the measurements the
+# search-intelligence lane already collects - gsc_truth.json and each host's
+# index_coverage.json. It invents no numbers: the first recorded week says it has
+# no prior week rather than showing a delta against nothing.
+#
+# It reads and reports. The only thing it writes back is the week's own history
+# row and the two report files, so a report run can never move a page, a script
+# or a validator.
+#
+# Nothing here waits on a human. Resend sends the email when a key is
+# configured; with no key the committed report and the per-site issues ARE the
+# delivery, and the run stays green either way. One self-closing issue per red
+# site is what keeps the list from rotting: red opens it, still red comments,
+# no longer red closes it with the measurement that cleared it.
+
+on:
+  schedule:
+    # Mondays 13:41 UTC: after the daily search-intelligence cycle (23 13) has
+    # landed the week's last measurements, and offset off the hour so it does not
+    # queue behind every other cron in the account.
+    - cron: "41 13 * * 1"
+  workflow_dispatch:
+
+env:
+  NODE_OPTIONS: --max-old-space-size=3072
+
+permissions:
+  # The issues scope is the point: one self-closing issue per red site.
+  contents: read
+  issues: write
+
+concurrency:
+  group: weekly-outcome-report
+  cancel-in-progress: false
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The week-over-week comparison reads the collector's own committed
+          # snapshot from at least seven days back. A shallow clone reaches no
+          # such commit and every delta would silently be absent.
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Prove the report's rules before trusting its numbers
+        run: npm run self-test:weekly-outcome-report
+      - name: Build the weekly outcome report
+        run: npm run report:weekly-outcome
+      - name: Email it and reconcile one self-closing issue per red site
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          WEEKLY_REPORT_FROM: ${{ vars.WEEKLY_REPORT_FROM }}
+          WEEKLY_REPORT_TO: ${{ vars.WEEKLY_REPORT_TO }}
+        run: node .github/scripts/weekly_outcome_notify.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: weekly-outcome-report
+          path: |
+            reports/weekly_outcome_report.json
+            reports/weekly_outcome_report.md

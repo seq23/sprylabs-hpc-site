@@ -1,21 +1,22 @@
 {
-  "checked_at": "2026-10-16T17:01:08.969Z",
+  "checked_at": "2026-10-26T09:01:09.251Z",
   "free_models": [
     "nvidia/nemotron-3-super-120b-a12b:free",
     "nvidia/nemotron-3-ultra-550b-a55b:free",
     "google/gemma-4-31b-it:free",
-    "thinkingmachines/inkling:free"
+    "google/gemma-4-26b-a4b-it:free"
   ],
   "model_callers": [
     "scripts/llm_citation_probe.mjs",
     "scripts/search_intelligence/observe_live_search.mjs"
   ],
-  "workflows_scanned": 10,
+  "workflows_scanned": 12,
   "scheduled_workflows": [
     ".github/workflows/daily-citation-intelligence.yml",
     ".github/workflows/main-validation-sentinel.yml",
     ".github/workflows/search-intelligence.yml",
-    ".github/workflows/spry-content-release.yml"
+    ".github/workflows/spry-content-release.yml",
+    ".github/workflows/weekly-outcome-report.yml"
   ],
   "provider_secret_refs": [
     ".github/workflows/daily-citation-intelligence.yml:96",
@@ -23,8 +24,6 @@
     ".github/workflows/search-intelligence.yml:76",
     ".github/workflows/search-intelligence.yml:91"
   ],
-  "errors": [
-    "config/llm_routing.json: excluded_models must name thinkingmachines/inkling:free (403 per model, run 38932788448)"
-  ],
-  "status": "FAIL"
+  "errors": [],
+  "status": "PASS"
 }

@@ -1,0 +1,126 @@
+name: Deploy aplayermode.com Worker
+
+# aplayermode.com is served by a DEDICATED Worker (workers/aplayermode-com), not by
+# the Pages project. Pages self-deploys on green main; this Worker did not deploy at
+# all - `npx wrangler deploy --config workers/aplayermode-com/wrangler.jsonc` was a
+# command a human had to remember.
+#
+# WHAT THAT COST (Search Readiness a5, a9, b1, c2; 25-26 Oct 2026): the About page,
+# the real 404 and the route table that serves them landed on main on 25 Oct and were
+# still not live on 26 Oct. /about/ and every made-up path went on 301-ing home, so
+# the sitemap advertised a redirecting URL, two URLs shared one title, the inner page
+# had no BreadcrumbList, and every typo and dead inbound link looked like the homepage
+# to Google. Four checklist items failed for one reason: nothing deployed the Worker.
+#
+# The post-deploy proof (scripts/diagnostics/check_aplayermode_live.mjs) existed too,
+# and nothing invoked it either. It runs here, against the live apex, after the deploy:
+# a deploy that lands the wrong thing fails this workflow instead of going unnoticed.
+#
+# The offline twin is scripts/validators/validate_aplayermode_landing.mjs on every
+# pull request. This workflow is the only thing that puts that proven code in front of
+# a visitor.
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      # The Worker, its config, and the pages it serves from the Pages origin.
+      - 'workers/aplayermode-com/**'
+      - 'aplayermode/**'
+      # The live proof itself, and this workflow - so the commit that introduces them
+      # is the commit that first deploys, rather than waiting for the next edit.
+      - 'scripts/diagnostics/check_aplayermode_live.mjs'
+      - '.github/workflows/deploy-aplayermode-worker.yml'
+
+env:
+  NODE_OPTIONS: --max-old-space-size=3072
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-aplayermode-worker
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # Normal end to end is well under 3 minutes. A fault detector, not a budget.
+    timeout-minutes: 12
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci --ignore-scripts
+
+      - name: The deploy credential must be present and able to write Workers
+        # Checked read-only and BEFORE the deploy, so a token that cannot deploy is a
+        # named stop naming the exact permission to add - not a wrangler stack trace.
+        # CLOUDFLARE_API_TOKEN is shared with the Analytics Engine reader in
+        # daily-citation-intelligence.yml, which needs no Workers scope.
+        run: |
+          set -euo pipefail
+          stop() {
+            echo "::error title=APLAYERMODE_WORKER_DEPLOY_BLOCKED::$1"
+            { echo "## NAMED STOP: APLAYERMODE_WORKER_DEPLOY_BLOCKED"; echo; echo "$1"; } >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          }
+          [ -n "${CLOUDFLARE_API_TOKEN:-}" ] || stop "The repository secret CLOUDFLARE_API_TOKEN is not set, so aplayermode.com cannot be deployed."
+          [ -n "${CLOUDFLARE_ACCOUNT_ID:-}" ] || stop "The repository secret CLOUDFLARE_ACCOUNT_ID is not set, so aplayermode.com cannot be deployed."
+          code=$(curl -sS -o /tmp/scope.json -w '%{http_code}' \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/scripts?per_page=1")
+          case "$code" in
+            200) echo "Workers script API answers 200; the token can deploy." ;;
+            401) stop "CLOUDFLARE_API_TOKEN was rejected (401). Rotate it in the repository secrets." ;;
+            403) stop "CLOUDFLARE_API_TOKEN answers 403 on the Workers script API: it lacks the Workers Scripts:Edit permission for this account. Add that permission to the token (Cloudflare dashboard > My Profile > API Tokens > the token this repo uses > Permissions > Account > Workers Scripts > Edit), or replace the secret with a token that has it. Until then aplayermode.com keeps serving whatever Worker version was last deployed by hand." ;;
+            *) stop "The Workers script API answered $code; refusing to deploy on an unverified credential. Response: $(head -c 300 /tmp/scope.json)" ;;
+          esac
+
+      - name: Deploy the aplayermode.com Worker
+        run: npx --yes wrangler@4 deploy --config workers/aplayermode-com/wrangler.jsonc
+
+      - name: Record that the deploy happened
+        # Rule 0: this lane may not exit 0 having done nothing. The receipt names the
+        # commit that was deployed, so an undeployed Worker is visible as a missing or
+        # stale receipt rather than as a live site nobody compared to the repository.
+        env:
+          DEPLOYED_COMMIT: ${{ github.sha }}
+          DEPLOY_RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          node scripts/distribution/write_aplayermode_deploy_receipt.mjs
+
+      - name: Publish the deploy receipt
+        uses: actions/upload-artifact@v7
+        with:
+          name: aplayermode-worker-deploy-${{ github.run_id }}
+          if-no-files-found: error
+          path: artifacts/validation/aplayermode-worker-deploy.json
+
+      - name: Prove it on the live apex
+        # The deploy returns before every edge has the new version, so the proof is
+        # retried for a bounded time rather than slept on a guessed number. The check
+        # asserts /about/ is 200 with its canonical, /about 301s to it, a made-up path
+        # is a real 404 with the noindex 404 page, and the crawl files still answer.
+        run: |
+          set -uo pipefail
+          for attempt in 1 2 3 4 5 6; do
+            if npm run check:aplayermode-live; then
+              echo "live check passed on attempt $attempt"
+              exit 0
+            fi
+            echo "attempt $attempt did not pass yet; the new version may not be on every edge"
+            sleep 15
+          done
+          echo "::error title=APLAYERMODE_LIVE_CHECK_FAILED::The Worker deployed but https://aplayermode.com does not match what the repository declares; the failures above name each URL."
+          exit 1

@@ -15,8 +15,13 @@
 // last validated bytes, ledgers the hold by name, and lets the other pages
 // ship - so the validator then judges a tree with the held page withdrawn.
 // One definition, so the hold can never pass a page the validator would fail.
+import {createRequire} from 'node:module';
 import {normalizeBhpcInternalLinkHref} from './bhpc_internal_links.mjs';
 import {saysPhrase} from './bhpc_agent_acceptance_satisfaction.mjs';
+// The snippet bounds are one definition (scripts/lib/search_snippet_bounds.cjs);
+// this file used to carry a second, looser pair of numbers (20-70 / 70-180), so
+// a title the hard guard rejects could still pass here without a warning.
+const {TITLE_MIN, TITLE_MAX, DESC_MIN, DESC_MAX} = createRequire(import.meta.url)('./search_snippet_bounds.cjs');
 
 export const APPROVED_CANONICAL_HOSTS = new Set(['spryexecutiveos.com', 'billionairehighperformancecoach.com']);
 export const FORBIDDEN_PUBLIC_PATTERNS = [
@@ -138,8 +143,8 @@ export function examinePageSeoContract({rel, html, acceptanceEntries = [], activ
 
   const title = stripTags((html.match(/<title\b[^>]*>([\s\S]*?)<\/title>/i) || [])[1] || '');
   const description = metaContent(html, 'description');
-  if (title.length && (title.length < 20 || title.length > 70)) warnings.push({path: rel, code: 'TITLE_LENGTH', detail: title.length});
-  if (description.length && (description.length < 70 || description.length > 180)) warnings.push({path: rel, code: 'META_DESCRIPTION_LENGTH', detail: description.length});
+  if (title.length && (title.length < TITLE_MIN || title.length > TITLE_MAX)) warnings.push({path: rel, code: 'TITLE_LENGTH', detail: title.length});
+  if (description.length && (description.length < DESC_MIN || description.length > DESC_MAX)) warnings.push({path: rel, code: 'META_DESCRIPTION_LENGTH', detail: description.length});
   if (active && !/data-bhpc-agent-block=["']direct_answer["']/i.test(html)) warnings.push({path: rel, code: 'NO_DIRECT_ANSWER_BLOCK'});
   return {failures, warnings};
 }

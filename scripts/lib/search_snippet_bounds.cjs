@@ -1,7 +1,7 @@
 'use strict';
 /**
  * One definition of the search-snippet bounds every indexable page must meet:
- * a <title> of 30-70 characters and a meta description of 110-160 characters,
+ * a <title> of 30-65 characters and a meta description of 120-160 characters,
  * each unique across the site.
  *
  * Why these numbers. Bing Webmaster Tools, 25 Sep 2026, SEO rule 118 ("meta
@@ -17,12 +17,8 @@
  * cannot drift into two definitions.
  *
  * What the repair may do, and what it may not:
- *   - an over-long title keeps its site's name and loses its own words: the
- *     full brand, else the short name (SHORT_BRANDS), with the core cut at a
- *     word boundary to make room. It may drop de-duplication qualifiers and
- *     abbreviate the product name, but never the site's name - a title that
- *     does not name its own site fails Search Readiness b10 (28 Oct 2026).
- *     An over-long description is cut at the last sentence
+ *   - an over-long title loses its brand/qualifier suffixes first, then is cut
+ *     at a word boundary; an over-long description is cut at the last sentence
  *     end that still leaves 110+ characters, else at a word boundary. Both keep
  *     the page's own words - nothing is invented, nothing is appended.
  *   - a SHORT title or description is never padded here. Padding is where
@@ -33,8 +29,26 @@
  */
 
 const TITLE_MIN = 30;
-const TITLE_MAX = 70;
-const DESC_MIN = 110;
+// 65, not 70. Google truncates a result title at roughly 600px, which is about
+// 60-65 characters; the Search Readiness checklist (item b1) asks for 30-65 and
+// reported 305 committed pages above it on 25 Oct 2026 - every one of them a
+// title whose tail no searcher ever sees. The ladder in titleCandidates()
+// already drops the brand suffix before it cuts, so most of those lose a
+// suffix rather than a word.
+const TITLE_MAX = 65;
+// 120, not 110. The Search Readiness checklist (item b2) asks for 120-160 and
+// reported spryexecutiveos.com pages at 118 characters on 25 Oct 2026 - inside
+// this repo's bound and outside the checklist's, which is two definitions of
+// "long enough" disagreeing. 50 committed pages sat in the 110-119 gap. Google
+// shows roughly 155-160 characters of a desktop snippet; under about 120 the
+// snippet is padded out with text Google picks from the page instead, which is
+// the thing a written description exists to prevent.
+//
+// Raising it needs no new padding logic: a description below the floor is not
+// in range, so descriptionCandidates() returns nothing for it and the repair
+// falls through to leadTexts() - the page's OWN paragraphs. That is the rung
+// this file already insists on, and nothing is invented.
+const DESC_MIN = 120;
 const DESC_MAX = 160;
 
 // download.html is the revenue page; its bytes are frozen at a known hash and
@@ -46,14 +60,11 @@ const BRANDS = {
   'spryexecutiveos.com': 'Spry Executive OS',
   'billionairehighperformancecoach.com': 'Billionaire High Performance Coach',
 };
-
-// The name a title falls back to when the full brand will not fit in TITLE_MAX.
-// A title may never drop its site's name to make room (Search Readiness b10):
-// "Billionaire High Performance Coach" is 34 of the 70 characters a title has,
-// so a long question could only ever fit the abbreviation the site's own
-// comparison pages already use. Each short name must be declared on its
-// homepage as og:site_name, because that is where the audit reads a site's
-// brands from; validate:title-brand-matches-host fails if it is not.
+// The form a title uses when the full product name will not fit. The site's own
+// comparison pages already abbreviate it this way. Without this rung, a 29-
+// character core under a 34-character brand had no candidate at all between
+// "too short alone" and "too long with the brand", and five pages ended with an
+// unresolved title.
 const SHORT_BRANDS = {
   'spryexecutiveos.com': 'Spry Executive OS',
   'billionairehighperformancecoach.com': 'BHPC',
@@ -137,42 +148,17 @@ function titleCandidates(title, host) {
     .replace(/\s+[—–]\s+Spry Executive OS\b/gi, '')
     .replace(/Billionaire High Performance Coach/g, 'BHPC'));
   const brand = BRANDS[host] || '';
-  const shortBrand = SHORT_BRANDS[host] || brand;
+  const shortBrand = SHORT_BRANDS[host] || '';
   const out = [];
   if (brand) out.push(`${core} | ${brand}`);
+  if (shortBrand && shortBrand !== brand) out.push(`${core} | ${shortBrand}`);
+  out.push(core);
   if (brand) out.push(`${short} | ${brand}`);
-  // Every remaining candidate still carries a name. Until 28 Oct 2026 the
-  // ladder fell through to `core`, `short` and a bare cut, so 1,806 of 2,264
-  // indexable titles had quietly lost their site's name to the 70-character cap
-  // and Search Readiness b10 failed on 10 of its 12 sampled pages. The brand is
-  // the last thing to go, not the first: the words are cut around it.
-  if (shortBrand) {
-    const tail = ` | ${shortBrand}`;
-    out.push(`${core}${tail}`);
-    out.push(`${short}${tail}`);
-    out.push(`${cutWords(core, TITLE_MAX - tail.length)}${tail}`);
-    out.push(`${cutWords(short, TITLE_MAX - tail.length)}${tail}`);
-  }
-  if (!brand && !shortBrand) { out.push(core); out.push(short); out.push(cutWords(short, TITLE_MAX)); }
+  if (shortBrand && shortBrand !== brand) out.push(`${short} | ${shortBrand}`);
+  out.push(short);
+  out.push(cutWords(short, TITLE_MAX));
+  if (shortBrand && shortBrand !== brand) out.push(`${cutWords(short, TITLE_MAX - shortBrand.length - 3)} | ${shortBrand}`);
   return [...new Set(out)].filter(inTitleRange);
-}
-
-/**
- * The title `core` carries on `host`, inside TITLE_MAX and always naming the
- * site: the full brand when it fits, else the short name, cutting the core's
- * own words to make room rather than dropping the name.
- */
-function titleWithBrand(core, host) {
-  const c = titleCore(core);
-  const brand = BRANDS[host] || '';
-  const shortBrand = SHORT_BRANDS[host] || brand;
-  if (!brand && !shortBrand) return cutWords(c, TITLE_MAX);
-  const full = `${c} | ${brand}`;
-  if (brand && full.length <= TITLE_MAX) return full;
-  const tail = ` | ${shortBrand}`;
-  const withShort = `${c}${tail}`;
-  if (withShort.length <= TITLE_MAX) return withShort;
-  return `${cutWords(c, TITLE_MAX - tail.length)}${tail}`;
 }
 
 /** Candidate descriptions for an over-long description, best first. Short ones return []. */
@@ -196,5 +182,5 @@ function descriptionCandidates(desc) {
 module.exports = {
   TITLE_MIN, TITLE_MAX, DESC_MIN, DESC_MAX, EXEMPT_PAGES, BRANDS, SHORT_BRANDS,
   decodeEntities, escapeText, escapeAttr, norm, titleOf, descriptionOf, META_DESC_RE,
-  inTitleRange, inDescRange, cutWords, titleCore, titleCandidates, titleWithBrand, descriptionCandidates,
+  inTitleRange, inDescRange, cutWords, titleCore, titleCandidates, descriptionCandidates,
 };

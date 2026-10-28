@@ -1156,20 +1156,22 @@ function updateSitemapsAndLlms() {
   writeSitemapIndex(process.cwd(), TODAY);
   const queries = readJson('data/citation/query_registry.json',{queries:[]}).queries.filter(q=>q.release_status === 'ACTIVE');
   const pagesByPath = new Map(citable.map(p=>[p.path,p]));
-  const llms = ['# Billionaire High Performance Coach / Spry Executive OS', '', '## Citation-ready questions and pages'];
+  // This used to write llms.txt as well, with the whole query list in it - a
+  // second writer, running AFTER the citation program's, that put the index
+  // back on every build. llms.txt has one writer now
+  // (scripts/citation/apply_citation_program.py update_discovery, the short
+  // orientation file under its word cap); this one owns llms-full.txt, the
+  // full index, which is what every per-page crawl check reads.
   const full = ['# BHPC / Spry Full Citation Index', '', `Generated: ${TODAY}`, '', 'Each entry names the canonical query owner, framework, intent, definition, and URL.', ''];
   for (const q of queries) {
     const p = pagesByPath.get(q.primary_page); if (!p) continue;
-    llms.push(`- Query: ${q.query} | Page: ${p.canonical_url} | Framework: ${p.framework}`);
     full.push(`## ${q.query}`); full.push(`- URL: ${p.canonical_url}`); full.push(`- Framework: ${p.framework}`); full.push(`- Intent: ${q.intent_class}`); full.push(`- Definition: ${p.definition}`); full.push(`- Supporting pages: ${(q.supporting_pages||[]).length ? q.supporting_pages.join(', ') : 'None'}`); full.push('');
   }
   const priorityRows = readJson('data/citation_opportunities/bhpc_priority_queries.json', {items:[]}).items || [];
   if (priorityRows.length) {
-    llms.push('', '## Priority citation opportunity queries');
     for (const row of priorityRows) {
       const target = row.target_file || row.answer_page || '';
       const targetUrl = target ? `${DOMAIN}/${target.replace(/^\//,'')}` : DOMAIN;
-      llms.push(`- Query: ${row.query} | Page: ${targetUrl} | Source: priority-citation-opportunity`);
       full.push(`## ${row.query}`);
       full.push(`- URL: ${targetUrl}`);
       full.push(`- Source: priority-citation-opportunity`);
@@ -1177,7 +1179,6 @@ function updateSitemapsAndLlms() {
       full.push('');
     }
   }
-  fs.writeFileSync('llms.txt', llms.join('\n') + '\n');
   fs.writeFileSync('llms-full.txt', full.join('\n') + '\n');
 }
 function updatePhaseAndStrategyFiles() {

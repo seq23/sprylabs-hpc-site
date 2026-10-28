@@ -38,7 +38,6 @@ const citablePath = 'data/citation/citable_pages.json';
 const publicRouteManifestPath = 'data/routes/public_route_manifest.json';
 const criticalRouteManifestPath = 'data/routes/critical_browser_route_manifest.json';
 const answersPath = 'answers.json';
-const llmsPath = 'llms.txt';
 const llmsFullPath = 'llms-full.txt';
 const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
 const registryGeneratedAtBeforeRepair = registry.generated_at || null;
@@ -274,7 +273,11 @@ function syncDistributionSurfacesForQueryRepairs(repairs, data) {
   let llmsUpdates = 0;
   const answers = fs.existsSync(answersPath) ? JSON.parse(fs.readFileSync(answersPath, 'utf8')) : {items: []};
   answers.items = answers.items || [];
-  let llms = fs.existsSync(llmsPath) ? fs.readFileSync(llmsPath, 'utf8') : '# Billionaire High Performance Coach / Spry Executive OS\n\n## Citation-ready questions and pages\n';
+  // The renamed query goes to the full index, not the orientation file.
+  // llms.txt is capped at 2,000 words (Search Readiness a7) and carries
+  // orientation plus a pointer to llms-full.txt; the per-query rows belong in
+  // the index that validate:llms-full-coverage and citation:warn read.
+  let llms = fs.existsSync(llmsFullPath) ? fs.readFileSync(llmsFullPath, 'utf8') : '# BHPC / Spry Full Citation Index\n\nEach entry names the canonical query owner, framework, intent, definition, and URL.\n\n';
   for (const repair of repairs) {
     const row = rowsByPage.get(repair.primary_page) || repair;
     const url = canonicalUrlFor(row);
@@ -308,7 +311,7 @@ function syncDistributionSurfacesForQueryRepairs(repairs, data) {
     }
   }
   if (answersUpdates) fs.writeFileSync(answersPath, `${JSON.stringify(answers, null, 2)}\n`, 'utf8');
-  if (llmsUpdates) fs.writeFileSync(llmsPath, llms.endsWith('\n') ? llms : `${llms}\n`, 'utf8');
+  if (llmsUpdates) fs.writeFileSync(llmsFullPath, llms.endsWith('\n') ? llms : `${llms}\n`, 'utf8');
   return {answers_updates: answersUpdates, llms_updates: llmsUpdates};
 }
 function llmsFullEntry(row, page) {
@@ -325,9 +328,12 @@ function llmsFullEntry(row, page) {
 function syncLlmsCoverage(activeRows, pagesByPath) {
   let llmsUpdates = 0;
   let llmsFullUpdates = 0;
-  let llms = fs.existsSync(llmsPath)
-    ? fs.readFileSync(llmsPath, 'utf8')
-    : '# Billionaire High Performance Coach / Spry Executive OS\n\n## Citation-ready questions and pages\n';
+  // llms.txt deliberately carries no per-query rows. It is the orientation file
+  // an AI engine reads first and is capped at 2,000 words (Search Readiness a7);
+  // appending one row per active query here is what made it 58,061 words, and
+  // every row was already written to llms-full.txt below in a richer form.
+  // Coverage is unchanged and still asserted on the index: see
+  // validate:llms-full-coverage, citation:warn and validate:citation-contract.
   let llmsFull = fs.existsSync(llmsFullPath)
     ? fs.readFileSync(llmsFullPath, 'utf8')
     : '# BHPC / Spry Full Citation Index\n\nEach entry names the canonical query owner, framework, intent, definition, and URL.\n\n';
@@ -335,16 +341,11 @@ function syncLlmsCoverage(activeRows, pagesByPath) {
     const page = pagesByPath.get(row.primary_page);
     if (!page) continue;
     const url = page.canonical_url || canonicalUrlFor(row);
-    if (!llms.includes(url) || !llms.includes(row.query)) {
-      llms += `${llms.endsWith('\n') ? '' : '\n'}- Query: ${row.query} | Page: ${url} | Framework: ${page.framework || `${row.query} Framework`}\n`;
-      llmsUpdates++;
-    }
     if (!llmsFull.includes(url) || !llmsFull.includes(row.query)) {
       llmsFull += `${llmsFull.endsWith('\n') ? '' : '\n'}${llmsFullEntry(row, page)}`;
       llmsFullUpdates++;
     }
   }
-  if (llmsUpdates) fs.writeFileSync(llmsPath, llms.endsWith('\n') ? llms : `${llms}\n`, 'utf8');
   if (llmsFullUpdates) fs.writeFileSync(llmsFullPath, llmsFull.endsWith('\n') ? llmsFull : `${llmsFull}\n`, 'utf8');
   return {llms_updates: llmsUpdates, llms_full_updates: llmsFullUpdates};
 }

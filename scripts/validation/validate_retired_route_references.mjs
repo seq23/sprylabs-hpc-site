@@ -30,6 +30,13 @@ function variants(sourcePath) {
   return [...out];
 }
 
+// Compile once per retired route, not once per route per file. The scan must
+// still examine the whole source tree and every exact variant; allocating the
+// same sets millions of times made this the merge gate's slowest validator.
+const retiredSourcePaths = new Set(redirects.map((entry) => entry.source_path));
+const retiredVariants = redirects.flatMap((entry) => variants(entry.source_path));
+const retiredPattern = new RegExp(retiredVariants.map((value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'));
+
 const routeMap = new Map();
 for (const entry of redirects) {
   const source = routeFromSource(entry.source_path);
@@ -44,9 +51,10 @@ for (const [source, target] of routeMap) {
 }
 
 const redirectText = fs.existsSync('_redirects') ? fs.readFileSync('_redirects', 'utf8') : '';
+const redirectLines = new Set(redirectText.split(/\r?\n/).map((line) => line.trim()));
 for (const entry of redirects) {
   const source = routeFromSource(entry.source_path);
-  if (!redirectText.split(/\r?\n/).some(line => line.trim() === `${source} ${entry.target} 301`)) {
+  if (!redirectLines.has(`${source} ${entry.target} 301`)) {
     errors.push(`_redirects missing exact mapping: ${source} ${entry.target} 301`);
   }
 }
@@ -64,11 +72,14 @@ function walk(dir) {
           const href = match[1].split(/[?#]/)[0];
           if (!href || /^[a-z][a-z0-9+.-]*:/i.test(href) || href.startsWith('/') || href.startsWith('#')) continue;
           const resolved = path.posix.normalize(path.posix.join(path.posix.dirname(rel), href));
-          for (const redirect of redirects) if (resolved === redirect.source_path) errors.push(`${rel}: retired relative href ${match[1]}`);
+          if (retiredSourcePaths.has(resolved)) errors.push(`${rel}: retired relative href ${match[1]}`);
         }
       }
-      for (const redirect of redirects) {
-        for (const value of variants(redirect.source_path)) {
+      // One exact, escaped multi-pattern search clears a clean file. If any
+      // pattern hits, enumerate as before so overlapping matches, duplicates,
+      // error messages and their order are all preserved.
+      if (retiredPattern.test(text)) {
+        for (const value of retiredVariants) {
           if (text.includes(value)) errors.push(`${rel}: retired route reference ${value}`);
         }
       }

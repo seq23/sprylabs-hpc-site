@@ -8,6 +8,8 @@ Outputs:
 */
 
 const fs = require("fs");
+// The one definition of the publisher Organization (Search Readiness item c1).
+const { organizationNode } = require('./lib/organization_node.cjs');
 const path = require("path");
 // One build clock (SOURCE_DATE_EPOCH, else the HEAD commit time), never the wall
 // clock: a wall-clock "today" made two clones of one commit differ after a UTC
@@ -266,7 +268,10 @@ function renderHtml(report) {
       "operating models",
       "accountability",
       "decision support"
-    ]
+    ],
+    // Search Readiness item c1: every page says which entity it belongs to.
+    // This was the one page on the site with no Organization node at all.
+    publisher: organizationNode()
   };
 
   const supplementalGeoSchema = {
@@ -297,6 +302,11 @@ function renderHtml(report) {
     ]
   };
 
+  // Search Readiness item c5: this FAQPage was markup with no visible copy -
+  // the one Question on the page was asked nowhere a reader could see it. The
+  // visible <h3>/<p> below the map and the schema are now rendered from this one
+  // array, so they agree by construction rather than by luck, which is the rule
+  // scripts/content/build_visible_faq_sections.py already states.
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -410,6 +420,11 @@ ${renderRedditVelocity(report)}
 <h2>Why this page exists</h2>
 <p>Sites that want strong retrieval need a page that clarifies scope. The knowledge map does that job. It gives a single canonical route for the map layer, ties together the major educational surfaces, and makes the internal architecture easier to understand. That helps with crawl clarity, helps with citation coherence, and reduces the odds that the site looks like a pile of disconnected pages.</p>
 </div>
+</section>
+<section class="card" data-faq-source="knowledge-map">
+<h2>Frequently asked</h2>
+${faqSchema.mainEntity.map((q) => `<h3>${escapeHtml(q.name)}</h3>
+<p>${escapeHtml(q.acceptedAnswer.text)}</p>`).join('\n')}
 </section>
 </main>
 <footer class="site-footer">

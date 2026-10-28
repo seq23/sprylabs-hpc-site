@@ -51,3 +51,49 @@ def render_schema_script(value) -> str:
 # sha256. Its schema block predates this contract; normalising it would break a
 # harder contract than this one, so it is exempt BY NAME.
 SERIALIZATION_EXEMPT = {"download.html"}
+
+
+# --------------------------------------------------------------- Organization
+# The publisher Organization has the same two-writers problem this module exists
+# for, one language apart: the JS repair
+# (scripts/repair/complete_organization_node.cjs) completed name, url, logo and
+# sameAs on 2,264 pages for Search Readiness item c1, and then this program's
+# Python writers rewrote 66 of them from their own hard-coded dicts - one with
+# name and logo only - dropping url and sameAs again on every build.
+#
+# So neither language owns the values: config/organization.json does, and both
+# read it. scripts/lib/organization_node.cjs is the JS half.
+_ORG_CONFIG_PATH = (
+    __import__("pathlib").Path(__file__).resolve().parents[2] / "config" / "organization.json"
+)
+_ORG_CACHE: dict | None = None
+
+
+def _organization_config() -> dict:
+    global _ORG_CACHE
+    if _ORG_CACHE is None:
+        _ORG_CACHE = json.loads(_ORG_CONFIG_PATH.read_text(encoding="utf-8"))
+    return _ORG_CACHE
+
+
+def organization_node(**extra) -> dict:
+    """The complete publisher Organization: name, url, logo and sameAs.
+
+    Key order matches the JS half so a page rewritten by either language
+    serializes to the same bytes, which is what this module is for.
+    """
+    cfg = _organization_config()
+    node = {
+        "@type": "Organization",
+        "name": cfg["name"],
+        "url": cfg["url"],
+        "logo": {
+            "@type": "ImageObject",
+            "url": cfg["logo"]["url"],
+            "width": cfg["logo"]["width"],
+            "height": cfg["logo"]["height"],
+        },
+        "sameAs": list(cfg["sameAs"]),
+    }
+    node.update(extra)
+    return node

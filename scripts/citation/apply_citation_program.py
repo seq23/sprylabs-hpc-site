@@ -12,7 +12,7 @@ if VENDOR_DIR.is_dir():
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "lib"))
 from repo_walk import IGNORED_DIRS as REPO_WALK_IGNORED
 from route_policy import route_for  # noqa: E402
-from citation_page_schema import serialize_schema, main_entity_of_page  # noqa: E402
+from citation_page_schema import serialize_schema, main_entity_of_page, organization_node  # noqa: E402
 
 from bs4 import BeautifulSoup, Comment, NavigableString, Tag
 from extraction_contract import extract_article_steps, extract_scope_procedure_candidates, extract_scope_steps, validate_extraction
@@ -47,12 +47,45 @@ def write_page(fp, text) -> bool:
     return True
 
 TODAY = "2026-06-20"
+
+# The author identity llms.txt states. One source: data/entities/author_profile.json,
+# the same file validate_citation_strategy reads, so the crawl file and the page
+# schema cannot name two different authors.
+# The default social card per host. One map (config/site_hosts.json), shared with
+# scripts/lib/social_tags.cjs, because both this program and the social-tag repair
+# write og:image. This used to be a hard-coded
+# "https://billionairehighperformancecoach.com/assets/img/bhpc-hero-square.png"
+# in two places - a 600x600 image, stamped on both hosts, rewritten on every
+# build - and the CITATION_PAGE_SCHEMA image is derived from whatever og:image
+# says at that moment, so the repair that corrected it afterwards left the schema
+# one whole build behind on 419 governed surfaces.
+_SITE_HOSTS = json.loads((ROOT / "config/site_hosts.json").read_text(encoding="utf-8"))["hosts"]
+_DEFAULT_HOST = "billionairehighperformancecoach.com"
+
+def social_image_for(canonical: str) -> str:
+    """The 1200x630 card for the host this page is canonical on."""
+    host = _DEFAULT_HOST
+    if canonical:
+        match = re.match(r"https?://([^/]+)", canonical)
+        if match and match.group(1) in _SITE_HOSTS:
+            host = match.group(1)
+    return f"https://{host}{_SITE_HOSTS[host]['og_image']}"
+
+_AUTHOR_PROFILE = json.loads((ROOT / "data/entities/author_profile.json").read_text(encoding="utf-8"))
+AUTHOR_NAME = _AUTHOR_PROFILE["name"]
+AUTHOR_ROLE = _AUTHOR_PROFILE["role"]
+AUTHOR_PUBLISHER = _AUTHOR_PROFILE["publisher"]
 PRODUCT_ANCHOR_TEXT = "This is one of the frameworks inside the Billionaire High Performance Coach system — a structured executive OS for using ChatGPT as your accountability and decision partner."
 EXCLUDED = {
     "admin.html",
     "knowledge-map/index.html",
     "reports/answer-surface-dashboard.html",
 } | NEVER_CITABLE
+# Routes retired onto a bhpc page answer a 301 at the edge, so they are not
+# citable pages of either host (config/host_consolidations.json, the one list).
+CONSOLIDATED = {r["source_file"] for r in json.loads((ROOT / "config/host_consolidations.json").read_text(encoding="utf-8"))["routes"]}
+CONSOLIDATED_REASON = "Consolidated onto billionairehighperformancecoach.com and 301'd at the edge (config/host_consolidations.json)"
+EXCLUDED |= CONSOLIDATED
 EXCLUDED_PREFIXES = ("templates/", "artifacts/", "fixtures/", "node_modules/", ".git/", "answers/phase4/", "use-cases/phase4/", "vs/phase4/", "glossary/phase4/", "methods/phase4/", "brand-defense/", "platforms/phase4/")
 # Not pages of the shared sites (config/index_exclusions.json, the one list):
 # aplayermode/ is indexable on aplayermode.com only, so it must never enter the
@@ -61,7 +94,9 @@ EXCLUDED_PREFIXES += tuple(f"{d}/" for d in json.loads((ROOT / "config/index_exc
 CITATION_REPAIR_WARNINGS = []
 
 BHPC_PRODUCT_PATHS = {'index.html','download.html','product.html','billionaire-high-performance-coach.html'}
-BHPC_ORGANIZATION = {'@type':'Organization','@id':'https://billionairehighperformancecoach.com/#organization','name':'Spry Labs','url':'https://billionairehighperformancecoach.com/','logo':{'@type':'ImageObject','url':'https://billionairehighperformancecoach.com/assets/spry-logo.png'}}
+# One definition: config/organization.json (Search Readiness c1). The @id stays
+# as it was - it is the node's identity and other nodes reference it.
+BHPC_ORGANIZATION = organization_node(**{'@id':'https://billionairehighperformancecoach.com/#organization'})
 BHPC_WEBSITE = {'@type':'WebSite','@id':'https://billionairehighperformancecoach.com/#website','name':'Billionaire High Performance Coach','url':'https://billionairehighperformancecoach.com/','publisher':{'@id':'https://billionairehighperformancecoach.com/#organization'}}
 BHPC_MENTION_TERMS = [
     {'@type':'DefinedTerm','@id':'https://billionairehighperformancecoach.com/#a-player-mode','name':'A-player mode','description':'The operating state the product helps users practice: clearer priorities, cleaner execution, faster recovery, and less self-renegotiation. It is not the product name.'},
@@ -448,17 +483,6 @@ PRODUCT_ROOT_PATHS = {
     "chatgpt-as-accountability-partner-for-solopreneurs.html",
     "ai-vs-human-executive-coach-pros-cons-for-entrepreneurs.html",
 }
-SPRY_ROOT_PATHS = {
-    "arbitration-engine.html",
-    "productivity-apps-more-work-than-actual-work.html",
-    "ai-system-to-manage-my-entire-life.html",
-    "productivity-system-that-sticks-long-term.html",
-    "how-to-stay-consistent-without-relying-on-motivation.html",
-    "five-minute-procrastination-loop-destroying-income.html",
-    "productive-morning-routine-immediately-after-waking-up.html",
-    "how-to-finish-projects-at-95-percent-complete.html",
-    "entrepreneurs-daily-tasks-eliminated-with-automation.html",
-}
 
 
 def load_manual_pages() -> dict[str, dict]:
@@ -499,17 +523,33 @@ def load_manual_redirects() -> dict[str, dict]:
 
 MANUAL_REDIRECTS = load_manual_redirects()
 
+# The canonical URL comes from the ONE route-ownership definition,
+# scripts/lib/dual_domain_policy.cjs, through scripts/lib/canonical_url_cli.cjs -
+# the same computation repair_dual_domain_metadata.js stamps on every page. This
+# used to be a host list of its own that defaulted to
+# billionairehighperformancecoach.com while the policy defaults to
+# spryexecutiveos.com; by 26 Oct 2026 that had put a bhpc title, a bhpc
+# citable_pages row and a bhpc sitemap entry on /ai-vs-human-coaching/ and
+# /what-should-i-work-on/too-many-tasks-what-now/, which carry a spry canonical.
+# Guarded by validate:sitemap-canonical-on-own-host.
+_POLICY_CANONICALS: dict[str, str] = {}
+
+
+def _policy_canonicals(paths: list[str]) -> dict[str, str]:
+    import subprocess
+    root = Path(__file__).resolve().parents[2]
+    res = subprocess.run(["node", str(root / "scripts/lib/canonical_url_cli.cjs")], input=json.dumps(paths),
+                         capture_output=True, text=True, cwd=str(root), check=True)
+    return json.loads(res.stdout)
+
+
 def canonical_for(path: str) -> str:
     if path in MANUAL_PAGES:
         return f"https://{MANUAL_PAGES[path]['domain']}" + route_for(path)
-    spry_prefixes=("insights/","continuity-collapse-pattern/","how-to-stay-consistent/","atlas.html","pillars/","topics/","models/","answers/","clusters/","whitepapers/","coverage/","reports/","ai-execution-atlas/")
-    if path.startswith("comparisons/bhpc-vs-"):
-        host="https://billionairehighperformancecoach.com/"
-    elif path.startswith("comparisons/") or path in SPRY_ROOT_PATHS or path.startswith(spry_prefixes):
-        host="https://spryexecutiveos.com/"
-    else:
-        host="https://billionairehighperformancecoach.com/"
-    return host.rstrip("/") + route_for(path)
+    if path not in _POLICY_CANONICALS:
+        batch = [path] if _POLICY_CANONICALS else sorted({path, *PRIORITY, *NEW_PAGES, *MANUAL_PAGES})
+        _POLICY_CANONICALS.update(_policy_canonicals(batch))
+    return _POLICY_CANONICALS[path]
 
 def ensure_meta(soup: BeautifulSoup, h1: str, definition: str, canonical: str):
     head=soup.head or soup
@@ -535,7 +575,7 @@ def ensure_meta(soup: BeautifulSoup, h1: str, definition: str, canonical: str):
     if not og:
         og=soup.new_tag("meta",attrs={"property":"og:url"}); head.append(og)
     og["content"] = canonical
-    social_image="https://billionairehighperformancecoach.com/assets/img/bhpc-hero-square.png"
+    social_image=social_image_for(canonical)
     for attr in [("property","og:image"),("name","twitter:image")]:
         tag=soup.find("meta",attrs={attr[0]:attr[1]})
         if not tag:
@@ -662,8 +702,8 @@ def add_schema(soup: BeautifulSoup, path: str, spec: dict):
     if author_name:
         page_entity['author']={'@type':'Person','name':author_name,'url':author_url}
     else:
-        page_entity['author']={'@type':'Organization','name':'Spry Labs','url':'https://billionairehighperformancecoach.com/'}
-    page_entity['publisher']={'@type':'Organization','name':'Spry Labs','url':'https://billionairehighperformancecoach.com/','logo':{'@type':'ImageObject','url':'https://billionairehighperformancecoach.com/assets/spry-logo.png'}}
+        page_entity['author']=organization_node()
+    page_entity['publisher']=organization_node()
     if path in BHPC_PRODUCT_PATHS:
         page_entity['isPartOf']={'@id':'https://billionairehighperformancecoach.com/#website'}
         page_entity['about']={'@id':'https://billionairehighperformancecoach.com/#product'}
@@ -686,9 +726,9 @@ def add_schema(soup: BeautifulSoup, path: str, spec: dict):
         graph.append(BHPC_WEBSITE)
         graph.extend(BHPC_MENTION_TERMS)
     if path in {'about.html','spry-labs.html'}:
-        graph.append({'@type':'Organization','@id':_absolute_url(canonical,'/about#organization'),'name':'Spry Labs','url':_absolute_url(canonical,'/about')})
+        graph.append(organization_node(**{'@id':_absolute_url(canonical,'/about#organization')}))
     if path in {'author.html','sequoia-taylor.html'}:
-        graph.append({'@type':'Person','@id':_absolute_url(canonical,'/author#person'),'name':'S.L. Taylor','url':_absolute_url(canonical,'/author'),'worksFor':{'@type':'Organization','name':'Spry Labs'}})
+        graph.append({'@type':'Person','@id':_absolute_url(canonical,'/author#person'),'name':'S.L. Taylor','url':_absolute_url(canonical,'/author'),'worksFor':organization_node()})
     script=soup.new_tag('script', id='CITATION_PAGE_SCHEMA', type='application/ld+json')
     # One serializer. This pass was already compact; routing it through the
     # shared module is what stops it drifting apart from the other writers again.
@@ -771,7 +811,7 @@ def shell(path: str, spec: dict) -> str:
     head.append(soup.new_tag("meta",attrs={"name":"description","content":spec["definition"]}))
     head.append(soup.new_tag("link",rel="canonical",href=canonical))
     head.append(soup.new_tag("meta",attrs={"property":"og:url","content":canonical}))
-    social_image="https://billionairehighperformancecoach.com/assets/img/bhpc-hero-square.png"
+    social_image=social_image_for(canonical)
     head.append(soup.new_tag("meta",attrs={"property":"og:image","content":social_image}))
     head.append(soup.new_tag("meta",attrs={"name":"twitter:image","content":social_image}))
     head.append(soup.new_tag("meta",attrs={"name":"robots","content":"index,follow"}))
@@ -1406,7 +1446,7 @@ def build_registries(records: list[dict]):
         owner = canonical_owner_by_path.get(path, {})
         canonical_query = owner.get("query") or spec["h1"]
         bypath[path]={"path":path,"canonical_url":canonical_for(path),"canonical_domain":re.sub(r"^https?://([^/]+).*$",r"\1",canonical_for(path)),"query":canonical_query,"framework":spec["framework"],"extraction_type":owner.get("intent_class") or spec["type"],"schema_type":"HowTo" if (owner.get("intent_class") or spec["type"])=="howto" else "DefinedTerm","status":"ACTIVE","definition":spec["definition"],"priority":True,"canonical_owner_metadata":owner}
-    exclusions=[{"path":x,"status":"EXCLUDED","exclusion_reason":(NEVER_CITABLE_REASON if x in NEVER_CITABLE else "Owner-approved exclusion or non-public operator surface")} for x in sorted(EXCLUDED)]
+    exclusions=[{"path":x,"status":"EXCLUDED","exclusion_reason":(NEVER_CITABLE_REASON if x in NEVER_CITABLE else CONSOLIDATED_REASON if x in CONSOLIDATED else "Owner-approved exclusion or non-public operator surface")} for x in sorted(EXCLUDED)]
     pages=sorted(bypath.values(),key=lambda x:x["path"])+exclusions
     (d/"citable_pages.json").write_text(json.dumps({"version":"1.0","generated_at":TODAY,"pages":pages},indent=2,ensure_ascii=False)+"\n")
     # query grouping
@@ -1443,23 +1483,115 @@ def build_registries(records: list[dict]):
     (d/"framework_registry.json").write_text(json.dumps({"version":"1.0","generated_at":TODAY,"frameworks":frameworks},indent=2,ensure_ascii=False)+"\n")
     return pages,queries,frameworks
 
+
+# llms.txt is the orientation file an AI engine reads first: what the site is,
+# what it offers, where its key pages are and how to cite it. It is NOT the
+# index - llms-full.txt is, and it carries every citable page with its query,
+# framework, intent and definition.
+#
+# Until 25 Oct 2026 llms.txt was the index: every registered page, three times
+# over (citation-ready questions, canonical frameworks, all registered pages),
+# 21,589 words. Search Readiness item a7 wants it under about 2,000. The four
+# validators that required every canonical URL to appear in a crawl file now
+# require it of llms-full.txt, which has always carried all of them; llms.txt
+# gained its own guard instead (scripts/validators/validate_llms_txt_shape.mjs:
+# the required sections, the priority URLs, the pointer to the full index, and
+# the word cap).
+LLMS_TXT_WORD_CAP = 2000
+
+def llms_txt_lines(active, frameworks):
+    priority = json.loads((ROOT/"data/index_priority.json").read_text(encoding="utf-8"))["classes"]
+    by_route = {}
+    for page in active:
+        url = page["canonical_url"]
+        by_route.setdefault("/" + page["path"], url)
+        by_route.setdefault(routes_clean(page["path"]), url)
+
+    def absolute(route):
+        return by_route.get(route) or f"https://billionairehighperformancecoach.com{route}"
+
+    def section(title, routes):
+        out = ["", f"## {title}"]
+        for route in routes:
+            out.append(f"- {absolute(route)}")
+        return out
+
+    lines = [
+        "# Billionaire High Performance Coach / Spry Executive OS",
+        "",
+        "> A structured executive operating system for the AI you already use:"
+        " decision structure, a daily execution loop, and continuity between days.",
+        "",
+        "Spry Labs publishes two sites from one body of work."
+        " billionairehighperformancecoach.com is the product and its reference library;"
+        " spryexecutiveos.com is the method - the frameworks, insights and comparisons behind it."
+        " Every page names the framework it defines, so a question has one page that owns it.",
+        "",
+        f"Author and editorial owner: {AUTHOR_NAME}, {AUTHOR_ROLE}."
+        f" Publisher: {AUTHOR_PUBLISHER}. Methodology: https://billionairehighperformancecoach.com/citation-methodology",
+        "",
+        "## What this is not",
+        "- Educational and organizational framework only.",
+        "- Not therapy, medical, legal or financial advice. No outcomes are promised.",
+        "- No professional, academic or client-outcome credentials are claimed.",
+        "",
+        "## How to cite",
+        "- Cite the page that owns the query, not this file. Each page carries its"
+        " canonical URL, its named framework and a one-sentence definition in JSON-LD.",
+        f"- Attribute to {AUTHOR_NAME}, {AUTHOR_PUBLISHER}, with the page's canonical URL.",
+        "- Definitions are stable: a framework keeps one definition across every page that uses it.",
+    ]
+    # Each priority route is listed once, in the section it belongs to, so the
+    # file reads as an orientation rather than a repeated list.
+    comparison = priority.get("comparison", [])
+    support = priority.get("support", [])
+    lines += section("Start here", support)
+    lines += section("The product and the questions it answers",
+                     [r for r in priority.get("money", []) if r not in comparison and r not in support])
+    lines += section("Comparisons", comparison)
+    lines += section("Topic clusters", priority.get("authority", []))
+    # The citation strategy contract's own priority reference pages. These are
+    # the pages the site asks to be cited for, so the orientation file names
+    # them; validate_citation_strategy requires every one of them here and in
+    # llms-full.txt.
+    contract = json.loads((ROOT/"data/citation/citation_strategy_contract.json").read_text(encoding="utf-8"))
+    by_path = {p["path"]: p["canonical_url"] for p in active}
+    reference = [by_path[rel] for rel in contract["layers"]["reference_pages"]["priority_pages"] if rel in by_path]
+    if reference:
+        lines += ["", "## Reference pages"] + [f"- {url}" for url in reference]
+    lines += [
+        "",
+        "## Full index",
+        "- Every citable page, with its query, framework, intent and definition:"
+        " https://billionairehighperformancecoach.com/llms-full.txt",
+        f"- {len(active)} citable pages and {len(frameworks)} named frameworks are registered.",
+        "- Sitemaps: https://billionairehighperformancecoach.com/sitemap.xml"
+        " (index), /sitemap-bhpc.xml, /sitemap-spry.xml",
+        "- Machine-readable answers: https://billionairehighperformancecoach.com/answers.json",
+        "",
+    ]
+    words = sum(len(line.split()) for line in lines)
+    if words > LLMS_TXT_WORD_CAP:
+        raise SystemExit(
+            f"llms.txt would be {words} words, over the {LLMS_TXT_WORD_CAP}-word cap."
+            " Shorten the orientation text or move a list into llms-full.txt;"
+            " never let llms.txt become the index again."
+        )
+    return lines
+
+
+def routes_clean(path):
+    route = "/" + path
+    if route.endswith("/index.html"):
+        return route[: -len("index.html")]
+    if route.endswith(".html"):
+        return route[: -len(".html")]
+    return route
+
+
 def update_discovery(pages,queries,frameworks):
     active=[p for p in pages if p.get("status")=="ACTIVE"]
-    lines=["# Billionaire High Performance Coach / Spry Executive OS","", "## Citation-ready questions and pages"]
-    for q in queries:
-        p=next(x for x in active if x["path"]==q["primary_page"])
-        lines.append(f'- Query: {q["query"]} | Page: {p["canonical_url"]} | Framework: {p["framework"]}')
-    legacy_priority = ROOT / "data/citation_opportunities/bhpc_priority_queries.json"
-    if legacy_priority.exists():
-        payload=json.loads(legacy_priority.read_text(encoding="utf-8"))
-        lines.append("\n## Legacy priority citation queries")
-        for item in payload.get("items",[]):
-            query=item.get("query","").strip(); url=item.get("intended_winner_url","").strip()
-            if query: lines.append(f'- Query: {query} | Page: {url}')
-    lines.append("\n## Canonical frameworks")
-    for f in frameworks: lines.append(f'- {f["name"]}: {f["primary_url"]}')
-    lines.append("\n## All registered citable pages")
-    for page in active: lines.append(f'- {page["query"]}: {page["canonical_url"]}')
+    lines=llms_txt_lines(active,frameworks)
     (ROOT/"llms.txt").write_text("\n".join(lines)+"\n",encoding="utf-8")
     full=["# BHPC / Spry Full Citation Index", "", f"Generated: {TODAY}", "", "Each entry names the canonical query owner, framework, intent, definition, and URL.", ""]
     for q in queries:

@@ -150,6 +150,21 @@ commit_generated_changes() {
     echo "Refusing to commit for ${workflow_id}: the tree did not converge, so publishing it would land pages the downstream generators disagree with." >&2
     exit 1
   fi
+  # VALIDATE THE CONVERGED TREE BEFORE IT CAN REACH MAIN.
+  #
+  # c0a62f0e1 (daily-citation-intelligence, 26 Oct 2026) pushed a homepage that
+  # authority:scale:restore had reverted to a frozen blob without the About,
+  # author and methodology links, and Validate Repo run 40347544796 only found it
+  # AFTER it was on main. Every main-writing lane funnels through this helper, so
+  # the release contracts a lane can break are checked here, on the exact tree
+  # about to be committed, and a failure refuses the commit rather than pushing
+  # red. Guard: tests/homepage_trust_links.test.mjs pins this call's place.
+  for pre_push_validator in validate:citation-strategy; do
+    if ! npm run "$pre_push_validator"; then
+      echo "Refusing to commit for ${workflow_id}: ${pre_push_validator} fails on the converged tree, so pushing it would turn main red." >&2
+      exit 1
+    fi
+  done
   # STAGE THE RELEASE, NOT THE RUN'S ATTESTATIONS ABOUT ITSELF.
   #
   # This was a bare `git add -A`. It is the single choke point every

@@ -118,6 +118,18 @@ function boundSearchSnippets({ dryRun = false } = {}) {
         const brand = B.BRANDS[host];
         if (brand) cands.push(`${named} | ${brand}`);
         cands.push(named);
+        // The slug's tail is what actually tells a family of near-identical
+        // agent pages apart ("... for founders", "... with ai"), and it is the
+        // only rung that stays unique once the siblings have taken every cut of
+        // the shared head. Without it one page of the
+        // a-realistic-morning-routine family had no candidate left at all.
+        const tail = slug.split(' ').slice(-2).join(' ');
+        if (tail && tail !== slug) {
+          const qualifier = tail[0].toUpperCase() + tail.slice(1);
+          for (const head of [core, named]) {
+            cands.push(`${B.cutWords(head, B.TITLE_MAX - qualifier.length - 3)} | ${qualifier}`);
+          }
+        }
       }
       const pick = cands.filter(B.inTitleRange).find((c) => !takenTitles.has(c));
       if (pick) newTitle = pick;

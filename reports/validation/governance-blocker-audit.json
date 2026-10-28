@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-10-25T21:38:00.430Z",
+  "generated_at": "2026-10-28T14:43:18.429Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 261,
+  "admitted_hard_fail_count": 276,
   "reviewed_count": 8,
-  "unreviewed_count": 253,
+  "unreviewed_count": 268,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 199,
+    "REVIEW_REQUIRED": 202,
     "EXISTING_REPAIR_AVAILABLE": 8,
-    "TRUE_BLOCKER": 34,
-    "REVIEW_WARNING_BOUNDARY": 20
+    "TRUE_BLOCKER": 37,
+    "REVIEW_WARNING_BOUNDARY": 29
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 199,
+    "REVIEW_REQUIRED": 202,
     "EXISTING_REPAIR_AVAILABLE": 8,
-    "TRUE_BLOCKER": 34,
-    "REVIEW_WARNING_BOUNDARY": 12
+    "TRUE_BLOCKER": 37,
+    "REVIEW_WARNING_BOUNDARY": 21
   },
   "migration_status_counts": {
-    "UNREVIEWED": 253,
+    "UNREVIEWED": 268,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -3956,6 +3956,231 @@
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-GENERATED-DIR-SWEEP"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-TITLE-BRAND-MATCHES-HOST",
+      "name": "validate:title-brand-matches-host",
+      "command": "npm run validate:title-brand-matches-host",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "25 Oct 2026: apply_repairs.mjs (snippet_alignment) and build_navigation_structure.mjs hub titles hard-coded '| Spry Executive OS', putting the sibling site's name on 34 billionairehighperformancecoach.com hub pages. Every indexable title that ends in a site name must name the host the page is published on (host_brand.cjs). Zero pages examined or zero branded titles fails.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-TITLE-BRAND-MATCHES-HOST"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-BUILD-INPUT-HASH-COVERS-TREE",
+      "name": "validate:build-input-hash-covers-tree",
+      "command": "npm run validate:build-input-hash-covers-tree",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "PR #147, 25 Oct 2026: Validate Repo's build cache key left out artifacts/ and reports/, so an artifacts-only commit was a cache HIT and the cached tar put the previous commit's artifacts/ back over the checkout; validate:python-dependency-contract failed on bytes never committed. Every tracked path outside .github must be in the key; an artifacts-only change must move it, a workflow-only change must not.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-BUILD-INPUT-HASH-COVERS-TREE"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "SOCIAL-TAGS",
+      "name": "validate:social-tags",
+      "command": "npm run validate:social-tags",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Search Readiness item b6 (25 Oct 2026): not one of 2,276 committed pages carried og:image:width/height, 1,966 had no og:site_name, 1,717 no og:type and 1,448 no twitter:card, and the two og images in use were 600x600 and 420x96. Every share and every AI preview rendered from a card the checklist rejects. Refuses an incomplete social-card head, an og:image that is not a committed 1200x630 PNG on the page's own host, width/height that disagree with the file, og:title that disagrees with <title>, and a missing icon/apple-touch-icon/manifest link.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-SOCIAL-TAGS"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "LLMS-TXT-SHAPE",
+      "name": "validate:llms-txt-shape",
+      "command": "npm run validate:llms-txt-shape",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Search Readiness item a7 (25 Oct 2026): /llms.txt was 21,589 words - the whole page index, three times over - where an AI engine expects a short orientation file under about 2,000 words. The full index is llms-full.txt. Refuses an llms.txt over the word cap, missing one of its required sections, not naming both brands, not listing every priority page, or not pointing at llms-full.txt, the sitemap index and the methodology page.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-LLMS-TXT-SHAPE"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "CANONICAL-HOST",
+      "name": "validate:canonical-host",
+      "command": "npm run validate:canonical-host",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Search Readiness item a1 (25 Oct 2026): https://www.billionairehighperformancecoach.com/ answered 200 instead of 301-ing to the apex, so every page existed at two addresses and Google was free to split the signals. Pages _redirects cannot match on host, so the rule lives in functions/_lib/canonical_host.js; this proves every public domain's www alias 301s with path and query intact, that the apexes themselves and every *.pages.dev preview are passed through, and that there is no redirect loop.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-CANONICAL-HOST"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-WF-WEEKLY-OUTCOME-REPORT",
+      "name": "weekly-outcome-report.yml",
+      "command": ".github/workflows/weekly-outcome-report.yml",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Search Readiness item i9 (25 Oct 2026): nothing reported outcomes per site week over week, so a drop went unnoticed for a month, and no list of red sites closed itself. This lane reports both hosts' impressions, clicks, queries and index coverage against the previous week from the collectors' own measurements, and keeps exactly one self-closing issue per red site.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-WF-WEEKLY-OUTCOME-REPORT"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "WEEKLY-OUTCOME-REPORT",
+      "name": "validate:weekly-outcome-report",
+      "command": "npm run validate:weekly-outcome-report",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Search Readiness item i9 asks only that a workflow run on a weekly cron and name a report, which a workflow that merely mentions one would satisfy while reporting nothing. This asserts the whole chain: a genuinely weekly cron, that it reaches the builder and the self-test, that the builder reads the collectors rather than inventing numbers, that the delivery reads the report that was built, that it can close an issue as well as open one, and that every RED site states its reason.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-WEEKLY-OUTCOME-REPORT"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "ORGANIZATION-NODE",
+      "name": "validate:organization-node",
+      "command": "npm run validate:organization-node",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Search Readiness item c1 (25 Oct 2026): all 3,480 Organization nodes on the site named Spry Labs and not one carried sameAs, because ten generators each wrote their own partial set, so AI engines had no complete entity to attach a page to. One definition in scripts/lib/organization_node.cjs, one repair in scripts/repair/complete_organization_node.cjs; this proves every published page carries name, url, logo and sameAs, that no page is missing an Organization entirely, and that no sameAs outside the declared list can be invented to make it green.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-ORGANIZATION-NODE"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "CLAUDE-MD-COST-RULE",
+      "name": "validate:claude-md-cost-rule",
+      "command": "npm run validate:claude-md-cost-rule",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Search Readiness item i10 (25 Oct 2026): docs/cost/zero-paid-llm.md had existed since 11 Oct but the repo had no CLAUDE.md at all, so the nothing-paid rule was in a document nothing an agent reads first pointed at - a rule no code reads is a wish. This reads CLAUDE.md for the sentence, proves the document it links exists and that every .md link resolves, proves the validator it names is a real script, proves config/llm_routing.json still pins max_cost_usd 0 with fallback_to_paid false, and reads the one-definition contract table so it cannot name a file or npm script that is not there.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-CLAUDE-MD-COST-RULE"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "SCHEMA-SUPPORTED",
+      "name": "validate:schema-supported",
+      "command": "npm run validate:schema-supported",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Search Readiness item c5 (25 Oct 2026): 12 of 7,832 Question nodes asked something that appeared nowhere on the page - the page title with a '?' added, or 'How does <brand> answer <title>?' - and one FAQPage had no visible copy at all. Markup without matching content is treated as deceptive and can cost every rich result on the domain. The schema-parity check already in the build missed them because it reads the citable-pages registry and the visible-FAQ builder's own block; this reads the whole indexable surface, sharing its definition of visible with the repair (scripts/lib/schema_supported.cjs). An invisible Offer price fails here rather than being deleted, so the revenue claim reaches a person.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-SCHEMA-SUPPORTED"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "ROUTE-OWNER-HOST",
+      "name": "validate:route-owner-host",
+      "command": "npm run validate:route-owner-host",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Search Readiness item a2 (25 Oct 2026): https://spryexecutiveos.com/ answered 200 with rel=canonical pointing at billionairehighperformancecoach.com, a homepage the spry host's own sitemap does not claim. One Pages deployment answers both hosts from one tree, so every page was served twice and a canonical is only a hint - a duplicate answering 200 is still a duplicate Google may index. functions/_lib/route_owner_host.js 301s a BHPC-owned route off the spry host, reading a table generated from the canonical each page carries. This proves the homepage redirects, every spry-owned route does not, unknown paths pass through so they still 404 (item a9), files, crawl surfaces, operator surfaces and previews are untouched, and that the table matches both the generator and every page's own rel=canonical.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-ROUTE-OWNER-HOST"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-WF-APLAYERMODE-WORKER-DEPLOY",
+      "name": "deploy-aplayermode-worker.yml",
+      "command": ".github/workflows/deploy-aplayermode-worker.yml",
+      "owning_lane": "distribution",
+      "risk_prevented": "aplayermode.com is served by a dedicated Worker (workers/aplayermode-com), not by the Pages project, and nothing deployed it. The About page, the real 404 and the route() table that serves them landed on main 25 Oct 2026 and were still unreachable on 26 Oct: /about/ and every made-up path 301'd home, failing Search Readiness a5, a9, b1 and c2 at once. A soft 404 also hid every dead inbound link and every typo from Search Console.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-WF-APLAYERMODE-WORKER-DEPLOY"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-SITEMAP-CANONICAL-ON-OWN-HOST",
+      "name": "validate:sitemap-canonical-on-own-host",
+      "command": "npm run validate:sitemap-canonical-on-own-host",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "26 Oct 2026: sitemap-bhpc.xml listed /ai-vs-human-coaching/ and /what-should-i-work-on/too-many-tasks-what-now/ while both pages declared a spryexecutiveos.com canonical, because apply_citation_program.py kept its own host list (default bhpc) while dual_domain_policy.cjs defaults to spry. Every URL in a host's child sitemap must resolve to a page whose canonical is on that host; a missing or empty sitemap, or zero resolved pages, fails.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-SITEMAP-CANONICAL-ON-OWN-HOST"
+      ],
+      "suggested_review": "TRUE_BLOCKER",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-HOST-CONSOLIDATION",
+      "name": "validate:host-consolidation",
+      "command": "npm run validate:host-consolidation",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Portfolio check Brief 5 (25 Oct 2026): four spryexecutiveos.com AI-executive-coach pages split bhpc's measured queries. They must 301 in one hop to their bhpc equivalents on both hosts (no loop, targets exist), and no child sitemap may list them or another host's URL (the 11 Oct bug).",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-HOST-CONSOLIDATION"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "HOMEPAGE-TRUST-LINKS",
+      "name": "validate:homepage-trust-links",
+      "command": "npm run validate:homepage-trust-links",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Validate Repo run 40347544796 (26 Oct 2026): the daily-citation-intelligence lane ran authority:scale:restore, which reverted index.html to a frozen blob older than the hand-added About/author/methodology footer links; no generator wrote them back and the lane pushed c0a62f0e1 to main without running validate:citation-strategy. Refuses a tree where build:postprocess does not run repair:homepage-trust-links before build_404.js, where the writer cannot restore the links into the frozen homepage blob, where the committed homepage lacks them, or where commit_and_push_if_changed.sh stops running validate:citation-strategy between convergence and staging.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-HOMEPAGE-TRUST-LINKS"
       ],
       "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",

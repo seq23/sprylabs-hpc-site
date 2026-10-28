@@ -34,11 +34,23 @@
  *                             medium; no IP, no user agent, no cookie), skipping
  *                             crawlers. Read weekly by
  *                             scripts/aplayermode/collect_pin_metrics.mjs.
+ *   /about/                -> the About page (aplayermode/about.html); /about 301s to it.
+ *                             Who publishes this and who built it, so an answer
+ *                             engine has an author to cite (Search Readiness c6).
  *   /aplayermode/          -> 301 to / (one URL per page)
  *   /amazon/*              -> 301 to billionairehighperformancecoach.com/amazon/*
  *                             (zone Redirect Rule b4d8a48c answers first; this
  *                             mirrors it so the contract holds without the rule)
- *   anything else          -> 301 to /, so no other BHPC page is exposed here.
+ *   REDIRECT_HOME          -> 301 to /: the handful of sibling-host paths the
+ *                             outside world links (/download, /guides/,
+ *                             /sitemap-bhpc.xml, /llms-full.txt, /index.xml), so
+ *                             an inbound link to a BHPC URL on this host lands on
+ *                             the page rather than nowhere.
+ *   anything else          -> 404 with aplayermode/404.html. It used to 301 home,
+ *                             which is a soft 404: every typo and every dead
+ *                             inbound link looked like the homepage to Google, so
+ *                             nothing broken was ever reported (Search Readiness
+ *                             a9, 25 Oct 2026). A 404 exposes no BHPC page either.
  *
  * LOOP GUARD: ORIGIN is the Pages project's own pages.dev host, never
  * billionairehighperformancecoach.com, whose /aplayermode/ now 301s here
@@ -88,6 +100,25 @@ export const ROOT_FILES = Object.freeze({
   '/apple-touch-icon.png': '/aplayermode/img/apple-touch-icon.png',
 });
 
+// The About page: its own file under aplayermode/, served at the apex root.
+export const ABOUT_PATH = '/about/';
+export const ABOUT_FILE = '/aplayermode/about.html';
+// The page served with a 404 status for every path this host does not have.
+export const NOT_FOUND_FILE = '/aplayermode/404.html';
+// Sibling-host paths the outside world links to; they go home rather than 404,
+// because a real page of that name exists on billionairehighperformancecoach.com.
+export const REDIRECT_HOME = Object.freeze(['/download', '/guides', '/sitemap-bhpc.xml', '/llms-full.txt', '/index.xml']);
+
+// route() names the COMMITTED FILE it serves (so the validator can check the file
+// exists); this is the path that file is REQUESTED AT on the origin. Cloudflare
+// Pages serves an .html file at its extensionless URL and 301s `/x.html` -> `/x`,
+// and this Worker refuses to follow an origin redirect - so fetching the .html
+// path verbatim answered 502 for /about/ and for every 404 (Search Readiness a5,
+// a9, b1, c2; the pages landed 25 Oct 2026 and were unreachable until 26 Oct).
+// One definition, used at every origin fetch below and read by
+// scripts/validators/validate_aplayermode_landing.mjs.
+export const originPath = (file) => (file.endsWith('.html') ? file.slice(0, -'.html'.length) : file);
+
 export const FEED_PATH = '/pinfeed.xml';
 export const QUEUE_PATH = '/aplayermode/data/pinterest/queue.json';
 export const FEED_TYPE = 'application/rss+xml; charset=utf-8';
@@ -101,10 +132,20 @@ export function route(pathname) {
   if (pathname === '/amazon' || pathname.startsWith('/amazon/')) return { kind: 'redirect', location: BHPC + pathname, keepQuery: true };
   if (pathname === '/pinfeed' || pathname === '/pinfeed/') return { kind: 'redirect', location: FEED_PATH, keepQuery: false };
   if (pathname === '/aplayermode' || pathname === PAGE_PATH || pathname === `${PAGE_PATH}index.html`) return { kind: 'redirect', location: '/', keepQuery: true };
+  if (pathname === ABOUT_PATH) return { kind: 'asset', upstream: ABOUT_FILE };
+  // Cloudflare Pages answers 404.html at /404 on the shared hosts; the error page's canonical names
+  // that URL, so this host answers it the same way rather than leaving the canonical pointing at a
+  // path that does not exist. The page is noindex either way.
+  if (pathname === '/404' || pathname === '/404.html') return { kind: 'asset', upstream: NOT_FOUND_FILE };
+  if (pathname === '/about' || pathname === '/about/index.html') return { kind: 'redirect', location: ABOUT_PATH, keepQuery: true };
   if (pathname.startsWith(PAGE_PATH) && !pathname.includes('..')) return { kind: 'asset', upstream: pathname };
   if (SHARED_ASSETS.has(pathname)) return { kind: 'asset', upstream: pathname };
   if (Object.prototype.hasOwnProperty.call(ROOT_FILES, pathname)) return { kind: 'asset', upstream: ROOT_FILES[pathname] };
-  return { kind: 'redirect', location: '/', keepQuery: false };
+  const bare = pathname.replace(/\/+$/, '') || '/';
+  if (REDIRECT_HOME.includes(bare)) return { kind: 'redirect', location: '/', keepQuery: false };
+  // Everything else is not a page on this host. 404, never a 301 home: a soft 404 hides every
+  // dead inbound link and every typo from Search Console (Search Readiness a9, 25 Oct 2026).
+  return { kind: 'notfound', upstream: NOT_FOUND_FILE };
 }
 
 /** One data point per Pinterest-referred page view: utm values only, never IP/UA/cookies. */
@@ -115,8 +156,18 @@ export function pinVisitPoint(url, userAgent) {
   return { indexes: [content], blobs: [content, clip(url.searchParams.get('utm_campaign')), clip(url.searchParams.get('utm_medium'))], doubles: [1] };
 }
 
+/** The apex's own 404 page, answered with a 404 status (never a 200, never a redirect home). */
+async function serveNotFound(request, upstreamPath) {
+  const upstream = await fetch(ORIGIN + originPath(upstreamPath), { headers: { accept: 'text/html' }, redirect: 'manual', cf: { cacheTtl: 300 } });
+  const html = upstream.status === 200 ? await upstream.text() : '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Not found | A Player Mode</title></head><body><h1>Not found</h1><p><a href="/">Go to A Player Mode</a></p></body></html>';
+  return new Response(request.method === 'HEAD' ? null : html, {
+    status: 404,
+    headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'public, max-age=300' },
+  });
+}
+
 async function serveFeed(request, upstreamPath) {
-  const upstream = await fetch(ORIGIN + upstreamPath, { headers: { accept: 'application/json' }, redirect: 'manual', cf: { cacheTtl: 300 } });
+  const upstream = await fetch(ORIGIN + originPath(upstreamPath), { headers: { accept: 'application/json' }, redirect: 'manual', cf: { cacheTtl: 300 } });
   if (upstream.status !== 200) return new Response(`pin queue unavailable (origin ${upstream.status})`, { status: 502 });
   const xml = buildPinfeedXml(await upstream.json(), chicagoDate(new Date()));
   return new Response(request.method === 'HEAD' ? null : xml, { status: 200, headers: { 'content-type': FEED_TYPE, 'cache-control': 'public, max-age=900' } });
@@ -158,6 +209,7 @@ export default {
       if (r.keepQuery) target.search = url.search;
       return new Response(null, { status: 301, headers: { Location: target.toString(), 'Cache-Control': 'public, max-age=3600' } });
     }
+    if (r.kind === 'notfound') return serveNotFound(request, r.upstream);
     if (r.kind === 'feed') return serveFeed(request, r.upstream);
     if (r.kind === 'page' && env.PIN_VISITS) {
       const point = pinVisitPoint(url, request.headers.get('user-agent'));
@@ -166,7 +218,7 @@ export default {
     const fetchOrigin = async () => {
       const headers = new Headers();
       for (const h of FORWARD_HEADERS) { const v = request.headers.get(h); if (v) headers.set(h, v); }
-      const upstream = await fetch(ORIGIN + r.upstream + url.search, { method: request.method, headers, redirect: 'manual' });
+      const upstream = await fetch(ORIGIN + originPath(r.upstream) + url.search, { method: request.method, headers, redirect: 'manual' });
       if (upstream.status >= 300 && upstream.status < 400 && upstream.status !== 304) {
         return new Response(`origin redirected ${r.upstream} (status ${upstream.status}); refusing to follow`, { status: 502 });
       }

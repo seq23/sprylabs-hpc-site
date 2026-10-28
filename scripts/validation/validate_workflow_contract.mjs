@@ -14,8 +14,17 @@ const expectedWorkflows = [
   'admin-operations.yml',
   'search-intelligence.yml',
   'main-validation-sentinel.yml',
+  // Search Readiness i9: the weekly outcome report. Reads the collectors'
+  // measurements, writes the week's report and reconciles one self-closing
+  // issue per red site. 2026-10-25.
+  'weekly-outcome-report.yml',
   // The Twin Agent's drop branch -> Spry Content Release (drop_branch). 2026-09-26.
   'agent-drop-intake.yml',
+  // aplayermode.com is served by its own Worker, not by the Pages project, and nothing
+  // deployed it: the About page and the real 404 landed on main 25 Oct 2026 and were
+  // still unreachable a day later (Search Readiness a5, a9, b1, c2). This lane deploys
+  // workers/aplayermode-com on main and proves the live apex. 2026-10-26.
+  'deploy-aplayermode-worker.yml',
 ].sort();
 const retiredWorkflows = [
   'citation-velocity-5k.yml',

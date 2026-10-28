@@ -1394,6 +1394,59 @@
       "validation_required": true,
       "superseded_at": "2026-10-25T22:10:00.000Z",
       "superseded_reason": "page is a demand-family page rebuilt by apply_demand_families.py on every build:all; the block does not survive the build, and the target set no longer maps targets onto these pages"
+    },
+    {
+      "repair_id": "repair_8fdac51edce234f1",
+      "target_id": "si_30d77c7cb96e7ac6",
+      "query": "leadership coaching cost",
+      "owned_route": "/vs/adhd-coaching/",
+      "owned_file": "vs/adhd-coaching/index.html",
+      "content_owner": "legacy_eligible",
+      "repair_type": "snippet_alignment",
+      "basis": [
+        {
+          "code": "GSC_IMPRESSIONS_WITHOUT_CLICKS",
+          "basis": "google_search_console",
+          "detail": "7 impressions and 0 clicks."
+        },
+        {
+          "code": "GSC_AVERAGE_POSITION_BEYOND_FIRST_PAGE",
+          "basis": "google_search_console",
+          "detail": "Average position 81.4."
+        }
+      ],
+      "evidence_used": [
+        "google_search_console"
+      ],
+      "baseline_gsc_metrics": {
+        "clicks": 0,
+        "impressions": 7,
+        "ctr": 0,
+        "gsc_average_position": 81.42857142857143,
+        "pages": [
+          "https://billionairehighperformancecoach.com/executive-coach-cost/"
+        ]
+      },
+      "baseline_grounded_own_domain_referenced": null,
+      "baseline_competitor_domains": [],
+      "priority": 38,
+      "current_title": "Billionaire High Performance Coach vs ADHD coaching | BHPC",
+      "current_description": "",
+      "competitor_domains": [],
+      "state": "PREPARED_NOT_APPLIED",
+      "new_url": false,
+      "publishes": false,
+      "mutates_publishing_cadence": false,
+      "agent_lane_excluded": true,
+      "status": "APPLIED",
+      "applied_at": "2026-10-26T14:53:05.709Z",
+      "before_sha256": "1e537cc6e7c245093a0a7497eaf5c92df624cbe4fbe9594ba692d54478eee7b8",
+      "after_sha256": "f90cefe523c091d1b1e6b22fe775713b2c0f9844646e379af882ee642aa43f81",
+      "rollback": {
+        "type": "content_hash",
+        "restore_sha256": "1e537cc6e7c245093a0a7497eaf5c92df624cbe4fbe9594ba692d54478eee7b8"
+      },
+      "validation_required": true
     }
   ]
 }

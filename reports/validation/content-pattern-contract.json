@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0",
   "validator": "content-pattern-contract",
-  "generated_at": "2026-10-25T21:37:56.834Z",
+  "generated_at": "2026-10-28T13:33:17.587Z",
   "enforcement": "block",
   "scanned_root": ".",
-  "pages_checked": 2273,
+  "pages_checked": 2275,
   "status": "PASS",
   "blocking_failures": 0,
   "summary": [
@@ -46,15 +46,15 @@
     {
       "id": "comparison_table",
       "blocking": false,
-      "pages_missing": 691,
-      "coverage_pct": 69.6,
+      "pages_missing": 693,
+      "coverage_pct": 69.5,
       "why": "no comparison or cost table (agent request #2, 529 occurrences)"
     },
     {
       "id": "concrete_numbers",
       "blocking": false,
-      "pages_missing": 1936,
-      "coverage_pct": 14.8,
+      "pages_missing": 1887,
+      "coverage_pct": 17.1,
       "why": "no concrete cost or timeline figures (agent request #5, 365 occurrences)"
     },
     {
@@ -67,29 +67,29 @@
     {
       "id": "faq",
       "blocking": false,
-      "pages_missing": 454,
-      "coverage_pct": 80,
+      "pages_missing": 460,
+      "coverage_pct": 79.8,
       "why": "no FAQ block or FAQPage schema (agent request #9)"
     },
     {
       "id": "structured_data",
       "blocking": false,
-      "pages_missing": 4,
+      "pages_missing": 5,
       "coverage_pct": 99.8,
       "why": "no JSON-LD structured data (agent request #10)"
     },
     {
       "id": "recommendation_summary",
       "blocking": false,
-      "pages_missing": 13,
-      "coverage_pct": 99.4,
+      "pages_missing": 15,
+      "coverage_pct": 99.3,
       "why": "no recommendation summary - asked for on 913 of 913 agent recommendations, the single most requested block"
     },
     {
       "id": "definition_callout",
       "blocking": false,
-      "pages_missing": 2,
-      "coverage_pct": 99.9,
+      "pages_missing": 4,
+      "coverage_pct": 99.8,
       "why": "no definition callout (agent requested 196 times) - this is what an answer engine lifts for \"what is X\""
     },
     {
@@ -102,29 +102,29 @@
     {
       "id": "protocol",
       "blocking": false,
-      "pages_missing": 418,
-      "coverage_pct": 81.6,
+      "pages_missing": 420,
+      "coverage_pct": 81.5,
       "why": "no ordered protocol (agent requested 305 times) - ordered steps are what gets lifted for \"how do I\""
     },
     {
       "id": "cta_callout",
       "blocking": false,
-      "pages_missing": 1416,
+      "pages_missing": 1418,
       "coverage_pct": 37.7,
       "why": "no next-step callout (agent requested 272 times) - the conversion link exists but nothing frames it as the next action"
     },
     {
       "id": "prompt_template",
       "blocking": false,
-      "pages_missing": 2184,
+      "pages_missing": 2186,
       "coverage_pct": 3.9,
       "why": "no copy-ready prompt (agent requested 255 times) - this is the artifact this audience actually reuses"
     },
     {
       "id": "trust_block",
       "blocking": false,
-      "pages_missing": 682,
-      "coverage_pct": 70,
+      "pages_missing": 684,
+      "coverage_pct": 69.9,
       "why": "no trust or authorship block (agent requested 215 times) - entity clarity is a citation factor"
     }
   ],
@@ -246,10 +246,13 @@
       "amazon/executive-dysfunction-field-manual/index.html",
       "amazon/index.html",
       "amazon/monk-mode/index.html",
-      "amazon/task-paralysis/index.html"
+      "amazon/task-paralysis/index.html",
+      "aplayermode/404.html"
     ],
     "recommendation_summary": [
       "amazon/index.html",
+      "aplayermode/404.html",
+      "aplayermode/about.html",
       "aplayermode/index.html",
       "download.html",
       "insights/elite-morning-structure-without-burnout.html",
@@ -264,6 +267,8 @@
       "product.html"
     ],
     "definition_callout": [
+      "aplayermode/404.html",
+      "aplayermode/about.html",
       "knowledge-map/index.html",
       "product.html"
     ],

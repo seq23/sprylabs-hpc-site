@@ -4,8 +4,10 @@ import { createRequire } from 'node:module';
 const requireCjs = createRequire(import.meta.url);
 // Route contract: the URL that answers 200 without a redirect hop.
 const { routeFor } = requireCjs('../lib/dual_domain_policy.cjs');
+const { fileForRoute } = requireCjs('../lib/route_resolution.cjs');
 import path from 'node:path';
 import {readJson,fail,pass,writeSummary} from './common.mjs';
+import {requiredHomepageTrustLinks,linksRoute} from '../lib/homepage_trust_links.mjs';
 const errors=[];
 const contract=readJson('data/citation/citation_strategy_contract.json');
 const pages=readJson('data/citation/citable_pages.json').pages.filter(x=>x.status==='ACTIVE');
@@ -52,11 +54,14 @@ for(const rel of [
   if(!fs.existsSync(rel)) errors.push(`missing phase strategy artifact: ${rel}`);
 }
 const sitemapBhpc=fs.readFileSync('sitemap-bhpc.xml','utf8');
-const llmsTxt=fs.readFileSync('llms.txt','utf8');
+// The full index, not the orientation file: llms.txt stopped being the
+// index on 25 Oct 2026 (Search Readiness a7). Every phase page must still be
+// reachable from a crawl file, and llms-full.txt is the one that lists them.
+const llmsFull=fs.readFileSync('llms-full.txt','utf8');
 for(const rel of (inventory.files || []).slice(0, 110)){
   const url='https://billionairehighperformancecoach.com' + routeFor(rel);
   if(!sitemapBhpc.includes(url)) errors.push(`sitemap-bhpc missing phase page: ${url}`);
-  if(!llmsTxt.includes(url)) errors.push(`llms.txt missing phase page: ${url}`);
+  if(!llmsFull.includes(url)) errors.push(`llms-full.txt missing phase page: ${url}`);
 }
 
 for(const rel of requiredFiles) if(!fs.existsSync(rel)) errors.push(`missing strategy artifact: ${rel}`);
@@ -65,6 +70,22 @@ for(const phrase of ['GPTBot','ClaudeBot','PerplexityBot','Google-Extended','Bin
 }
 if(!String(author.name||'').trim()||!String(author.role||'').trim()||!String(author.review_role||'').trim()) errors.push('author profile is incomplete');
 if(!String(author.credential_policy||'').includes('No professional')) errors.push('author credential policy missing anti-fabrication boundary');
+
+// Who is speaking, reachable from the front door. AI engines weight the author,
+// and an unnamed page with no About is the last thing they cite; Search
+// Readiness item c6 reported on 25 Oct 2026 that the homepage linked neither.
+// The pages must exist as published files AND be linked from index.html.
+{
+  const home=fs.readFileSync('index.html','utf8');
+  // One list, shared with the writer (scripts/repair/homepage_trust_links.mjs,
+  // run in build:postprocess), so the check and the output cannot disagree.
+  const required=requiredHomepageTrustLinks(author);
+  if(required.length<3) errors.push(`homepage trust links: ${required.length} defined, expected the About, author and methodology pages`);
+  for(const {route,label} of required){
+    if(!fileForRoute(process.cwd(), route)) errors.push(`${label} (${route}) is not a published page`);
+    if(!linksRoute(home, route)) errors.push(`the homepage does not link ${label} (${route}); an engine cannot reach who is speaking`);
+  }
+}
 // The per-page citation checks (one H1, canonical, extraction block, named author,
 // schema, product bridge) all run inside this loop. An emptied priority_pages list
 // would report "OK: 0 priority pages satisfy the four-layer citation strategy".

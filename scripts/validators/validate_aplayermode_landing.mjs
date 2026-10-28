@@ -83,6 +83,10 @@ import path from 'node:path';
 import vm from 'node:vm';
 import { pathToFileURL } from 'node:url';
 
+// The one definition of the publisher Organization's approved sameAs list
+// (Search Readiness item c1). See scripts/lib/organization_node.cjs.
+const { SAME_AS: ORG_SAME_AS } = createRequire(import.meta.url)('../lib/organization_node.cjs');
+
 const ROOT = process.cwd();
 const LABEL = '[validate:aplayermode-landing]';
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
@@ -260,13 +264,26 @@ const fileExists = (p) => {
   const clean = decodeURIComponent(p.split(/[?#]/)[0]).replace(/^\//, '');
   return [clean, path.join(clean, 'index.html'), `${clean}.html`].some((c) => c && fs.existsSync(path.join(ROOT, c)) && fs.statSync(path.join(ROOT, c)).isFile());
 };
+// The Worker is the only authority on what aplayermode.com serves. Checking a root path against
+// the repository alone passed links the Worker sends somewhere else: about.html exists at the
+// repository ROOT (the BHPC page), so href="/about" looked like a valid internal link while the
+// apex 301'd it home (25 Oct 2026). Every root path on this page must be a path route() SERVES.
+const APEX = await import(pathToFileURL(path.join(ROOT, 'workers', 'aplayermode-com', 'src', 'index.js')).href);
+/** The repository file the Worker serves for a root path, or null when it serves no file. */
+const apexServes = (ref) => {
+  let decoded = ref; try { decoded = decodeURIComponent(ref); } catch { /* keep it raw */ }
+  const r = APEX.route(decoded.split(/[?#]/)[0] || '/');
+  return (r.kind === 'asset' || r.kind === 'page' || r.kind === 'feed') ? (r.upstream ?? null) : null;
+};
 for (const ref of refs) {
   if (ref === '' || ref === '#' || /^javascript:/i.test(ref)) { fail(`empty or dead link: href/src="${ref}"`); continue; }
   if (ref.startsWith('#')) { if (!ids.has(ref.slice(1))) fail(`in-page link ${ref} has no matching id`); continue; }
   if (/^https?:\/\//i.test(ref)) { if (!EXTERNAL_ALLOW.has(ref)) fail(`external link ${ref} is not in the allow-list (APM_LINKS.gumroad, APM_LINKS.beta.webApp, APM_LINKS.join)`); continue; }
   if (/^(mailto|tel):/i.test(ref)) continue;
   if (!ref.startsWith('/')) { fail(`relative link "${ref}" breaks when the page moves to aplayermode.com; use a root path`); continue; }
-  if (!fileExists(ref)) fail(`internal link ${ref} resolves to no committed file`);
+  const upstream = apexServes(ref);
+  if (!upstream) { fail(`internal link ${ref} is not served on aplayermode.com: the Worker's route() answers ${JSON.stringify(APEX.route(ref.split(/[?#]/)[0]))}`); continue; }
+  if (!fileExists(upstream)) fail(`internal link ${ref} is served from ${upstream}, which is no committed file`);
 }
 
 // Download buttons: one per route, never an <a> in the static page, always a "soon" label.
@@ -545,11 +562,20 @@ if (/billionairehighperformancecoach\.com\/aplayermode/i.test(html)) fail('the p
   if (localRefs.length === 0) fail('Rule 0: the page loads no local file; the Worker asset check would check nothing');
   for (const ref of new Set(localRefs)) {
     const r = w.route(ref);
-    if (r.kind !== 'asset' || r.upstream !== ref) fail(`page loads ${ref} but the aplayermode.com Worker does not serve it (route = ${JSON.stringify(r)})`);
+    // The Worker may serve a root path from a different file (/about/ -> aplayermode/about.html),
+    // so what matters is that it serves an ASSET and that the file behind it is committed.
+    if (r.kind !== 'asset' || !r.upstream || !fileExists(r.upstream)) fail(`page loads ${ref} but the aplayermode.com Worker does not serve a committed file for it (route = ${JSON.stringify(r)})`);
   }
-  for (const [p, loc] of [['/aplayermode/', '/'], ['/download', '/'], ['/admin.html', '/'], ['/about.html', '/'], ['/amazon/', 'https://billionairehighperformancecoach.com/amazon/'], ['/amazon/x/', 'https://billionairehighperformancecoach.com/amazon/x/']]) {
+  for (const [p, loc] of [['/aplayermode/', '/'], ['/download', '/'], ['/amazon/', 'https://billionairehighperformancecoach.com/amazon/'], ['/amazon/x/', 'https://billionairehighperformancecoach.com/amazon/x/']]) {
     const r = w.route(p);
     if (r.kind !== 'redirect' || r.location !== loc) fail(`Worker route(${p}) must 301 to ${loc}; got ${JSON.stringify(r)}`);
+  }
+  // The shared hosts' own pages are NEVER served here. They answer the apex's 404 page rather than
+  // a 301 home (25 Oct 2026: a soft 404 hid every dead link); either way nothing of theirs leaks.
+  for (const p of ['/admin.html', '/admin/', '/about.html', '/adhd-tips/']) {
+    const r = w.route(p);
+    if (r.kind === 'asset' || r.kind === 'page') fail(`Worker route(${p}) serves a shared-host page on aplayermode.com: ${JSON.stringify(r)}`);
+    if (r.kind !== 'notfound') fail(`Worker route(${p}) must answer the apex 404 page; got ${JSON.stringify(r)}`);
   }
   for (const s of w.SHARED_ASSETS) if (!fs.existsSync(path.join(ROOT, s.slice(1)))) fail(`Worker SHARED_ASSETS lists ${s}, which is no committed file`);
   const wcfg = fs.readFileSync(path.join(workerDir, 'wrangler.jsonc'), 'utf8');
@@ -752,6 +778,11 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
   const one = (attr, name) => { const v = meta(attr, name); if (v.length !== 1) fail(`expected exactly one <meta ${attr}="${name}">, found ${v.length}`); return decode(v[0] ?? ''); };
   const title = decode(stripTags((html.match(/<title>([\s\S]*?)<\/title>/i) || [])[1] || '').trim());
   const desc = decode((html.match(/<meta\b[^>]*name="description"[^>]*content="([^"]*)"/i) || [])[1] || '');
+  // The snippet band: a longer description is cut off mid-sentence in the result (it was 281
+  // characters until 25 Oct 2026, Search Readiness b2). Measured on the raw attribute, which is
+  // what a crawler reads.
+  const rawDesc = (html.match(/<meta\b[^>]*name="description"[^>]*content="([^"]*)"/i) || [])[1] || '';
+  if (rawDesc.length < 120 || rawDesc.length > 160) fail(`the meta description is ${rawDesc.length} characters; keep it 120-160`);
   // Head tags.
   if (one('property', 'og:type') !== 'website') fail('og:type must be "website"');
   if (one('property', 'og:site_name') !== 'A Player Mode') fail('og:site_name must be "A Player Mode"');
@@ -797,7 +828,12 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
   for (const t of ['Organization', 'WebSite', 'WebPage', 'SoftwareApplication', 'Product', 'FAQPage']) if (node(t).length !== 1) fail(`JSON-LD @graph needs exactly one ${t}, found ${node(t).length}`);
   const org = node('Organization')[0] || {};
   if (org.name !== 'Spry Labs' || !org.url || !org.logo) fail('JSON-LD Organization must be Spry Labs with url and logo');
-  for (const u of org.sameAs || []) if (!['https://spryexecutiveos.com/', 'https://sprylabs.gumroad.com/'].includes(u)) fail(`Organization sameAs ${u} is not a Spry Labs property the repo already uses`);
+  // The approved sameAs list has ONE definition (scripts/lib/organization_node.cjs,
+  // Search Readiness item c1). Read it rather than keep a second copy here: this
+  // check used to hold a hand-copied subset of two, which is how the list and
+  // its guard drift into disagreeing.
+  for (const u of org.sameAs || []) if (!ORG_SAME_AS.includes(u)) fail(`Organization sameAs ${u} is not a Spry Labs property the repo already uses (scripts/lib/organization_node.cjs)`);
+  for (const u of ORG_SAME_AS) if (!(org.sameAs || []).includes(u)) fail(`Organization sameAs is missing ${u}, which scripts/lib/organization_node.cjs declares`);
   if ((node('WebSite')[0] || {}).url !== U) fail(`JSON-LD WebSite url must be ${U}`);
   const app = node('SoftwareApplication')[0] || {};
   if (app.name !== 'A Player Mode' || !app.applicationCategory || !app.operatingSystem) fail('JSON-LD SoftwareApplication must be "A Player Mode" with applicationCategory and operatingSystem');
@@ -821,10 +857,13 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
   const visibleSquash = squash(stripTags(html));
   const qs = (node('FAQPage')[0] || {}).mainEntity || [];
   if (qs.length < FAQ_QS.length) fail(`FAQPage has ${qs.length} questions; it must carry at least the ${FAQ_QS.length} approved FAQ questions`);
-  const REPHRASED = { 'what does a-player mode actually mean?': 'what a-player mode actually means' };
+  // No alias list: every FAQPage question appears on the page WORD FOR WORD. The one alias here
+  // ("what a-player mode actually means" standing in for the question) is exactly the gap an
+  // outside reader of the markup reports as a question the page does not answer, so the heading
+  // became the question instead (Search Readiness c5, 25 Oct 2026).
   for (const q of qs) {
     const name = norm(q.name || ''); const ans = norm(q.acceptedAnswer?.text || '');
-    if (!visibleNorm.includes(REPHRASED[name] || name)) fail(`FAQPage question "${q.name}" is not a question visible on the page`);
+    if (!visibleNorm.includes(name)) fail(`FAQPage question "${q.name}" is not a question visible on the page, word for word`);
     // Every sentence of the answer is visible on the page word for word (an answer may skip a sentence, never add one).
     const sentences = (q.acceptedAnswer?.text || '').split(/(?<=[.!?])\s+/).filter(Boolean);
     if (!ans || sentences.some((x) => !visibleSquash.includes(squash(x)))) fail(`FAQPage answer to "${q.name}" is not the page's visible answer word for word`);
@@ -843,7 +882,63 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
     if (r.kind !== 'asset' || r.upstream !== `/${file}`) fail(`Worker route(${p}) must serve /${file}; got ${JSON.stringify(r)}`);
     if (!fs.existsSync(path.join(ROOT, file))) fail(`${file} is not committed`);
   }
-  for (const p of ['/sitemap-bhpc.xml', '/llms-full.txt', '/guides/', '/index.xml']) if (w.route(p).kind !== 'redirect') fail(`Worker must still 301 ${p} to /`);
+  // Sibling-host paths the outside world links to still go home rather than 404.
+  for (const p of ['/sitemap-bhpc.xml', '/llms-full.txt', '/guides/', '/index.xml', '/download']) {
+    const r = w.route(p);
+    if (r.kind !== 'redirect' || r.location !== '/') fail(`Worker must still 301 ${p} to / (got ${JSON.stringify(r)})`);
+  }
+  // A REAL 404, not a soft one. Every made-up path answers the apex's own 404 page with a 404
+  // status; it used to 301 home, which made every typo and every dead inbound link look like the
+  // homepage to Google and kept broken links out of Search Console (Search Readiness a9).
+  for (const p of ['/nope', '/nope/', '/a/b/c', '/wp-login.php', '/adhd-tips/']) {
+    const r = w.route(p);
+    if (r.kind !== 'notfound' || r.upstream !== w.NOT_FOUND_FILE) fail(`Worker must answer ${p} with the 404 page, got ${JSON.stringify(r)}`);
+  }
+  if (!fs.existsSync(path.join(ROOT, w.NOT_FOUND_FILE.slice(1)))) fail(`${w.NOT_FOUND_FILE.slice(1)} is not committed`);
+  else {
+    const nf = read(w.NOT_FOUND_FILE.slice(1));
+    if (!/<meta name="robots" content="noindex/i.test(nf)) fail('the 404 page must be noindex');
+    if (!nf.includes('href="/"')) fail('the 404 page must link back to the home page');
+  }
+  // The About page: who publishes this, for an answer engine that needs an author to cite.
+  const about = w.route('/about/');
+  if (about.kind !== 'asset' || about.upstream !== w.ABOUT_FILE) fail(`Worker route(/about/) must serve ${w.ABOUT_FILE}, got ${JSON.stringify(about)}`);
+  const aboutBare = w.route('/about');
+  if (aboutBare.kind !== 'redirect' || aboutBare.location !== '/about/') fail(`Worker route(/about) must 301 to /about/, got ${JSON.stringify(aboutBare)}`);
+  if (!fs.existsSync(path.join(ROOT, w.ABOUT_FILE.slice(1)))) fail(`${w.ABOUT_FILE.slice(1)} is not committed`);
+  else {
+    const ab = read(w.ABOUT_FILE.slice(1));
+    const abDesc = (ab.match(/<meta\b[^>]*name="description"[^>]*content="([^"]*)"/i) || [])[1] || '';
+    if (abDesc.length < 120 || abDesc.length > 160) fail(`the About page's meta description is ${abDesc.length} characters; keep it 120-160`);
+    if (!/<link rel="canonical" href="https:\/\/aplayermode\.com\/about\/">/.test(ab)) fail('the About page needs rel=canonical https://aplayermode.com/about/');
+    if (!/Spry Labs/.test(ab)) fail('the About page must name the publisher, Spry Labs');
+    if (/<meta[^>]*noindex/i.test(ab)) fail('the About page must be indexable');
+  }
+  // route() names the committed FILE; originPath() is the URL that file is REQUESTED AT on the
+  // Pages origin. Pages serves an .html file extensionless and 301s `/x.html` -> `/x`, and this
+  // Worker answers 502 rather than follow an origin redirect - so an origin fetch that keeps the
+  // .html suffix made /about/ and every 404 a 502 (landed 25 Oct 2026, unreachable until 26 Oct).
+  // Checked here because no offline validator can see the live origin.
+  if (typeof w.originPath !== 'function') fail('the Worker must export originPath(), the one definition of the origin request path');
+  else {
+    for (const f of [w.ABOUT_FILE, w.NOT_FOUND_FILE]) {
+      if (!f.endsWith('.html')) continue;
+      const want = f.slice(0, -'.html'.length);
+      if (w.originPath(f) !== want) fail(`originPath(${f}) must be ${want}, got ${w.originPath(f)}`);
+    }
+    for (const keep of ['/aplayermode/', '/aplayermode/img/og.png', w.QUEUE_PATH]) {
+      if (w.originPath(keep) !== keep) fail(`originPath(${keep}) must be unchanged, got ${w.originPath(keep)}`);
+    }
+    // Every origin fetch must go through it. A new `ORIGIN + <path>` added without originPath()
+    // reintroduces the 502 silently, so the source itself is read.
+    const src = read('workers/aplayermode-com/src/index.js');
+    for (const bare of src.match(/ORIGIN \+ (?!originPath\()[A-Za-z_$][\w.$]*/g) || []) {
+      if (bare.endsWith('BUILD_ID_PATH')) continue; // build-id.txt is not an .html page
+      fail(`${bare} fetches the origin without originPath(); an .html upstream 301s there and is answered 502`);
+    }
+  }
+  // The home page links it, or no engine finds the author (Search Readiness c6).
+  if (!/href="\/about\/"/.test(html)) fail(`${PAGE} does not link the About page (/about/)`);
   // IndexNow (16 Oct 2026, Search Console: aplayermode.com had no key). The domain's
   // OWN key, from distribution.config.json indexnow.host_keys, served at the root by
   // the Worker from aplayermode/<key>.txt, valid on aplayermode.com only: the shared
@@ -860,7 +955,7 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
     if (kr.kind !== 'asset' || kr.upstream !== `/${hk.key_file}`) fail(`Worker route(/${hk.key}.txt) must serve /${hk.key_file}; got ${JSON.stringify(kr)}`);
     if (!fs.existsSync(path.join(ROOT, hk.key_file)) || read(hk.key_file).trim() !== hk.key) fail(`${hk.key_file} must be committed and hold exactly the key`);
     if (fs.existsSync(path.join(ROOT, `${hk.key}.txt`))) fail(`${hk.key}.txt sits at the repo root, so the shared hosts would serve aplayermode.com's key`);
-    if (w.route(`/${sharedKey}.txt`).kind !== 'redirect') fail('Worker must not serve the shared hosts\' IndexNow key file on aplayermode.com');
+    if (w.route(`/${sharedKey}.txt`).kind === 'asset') fail('Worker must not serve the shared hosts\' IndexNow key file on aplayermode.com');
     if (!/host_keys/.test(read('scripts/distribution/deploy_distribution.sh'))) fail('scripts/distribution/deploy_distribution.sh no longer submits indexnow.host_keys hosts on deploy');
     // Run the real submitter's key verification for this host (no network): it must
     // accept aplayermode.com's own key file and refuse a key that file does not hold.
@@ -880,21 +975,32 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
   if (/^Disallow:\s*\S/im.test(apmRobots)) fail('aplayermode/robots.txt disallows something; the page is indexable');
   const sm = [...apmRobots.matchAll(/^Sitemap:\s*(\S+)/gim)].map((m) => m[1]);
   if (JSON.stringify(sm) !== JSON.stringify([`${U}sitemap.xml`])) fail(`aplayermode/robots.txt must name exactly one Sitemap: ${U}sitemap.xml`);
+  // The sitemap lists EVERY page this host publishes and nothing else: the landing page and, since
+  // 25 Oct 2026, the About page. Both come from PAGES in the lastmod script, so the sitemap, the
+  // record and the Worker's routes cannot disagree about what aplayermode.com has.
+  const apmLm = await import(pathToFileURL(path.join(ROOT, 'scripts', 'aplayermode_sitemap_lastmod.mjs')).href);
   const sitemap = read('aplayermode/sitemap.xml');
   const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
-  if (JSON.stringify(locs) !== JSON.stringify([U])) fail(`aplayermode/sitemap.xml must list exactly ${U}, found ${JSON.stringify(locs)}`);
-  const lastmod = (sitemap.match(/<lastmod>(\d{4}-\d{2}-\d{2})<\/lastmod>/) || [])[1];
-  if (!lastmod || Number.isNaN(Date.parse(lastmod)) || Date.parse(lastmod) > Date.now() + 86400000) fail(`aplayermode/sitemap.xml needs a real <lastmod> date (not in the future), found ${lastmod}`);
-  else {
-    // Real lastmod, from content not commit dates: the record (hash of the body's visible
-    // text -> date) must describe the page as it is now, and the sitemap must carry its date.
+  const wantLocs = apmLm.PAGES.map((x) => x.loc);
+  if (JSON.stringify(locs) !== JSON.stringify(wantLocs)) fail(`aplayermode/sitemap.xml must list exactly ${JSON.stringify(wantLocs)}, found ${JSON.stringify(locs)}`);
+  if (wantLocs[0] !== U) fail(`the first sitemap URL must be the canonical ${U}, found ${wantLocs[0]}`);
+  const lastmods = [...sitemap.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)].map((m) => m[1]);
+  if (lastmods.length !== wantLocs.length) fail(`aplayermode/sitemap.xml needs one <lastmod> per URL, found ${lastmods.length} for ${wantLocs.length}`);
+  for (const d of lastmods) if (!DATE.test(d) || Number.isNaN(Date.parse(d)) || Date.parse(d) > Date.now() + 86400000) fail(`aplayermode/sitemap.xml has a <lastmod> that is not a real past date: ${d}`);
+  {
+    // Real lastmod, from content not commit dates: the record (hash of each page's visible body
+    // text -> date) must describe the pages as they are now, and the sitemap must carry its dates.
     // A commit date moves on any automated touch; a content hash moves only on content.
-    const apmLm = await import(pathToFileURL(path.join(ROOT, 'scripts', 'aplayermode_sitemap_lastmod.mjs')).href);
-    let rec = null; try { rec = JSON.parse(read(apmLm.RECORD)); } catch {}
-    const hash = apmLm.pageContentHash(html);
-    if (!rec || !DATE.test(rec.lastmod || '')) fail(`${apmLm.RECORD} is missing or has no lastmod date; run npm run sitemap:aplayermode:lastmod`);
-    else if (rec.content_hash !== hash) fail(`${PAGE} content changed (hash ${hash}) but ${apmLm.RECORD} still records ${rec.content_hash} (${rec.lastmod}); run npm run sitemap:aplayermode:lastmod`);
-    else if (rec.lastmod !== lastmod) fail(`aplayermode/sitemap.xml lastmod ${lastmod} is not the recorded date ${rec.lastmod} for the page's current content; run npm run sitemap:aplayermode:lastmod`);
+    let rec = null; try { rec = JSON.parse(read(apmLm.RECORD)); } catch { /* missing */ }
+    const entries = apmLm.entriesOf(rec);
+    if (entries.length !== apmLm.PAGES.length) fail(`${apmLm.RECORD} records ${entries.length} pages; PAGES declares ${apmLm.PAGES.length}. Run npm run sitemap:aplayermode:lastmod`);
+    apmLm.PAGES.forEach((pg, i) => {
+      const e = entries.find((x) => x.page === pg.page);
+      const hash = apmLm.pageContentHash(pg.page === PAGE ? html : read(pg.page));
+      if (!e || !DATE.test(e.lastmod || '')) fail(`${apmLm.RECORD} has no dated entry for ${pg.page}; run npm run sitemap:aplayermode:lastmod`);
+      else if (e.content_hash !== hash) fail(`${pg.page} content changed (hash ${hash}) but ${apmLm.RECORD} still records ${e.content_hash} (${e.lastmod}); run npm run sitemap:aplayermode:lastmod`);
+      else if (e.lastmod !== lastmods[i]) fail(`aplayermode/sitemap.xml lastmod ${lastmods[i]} for ${pg.loc} is not the recorded date ${e.lastmod}; run npm run sitemap:aplayermode:lastmod`);
+    });
     if (!/aplayermode_sitemap_lastmod\.mjs/.test(JSON.parse(read('package.json')).scripts?.['sitemap:lastmod:content'] || '')) fail('npm run sitemap:lastmod:content no longer re-derives aplayermode.com\'s lastmod record');
   }
   // A shared-site retrofit never writes into this page (11 Oct 2026: the recommendation-summary
@@ -971,6 +1077,67 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
       if (wording !== norm(text || '')) fail('the consent wording on the page differs from the server copy in services/api/src/launchUpdates.ts');
       notes.push('launch-updates consent compared to the server copy');
     }
+  }
+}
+
+// ---------------------------------------------------------------- 12. every OTHER page this host publishes
+// Section 11 proves the landing page's card and head in depth. It reads one file
+// (PAGE), so for every other page aplayermode.com publishes it proved nothing:
+// about.html shipped with no og:image:width/height and no BreadcrumbList while
+// this validator was green (Search Readiness b6 and c2, 26 Oct 2026). The scope
+// is apmLm.PAGES - the same list the sitemap, the lastmod record and the Worker
+// routes are already reconciled against - so a third page is covered the day it
+// is added rather than the day someone remembers to widen a validator.
+{
+  const lm = await import(pathToFileURL(path.join(ROOT, 'scripts', 'aplayermode_sitemap_lastmod.mjs')).href);
+  const OG_IMG = `${PUBLIC_CANONICAL}aplayermode/img/og.png`;
+  const secondary = lm.PAGES.filter((pg) => pg.page !== PAGE);
+  if (!secondary.length) fail('aplayermode_sitemap_lastmod.mjs PAGES declares only the landing page; this section would check nothing');
+  for (const pg of secondary) {
+    const h = read(pg.page);
+    const at = (attr, name) => [...h.matchAll(new RegExp(`<meta\\b[^>]*${attr}="${name}"[^>]*>`, 'gi'))].map((m) => (m[0].match(/content="([^"]*)"/) || [])[1]);
+    const one = (attr, name) => { const v = at(attr, name); if (v.length !== 1) { fail(`${pg.page}: expected exactly one <meta ${attr}="${name}">, found ${v.length}`); return null; } return decode(v[0] ?? ''); };
+    const title = decode(stripTags((h.match(/<title>([\s\S]*?)<\/title>/i) || [])[1] || '').trim());
+    const desc = decode((h.match(/<meta\b[^>]*name="description"[^>]*content="([^"]*)"/i) || [])[1] || '');
+    if (!title) fail(`${pg.page}: no <title>`);
+    if (!desc) fail(`${pg.page}: no meta description`);
+
+    // The complete card, including the dimensions a preview needs to lay the
+    // image out before it has fetched it. The pixel values are not free-floating:
+    // section 11 has already proved the committed og.png really is 1200x630.
+    if (one('property', 'og:type') !== 'website') fail(`${pg.page}: og:type must be "website"`);
+    if (one('property', 'og:site_name') !== 'A Player Mode') fail(`${pg.page}: og:site_name must be "A Player Mode"`);
+    const ogTitle = one('property', 'og:title');
+    if (ogTitle !== null && !ogTitle) fail(`${pg.page}: og:title is empty`);
+    if (one('property', 'og:description') !== desc) fail(`${pg.page}: og:description must equal the meta description`);
+    if (one('property', 'og:url') !== pg.loc) fail(`${pg.page}: og:url must be ${pg.loc}`);
+    if (one('property', 'og:image') !== OG_IMG) fail(`${pg.page}: og:image must be ${OG_IMG} (this host's own image, not another domain's)`);
+    if (one('property', 'og:image:width') !== '1200' || one('property', 'og:image:height') !== '630') fail(`${pg.page}: og:image:width/height must be 1200/630`);
+    if (one('name', 'twitter:card') !== 'summary_large_image') fail(`${pg.page}: twitter:card must be summary_large_image`);
+    if (one('name', 'twitter:image') !== OG_IMG) fail(`${pg.page}: twitter:image must be ${OG_IMG}`);
+    const canon = (h.match(/<link\b[^>]*rel="canonical"[^>]*href="([^"]+)"/i) || [])[1];
+    if (canon !== pg.loc) fail(`${pg.page}: canonical is ${canon}; expected ${pg.loc}`);
+
+    // An inner page states where it sits. Engines read the page-to-site
+    // relationship from this, and it is what c2 asks every inner page for.
+    const lds = [...h.matchAll(/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi)];
+    if (lds.length !== 1) { fail(`${pg.page}: expected exactly one JSON-LD block, found ${lds.length}`); continue; }
+    let g = [];
+    try { g = JSON.parse(lds[0][1])['@graph'] || []; } catch (e) { fail(`${pg.page}: JSON-LD does not parse: ${e.message}`); continue; }
+    const crumbs = g.filter((n) => n['@type'] === 'BreadcrumbList');
+    if (crumbs.length !== 1) { fail(`${pg.page}: JSON-LD @graph needs exactly one BreadcrumbList on an inner page, found ${crumbs.length}`); continue; }
+    const items = crumbs[0].itemListElement || [];
+    if (items.length < 2) fail(`${pg.page}: the BreadcrumbList has ${items.length} item(s); an inner page's trail starts at the home page and ends at itself`);
+    const positions = items.map((x) => x.position);
+    if (JSON.stringify(positions) !== JSON.stringify(items.map((_, i) => i + 1))) fail(`${pg.page}: BreadcrumbList positions must be 1..${items.length}, found ${JSON.stringify(positions)}`);
+    if (items[0]?.item !== PUBLIC_CANONICAL) fail(`${pg.page}: the first breadcrumb must be ${PUBLIC_CANONICAL}, found ${items[0]?.item}`);
+    if (items[items.length - 1]?.item !== pg.loc) fail(`${pg.page}: the last breadcrumb must be the page itself (${pg.loc}), found ${items[items.length - 1]?.item}`);
+    for (const it of items) if (!it.name) fail(`${pg.page}: a breadcrumb ListItem has no name`);
+    // The trail is only worth anything if every stop on it is a page this host
+    // actually publishes.
+    const known = new Set(lm.PAGES.map((x) => x.loc));
+    for (const it of items) if (!known.has(it.item)) fail(`${pg.page}: breadcrumb points at ${it.item}, which is not a page aplayermode.com publishes`);
+    notes.push(`${pg.page}: complete card and a ${items.length}-step breadcrumb trail`);
   }
 }
 
