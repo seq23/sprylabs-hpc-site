@@ -1,0 +1,561 @@
+{
+  "schema_version": "1.0",
+  "workflow_id": "search-intelligence",
+  "workflow_name": "Search Intelligence Cycle",
+  "run_id": "20261028132852-2428",
+  "trigger": "schedule",
+  "repository": "seq23/sprylabs-hpc-site",
+  "ref": "refs/heads/main",
+  "sha": "ee7e7f403ef8d44a35004867d00676419d0ee5f0",
+  "actor": "seq23",
+  "started_at": "2026-10-28T13:28:52.597Z",
+  "command": "npm run workflow:search-intelligence",
+  "contract_file": "data/workflows/workflow_contracts.json",
+  "workflow_file": ".github/workflows/search-intelligence.yml",
+  "lane": "search-intelligence",
+  "lineage": {
+    "input_patterns": [
+      "data/intake/query_universe.json",
+      "data/content_ownership_registry.json",
+      "data/search_intelligence/**",
+      "site/public/**"
+    ],
+    "output_patterns": [
+      "data/search_intelligence/**",
+      "site/public/**",
+      "dist/**",
+      "reports/workflows/search-intelligence/**",
+      "artifacts/validation/search-intelligence.json",
+      "reports/implementation/protected_agent_runtime_proof.json"
+    ],
+    "inputs_before": [
+      {
+        "file": "data/content_ownership_registry.json",
+        "sha256": "77dbe1fdcdc95153294895e6935984530fb66456a14bf005d4fa0a41852d9449",
+        "bytes": 877421
+      },
+      {
+        "file": "data/intake/query_universe.json",
+        "sha256": "86e0a1700452fe653659785bd34c9e0f8b5c11324f8fede751d30fc62d190d12",
+        "bytes": 5424636
+      },
+      {
+        "file": "data/search_intelligence/before_after_evidence.json",
+        "sha256": "c3294cb10bcb2fae6587ae4dd625660808d9bf33cd6ea3b4b4e874a18271a4f2",
+        "bytes": 32013
+      },
+      {
+        "file": "data/search_intelligence/billionairehighperformancecoach.com/demand_families.json",
+        "sha256": "f51fce8828ac802f0b501d7c6f928d20c5da0efad93dc22a4deb236070c2c1e8",
+        "bytes": 65327
+      },
+      {
+        "file": "data/search_intelligence/billionairehighperformancecoach.com/index_coverage.json",
+        "sha256": "cbe9954be8e6565c154d9cdb378a888ecaca0caeed19e0d80d2b164ed0336813",
+        "bytes": 309214
+      },
+      {
+        "file": "data/search_intelligence/competitor_comparison.json",
+        "sha256": "ad4305b6f7a345d2349c46587714be96c64bb31858064247fb5975ee213352ea",
+        "bytes": 338
+      },
+      {
+        "file": "data/search_intelligence/gsc_truth.json",
+        "sha256": "87a59a3391af44f971065a242726fd1ae17648313018f77e0a44cbced5e6f7e2",
+        "bytes": 57558
+      },
+      {
+        "file": "data/search_intelligence/live_search_observations.json",
+        "sha256": "2268a2d740be23d2c46bdbc63ef5513f8af8ac654289e962811d67aee0a07238",
+        "bytes": 1713
+      },
+      {
+        "file": "data/search_intelligence/provider_inputs/.gitkeep",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "file": "data/search_intelligence/provider_inputs/gsc_bhpc.json",
+        "sha256": "e4cddb18b5a1fd4684032dad47448093fb9d10c10a3985b80c74b62eb74e25b3",
+        "bytes": 48506
+      },
+      {
+        "file": "data/search_intelligence/provider_inputs/gsc_spry.json",
+        "sha256": "0467d1fe2e7b30b1cdb0886754723ff8220868b646423b108d8702b9a882c84a",
+        "bytes": 6003
+      },
+      {
+        "file": "data/search_intelligence/red_week_41.json",
+        "sha256": "54a9ddf03a76fb9d64d36c060ee0ab8e4823e975df8156f353abf84f0221e49a",
+        "bytes": 18051
+      },
+      {
+        "file": "data/search_intelligence/repair_apply_receipt.json",
+        "sha256": "904a80755e7f51857a39080447eff4d66f39e49f1d48de2c999ef0f1ffeb3646",
+        "bytes": 112
+      },
+      {
+        "file": "data/search_intelligence/repair_candidates.json",
+        "sha256": "6598a23dda32b303a1ea692c9e8cb788df81b3dd9d066e797b7371dfb5716171",
+        "bytes": 1665
+      },
+      {
+        "file": "data/search_intelligence/repair_ledger.json",
+        "sha256": "a270fe8501a80a9975160d29a2f498710d5f9ae12c082e6da672099c3ec9be51",
+        "bytes": 54556
+      },
+      {
+        "file": "data/search_intelligence/retest_snapshots.json",
+        "sha256": "f36a707d69f1796c0a2996efea6dbb84895d4755d33e5f6396d6a4aa3d9828c8",
+        "bytes": 14556
+      },
+      {
+        "file": "data/search_intelligence/rotation_cursor.json",
+        "sha256": "1b42afcb247e0e35a754f31e9587056ab7104eb0144f2d43810e687a73a2107d",
+        "bytes": 166
+      },
+      {
+        "file": "data/search_intelligence/search_diagnosis.json",
+        "sha256": "aa0b798ebc1a89a9a9379b09bb7f20e318538e8f4b3e8cfe91ff686c53eda84d",
+        "bytes": 204228
+      },
+      {
+        "file": "data/search_intelligence/search_intelligence_contract.json",
+        "sha256": "742511bb73e069666e64f1ed4427c8f946a9b70d7e22b4101628caddff466f0b",
+        "bytes": 3970
+      },
+      {
+        "file": "data/search_intelligence/spryexecutiveos.com/demand_families.json",
+        "sha256": "84cc89e3f936ea1c1f290f3b27ba037296c64fa3b1090876368f7ba120c3b428",
+        "bytes": 36973
+      },
+      {
+        "file": "data/search_intelligence/spryexecutiveos.com/index_coverage.json",
+        "sha256": "cf5b692250a99073d3211393b1e434c9cf54000d8198bb5847387bff666bd6b6",
+        "bytes": 242482
+      },
+      {
+        "file": "data/search_intelligence/status.json",
+        "sha256": "e8ebdc86bc5ab5853363bee0deb065f3125207f2a48e95248ed8d3fe1034162e",
+        "bytes": 444
+      },
+      {
+        "file": "data/search_intelligence/target_query_set.json",
+        "sha256": "e28201d6d40f619ca3590e473ee70f08b3499f94bf44fe8e5daea64132f146b9",
+        "bytes": 100369
+      }
+    ],
+    "outputs_before": [
+      {
+        "file": "data/search_intelligence/before_after_evidence.json",
+        "sha256": "c3294cb10bcb2fae6587ae4dd625660808d9bf33cd6ea3b4b4e874a18271a4f2",
+        "bytes": 32013
+      },
+      {
+        "file": "data/search_intelligence/billionairehighperformancecoach.com/demand_families.json",
+        "sha256": "f51fce8828ac802f0b501d7c6f928d20c5da0efad93dc22a4deb236070c2c1e8",
+        "bytes": 65327
+      },
+      {
+        "file": "data/search_intelligence/billionairehighperformancecoach.com/index_coverage.json",
+        "sha256": "cbe9954be8e6565c154d9cdb378a888ecaca0caeed19e0d80d2b164ed0336813",
+        "bytes": 309214
+      },
+      {
+        "file": "data/search_intelligence/competitor_comparison.json",
+        "sha256": "ad4305b6f7a345d2349c46587714be96c64bb31858064247fb5975ee213352ea",
+        "bytes": 338
+      },
+      {
+        "file": "data/search_intelligence/gsc_truth.json",
+        "sha256": "87a59a3391af44f971065a242726fd1ae17648313018f77e0a44cbced5e6f7e2",
+        "bytes": 57558
+      },
+      {
+        "file": "data/search_intelligence/live_search_observations.json",
+        "sha256": "2268a2d740be23d2c46bdbc63ef5513f8af8ac654289e962811d67aee0a07238",
+        "bytes": 1713
+      },
+      {
+        "file": "data/search_intelligence/provider_inputs/.gitkeep",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "file": "data/search_intelligence/provider_inputs/gsc_bhpc.json",
+        "sha256": "e4cddb18b5a1fd4684032dad47448093fb9d10c10a3985b80c74b62eb74e25b3",
+        "bytes": 48506
+      },
+      {
+        "file": "data/search_intelligence/provider_inputs/gsc_spry.json",
+        "sha256": "0467d1fe2e7b30b1cdb0886754723ff8220868b646423b108d8702b9a882c84a",
+        "bytes": 6003
+      },
+      {
+        "file": "data/search_intelligence/red_week_41.json",
+        "sha256": "54a9ddf03a76fb9d64d36c060ee0ab8e4823e975df8156f353abf84f0221e49a",
+        "bytes": 18051
+      },
+      {
+        "file": "data/search_intelligence/repair_apply_receipt.json",
+        "sha256": "904a80755e7f51857a39080447eff4d66f39e49f1d48de2c999ef0f1ffeb3646",
+        "bytes": 112
+      },
+      {
+        "file": "data/search_intelligence/repair_candidates.json",
+        "sha256": "6598a23dda32b303a1ea692c9e8cb788df81b3dd9d066e797b7371dfb5716171",
+        "bytes": 1665
+      },
+      {
+        "file": "data/search_intelligence/repair_ledger.json",
+        "sha256": "a270fe8501a80a9975160d29a2f498710d5f9ae12c082e6da672099c3ec9be51",
+        "bytes": 54556
+      },
+      {
+        "file": "data/search_intelligence/retest_snapshots.json",
+        "sha256": "f36a707d69f1796c0a2996efea6dbb84895d4755d33e5f6396d6a4aa3d9828c8",
+        "bytes": 14556
+      },
+      {
+        "file": "data/search_intelligence/rotation_cursor.json",
+        "sha256": "1b42afcb247e0e35a754f31e9587056ab7104eb0144f2d43810e687a73a2107d",
+        "bytes": 166
+      },
+      {
+        "file": "data/search_intelligence/search_diagnosis.json",
+        "sha256": "aa0b798ebc1a89a9a9379b09bb7f20e318538e8f4b3e8cfe91ff686c53eda84d",
+        "bytes": 204228
+      },
+      {
+        "file": "data/search_intelligence/search_intelligence_contract.json",
+        "sha256": "742511bb73e069666e64f1ed4427c8f946a9b70d7e22b4101628caddff466f0b",
+        "bytes": 3970
+      },
+      {
+        "file": "data/search_intelligence/spryexecutiveos.com/demand_families.json",
+        "sha256": "84cc89e3f936ea1c1f290f3b27ba037296c64fa3b1090876368f7ba120c3b428",
+        "bytes": 36973
+      },
+      {
+        "file": "data/search_intelligence/spryexecutiveos.com/index_coverage.json",
+        "sha256": "cf5b692250a99073d3211393b1e434c9cf54000d8198bb5847387bff666bd6b6",
+        "bytes": 242482
+      },
+      {
+        "file": "data/search_intelligence/status.json",
+        "sha256": "e8ebdc86bc5ab5853363bee0deb065f3125207f2a48e95248ed8d3fe1034162e",
+        "bytes": 444
+      },
+      {
+        "file": "data/search_intelligence/target_query_set.json",
+        "sha256": "e28201d6d40f619ca3590e473ee70f08b3499f94bf44fe8e5daea64132f146b9",
+        "bytes": 100369
+      }
+    ],
+    "outputs_after": [
+      {
+        "file": "data/search_intelligence/before_after_evidence.json",
+        "sha256": "25f970a63f163cd2b82c26998879d5d069e378a11bf3533aa6d78d3d436e33eb",
+        "bytes": 32006
+      },
+      {
+        "file": "data/search_intelligence/billionairehighperformancecoach.com/demand_families.json",
+        "sha256": "f51fce8828ac802f0b501d7c6f928d20c5da0efad93dc22a4deb236070c2c1e8",
+        "bytes": 65327
+      },
+      {
+        "file": "data/search_intelligence/billionairehighperformancecoach.com/index_coverage.json",
+        "sha256": "ba1fa39a690a4a674267cce32ea39ef27183582fea2fdc2ebbc62930e76cb531",
+        "bytes": 421172
+      },
+      {
+        "file": "data/search_intelligence/competitor_comparison.json",
+        "sha256": "32ec48b86a2d4f0523f1f4a32bcd2fe58b24174f5d32f4adaf82a51017d46761",
+        "bytes": 338
+      },
+      {
+        "file": "data/search_intelligence/gsc_truth.json",
+        "sha256": "f969dc605b350e42b2464a85dbfa3b3f904eec48f89182369c5d651b5233446e",
+        "bytes": 58300
+      },
+      {
+        "file": "data/search_intelligence/live_search_observations.json",
+        "sha256": "824ab9454d2dcc50592ee8272b25f118216a5612b571bdc96d3b0f339e794bbc",
+        "bytes": 1713
+      },
+      {
+        "file": "data/search_intelligence/provider_inputs/.gitkeep",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "file": "data/search_intelligence/provider_inputs/gsc_bhpc.json",
+        "sha256": "ca77bd11965081700b02b64280f031616b5c8104401861fd0445a3dce93d22c5",
+        "bytes": 50448
+      },
+      {
+        "file": "data/search_intelligence/provider_inputs/gsc_spry.json",
+        "sha256": "f8f12559d0d5dfdd889c3bb595cb368b9c471bcdadfa88bd8d5b0903460839c6",
+        "bytes": 3584
+      },
+      {
+        "file": "data/search_intelligence/red_week_41.json",
+        "sha256": "54a9ddf03a76fb9d64d36c060ee0ab8e4823e975df8156f353abf84f0221e49a",
+        "bytes": 18051
+      },
+      {
+        "file": "data/search_intelligence/repair_apply_receipt.json",
+        "sha256": "df420d83457b8156cf943c56a7c0601b57b808ba51dd62d71d965d48bd211e26",
+        "bytes": 112
+      },
+      {
+        "file": "data/search_intelligence/repair_candidates.json",
+        "sha256": "d4bb8b72f42f1fcf021c8e12577bf1604ec0447e4e04f8b2e73e29a98ca8aa5c",
+        "bytes": 1680
+      },
+      {
+        "file": "data/search_intelligence/repair_ledger.json",
+        "sha256": "a270fe8501a80a9975160d29a2f498710d5f9ae12c082e6da672099c3ec9be51",
+        "bytes": 54556
+      },
+      {
+        "file": "data/search_intelligence/retest_snapshots.json",
+        "sha256": "792232ab6f4b669c7f1d8e28a8a5b59f63eadc9b342d0a92e574ef77e8f003dc",
+        "bytes": 14549
+      },
+      {
+        "file": "data/search_intelligence/rotation_cursor.json",
+        "sha256": "1b42afcb247e0e35a754f31e9587056ab7104eb0144f2d43810e687a73a2107d",
+        "bytes": 166
+      },
+      {
+        "file": "data/search_intelligence/search_diagnosis.json",
+        "sha256": "2a0eeeb2f38f2856e0d9d5dcba05431fd3527f51f6fdcdbd867b44908f60df19",
+        "bytes": 206305
+      },
+      {
+        "file": "data/search_intelligence/search_intelligence_contract.json",
+        "sha256": "742511bb73e069666e64f1ed4427c8f946a9b70d7e22b4101628caddff466f0b",
+        "bytes": 3970
+      },
+      {
+        "file": "data/search_intelligence/spryexecutiveos.com/demand_families.json",
+        "sha256": "84cc89e3f936ea1c1f290f3b27ba037296c64fa3b1090876368f7ba120c3b428",
+        "bytes": 36973
+      },
+      {
+        "file": "data/search_intelligence/spryexecutiveos.com/index_coverage.json",
+        "sha256": "75f8c40e5d85cf676f3f2c3fd3d1e1d92743d1fa9dea517e8807184a1c0e4f88",
+        "bytes": 287034
+      },
+      {
+        "file": "data/search_intelligence/status.json",
+        "sha256": "403c33dcec8922f004a72a82d59a92979a870bf9ddd041b5c3555babda6c00b2",
+        "bytes": 444
+      },
+      {
+        "file": "data/search_intelligence/target_query_set.json",
+        "sha256": "37ce7d5daa4d206d0124a8c2f3daafbc18ead313ef4a9d853acffd98f71f0f30",
+        "bytes": 100092
+      }
+    ],
+    "changed_files": [
+      {
+        "file": "agency/index.html",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "d34900aa13b89815b577c91b85340bb28d22d1d25cde600478e1358a6430fa7f",
+          "bytes": 91006
+        },
+        "after": {
+          "sha256": "52277934eaad9af4f3b59ec6ac4ea92fee82785040de58443e3533fafb02dd7c",
+          "bytes": 90485
+        }
+      },
+      {
+        "file": "data/search_intelligence/before_after_evidence.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "c3294cb10bcb2fae6587ae4dd625660808d9bf33cd6ea3b4b4e874a18271a4f2",
+          "bytes": 32013
+        },
+        "after": {
+          "sha256": "25f970a63f163cd2b82c26998879d5d069e378a11bf3533aa6d78d3d436e33eb",
+          "bytes": 32006
+        }
+      },
+      {
+        "file": "data/search_intelligence/billionairehighperformancecoach.com/index_coverage.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "cbe9954be8e6565c154d9cdb378a888ecaca0caeed19e0d80d2b164ed0336813",
+          "bytes": 309214
+        },
+        "after": {
+          "sha256": "ba1fa39a690a4a674267cce32ea39ef27183582fea2fdc2ebbc62930e76cb531",
+          "bytes": 421172
+        }
+      },
+      {
+        "file": "data/search_intelligence/competitor_comparison.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "ad4305b6f7a345d2349c46587714be96c64bb31858064247fb5975ee213352ea",
+          "bytes": 338
+        },
+        "after": {
+          "sha256": "32ec48b86a2d4f0523f1f4a32bcd2fe58b24174f5d32f4adaf82a51017d46761",
+          "bytes": 338
+        }
+      },
+      {
+        "file": "data/search_intelligence/gsc_truth.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "87a59a3391af44f971065a242726fd1ae17648313018f77e0a44cbced5e6f7e2",
+          "bytes": 57558
+        },
+        "after": {
+          "sha256": "f969dc605b350e42b2464a85dbfa3b3f904eec48f89182369c5d651b5233446e",
+          "bytes": 58300
+        }
+      },
+      {
+        "file": "data/search_intelligence/live_search_observations.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "2268a2d740be23d2c46bdbc63ef5513f8af8ac654289e962811d67aee0a07238",
+          "bytes": 1713
+        },
+        "after": {
+          "sha256": "824ab9454d2dcc50592ee8272b25f118216a5612b571bdc96d3b0f339e794bbc",
+          "bytes": 1713
+        }
+      },
+      {
+        "file": "data/search_intelligence/provider_inputs/gsc_bhpc.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "e4cddb18b5a1fd4684032dad47448093fb9d10c10a3985b80c74b62eb74e25b3",
+          "bytes": 48506
+        },
+        "after": {
+          "sha256": "ca77bd11965081700b02b64280f031616b5c8104401861fd0445a3dce93d22c5",
+          "bytes": 50448
+        }
+      },
+      {
+        "file": "data/search_intelligence/provider_inputs/gsc_spry.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "0467d1fe2e7b30b1cdb0886754723ff8220868b646423b108d8702b9a882c84a",
+          "bytes": 6003
+        },
+        "after": {
+          "sha256": "f8f12559d0d5dfdd889c3bb595cb368b9c471bcdadfa88bd8d5b0903460839c6",
+          "bytes": 3584
+        }
+      },
+      {
+        "file": "data/search_intelligence/repair_apply_receipt.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "904a80755e7f51857a39080447eff4d66f39e49f1d48de2c999ef0f1ffeb3646",
+          "bytes": 112
+        },
+        "after": {
+          "sha256": "df420d83457b8156cf943c56a7c0601b57b808ba51dd62d71d965d48bd211e26",
+          "bytes": 112
+        }
+      },
+      {
+        "file": "data/search_intelligence/repair_candidates.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "6598a23dda32b303a1ea692c9e8cb788df81b3dd9d066e797b7371dfb5716171",
+          "bytes": 1665
+        },
+        "after": {
+          "sha256": "d4bb8b72f42f1fcf021c8e12577bf1604ec0447e4e04f8b2e73e29a98ca8aa5c",
+          "bytes": 1680
+        }
+      },
+      {
+        "file": "data/search_intelligence/retest_snapshots.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "f36a707d69f1796c0a2996efea6dbb84895d4755d33e5f6396d6a4aa3d9828c8",
+          "bytes": 14556
+        },
+        "after": {
+          "sha256": "792232ab6f4b669c7f1d8e28a8a5b59f63eadc9b342d0a92e574ef77e8f003dc",
+          "bytes": 14549
+        }
+      },
+      {
+        "file": "data/search_intelligence/search_diagnosis.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "aa0b798ebc1a89a9a9379b09bb7f20e318538e8f4b3e8cfe91ff686c53eda84d",
+          "bytes": 204228
+        },
+        "after": {
+          "sha256": "2a0eeeb2f38f2856e0d9d5dcba05431fd3527f51f6fdcdbd867b44908f60df19",
+          "bytes": 206305
+        }
+      },
+      {
+        "file": "data/search_intelligence/spryexecutiveos.com/index_coverage.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "cf5b692250a99073d3211393b1e434c9cf54000d8198bb5847387bff666bd6b6",
+          "bytes": 242482
+        },
+        "after": {
+          "sha256": "75f8c40e5d85cf676f3f2c3fd3d1e1d92743d1fa9dea517e8807184a1c0e4f88",
+          "bytes": 287034
+        }
+      },
+      {
+        "file": "data/search_intelligence/status.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "e8ebdc86bc5ab5853363bee0deb065f3125207f2a48e95248ed8d3fe1034162e",
+          "bytes": 444
+        },
+        "after": {
+          "sha256": "403c33dcec8922f004a72a82d59a92979a870bf9ddd041b5c3555babda6c00b2",
+          "bytes": 444
+        }
+      },
+      {
+        "file": "data/search_intelligence/target_query_set.json",
+        "change": "MODIFIED",
+        "before": {
+          "sha256": "e28201d6d40f619ca3590e473ee70f08b3499f94bf44fe8e5daea64132f146b9",
+          "bytes": 100369
+        },
+        "after": {
+          "sha256": "37ce7d5daa4d206d0124a8c2f3daafbc18ead313ef4a9d853acffd98f71f0f30",
+          "bytes": 100092
+        }
+      }
+    ]
+  },
+  "validation": {
+    "canonical_validation": "npm run validate:all (enforced by programmatic:run-lane)",
+    "status": "PASSED"
+  },
+  "hostile_review": {
+    "status": "PASSED",
+    "report": "reports/workflows/search-intelligence/20261028132852-2428/hostile-review.json"
+  },
+  "monitor_validation": {
+    "status": "PASSED"
+  },
+  "status": "PASS",
+  "completed_at": "2026-10-28T13:33:21.165Z",
+  "command_exit_code": 0,
+  "signal": null,
+  "finalized_at": "2026-10-28T13:33:21.534Z"
+}
