@@ -18,19 +18,14 @@ name: Validate Repo
 #                 to its consumers; a pull request has nothing to attest and
 #                 nothing to hand over, so it reconciles and stops.
 #
-# Validators are NOT scoped to changed files. Every run validates everything.
+# Main validates the entire built tree. PRs use the existing incremental profile.
 #
-# THE SHAPE OF THE GATE (Search Readiness item h5, 25 Oct 2026: the median
-# pull-request check was 8.3 minutes against a 5-minute target). `plan` and
-# `build` were two jobs that each paid a checkout, a setup-node and an `npm ci`
-# before doing ~20 seconds and ~2.5 minutes of real work; they are one job now.
-# `gate` downloaded and unpacked the 292 MiB tree to reconcile receipts that do
-# not need it. And the two long suites a pull request does not have to wait for
-# - the clean-rebuild parity check (3.4-5.2 min on its own) and the release-time
-# attestation, warnings and cadence steps - now run on main after the merge,
-# where a failure blocks the next production deploy. NO VALIDATOR MOVED: the
-# shard set, the producers and the coverage reconciliation are identical on both
-# events, and `gate` still cannot attest over a failed clean rebuild on main.
+# Search Readiness h5: PRs run the repository's existing `changed` profile and
+# unit/CI contract tests against the commit. The ordered full build, all 186
+# container-prepush steps, clean rebuild parity and release attestation run on
+# main before deployment. Run 40562892673 took 9m40s because a PR paid that full
+# release build before it could start its validators. The fast profile took 11s
+# locally; its receipt is reconciled at the same required `gate` check.
 
 on:
   workflow_dispatch:
@@ -64,7 +59,45 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  pull-request:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # Incremental audits and lastmod checks read git history.
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Exercise CI coverage and tree isolation contracts
+        run: |
+          node .github/scripts/test_validation_shards.mjs
+          bash .github/scripts/test_unpack_build_tree.sh
+          node .github/scripts/test_pull_request_profile.mjs
+      - name: Unit and workflow contracts
+        run: |
+          node --test tests/*.test.mjs tests/aplayermode/*.test.mjs
+          npm run validate:workflow-contract
+          npm run validate:workflow-run-handoff
+      - name: Run the incremental validation profile
+        run: npm run validate:changed
+      - name: Bind the receipt to this commit
+        run: |
+          node -e 'const fs=require("node:fs"); const p="artifacts/validation/profile-changed.json"; const r=JSON.parse(fs.readFileSync(p)); r.head_sha=process.env.GITHUB_SHA; fs.writeFileSync(p, JSON.stringify(r,null,2)+"\n");'
+          node .github/scripts/verify_pull_request_profile.mjs
+      - name: Publish this commit's fast-profile receipt
+        uses: actions/upload-artifact@v7
+        with:
+          name: spry-pr-profile-${{ github.run_id }}
+          if-no-files-found: error
+          path: artifacts/validation/profile-changed.json
+
   prepare:
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     outputs:
@@ -163,6 +196,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     needs: prepare
+    if: github.event_name != 'pull_request'
     strategy:
       fail-fast: false
       matrix:
@@ -223,16 +257,17 @@ jobs:
   gate:
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    needs: [prepare, validate, clean-rebuild]
-    # clean-rebuild does not run on a pull request, and a skipped `needs` job
-    # skips its dependents unless the condition says otherwise. Spelled out
-    # rather than dropped from `needs`, so on main the attestation below still
-    # cannot be issued over a failed clean rebuild.
+    needs: [pull-request, prepare, validate, clean-rebuild]
+    # PRs prove the fast profile; every release still needs the entire main
+    # profile AND the independent clean rebuild. A failed prerequisite cannot
+    # turn the required gate green through the other event's path.
     if: >-
       !cancelled()
+      && ((github.event_name == 'pull_request' && needs.pull-request.result == 'success')
+      || (github.event_name != 'pull_request'
       && needs.prepare.result == 'success'
       && needs.validate.result == 'success'
-      && (needs.clean-rebuild.result == 'success' || needs.clean-rebuild.result == 'skipped')
+      && needs.clean-rebuild.result == 'success'))
     permissions:
       contents: read
       # The hand-off below POSTs to the workflow dispatches endpoint. The root
@@ -274,19 +309,30 @@ jobs:
         if: github.event_name != 'pull_request'
         run: bash .github/scripts/unpack_build_tree.sh
       - uses: actions/download-artifact@v7
+        if: github.event_name != 'pull_request'
         with:
           pattern: spry-shard-receipt-${{ github.run_id }}-*
           merge-multiple: true
           path: artifacts/validation/shards
       - uses: actions/download-artifact@v7
+        if: github.event_name != 'pull_request'
         with:
           name: spry-shard-producers-${{ github.run_id }}
           path: artifacts/validation
       - name: Executed validator set must equal the declared validator set
+        if: github.event_name != 'pull_request'
         # Hard-fails on a missing shard, an empty shard, a validator the matrix
         # declares that no shard ran, and on any count mismatch against both
         # _repo_validation_matrix.json and _validation_registry.json.
         run: node .github/scripts/validation_shards.mjs verify --shards "$SHARD_COUNT"
+      - uses: actions/download-artifact@v7
+        if: github.event_name == 'pull_request'
+        with:
+          name: spry-pr-profile-${{ github.run_id }}
+          path: artifacts/validation
+      - name: Fast-profile receipt must cover the declared incremental profile
+        if: github.event_name == 'pull_request'
+        run: node .github/scripts/verify_pull_request_profile.mjs
       - name: Warnings and attestation
         # Release-time, and consumed only by Deploy Distribution, which runs on
         # main. A pull request has nothing to attest (h5).
