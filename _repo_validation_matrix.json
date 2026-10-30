@@ -2917,9 +2917,19 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-WF-ENTITY-BACKLINK-WATCH",
+      "validation_id": "VAL-WF-ENTITY-BACKLINK-WATCH",
+      "lane": "validation-control-plane",
+      "command": ".github/workflows/entity-backlink-watch.yml",
+      "order": 283,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 291,
+  "entry_count": 292,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {

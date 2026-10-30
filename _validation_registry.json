@@ -9319,8 +9319,42 @@
         "MX-ENTITY-BACKLINK-WATCH-SELF-TEST"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "VAL-WF-ENTITY-BACKLINK-WATCH",
+      "status": "ADMITTED",
+      "name": "entity-backlink-watch.yml",
+      "check_type": "workflow",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Authority audit (30 Oct 2026): no repo verified that the sameAs profiles an entity claims still resolve and link back, so a dead or unclaimed profile stayed in the knowledge graph unseen. This lane fetches every sameAs and pending profile in config/entity.json weekly, removes a dead one and promotes a live pending one by PR (with the organization-node repair applied), and names every missing link-back, unclaimed profile and member without parentOrganization.",
+      "existing_coverage_gap": "validate:entity-graph proves the committed graph is internally consistent and separation-clean, but it cannot see the web; nothing checked the profiles themselves.",
+      "scope": [
+        "github-actions",
+        "entity-graph",
+        "billionairehighperformancecoach.com",
+        "spryexecutiveos.com",
+        "aplayermode.com"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/entity-backlink-watch.yml",
+      "implementation_path": ".github/workflows/entity-backlink-watch.yml",
+      "environment": "ci",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "reports/entity/backlink_watch.json plus the job summary and any self-heal PR",
+      "runtime_budget_seconds": 900,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted with the authority audit fix (sprylabs-hpc-site brief).",
+      "decision_date": "2026-10-30",
+      "matrix_ids": [
+        "MX-WF-ENTITY-BACKLINK-WATCH"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 298,
+  "record_count": 299,
   "generated_at": "2026-08-08T23:30:00Z"
 }

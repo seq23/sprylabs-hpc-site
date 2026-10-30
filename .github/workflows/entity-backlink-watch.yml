@@ -22,6 +22,9 @@ on:
     - cron: "17 14 * * 3"
   workflow_dispatch:
 
+env:
+  NODE_OPTIONS: --max-old-space-size=3072
+
 permissions:
   contents: write
   pull-requests: write
