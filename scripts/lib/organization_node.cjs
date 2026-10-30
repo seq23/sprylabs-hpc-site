@@ -66,7 +66,7 @@ const LOGO_HEIGHT = CONFIG.logo.height;
  * The organization's real external profiles. Each one answers 200 and each one
  * is Spry Labs: nothing here is a claim about reach, press or endorsement. The
  * weekly watch (scripts/entity/entity_backlink_watch.mjs) removes a dead one and
- * promotes a pending one, and lands the change on main.
+ * promotes a pending one (the run stops red with the exact change for review).
  *
  * aplayermode.com is deliberately NOT here, though it is ours. The repo holds an
  * index-exclusion contract - config/index_exclusions.json, proven by

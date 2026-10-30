@@ -5,19 +5,18 @@ name: Entity Backlink Watch
 #
 # Weekly, scripts/entity/entity_backlink_watch.mjs fetches every sameAs and
 # pending profile in config/entity.json and every member side business:
-#   - a dead profile (404/410/no DNS, twice) is removed from sameAs,
-#   - a pending profile that now resolves is promoted into sameAs,
-#   and either change is applied to every page (the organization-node repair,
-#   then the ordered build with the extraction-surface snapshot re-baselined for
-#   that one config change) and lands on main through the shared push helper,
-#   which requests Validate Repo for the exact commit it pushed;
+#   - a dead profile (404/410/no DNS, twice) is removed from sameAs and a
+#     pending profile that now resolves is promoted - but in this repo that
+#     changes the Organization node on every page, and the extraction-surface
+#     baseline may only be re-baselined after review (no workflow may
+#     re-baseline it). So the run stops RED with "SELF-HEAL
+#     READY", the exact sameAs change in the job summary and the report, and the
+#     three commands that apply it; nothing half-applied reaches main.
 #   - a profile that does not link back, a profile the owner has not created
 #     yet and a member that does not yet point parentOrganization at Spry Labs
 #     are NAMED STOPS in the job summary and reports/entity/backlink_watch.json,
-#     which is committed each week as the watch's evidence.
-# Named stops keep the run green: they are owner or sibling-repo actions, not a
-# broken watch. The run is red only when the watch itself fails (Rule 0: it
-# examined nothing) or the self-heal could not be built and landed.
+#     which lands on main each week as the watch's evidence. They keep the run
+#     green: they are owner or sibling-repo actions, not a broken watch.
 #
 # It writes main, so it is serialized with every other writer on
 # main-automation and pushes only through commit_and_push_if_changed.sh
@@ -65,15 +64,20 @@ jobs:
             echo "## Entity backlink watch"
             grep -E 'NAMED STOP|REMOVED|PROMOTED|\{"examined"' watch.log | sed 's/^\[entity-watch\] /- /' || echo "- nothing to report"
           } >> "$GITHUB_STEP_SUMMARY"
-      - name: Apply a sameAs self-heal to every page
+      - name: A sameAs change stops here for one reviewed rebaseline
         run: |
           if git diff --quiet -- config/entity.json; then
-            echo "sameAs unchanged; nothing to rebuild"; exit 0
+            echo "sameAs unchanged"; exit 0
           fi
-          npm run repair:organization-node
-          EXTRACTION_SURFACE_REBASELINE=1 node .github/scripts/validation_shards.mjs producers
-      - name: Land the evidence (and any self-heal) on main
+          {
+            echo "## SELF-HEAL READY"
+            echo '```diff'; git diff -- config/entity.json; echo '```'
+            echo "Apply on a branch: \`npm run watch:entity-backlinks -- --apply\`, \`npm run repair:organization-node\`, then rebuild and re-baseline the extraction surfaces after review, and land the PR."
+          } >> "$GITHUB_STEP_SUMMARY"
+          echo "::error::SELF-HEAL READY: config/entity.json sameAs changed; see the job summary"
+          exit 1
+      - name: Land the weekly evidence on main
         env:
-          WORKFLOW_ARGV: "npm run watch:entity-backlinks -- --apply && npm run repair:organization-node"
+          WORKFLOW_ARGV: "npm run watch:entity-backlinks"
         run: |
-          ./.github/scripts/commit_and_push_if_changed.sh "entity backlink watch - weekly evidence and sameAs self-heal" entity-backlink-watch
+          ./.github/scripts/commit_and_push_if_changed.sh "entity backlink watch - weekly evidence" entity-backlink-watch

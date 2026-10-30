@@ -240,6 +240,38 @@
       "validation_owner": "simplified workflow topology validators"
     },
     {
+      "path": ".github/workflows/entity-backlink-watch.yml",
+      "name": "Entity Backlink Watch",
+      "trigger": [
+        "schedule",
+        "workflow_dispatch"
+      ],
+      "primary_command": "npm run watch:entity-backlinks -- --apply",
+      "repo_lane": "validation-control-plane",
+      "current_status": "keep_admitted",
+      "reason": "Authority audit (30 Oct 2026): weekly proof that every sameAs and pending profile in config/entity.json resolves and links back, and that every member side business points parentOrganization at the Spry Labs entity home. A sameAs change stops red with the exact diff for one reviewed rebuild; named stops and the weekly evidence report land on main through the shared push helper.",
+      "allowed_runtime_mutations": [
+        "reports/entity/backlink_watch.json"
+      ],
+      "forbidden_runtime_mutations": [
+        ".github/**",
+        "package.json",
+        "package-lock.json",
+        "scripts/**",
+        "docs/**",
+        "_repo*.json",
+        "_validation_registry.json",
+        "_repo_validation_matrix.json",
+        "data/**",
+        "site/public/**",
+        "dist/**"
+      ],
+      "required_artifacts": [
+        "reports/entity/backlink_watch.json"
+      ],
+      "validation_owner": "validate:entity-graph, self-test:entity-backlink-watch"
+    },
+    {
       "path": ".github/workflows/main-validation-sentinel.yml",
       "name": "Main Validation Sentinel",
       "trigger": [
