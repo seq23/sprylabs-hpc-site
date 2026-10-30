@@ -262,8 +262,23 @@ function midSentence(name) {
 }
 // The suffix is the hub's own host's name (scripts/lib/host_brand.cjs): a
 // billionairehighperformancecoach.com hub said "| Spry Executive OS" until 25 Oct 2026.
+//
+// The section name stays in the title ("Money and wealth | Insights | Spry
+// Executive OS"): insights, use-cases and methods each have a money-and-wealth
+// hub, and a title that drops the section is the same title three times. On
+// 28 Oct 2026 it was dropped (titleCandidates() treats everything after " | "
+// as a qualifier), the dedupe in repair_dual_domain_metadata.js then appended
+// "| Spry Page: ..." with no site name, and Validate Repo went red.
 function hubTitle(parts, route) {
-  return snippetBounds.titleCandidates(parts.join(' | '), hostFor(route))[0];
+  const host = snippetBounds.bareHost(hostFor(route));
+  const joined = parts.join(' | ');
+  for (const name of [snippetBounds.BRANDS[host], snippetBounds.SHORT_BRANDS[host]]) {
+    const t = `${joined} | ${name}`;
+    if (name && snippetBounds.inTitleRange(t)) return t;
+  }
+  // Too long or too short with the qualifier: let the one policy shorten it,
+  // keeping the section words in the core so the hub stays distinct.
+  return snippetBounds.brandedTitle(parts.join(' '), host);
 }
 
 function sectionHubRel(section) {

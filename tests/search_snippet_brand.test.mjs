@@ -38,3 +38,35 @@ test('a sibling topic on Spry uses the abbreviation and retains Spry branding', 
   assert.match(candidates[0], /^BHPC vs therapy/);
   assert.ok(B.titleNamesHost(candidates[0], 'spryexecutiveos.com'));
 });
+
+// 30 Oct 2026: build_navigation_structure.mjs passed hostFor()'s origin URL,
+// BRANDS[url] was undefined, and short hub titles were written as "undefined".
+test('an origin URL and its bare host get the same branded titles', () => {
+  for (const h of ['spryexecutiveos.com', 'billionairehighperformancecoach.com']) {
+    for (const t of ['Guides index', 'Money and wealth | Insights', 'Agent notes index']) {
+      const bare = B.titleCandidates(t, h);
+      assert.ok(bare.length, `${t} on ${h}`);
+      assert.deepEqual(B.titleCandidates(t, `https://${h}`), bare);
+      assert.deepEqual(B.titleCandidates(t, `https://${h}/guides/`), bare);
+    }
+  }
+});
+
+test('brandedTitle never returns undefined: it brands or throws', () => {
+  assert.equal(B.brandedTitle('Guides index', 'https://spryexecutiveos.com'), 'Guides index | Spry Executive OS');
+  assert.throws(() => B.brandedTitle('Guides index', 'https://unknown.example'), /no brand declared/);
+  assert.throws(() => B.brandedTitle('', 'spryexecutiveos.com'), /no title/);
+});
+
+// The demand-family applier writes brandedTitle(), and the snippet repair's
+// first candidate for that title is the title itself, so the two agree.
+test('a branded demand title is stable under the snippet repair', () => {
+  for (const [t, h] of [
+    ['AI Executive Coaching: What an AI Executive Coach Does', 'billionairehighperformancecoach.com'],
+    ['Executive OS: What an Executive Operating System Is', 'spryexecutiveos.com'],
+  ]) {
+    const branded = B.brandedTitle(t, h);
+    assert.notEqual(branded, t);
+    assert.equal(B.titleCandidates(branded, h)[0], branded);
+  }
+});
