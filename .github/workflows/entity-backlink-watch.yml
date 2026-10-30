@@ -74,5 +74,6 @@ jobs:
           EXTRACTION_SURFACE_REBASELINE=1 node .github/scripts/validation_shards.mjs producers
       - name: Land the evidence (and any self-heal) on main
         env:
-          WORKFLOW_ARGV: npm run watch:entity-backlinks -- --apply && npm run repair:organization-node
-        run: ./.github/scripts/commit_and_push_if_changed.sh "entity backlink watch: weekly evidence and sameAs self-heal" entity-backlink-watch
+          WORKFLOW_ARGV: "npm run watch:entity-backlinks -- --apply && npm run repair:organization-node"
+        run: |
+          ./.github/scripts/commit_and_push_if_changed.sh "entity backlink watch - weekly evidence and sameAs self-heal" entity-backlink-watch
