@@ -7,14 +7,21 @@ name: Entity Backlink Watch
 # pending profile in config/entity.json and every member side business:
 #   - a dead profile (404/410/no DNS, twice) is removed from sameAs,
 #   - a pending profile that now resolves is promoted into sameAs,
-#   and either change goes out as a PR, with the organization-node repair
-#   applied so every page carries the new list;
+#   and either change is applied to every page (the organization-node repair,
+#   then the ordered build with the extraction-surface snapshot re-baselined for
+#   that one config change) and lands on main through the shared push helper,
+#   which requests Validate Repo for the exact commit it pushed;
 #   - a profile that does not link back, a profile the owner has not created
 #     yet and a member that does not yet point parentOrganization at Spry Labs
-#     are NAMED STOPS in the job summary and reports/entity/backlink_watch.json.
+#     are NAMED STOPS in the job summary and reports/entity/backlink_watch.json,
+#     which is committed each week as the watch's evidence.
 # Named stops keep the run green: they are owner or sibling-repo actions, not a
 # broken watch. The run is red only when the watch itself fails (Rule 0: it
-# examined nothing) or a self-heal PR could not be opened.
+# examined nothing) or the self-heal could not be built and landed.
+#
+# It writes main, so it is serialized with every other writer on
+# main-automation and pushes only through commit_and_push_if_changed.sh
+# (.github/scripts/test_commit_and_push_if_changed.sh enforces both).
 
 on:
   schedule:
@@ -24,13 +31,15 @@ on:
 
 env:
   NODE_OPTIONS: --max-old-space-size=3072
+  GITHUB_TOKEN: ${{ github.token }}
 
 permissions:
   contents: write
-  pull-requests: write
+  # Lets the shared push helper request Validate Repo for the commit it lands.
+  actions: write
 
 concurrency:
-  group: entity-backlink-watch
+  group: main-automation
   cancel-in-progress: false
 
 jobs:
@@ -56,21 +65,15 @@ jobs:
             echo "## Entity backlink watch"
             grep -E 'NAMED STOP|REMOVED|PROMOTED|\{"examined"' watch.log | sed 's/^\[entity-watch\] /- /' || echo "- nothing to report"
           } >> "$GITHUB_STEP_SUMMARY"
-      - name: Self-heal PR when sameAs changed
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Apply a sameAs self-heal to every page
         run: |
           if git diff --quiet -- config/entity.json; then
-            echo "sameAs unchanged; no PR"; exit 0
+            echo "sameAs unchanged; nothing to rebuild"; exit 0
           fi
           npm run repair:organization-node
-          branch="entity-watch/$(date -u +%Y%m%d)"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout -b "$branch"
-          git add -A config/entity.json reports/entity '*.html'
-          git commit -m "entity watch: sameAs self-heal (dead removed / pending promoted)"
-          git push origin "$branch"
-          gh pr create --base main --head "$branch" \
-            --title "Entity watch: sameAs self-heal $(date -u +%Y-%m-%d)" \
-            --body "$(printf 'Weekly entity backlink watch changed config/entity.json sameAs.\n\n%s\n' "$(grep -E 'REMOVED|PROMOTED' watch.log)")"
+          EXTRACTION_SURFACE_REBASELINE=1 node .github/scripts/validation_shards.mjs producers
+      - name: Land the evidence (and any self-heal) on main
+        env:
+          WORKFLOW_ARGV: "npm run watch:entity-backlinks -- --apply && npm run repair:organization-node"
+        run: |
+          ./.github/scripts/commit_and_push_if_changed.sh "entity backlink watch - weekly evidence and sameAs self-heal" entity-backlink-watch

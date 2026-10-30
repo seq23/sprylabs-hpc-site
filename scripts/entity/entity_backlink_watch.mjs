@@ -27,7 +27,7 @@
  * named stop for that business's repo - the graph edge is only half drawn.
  *
  * --apply writes config/entity.json when something was removed or promoted;
- * the workflow then runs the organization-node repair and opens a PR. The
+ * the workflow then applies it to every page and lands it on main. The
  * report goes to reports/entity/backlink_watch.json.
  *
  * Rule 0: a run that examined zero profiles and zero members fails.
