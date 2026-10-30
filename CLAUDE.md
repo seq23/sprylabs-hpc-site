@@ -32,7 +32,8 @@ head, a tag or a schema node, fix it in the one definition and let the repair ap
 | Which host owns which route | `scripts/lib/dual_domain_policy.cjs` | `repair:dual-domain-metadata` | `validate:host-crawl-surfaces` |
 | Title and description bounds | `scripts/lib/search_snippet_bounds.cjs` | `repair:dual-domain-metadata` | `validate:search-snippet-bounds` |
 | The social-card head and icon links | `scripts/lib/social_tags.cjs` | `repair:social-tags` | `validate:social-tags` |
-| The publisher Organization node | `scripts/lib/organization_node.cjs` | `repair:organization-node` | `validate:organization-node` |
+| The publisher Organization node | `scripts/lib/organization_node.cjs`, values in `config/entity.json` | `repair:organization-node` | `validate:organization-node` |
+| The Spry Labs entity graph (sameAs, @id, entity home `/spry-labs`, members) | `config/entity.json` | `repair:organization-node`; weekly `entity-backlink-watch.yml` self-heals sameAs by PR | `validate:entity-graph`, `self-test:entity-backlink-watch` |
 | One canonical host per domain | `functions/_lib/canonical_host.js` | — (edge) | `validate:canonical-host` |
 | One 200 per route across hosts | `functions/_lib/route_owner_host.js` | `build:route-owner-table` | `validate:route-owner-host` |
 | Routes retired onto a bhpc page | `functions/_lib/host_consolidation.js` | — (edge) | `validate:host-consolidation` |

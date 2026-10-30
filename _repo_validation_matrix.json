@@ -2897,9 +2897,29 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-ENTITY-GRAPH",
+      "validation_id": "ENTITY-GRAPH",
+      "lane": "validation-control-plane",
+      "command": "npm run validate:entity-graph",
+      "order": 281,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-ENTITY-BACKLINK-WATCH-SELF-TEST",
+      "validation_id": "ENTITY-BACKLINK-WATCH-SELF-TEST",
+      "lane": "validation-control-plane",
+      "command": "npm run self-test:entity-backlink-watch",
+      "order": 282,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 289,
+  "entry_count": 291,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3649,6 +3669,14 @@
         {
           "id": "HOMEPAGE-TRUST-LINKS",
           "command": "npm run validate:homepage-trust-links"
+        },
+        {
+          "id": "ENTITY-GRAPH",
+          "command": "npm run validate:entity-graph"
+        },
+        {
+          "id": "ENTITY-BACKLINK-WATCH-SELF-TEST",
+          "command": "npm run self-test:entity-backlink-watch"
         }
       ]
     },
@@ -3747,6 +3775,14 @@
         {
           "id": "VAL-TITLE-BRAND-MATCHES-HOST",
           "command": "npm run validate:title-brand-matches-host"
+        },
+        {
+          "id": "ENTITY-GRAPH",
+          "command": "npm run validate:entity-graph"
+        },
+        {
+          "id": "ENTITY-BACKLINK-WATCH-SELF-TEST",
+          "command": "npm run self-test:entity-backlink-watch"
         }
       ]
     },

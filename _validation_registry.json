@@ -9259,8 +9259,68 @@
         "MX-HOMEPAGE-TRUST-LINKS"
       ],
       "not_applicable_reason": null
+    },
+    {
+      "validation_id": "ENTITY-GRAPH",
+      "status": "ADMITTED",
+      "name": "validate:entity-graph",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Authority audit 30 Oct 2026: the three Spry sites listed their own host spryexecutiveos.com as a sameAs profile, listed the founder's personal site whose Person works for a West Peek company (Spry/West Peek separation breach), and declared Spry Labs under four different @ids so no side business could point parentOrganization at one entity. This proves config/entity.json is self-reference-free and separation-clean, that the /spry-labs entity home publishes exactly its @id, description, sameAs, brands and member subOrganizations and visibly links every member, that aplayermode.com carries the same node and its app sameAs, and that no published JSON-LD names a forbidden host; it hard-fails on zero pages, sameAs URLs or members.",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run validate:entity-graph",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/validate-entity-graph/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-30",
+      "matrix_ids": [
+        "MX-ENTITY-GRAPH"
+      ],
+      "not_applicable_reason": null
+    },
+    {
+      "validation_id": "ENTITY-BACKLINK-WATCH-SELF-TEST",
+      "status": "ADMITTED",
+      "name": "self-test:entity-backlink-watch",
+      "check_type": "validator",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Authority audit 30 Oct 2026: no repo verified that sameAs profiles still resolve and link back, so a dead or unclaimed profile stayed in the graph unseen. The weekly entity-backlink-watch workflow does that with self-heal; this proves its rules offline on every change - a 404 profile is removed, a resolving linking-back pending profile is promoted, a JS-rendered profile is kept as unverifiable, a missing link-back and a member without parentOrganization are named stops, and a run that examined nothing fails (Rule 0).",
+      "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
+      "scope": [
+        "repository"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": "npm run self-test:entity-backlink-watch",
+      "implementation_path": "package.json",
+      "environment": "container",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "artifacts/diagnostics/<run-id>/self-test-entity-backlink-watch/summary.json",
+      "runtime_budget_seconds": 300,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Atomically admitted by validation:add.",
+      "decision_date": "2026-10-30",
+      "matrix_ids": [
+        "MX-ENTITY-BACKLINK-WATCH-SELF-TEST"
+      ],
+      "not_applicable_reason": null
     }
   ],
-  "record_count": 296,
+  "record_count": 298,
   "generated_at": "2026-08-08T23:30:00Z"
 }

@@ -1,7 +1,8 @@
 'use strict';
 /**
  * Give every published page a complete publisher Organization node
- * (scripts/lib/organization_node.cjs): name, url, logo and sameAs.
+ * (scripts/lib/organization_node.cjs): name, url, logo, sameAs and the one
+ * @id (the /spry-labs entity home), and point every reference at that @id.
  *
  * Search Readiness item c1. Ten generators each wrote their own partial
  * Organization and none of them wrote sameAs, so rather than edit ten writers
@@ -61,6 +62,9 @@ function applyTo({ html }) {
       if (!O.isOwnOrganization(node)) return;
       filled += O.completeOrganization(node).length;
     });
+    // One entity, one @id: references to a legacy Spry Labs @id follow the node.
+    filled += O.relinkOrganizationRefs(payload);
+    O.eachNode(payload, (node) => { filled += O.completeSiteEntity(node) + O.separateFromForbidden(node); });
     if (!filled) return whole;
     filledTotal += filled;
     const indent = indentOf(src);
@@ -74,7 +78,11 @@ function applyTo({ html }) {
 }
 
 function completeOrganizationNodes({ root = ROOT, dryRun = false } = {}) {
+  // aplayermode/index.html is outside the shared sites' indexes
+  // (config/index_exclusions.json) but publishes the same Spry Labs node on
+  // aplayermode.com, so it is completed here too.
   const pages = listIndexablePages(root).filter((rel) => !B.EXEMPT_PAGES.has(rel));
+  if (fs.existsSync(path.join(root, 'aplayermode/index.html')) && !pages.includes('aplayermode/index.html')) pages.push('aplayermode/index.html');
   const changed = [];
   let filled = 0;
   for (const rel of pages) {

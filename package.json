@@ -464,7 +464,10 @@
     "build:route-owner-table": "node scripts/build/build_route_owner_table.mjs",
     "validate:route-owner-host": "node --test tests/route_owner_host.test.mjs",
     "validate:sitemap-canonical-on-own-host": "node scripts/validators/validate_sitemap_canonical_on_own_host.mjs",
-    "validate:host-consolidation": "node --test tests/host_consolidation.test.mjs"
+    "validate:host-consolidation": "node --test tests/host_consolidation.test.mjs",
+    "validate:entity-graph": "node scripts/validators/validate_entity_graph.mjs",
+    "watch:entity-backlinks": "node scripts/entity/entity_backlink_watch.mjs",
+    "self-test:entity-backlink-watch": "node scripts/entity/self_test_entity_backlink_watch.mjs"
   },
   "engines": {
     "node": ">=24.0.0"

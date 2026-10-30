@@ -63,14 +63,19 @@ for (const rel of pages) {
       // another ended up with a different node than the snapshot had hashed.
       // One entity, one url, one logo, one sameAs, on every page.
       const want = O.organizationFields();
-      for (const key of ['name', 'url', 'logo', 'sameAs']) {
+      for (const key of O.FIELD_KEYS) {
         if (JSON.stringify(node[key]) !== JSON.stringify(want[key])) {
-          fail(`${rel}: Organization ${key} is ${JSON.stringify(node[key])}; config/organization.json says ${JSON.stringify(want[key])}`);
+          fail(`${rel}: Organization ${key} is ${JSON.stringify(node[key])}; config/entity.json says ${JSON.stringify(want[key])}`);
         }
       }
     });
   }
   if (!found) fail(`${rel}: no Organization node at all`);
+  // One entity, one @id: a reference to a legacy Spry Labs @id is an edge to a
+  // node no page declares any more.
+  for (const legacy of new Set([...html.matchAll(/"@id"\s*:\s*"([^"]+#organization)"/g)].map((x) => x[1]))) {
+    if (legacy !== O.ORG_ID && O.isOwnOrgId(legacy)) fail(`${rel}: references the legacy Spry Labs @id ${legacy}; config/entity.json says ${O.ORG_ID}`);
+  }
 }
 
 if (!pages.length) fail('Rule 0: 0 published pages found; expected the whole published surface');
@@ -86,4 +91,4 @@ if (failures.length) {
   console.error(`${LABEL} FAIL (${failures.length}) - ${pages.length} pages, ${nodes} Organization nodes`);
   process.exit(1);
 }
-console.log(`${LABEL} PASS - ${pages.length} pages, ${nodes} Organization nodes, ${withSameAs} equal to config/organization.json (${O.SAME_AS.length} sameAs URLs)`);
+console.log(`${LABEL} PASS - ${pages.length} pages, ${nodes} Organization nodes, ${withSameAs} equal to config/entity.json (${O.SAME_AS.length} sameAs URLs)`);

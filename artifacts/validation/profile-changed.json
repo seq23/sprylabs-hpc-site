@@ -1,6 +1,6 @@
 {
   "profile": "changed",
-  "started_at": "2026-10-30T15:28:54.692Z",
+  "started_at": "2026-10-30T23:07:53.044Z",
   "steps": [
     {
       "id": "VAL-ORCHESTRATION-CONTRACT",
@@ -139,11 +139,23 @@
       "command": "npm run validate:title-brand-matches-host",
       "exit_code": 0,
       "status": "PASS"
+    },
+    {
+      "id": "ENTITY-GRAPH",
+      "command": "npm run validate:entity-graph",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "ENTITY-BACKLINK-WATCH-SELF-TEST",
+      "command": "npm run self-test:entity-backlink-watch",
+      "exit_code": 0,
+      "status": "PASS"
     }
   ],
   "status": "PASS",
   "failure_count": 0,
   "failures": [],
   "stopped_early_at": null,
-  "finished_at": "2026-10-30T15:29:12.454Z"
+  "finished_at": "2026-10-30T23:08:03.941Z"
 }

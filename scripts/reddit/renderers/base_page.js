@@ -1,3 +1,4 @@
+const ORG = require('../../lib/organization_node.cjs');
 
 const { buildFanoutData, renderFanoutBlock } = require('../../fanout/shared');
 
@@ -38,19 +39,14 @@ function buildBreadcrumbs(page) {
 
 function buildJsonLd(page) {
   const graph = [
-    {
-      '@type': 'Organization',
-      '@id': `${page.host}/#organization`,
-      name: 'Spry Labs',
-      url: page.host + '/',
-      logo: `${page.host}/assets/spry-logo.png`
-    },
+    // One definition (config/entity.json): the Spry Labs entity home node.
+    ORG.organizationNode(),
     {
       '@type': 'WebSite',
       '@id': `${page.host}/#website`,
       url: page.host + '/',
       name: hostLabel(page.host),
-      publisher: { '@id': `${page.host}/#organization` }
+      publisher: { '@id': ORG.ORG_ID }
     },
     {
       '@type': 'SoftwareApplication',
