@@ -1,0 +1,76 @@
+name: Entity Backlink Watch
+
+# Authority audit, 30 Oct 2026: nothing checked that the sameAs profiles the
+# Spry Labs entity claims still resolve and link back, so drift was invisible.
+#
+# Weekly, scripts/entity/entity_backlink_watch.mjs fetches every sameAs and
+# pending profile in config/entity.json and every member side business:
+#   - a dead profile (404/410/no DNS, twice) is removed from sameAs,
+#   - a pending profile that now resolves is promoted into sameAs,
+#   and either change goes out as a PR, with the organization-node repair
+#   applied so every page carries the new list;
+#   - a profile that does not link back, a profile the owner has not created
+#     yet and a member that does not yet point parentOrganization at Spry Labs
+#     are NAMED STOPS in the job summary and reports/entity/backlink_watch.json.
+# Named stops keep the run green: they are owner or sibling-repo actions, not a
+# broken watch. The run is red only when the watch itself fails (Rule 0: it
+# examined nothing) or a self-heal PR could not be opened.
+
+on:
+  schedule:
+    # Wednesdays 14:17 UTC, off the hour and away from the Monday report.
+    - cron: "17 14 * * 3"
+  workflow_dispatch:
+
+env:
+  NODE_OPTIONS: --max-old-space-size=3072
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: entity-backlink-watch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Prove the self-heal rules before trusting them
+        run: npm run self-test:entity-backlink-watch
+      - name: Check every profile and member
+        shell: bash
+        run: npm run watch:entity-backlinks -- --apply | tee watch.log
+      - name: Named stops to the job summary
+        if: always()
+        run: |
+          {
+            echo "## Entity backlink watch"
+            grep -E 'NAMED STOP|REMOVED|PROMOTED|\{"examined"' watch.log | sed 's/^\[entity-watch\] /- /' || echo "- nothing to report"
+          } >> "$GITHUB_STEP_SUMMARY"
+      - name: Self-heal PR when sameAs changed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet -- config/entity.json; then
+            echo "sameAs unchanged; no PR"; exit 0
+          fi
+          npm run repair:organization-node
+          branch="entity-watch/$(date -u +%Y%m%d)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add -A config/entity.json reports/entity '*.html'
+          git commit -m "entity watch: sameAs self-heal (dead removed / pending promoted)"
+          git push origin "$branch"
+          gh pr create --base main --head "$branch" \
+            --title "Entity watch: sameAs self-heal $(date -u +%Y-%m-%d)" \
+            --body "$(printf 'Weekly entity backlink watch changed config/entity.json sameAs.\n\n%s\n' "$(grep -E 'REMOVED|PROMOTED' watch.log)")"

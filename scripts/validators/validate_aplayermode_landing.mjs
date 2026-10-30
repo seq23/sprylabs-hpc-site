@@ -539,8 +539,10 @@ if (ogUrl !== PUBLIC_CANONICAL) fail(`og:url is ${ogUrl}; expected ${PUBLIC_CANO
 // Every JSON-LD @id is on aplayermode.com except the shared Spry Labs organization node; every
 // url is on aplayermode.com except that organization's own url/logo and the Gumroad listing
 // (read from the price file). Nothing names the old BHPC /aplayermode/ address.
-const SPRY_ORG_ID = 'https://billionairehighperformancecoach.com/#organization';
-const OFFSITE_URLS = new Set(['https://billionairehighperformancecoach.com/', 'https://billionairehighperformancecoach.com/assets/spry-logo.png', pinned.bhpc_digital_product?.url].filter(Boolean));
+// The organization node is the one definition (config/entity.json), read - never typed here.
+const SPRY_ORG = createRequire(import.meta.url)('../lib/organization_node.cjs');
+const SPRY_ORG_ID = SPRY_ORG.ORG_ID;
+const OFFSITE_URLS = new Set([SPRY_ORG.ORG_URL, SPRY_ORG.LOGO.url, pinned.bhpc_digital_product?.url].filter(Boolean));
 for (const m of html.matchAll(/<script\b[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi)) {
   for (const u of m[1].matchAll(/"@id"\s*:\s*"([^"]+)"/g)) if (!u[1].startsWith(PUBLIC_CANONICAL) && u[1] !== SPRY_ORG_ID) fail(`JSON-LD @id ${u[1]} is not on ${PUBLIC_CANONICAL}`);
   for (const u of m[1].matchAll(/"url"\s*:\s*"([^"]+)"/g)) if (!u[1].startsWith(PUBLIC_CANONICAL) && !OFFSITE_URLS.has(u[1])) fail(`JSON-LD url ${u[1]} is not on ${PUBLIC_CANONICAL} (nor the Spry Labs org url/logo or the Gumroad listing)`);

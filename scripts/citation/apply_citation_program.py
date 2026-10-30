@@ -12,7 +12,7 @@ if VENDOR_DIR.is_dir():
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "lib"))
 from repo_walk import IGNORED_DIRS as REPO_WALK_IGNORED
 from route_policy import route_for  # noqa: E402
-from citation_page_schema import serialize_schema, main_entity_of_page, organization_node  # noqa: E402
+from citation_page_schema import serialize_schema, main_entity_of_page, organization_node, organization_id  # noqa: E402
 
 from bs4 import BeautifulSoup, Comment, NavigableString, Tag
 from extraction_contract import extract_article_steps, extract_scope_procedure_candidates, extract_scope_steps, validate_extraction
@@ -75,12 +75,21 @@ _AUTHOR_PROFILE = json.loads((ROOT / "data/entities/author_profile.json").read_t
 AUTHOR_NAME = _AUTHOR_PROFILE["name"]
 AUTHOR_ROLE = _AUTHOR_PROFILE["role"]
 AUTHOR_PUBLISHER = _AUTHOR_PROFILE["publisher"]
+# Pages about the organization, not one of the product's frameworks: the Spry Labs
+# entity home (config/entity.json url, which every side business points
+# parentOrganization at) and the editorial policy. The citation contract requires
+# every active citable page to say "This is one of the frameworks inside..." and
+# to name a framework - both false here - so these are excluded from the citable
+# set and published exactly as authored. validate:entity-graph guards the entity
+# home's content instead.
+ENTITY_HOME_PATHS = {"spry-labs.html", "editorial-policy.html"}
+ENTITY_HOME_REASON = "Organization page (Spry Labs entity home / editorial policy), not a product framework; authored by hand and guarded by validate:entity-graph"
 PRODUCT_ANCHOR_TEXT = "This is one of the frameworks inside the Billionaire High Performance Coach system — a structured executive OS for using ChatGPT as your accountability and decision partner."
 EXCLUDED = {
     "admin.html",
     "knowledge-map/index.html",
     "reports/answer-surface-dashboard.html",
-} | NEVER_CITABLE
+} | NEVER_CITABLE | ENTITY_HOME_PATHS
 # Routes retired onto a bhpc page answer a 301 at the edge, so they are not
 # citable pages of either host (config/host_consolidations.json, the one list).
 CONSOLIDATED = {r["source_file"] for r in json.loads((ROOT / "config/host_consolidations.json").read_text(encoding="utf-8"))["routes"]}
@@ -94,10 +103,12 @@ EXCLUDED_PREFIXES += tuple(f"{d}/" for d in json.loads((ROOT / "config/index_exc
 CITATION_REPAIR_WARNINGS = []
 
 BHPC_PRODUCT_PATHS = {'index.html','download.html','product.html','billionaire-high-performance-coach.html'}
-# One definition: config/organization.json (Search Readiness c1). The @id stays
-# as it was - it is the node's identity and other nodes reference it.
-BHPC_ORGANIZATION = organization_node(**{'@id':'https://billionairehighperformancecoach.com/#organization'})
-BHPC_WEBSITE = {'@type':'WebSite','@id':'https://billionairehighperformancecoach.com/#website','name':'Billionaire High Performance Coach','url':'https://billionairehighperformancecoach.com/','publisher':{'@id':'https://billionairehighperformancecoach.com/#organization'}}
+# One definition: config/entity.json (Search Readiness c1). The @id is the one
+# Spry Labs entity home (/spry-labs#organization) every side business points
+# parentOrganization at; every reference below uses the same id.
+SPRY_ORG_ID = organization_id()
+BHPC_ORGANIZATION = organization_node()
+BHPC_WEBSITE = {'@type':'WebSite','@id':'https://billionairehighperformancecoach.com/#website','name':'Billionaire High Performance Coach','url':'https://billionairehighperformancecoach.com/','publisher':{'@id':SPRY_ORG_ID}}
 BHPC_MENTION_TERMS = [
     {'@type':'DefinedTerm','@id':'https://billionairehighperformancecoach.com/#a-player-mode','name':'A-player mode','description':'The operating state the product helps users practice: clearer priorities, cleaner execution, faster recovery, and less self-renegotiation. It is not the product name.'},
     {'@type':'DefinedTerm','@id':'https://billionairehighperformancecoach.com/#llm-operating-system','name':'LLM operating system','description':'A structured rule, prompt, agenda, review, and recovery layer installed into an LLM so the user is not relying on open-ended chat alone.'},
@@ -110,8 +121,8 @@ BHPC_PRODUCT_SCHEMA = {
     'name':'Billionaire High Performance Coach OS',
     'alternateName':['Billionaire High Performance Coach','BHPC OS'],
     'url':'https://billionairehighperformancecoach.com/download.html',
-    'brand':{'@id':'https://billionairehighperformancecoach.com/#organization'},
-    'manufacturer':{'@id':'https://billionairehighperformancecoach.com/#organization'},
+    'brand':{'@id':SPRY_ORG_ID},
+    'manufacturer':{'@id':SPRY_ORG_ID},
     'category':'Personal executive operating system for LLM-based planning, accountability, recovery, and execution',
     'image':['https://billionairehighperformancecoach.com/assets/img/bhpc-hero-square.png','https://billionairehighperformancecoach.com/assets/books/bhpc-white.png'],
     'description':'A self-installed executive operating system and executable prompt pack that helps ChatGPT, Claude, Gemini, Perplexity, DeepSeek, or another LLM operate as a structured planning, accountability, review, recovery, and execution partner.',
@@ -726,7 +737,7 @@ def add_schema(soup: BeautifulSoup, path: str, spec: dict):
         graph.append(BHPC_WEBSITE)
         graph.extend(BHPC_MENTION_TERMS)
     if path in {'about.html','spry-labs.html'}:
-        graph.append(organization_node(**{'@id':_absolute_url(canonical,'/about#organization')}))
+        graph.append(organization_node())
     if path in {'author.html','sequoia-taylor.html'}:
         graph.append({'@type':'Person','@id':_absolute_url(canonical,'/author#person'),'name':'S.L. Taylor','url':_absolute_url(canonical,'/author'),'worksFor':organization_node()})
     script=soup.new_tag('script', id='CITATION_PAGE_SCHEMA', type='application/ld+json')
@@ -1446,7 +1457,7 @@ def build_registries(records: list[dict]):
         owner = canonical_owner_by_path.get(path, {})
         canonical_query = owner.get("query") or spec["h1"]
         bypath[path]={"path":path,"canonical_url":canonical_for(path),"canonical_domain":re.sub(r"^https?://([^/]+).*$",r"\1",canonical_for(path)),"query":canonical_query,"framework":spec["framework"],"extraction_type":owner.get("intent_class") or spec["type"],"schema_type":"HowTo" if (owner.get("intent_class") or spec["type"])=="howto" else "DefinedTerm","status":"ACTIVE","definition":spec["definition"],"priority":True,"canonical_owner_metadata":owner}
-    exclusions=[{"path":x,"status":"EXCLUDED","exclusion_reason":(NEVER_CITABLE_REASON if x in NEVER_CITABLE else CONSOLIDATED_REASON if x in CONSOLIDATED else "Owner-approved exclusion or non-public operator surface")} for x in sorted(EXCLUDED)]
+    exclusions=[{"path":x,"status":"EXCLUDED","exclusion_reason":(NEVER_CITABLE_REASON if x in NEVER_CITABLE else ENTITY_HOME_REASON if x in ENTITY_HOME_PATHS else CONSOLIDATED_REASON if x in CONSOLIDATED else "Owner-approved exclusion or non-public operator surface")} for x in sorted(EXCLUDED)]
     pages=sorted(bypath.values(),key=lambda x:x["path"])+exclusions
     (d/"citable_pages.json").write_text(json.dumps({"version":"1.0","generated_at":TODAY,"pages":pages},indent=2,ensure_ascii=False)+"\n")
     # query grouping

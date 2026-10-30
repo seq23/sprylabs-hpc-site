@@ -1,0 +1,128 @@
+{
+  "purpose": "The ONE definition of the Spry Labs entity (the shared authority piece, entity.json): the publisher Organization every published page of billionairehighperformancecoach.com, spryexecutiveos.com and aplayermode.com declares, the brand entity of each of those three sites, and the side businesses whose own entity.json points parentOrganization at Spry Labs. Read by scripts/lib/organization_node.cjs (JS: generators, scripts/repair/complete_organization_node.cjs, validate:organization-node, validate:entity-graph, the weekly scripts/entity/entity_backlink_watch.mjs) and by scripts/lib/citation_page_schema.py (Python: the citation program). It is one config file both languages read because both write this node; a constant in one is invisible to the other.",
+  "origin": "25 Oct 2026: all 3,480 Organization nodes on the site named Spry Labs and not one carried sameAs, because ten generators each wrote their own partial set. The JS repair completed them, and then repair_schema_parity.py - which runs later in container-prepush - rewrote 66 pages' publisher from its own hard-coded dict with name and logo only, dropping url and sameAs again. Two writers of one node is the defect; this file is the fix. 30 Oct 2026 (authority audit): the node grew an @id - /spry-labs is the Spry Labs entity home every side business points parentOrganization at - and lost two sameAs: spryexecutiveos.com is one of this repo's own hosts (self-reference), and the founder's personal site carries a Person whose worksFor is a West Peek company, which tied Spry Labs to West Peek in the knowledge graph against the Spry/West Peek separation rule.",
+  "truth_boundary": "sameAs holds ONLY profiles that really exist and resolve now (data/entities/authority_signal_manifest.json: 'Only actually-known ... sameAs ... signals are claimed'). Never this repo's own hosts, never the founder's personal site, never anything naming West Peek (forbidden_same_as_hosts). A profile named but not yet live goes in profiles_pending and enters sameAs only when the weekly watch sees it resolve - and, where the platform renders server-side, link back. A pending entry with url null has no address yet; nobody guesses one, because a guessed LinkedIn or Crunchbase slug can belong to another company.",
+  "@id": "https://billionairehighperformancecoach.com/spry-labs#organization",
+  "name": "Spry Labs",
+  "url": "https://billionairehighperformancecoach.com/spry-labs",
+  "logo": {
+    "url": "https://billionairehighperformancecoach.com/assets/spry-logo.png",
+    "width": 420,
+    "height": 96
+  },
+  "description": "Spry Labs is an independent studio that builds and publishes self-serve software and reference sites: execution systems for operators, source-backed consumer guides, printable planning kits, a children's reading app and an evidence-first science channel.",
+  "sameAs": [
+    "https://sprylabs.gumroad.com/"
+  ],
+  "profiles_pending": [
+    {
+      "platform": "LinkedIn company page",
+      "name": "Spry Labs",
+      "url": null,
+      "owner_action": "Create the LinkedIn company page \"Spry Labs\" with website https://billionairehighperformancecoach.com/spry-labs, then put its URL here."
+    },
+    {
+      "platform": "Crunchbase organization",
+      "name": "Spry Labs",
+      "url": null,
+      "owner_action": "Create a free Crunchbase organization profile \"Spry Labs\" with website https://billionairehighperformancecoach.com/spry-labs, then put its URL here."
+    }
+  ],
+  "own_hosts": [
+    "billionairehighperformancecoach.com",
+    "spryexecutiveos.com",
+    "aplayermode.com"
+  ],
+  "forbidden_same_as_hosts": [
+    "sequoiataylor.com",
+    "westpeek.ventures",
+    "westpeek.com",
+    "joinwestpeek.com",
+    "westpeekproductions.com"
+  ],
+  "sites": {
+    "billionairehighperformancecoach.com": {
+      "name": "Billionaire High Performance Coach",
+      "url": "https://billionairehighperformancecoach.com/",
+      "description": "A self-installed executive operating system that turns the AI you already use into a structured planning, accountability and recovery partner.",
+      "parentOrganization": "https://billionairehighperformancecoach.com/spry-labs#organization",
+      "sameAs": [],
+      "profiles_pending": []
+    },
+    "spryexecutiveos.com": {
+      "name": "Spry Executive OS",
+      "url": "https://spryexecutiveos.com/",
+      "description": "The framework library behind Billionaire High Performance Coach: the rules, models and operating logic, explained one framework at a time.",
+      "parentOrganization": "https://billionairehighperformancecoach.com/spry-labs#organization",
+      "sameAs": [],
+      "profiles_pending": []
+    },
+    "aplayermode.com": {
+      "@type": "SoftwareApplication",
+      "@id": "https://aplayermode.com/#app",
+      "name": "A Player Mode",
+      "url": "https://aplayermode.com/",
+      "description": "A planning app with a five-role executive team that builds your plan, has it ready every morning and shrinks bad days.",
+      "parentOrganization": "https://billionairehighperformancecoach.com/spry-labs#organization",
+      "sameAs": [
+        "https://www.pinterest.com/aplayermode/"
+      ],
+      "profiles_pending": [
+        {
+          "platform": "Apple App Store",
+          "name": "A Player Mode",
+          "url": null,
+          "url_from": "aplayermode/config.js stores.appStore",
+          "owner_action": "None: the listing is awaiting Apple's approval. When it is approved its URL goes in aplayermode/config.js stores.appStore and the watch promotes it."
+        },
+        {
+          "platform": "Google Play",
+          "name": "A Player Mode",
+          "url": null,
+          "url_from": "aplayermode/config.js stores.googlePlay",
+          "owner_action": "None: the listing is awaiting Google's approval. When it is approved its URL goes in aplayermode/config.js stores.googlePlay and the watch promotes it."
+        }
+      ]
+    }
+  },
+  "members": [
+    {
+      "name": "The Industry Guides",
+      "url": "https://theindustryguides.com/",
+      "kind": "Source-backed consumer guides",
+      "description": "Source-backed guides and provider routing for USCIS medical exams, personal injury, dentistry, neuropsychological testing, hormone care and senior care."
+    },
+    {
+      "name": "ApprovalPrep",
+      "url": "https://approvalprep.com/",
+      "kind": "Self-service document kits",
+      "description": "Self-service letters, rental packets and income-proof templates for people preparing a credit, rental or loan application."
+    },
+    {
+      "name": "Dream Wedding Builder",
+      "url": "https://weddingchecklistpdf.com/",
+      "kind": "Printable planning kits",
+      "description": "Editable wedding planning kits: a checklist, a budget spreadsheet, a seating chart maker and a day-of timeline.",
+      "sites": [
+        "https://weddingchecklistpdf.com/",
+        "https://weddingbudgetspreadsheet.com/",
+        "https://weddingseatingchartmaker.com/",
+        "https://weddingtimelinetemplate.com/"
+      ]
+    },
+    {
+      "name": "Time-2-Read",
+      "url": "https://time-2-read.com/",
+      "kind": "Children's reading app",
+      "description": "Personalized, illustrated reading adventures for children aged 3 to 15, with phonics support and read-aloud."
+    },
+    {
+      "name": "How We Know",
+      "url": "https://howweknowdeep.com/",
+      "kind": "Evidence-first science channel",
+      "description": "Deep-ocean answers that name the instrument, the proxy or the observation behind each claim, and where the evidence stops."
+    }
+  ],
+  "author_page": "https://billionairehighperformancecoach.com/sequoia-taylor",
+  "_author_page_why": "The on-site page of the Person (pen name S.L. Taylor, @id .../sequoia-taylor#person). A Person node whose url or sameAs pointed at a forbidden host is pointed here instead by the organization-node repair."
+}

@@ -223,7 +223,7 @@ def update_schema(path: Path):
                 'name': norm(author.get_text(' ',strip=True)),
                 'url': urljoin(canonical, author.get('href',''))
             },
-            # One definition: config/organization.json (Search Readiness c1).
+            # One definition: config/entity.json (Search Readiness c1).
             # This dict used to carry name and logo only, so it dropped url and
             # sameAs on 66 pages every build, after the JS repair had added them.
             'publisher': organization_node(),

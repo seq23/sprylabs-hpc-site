@@ -25,6 +25,11 @@ const expectedWorkflows = [
   // still unreachable a day later (Search Readiness a5, a9, b1, c2). This lane deploys
   // workers/aplayermode-com on main and proves the live apex. 2026-10-26.
   'deploy-aplayermode-worker.yml',
+  // Authority audit: the weekly Spry Labs entity watch. Fetches every sameAs and
+  // pending profile in config/entity.json and every member side business; removes
+  // a dead profile and promotes a live pending one by PR, and lists missing
+  // link-backs as named stops. 2026-10-30.
+  'entity-backlink-watch.yml',
 ].sort();
 const retiredWorkflows = [
   'citation-velocity-5k.yml',

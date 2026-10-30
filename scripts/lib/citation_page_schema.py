@@ -61,10 +61,10 @@ SERIALIZATION_EXEMPT = {"download.html"}
 # Python writers rewrote 66 of them from their own hard-coded dicts - one with
 # name and logo only - dropping url and sameAs again on every build.
 #
-# So neither language owns the values: config/organization.json does, and both
+# So neither language owns the values: config/entity.json does, and both
 # read it. scripts/lib/organization_node.cjs is the JS half.
 _ORG_CONFIG_PATH = (
-    __import__("pathlib").Path(__file__).resolve().parents[2] / "config" / "organization.json"
+    __import__("pathlib").Path(__file__).resolve().parents[2] / "config" / "entity.json"
 )
 _ORG_CACHE: dict | None = None
 
@@ -76,8 +76,13 @@ def _organization_config() -> dict:
     return _ORG_CACHE
 
 
+def organization_id() -> str:
+    """The one Spry Labs @id, for a node that references the organization."""
+    return _organization_config()["@id"]
+
+
 def organization_node(**extra) -> dict:
-    """The complete publisher Organization: name, url, logo and sameAs.
+    """The complete publisher Organization: name, url, logo, sameAs and @id.
 
     Key order matches the JS half so a page rewritten by either language
     serializes to the same bytes, which is what this module is for.
@@ -94,6 +99,9 @@ def organization_node(**extra) -> dict:
             "height": cfg["logo"]["height"],
         },
         "sameAs": list(cfg["sameAs"]),
+        # One entity, one @id: the /spry-labs entity home. Last, matching the
+        # JS half's key order (scripts/lib/organization_node.cjs FIELD_KEYS).
+        "@id": cfg["@id"],
     }
     node.update(extra)
     return node
