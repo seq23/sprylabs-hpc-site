@@ -149,8 +149,19 @@ function titleNamesSibling(title, host) {
     || t.includes('aplayermode');
 }
 
+/**
+ * "https://spryexecutiveos.com/x" and "spryexecutiveos.com" are the same host.
+ * dual_domain_policy.cjs hostFor() returns an origin URL; until 30 Oct 2026 the
+ * hub generator passed that straight in, BRANDS[url] was undefined, and four
+ * short hub titles came back with no candidate and were written as "undefined".
+ */
+function bareHost(hostOrUrl) {
+  return String(hostOrUrl || '').replace(/^https?:\/\//i, '').replace(/[/:?#].*$/, '').toLowerCase();
+}
+
 /** Candidates always retain the host's name, including titles already in range. */
-function titleCandidates(title, host) {
+function titleCandidates(title, hostOrUrl) {
+  const host = bareHost(hostOrUrl);
   const t = norm(title);
   const brand = BRANDS[host] || '';
   const shortBrand = SHORT_BRANDS[host] || brand;
@@ -175,6 +186,22 @@ function titleCandidates(title, host) {
   return [...new Set(out)].filter(inTitleRange).filter((t) => titleNamesHost(t, host) && !titleNamesSibling(t, host));
 }
 
+/**
+ * The one branded title for a page: the best candidate the policy allows.
+ * Every writer that sets a title from its own data (hub generator, demand-family
+ * applier) goes through this, so the snippet repair that runs afterwards finds
+ * the title already conforming and leaves it alone - two writers can no longer
+ * fight over the same <title>. Throws rather than returning undefined: a title
+ * the policy cannot express is a build failure, not a page called "undefined".
+ */
+function brandedTitle(title, hostOrUrl) {
+  const host = bareHost(hostOrUrl);
+  if (!BRANDS[host]) throw new Error(`[search_snippet_bounds] no brand declared for host "${hostOrUrl}"`);
+  const pick = titleCandidates(title, host)[0];
+  if (!pick) throw new Error(`[search_snippet_bounds] no title in ${TITLE_MIN}-${TITLE_MAX} chars naming ${BRANDS[host]} can be made from "${title}"`);
+  return pick;
+}
+
 /** Candidate descriptions for an over-long description, best first. Short ones return []. */
 function descriptionCandidates(desc) {
   const d = norm(desc);
@@ -196,5 +223,5 @@ function descriptionCandidates(desc) {
 module.exports = {
   TITLE_MIN, TITLE_MAX, DESC_MIN, DESC_MAX, EXEMPT_PAGES, BRANDS, SHORT_BRANDS,
   decodeEntities, escapeText, escapeAttr, norm, titleOf, descriptionOf, META_DESC_RE,
-  inTitleRange, inDescRange, cutWords, titleCore, titleCandidates, titleNamesHost, titleNamesSibling, descriptionCandidates,
+  inTitleRange, inDescRange, cutWords, titleCore, titleCandidates, brandedTitle, bareHost, titleNamesHost, titleNamesSibling, descriptionCandidates,
 };

@@ -422,7 +422,7 @@
     "workflow:whitepaper": "npm run workflow:content-expansion -- --mode=whitepaper",
     "workflow:zero-dollar-autonomous": "npm run release:zero-dollar-autonomous",
     "validate:workflow-step-env-contract": "node scripts/validators/validate_workflow_step_env_contract.mjs",
-    "validate:search-snippet-bounds": "node scripts/validators/validate_search_snippet_bounds.mjs",
+    "validate:search-snippet-bounds": "node scripts/validators/validate_search_snippet_bounds.mjs && node --test tests/search_snippet_brand.test.mjs",
     "validate:product-offers": "node scripts/validators/validate_product_offers.mjs",
     "validate:redirect-and-link-integrity": "node scripts/validators/validate_redirect_and_link_integrity.mjs",
     "validate:frozen-output-shrink": "node scripts/validators/validate_frozen_output_shrink.mjs",

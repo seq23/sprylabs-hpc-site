@@ -14,7 +14,7 @@
  *     the family's measured words; its definition is outside 40-60 words;
  *   - FRESHNESS: the primary page does not carry the section for the CURRENT
  *     content (data-demand-hash must equal the hash of the family's content),
- *     its <title> differs, its CTA lacks the ref, it has fewer than 3 question
+ *     its <title> is not the family title branded for its host (brandedTitle), its CTA lacks the ref, it has fewer than 3 question
  *     H2s, or its FAQ lacks a question from the file. A file edited without
  *     the applier running, or a page some later pass rewrote, both fail here;
  *   - the homepage does not link every strengthened page;
@@ -28,8 +28,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { createRequire } from 'node:module';
 
 const ROOT = process.cwd();
+// The page title is the family title branded by the one title policy for the
+// page's own host - the same function apply_demand_families.py writes through.
+const { brandedTitle } = createRequire(import.meta.url)(path.join(ROOT, 'scripts/lib/search_snippet_bounds.cjs'));
+const { canonicalHostOf } = createRequire(import.meta.url)(path.join(ROOT, 'scripts/lib/branded_title_cli.cjs'));
 const fail = [];
 const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
 const hosts = Object.keys(JSON.parse(read('config/site_hosts.json')).hosts);
@@ -82,7 +87,12 @@ for (const host of hosts) {
     const hash = (sec[0].match(/data-demand-hash="([0-9a-f]+)"/) || [])[1];
     if (hash !== hashOf(c)) fail.push(`${tag}: ${file} carries content hash ${hash}, file content is ${hashOf(c)} (stale page)`);
     const title = decode((h.match(/<title>([\s\S]*?)<\/title>/) || [])[1] || '');
-    if (title !== c.title) fail.push(`${tag}: ${file} <title> "${title}" != "${c.title}"`);
+    let want = '';
+    try { want = brandedTitle(c.title, canonicalHostOf(h)); } catch (e) { fail.push(`${tag}: ${file} ${e.message}`); }
+    if (want && title !== want) fail.push(`${tag}: ${file} <title> "${title}" != "${want}" (family title "${c.title}" branded for its host)`);
+    // Branding may only cut the family title's tail, never reword its lead.
+    const kept = want.split(' | ')[0].replace(/…$/, '');
+    if (want && (kept.length < 20 || !String(c.title).startsWith(kept))) fail.push(`${tag}: ${file} branded title "${want}" does not keep the family title's own leading words`);
     const qh2 = (sec[0].match(/<h2>[^<]*\?<\/h2>/g) || []).length;
     if (qh2 < 3) fail.push(`${tag}: ${file} has ${qh2} question H2s in the section`);
     if (!sec[0].includes(`ref=`)) fail.push(`${tag}: ${file} CTA without ref`);
@@ -119,6 +129,7 @@ if (multi.length) fail.push(`${multi.length} page(s) carry more than one FAQPage
 
 // Negative proofs.
 if (faqCount('{"@type":"FAQPage"}<script>{"@type": "FAQPage"}</script>') !== 2) fail.push('negative proof: FAQPage counter cannot see two nodes');
+if (brandedTitle('AI Executive Coaching: What an AI Executive Coach Does', 'https://billionairehighperformancecoach.com/x') === 'AI Executive Coaching: What an AI Executive Coach Does') fail.push('negative proof: an unbranded family title would pass as the page title');
 if (hashOf({ a: 1, b: ['x'] }) === hashOf({ a: 2, b: ['x'] })) fail.push('negative proof: content hash does not change with content');
 if (hashOf({ b: 'é', a: [1, { c: true }] }) !== hashOf({ a: [1, { c: true }], b: 'é' })) fail.push('negative proof: hash depends on key order');
 

@@ -162,11 +162,28 @@ def load_families():
     return out
 
 
+def branded_titles(fams) -> dict:
+    # The page <title> is the family's title as the one title policy brands it
+    # for the page's own host (scripts/lib/branded_title_cli.cjs ->
+    # search_snippet_bounds.cjs brandedTitle). Writing the bare title made this
+    # pass and repair:dual-domain-metadata fight over the same <title>.
+    import subprocess
+    items = [{"file": f["primary_page"]["file"], "title": f["content"]["title"]} for _, f in fams]
+    res = subprocess.run(["node", str(ROOT / "scripts/lib/branded_title_cli.cjs")], input=json.dumps(items),
+                         cwd=str(ROOT), check=True, capture_output=True, text=True)
+    out = json.loads(res.stdout)
+    missing = [i["file"] for i in items if not out.get(i["file"])]
+    if missing:
+        raise SystemExit(f"[apply-demand-families] FAIL: no branded title for {missing}")
+    return out
+
+
 def main() -> int:
     if py_json is not serialize_schema:
         raise SystemExit("[apply-demand-families] FAIL: build_visible_faq_sections no longer serializes through citation_page_schema.serialize_schema")
     fams = load_families()
     changed, unchanged, hub = [], 0, []
+    titles = branded_titles(fams)
     for host, fam in fams:
         rel = fam["primary_page"]["file"]
         if rel in PROTECTED:
@@ -176,7 +193,7 @@ def main() -> int:
             raise SystemExit(f"[apply-demand-families] FAIL: {host} {fam['id']}: primary page {rel} is missing; this pass never creates pages")
         c = fam["content"]
         before = path.read_text(encoding="utf-8")
-        html = set_title(before, c["title"])
+        html = set_title(before, titles[rel])
         seated = seat_section(html, render_section(fam["id"], c))
         if seated is None:
             raise SystemExit(f"[apply-demand-families] FAIL: {rel} has no H1")

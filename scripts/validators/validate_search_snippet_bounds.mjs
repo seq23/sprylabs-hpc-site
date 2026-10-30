@@ -33,6 +33,23 @@ const scanned = pages.filter((rel) => !B.EXEMPT_PAGES.has(rel));
 assertExamined('validate:search-snippet-bounds', scanned.length);
 
 const errors = [];
+// A title some generator built from a missing value. 30 Oct 2026: the hub
+// generator passed an origin URL where a bare host was expected, got no title
+// candidate back, and wrote "undefined" into five hub titles; the dedupe
+// pass then hid four of them behind "| Spry Page: ...".
+const PLACEHOLDER_TITLE = /\b(undefined|null|NaN)\b|\[object Object\]/;
+// Self-proof, every run: the policy answers the same for an origin URL and a
+// bare host, a short hub name still gets a branded title, and a host with no
+// declared brand throws instead of yielding nothing.
+{
+  const bare = B.titleCandidates('Guides index', 'spryexecutiveos.com');
+  const url = B.titleCandidates('Guides index', 'https://spryexecutiveos.com');
+  if (!bare.length || JSON.stringify(bare) !== JSON.stringify(url)) errors.push(`self-proof: titleCandidates differs for an origin URL (${JSON.stringify(url)}) and its bare host (${JSON.stringify(bare)})`);
+  let threw = false;
+  try { B.brandedTitle('Guides index', 'https://unknown.example'); } catch { threw = true; }
+  if (!threw) errors.push('self-proof: brandedTitle returned a title for a host with no declared brand');
+  if (!PLACEHOLDER_TITLE.test('undefined | Spry Page: Guides')) errors.push('self-proof: the placeholder-title check cannot see "undefined"');
+}
 const titles = new Map();
 const descs = new Map();
 for (const rel of pages) {
@@ -43,6 +60,7 @@ for (const rel of pages) {
     if (!B.inTitleRange(title)) errors.push(`${rel}: title is ${title.length} characters (want ${B.TITLE_MIN}-${B.TITLE_MAX}): "${title}"`);
     if (!B.inDescRange(desc)) errors.push(`${rel}: meta description is ${desc.length} characters (want ${B.DESC_MIN}-${B.DESC_MAX}): "${desc}"`);
   }
+  if (title && PLACEHOLDER_TITLE.test(title)) errors.push(`${rel}: title carries a placeholder value: "${title}"`);
   if (title) {
     if (titles.has(title)) errors.push(`${rel}: duplicate title, same as ${titles.get(title)}: "${title}"`);
     else titles.set(title, rel);
