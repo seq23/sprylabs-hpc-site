@@ -9326,7 +9326,7 @@
       "name": "entity-backlink-watch.yml",
       "check_type": "workflow",
       "owning_lane": "validation-control-plane",
-      "risk_prevented": "Authority audit (30 Oct 2026): no repo verified that the sameAs profiles an entity claims still resolve and link back, so a dead or unclaimed profile stayed in the knowledge graph unseen. This lane fetches every sameAs and pending profile in config/entity.json weekly, removes a dead one and promotes a live pending one, applies it to every page and lands it on main through the shared push helper, and names every missing link-back, unclaimed profile and member without parentOrganization.",
+      "risk_prevented": "Authority audit (30 Oct 2026): no repo verified that the sameAs profiles an entity claims still resolve and link back, so a dead or unclaimed profile stayed in the knowledge graph unseen. This lane fetches every sameAs and pending profile in config/entity.json weekly, removes a dead one and promotes a live pending one (stopping red with the exact change for one reviewed rebaseline, since the change touches every page), and names every missing link-back, unclaimed profile and member without parentOrganization.",
       "existing_coverage_gap": "validate:entity-graph proves the committed graph is internally consistent and separation-clean, but it cannot see the web; nothing checked the profiles themselves.",
       "scope": [
         "github-actions",
