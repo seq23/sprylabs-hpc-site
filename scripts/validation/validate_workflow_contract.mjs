@@ -176,6 +176,16 @@ for (const actual of actualWorkflows) {
   if (!expectedWorkflows.includes(actual)) errors.push(`unreviewed workflow file present: ${actual}`);
 }
 
+// Weekly-plus-manual lanes: exactly these triggers, never push or pull_request.
+// A push trigger on a lane that writes main would race the main writers.
+const SCHEDULED_ONLY = { 'entity-backlink-watch.yml': ['schedule', 'workflow_dispatch'] };
+for (const [name, want] of Object.entries(SCHEDULED_ONLY)) {
+  const rel = `${workflowDir}/${name}`;
+  if (!fs.existsSync(rel)) { errors.push(`${name}: scheduled-only workflow missing`); continue; }
+  const onBlock = (fs.readFileSync(rel, 'utf8').match(/^on:\s*\n((?:[ #].*\n|\n)*)/m) || [])[1] || '';
+  const got = [...onBlock.matchAll(/^ {2}([a-z_]+):/gm)].map((m) => m[1]).sort();
+  if (JSON.stringify(got) !== JSON.stringify([...want].sort())) errors.push(`${name}: triggers are ${JSON.stringify(got)}; a weekly-plus-manual lane takes exactly ${JSON.stringify(want)}`);
+}
 for (const name of actualWorkflows) {
   const rel = `${workflowDir}/${name}`;
   const text = fs.readFileSync(rel, 'utf8');
@@ -183,6 +193,16 @@ for (const name of actualWorkflows) {
   if (text.includes('\t')) errors.push(`${name}: tabs are forbidden in workflow YAML`);
   for (const [index, line] of lines.entries()) {
     const trimmed = line.trim();
+    // GitHub rejects a workflow whose plain (unquoted) scalar holds ": " - and
+    // a workflow GitHub cannot parse fails every push with ZERO jobs and no log.
+    // entity-backlink-watch.yml did exactly that on #172's branch (31 Oct 2026):
+    //   run: ./push.sh "entity backlink watch: weekly evidence" ...
+    // Quote the value or use a block scalar (run: |).
+    const kv = trimmed.match(/^(?:-\s+)?[A-Za-z0-9_.-]+:\s+(.+)$/);
+    if (kv && !/^['"|>{[&*!#]/.test(kv[1])) {
+      const plain = kv[1].replace(/\$\{\{[\s\S]*?\}\}/g, '').replace(/\s+#.*$/, '');
+      if (/:\s/.test(plain) || /:$/.test(plain)) errors.push(`${name}: line ${index + 1} is a plain YAML scalar containing ": " - GitHub cannot parse it and every run fails with zero jobs; quote it or use a block scalar`);
+    }
     if (/^if\s*:\s*.*\bsecrets\./.test(trimmed)) {
       errors.push(`${name}: line ${index + 1} must not reference secrets.* directly in an if expression; map the secret through env and test env.* instead`);
     }

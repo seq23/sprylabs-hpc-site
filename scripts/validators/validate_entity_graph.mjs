@@ -22,8 +22,12 @@
  *      indexes so validate:organization-node never reads it): the same
  *      Organization node, every reference to it on the one @id, and the app's
  *      sameAs equal to its entity.
- *   4. Every published page: no JSON-LD block names a forbidden host, and no
- *      Organization node lists one of this repo's own hosts as sameAs.
+ *   4. Every page any of the three hosts serves (listEveryServedPage: noindex
+ *      pages, aplayermode/ and amazon/ included): no JSON-LD block names a
+ *      forbidden host, no node lists one of this repo's own hosts as sameAs,
+ *      every Spry Labs node's sameAs equals config/entity.json, no legacy
+ *      Spry Labs @id (the protected download page excepted), and on
+ *      aplayermode.com every Organization field equals the one definition.
  *
  * Name, url, logo, sameAs and @id equality on every page is
  * validate:organization-node's job; this does not repeat it.
@@ -38,8 +42,8 @@ import { createRequire } from 'node:module';
 
 const require_ = createRequire(import.meta.url);
 const O = require_('../lib/organization_node.cjs');
-const { listIndexablePages } = require_('../lib/site_pages.js');
 const B = require_('../lib/search_snippet_bounds.cjs');
+const { listEveryServedPage } = require_('../lib/site_pages.js');
 
 const ROOT = process.cwd();
 const LABEL = '[validate:entity-graph]';
@@ -149,28 +153,51 @@ else {
   const app = nodes.find((n) => n['@id'] === site['@id']);
   if (!app) fail(`${APM_PAGE}: no node with @id ${site['@id']}`);
   else if (!same(app.sameAs || [], site.sameAs || [])) fail(`${APM_PAGE}: ${site['@id']} sameAs ${JSON.stringify(app.sameAs)}; config/entity.json says ${JSON.stringify(site.sameAs)}`);
-  for (const m of html.matchAll(/"@id"\s*:\s*"([^"]+#organization)"/g)) if (m[1] !== O.ORG_ID) fail(`${APM_PAGE}: references ${m[1]}; the one Spry Labs @id is ${O.ORG_ID}`);
 }
 
-// ------------------------------------------------------ 4. published pages
-const pages = listIndexablePages(ROOT).filter((rel) => !B.EXEMPT_PAGES.has(rel));
+// ------------------------------------------------------ 4. every served page
+// Every page any of the three hosts serves (site_pages.listEveryServedPage, the
+// list the Organization repair writes): indexable or noindex, the shared
+// sites' pages AND aplayermode/ and amazon/. Until 31 Oct 2026 this read the
+// shared sites' indexable pages plus aplayermode/index.html only, so
+// aplayermode.com/about kept spryexecutiveos.com in its sameAs after it was
+// removed from config/entity.json. The protected download page is read here,
+// never written.
+const pages = listEveryServedPage(ROOT);
+const WANT = O.organizationFields();
 let blocks = 0;
+let orgNodes = 0;
+// bhpc and spryexecutiveos are one deployment serving one tree; aplayermode.com is aplayermode/.
+const pagesPerHost = { 'billionairehighperformancecoach.com + spryexecutiveos.com': 0, 'aplayermode.com': 0 };
 const FORBIDDEN_RE = new RegExp(FORBIDDEN.map((h) => h.replace(/\./g, '\\.')).join('|'), 'i');
-for (const rel of [...pages, APM_PAGE]) {
-  const abs = path.join(ROOT, rel);
-  if (!fs.existsSync(abs)) continue;
-  const html = fs.readFileSync(abs, 'utf8');
+for (const rel of pages) {
+  const html = fs.readFileSync(path.join(ROOT, rel), 'utf8');
+  pagesPerHost[rel.startsWith('aplayermode/') ? 'aplayermode.com' : 'billionairehighperformancecoach.com + spryexecutiveos.com'] += 1;
   for (const m of html.matchAll(LD_RE)) {
     blocks += 1;
     if (FORBIDDEN.length && FORBIDDEN_RE.test(m[1])) fail(`${rel}: JSON-LD names a forbidden host (${m[1].match(FORBIDDEN_RE)[0]}) - Spry/West Peek separation`);
   }
   for (const n of ldNodes(html, rel)) {
-    if (!O.isOrganizationNode(n)) continue;
-    for (const u of [].concat(n.sameAs || [])) { const host = hostOf(u); if (host && onHost(host, OWN)) fail(`${rel}: Organization ${n.name} lists its own host ${u} as sameAs`); }
+    for (const u of [].concat(n.sameAs || [])) { const host = hostOf(u); if (host && onHost(host, OWN)) fail(`${rel}: ${[].concat(n['@type'] || 'node').join('/')} ${n.name || n['@id'] || ''} lists this repo's own host ${u} as sameAs`); }
+    // The protected download page is byte-pinned and keeps its legacy @id; every
+    // check above still reads it, only the @id unification cannot be applied.
+    if (B.EXEMPT_PAGES.has(rel)) continue;
+    for (const v of Object.values(n)) {
+      const id = v && typeof v === 'object' && !Array.isArray(v) ? v['@id'] : null;
+      if (O.isOwnOrgId(id) && id !== O.ORG_ID) fail(`${rel}: references legacy Spry Labs @id ${id}; the one @id is ${O.ORG_ID}`);
+    }
+    if (O.isOwnOrgId(n['@id']) && n['@id'] !== O.ORG_ID) fail(`${rel}: declares legacy Spry Labs @id ${n['@id']}; the one @id is ${O.ORG_ID}`);
+    if (!O.isOwnOrganization(n) || Object.keys(n).length <= 1) continue;
+    orgNodes += 1;
+    if (n.sameAs !== undefined && !same(n.sameAs, WANT.sameAs)) fail(`${rel}: Spry Labs sameAs ${JSON.stringify(n.sameAs)}; config/entity.json says ${JSON.stringify(WANT.sameAs)}`);
+    if (rel.startsWith('aplayermode/')) for (const k of O.FIELD_KEYS) if (!same(n[k], WANT[k])) fail(`${rel}: Organization ${k} is ${JSON.stringify(n[k])}; config/entity.json says ${JSON.stringify(WANT[k])}`);
   }
 }
 
 if (!pages.length) fail('Rule 0: 0 published pages examined');
+for (const [h, n] of Object.entries(pagesPerHost)) if (!n) fail(`Rule 0: 0 pages examined for ${h}`);
+if (!pages.includes('aplayermode/about.html')) fail('Rule 0: aplayermode/about.html is not in the served-page list; aplayermode.com/about escaped this check once');
+if (!orgNodes) fail('Rule 0: 0 Spry Labs Organization nodes examined');
 if (!blocks) fail('Rule 0: 0 JSON-LD blocks examined');
 if (!sameAsChecked) fail('Rule 0: 0 sameAs URLs examined - the entity has no external profile at all');
 if (!members.length) fail('Rule 0: 0 members - nothing points parentOrganization at the entity home');
@@ -178,4 +205,4 @@ if (!members.length) fail('Rule 0: 0 members - nothing points parentOrganization
 for (const m of failures.slice(0, 25)) console.error(`${LABEL} FAIL ${m}`);
 if (failures.length > 25) console.error(`${LABEL} FAIL ... and ${failures.length - 25} more`);
 if (failures.length) { console.error(`${LABEL} FAIL (${failures.length})`); process.exit(1); }
-console.log(`${LABEL} PASS - ${pages.length + 1} pages, ${blocks} JSON-LD blocks, ${sameAsChecked} sameAs URLs, ${OWN.length} sites, ${members.length} members, entity home ${C.url}`);
+console.log(`${LABEL} PASS - ${pages.length} pages (${Object.entries(pagesPerHost).map(([h, n]) => `${h} ${n}`).join(', ')}), ${orgNodes} Spry Labs nodes, ${blocks} JSON-LD blocks, ${sameAsChecked} sameAs URLs, ${OWN.length} sites, ${members.length} members, entity home ${C.url}`);

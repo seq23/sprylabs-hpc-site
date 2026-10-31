@@ -32,7 +32,7 @@
 const fs = require('fs');
 const path = require('path');
 const O = require('../lib/organization_node.cjs');
-const { listIndexablePages } = require('../lib/site_pages.js');
+const { listEveryServedPage } = require('../lib/site_pages.js');
 const B = require('../lib/search_snippet_bounds.cjs');
 
 const ROOT = process.cwd();
@@ -78,11 +78,11 @@ function applyTo({ html }) {
 }
 
 function completeOrganizationNodes({ root = ROOT, dryRun = false } = {}) {
-  // aplayermode/index.html is outside the shared sites' indexes
-  // (config/index_exclusions.json) but publishes the same Spry Labs node on
-  // aplayermode.com, so it is completed here too.
-  const pages = listIndexablePages(root).filter((rel) => !B.EXEMPT_PAGES.has(rel));
-  if (fs.existsSync(path.join(root, 'aplayermode/index.html')) && !pages.includes('aplayermode/index.html')) pages.push('aplayermode/index.html');
+  // Every page any of the three hosts serves - noindex pages and the excluded
+  // directories (aplayermode/, amazon/) included. A hard-coded
+  // aplayermode/index.html left aplayermode.com/about publishing a stale
+  // sameAs (31 Oct 2026). The protected download page is never written.
+  const pages = listEveryServedPage(root).filter((rel) => !B.EXEMPT_PAGES.has(rel));
   const changed = [];
   let filled = 0;
   for (const rel of pages) {
