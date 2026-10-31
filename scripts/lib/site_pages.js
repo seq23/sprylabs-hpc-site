@@ -91,4 +91,30 @@ function assertExamined(label, count) {
   process.exit(1);
 }
 
-module.exports = { ROOT, NON_PAGE_DIRS, isNoindex, listSitePages, listIndexablePages, assertExamined };
+/**
+ * Every page any of the three hosts serves: the shared sites' pages (indexable
+ * or not) PLUS every page in the excluded directories (config/index_exclusions.json:
+ * aplayermode/ is aplayermode.com, amazon/ is noindex book landings). Kept out of
+ * the shared sites' indexes is not kept out of the entity graph: aplayermode.com/about
+ * published a stale Spry Labs node for two weeks because the Organization repair
+ * and validate:entity-graph each hard-coded aplayermode/index.html (31 Oct 2026).
+ * The entity repair and validator read this one list.
+ */
+const IGNORED_DIRS_SET = new Set(IGNORED_DIRS);
+function listEveryServedPage(baseDir = ROOT) {
+  const out = new Set(listSitePages(baseDir));
+  const walk = (dir) => {
+    let entries;
+    try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch { return; }
+    for (const e of entries) {
+      if (e.name.startsWith('.') || IGNORED_DIRS_SET.has(e.name)) continue;
+      const full = path.join(dir, e.name);
+      if (e.isDirectory()) walk(full);
+      else if (e.name.endsWith('.html')) out.add(path.relative(baseDir, full));
+    }
+  };
+  for (const d of excludedDirs(baseDir)) walk(path.join(baseDir, d));
+  return [...out].sort();
+}
+
+module.exports = { ROOT, NON_PAGE_DIRS, isNoindex, listSitePages, listIndexablePages, listEveryServedPage, assertExamined };
