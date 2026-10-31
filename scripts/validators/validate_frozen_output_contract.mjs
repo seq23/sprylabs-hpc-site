@@ -61,6 +61,30 @@ const records = Object.entries(reg.records || {});
 // Rule 0, first empty loop: an empty registry proves nothing about restore().
 if (records.length === 0) fail(`${REG} holds no records, so this guard cannot reach what it governs.`);
 
+// Rule: every frozen record is a page ADMITTED today. freeze() only records
+// admitted pages, but a page that later leaves the admitted set (a hand-authored
+// organization page such as spry-labs.html, excluded from the citable set) keeps
+// its stale record, and restore() reverted it: 31 Oct 2026, commit 026cc6292
+// wrote the pre-#170 /spry-labs over the entity home and validate:entity-graph
+// went red on main. A record outside the admitted set is a revert waiting to run.
+const ADMISSION = 'data/content/page_admission_registry.json';
+const admissionPath = path.join(ROOT, ADMISSION);
+if (!fs.existsSync(admissionPath)) fail(`${ADMISSION} is missing; cannot tell which frozen records restore() may write.`);
+const admission = JSON.parse(fs.readFileSync(admissionPath, 'utf8'));
+const admittedPaths = new Set([
+  ...(admission.records || []).filter((r) => String(r.status).toUpperCase() === 'ADMITTED' && r.path).map((r) => r.path),
+  ...(admission.pages || []).filter((r) => String(r.status).toLowerCase() === 'admitted' && r.path).map((r) => r.path),
+]);
+if (admittedPaths.size === 0) fail(`${ADMISSION} admits no page; the admitted-only rule cannot reach what it governs.`);
+const notAdmitted = records.filter(([, rec]) => !admittedPaths.has(rec.path)).map(([route, rec]) => `${route} (${rec.path})`);
+if (notAdmitted.length) {
+  fail(
+    `${notAdmitted.length} frozen record(s) are not admitted pages; authority:scale:restore would revert them to stale bytes. ` +
+      'Drop the record(s) from the registry (re-freeze: prepare-drift-scope -> freeze -> clear-scope).',
+    notAdmitted.slice(0, 15),
+  );
+}
+
 const problems = [];
 let carrying = 0;
 let clean = 0;
@@ -171,6 +195,6 @@ if (problems.length) {
 
 console.log(
   `[frozen-output-contract] PASS: ${clean} of ${carrying} frozen blob(s) carrying CITATION_PAGE_SCHEMA satisfy ` +
-    `the serialization and mainEntityOfPage contracts; every internal link in ${records.length} frozen record(s) resolves. ` +
+    `the serialization and mainEntityOfPage contracts; every internal link in ${records.length} frozen record(s) resolves; all ${records.length} are admitted pages. ` +
     'authority:scale:restore cannot reintroduce a validator failure.',
 );
