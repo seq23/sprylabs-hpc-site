@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-10-30T15:29:15.502Z",
+  "generated_at": "2026-10-31T13:31:13.668Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 276,
+  "admitted_hard_fail_count": 279,
   "reviewed_count": 8,
-  "unreviewed_count": 268,
+  "unreviewed_count": 271,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 202,
+    "REVIEW_REQUIRED": 205,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 37,
     "REVIEW_WARNING_BOUNDARY": 29
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 202,
+    "REVIEW_REQUIRED": 205,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 37,
     "REVIEW_WARNING_BOUNDARY": 21
   },
   "migration_status_counts": {
-    "UNREVIEWED": 268,
+    "UNREVIEWED": 271,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -4181,6 +4181,51 @@
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-HOMEPAGE-TRUST-LINKS"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "ENTITY-GRAPH",
+      "name": "validate:entity-graph",
+      "command": "npm run validate:entity-graph",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Authority audit 30 Oct 2026: the three Spry sites listed their own host spryexecutiveos.com as a sameAs profile, listed the founder's personal site whose Person works for a West Peek company (Spry/West Peek separation breach), and declared Spry Labs under four different @ids so no side business could point parentOrganization at one entity. This proves config/entity.json is self-reference-free and separation-clean, that the /spry-labs entity home publishes exactly its @id, description, sameAs, brands and member subOrganizations and visibly links every member, that aplayermode.com carries the same node and its app sameAs, and that no published JSON-LD names a forbidden host; it hard-fails on zero pages, sameAs URLs or members.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-ENTITY-GRAPH"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "ENTITY-BACKLINK-WATCH-SELF-TEST",
+      "name": "self-test:entity-backlink-watch",
+      "command": "npm run self-test:entity-backlink-watch",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Authority audit 30 Oct 2026: no repo verified that sameAs profiles still resolve and link back, so a dead or unclaimed profile stayed in the graph unseen. The weekly entity-backlink-watch workflow does that with self-heal; this proves its rules offline on every change - a 404 profile is removed, a resolving linking-back pending profile is promoted, a JS-rendered profile is kept as unverifiable, a missing link-back and a member without parentOrganization are named stops, and a run that examined nothing fails (Rule 0).",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-ENTITY-BACKLINK-WATCH-SELF-TEST"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-WF-ENTITY-BACKLINK-WATCH",
+      "name": "entity-backlink-watch.yml",
+      "command": ".github/workflows/entity-backlink-watch.yml",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Authority audit (30 Oct 2026): no repo verified that the sameAs profiles an entity claims still resolve and link back, so a dead or unclaimed profile stayed in the knowledge graph unseen. This lane fetches every sameAs and pending profile in config/entity.json weekly, removes a dead one and promotes a live pending one (stopping red with the exact change for one reviewed rebaseline, since the change touches every page), and names every missing link-back, unclaimed profile and member without parentOrganization.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-WF-ENTITY-BACKLINK-WATCH"
       ],
       "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",
