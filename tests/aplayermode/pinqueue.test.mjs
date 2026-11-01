@@ -52,8 +52,9 @@ test('chicagoDate follows America/Chicago, not UTC', () => {
   assert.equal(chicagoDate(new Date('2026-12-01T05:59:00Z')), '2026-11-30'); // 23:59 CST
 });
 
-test('committed queue: >=30 variants, 6-8 per section, 1 a day from 17 Oct, no section two days running, launch 5 kept', () => {
-  assert.equal(queue.config.pins_per_day, 1);
+test('committed queue: >=30 variants, 6-8 per section, 1 a day from 17 Oct then up to 3 from 1 Nov, no section two days running, launch 5 kept', () => {
+  assert.equal(queue.config.pins_per_day, 3);
+  assert.equal(queue.config.pace.since, '2026-11-01');
   assert.equal(queue.config.drip_start, '2026-10-17');
   assert.equal(queue.config.timezone, 'America/Chicago');
   assert.ok(queue.variants.length >= 30, `${queue.variants.length} variants`);
@@ -65,9 +66,13 @@ test('committed queue: >=30 variants, 6-8 per section, 1 a day from 17 Oct, no s
   assert.deepEqual({ channel: queue.channel, launch: queue.launch }, launchBlock(root));
   const dates = queue.variants.map((v) => v.release_date).sort();
   assert.equal(dates[0], '2026-10-17');
-  assert.equal(new Set(dates).size, dates.length, 'one pin a day');
-  const byDate = new Map(queue.variants.map((v) => [v.release_date, v.section]));
-  for (const [d, s] of byDate) assert.notEqual(byDate.get(addDays(d, -1)), s, `${d}: #${s} two days running`);
+  const byDate = new Map();
+  for (const v of queue.variants) byDate.set(v.release_date, [...(byDate.get(v.release_date) ?? []), v.section]);
+  for (const [d, list] of byDate) {
+    assert.ok(list.length <= (d < queue.config.pace.since ? 1 : queue.config.pins_per_day), `${d}: ${list.length} pins`);
+    assert.equal(new Set(list).size, list.length, `${d}: one section twice`);
+    for (const s of list) assert.ok(!(byDate.get(addDays(d, -1)) ?? []).includes(s), `${d}: #${s} two days running`);
+  }
 });
 
 test('every variant: truthful limits, its own 1000x1500 PNG, distinct headline and design within its section', () => {
@@ -150,10 +155,12 @@ test('scheduleVariants: pins_per_day, firstDay, never a section on consecutive d
   assert.deepEqual(lone.map((v) => v.release_date), ['2026-10-17', null]);
 });
 
-test('weekly refill: due under 14 unreleased; plans new designs, recycles angles in unused designs, never repeats one', () => {
+test('weekly refill: due under refill_threshold unreleased; plans new designs, recycles angles in unused designs, never repeats one', () => {
   const q = clone(queue);
-  assert.equal(needsRefill(q, '2026-10-16'), false);
-  assert.equal(needsRefill(q, '2026-11-08'), true); // 12 left after the 8th
+  const left = (d) => q.variants.filter((v) => !v.release_date || v.release_date > d).length;
+  assert.equal(needsRefill({ ...q, config: { ...q.config, refill_threshold: left('2026-10-16') } }, '2026-10-16'), false);
+  assert.equal(needsRefill(q, '2026-11-08'), left('2026-11-08') < q.config.refill_threshold);
+  assert.equal(needsRefill({ ...q, config: { ...q.config, refill_threshold: left('2026-11-01') + 1 } }, '2026-11-01'), true);
   const planned = planRefill(q, angles, 21);
   assert.equal(planned.length, 21);
   q.variants.push(...planned);
@@ -186,7 +193,7 @@ test('weekly step: Mondays CT in the governed daily lane, refill + render + guar
   assert.match(wf, /WORKFLOW_ARGV:[\s\S]*bash scripts\/aplayermode\/weekly_pin_drip\.sh &&[\s\S]*commit_and_push_if_changed\.sh/);
   assert.match(wf, /CLOUDFLARE_API_TOKEN: \$\{\{ secrets\.CLOUDFLARE_API_TOKEN \}\}/);
   assert.doesNotMatch(sh, /OPENROUTER|GEMINI|ANTHROPIC|OPENAI/, 'template copy only: no model key');
-  assert.equal(queue.config.refill_threshold, 14);
+  assert.equal(queue.config.refill_threshold, 42); // two weeks at 3 a day
 });
 
 test('edge log: a data point per Pinterest page view, utm values only, never IP/UA, never crawlers', async () => {
@@ -224,4 +231,51 @@ test('weekly metrics: NAMED STOP PINTEREST_METRICS_UNAVAILABLE naming the secret
   assert.match(sent.init.body, /FROM aplayermode_pin_visits/);
   assert.match(sent.init.body, /blob1 NOT IN \('verify-probe'\)/, 'live-verification test visits must be excluded from the weekly count');
   assert.equal(sent.init.headers.Authorization, 'Bearer t');
+});
+
+test('topic boards: each pin in exactly one board feed; topic feeds carry no pin released before the split', async () => {
+  const { boardsOf, inBoardFeed, boardForSection } = await import('../../workers/aplayermode-com/src/pinqueue.js');
+  const { list, split } = boardsOf(queue);
+  assert.ok(list.length >= 4);
+  for (const day of ['2026-11-01', '2026-11-20', '2027-06-01']) {
+    const seen = new Map();
+    for (const board of list) {
+      const xml = buildPinfeedXml(queue, day, board);
+      for (const [, guid] of xml.matchAll(/<guid isPermaLink="false">([^<]+)<\/guid>/g)) {
+        assert.ok(!seen.has(guid), `${guid} in ${seen.get(guid)} and ${board.slug} on ${day}`);
+        seen.set(guid, board.slug);
+        const v = queue.variants.find((x) => `aplayermode-pin-${x.id}` === guid);
+        if (board !== list[0]) assert.ok(v && v.release_date >= split && boardForSection(queue, v.section).slug === board.slug, `${board.slug} carries ${guid}`);
+      }
+    }
+    const due = queue.variants.filter((v) => v.release_date && v.release_date <= day);
+    if (due.length + queue.launch.length <= queue.config.max_feed_items) for (const v of due) assert.ok(seen.has(`aplayermode-pin-${v.id}`), `${v.id} due on ${day} but in no feed`);
+  }
+  assert.equal(inBoardFeed(queue, list[0], { section: 'pillars', release_date: '2026-10-20' }), true);
+  assert.equal(inBoardFeed(queue, list[3], { section: 'pillars', release_date: '2026-10-20' }), false);
+});
+
+test('worker: /pinfeed/<board>.xml routes to the feed; an unknown board 404s', async () => {
+  assert.deepEqual(route('/pinfeed/daily-routine.xml'), { kind: 'feed', upstream: '/aplayermode/data/pinterest/queue.json', feed: '/pinfeed/daily-routine.xml' });
+  assert.equal(route('/pinfeed/../x.xml').kind, 'notfound');
+});
+
+test('stop rule: 0 visits at 4 weeks -> new format; 8 weeks -> pause, never delete', async () => {
+  const { decidePace, applyFallback, applyPause } = await import('../../scripts/aplayermode/pace.mjs');
+  const wk = (d, total, status = 'MEASURED') => ({ generated_at: `${d}T12:00:00Z`, status, total });
+  const zeros = ['2026-11-07', '2026-11-14', '2026-11-21', '2026-11-28'].map((d) => wk(d, 0));
+  const c = clone(queue).config;
+  assert.equal(decidePace(c, zeros, '2026-11-28').action, 'keep');
+  assert.equal(decidePace(c, [...zeros.slice(0, 3), wk('2026-11-28', 2)], '2026-11-30').action, 'keep');
+  assert.equal(decidePace(c, [...zeros.slice(0, 3), wk('2026-11-28', null, 'NAMED_STOP')], '2026-11-30').action, 'keep');
+  const d1 = decidePace(c, zeros, '2026-11-29');
+  assert.equal(d1.action, 'fallback');
+  applyFallback(c, '2026-11-29', d1.reason);
+  assert.deepEqual(c.layouts, c.pace.fallback.layouts);
+  const more = ['2026-12-05', '2026-12-12', '2026-12-19', '2026-12-26'].map((d) => wk(d, 0));
+  const d2 = decidePace(c, [...zeros, ...more], '2026-12-27');
+  assert.equal(d2.action, 'pause');
+  const vs = [{ release_date: '2026-12-01' }, { release_date: '2026-12-30' }];
+  applyPause(c, vs, '2026-12-27', d2.reason);
+  assert.deepEqual(vs.map((v) => v.release_date), ['2026-12-01', null]);
 });

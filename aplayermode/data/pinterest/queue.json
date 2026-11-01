@@ -1,12 +1,12 @@
 {
   "_comment": "aplayermode.com Pinterest daily drip queue (owner-approved 16 Oct 2026). config.pins_per_day is THE release rate. The Worker (workers/aplayermode-com/src/pinqueue.js buildPinfeedXml) serves /pinfeed.xml from this file at request time: the 5 launch items plus every variant whose release_date <= today in America/Chicago, newest config.max_feed_items; no deploy per day. channel + launch are derived from config/aplayermode_pinfeed.json; variants come from config/aplayermode_pin_angles.json via scripts/aplayermode/pin_queue.mjs (weekly: scripts/aplayermode/weekly_pin_drip.sh, Mondays in the Daily Citation Intelligence lane). Guarded by validate:aplayermode-pinterest and tests/aplayermode/pinqueue.test.mjs.",
   "config": {
-    "pins_per_day": 1,
+    "pins_per_day": 3,
     "timezone": "America/Chicago",
     "launch_date": "2026-10-16",
     "drip_start": "2026-10-17",
-    "refill_threshold": 14,
-    "refill_batch": 21,
+    "refill_threshold": 42,
+    "refill_batch": 42,
     "max_feed_items": 50,
     "layouts": [
       "phone",
@@ -22,6 +22,91 @@
       "dark",
       "sage",
       "stone"
+    ],
+    "pace": {
+      "since": "2026-11-01",
+      "review_after_days": 28,
+      "fallback": {
+        "layouts": [
+          "statement",
+          "numbered"
+        ]
+      },
+      "fell_back_at": null,
+      "paused_at": null,
+      "log": [
+        {
+          "at": "2026-11-01",
+          "change": "pins_per_day 1 -> 3 (sections permitting), four topic boards",
+          "why": "1 a day on one board: 21 pins, 5 monthly profile views, 0 measured visits (Pinterest, 1 Nov 2026); Pinterest distributes fresh pins and 3 a day stays far under the 200-a-day auto-publish cap. Stop rule from the Growth playbook: 0 clicks at 4 weeks -> new format, 8 weeks -> pause"
+        }
+      ]
+    }
+  },
+  "boards": {
+    "_comment": "Pinterest topic boards (owner-approved 1 Nov 2026). Pinterest auto-publish maps ONE feed to ONE board, so each board has its own feed, served by the aplayermode-com Worker (/pinfeed.xml = the first board, /pinfeed/<slug>.xml the others). A pin's board is its page section. Pins released before split_from all went to the first board and stay there. keywords: Pinterest search suggestions read 1 Nov 2026; a post-split title naming none is led with the first.",
+    "split_from": "2026-11-01",
+    "list": [
+      {
+        "slug": "weekly-planning",
+        "name": "Weekly Planning & Focus Routines",
+        "feed": "/pinfeed.xml",
+        "sections": [
+          "founding-100",
+          "app"
+        ],
+        "keywords": [
+          "weekly planner",
+          "planner",
+          "weekly planner template",
+          "planning app"
+        ]
+      },
+      {
+        "slug": "daily-routine",
+        "name": "Daily Routine & Time Blocking",
+        "feed": "/pinfeed/daily-routine.xml",
+        "sections": [
+          "how-it-works"
+        ],
+        "keywords": [
+          "daily routine",
+          "daily routine schedule",
+          "daily routine planner",
+          "time blocking",
+          "time blocking template"
+        ]
+      },
+      {
+        "slug": "productivity-goals",
+        "name": "Productivity & Goal Setting",
+        "feed": "/pinfeed/productivity-goals.xml",
+        "sections": [
+          "modes"
+        ],
+        "keywords": [
+          "productivity",
+          "goal setting",
+          "goal setting template",
+          "productivity ideas",
+          "habit tracker"
+        ]
+      },
+      {
+        "slug": "faith-family-balance",
+        "name": "Faith, Family & Balanced Life Planning",
+        "feed": "/pinfeed/faith-family-balance.xml",
+        "sections": [
+          "pillars"
+        ],
+        "keywords": [
+          "christian planner",
+          "faith",
+          "family",
+          "gratitude",
+          "balanced life"
+        ]
+      }
     ]
   },
   "channel": {
@@ -512,7 +597,7 @@
       "description": "If you spend more time designing planners than using them, A Player Mode flips it: you answer a few easy taps and it builds the plan, then carries the day. Every morning: one priority, a short start, then the day. Bad days shrink automatically. You never design anything.",
       "layout": "cards",
       "palette": "dark",
-      "release_date": "2026-11-02",
+      "release_date": "2026-11-01",
       "image": {
         "path": "aplayermode/img/pins/drip/how-it-works-04.png",
         "length": 99493,
@@ -537,7 +622,7 @@
       "description": "If deciding what to do first eats your morning, A Player Mode decides it for you. Your morning order is ready at the time you set: max 5 physical steps, then the one task that matters. Bad days shrink automatically with no catch-up. A planning app, not medical advice or treatment.",
       "layout": "checklist",
       "palette": "dark",
-      "release_date": "2026-11-03",
+      "release_date": "2026-11-02",
       "image": {
         "path": "aplayermode/img/pins/drip/app-04.png",
         "length": 106276,
@@ -562,7 +647,7 @@
       "description": "Close to a deadline, the plan should get narrower, not longer. A Player Mode's Sprint mode is a short, declared push on one thing only, and everything else waits until it is done. One tap, any time, and the day and the coaching voice change with it.",
       "layout": "phone",
       "palette": "stone",
-      "release_date": "2026-11-04",
+      "release_date": "2026-11-01",
       "image": {
         "path": "aplayermode/img/pins/drip/modes-04.png",
         "length": 251782,
@@ -587,7 +672,7 @@
       "description": "Busy is not the same as moving forward. A Player Mode's Mind pillar keeps your agenda to work that moves the needle and picks the next thing to learn. It covers work, business and career, money, learning, focus and mental health. A planning app, not medical advice.",
       "layout": "quote",
       "palette": "dark",
-      "release_date": "2026-11-05",
+      "release_date": "2026-11-02",
       "image": {
         "path": "aplayermode/img/pins/drip/pillars-04.png",
         "length": 87342,
@@ -611,7 +696,7 @@
       "description": "A Player Mode has three plans and each does all five executive jobs. The difference is who does the last step: in Executive Roundtable you do, in Executive Suite you tap yes and it does it, in Autopilot it handles recurring things on its own inside rules you set and you read the done-list. Founding 100 places are on the page.",
       "layout": "checklist",
       "palette": "light",
-      "release_date": "2026-11-06",
+      "release_date": "2026-11-03",
       "image": {
         "path": "aplayermode/img/pins/drip/founding-100-05.png",
         "length": 103104,
@@ -636,7 +721,7 @@
       "description": "A weekly plan that survives real life needs three things: goals, rules and a minimum day for when things go wrong. A Player Mode builds all three from a few easy taps, about 3 minutes, and you approve each piece before it runs. Then it has the day ready every morning.",
       "layout": "statement",
       "palette": "sage",
-      "release_date": "2026-11-07",
+      "release_date": "2026-11-03",
       "image": {
         "path": "aplayermode/img/pins/drip/how-it-works-05.png",
         "length": 77625,
@@ -661,7 +746,7 @@
       "description": "A Player Mode is the app that runs your day for you. You answer a few easy taps, it builds the plan, then it carries the day: your morning order, the one task that matters, and a smaller day when things go wrong. You never design anything.",
       "layout": "cards",
       "palette": "sage",
-      "release_date": "2026-11-08",
+      "release_date": "2026-11-04",
       "image": {
         "path": "aplayermode/img/pins/drip/app-05.png",
         "length": 92441,
@@ -686,7 +771,7 @@
       "description": "A focus block only works if the rest of the day respects it. A Player Mode's Deep Work mode protects one uninterrupted focus block for one hard task and plans the rest of the day around it. Tap it on any time.",
       "layout": "split",
       "palette": "light",
-      "release_date": "2026-11-09",
+      "release_date": "2026-11-03",
       "image": {
         "path": "aplayermode/img/pins/drip/modes-05.png",
         "length": 232188,
@@ -711,7 +796,7 @@
       "description": "Life planners fall apart when every goal needs its own page. A Player Mode sorts anything you care about into Mind, Body or Spirit automatically, so one plan holds all of it. All three are on by default; untick any you do not want it to hold for you.",
       "layout": "phone",
       "palette": "sage",
-      "release_date": "2026-11-10",
+      "release_date": "2026-11-04",
       "image": {
         "path": "aplayermode/img/pins/drip/pillars-05.png",
         "length": 254152,
@@ -736,7 +821,7 @@
       "description": "Executive Suite in A Player Mode runs the life admin a paper planner only lists: birthdays, bills, renewals and appointments are tracked and prepared for a one-tap approve. It drafts the replies you owe, proposes the calendar fix and flags subscriptions you are wasting money on. It acts when you tap yes.",
       "layout": "cards",
       "palette": "dark",
-      "release_date": "2026-11-11",
+      "release_date": "2026-11-05",
       "image": {
         "path": "aplayermode/img/pins/drip/founding-100-06.png",
         "length": 106810,
@@ -761,7 +846,7 @@
       "description": "Plans break when one bad day turns into a pile of catch-up. In A Player Mode, bad days shrink automatically: no catch-up, no guilt, and tomorrow's plan is still ready in the morning. Answer easy taps once, about 3 minutes, and it carries the days after that.",
       "layout": "numbered",
       "palette": "stone",
-      "release_date": "2026-11-12",
+      "release_date": "2026-11-05",
       "image": {
         "path": "aplayermode/img/pins/drip/how-it-works-06.png",
         "length": 77781,
@@ -786,7 +871,7 @@
       "description": "Advice is one more thing to decide about. When something is hard, A Player Mode hands you the ready routine with the moves and the order already picked, like a 10-minute in-bed mobility routine on a hard morning, or one safe step a day toward a 90-day goal. A planning app, not medical advice.",
       "layout": "statement",
       "palette": "stone",
-      "release_date": "2026-11-13",
+      "release_date": "2026-11-06",
       "image": {
         "path": "aplayermode/img/pins/drip/app-06.png",
         "length": 80862,
@@ -811,7 +896,7 @@
       "description": "Routines collapse in low seasons because they expect your best days. A Player Mode's Recovery mode gives you a minimum day after a bad day or in a low season: no catch-up, no guilt. One tap, no paragraph about how you feel. A planning app, not medical advice or treatment.",
       "layout": "checklist",
       "palette": "dark",
-      "release_date": "2026-11-14",
+      "release_date": "2026-11-05",
       "image": {
         "path": "aplayermode/img/pins/drip/modes-06.png",
         "length": 93410,
@@ -836,7 +921,7 @@
       "description": "Balancing work, workouts, sleep, faith and family by hand every week is exhausting. A Player Mode covers Mind, Body and Spirit by default: it keeps work to what moves the needle, picks the workout, protects your sleep and makes room for family and faith.",
       "layout": "split",
       "palette": "stone",
-      "release_date": "2026-11-15",
+      "release_date": "2026-11-06",
       "image": {
         "path": "aplayermode/img/pins/drip/pillars-06.png",
         "length": 234264,
@@ -862,7 +947,7 @@
       "description": "Executive Roundtable puts five roles in one planning app: Executive Coach, Executive Assistant, Chief of Staff, Accountability Partner and Cognitive Behavioral Mindset Coach. Your agenda is ready every morning, prioritised, and coaching comes one question at a time. The first 100 members join as the Founding 100.",
       "layout": "statement",
       "palette": "sage",
-      "release_date": "2026-11-16",
+      "release_date": "2026-11-07",
       "image": {
         "path": "aplayermode/img/pins/drip/founding-100-07.png",
         "length": 81707,
@@ -887,7 +972,7 @@
       "description": "Long planner setups are where good intentions go to die. A Player Mode's setup is easy-tap questions, about 3 minutes to a working plan, and you can stop any time without losing anything. It builds your goals, rules and minimum day, and you approve each piece.",
       "layout": "quote",
       "palette": "light",
-      "release_date": "2026-11-17",
+      "release_date": "2026-11-07",
       "image": {
         "path": "aplayermode/img/pins/drip/how-it-works-07.png",
         "length": 94770,
@@ -912,7 +997,7 @@
       "description": "Healthy habits stick when the daily step is small. A Player Mode turns a health goal into one step a day at a safe pace, such as a 10-minute walk, workout clothes out the night before, logging what you eat or booking a check-up. Never diet or medical advice.",
       "layout": "numbered",
       "palette": "light",
-      "release_date": "2026-11-18",
+      "release_date": "2026-11-08",
       "image": {
         "path": "aplayermode/img/pins/drip/app-07.png",
         "length": 79753,
@@ -938,7 +1023,7 @@
       "description": "Some days you are stuck, some days overloaded, some days low. In A Player Mode one tap matches the day: High-Pressure when stuck, Executive Review when your head is full, Recovery when low, Sprint near a deadline, Deep Work to focus. No paragraphs about feelings. A planning app, not medical advice.",
       "layout": "cards",
       "palette": "sage",
-      "release_date": "2026-11-19",
+      "release_date": "2026-11-07",
       "image": {
         "path": "aplayermode/img/pins/drip/modes-07.png",
         "length": 106281,
@@ -963,7 +1048,7 @@
       "description": "Self-care slips when it depends on remembering. In A Player Mode the Spirit pillar makes room for gratitude, nature, meditation, service and family time, and repeats them on their own without you guarding the time. On by default in every plan.",
       "layout": "checklist",
       "palette": "light",
-      "release_date": "2026-11-20",
+      "release_date": "2026-11-08",
       "image": {
         "path": "aplayermode/img/pins/drip/pillars-07.png",
         "length": 99402,
