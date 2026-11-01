@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-10-31T14:40:20.788Z",
+  "generated_at": "2026-11-01T13:31:04.522Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 279,
+  "admitted_hard_fail_count": 280,
   "reviewed_count": 8,
-  "unreviewed_count": 271,
+  "unreviewed_count": 272,
   "suggested_review_counts": {
-    "REVIEW_REQUIRED": 205,
+    "REVIEW_REQUIRED": 206,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 37,
     "REVIEW_WARNING_BOUNDARY": 29
   },
   "unresolved_review_counts": {
-    "REVIEW_REQUIRED": 205,
+    "REVIEW_REQUIRED": 206,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 37,
     "REVIEW_WARNING_BOUNDARY": 21
   },
   "migration_status_counts": {
-    "UNREVIEWED": 271,
+    "UNREVIEWED": 272,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -4048,6 +4048,21 @@
         "MX-WF-WEEKLY-OUTCOME-REPORT"
       ],
       "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-WF-SEARCH-LOOP",
+      "name": "search-loop.yml",
+      "command": ".github/workflows/search-loop.yml",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Search is the bottleneck (spry brain, 1 Nov 2026) and the site had no lane that finds searches it can win and publishes a page for each: new pages were frozen behind measured volume. This lane runs the shared engine seq23/search-loop: weekly free discovery, daily gated pages under /questions/, checks at 2/4/8 weeks with strengthen / automatic undo / merge, and the weekly search-loop-week report.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-WF-SEARCH-LOOP"
+      ],
+      "suggested_review": "REVIEW_REQUIRED",
       "migration_status": "UNREVIEWED",
       "decision": null,
       "evidence": []
