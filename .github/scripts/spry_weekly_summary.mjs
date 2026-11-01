@@ -11,7 +11,7 @@
  * came from (Gumroad's referrer host). Never a buyer's name or address. Without
  * GUMROAD_ACCESS_TOKEN the line is the NAMED STOP [NO_GUMROAD_TOKEN], never a zero.
  *
- * THE FREE SAMPLE LINE. The sample -> email -> paid series, the checkout upsell and the one review
+ * THE FREE SAMPLE LINE. The sample -> email -> paid series and the one review
  * ask for BHPC OS are all Gumroad features (a $0 product + a Workflow, Upsells, Workflow on
  * purchase). The copy is data/sales/gumroad_growth.json; until its `live` fields are filled in
  * the line is the NAMED STOP [GUMROAD_SETUP], naming what is waiting.
@@ -41,7 +41,7 @@ export function salesLine(read) {
 export function growthLine(growth) {
   if (!growth) return `Free sample series: not read: ${GROWTH_FILE} is missing.`;
   const waiting = Object.entries(growth.live ?? {}).filter(([, v]) => !v).map(([k]) => k);
-  if (!waiting.length) return `Free sample series, checkout upsell and review ask: live on Gumroad (${plural(growth.series?.length ?? 0, 'email')}).`;
+  if (!waiting.length) return `Free sample series and review ask: live on Gumroad (${plural(growth.series?.length ?? 0, 'email')}).`;
   return `Free sample series: NAMED STOP [GUMROAD_SETUP] written (${plural(growth.series?.length ?? 0, 'email')}), not live until set up in her Gumroad account: ${waiting.join(', ')}.`;
 }
 
