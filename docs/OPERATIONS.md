@@ -61,3 +61,10 @@ Admin is private/noindex.
 - `aplayermode.com` is served by the Worker `aplayermode-com` (source `workers/aplayermode-com`):
   it SERVES the landing page at aplayermode.com (address bar stays), never a 301 to another domain.
   Browsers cache 301s, so test routing changes with `curl` or a private window.
+
+## Search loop (shared engine, from 1 Nov 2026)
+- **What:** `.github/workflows/search-loop.yml` calls the shared engine `seq23/search-loop@v1` daily (11:41 UTC, `main-automation` group). It finds easy searches weekly, publishes gated pages under `/questions/` on spryexecutiveos.com, checks each at 2/4/8 weeks and 90 days (strengthen with automatic undo, merge with a 301 into `data/content/manual_redirects.json`), and uploads the `search-loop-week` report artifact. Config: `search-loop.config.json`. Ledger: `data/search-loop/`. How the engine works and the config keys: https://github.com/seq23/search-loop#readme
+- **Throttle:** `gh variable set SEARCH_LOOP_MODE --body slow -R seq23/search-loop` (normal | slow | off) — no change here needed. `mode` in `search-loop.config.json` can only lower it.
+- **Protected:** `download.html` and the homepage, Spry Labs entity home, admin/agency and aplayermode are in `protected_paths`; the engine never edits them.
+- **Cadence cap:** engine pages are paced by the engine (owner ruling 1 Nov 2026: publish straight away). `.github/scripts/search_loop_post_build.sh` converges the tree and records their URLs with `cadence_gate.js --accept`, so the 6/week cap in `data/cadence/policy.json` keeps governing the Spry Content Release lane only.
+- **Nothing retired:** no existing script is replaced one-for-one. `search-intelligence.yml` keeps repairing and observing the ~2,300 existing pages; the engine owns only the pages it publishes.

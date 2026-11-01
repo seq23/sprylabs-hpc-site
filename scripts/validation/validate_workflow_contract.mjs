@@ -30,6 +30,9 @@ const expectedWorkflows = [
   // a dead profile and promotes a live pending one by PR, and lists missing
   // link-backs as named stops. 2026-10-30.
   'entity-backlink-watch.yml',
+  // The shared search growth engine (seq23/search-loop), owner ruling 1 Nov 2026.
+  // A thin caller of a pinned reusable workflow; held to REUSABLE_CALLERS below.
+  'search-loop.yml',
 ].sort();
 const retiredWorkflows = [
   'citation-velocity-5k.yml',
@@ -59,6 +62,29 @@ const allowedActions = new Set([
   // for no stated reason.
   'actions/cache@',
 ]);
+// Callers of a reviewed, pinned reusable workflow. They have no steps of their
+// own, so the step-shape rules (checkout, setup-node, npm cache, npm ci) are
+// checked through the inputs they pass instead - every one is required, and the
+// lane must serialize with the other main writers and commit through the shared
+// helper. Stricter than the step rules, not a way around them.
+const REUSABLE_CALLERS = {
+  'search-loop.yml': {
+    uses: 'seq23/search-loop/.github/workflows/search-loop.yml@v1',
+    required: [
+      'engine_ref: v1',
+      'setup_command: npm ci --ignore-scripts',
+      'node_options: --max-old-space-size=3072',
+      'post_build_command: bash .github/scripts/search_loop_post_build.sh',
+      'commit_command: ./.github/scripts/search_loop_commit.sh',
+      'group: main-automation',
+      'cancel-in-progress: false',
+    ],
+    helpers: {
+      '.github/scripts/search_loop_commit.sh': ['./.github/scripts/commit_and_push_if_changed.sh', 'WORKFLOW_ARGV='],
+      '.github/scripts/search_loop_post_build.sh': ['converge_tree_before_commit.sh', 'scripts/cadence_gate.js --accept --reason'],
+    },
+  },
+};
 const pkg = readJson('package.json');
 const packageScripts = pkg.scripts || {};
 const spryReleaseWrapper = String(packageScripts['workflow:spry-content-release'] || '');
@@ -211,11 +237,25 @@ for (const name of actualWorkflows) {
   if (!/^on:\s*$/m.test(text)) errors.push(`${name}: missing on trigger mapping`);
   if (!/^jobs:\s*$/m.test(text)) errors.push(`${name}: missing jobs mapping`);
   if (!/^env:\s*\n\s{2}NODE_OPTIONS:\s*--max-old-space-size=3072\s*$/m.test(text)) errors.push(`${name}: root NODE_OPTIONS must be --max-old-space-size=3072`);
-  has(text, 'actions/checkout@', name);
-  has(text, 'actions/setup-node@', name);
-  if (!/node-version:\s*24\b/.test(text)) errors.push(`${name}: Node 24 setup is required`);
-  if (!/cache:\s*npm\b/.test(text)) errors.push(`${name}: npm dependency caching is required`);
-  has(text, 'npm ci --ignore-scripts', name);
+  const caller = REUSABLE_CALLERS[name];
+  if (caller) {
+    if (!lines.some(l => l.trim() === `uses: ${caller.uses}`)) errors.push(`${name}: a reusable caller must use exactly ${caller.uses}`);
+    if (/^\s+steps:\s*$/m.test(text)) errors.push(`${name}: a reusable caller has no steps of its own`);
+    if (!/permissions:\s*\n\s{2}contents:\s*write\s*\n\s{2}actions:\s*write/m.test(text)) errors.push(`${name}: a main-writing caller needs contents: write and actions: write (the helper requests Validate Repo for its push)`);
+    for (const token of caller.required) has(text, token, name, `reusable caller input ${token}`);
+    for (const [helper, tokens] of Object.entries(caller.helpers)) {
+      if (!fs.existsSync(helper)) { errors.push(`${name}: helper ${helper} is missing`); continue; }
+      if (!(fs.statSync(helper).mode & 0o111)) errors.push(`${name}: helper ${helper} is not executable`);
+      const helperText = fs.readFileSync(helper, 'utf8');
+      for (const token of tokens) if (!helperText.includes(token)) errors.push(`${helper}: missing ${token}`);
+    }
+  } else {
+    has(text, 'actions/checkout@', name);
+    has(text, 'actions/setup-node@', name);
+    if (!/node-version:\s*24\b/.test(text)) errors.push(`${name}: Node 24 setup is required`);
+    if (!/cache:\s*npm\b/.test(text)) errors.push(`${name}: npm dependency caching is required`);
+    has(text, 'npm ci --ignore-scripts', name);
+  }
   for (const line of lines) {
     const trimmed = line.trim();
     // A step written as `- name: X` / `uses: y@v1` puts `uses:` on its own line,
@@ -226,7 +266,7 @@ for (const name of actualWorkflows) {
       // Entries ending in '@' allow any version of that action. Pinning exact
       // versions here meant every routine action upgrade failed the build, which
       // is what stranded the Node 20 -> 24 migration.
-      const reviewed = [...allowedActions].some(a => a.endsWith('@') ? action.startsWith(a) : action === a);
+      const reviewed = [...allowedActions].some(a => a.endsWith('@') ? action.startsWith(a) : action === a) || REUSABLE_CALLERS[name]?.uses === action;
       if (!reviewed) errors.push(`${name}: unreviewed action reference ${action}`);
     }
   }
