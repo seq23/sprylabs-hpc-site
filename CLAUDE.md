@@ -6,6 +6,10 @@ This repository publishes two public hosts from one Cloudflare Pages deployment:
 [`AGENTS.md`](AGENTS.md) for the inherited Repo Operator chassis. `download.html` is protected: read "The download page is protected" in
 [`docs/OPERATIONS.md`](docs/OPERATIONS.md) before touching it.
 
+## Company brain
+
+Read `~/Brains/spry.md` before any work (business facts, priorities, voice, settled decisions). New business facts go to the brain via Boss OS, not into this repo or memory. Repo how-tos stay in `docs/`.
+
 ## Nothing paid
 
 **Nothing paid.** No lane in this repository spends money: every model call goes through the free
