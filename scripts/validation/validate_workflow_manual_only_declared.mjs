@@ -111,6 +111,9 @@ for (const file of files) {
     const jobsBody = text.slice(jobsIdx);
     wf.jobs = (jobsBody.match(/^ {2}[A-Za-z_][\w-]*:\s*$/gm) || []).length;
     wf.steps = (jobsBody.match(/^\s+- (name|uses|run):/gm) || []).length;
+    // A job that calls a reusable workflow (job-level `uses: owner/repo/.github/workflows/x.yml@ref`)
+    // runs that workflow's steps; it is work, not an empty job. Only that exact shape counts.
+    wf.steps += (jobsBody.match(/^ {4}uses:\s+[\w.-]+\/[\w.-]+\/\.github\/workflows\/[\w.-]+\.ya?ml@\S+\s*$/gm) || []).length;
     if (wf.jobs === 0) errors.push(`${file}: jobs: block declares no job.`);
     if (wf.steps === 0) errors.push(`${file}: declares ${wf.jobs} job(s) but no steps, so a dispatch would exit 0 having done nothing.`);
   }

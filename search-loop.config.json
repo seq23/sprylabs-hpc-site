@@ -1,0 +1,81 @@
+{
+  "schema": "search-loop-config-v1",
+  "site": "spryexecutiveos.com",
+  "base_url": "https://spryexecutiveos.com",
+  "site_name": "Spry Executive OS",
+  "publisher": { "name": "Spry Labs", "url": "https://billionairehighperformancecoach.com/spry-labs" },
+  "audience": "founders, operators and high performers who want structure, accountability and follow-through, often using ChatGPT or another AI as a coach",
+  "voice": "plain, direct and calm; short sentences; practical systems over motivation; no hype, no income claims, no health or weight-loss promises; results are examples, not guarantees",
+  "topics": [
+    "ai accountability coach",
+    "chatgpt accountability partner",
+    "executive coach alternative",
+    "daily planning system",
+    "weekly review",
+    "how to stay consistent",
+    "decision fatigue",
+    "adhd productivity system",
+    "how to stop procrastinating",
+    "how to be an a player"
+  ],
+  "find": { "exclude_words": ["free download", "torrent", "betterup login"] },
+  "action": { "label": "See what the complete Spry Executive OS includes", "url": "https://billionairehighperformancecoach.com/download" },
+  "allowed_link_targets": [
+    "https://spryexecutiveos.com",
+    "https://billionairehighperformancecoach.com",
+    "https://aplayermode.com",
+    "https://sprylabs.gumroad.com"
+  ],
+  "mode": "normal",
+  "pace": { "start_per_day": 10, "step_per_week": 5, "cap": 30 },
+  "menu_pages_need_approval": false,
+  "health_gate": "none",
+  "protected_paths": [
+    "download.html",
+    "download",
+    "index.html",
+    "spry-labs.html",
+    "admin",
+    "admin.html",
+    "agency",
+    "aplayermode",
+    "404.html"
+  ],
+  "output": {
+    "dir": "questions",
+    "format": "dir-index",
+    "url_prefix": "/questions/",
+    "redirects": {
+      "file": "data/content/manual_redirects.json",
+      "format": "json-list",
+      "list_key": "redirects",
+      "source_field": "source_path",
+      "source_form": "rel",
+      "target_field": "target",
+      "extra": { "domain": "spryexecutiveos.com" },
+      "count_key": "redirect_count"
+    }
+  },
+  "template": {
+    "section_name": "Questions",
+    "stylesheets": ["/assets/styles.css"],
+    "og_image": { "url": "https://spryexecutiveos.com/assets/og/default-spryexecutiveos.png", "width": 1200, "height": 630 },
+    "header_html": "<header class=\"site-header\"><div class=\"container\"><a class=\"brand\" href=\"/\">Spry Executive OS</a><nav aria-label=\"Primary\"><a href=\"/ai-execution-atlas/\">Atlas</a><a href=\"https://billionairehighperformancecoach.com/download\">System Manual</a></nav></div></header>",
+    "footer_html": "<footer class=\"footer\"><div class=\"container\"><p>Educational and organizational content from Spry Labs. Results vary. Consequential decisions remain under human authority.</p></div></footer>"
+  },
+  "related": {
+    "max_pages_per_new_page": 2,
+    "scan_dirs": ["."],
+    "skip_dirs": ["admin", "agency", "artifacts", "reports", "fixtures", "test-results", "tests", "templates", "aplayermode", "dist", "public", "content", "data", "docs", "scripts", "functions", "workers", "LICENSES", "seo", "models", "node_modules", "site", ".search-loop-engine", "knowledge-map"]
+  },
+  "gsc": { "site_url_env": "GSC_SITE_URL" },
+  "llm": { "routing_file": "config/llm_routing.json" },
+  "indexnow": {
+    "key": "200dca426298c70aabc048344605cccae8dabc0b460f1b3e21eb6e857ef83af1",
+    "key_location": "https://spryexecutiveos.com/200dca426298c70aabc048344605cccae8dabc0b460f1b3e21eb6e857ef83af1.txt"
+  },
+  "analytics": { "ai_referrals": "cloudflare", "ai_bot_hits": "cloudflare", "zone": "spryexecutiveos.com" },
+  "conversions": { "source": "none" },
+  "shares_audience_with": [],
+  "ledger_dir": "data/search-loop"
+}

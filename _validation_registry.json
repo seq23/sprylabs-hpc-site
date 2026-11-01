@@ -8989,6 +8989,38 @@
       "not_applicable_reason": null
     },
     {
+      "validation_id": "VAL-WF-SEARCH-LOOP",
+      "status": "ADMITTED",
+      "name": "search-loop.yml",
+      "check_type": "workflow",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Search is the bottleneck (spry brain, 1 Nov 2026) and the site had no lane that finds searches it can win and publishes a page for each: new pages were frozen behind measured volume. This lane runs the shared engine seq23/search-loop: weekly free discovery, daily gated pages under /questions/, checks at 2/4/8 weeks with strengthen / automatic undo / merge, and the weekly search-loop-week report.",
+      "existing_coverage_gap": "search-intelligence.yml repairs and observes existing pages; spry-content-release.yml releases the governed library under a 6/week cap. Neither finds new easy searches nor checks a page's outcome at fixed ages.",
+      "scope": [
+        "github-actions",
+        "search-growth",
+        "spryexecutiveos.com"
+      ],
+      "proposed_severity": "HARD_FAIL",
+      "command": ".github/workflows/search-loop.yml",
+      "implementation_path": ".github/workflows/search-loop.yml",
+      "environment": "ci",
+      "proof_tier": 1,
+      "positive_fixture": "fixtures/validation/repo/pass.json",
+      "negative_fixture": "fixtures/validation/repo/fail.json",
+      "evidence_output": "data/search-loop/ (targets, pages, pace, consolidation ledger, search-loop-week.json) plus the search-loop-week artifact",
+      "runtime_budget_seconds": 5400,
+      "maintenance_owner": "repo",
+      "overlap_analysis": [],
+      "retirement_offset": null,
+      "decision": "Admitted as the search growth lane (owner ruling 1 Nov 2026: publish straight away). A thin caller of the pinned reusable workflow seq23/search-loop@v1, held to REUSABLE_CALLERS in validate_workflow_contract.mjs; commits through the shared helper; download.html is a protected path the engine never edits.",
+      "decision_date": "2026-11-01",
+      "matrix_ids": [
+        "MX-WF-SEARCH-LOOP"
+      ],
+      "not_applicable_reason": null
+    },
+    {
       "validation_id": "WEEKLY-OUTCOME-REPORT",
       "status": "ADMITTED",
       "name": "validate:weekly-outcome-report",

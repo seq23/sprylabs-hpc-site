@@ -1,0 +1,48 @@
+name: Search Loop
+
+# The shared search growth engine (seq23/search-loop), owner ruling 1 Nov 2026:
+# find easy searches weekly, publish one gated page per search daily under
+# /questions/ on spryexecutiveos.com, check every page at 2/4/8 weeks,
+# strengthen / undo / merge, and upload the weekly report artifact
+# "search-loop-week". The global switch SEARCH_LOOP_MODE on seq23/search-loop
+# (normal | slow | off) throttles it without touching this repo.
+# download.html (the protected sales page) is in protected_paths and is never edited.
+on:
+  schedule:
+    - cron: "41 11 * * *"
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: "auto | find | build | check"
+        required: false
+        default: auto
+        type: string
+
+env:
+  NODE_OPTIONS: --max-old-space-size=3072
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: main-automation
+  cancel-in-progress: false
+
+jobs:
+  search-loop:
+    uses: seq23/search-loop/.github/workflows/search-loop.yml@v1
+    with:
+      engine_ref: v1
+      stage: ${{ inputs.stage || 'auto' }}
+      setup_command: npm ci --ignore-scripts
+      node_options: --max-old-space-size=3072
+      post_build_command: bash .github/scripts/search_loop_post_build.sh
+      commit_command: ./.github/scripts/search_loop_commit.sh
+    secrets:
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
+      GSC_SITE_URL: ${{ secrets.GSC_SITE_URL_SPRY }}
+      BING_WEBMASTER_API_KEY: ${{ secrets.BING_WEBMASTER_API_KEY }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
