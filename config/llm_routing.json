@@ -13,16 +13,16 @@
   },
   "pricing_snapshot": {
     "source": "GET https://openrouter.ai/api/v1/models (unauthenticated)",
-    "taken_at": "2026-10-11",
+    "taken_at": "2026-11-01",
     "selection_rule": "pricing.prompt == \"0\" && pricing.completion == \"0\" (and request/web_search absent or \"0\"), context_length >= 32000, text output, general instruct model; meta-routers (openrouter/free) excluded because they choose the model for us",
     "free_models_seen": 19,
-    "selection_note": "2026-10-16: thinkingmachines/inkling:free dropped (403 'only available on agentic harnesses' on Daily Citation Intelligence run 38932788448, same reason the siblings dropped it on 11 Oct 2026), google/gemma-4-26b-a4b-it:free added as the fourth fallback"
+    "selection_note": "2026-10-16: thinkingmachines/inkling:free dropped (403 'only available on agentic harnesses' on Daily Citation Intelligence run 38932788448, same reason the siblings dropped it on 11 Oct 2026), google/gemma-4-26b-a4b-it:free added as the fourth fallback | 2026-11-01: nemotron-3-super dropped (404), nemotron-3.5-lightning first, dots-3-note-preview added as fifth fallback; snapshot re-read from GET /api/v1/models."
   },
   "free_models": [
     {
-      "id": "nvidia/nemotron-3-super-120b-a12b:free",
-      "why": "measured first: answered 24/25 queries on dispatch run 38154936131 (11 Oct 2026)",
-      "context_length": 262144,
+      "id": "nvidia/nemotron-3.5-lightning:free",
+      "why": "2026-11-01: replaces nvidia/nemotron-3-super-120b-a12b:free, which answered HTTP 404 (no longer listed by GET /api/v1/models) on Search Loop run 41313341863; listed free (0/0), 1M context",
+      "context_length": 1000000,
       "pricing": {
         "prompt": "0",
         "completion": "0"
@@ -54,11 +54,21 @@
         "prompt": "0",
         "completion": "0"
       }
+    },
+    {
+      "id": "dots-studio/dots-3-note-preview:free",
+      "why": "2026-11-01: fifth fallback so one upstream's 429s do not empty the roster (all three Gemma/Nemotron fallbacks 429'd or answered empty on run 41313341863)",
+      "context_length": 512000,
+      "pricing": {
+        "prompt": "0",
+        "completion": "0"
+      }
     }
   ],
   "excluded_models": {
     "_rule": "Ids here may never appear in free_models; validate:zero-paid-llm enforces it.",
-    "thinkingmachines/inkling:free": "HTTP 403 'only available on agentic harnesses' for chat-completions callers (siblings 11 Oct 2026; this repo run 38932788448, 16 Oct 2026)"
+    "thinkingmachines/inkling:free": "HTTP 403 'only available on agentic harnesses' for chat-completions callers (siblings 11 Oct 2026; this repo run 38932788448, 16 Oct 2026)",
+    "nvidia/nemotron-3-super-120b-a12b:free": "HTTP 404 on 2026-11-01 (run 41313341863): no longer offered"
   },
   "paid_lanes": {
     "_rule": "A lane listed here costs money on every call (OpenRouter's web plugin bills per request whatever the model). It is off every schedule and runs only on workflow_dispatch with confirm_paid: true; otherwise its script records DISABLED_BY_OWNER_POLICY and exits 0 having called nothing.",
