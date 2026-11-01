@@ -90,6 +90,8 @@ jobs:
         if: steps.guard.outputs.run == 'true'
         env:
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          # The money line: BHPC OS sales from Gumroad. Unset = NAMED STOP [NO_GUMROAD_TOKEN] line.
+          GUMROAD_ACCESS_TOKEN: ${{ secrets.GUMROAD_ACCESS_TOKEN }}
         run: node .github/scripts/spry_weekly_summary.mjs reports/weekly_outcome_report.json spry-weekly-summary.json
       - name: Upload the summary for Boss OS
         if: steps.guard.outputs.run == 'true'
