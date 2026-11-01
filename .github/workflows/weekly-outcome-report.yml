@@ -74,6 +74,10 @@ jobs:
         if: steps.guard.outputs.run == 'true'
       - name: Prove the report's rules before trusting its numbers
         if: steps.guard.outputs.run == 'true'
+        # The self-check passes its own fake token; the real one is declared here only so the
+        # step-env contract sees the script's GUMROAD_ACCESS_TOKEN read satisfied.
+        env:
+          GUMROAD_ACCESS_TOKEN: ${{ secrets.GUMROAD_ACCESS_TOKEN }}
         run: |
           npm run self-test:weekly-outcome-report
           node .github/scripts/spry_weekly_summary.mjs --self-check
