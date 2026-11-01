@@ -3,7 +3,8 @@
 This repository publishes two public hosts from one Cloudflare Pages deployment:
 `billionairehighperformancecoach.com` and `spryexecutiveos.com`. Start with
 [`REPO_IDENTITY.md`](REPO_IDENTITY.md) for the route/source/deploy contract, and
-[`AGENTS.md`](AGENTS.md) for the inherited Repo Operator chassis.
+[`AGENTS.md`](AGENTS.md) for the inherited Repo Operator chassis. `download.html` is protected: read "The download page is protected" in
+[`docs/OPERATIONS.md`](docs/OPERATIONS.md) before touching it.
 
 ## Nothing paid
 

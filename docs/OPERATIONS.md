@@ -49,3 +49,15 @@ Admin password gate:
 process.env.SPRY_ADMIN_PASSWORD || "aplayer"
 
 Admin is private/noindex.
+
+## The download page is protected
+- `download.html` is the conversion page behind the portfolio's only two verified real sales
+  (`data/entity/conversion_evidence.json`; both carry `full_price_status: unverified`, so never call
+  either "the $99 sale" and never derive a conversion rate from two data points).
+- **Protected, not frozen (owner ruling, 25 Oct 2026):** fix it only when something is really broken
+  or clearly costing sales (dead buy button, broken links, search basics such as title, schema,
+  canonical). Never touch it in bulk sweeps or cosmetic passes. Every change is deliberate and one
+  page only: check the Gumroad buy link works before and after.
+- `aplayermode.com` is served by the Worker `aplayermode-com` (source `workers/aplayermode-com`):
+  it SERVES the landing page at aplayermode.com (address bar stays), never a 301 to another domain.
+  Browsers cache 301s, so test routing changes with `curl` or a private window.
