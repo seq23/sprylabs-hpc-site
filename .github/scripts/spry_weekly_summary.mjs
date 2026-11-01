@@ -45,7 +45,26 @@ export function growthLine(growth) {
   return `Free sample series: NAMED STOP [GUMROAD_SETUP] written (${plural(growth.series?.length ?? 0, 'email')}), not live until set up in her Gumroad account: ${waiting.join(', ')}.`;
 }
 
-export function summarise(report, runUrl = null, { sales = null, growth = null } = {}) {
+const day = (iso) => new Date(iso).toLocaleDateString('en-US', { timeZone: 'America/Chicago', month: 'short', day: 'numeric' });
+
+/**
+ * The A Player Mode Pinterest line (owner-approved 1 Nov 2026): new pins released in the
+ * week (aplayermode/data/pinterest/queue.json) and visits from pins (the Monday measurement,
+ * reports/pinterest/aplayermode_metrics.json). An unread number is "not read: reason",
+ * never 0. Sales are not on this site: A Player Mode's checkout runs in the app.
+ */
+export function pinterestLine(metrics, queue, now = Date.now()) {
+  if (!metrics) return 'A Player Mode Pinterest: not read: no measurement in this repo.';
+  if (metrics.status !== 'MEASURED') return `A Player Mode Pinterest: not read: ${String(metrics.reason ?? metrics.stop ?? 'the last measurement stopped').replace(/\.$/, '')}.`;
+  const at = Date.parse(metrics.generated_at ?? '');
+  if (Number.isNaN(at) || now - at > 10 * DAY || metrics.total == null) return `A Player Mode Pinterest: not read: the newest measurement is from ${Number.isNaN(at) ? 'an unknown day' : day(at)}.`;
+  const since = new Date(at - 7 * DAY).toISOString().slice(0, 10);
+  const until = new Date(at).toISOString().slice(0, 10);
+  const pins = (queue?.variants ?? []).filter((v) => v.release_date && v.release_date > since && v.release_date <= until).length;
+  return `A Player Mode Pinterest (week to ${day(at)}): ${plural(pins, 'new pin')}, ${plural(Number(metrics.total), 'visit')} from pins; sales not read here (checkout runs in the app).`;
+}
+
+export function summarise(report, runUrl = null, { sales = null, growth = null, pinterest = null } = {}) {
   const sites = (report?.sites ?? []).map((s) => ({
     host: s.site,
     state: s.status === 'OK' ? 'fine' : 'needs-a-look',
@@ -59,7 +78,7 @@ export function summarise(report, runUrl = null, { sales = null, growth = null }
   return {
     schema: 'spry-weekly-summary-v1', business: 'Spry Labs site', week: report.week,
     generated_at: report.generated_at ?? new Date().toISOString(), run_url: runUrl, sites,
-    notes: [salesLine(sales), growthLine(growth)],
+    notes: [salesLine(sales), growthLine(growth), ...(pinterest ? [pinterest] : [])],
   };
 }
 
@@ -106,6 +125,12 @@ export async function selfCheck() {
   const read = await readGumroadSales(now, fake, 't');
   if (salesLine(read) !== 'Sales (Gumroad): 2 sales this week ($148.00); came from direct or unknown 1, spryexecutiveos.com 1.') throw new Error(`self-check: paging or the 7-day window is wrong: ${salesLine(read)}`);
   if (!/NAMED STOP \[GUMROAD_SETUP\]/.test(growthLine({ series: [1, 2], live: { a: null } }))) throw new Error('self-check: a Gumroad setup gap was not a named stop');
+  const pnow = Date.parse('2026-11-04T13:00:00Z');
+  const q = { variants: [{ release_date: '2026-11-01' }, { release_date: '2026-11-02' }, { release_date: '2026-10-20' }, { release_date: null }] };
+  const pinLine = pinterestLine({ status: 'MEASURED', generated_at: '2026-11-02T15:00:00Z', total: 3 }, q, pnow);
+  if (pinLine !== 'A Player Mode Pinterest (week to Nov 2): 2 new pins, 3 visits from pins; sales not read here (checkout runs in the app).') throw new Error(`self-check: Pinterest line is wrong: ${pinLine}`);
+  const stop = pinterestLine({ status: 'NAMED_STOP', reason: 'no token.' }, q, pnow);
+  if (!stop.includes('not read: no token') || /\b0 visit/.test(stop)) throw new Error(`self-check: an unread Pinterest number became a zero: ${stop}`);
   console.log('spry_weekly_summary self-check: ok');
 }
 
@@ -113,7 +138,7 @@ if (import.meta.url === `file://${process.argv[1]}` && process.argv[2] === '--se
 else if (import.meta.url === `file://${process.argv[1]}`) {
   const [input = 'reports/weekly_outcome_report.json', out = 'spry-weekly-summary.json'] = process.argv.slice(2);
   const growth = existsSync(GROWTH_FILE) ? JSON.parse(readFileSync(GROWTH_FILE, 'utf8')) : null;
-  const summary = summarise(JSON.parse(readFileSync(input, 'utf8')), process.env.RUN_URL ?? null, { sales: await readGumroadSales(), growth });
+  const summary = summarise(JSON.parse(readFileSync(input, 'utf8')), process.env.RUN_URL ?? null, { sales: await readGumroadSales(), growth, pinterest: pinterestLine(existsSync('reports/pinterest/aplayermode_metrics.json') ? JSON.parse(readFileSync('reports/pinterest/aplayermode_metrics.json', 'utf8')) : null, existsSync('aplayermode/data/pinterest/queue.json') ? JSON.parse(readFileSync('aplayermode/data/pinterest/queue.json', 'utf8')) : null) });
   writeFileSync(out, `${JSON.stringify(summary, null, 2)}\n`);
   console.log(`spry weekly summary: ${summary.sites.length} site(s) -> ${out}; ${summary.notes.join(' | ')}`);
 }

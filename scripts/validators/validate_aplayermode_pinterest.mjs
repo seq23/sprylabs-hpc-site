@@ -112,7 +112,9 @@ if (!patterns.length || patterns.some((p) => !p.startsWith('aplayermode.com/')))
 const ids = pageIds;
 const variants = queue.variants || [];
 if (variants.length < 30) fail(`queue holds ${variants.length} variants; at least 30 required`);
-if (queue.config.pins_per_day !== 1) fail(`pins_per_day is ${queue.config.pins_per_day}; the owner approved 1`);
+// Pace: 1 a day until 1 Nov 2026, then 3 (owner-approved 1 Nov 2026; the Growth-playbook
+// stop rule in scripts/aplayermode/pace.mjs may change the format, never the cap).
+if (queue.config.pins_per_day !== 3 || queue.config.pace?.since !== '2026-11-01') fail(`pins_per_day is ${queue.config.pins_per_day} from ${queue.config.pace?.since}; the owner approved 3 from 2026-11-01`);
 if (queue.launch.length !== 5 || queue.launch.map((i) => i.slug).join() !== cfg.items.map((i) => i.slug).join()) fail('the 5 launch items must keep their queue entries');
 const byDate = new Map();
 for (const v of variants) {
@@ -123,7 +125,8 @@ for (const v of variants) {
   byDate.set(v.release_date, [...(byDate.get(v.release_date) || []), v.section]);
 }
 for (const [d, secs] of byDate) {
-  if (secs.length > queue.config.pins_per_day) fail(`${d}: ${secs.length} pins on one day`);
+  if (secs.length > (d < queue.config.pace?.since ? 1 : queue.config.pins_per_day)) fail(`${d}: ${secs.length} pins on one day`);
+  if (new Set(secs).size !== secs.length) fail(`${d}: one section twice in a day`);
   for (const s of secs) if ((byDate.get(addDays(d, -1)) || []).includes(s)) fail(`${d}: section #${s} two days running`);
 }
 const lastDay = variants.reduce((m, v) => (v.release_date > m ? v.release_date : m), today);
@@ -155,8 +158,10 @@ const unesc = (s) => s.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&g
 const itemsOf = (xml) => [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].map((m) => m[1]);
 const items = itemsOf(feed);
 if (items.length < 3) fail(`feed has ${items.length} items; at least 3 required`);
-const fullItems = itemsOf(fullFeed);
-const expectFull = Math.min(queue.config.max_feed_items, queue.launch.length + variants.length);
+// Every board's feed together (1 Nov 2026: one feed per Pinterest topic board).
+const { boardsOf } = await import('../../workers/aplayermode-com/src/pinqueue.js');
+const fullItems = boardsOf(queue).list.flatMap((b) => itemsOf(buildPinfeedXml(queue, lastDay, b)));
+const expectFull = boardsOf(queue).list.reduce((n, b) => n + Math.min(queue.config.max_feed_items, (b === boardsOf(queue).list[0] ? queue.launch.length : 0) + variants.filter((v) => b.sections.includes(v.section) ? (b === boardsOf(queue).list[0] || v.release_date >= boardsOf(queue).split) : (b === boardsOf(queue).list[0] && v.release_date < boardsOf(queue).split)).length), 0);
 if (fullItems.length !== expectFull) fail(`feed as of ${lastDay} has ${fullItems.length} items, expected ${expectFull}`);
 if (wellFormed(fullFeed)) fail(`feed as of ${lastDay} is not well-formed XML: ${wellFormed(fullFeed)}`);
 const tag = (x, t) => { const m = x.match(new RegExp(`<${t}(?:\\s[^>]*)?>([\\s\\S]*?)</${t}>`)); return m ? unesc(m[1]) : null; };

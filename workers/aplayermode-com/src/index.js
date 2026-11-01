@@ -69,7 +69,7 @@
  * Guarded by scripts/validators/validate_aplayermode_landing.mjs and
  * tests/edge_cache.test.mjs.
  */
-import { buildPinfeedXml, chicagoDate } from './pinqueue.js';
+import { boardsOf, buildPinfeedXml, chicagoDate } from './pinqueue.js';
 import { serveWithEdgeCache } from '../../../functions/_lib/edge_cache.js';
 
 export const ORIGIN = 'https://sprylabs-hpc-site.pages.dev';
@@ -129,6 +129,8 @@ const BOT_UA = /bot|crawl|spider|slurp|preview|pinterest|facebookexternalhit|hea
 export function route(pathname) {
   if (pathname === '/' || pathname === '/index.html') return { kind: 'page', upstream: PAGE_PATH };
   if (pathname === FEED_PATH) return { kind: 'feed', upstream: QUEUE_PATH };
+  // One feed per Pinterest topic board (queue.boards.list); an unknown board answers 404 in serveFeed.
+  if (/^\/pinfeed\/[a-z0-9-]+\.xml$/.test(pathname)) return { kind: 'feed', upstream: QUEUE_PATH, feed: pathname };
   if (pathname === '/amazon' || pathname.startsWith('/amazon/')) return { kind: 'redirect', location: BHPC + pathname, keepQuery: true };
   if (pathname === '/pinfeed' || pathname === '/pinfeed/') return { kind: 'redirect', location: FEED_PATH, keepQuery: false };
   if (pathname === '/aplayermode' || pathname === PAGE_PATH || pathname === `${PAGE_PATH}index.html`) return { kind: 'redirect', location: '/', keepQuery: true };
@@ -166,10 +168,13 @@ async function serveNotFound(request, upstreamPath) {
   });
 }
 
-async function serveFeed(request, upstreamPath) {
+async function serveFeed(request, upstreamPath, feedPath = FEED_PATH) {
   const upstream = await fetch(ORIGIN + originPath(upstreamPath), { headers: { accept: 'application/json' }, redirect: 'manual', cf: { cacheTtl: 300 } });
   if (upstream.status !== 200) return new Response(`pin queue unavailable (origin ${upstream.status})`, { status: 502 });
-  const xml = buildPinfeedXml(await upstream.json(), chicagoDate(new Date()));
+  const queue = await upstream.json();
+  const board = boardsOf(queue).list.find((b) => b.feed === feedPath);
+  if (!board) return new Response('Not found', { status: 404, headers: { 'content-type': 'text/plain; charset=utf-8' } });
+  const xml = buildPinfeedXml(queue, chicagoDate(new Date()), board);
   return new Response(request.method === 'HEAD' ? null : xml, { status: 200, headers: { 'content-type': FEED_TYPE, 'cache-control': 'public, max-age=900' } });
 }
 
@@ -210,7 +215,7 @@ export default {
       return new Response(null, { status: 301, headers: { Location: target.toString(), 'Cache-Control': 'public, max-age=3600' } });
     }
     if (r.kind === 'notfound') return serveNotFound(request, r.upstream);
-    if (r.kind === 'feed') return serveFeed(request, r.upstream);
+    if (r.kind === 'feed') return serveFeed(request, r.upstream, r.feed);
     if (r.kind === 'page' && env.PIN_VISITS) {
       const point = pinVisitPoint(url, request.headers.get('user-agent'));
       if (point) { try { env.PIN_VISITS.writeDataPoint(point); } catch { /* measurement never breaks the page */ } }

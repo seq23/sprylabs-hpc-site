@@ -133,3 +133,19 @@
     });
   }
 })();
+
+// Pin visit -> join (owner-approved 1 Nov 2026): a visit from a pin (utm_source=pinterest)
+// carries its utm params onto every link into the app (app.aplayermode.com), so the app's
+// join and checkout can credit the pin. Nothing is stored on this site.
+(function () {
+  try {
+    var q = new URLSearchParams(window.location.search);
+    if ((q.get('utm_source') || '').toLowerCase() !== 'pinterest') return;
+    var keep = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'];
+    document.querySelectorAll('a[href^="https://app.aplayermode.com"]').forEach(function (a) {
+      var u = new URL(a.href);
+      keep.forEach(function (k) { if (q.get(k)) u.searchParams.set(k, q.get(k)); });
+      a.href = u.toString();
+    });
+  } catch (e) { /* attribution is best effort; the links still work */ }
+})();

@@ -151,13 +151,40 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
 export const variantPubDate = (v) => new Date(`${v.release_date}T11:00:00Z`).toUTCString();
 
 /** Feed entries due on `today` (YYYY-MM-DD, America/Chicago): drip + launch, newest first, at most max_feed_items. */
-export function feedEntries(queue, today) {
+// Topic boards (owner-approved 1 Nov 2026): queue.boards.list, one feed per board; a
+// pin's board is its section; every pin is in exactly one feed. Pins released before
+// queue.boards.split_from all went to the first board and stay in its feed.
+export function boardsOf(queue) {
+  const list = queue.boards?.list;
+  if (!list?.length) return { list: [{ slug: 'main', feed: '/pinfeed.xml', sections: SECTIONS, keywords: [] }], split: '9999-12-31' };
+  return { list, split: queue.boards.split_from };
+}
+export function boardForSection(queue, section) {
+  const { list } = boardsOf(queue);
+  return list.find((b) => b.sections.includes(section)) ?? list[0];
+}
+export function inBoardFeed(queue, board, v) {
+  const { list, split } = boardsOf(queue);
+  const own = boardForSection(queue, v.section).slug === board.slug;
+  return board.slug === list[0].slug ? own || v.release_date < split : own && v.release_date >= split;
+}
+const clipTitle = (t, max = 100) => (t.length <= max ? t : `${t.slice(0, max - 1).replace(/\s+\S*$/, '')}…`);
+/** Post-split titles lead with a real Pinterest search term when they name none of their board's. */
+export function pinTitle(title, board) {
+  const lower = String(title).toLowerCase();
+  if (!board.keywords?.length || board.keywords.some((k) => lower.includes(k))) return clipTitle(title);
+  return clipTitle(`${board.keywords[0].replace(/^./, (c) => c.toUpperCase())}: ${title}`);
+}
+
+export function feedEntries(queue, today, board = boardsOf(queue).list[0]) {
   const max = queue.config.max_feed_items;
-  const drip = dueVariants(queue.variants, today, max).map((v) => ({
-    guid: `aplayermode-pin-${v.id}`, title: v.title, link: variantLink(v), description: v.description,
+  const { list, split } = boardsOf(queue);
+  const mine = queue.variants.filter((v) => v.release_date && inBoardFeed(queue, board, v));
+  const drip = dueVariants(mine, today, max).map((v) => ({
+    guid: `aplayermode-pin-${v.id}`, title: v.release_date >= split ? pinTitle(v.title, board) : v.title, link: variantLink(v), description: v.description,
     date: Date.parse(`${v.release_date}T11:00:00Z`), image: v.image,
   }));
-  const launch = [...queue.launch].sort((a, b) => Date.parse(b.pubDate) - Date.parse(a.pubDate)).map((i) => ({
+  const launch = board.slug !== list[0].slug ? [] : [...queue.launch].sort((a, b) => Date.parse(b.pubDate) - Date.parse(a.pubDate)).map((i) => ({
     guid: `aplayermode-pin-${i.slug}`, title: i.title, link: launchLink(i), description: i.description,
     date: Date.parse(i.pubDate), image: i.image,
   }));
@@ -165,18 +192,20 @@ export function feedEntries(queue, today) {
 }
 
 /** RSS 2.0 with media:content, the exact shape #136 shipped for the launch items. */
-export function buildPinfeedXml(queue, today) {
-  const entries = feedEntries(queue, today);
-  if (!entries.length) throw new Error('Rule 0: the pin feed has no items');
+export function buildPinfeedXml(queue, today, board = boardsOf(queue).list[0]) {
+  const entries = feedEntries(queue, today, board);
+  const main = board.slug === boardsOf(queue).list[0].slug;
+  // Rule 0 for the first board's feed; a topic board is empty only before its first pin day.
+  if (!entries.length && main) throw new Error('Rule 0: the pin feed has no items');
   const out = [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">',
     '<channel>',
-    `<title>${esc(queue.channel.title)}</title>`,
+    `<title>${esc(main ? queue.channel.title : `${queue.channel.title}: ${board.name}`)}</title>`,
     `<link>${esc(SITE)}</link>`,
     `<description>${esc(queue.channel.description)}</description>`,
     '<language>en-us</language>',
-    `<lastBuildDate>${new Date(Math.max(...entries.map((e) => e.date))).toUTCString()}</lastBuildDate>`,
+    ...(entries.length ? [`<lastBuildDate>${new Date(Math.max(...entries.map((e) => e.date))).toUTCString()}</lastBuildDate>`] : []),
   ];
   for (const e of entries) {
     const img = imageUrl(e.image.path);
