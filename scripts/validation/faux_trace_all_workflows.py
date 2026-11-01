@@ -114,6 +114,15 @@ for path in sorted(WF_DIR.glob('*.yml')) + sorted(WF_DIR.glob('*.yaml')):
     if not jobs: errors.append(f'{rel}: no jobs'); continue
     for job_id, job in jobs.items():
         if not isinstance(job,dict): continue
+        # A job that calls a reusable workflow (owner/repo/.github/workflows/x.yml@ref)
+        # has no runs-on or steps of its own: the called workflow supplies both. It must
+        # be pinned to a ref and pass `with:` inputs; nothing else is skipped.
+        reusable=job.get('uses')
+        if isinstance(reusable,str) and '/.github/workflows/' in reusable:
+            if '@' not in reusable: errors.append(f'{rel}/{job_id}: reusable workflow not pinned: {reusable}')
+            if job.get('steps'): errors.append(f'{rel}/{job_id}: a reusable-workflow call cannot also have steps')
+            if not isinstance(job.get('with'),dict) or not job.get('with'): errors.append(f'{rel}/{job_id}: reusable-workflow call passes no inputs')
+            continue
         if not job.get('runs-on'): errors.append(f'{rel}/{job_id}: missing runs-on')
         steps=job.get('steps',[])
         if not steps: errors.append(f'{rel}/{job_id}: no steps')

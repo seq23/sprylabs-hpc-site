@@ -28,3 +28,11 @@ zero-dollar autonomous gap fill (`release:zero-dollar-autonomous`) make no model
 
 Actions → the workflow → Run workflow → tick `confirm_paid`. Nothing scheduled can reach a
 model-provider secret; `validate:zero-paid-llm` fails the build if that changes.
+
+**One scheduled exception (1 Nov 2026):** the shared search loop (`.github/workflows/search-loop.yml`,
+owner ruling "writing model: each site's existing $0 model route") writes its daily pages with the free
+router. `validate:zero-paid-llm` allows it only in this exact shape: the job calls the pinned
+`seq23/search-loop/.github/workflows/search-loop.yml@v1`, `OPENROUTER_API_KEY` is the only provider secret
+and is passed only in that call's `secrets:` block, and `search-loop.config.json` routes through
+`config/llm_routing.json` ($0/$0 `:free` models, `max_cost_usd: 0`, no paid fallback). The engine fails
+loud on any non-zero `usage.cost`. Change any part and the validator fails again.

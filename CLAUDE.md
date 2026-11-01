@@ -13,7 +13,9 @@ Read `~/Brains/spry.md` before any work (business facts, priorities, voice, sett
 ## Nothing paid
 
 **Nothing paid.** No lane in this repository spends money: every model call goes through the free
-router at `$0`, and nothing on a schedule can reach a model-provider secret.
+router at `$0`, and nothing on a schedule can reach a model-provider secret except the shared
+search loop (`search-loop.yml`), which gets the OpenRouter key only through the pinned engine
+and only routed through `config/llm_routing.json` (owner ruling 1 Nov 2026).
 
 The policy, the inventory of what used to be paid, and the named stops are in
 [`docs/cost/zero-paid-llm.md`](docs/cost/zero-paid-llm.md). It lives in code in

@@ -84,6 +84,27 @@ const workflows = fs.readdirSync(path.join(ROOT, wfDir)).filter((f) => /\.ya?ml$
 evidence.workflows_scanned = workflows.length;
 if (!workflows.length) errors.push('no workflows scanned - zero items is a failure, not a pass');
 const indentOf = (l) => l.match(/^\s*/)[0].length;
+// The ONE scheduled lane allowed the OpenRouter key: the shared search loop
+// (owner ruling 1 Nov 2026: daily pages, "writing model: each site's existing $0
+// model route"). It is allowed only in this exact shape, every part checked:
+//  - the job calls the pinned engine seq23/search-loop/.github/workflows/search-loop.yml@v1;
+//  - the key is passed only in that call's `secrets:` block, and it is the only
+//    model-provider secret the file names;
+//  - search-loop.config.json routes the engine through THIS repo's $0 file
+//    (config/llm_routing.json, checked above: $0/$0 ":free" models,
+//    max_cost_usd 0, no paid fallback). The engine refuses a non-zero usage.cost.
+// Any other scheduled exposure still fails. docs/cost/zero-paid-llm.md says the same.
+const FREE_ROUTED_CALLER = { file: 'search-loop.yml', uses: 'uses: seq23/search-loop/.github/workflows/search-loop.yml@v1', secret: 'OPENROUTER_API_KEY', config: 'search-loop.config.json' };
+function freeRoutedCallerAllows(wf, lines, i) {
+  if (wf !== FREE_ROUTED_CALLER.file) return false;
+  if (!lines.some((l) => l.trim() === FREE_ROUTED_CALLER.uses)) return false;
+  const names = lines.filter((l) => SECRET.test(l) && !/^\s*#/.test(l)).map((l) => l.match(SECRET)[0]);
+  if (names.some((n) => n !== `secrets.${FREE_ROUTED_CALLER.secret}`)) return false;
+  let j = i - 1; while (j >= 0 && (!lines[j].trim() || indentOf(lines[j]) >= indentOf(lines[i]))) j--;
+  if (j < 0 || lines[j].trim() !== 'secrets:') return false;
+  let cfg; try { cfg = JSON.parse(rd(FREE_ROUTED_CALLER.config)); } catch { return false; }
+  return cfg?.llm?.routing_file === ROUTING;
+}
 for (const wf of workflows) {
   const rel = `${wfDir}/${wf}`;
   const lines = rd(rel).split('\n');
@@ -104,6 +125,7 @@ for (const wf of workflows) {
     const step = stepOf(i);
     const ref = `${rel}:${i + 1}`;
     evidence.provider_secret_refs.push(ref);
+    if (freeRoutedCallerAllows(wf, lines, i)) { evidence.free_routed_scheduled = [...(evidence.free_routed_scheduled || []), ref]; return; }
     if (!step) { errors.push(`${ref}: model-provider secret outside any step (workflow/job env reaches every step)`); return; }
     if (!scheduled) return;
     const stepIfDispatch = /\n?\s*-?\s*if:.*github\.event_name == 'workflow_dispatch'/.test(step);

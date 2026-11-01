@@ -2,7 +2,7 @@
   "schema_version": "2.0",
   "repo": "seq23/sprylabs-hpc-site",
   "generated_at": "2026-07-10T18:30:00Z",
-  "workflow_count": 12,
+  "workflow_count": 14,
   "topology": "full_safe_autonomy_eight_workflow_surface",
   "workflows": [
     {
@@ -515,6 +515,42 @@
         "reports/weekly_outcome_report.md"
       ],
       "validation_owner": "validate:weekly-outcome-report"
+    },
+    {
+      "path": ".github/workflows/search-loop.yml",
+      "name": "Search Loop",
+      "trigger": [
+        "schedule",
+        "workflow_dispatch"
+      ],
+      "primary_command": "seq23/search-loop/.github/workflows/search-loop.yml@v1",
+      "repo_lane": "search-growth",
+      "current_status": "keep_admitted",
+      "reason": "The shared search growth engine (owner ruling 1 Nov 2026): weekly free discovery of searches the site can win, daily gated pages under /questions/ on spryexecutiveos.com, checks at 2/4/8 weeks with strengthen / automatic undo / merge, and the weekly search-loop-week report artifact. Commits through the shared helper on main-automation; download.html is a protected path it never edits.",
+      "allowed_runtime_mutations": [
+        "questions/**",
+        "data/search-loop/**",
+        "data/cadence/known_urls.json",
+        "data/content/manual_redirects.json",
+        "*.html",
+        "**/*.html",
+        "sitemap*.xml"
+      ],
+      "forbidden_runtime_mutations": [
+        ".github/**",
+        "package.json",
+        "package-lock.json",
+        "scripts/**",
+        "docs/**",
+        "_repo*.json",
+        "_validation_registry.json",
+        "_repo_validation_matrix.json",
+        "download.html"
+      ],
+      "required_artifacts": [
+        "search-loop-week"
+      ],
+      "validation_owner": "validate:workflow-contract"
     }
   ]
 }
