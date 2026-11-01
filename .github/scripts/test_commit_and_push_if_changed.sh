@@ -429,11 +429,25 @@ fi
 echo "writer coordination: examining ${#writer_workflows[@]} contents:write workflow(s)"
 
 for workflow in "${writer_workflows[@]}"; do
-  path="$repo_root/$workflow"
-  if [ ! -f "$path" ]; then
+  wf_file="$repo_root/$workflow"
+  if [ ! -f "$wf_file" ]; then
     echo "writer coordination: missing $workflow" >&2
     exit 1
   fi
+  # A caller of a reusable workflow (search-loop.yml) commits through a local
+  # helper script it names, not inline. The checks below read the workflow plus
+  # every .github/scripts/*.sh it references, so the helper is held to the same
+  # rules; a helper that is named but missing fails.
+  path="$(mktemp)"
+  cat "$wf_file" > "$path"
+  for helper in $(grep -oE '\.github/scripts/[A-Za-z0-9_./-]+\.sh' "$wf_file" | sort -u); do
+    case "$helper" in */commit_and_push_if_changed.sh) continue ;; esac
+    if [ ! -f "$repo_root/$helper" ]; then
+      echo "writer coordination: $workflow names $helper, which does not exist" >&2
+      exit 1
+    fi
+    cat "$repo_root/$helper" >> "$path"
+  done
   if ! grep -Eq '^[[:space:]]*group:[[:space:]]*main-automation[[:space:]]*$' "$path"; then
     echo "writer coordination: $workflow is not serialized on main-automation" >&2
     exit 1
