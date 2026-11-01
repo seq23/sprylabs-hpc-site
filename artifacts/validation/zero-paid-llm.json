@@ -1,20 +1,23 @@
 {
-  "checked_at": "2026-10-26T09:01:09.251Z",
+  "checked_at": "2026-11-01T21:14:55.417Z",
   "free_models": [
-    "nvidia/nemotron-3-super-120b-a12b:free",
+    "nvidia/nemotron-3.5-lightning:free",
     "nvidia/nemotron-3-ultra-550b-a55b:free",
     "google/gemma-4-31b-it:free",
-    "google/gemma-4-26b-a4b-it:free"
+    "google/gemma-4-26b-a4b-it:free",
+    "dots-studio/dots-3-note-preview:free"
   ],
   "model_callers": [
     "scripts/llm_citation_probe.mjs",
     "scripts/search_intelligence/observe_live_search.mjs"
   ],
-  "workflows_scanned": 12,
+  "workflows_scanned": 14,
   "scheduled_workflows": [
     ".github/workflows/daily-citation-intelligence.yml",
+    ".github/workflows/entity-backlink-watch.yml",
     ".github/workflows/main-validation-sentinel.yml",
     ".github/workflows/search-intelligence.yml",
+    ".github/workflows/search-loop.yml",
     ".github/workflows/spry-content-release.yml",
     ".github/workflows/weekly-outcome-report.yml"
   ],
@@ -22,7 +25,11 @@
     ".github/workflows/daily-citation-intelligence.yml:96",
     ".github/workflows/daily-citation-intelligence.yml:112",
     ".github/workflows/search-intelligence.yml:76",
-    ".github/workflows/search-intelligence.yml:91"
+    ".github/workflows/search-intelligence.yml:91",
+    ".github/workflows/search-loop.yml:43"
+  ],
+  "free_routed_scheduled": [
+    ".github/workflows/search-loop.yml:43"
   ],
   "errors": [],
   "status": "PASS"
