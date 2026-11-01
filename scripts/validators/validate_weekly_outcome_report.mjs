@@ -77,10 +77,22 @@ else {
   if (!notify.includes(REPORT)) errors.push(`${NOTIFY}: does not read ${REPORT}, so it delivers something other than the report that was built`);
   // Self-closing is the whole point of i9's second half.
   if (!/state:\s*'closed'|"closed"/.test(notify)) errors.push(`${NOTIFY}: never closes an issue, so the red list rots`);
-  if (!/resend\.com/.test(notify)) errors.push(`${NOTIFY}: no Resend delivery`);
-  // A missing key must not fail the run, or a report nobody configured email for
-  // would red main every Monday.
-  if (!/RESEND_API_KEY/.test(notify)) errors.push(`${NOTIFY}: does not read RESEND_API_KEY`);
+  // 1 Nov 2026 (owner): this site sends NO email of its own. Its summary goes to Boss OS, which sends
+  // the one "Spry Labs weekly" email. A Resend send coming back here would be a second email.
+  if (/resend\.com|RESEND_API_KEY/.test(notify)) errors.push(`${NOTIFY}: sends email again; the week goes to Boss OS's Spry Labs weekly instead`);
+}
+
+// THE HAND-OFF: the summary is built, proven and uploaded under the one name Boss OS reads.
+const HANDOFF = '.github/scripts/spry_weekly_summary.mjs';
+const handoff = read(HANDOFF);
+if (!handoff) errors.push(`${HANDOFF} is missing, so Boss OS's Spry Labs weekly has nothing from this site`);
+else if (!handoff.includes("'spry-weekly-summary-v1'") || !handoff.includes(REPORT)) errors.push(`${HANDOFF}: does not write spry-weekly-summary-v1 from ${REPORT}`);
+if (wf) {
+  if (/RESEND_API_KEY|resend\.com/.test(wf)) errors.push(`${WORKFLOW}: emails again; the week goes to Boss OS's Spry Labs weekly instead`);
+  if (!wf.includes(`node ${HANDOFF} --self-check`) || !wf.includes(`node ${HANDOFF} ${REPORT} spry-weekly-summary.json`)) errors.push(`${WORKFLOW}: does not prove and build the hand-off summary`);
+  if (!/name:\s*spry-weekly-summary\s/.test(wf) || !/if-no-files-found:\s*error/.test(wf)) errors.push(`${WORKFLOW}: does not upload the artifact spry-weekly-summary (failing when it is missing)`);
+  // DST-proof: a pair of UTC crons and a guard that lets only Chicago's current offset run.
+  if (!/-0500/.test(wf) || !/-0600/.test(wf) || !/TZ=America\/Chicago/.test(wf)) errors.push(`${WORKFLOW}: has no Chicago offset guard, so the clock change moves the run`);
 }
 
 // The report's declared red rule must be machine-readable in the artifact, so a

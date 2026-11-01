@@ -4,11 +4,11 @@
  *
  * Two deliveries, and neither waits on a human:
  *
- *  1. Email, through Resend's free tier, ONLY when RESEND_API_KEY and
- *     WEEKLY_REPORT_TO are both configured. With no key the report still exists
- *     as a committed artifact and the issues below still open, and this says so
- *     in one line rather than failing: a missing key is a configuration state,
- *     not a defect in the week's measurements.
+ *  1. NO EMAIL FROM HERE (owner, 1 Nov 2026). The workflow writes
+ *     spry-weekly-summary.json (.github/scripts/spry_weekly_summary.mjs) and
+ *     uploads it as the artifact `spry-weekly-summary`; Boss OS sends the ONE
+ *     "Spry Labs weekly" email on Wednesday at 08:15 Central with a short
+ *     section for this site. The Resend send that lived here is gone.
  *
  *  2. One SELF-CLOSING issue per red site. Red this week and no open issue ->
  *     open one. Red again -> comment on the existing one rather than open a
@@ -26,9 +26,6 @@ const LABEL = 'weekly-outcome-report';
 
 const token = process.env.GITHUB_TOKEN || '';
 const repo = process.env.GITHUB_REPOSITORY || '';
-const resendKey = process.env.RESEND_API_KEY || '';
-const mailTo = process.env.WEEKLY_REPORT_TO || '';
-const mailFrom = process.env.WEEKLY_REPORT_FROM || '';
 
 if (!fs.existsSync(REPORT)) {
   console.error(`[weekly-outcome-notify] FAIL: ${REPORT} is missing; the report step must run before delivery.`);
@@ -56,32 +53,6 @@ async function gh(path, init = {}) {
   });
   if (!res.ok) throw new Error(`GitHub ${init.method || 'GET'} ${path} -> ${res.status} ${await res.text()}`);
   return res.status === 204 ? null : res.json();
-}
-
-async function sendEmail() {
-  if (!resendKey || !mailTo || !mailFrom) {
-    console.log(
-      '[weekly-outcome-notify] email not configured (needs RESEND_API_KEY, WEEKLY_REPORT_FROM, WEEKLY_REPORT_TO); ' +
-        'the report artifact and the per-site issues below are the delivery this week.',
-    );
-    return;
-  }
-  const red = report.red_sites.length;
-  const res = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: { authorization: `Bearer ${resendKey}`, 'content-type': 'application/json' },
-    body: JSON.stringify({
-      from: mailFrom,
-      to: mailTo.split(',').map((s) => s.trim()).filter(Boolean),
-      subject: `Weekly outcome report ${report.week}: ${red ? `${red} site(s) red` : 'all sites OK'}`,
-      text: summary,
-    }),
-  });
-  if (!res.ok) {
-    console.error(`[weekly-outcome-notify] FAIL: Resend returned ${res.status} ${await res.text()}`);
-    process.exit(1);
-  }
-  console.log(`[weekly-outcome-notify] emailed ${report.week} to ${mailTo}`);
 }
 
 async function reconcileIssues() {
@@ -130,7 +101,6 @@ async function reconcileIssues() {
   }
 }
 
-await sendEmail();
 await reconcileIssues();
 console.log(
   `[weekly-outcome-notify] OK: ${report.week}, ${report.site_count} site(s), red ${report.red_sites.length}`,
