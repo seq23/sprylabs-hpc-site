@@ -35,6 +35,8 @@ const ROOT = process.cwd();
 // page's own host - the same function apply_demand_families.py writes through.
 const { brandedTitle } = createRequire(import.meta.url)(path.join(ROOT, 'scripts/lib/search_snippet_bounds.cjs'));
 const { canonicalHostOf } = createRequire(import.meta.url)(path.join(ROOT, 'scripts/lib/branded_title_cli.cjs'));
+// Over a length limit is a note; under a floor fails only below 75% of it (owner ruling 2 Nov 2026).
+const { floorVerdict, limitVerdict } = createRequire(import.meta.url)(path.join(ROOT, 'scripts/lib/word_floor.cjs'));
 const fail = [];
 const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
 const hosts = Object.keys(JSON.parse(read('config/site_hosts.json')).hosts);
@@ -71,12 +73,15 @@ for (const host of hosts) {
     const tag = `${host} ${f.id}`;
     const measured = new Set(f.queries.map((q) => q.query));
     for (const q of c.faq || []) if (!measured.has(q.source_query)) fail.push(`${tag}: FAQ source query "${q.source_query}" is not a measured query of this family`);
-    if (!c.title || c.title.length > 65) fail.push(`${tag}: title "${c.title}" is ${c.title?.length} chars (max 65)`);
+    if (!c.title) fail.push(`${tag}: family has no title`);
+    // The rendered <title> is trimmed to fit by brandedTitle (checked below), so a long family title is a note.
+    else if (limitVerdict(c.title.length, 65) === 'over') console.log(`[demand-families-info] ${tag}: family title is ${c.title.length} chars; the page title is trimmed to fit`);
     const lead = words(String(c.title).split(/[:|—-]/)[0]);
     const qwords = new Set(f.queries.slice(0, 5).flatMap((q) => words(q.query)));
     if (!lead.some((w) => qwords.has(w))) fail.push(`${tag}: title does not lead with the family's measured words`);
     const dw = String(c.definition || '').split(/\s+/).filter(Boolean).length;
-    if (dw < 40 || dw > 60) fail.push(`${tag}: definition is ${dw} words (40-60)`);
+    if (floorVerdict(dw, 40) === 'fail') fail.push(`${tag}: definition is ${dw} words (under 75% of the 40-word floor)`);
+    else if (dw < 40 || limitVerdict(dw, 60) === 'over') console.log(`[demand-families-info] ${tag}: definition is ${dw} words (target 40-60)`);
     if ((c.question_sections || []).length < 3) fail.push(`${tag}: fewer than 3 question sections`);
     if (!/[?&]ref=/.test(c.cta?.href || '')) fail.push(`${tag}: CTA has no ref`);
     const file = f.primary_page?.file;

@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
+import { createRequire } from 'node:module';
+// Word floors carry the 25% cushion (owner ruling 2 Nov 2026, scripts/lib/word_floor.cjs).
+const { floorVerdict } = createRequire(import.meta.url)('../lib/word_floor.cjs');
 const manifest = JSON.parse(fs.readFileSync('data/content/programmatic_candidate_manifest.json','utf8'));
 const registry = JSON.parse(fs.readFileSync('data/content/page_admission_registry.json','utf8'));
 const generated = (manifest.candidates || []).filter(x => x.source === 'aplayer_phase_expansion_2000_baseline');
@@ -11,9 +14,9 @@ for (const r of generated) {
   for (const f of required) if (r[f] === undefined || r[f] === null || (typeof r[f] === 'string' && !r[f].trim()) || (Array.isArray(r[f]) && !r[f].length)) errors.push(`${r.path}: missing release atom field ${f}`);
   if (!fs.existsSync(r.path)) errors.push(`${r.path}: generated page missing`);
   if (!byPath.has(r.path)) errors.push(`${r.path}: missing from page_admission_registry`);
-  if (words(r.unique_atom).length < 16) errors.push(`${r.path}: unique_atom too short`);
+  if (floorVerdict(words(r.unique_atom).length, 16) === 'fail') errors.push(`${r.path}: unique_atom too short (under 75% of 16 words)`);
   const stripped = norm(String(r.unique_atom).replace(new RegExp(String(r.primary_query||'').replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'ig'),''));
-  if (stripped.split(/\s+/).filter(Boolean).length < 12) errors.push(`${r.path}: unique_atom collapses after query removal`);
+  if (floorVerdict(stripped.split(/\s+/).filter(Boolean).length, 12) === 'fail') errors.push(`${r.path}: unique_atom collapses after query removal`);
   const key = norm(r.unique_atom); if (atoms.has(key)) errors.push(`${r.path}: duplicate unique_atom`); atoms.add(key);
   const q = norm(r.primary_query); if (queries.has(q)) errors.push(`${r.path}: duplicate primary_query`); queries.add(q);
   if (['source_needed','external_pending','prohibited'].includes(r.claim_safety_level)) errors.push(`${r.path}: public page uses unsafe claim_safety_level ${r.claim_safety_level}`);
