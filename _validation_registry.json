@@ -6174,7 +6174,7 @@
       "name": "validate:amazon-book-landing",
       "check_type": "validator",
       "owning_lane": "validation-control-plane",
-      "risk_prevented": "Declared validator protection. Length rule (owner ruling 2 Nov 2026, scripts/lib/word_floor.cjs/.py): over a word/character limit is a note, never a failure; under a floor fails only below 75% of it.",
+      "risk_prevented": "Three published books print hard-coded /amazon/<slug>/ URLs that cannot be edited after sale. This fails when a book page or the /amazon/ index is missing, is a template body (under 75% of its word floor), links a product URL with no committed proof it resolves on the seller account, makes a clinical or outcome-guarantee claim about ADHD or executive function, or is indexable. Length rule (owner ruling 2 Nov 2026, scripts/lib/word_floor.cjs): over a word limit is never a failure.",
       "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
       "scope": [
         "repository"
@@ -6688,7 +6688,7 @@
       "name": "validate:release-atom-contract",
       "check_type": "validator",
       "owning_lane": "validation-control-plane",
-      "risk_prevented": "Declared validator protection. Length rule (owner ruling 2 Nov 2026, scripts/lib/word_floor.cjs/.py): over a word/character limit is a note, never a failure; under a floor fails only below 75% of it.",
+      "risk_prevented": "Every page the aplayer phase expansion generates must ship as a complete, unique release atom: no missing contract field, no page absent from the tree or the admission registry, no duplicated unique_atom or primary_query (two pages competing for one search), no unique_atom that collapses to the query once the query is removed, and no public page on an unsafe claim_safety_level. Length rule (owner ruling 2 Nov 2026, scripts/lib/word_floor.cjs): word floors fail only below 75%.",
       "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
       "scope": [
         "repository"
