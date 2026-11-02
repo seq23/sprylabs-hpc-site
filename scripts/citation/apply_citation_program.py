@@ -48,6 +48,22 @@ def write_page(fp, text) -> bool:
 
 TODAY = "2026-06-20"
 
+
+def first_seen_lastmod() -> str:
+    """The lastmod for a URL entering the sitemap for the first time: the real
+    publication day (UTC), never the frozen TODAY above. TODAY pins generated_at
+    stamps so rebuilds do not churn; used as a lastmod it dated every page the
+    search loop published on 2 Nov 2026 as 2026-06-20. SITEMAP_LASTMOD_TODAY
+    overrides it, the same knob scripts/sitemap_content_lastmod.mjs reads."""
+    from datetime import datetime, timezone
+    return os.environ.get("SITEMAP_LASTMOD_TODAY") or datetime.now(timezone.utc).date().isoformat()
+
+
+def sitemap_lastmod_for(url: str, ledger_lastmod: dict, existing: dict) -> str:
+    """Derived ledger first, then what the sitemap already said, and only for a
+    URL seen here for the very first time, the day it was published."""
+    return ledger_lastmod.get(url) or existing.get(url) or first_seen_lastmod()
+
 # The author identity llms.txt states. One source: data/entities/author_profile.json,
 # the same file validate_citation_strategy reads, so the crawl file and the page
 # schema cannot name two different authors.
@@ -1677,14 +1693,14 @@ def update_discovery(pages,queries,frameworks):
         if domain=="spryexecutiveos.com":
             urls.add("https://spryexecutiveos.com/knowledge-map/")
         def lastmod_for(u):
-            return ledger_lastmod.get(u) or existing.get(u) or TODAY
+            return sitemap_lastmod_for(u, ledger_lastmod, existing)
         xml='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+"\n".join(f'  <url><loc>{u}</loc><lastmod>{lastmod_for(u)}</lastmod></url>' for u in sorted(urls))+"\n</urlset>\n"
         fp.write_text(xml,encoding="utf-8")
     # The static /sitemap.xml index has ONE writer, scripts/lib/sitemap_index.mjs
     # (children from config/site_hosts.json); the Pages functions narrow it to
     # the request host. This program used to keep its own copy of the index.
     import subprocess
-    subprocess.run(["node","scripts/lib/sitemap_index.mjs"],cwd=str(ROOT),check=True,env={**os.environ,"SITEMAP_TODAY":TODAY})
+    subprocess.run(["node","scripts/lib/sitemap_index.mjs"],cwd=str(ROOT),check=True,env={**os.environ,"SITEMAP_TODAY":first_seen_lastmod()})
     browser_contract=ROOT/"config/validation/browser_suite_contract.json"
     if browser_contract.exists():
         contract=json.loads(browser_contract.read_text(encoding="utf-8"))

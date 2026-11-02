@@ -24,6 +24,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import { execFileSync } from 'node:child_process';
+import { ensureRuntime, managedPython } from './validation/python_runtime.mjs';
 
 const ROOT = process.cwd();
 const GEN = 'scripts/sitemap_content_lastmod.mjs';
@@ -150,6 +151,26 @@ for (const [file, blanket] of generators) {
   if (!src.includes('data/sitemap/lastmod_ledger.json')) errors.push(`${file}: does not consult the derived lastmod ledger`);
 }
 
+// --- 7. a URL new to the sitemap is dated the day it was published ----------
+// apply_citation_program.py's TODAY is frozen at 2026-06-20 so generated_at
+// stamps do not churn. Used as the first-seen lastmod it dated the search loop's
+// 2 Nov 2026 /questions/ pages 2026-06-20 (Validate Repo run 41478768656).
+let firstSeen = null;
+try {
+  const env = { ...process.env }; delete env.SITEMAP_LASTMOD_TODAY;
+  ensureRuntime();
+  firstSeen = JSON.parse(execFileSync(managedPython(), ['-c', [
+    'import sys, json; sys.path.insert(0, "scripts/citation")',
+    'import apply_citation_program as m',
+    'print(json.dumps([m.sitemap_lastmod_for("https://example.invalid/new/", {}, {}), m.sitemap_lastmod_for("https://example.invalid/old/", {"https://example.invalid/old/": "2026-01-02"}, {}), m.sitemap_lastmod_for("https://example.invalid/kept/", {}, {"https://example.invalid/kept/": "2026-03-04"})]))',
+  ].join('\n')], { cwd: ROOT, encoding: 'utf8', env }).trim().split('\n').pop());
+} catch (e) { errors.push(`apply_citation_program.sitemap_lastmod_for could not be called: ${String(e.message || e).slice(0, 300)}`); }
+if (firstSeen) {
+  if (firstSeen[0] !== today) errors.push(`a URL new to the sitemap is dated ${firstSeen[0]}, not the day it was published (${today}); the first-seen lastmod is a frozen build constant`);
+  if (firstSeen[1] !== '2026-01-02') errors.push(`the derived ledger date did not win for a known URL (got ${firstSeen[1]})`);
+  if (firstSeen[2] !== '2026-03-04') errors.push(`the existing sitemap date did not win for a URL absent from the ledger (got ${firstSeen[2]})`);
+}
+
 const report = {
   schema_version: '1.0',
   status: errors.length ? 'FAIL' : 'PASS',
@@ -164,6 +185,7 @@ const report = {
     stale_2026_06_21_detected: stalecheck?.code !== 0,
     stamp_today_detected: bumpcheck?.code !== 0,
     clean_tree_passes: baseline?.code === 0,
+    new_url_dated_publication_day: Array.isArray(firstSeen) && firstSeen[0] === today,
   },
   errors,
 };

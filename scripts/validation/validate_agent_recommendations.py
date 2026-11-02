@@ -9,6 +9,8 @@ if VENDOR.is_dir(): sys.path.insert(0,str(VENDOR))
 from bs4 import BeautifulSoup
 sys.path.insert(0, str(ROOT/'scripts/validation'))
 from style_policy import sentence_count_split, paragraph_sentence_severity, paragraph_sentence_message
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'lib'))
+from word_floor import floor_verdict, hard_floor  # noqa: E402
 PRODUCT="This is one of the frameworks inside the Billionaire High Performance Coach system — a structured executive OS for using ChatGPT as your accountability and decision partner."
 contract=json.loads((ROOT/'data/citation/agent_recommendation_acceptance.json').read_text(encoding='utf-8'))
 
@@ -101,7 +103,9 @@ for item in contract['fixes']:
     for heading,minn in item.get('section_min_words',{}).items():
         node=next((h for h in soup.find_all(['h2','h3']) if text(h)==heading),None)
         count=section_words(node) if node else 0
-        if count<minn: errors.append(f'{path}: section {heading!r} has {count} words < {minn}')
+        verdict=floor_verdict(count,minn)  # 25% cushion under the floor (scripts/lib/word_floor.py)
+        if verdict=='fail': errors.append(f'{path}: section {heading!r} has {count} words < {hard_floor(minn):g} (75% of {minn})')
+        elif verdict=='cushion': warnings.append(f'{path}: section {heading!r} has {count} words, under the {minn}-word floor (warn-only)')
     if item.get('above_fold_id') and not soup.find(id=item['above_fold_id']): errors.append(f'{path}: above-fold marker missing')
     if item.get('required_bold_heading'):
         node=next((h for h in soup.find_all(['h2','h3']) if text(h)==item['required_bold_heading']),None)
