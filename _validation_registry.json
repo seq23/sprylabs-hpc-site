@@ -823,7 +823,7 @@
       "name": "validate:content",
       "check_type": "validator",
       "owning_lane": "content",
-      "risk_prevented": "Prevents unproven or inconsistent content behavior from entering the release lifecycle.",
+      "risk_prevented": "Prevents unproven or inconsistent content behavior from entering the release lifecycle. Length rule (owner ruling 2 Nov 2026, scripts/lib/word_floor.cjs/.py): over a word/character limit is a note, never a failure; under a floor fails only below 75% of it.",
       "existing_coverage_gap": "This command is the admitted orchestration or proof boundary for its lane; no unregistered command may substitute for it.",
       "scope": [
         "repository"
@@ -1127,7 +1127,7 @@
       "name": "validate:agent-recommendations",
       "check_type": "validator",
       "owning_lane": "citation-contract",
-      "risk_prevented": "Prevents the complete BHPC agent recommendation set from drifting after implementation, including existing-page fixes, exact-query opportunity pages, and explicit low-relevance skips.",
+      "risk_prevented": "Prevents the complete BHPC agent recommendation set from drifting after implementation, including existing-page fixes, exact-query opportunity pages, and explicit low-relevance skips. Length rule (owner ruling 2 Nov 2026, scripts/lib/word_floor.cjs/.py): over a word/character limit is a note, never a failure; under a floor fails only below 75% of it.",
       "existing_coverage_gap": "The universal citation contract proves common structure but does not encode the agent-specific sections, worked examples, competitor framing, exact query inventory, or skip decisions.",
       "scope": [
         "21 unique existing-page fixes",
@@ -1398,7 +1398,7 @@
       "name": "validate:programmatic-admission",
       "check_type": "validator",
       "owning_lane": "content",
-      "risk_prevented": "Prevents thin, duplicate, unsupported, CTA-less, or lane-incomplete programmatic pages from becoming public.",
+      "risk_prevented": "Prevents thin, duplicate, unsupported, CTA-less, or lane-incomplete programmatic pages from becoming public. Length rule (owner ruling 2 Nov 2026, scripts/lib/word_floor.cjs/.py): over a word/character limit is a note, never a failure; under a floor fails only below 75% of it.",
       "existing_coverage_gap": "Prior validation did not enforce this source-to-publication boundary across workflow-generated content and attested distribution handoff.",
       "scope": [
         "repository",
@@ -5662,7 +5662,7 @@
       "name": "validate:content-pattern",
       "check_type": "content",
       "owning_lane": "citation-contract",
-      "risk_prevented": "Prevents publishing a page that an answer engine cannot quote or that gives a citation nowhere to go: no direct-answer block, an h1 too short to carry the searcher phrasing, a table with empty cells, or no route to purchase.",
+      "risk_prevented": "Prevents publishing a page that an answer engine cannot quote or that gives a citation nowhere to go: no direct-answer block, an h1 too short to carry the searcher phrasing, a table with empty cells, or no route to purchase. Length rule (owner ruling 2 Nov 2026, scripts/lib/word_floor.cjs/.py): over a word/character limit is a note, never a failure; under a floor fails only below 75% of it.",
       "existing_coverage_gap": "The external review agent re-reported 27% of distinct defects on later runs despite them being marked released. No existing validator checked for the blocks the agent keeps asking for before publish; they were only found after audit.",
       "scope": [
         "site/public"
@@ -6174,7 +6174,7 @@
       "name": "validate:amazon-book-landing",
       "check_type": "validator",
       "owning_lane": "validation-control-plane",
-      "risk_prevented": "Declared validator protection.",
+      "risk_prevented": "Declared validator protection. Length rule (owner ruling 2 Nov 2026, scripts/lib/word_floor.cjs/.py): over a word/character limit is a note, never a failure; under a floor fails only below 75% of it.",
       "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
       "scope": [
         "repository"
@@ -6688,7 +6688,7 @@
       "name": "validate:release-atom-contract",
       "check_type": "validator",
       "owning_lane": "validation-control-plane",
-      "risk_prevented": "Declared validator protection.",
+      "risk_prevented": "Declared validator protection. Length rule (owner ruling 2 Nov 2026, scripts/lib/word_floor.cjs/.py): over a word/character limit is a note, never a failure; under a floor fails only below 75% of it.",
       "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
       "scope": [
         "repository"
@@ -8151,7 +8151,7 @@
       "name": "validate:search-snippet-bounds",
       "check_type": "validator",
       "owning_lane": "validation-control-plane",
-      "risk_prevented": "Refuses the Bing Webmaster findings of 25 Sep 2026: rule 118 'meta description too short' on 8 billionairehighperformancecoach.com and 24 spryexecutiveos.com pages (41-98 characters, the section and topic hubs from build_navigation_structure.mjs and the insight posts' boilerplate front matter), and Site Scan 'title too long' above 70 characters (1,813 pages, a 37-character brand suffix on long questions). Every indexable page must carry a 30-70 character title and a 110-160 character meta description, each unique; every sitemap URL must map to a page the check examined. Zero pages examined fails.",
+      "risk_prevented": "Refuses the Bing Webmaster findings of 25 Sep 2026: rule 118 'meta description too short' on 8 billionairehighperformancecoach.com and 24 spryexecutiveos.com pages (41-98 characters, the section and topic hubs from build_navigation_structure.mjs and the insight posts' boilerplate front matter), and Site Scan 'title too long' above 70 characters (1,813 pages, a 37-character brand suffix on long questions). Every indexable page must carry a 30-70 character title and a 110-160 character meta description, each unique; every sitemap URL must map to a page the check examined. Zero pages examined fails. Length rule (owner ruling 2 Nov 2026, scripts/lib/word_floor.cjs/.py): over a word/character limit is a note, never a failure; under a floor fails only below 75% of it.",
       "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
       "scope": [
         "repository"
@@ -8571,7 +8571,7 @@
       "name": "validate:demand-families",
       "check_type": "validator",
       "owning_lane": "validation-control-plane",
-      "risk_prevented": "Neither site had a demand pass: titles, definitions and FAQs were not built from the queries Search Console measures, and 32 pages (the homepage among them) carried two or three FAQPage nodes. The check fails when a host's demand_families.json is missing or strengthens anything but 8 measured families, an FAQ target is not a measured query, a strengthened page does not carry the section for the file's current content hash (stale), its title/CTA ref/question H2s/FAQ are missing, the homepage does not link it, or any page carries more than one FAQPage.",
+      "risk_prevented": "Neither site had a demand pass: titles, definitions and FAQs were not built from the queries Search Console measures, and 32 pages (the homepage among them) carried two or three FAQPage nodes. The check fails when a host's demand_families.json is missing or strengthens anything but 8 measured families, an FAQ target is not a measured query, a strengthened page does not carry the section for the file's current content hash (stale), its title/CTA ref/question H2s/FAQ are missing, the homepage does not link it, or any page carries more than one FAQPage. Length rule (owner ruling 2 Nov 2026, scripts/lib/word_floor.cjs/.py): over a word/character limit is a note, never a failure; under a floor fails only below 75% of it.",
       "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
       "scope": [
         "repository"
@@ -8691,7 +8691,7 @@
       "name": "validate:aplayermode-pin-drip",
       "check_type": "validator",
       "owning_lane": "validation-control-plane",
-      "risk_prevented": "aplayermode.com Pinterest daily drip (16 Oct 2026): the dated queue could release more than one pin a day, run one landing-page section two days running, drop a launch item, ship a variant over Pinterest's title/description limits or with a price, Spry or checkout, reuse a design, or point at a missing pin image; the Worker could stop building /pinfeed.xml at request time in America/Chicago, log IPs or crawler hits as Pinterest visits, or BHPC/spryexecutiveos could start serving a pinfeed; the weekly metrics reader could report an unmeasured zero instead of the named stop PINTEREST_METRICS_UNAVAILABLE. node --test fails on each.",
+      "risk_prevented": "aplayermode.com Pinterest daily drip (16 Oct 2026): the dated queue could release more than one pin a day, run one landing-page section two days running, drop a launch item, ship a variant over Pinterest's title/description limits or with a price, Spry or checkout, reuse a design, or point at a missing pin image; the Worker could stop building /pinfeed.xml at request time in America/Chicago, log IPs or crawler hits as Pinterest visits, or BHPC/spryexecutiveos could start serving a pinfeed; the weekly metrics reader could report an unmeasured zero instead of the named stop PINTEREST_METRICS_UNAVAILABLE. node --test fails on each. Length rule (owner ruling 2 Nov 2026, scripts/lib/word_floor.cjs/.py): over a word/character limit is a note, never a failure; under a floor fails only below 75% of it.",
       "existing_coverage_gap": "Atomic registration prevents package/registry/matrix drift.",
       "scope": [
         "repository"

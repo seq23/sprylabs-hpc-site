@@ -27,6 +27,14 @@ const require = createRequire(import.meta.url);
 const ROOT = process.cwd();
 const B = require(path.join(ROOT, 'scripts/lib/search_snippet_bounds.cjs'));
 const { listIndexablePages, assertExamined } = require(path.join(ROOT, 'scripts/lib/site_pages.js'));
+// Over a length limit is a note; under a floor fails only below 75% of it (owner ruling 2 Nov 2026).
+const { floorVerdict, limitVerdict } = require(path.join(ROOT, 'scripts/lib/word_floor.cjs'));
+const notes = [];
+function lengthCheck(rel, what, s, min, max) {
+  const n = s.length;
+  if (floorVerdict(n, min) === 'fail') errors.push(`${rel}: ${what} is ${n} characters, under 75% of the ${min}-character floor: "${s}"`);
+  else if (n < min || limitVerdict(n, max) === 'over') notes.push(`${rel}: ${what} is ${n} characters (target ${min}-${max})`);
+}
 
 const pages = listIndexablePages(ROOT);
 const scanned = pages.filter((rel) => !B.EXEMPT_PAGES.has(rel));
@@ -57,8 +65,8 @@ for (const rel of pages) {
   const title = B.titleOf(html);
   const desc = B.descriptionOf(html);
   if (!B.EXEMPT_PAGES.has(rel)) {
-    if (!B.inTitleRange(title)) errors.push(`${rel}: title is ${title.length} characters (want ${B.TITLE_MIN}-${B.TITLE_MAX}): "${title}"`);
-    if (!B.inDescRange(desc)) errors.push(`${rel}: meta description is ${desc.length} characters (want ${B.DESC_MIN}-${B.DESC_MAX}): "${desc}"`);
+    lengthCheck(rel, 'title', title, B.TITLE_MIN, B.TITLE_MAX);
+    lengthCheck(rel, 'meta description', desc, B.DESC_MIN, B.DESC_MAX);
   }
   if (title && PLACEHOLDER_TITLE.test(title)) errors.push(`${rel}: title carries a placeholder value: "${title}"`);
   if (title) {
@@ -90,10 +98,11 @@ for (const f of sitemapFiles) {
 }
 if (!sitemapUrls) errors.push('the sitemaps list zero URLs, so reach cannot be proved');
 
+if (notes.length) console.log(`[validate:search-snippet-bounds] note: ${notes.length} title/description length(s) outside the target, within the cushion or over it (never a failure); first: ${notes[0]}`);
 if (errors.length) {
   console.error(`[validate:search-snippet-bounds] FAIL: ${errors.length} problem(s) across ${scanned.length} indexable pages`);
   for (const e of errors.slice(0, 80)) console.error(`  - ${e}`);
   if (errors.length > 80) console.error(`  ... and ${errors.length - 80} more`);
   process.exit(1);
 }
-console.log(`[validate:search-snippet-bounds] OK: ${scanned.length} indexable pages have a ${B.TITLE_MIN}-${B.TITLE_MAX} character title and a ${B.DESC_MIN}-${B.DESC_MAX} character meta description, all unique; ${sitemapUrls} sitemap URLs reached (exempt: ${[...B.EXEMPT_PAGES].join(', ')})`);
+console.log(`[validate:search-snippet-bounds] OK: ${scanned.length} indexable pages have a title and meta description above 75% of their ${B.TITLE_MIN}/${B.DESC_MIN}-character floors (over the ${B.TITLE_MAX}/${B.DESC_MAX} targets is a note), all unique; ${sitemapUrls} sitemap URLs reached (exempt: ${[...B.EXEMPT_PAGES].join(', ')})`);

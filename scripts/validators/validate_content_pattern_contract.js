@@ -27,6 +27,8 @@
 
 const fs = require('fs');
 const path = require('path');
+// Under a floor fails only below 75% of it (owner ruling 2 Nov 2026).
+const { floorVerdict } = require('../lib/word_floor.cjs');
 
 const REPO = path.resolve(__dirname, '../..');
 // The public site is the repository root.
@@ -93,7 +95,7 @@ const leadLength = (html) => {
 const hasAnswer = (h) => /class="[^"]*citation-definition/i.test(h)
   || /data-llm-answer/i.test(h)
   || /<h[23][^>]*>\s*(?:Quick|Direct|Short)\s+answer/i.test(h)
-  || leadLength(h) >= MIN_LEAD_CHARS;
+  || floorVerdict(leadLength(h), MIN_LEAD_CHARS) !== 'fail';
 
 // The conversion destination is the paid operating system. /download is the
 // canonical handoff and produced both verified sales; aplayermode.com 301s to
@@ -112,7 +114,7 @@ const CHECKS = [
       const m = h.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i);
       if (!m) return false;
       const len = text(m[1]).length;
-      return isHub(rel) ? len > 0 : len > 10;
+      return isHub(rel) ? len > 0 : floorVerdict(len, 11) !== 'fail';
     },
     why: 'h1 missing or too short to carry the searcher phrasing' },
   { id: 'no_empty_table_cells', blocking: true,
