@@ -15,6 +15,9 @@ const citationRegistry = fs.existsSync(citationRegistryPath) ? JSON.parse(fs.rea
 const citationPriorityPages = new Set((citationRegistry.pages || []).filter(page => page.priority === true).map(page => page.path));
 const MIN_WORDS = Number(process.env.GENERATED_PAGE_MIN_WORDS || 300);
 const MAX_WORDS = Number(process.env.GENERATED_PAGE_MAX_WORDS || 650);
+// Over the max is information only; under the min is blocked only below the
+// 25% cushion (owner ruling 2 Nov 2026, scripts/lib/word_floor.cjs).
+const { floorVerdict } = require('../lib/word_floor.cjs');
 const report = [];
 let repaired = 0;
 let blocked = 0;
@@ -52,7 +55,7 @@ for (const page of generatedPages) {
     const patched = html.replace('</article>', `${injection}\n</article>`);
     fs.writeFileSync(full, patched);
     entry.after = wordCount(patched);
-    if (entry.after >= MIN_WORDS && entry.after <= MAX_WORDS) {
+    if (floorVerdict(entry.after, MIN_WORDS) !== 'fail') {
       entry.status = 'repaired';
       repaired += 1;
     } else {

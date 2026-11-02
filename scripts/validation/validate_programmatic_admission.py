@@ -9,6 +9,8 @@ VENDOR=Path(__file__).resolve().parents[1]/'_vendor'
 if VENDOR.is_dir(): sys.path.insert(0,str(VENDOR))
 from bs4 import BeautifulSoup
 from style_policy import sentence_count, paragraph_sentence_severity, paragraph_sentence_message
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'lib'))
+from word_floor import floor_verdict, hard_floor, limit_verdict  # noqa: E402
 
 ROOT=Path(__file__).resolve().parents[2]
 CONTRACT=json.loads((ROOT/'data/content/programmatic_lane_contracts.json').read_text(encoding='utf-8'))
@@ -109,7 +111,9 @@ def inspect(record):
     if record.get('admission_level')=='full':
         article=soup.find('article') or soup
         wc=len(words(text_of(article)))
-        if wc<int(lane.get('minimum_word_count',0)): errors.append(f'{path}: word count {wc} below lane floor {lane.get("minimum_word_count")}')
+        # Owner ruling 2 Nov 2026: a 25% cushion under the floor (scripts/lib/word_floor.py).
+        lane_floor=int(lane.get('minimum_word_count',0))
+        if floor_verdict(wc,lane_floor)=='fail': errors.append(f'{path}: word count {wc} below {hard_floor(lane_floor):g} (75% of lane floor {lane_floor})')
         if lane.get('required_artifacts') and not detect_artifact(soup): errors.append(f'{path}: unique artifact missing')
         if lane.get('worked_example') and not soup.select_one('.worked-example'): errors.append(f'{path}: worked example missing')
         header_cta=soup.select_one('header a[href="/download.html"], header a[href^="https://sprylabs.gumroad.com/"], .cta-bar a[href="/download.html"], .cta-bar a[href^="https://sprylabs.gumroad.com/"]')
@@ -191,7 +195,8 @@ def inspect(record):
 
         if lane_name in ANSWER_LANES:
             max_words=int(lane.get('direct_answer_max_words',70))
-            if first_answer_words(soup)>max_words: errors.append(f'{path}: direct answer exceeds {max_words} words')
+            # Over a word limit is never a failure (owner ruling 2 Nov 2026): info only.
+            if limit_verdict(first_answer_words(soup),max_words)=='over': print(f'[programmatic-admission-info] {path}: direct answer over the {max_words}-word target')
 
         text=text_of(soup).casefold()
         health=record.get('health_adjacent') or any(x in text for x in ['adhd','therapist','therapy','burnout','brain fog','mental health','mental-health'])

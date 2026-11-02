@@ -75,6 +75,8 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { createRequire as __wfRequire } from 'node:module';
+const { floorVerdict, hardFloor } = __wfRequire(import.meta.url)('../lib/word_floor.cjs');
 
 const ROOT = process.cwd();
 const DIR = 'amazon';
@@ -269,7 +271,8 @@ if (!indexHtml) {
   const t = visibleText(indexHtml);
   const n = words(t).length;
   rows.push({ page: `${DIR}/index.html`, words: n });
-  if (n < MIN_INDEX_WORDS) errors.push(`${DIR}/index.html has ${n} visible words, below the floor of ${MIN_INDEX_WORDS}.`);
+  // 25% cushion under every word floor (owner ruling 2 Nov 2026, scripts/lib/word_floor.cjs).
+  if (floorVerdict(n, MIN_INDEX_WORDS) === 'fail') errors.push(`${DIR}/index.html has ${n} visible words, below ${hardFloor(MIN_INDEX_WORDS)} (75% of the ${MIN_INDEX_WORDS}-word floor).`);
   for (const b of BOOKS) {
     if (!indexHtml.includes(`/amazon/${b.slug}/`)) errors.push(`${DIR}/index.html does not link to /amazon/${b.slug}/, so that book is unreachable from the index above it.`);
   }
@@ -302,8 +305,8 @@ for (const b of BOOKS) {
   const row = { page: rel, words: n, book: b.book };
 
   // substantive content, not a template body
-  if (n < MIN_WORDS) {
-    errors.push(`${rel} has ${n} visible words, below the floor of ${MIN_WORDS}. A page that only describes what it should say is the failure this guard exists to catch.`);
+  if (floorVerdict(n, MIN_WORDS) === 'fail') {
+    errors.push(`${rel} has ${n} visible words, below ${hardFloor(MIN_WORDS)} (75% of the ${MIN_WORDS}-word floor). A page that only describes what it should say is the failure this guard exists to catch.`);
   }
 
   // about its own book

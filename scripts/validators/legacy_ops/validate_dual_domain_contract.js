@@ -20,6 +20,7 @@ function walk(dir, out = []) {
   return out;
 }
 const { routeFor, hostFor, canonicalUrlFor } = require('../../lib/dual_domain_policy.cjs');
+const { floorVerdict, hardFloor } = require('../../lib/word_floor.cjs');
 const publishedManifestPath = path.join(root, 'data/reddit/published_manifest.json');
 const publishedManifest = fs.existsSync(publishedManifestPath) ? JSON.parse(fs.readFileSync(publishedManifestPath, 'utf8')) : { items: [] };
 const publishedHostOverrides = new Map((publishedManifest.items || []).map((item) => [item.route, item.canonical_host]));
@@ -56,7 +57,6 @@ const warnings = [];
 const titles = new Map();
 const descs = new Map();
 const founderPages = new Set(['index.html','sequoia-taylor.html','billionaire-high-performance-coach.html','faq.html','what-is-this-system.html','start-here.html','work-with-spry.html','ai-executive-coach.html','ai-coach-vs-human-coach.html','chatgpt-vs-executive-coach.html','best-ai-coaching-tools.html','how-to-build-a-coaching-system.html','is-ai-coaching-effective.html']);
-const WORD_COUNT_WARN_MARGIN = 15;
 
 const minWordChecks = new Map([
   ['pillars/leverage/index.html', 240],
@@ -170,11 +170,10 @@ for (const file of htmlFiles) {
   if (minWordChecks.has(rel)) {
     const words = stripText(html).split(/\s+/).filter(Boolean).length;
     const floor = minWordChecks.get(rel);
-    if (words < floor) {
-      const delta = floor - words;
-      if (delta <= WORD_COUNT_WARN_MARGIN) warnings.push(`${rel}: near floor word count ${words} < ${floor} (warn-only; margin=${WORD_COUNT_WARN_MARGIN})`);
-      else errors.push(`${rel}: below minimum word count ${words} < ${floor}`);
-    }
+    // Owner ruling 2 Nov 2026: a 25% cushion under the floor (scripts/lib/word_floor.cjs).
+    const verdict = floorVerdict(words, floor);
+    if (verdict === 'cushion') warnings.push(`${rel}: under floor word count ${words} < ${floor} (warn-only; fails below ${hardFloor(floor)})`);
+    else if (verdict === 'fail') errors.push(`${rel}: below minimum word count ${words} < ${hardFloor(floor)} (75% of the ${floor}-word floor)`);
   }
   if (requiredHeadings.has(rel)) {
     for (const heading of requiredHeadings.get(rel)) {

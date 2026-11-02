@@ -7,6 +7,7 @@ from urllib.parse import urlparse
 sys.dont_write_bytecode=True
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'lib'))
 from route_policy import route_for  # noqa: E402
+from word_floor import floor_verdict, hard_floor  # noqa: E402
 VENDOR=Path(__file__).resolve().parents[1]/'_vendor'
 if VENDOR.is_dir(): sys.path.insert(0,str(VENDOR))
 from bs4 import BeautifulSoup
@@ -98,7 +99,10 @@ for page in SPEC['pages']:
     product_link=next((a for a in soup.find_all('a',href='/download.html') if 'Billionaire High Performance Coach system' in a.get_text(' ',strip=True)),None)
     if not product_link: fail(rel,'product anchor link missing')
     wc=len(words((soup.find('article') or soup).get_text(' ',strip=True)))
-    if wc<PROGRAM['minimum_word_count']: fail(rel,f'word count {wc} below {PROGRAM["minimum_word_count"]}')
+    # Owner ruling 2 Nov 2026: a 25% cushion under the floor (scripts/lib/word_floor.py).
+    floor=PROGRAM['minimum_word_count']; verdict=floor_verdict(wc,floor)
+    if verdict=='fail': fail(rel,f'word count {wc} below {hard_floor(floor):g} (75% of the {floor}-word floor)')
+    elif verdict=='cushion': warnings.append(f'{rel}: word count {wc} under the {floor}-word floor (warn-only; fails below {hard_floor(floor):g})')
     for idx,ptag in enumerate(soup.find_all('p')):
         n=sentence_count(ptag.get_text(' ',strip=True))
         severity=paragraph_sentence_severity(n)

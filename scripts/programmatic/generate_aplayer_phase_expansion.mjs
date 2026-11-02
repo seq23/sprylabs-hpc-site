@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 const requireCjs = createRequire(import.meta.url);
+const { floorVerdict, hardFloor } = requireCjs('../lib/word_floor.cjs');
 const { routeFor: sharedRouteFor, hostFor: sharedHostFor } = requireCjs('../lib/dual_domain_policy.cjs');
 const { serializeSchema, mainEntityOfPage } = requireCjs('../lib/citation_page_schema.cjs');
 import {
@@ -1056,7 +1057,8 @@ function writePages() {
     const wc = countWords(textOf(article));
     const floor = Number((LANE_FLOORS[atom.generation_lane] || {}).minimum_word_count || 0);
     atom.rendered_word_count = wc;
-    if (floor && wc < floor) { thin.push(`${atom.path}: ${wc} words against a ${floor}-word floor for lane ${atom.generation_lane}`); continue; }
+    // Same rule the admission validator applies: refuse only below 75% of the lane floor (scripts/lib/word_floor.cjs).
+    if (floorVerdict(wc, floor) === 'fail') { thin.push(`${atom.path}: ${wc} words, below ${hardFloor(floor)} (75% of the ${floor}-word floor for lane ${atom.generation_lane})`); continue; }
     const fp = path.join(ROOT, atom.path);
     fs.mkdirSync(path.dirname(fp), {recursive:true});
     fs.writeFileSync(fp, html);
