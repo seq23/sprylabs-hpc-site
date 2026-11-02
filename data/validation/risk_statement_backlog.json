@@ -9,13 +9,12 @@
     "An id on this list that is no longer in the registry is a FAIL, so retirement does not leave the ratchet holding slack."
   ],
   "frozen_at": "2026-09-03",
-  "ceiling": 53,
-  "evidence": "VAL-EXTRACTION-SURFACE-GUARD-SNAPSHOT and VAL-EXTRACTION-SURFACE-GUARD-CHECK were on this list when it was first derived at 55 entries. They are the HARD_FAIL gate behind Validate Repo runs 33515334720 (1,628 drifted surfaces) and 33727145801 (230 changed surfaces), and downstream of the first, Main Validation Sentinel alarm 33533720679. Both were written properly and removed, lowering the ceiling to 53.",
+  "ceiling": 51,
+  "evidence": "VAL-EXTRACTION-SURFACE-GUARD-SNAPSHOT and VAL-EXTRACTION-SURFACE-GUARD-CHECK were on this list when it was first derived at 55 entries. They are the HARD_FAIL gate behind Validate Repo runs 33515334720 (1,628 drifted surfaces) and 33727145801 (230 changed surfaces), and downstream of the first, Main Validation Sentinel alarm 33533720679. Both were written properly and removed, lowering the ceiling to 53. VAL-AMAZON-BOOK-LANDING and VAL-RELEASE-ATOM-CONTRACT were written properly on 2 Nov 2026 and removed, lowering the ceiling to 51.",
   "ids": [
     "AGENT-BHPC-ACCEPTANCE-VISIBILITY",
     "VAL-AGENT-ARTIFACT-ABSORPTION-TRIGGER",
     "VAL-AGENT-RUN-ABSORPTION-COMPLETENESS",
-    "VAL-AMAZON-BOOK-LANDING",
     "VAL-ATTESTATION-MATCHES-RECEIPT",
     "VAL-AUTHORITY-ADMISSION-HONESTY",
     "VAL-AUTHORITY-PAPER-DISK-REGISTRY-PARITY",
@@ -54,7 +53,6 @@
     "VAL-PYTHON-DEPENDENCY-CONTRACT-WRITE",
     "VAL-QUERY-OWNER-UNIQUENESS",
     "VAL-REDIRECT-MAP-EQUIVALENCE",
-    "VAL-RELEASE-ATOM-CONTRACT",
     "VAL-RELEASE-CONVERGE-BEFORE-FREEZE",
     "VAL-RELEASE-MIX-POLICY",
     "VAL-REPO-WALK-BOUNDARY",
