@@ -23,6 +23,29 @@ const queue = JSON.parse(read(QUEUE_FILE));
 const angles = JSON.parse(read('config/aplayermode_pin_angles.json')).sections;
 const clone = (x) => JSON.parse(JSON.stringify(x));
 
+/**
+ * The shape planRefill keeps a queue in, refill after refill: every section has
+ * >= 6 variants and the sections stay within one of each other (fewest goes first);
+ * within a section no design (headline x layout x palette) repeats, no layout runs
+ * back to back, every headline is one of the section's angles, and no angle runs a
+ * second time before every angle has run once (uses differ by at most one).
+ */
+function assertSectionShape(variants, label) {
+  const counts = SECTIONS.map((s) => variants.filter((v) => v.section === s).length);
+  for (const [i, s] of SECTIONS.entries()) assert.ok(counts[i] >= 6, `${label} ${s}: ${counts[i]} variants`);
+  assert.ok(Math.max(...counts) - Math.min(...counts) <= 1, `${label}: sections unbalanced ${counts.join('/')}`);
+  for (const s of SECTIONS) {
+    const vs = variants.filter((v) => v.section === s).sort((a, b) => a.seq - b.seq);
+    const designs = vs.map((v) => `${v.headline}|${v.layout}|${v.palette}`.toLowerCase());
+    assert.equal(new Set(designs).size, vs.length, `${label} ${s}: repeated design`);
+    for (let i = 1; i < vs.length; i += 1) assert.notEqual(vs[i].layout, vs[i - 1].layout, `${label} ${s}: same layout back to back`);
+    const headlines = angles[s].map((a) => a.headline);
+    for (const v of vs) assert.ok(headlines.includes(v.headline), `${label} ${v.id}: headline not in its section's angles`);
+    const uses = headlines.map((h) => vs.filter((v) => v.headline === h).length);
+    assert.ok(Math.max(...uses) - Math.min(...uses) <= 1, `${label} ${s}: repeated headline before every angle ran (${uses.join(',')})`);
+  }
+}
+
 /** Run the real Worker against the committed tree as its Pages origin. */
 async function viaWorker(url, { env = {}, ua = 'Mozilla/5.0', method = 'GET', now } = {}) {
   const realFetch = globalThis.fetch;
@@ -52,16 +75,13 @@ test('chicagoDate follows America/Chicago, not UTC', () => {
   assert.equal(chicagoDate(new Date('2026-12-01T05:59:00Z')), '2026-11-30'); // 23:59 CST
 });
 
-test('committed queue: >=30 variants, 6-8 per section, 1 a day from 17 Oct then up to 3 from 1 Nov, no section two days running, launch 5 kept', () => {
+test('committed queue: >=30 variants, sections balanced, 1 a day from 17 Oct then up to 3 from 1 Nov, no section two days running, launch 5 kept', () => {
   assert.equal(queue.config.pins_per_day, 3);
   assert.equal(queue.config.pace.since, '2026-11-01');
   assert.equal(queue.config.drip_start, '2026-10-17');
   assert.equal(queue.config.timezone, 'America/Chicago');
   assert.ok(queue.variants.length >= 30, `${queue.variants.length} variants`);
-  for (const s of SECTIONS) {
-    const n = queue.variants.filter((v) => v.section === s).length;
-    assert.ok(n >= 6 && n <= 8, `${s}: ${n} variants`);
-  }
+  assertSectionShape(queue.variants, 'committed');
   assert.deepEqual(queue.launch.map((i) => i.slug), ['founding-100', 'weekly-planning', 'adhd-morning-routine', 'adhd-routine-bad-days', 'mind-body-spirit-planner']);
   assert.deepEqual({ channel: queue.channel, launch: queue.launch }, launchBlock(root));
   const dates = queue.variants.map((v) => v.release_date).sort();
@@ -75,7 +95,7 @@ test('committed queue: >=30 variants, 6-8 per section, 1 a day from 17 Oct then 
   }
 });
 
-test('every variant: truthful limits, its own 1000x1500 PNG, distinct headline and design within its section', () => {
+test('every variant: truthful limits, its own 1000x1500 PNG, distinct design within its section', () => {
   const ids = pageIds(root);
   for (const v of queue.variants) {
     assert.ok(ids.has(v.section), `${v.id}: #${v.section} not on the page`);
@@ -85,11 +105,6 @@ test('every variant: truthful limits, its own 1000x1500 PNG, distinct headline a
     const buf = fs.readFileSync(path.join(root, v.image.path));
     assert.deepEqual(pngSize(buf), { width: 1000, height: 1500 }, v.id);
     assert.equal(buf.length, v.image.length, `${v.id} length`);
-  }
-  for (const s of SECTIONS) {
-    const vs = queue.variants.filter((v) => v.section === s);
-    assert.equal(new Set(vs.map((v) => v.headline)).size, vs.length, `${s}: repeated headline`);
-    assert.equal(new Set(vs.map((v) => v.layout)).size, vs.length, `${s}: repeated layout`);
   }
   const images = queue.variants.map((v) => v.image.path);
   assert.equal(new Set(images).size, images.length, 'each variant has its own image');
@@ -153,6 +168,16 @@ test('scheduleVariants: pins_per_day, firstDay, never a section on consecutive d
   const lone = [{ id: 'a', seq: 1, section: 'app', release_date: null }, { id: 'b', seq: 2, section: 'app', release_date: null }];
   scheduleVariants(lone, { pinsPerDay: 1, firstDay: '2026-10-17' });
   assert.deepEqual(lone.map((v) => v.release_date), ['2026-10-17', null]);
+});
+
+test('the Monday refill keeps the queue shape: two full refill_batch refills of the committed queue', () => {
+  const q = clone(queue);
+  for (const round of [1, 2]) {
+    const planned = planRefill(q, angles, q.config.refill_batch);
+    assert.equal(planned.length, q.config.refill_batch, `refill ${round}: ${planned.length} planned`);
+    q.variants.push(...planned);
+    assertSectionShape(q.variants, `refill ${round}`);
+  }
 });
 
 test('weekly refill: due under refill_threshold unreleased; plans new designs, recycles angles in unused designs, never repeats one', () => {
