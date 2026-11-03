@@ -1,6 +1,6 @@
 {
   "profile": "container-prepush",
-  "started_at": "2026-11-03T14:29:48.714Z",
+  "started_at": "2026-11-03T14:53:01.915Z",
   "steps": [
     {
       "id": "VAL-ORCHESTRATION-CONTRACT",
@@ -701,8 +701,8 @@
     {
       "id": "VAL-MAIN-WRITER-VALIDATION-GATE",
       "command": "npm run validate:main-writer-validation-gate",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "VAL-CONTROL-PLANE-IDENTITY",
@@ -1132,12 +1132,11 @@
     }
   ],
   "status": "FAIL",
-  "failure_count": 3,
+  "failure_count": 2,
   "failures": [
     "VAL-EXTRACTION-SURFACE-GUARD-CHECK",
-    "validate:content-release",
-    "VAL-MAIN-WRITER-VALIDATION-GATE"
+    "validate:content-release"
   ],
   "stopped_early_at": null,
-  "finished_at": "2026-11-03T14:39:32.964Z"
+  "finished_at": "2026-11-03T15:04:49.929Z"
 }

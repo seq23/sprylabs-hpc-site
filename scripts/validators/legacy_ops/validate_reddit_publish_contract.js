@@ -1,5 +1,9 @@
 const fs = require('fs');
 const path = require('path');
+const {isRetiredFile} = require('../../lib/spry_rescue.cjs');
+const {spryRescueResponse} = require('../../../functions/_lib/spry_rescue.js');
+const {consolidationResponse} = require('../../../functions/_lib/host_consolidation.js');
+const rescueLedger = require('../../../data/seo/spry_rescue_redirects.json').redirects;
 
 const ROOT = process.cwd();
 const publishedPath = path.join(ROOT, 'data/reddit/published_manifest.json');
@@ -13,8 +17,8 @@ const llmsPath = path.join(ROOT, 'llms-full.txt');
 const coveragePath = path.join(ROOT, 'knowledge-map/knowledge-map.json');
 
 if (!fs.existsSync(publishedPath)) {
-  console.log('validate_reddit_publish_contract: no published manifest');
-  process.exit(0);
+  console.error('validate_reddit_publish_contract: missing historical publication manifest');
+  process.exit(1);
 }
 
 const manifest = JSON.parse(fs.readFileSync(publishedPath, 'utf8'));
@@ -55,7 +59,29 @@ function buildCoverageRouteSet(coverageObj) {
 const coverageRoutes = buildCoverageRouteSet(coverage);
 const items = Array.isArray(manifest.items) ? manifest.items : [];
 
+if (!items.length) errors.push('published manifest contains zero publications to examine');
+let retired = 0;
 for (const item of items) {
+  const source = item.target_file || `${item.slug}.html`;
+  if (isRetiredFile(source)) {
+    retired++;
+    const row = rescueLedger.find(r => r.from === item.route);
+    if (!row) { errors.push(`${source}: retirement has no exact redirect`); continue; }
+    const target = new URL(row.to);
+    const targetFile = target.pathname.endsWith('/') ? target.pathname.slice(1)+'index.html' : target.pathname.slice(1)+'.html';
+    if (!fs.existsSync(targetFile) || isRetiredFile(targetFile)) errors.push(`${source}: redirect target is not a kept publication`);
+    else if (extractTagValue(fs.readFileSync(targetFile,'utf8'),'link','rel','canonical','href') !== row.to) errors.push(`${source}: redirect target canonical mismatch`);
+    for (const host of ['spryexecutiveos.com','billionairehighperformancecoach.com']) {
+      const request = new Request(`https://${host}${item.route}?ref=publication-test`);
+      const response = consolidationResponse(request) || spryRescueResponse(request);
+      if (response?.status !== 301 || response.headers.get('location') !== row.to+'?ref=publication-test') errors.push(`${source}: permanent redirect/query contract failed on ${host}`);
+    }
+    const oldUrl = item.canonical_host + item.route;
+    if (sitemap.includes(`<loc>${oldUrl}</loc>`) || llms.includes(oldUrl)) errors.push(`${source}: retired URL is still advertised`);
+    const targetSitemap = fs.readFileSync(target.hostname === 'spryexecutiveos.com' ? 'sitemap-spry.xml' : 'sitemap-bhpc.xml','utf8');
+    if (!targetSitemap.includes(`<loc>${row.to}</loc>`) || !llms.includes(row.to)) errors.push(`${source}: kept target is absent from discovery`);
+    continue;
+  }
   const filePath = path.join(ROOT, item.target_file || `${item.slug}.html`);
   if (!fs.existsSync(filePath)) {
     errors.push(`Missing published page file: ${item.target_file || `${item.slug}.html`}`);
@@ -118,4 +144,4 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`validate_reddit_publish_contract: OK (${items.length} published pages checked)`);
+console.log(`validate_reddit_publish_contract: OK (${items.length} publications checked; ${retired} permanent redirects verified)`);
