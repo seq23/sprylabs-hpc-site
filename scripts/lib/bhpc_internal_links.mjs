@@ -1,4 +1,6 @@
 import fs from 'node:fs';
+import { createRequire } from 'node:module';
+const rescueRedirects = new Map(createRequire(import.meta.url)('../../data/seo/spry_rescue_redirects.json').redirects.map(r => [r.from, r.to]));
 import path from 'node:path';
 
 const INTERNAL_HOSTS = new Set([
@@ -43,6 +45,7 @@ export function normalizeBhpcInternalLinkHref(value = '') {
     else if (pathname.endsWith('/index.html')) pathname = pathname.slice(0, -'index.html'.length);
     else if (pathname.endsWith('.html')) pathname = pathname.slice(0, -'.html'.length);
   }
+  if (rescueRedirects.has(pathname)) pathname = new URL(rescueRedirects.get(pathname)).pathname;
   return `${pathname}${url.search || ''}${url.hash || ''}`;
 }
 

@@ -35,6 +35,7 @@
  * Fails on zero rules, zero pages, zero links or zero legacy index URLs examined.
  */
 import fs from 'node:fs';
+import { SPRY_RESCUE_REDIRECTS } from '../../functions/_lib/spry_rescue_table.js';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -123,7 +124,8 @@ function follow(p) {
   let hops = 0;
   const seen = new Set();
   for (;;) {
-    const rule = firstRule(cur);
+    const edgeTarget = SPRY_RESCUE_REDIRECTS.get(cur);
+    const rule = edgeTarget ? { target: edgeTarget, resolvedTarget: edgeTarget } : firstRule(cur);
     if (!rule) return { final: cur, hops };
     const next = internalPath(targetOf(rule));
     hops += 1;

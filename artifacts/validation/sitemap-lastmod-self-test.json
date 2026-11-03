@@ -1,60 +1,83 @@
 {
   "schema_version": "1.0",
-  "status": "PASS",
-  "url_count": 2238,
-  "distinct_lastmod_count": 8,
+  "status": "FAIL",
+  "url_count": 2236,
+  "distinct_lastmod_count": 19,
   "oldest_lastmod": "2026-07-28",
-  "newest_lastmod": "2026-09-26",
+  "newest_lastmod": "2026-11-02",
   "urls_retaining_existing_value_for_lack_of_evidence": 0,
-  "sampled_pages_changed_since_the_ledger_was_derived": [],
+  "sampled_pages_changed_since_the_ledger_was_derived": [
+    "answers/phase4/what-should-a-founder-do-when-closing-a-chaotic-week-and-needs-prompt-structure-support.html",
+    "answers/phase4/what-should-a-founder-do-when-tired-of-restarting-and-needs-private-journaling-boundaries-support.html",
+    "glossary/phase4/minimum-viable-day-for-founder-overwhelm.html",
+    "platforms/phase4/how-to-use-billionaire-high-performance-coach-with-deepseek-for-three-chat-setup.html",
+    "use-cases/phase4/a-player-mode-for-a-student-who-is-under-launch-pressure.html",
+    "whitepapers/state-of-execution-founder.html",
+    "insights/chatgpt-prompts-for-managers.html"
+  ],
   "sampled_against_independent_git_walk": [
     {
-      "file": "billionaire-high-performance-coach/index.html",
-      "ledger": "2026-08-26",
-      "independent": "2026-08-26",
+      "file": "index.html",
+      "ledger": "2026-10-26",
+      "independent": "2026-10-26",
       "agrees": true
     },
     {
-      "file": "chatgpt-daily-operator-system/index.html",
+      "file": "answers/phase4/what-should-a-founder-do-when-closing-a-chaotic-week-and-needs-prompt-structure-support.html",
+      "ledger": "2026-10-25",
+      "independent": "2026-11-03",
+      "agrees": false
+    },
+    {
+      "file": "answers/phase4/what-should-a-founder-do-when-tired-of-restarting-and-needs-private-journaling-boundaries-support.html",
+      "ledger": "2026-10-28",
+      "independent": "2026-11-03",
+      "agrees": false
+    },
+    {
+      "file": "glossary/phase4/minimum-viable-day-for-founder-overwhelm.html",
+      "ledger": "2026-10-25",
+      "independent": "2026-11-03",
+      "agrees": false
+    },
+    {
+      "file": "platforms/phase4/how-to-use-billionaire-high-performance-coach-with-deepseek-for-three-chat-setup.html",
+      "ledger": "2026-10-29",
+      "independent": "2026-11-03",
+      "agrees": false
+    },
+    {
+      "file": "use-cases/phase4/a-player-mode-for-a-student-who-is-under-launch-pressure.html",
+      "ledger": "2026-10-30",
+      "independent": "2026-11-03",
+      "agrees": false
+    },
+    {
+      "file": "whitepapers/state-of-execution-founder.html",
+      "ledger": "2026-10-28",
+      "independent": "2026-11-03",
+      "agrees": false
+    },
+    {
+      "file": "insights/chatgpt-prompts-for-managers.html",
       "ledger": "2026-09-26",
-      "independent": "2026-09-26",
-      "agrees": true
-    },
-    {
-      "file": "download.html",
-      "ledger": "2026-07-28",
-      "independent": "2026-07-28",
-      "agrees": true
-    },
-    {
-      "file": "faq/index.html",
-      "ledger": "2026-08-26",
-      "independent": "2026-08-26",
-      "agrees": true
-    },
-    {
-      "file": "billionaire-high-performance-coach/index.html",
-      "ledger": "2026-08-26",
-      "independent": "2026-08-26",
-      "agrees": true
-    },
-    {
-      "file": "billionaire-operator/how-billionaires-structure-their-day/index.html",
-      "ledger": "2026-08-26",
-      "independent": "2026-08-26",
-      "agrees": true
-    },
-    {
-      "file": "low-energy-structure/minimum-viable-day/index.html",
-      "ledger": "2026-08-26",
-      "independent": "2026-08-26",
-      "agrees": true
+      "independent": "2026-11-03",
+      "agrees": false
     }
   ],
   "negative_tests": {
     "stale_2026_06_21_detected": true,
     "stamp_today_detected": true,
-    "clean_tree_passes": true
+    "clean_tree_passes": true,
+    "new_url_dated_publication_day": true
   },
-  "errors": []
+  "errors": [
+    "answers/phase4/what-should-a-founder-do-when-closing-a-chaotic-week-and-needs-prompt-structure-support.html: ledger says 2026-10-25, independent git walk says 2026-11-03",
+    "answers/phase4/what-should-a-founder-do-when-tired-of-restarting-and-needs-private-journaling-boundaries-support.html: ledger says 2026-10-28, independent git walk says 2026-11-03",
+    "glossary/phase4/minimum-viable-day-for-founder-overwhelm.html: ledger says 2026-10-25, independent git walk says 2026-11-03",
+    "platforms/phase4/how-to-use-billionaire-high-performance-coach-with-deepseek-for-three-chat-setup.html: ledger says 2026-10-29, independent git walk says 2026-11-03",
+    "use-cases/phase4/a-player-mode-for-a-student-who-is-under-launch-pressure.html: ledger says 2026-10-30, independent git walk says 2026-11-03",
+    "whitepapers/state-of-execution-founder.html: ledger says 2026-10-28, independent git walk says 2026-11-03",
+    "insights/chatgpt-prompts-for-managers.html: ledger says 2026-09-26, independent git walk says 2026-11-03"
+  ]
 }

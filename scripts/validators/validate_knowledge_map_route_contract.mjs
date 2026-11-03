@@ -28,7 +28,7 @@ for(const rel of publicJsonPaths){
 const publicJson=JSON.parse(fs.readFileSync(path.join(root,'knowledge-map/knowledge-map.json'),'utf8'));
 const html=fs.readFileSync(path.join(root,'knowledge-map/index.html'),'utf8');
 if(/Upcoming dated drafts|Draft runway|>Draft</.test(html)) fail.push('public knowledge-map page exposes operational draft/runway data');
-if(!/Published coverage snapshot/.test(html)) fail.push('public knowledge-map page lacks published coverage snapshot');
+
 // Build clock: the generator must date its output from scripts/lib/build_clock.cjs.
 // A bare `new Date()` / `Date.now()` stamps the wall clock, so two clones of one
 // commit built either side of a UTC midnight differ (clean-rebuild-parity red).

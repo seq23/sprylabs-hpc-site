@@ -1,11 +1,11 @@
 {
   "schema_version": "1.0",
   "validator": "repair-fixture-capability",
-  "status": "PASS",
-  "generated_at": "2026-10-26T09:14:12.774Z",
+  "status": "FAIL",
+  "generated_at": "2026-11-03T13:58:25.387Z",
   "repairs_registered": 10,
   "distinct_repair_commands": 6,
-  "behavioural_pass": 9,
+  "behavioural_pass": 5,
   "fixture_floor": 9,
   "behavioural_fixture_missing": [
     "VAL-EXTRACTION-SURFACE-GUARD-CHECK"
@@ -49,15 +49,13 @@
       "id": "VAL-FULL-PAGE-AUDIT",
       "repair_command": "npm run agent:bhpc:plan-exact && npm run agent:bhpc:apply-exact && npm run retrofit:recommendation-summary && npm run schema:repair-parity",
       "validate_command": "npm run validate:full-page-audit",
-      "fault": "ai-executive-coach.html lost the acceptance record marker for 2026-06-27-bhpc-046",
-      "behavioural": "PASS"
+      "behavioural": "FAIL"
     },
     {
       "id": "VAL-BHPC-PAGE-SEO",
       "repair_command": "npm run agent:bhpc:plan-exact && npm run agent:bhpc:apply-exact && npm run retrofit:recommendation-summary && npm run schema:repair-parity",
       "validate_command": "npm run validate:page-seo",
-      "fault": "ai-executive-coach.html lost the acceptance record marker for 2026-06-27-bhpc-046",
-      "behavioural": "PASS"
+      "behavioural": "FAIL"
     },
     {
       "id": "validate:sitemap-coverage",
@@ -70,16 +68,21 @@
       "id": "validate:llms-full-coverage",
       "repair_command": "npm run build:aplayer-phase-expansion",
       "validate_command": "node scripts/validation/validate_llms_full_coverage.mjs",
-      "fault": "llms-full.txt is missing https://spryexecutiveos.com/90-day-plan-template/",
-      "behavioural": "PASS"
+      "behavioural": "FAIL"
     },
     {
       "id": "validate:ui-test-parity",
       "repair_command": "npm run repair:citation-contract-surfaces",
       "validate_command": "npm run validate:ui-test-parity",
-      "fault": "data/routes/public_route_manifest.json is missing the route for about.html",
-      "behavioural": "PASS"
+      "behavioural": "FAIL"
     }
   ],
-  "errors": []
+  "errors": [
+    "validator_already_failing:VAL-BHPC-PAGE-SEO - `npm run validate:page-seo` fails on the untouched tree, so a repair cannot be proven capable against a constructed fault here. Fix the tree first. Output: [validate:page-seo-contract] FAIL: mode=incremental; files=19; failures=2; warnings=11",
+    "validator_already_failing:validate:llms-full-coverage - `node scripts/validation/validate_llms_full_coverage.mjs` fails on the untouched tree, so a repair cannot be proven capable against a constructed fault here. Fix the tree first. Output:  - llms-full missing query Spry Executive OS practical planning guides",
+    "validator_already_failing:validate:ui-test-parity - `npm run validate:ui-test-parity` fails on the untouched tree, so a repair cannot be proven capable against a constructed fault here. Fix the tree first. Output:  - CRITICAL-0012: critical extraction type drift",
+    "validator_already_failing:VAL-FULL-PAGE-AUDIT - `npm run validate:full-page-audit` fails on the untouched tree, so a repair cannot be proven capable against a constructed fault here. Fix the tree first. Output: [validate:full-page-audit] FAIL: mode=full; elapsed_ms=45550",
+    "production_tree_mutated - the working tree changed while this test ran, so a fixture wrote outside its scratch worktree. Every induction must be sandboxed; a guard that leaves the repo dirty is worse than no guard.",
+    "behavioural_coverage_fell:5 repair(s) proved capable against a failing fixture, below the grow-only floor of 9. A repair that was once proven capable must stay proven capable - restore the fixture rather than lowering the floor."
+  ]
 }

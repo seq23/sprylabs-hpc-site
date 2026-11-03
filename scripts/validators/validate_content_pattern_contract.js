@@ -101,7 +101,7 @@ const hasAnswer = (h) => /class="[^"]*citation-definition/i.test(h)
 // canonical handoff and produced both verified sales; aplayermode.com 301s to
 // it, and gumroad.com is the checkout itself. All three are real paths to
 // purchase, so all three satisfy the check.
-const CONVERSION = /href="[^"]*(?:\/download(?:\.html)?"|aplayermode\.com|gumroad\.com)/i;
+const CONVERSION = /href="[^"]*(?:\/download(?:\.html)?(?:[?#][^"]*)?"|aplayermode\.com|gumroad\.com)/i;
 
 // The site's own domains are not cited sources, and font hosts are assets.
 const EXTERNAL_SOURCE = /<a[^>]+href="https?:\/\/(?!(?:www\.)?spryexecutiveos\.com)(?!(?:www\.)?billionairehighperformancecoach\.com)(?!(?:www\.)?aplayermode\.com)(?!fonts\.(?:googleapis|gstatic)\.com)/i;

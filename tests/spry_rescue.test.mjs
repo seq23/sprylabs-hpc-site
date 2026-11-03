@@ -110,7 +110,15 @@ test('historical GSC winners remain published, including established sibling own
     }
     Object.values(value).forEach(collect);
   }
-  const sources = new Set(selection.measured_routes.flatMap(row => row.sources));
+  // Discover observations independently: a newly committed GSC export must not
+  // disappear merely because the editorial ledger omitted its source file.
+  function jsonFiles(dir) {
+    return fs.readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
+      const file = dir + '/' + entry.name;
+      return entry.isDirectory() ? jsonFiles(file) : file.endsWith('.json') ? [file] : [];
+    });
+  }
+  const sources = new Set(jsonFiles('data'));
   assert.ok(sources.size > 0, 'no GSC evidence files examined');
   for (const file of sources) collect(JSON.parse(fs.readFileSync(file)));
   assert.ok(observed.size > 0, 'GSC files contained zero measured pages');
@@ -142,4 +150,27 @@ for raw in ['', '<p>/download.html</p>', '<a href="/download">Manual</a>', '<a h
 print('conversion destination behavior passed')
 `], { encoding: 'utf8' });
   assert.match(result, /behavior passed/);
+});
+
+test('the replacement edition governs historical actions without discarding their artifacts', () => {
+  const manifest = JSON.parse(fs.readFileSync('data/report_fixes/agent_acceptance_manifest.generated.json'));
+  const { routeFor } = require('../scripts/lib/dual_domain_policy.cjs');
+  const superseded = manifest.entries.filter(e => e.superseded_by === 'data/seo/spry_rescue_guides.json');
+  assert.ok(superseded.length > 0, 'zero historical actions reconciled');
+  for (const entry of superseded) {
+    assert.ok(keepers.has(routeFor(entry.implementation_path)), entry.implementation_path);
+    assert.equal(entry.acceptance_status, 'NO_ACTION');
+    assert.ok(entry.normalized_path && fs.existsSync(entry.normalized_path));
+    assert.ok(entry.record_id && entry.source_fix_instruction);
+  }
+  for (const g of content.guides) {
+    const html = render(g);
+    assert.equal((html.match(/data-llm-answer="true"/g) || []).length, 1);
+    assert.equal((html.match(/<aside class="recommendation-summary"/g) || []).length, 1);
+    assert.ok(html.includes(`<link rel="canonical" href="${HOST + g.route}">`));
+    assert.ok(html.includes('<ol>') && html.includes('rel="author"'));
+    assert.ok(g.sections.length > 0 && g.steps.length > 0 && g.faq.length > 0);
+    const visible = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, '');
+    for (const faq of g.faq) assert.ok(visible.includes(faq.question.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll("'", '&#39;')));
+  }
 });

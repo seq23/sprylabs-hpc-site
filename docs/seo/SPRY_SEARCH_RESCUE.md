@@ -37,3 +37,11 @@ The initial ten-page pass is superseded by 50 kept pages: 48 guides, the directo
 Both citation repair and final extraction repair finish with the authoritative rescue renderer so legacy writers cannot replace the reviewed edition. The renderer supplies the existing priority marker, Article extraction structure and editorial title authority. The cited NCI reference was checked on 2 November; it is archived and no longer maintained, which is stated on the guides. Its if–then planning principle supports the limited research statement, not a product outcome claim.
 
 The final validation receipt is recorded after the canonical profile and complete Node suite finish. Nothing is merged or deployed by this task; traffic recovery remains unproved until measured after an approved deployment.
+
+## Resumed completion — 3 November 2026
+
+The final renderer also reconciles the active route manifests, critical browser representatives, phase count and admitted-page metadata. Existing manual redirects terminate at kept destinations, and the link-integrity model includes the exact edge redirects so protected pages retain working links without a byte change. Retired manual source entries remain in `archived_pages`; frozen output records for retired routes are removed. The reviewed replacement guides have named size-reduction acceptances before the existing freeze operation refreshes the accepted outputs.
+
+Twenty-eight historical agent actions on replacement guides are explicitly superseded by the reviewed editorial edition. Their original instructions and normalized artifact paths remain in the acceptance ledger; they are not falsely reported as implemented append operations. The rescue behavior suite verifies the replacement's canonical, extraction, FAQ, publisher, attribution and finite-set contracts. Other agent actions retain their existing acceptance checks. The evidence test independently scans all JSON data for positive page observations instead of trusting the selection ledger's list of source files.
+
+Additional pre-rescue population floors in the page-surface and citation-phase checks now use the nonempty distinct advertised URL set. Existing zero-item guards, complete-scan coverage and named-exemption allowances remain enforced. The directory's exact sentence pin was removed; its published membership remains behavior-tested.

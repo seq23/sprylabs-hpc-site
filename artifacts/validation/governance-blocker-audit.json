@@ -1,6 +1,6 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-11-02T14:42:25.310Z",
+  "generated_at": "2026-11-03T13:54:25.912Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
   "admitted_hard_fail_count": 280,
   "reviewed_count": 8,
@@ -312,7 +312,7 @@
       "name": "validate:content",
       "command": "npm run validate:content",
       "owning_lane": "content",
-      "risk_prevented": "Prevents unproven or inconsistent content behavior from entering the release lifecycle.",
+      "risk_prevented": "Prevents unproven or inconsistent content behavior from entering the release lifecycle. Length rule (owner ruling 2 Nov 2026, scripts/lib/word_floor.cjs/.py): over a word/character limit is a note, never a failure; under a floor fails only below 75% of it.",
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-027"
@@ -447,7 +447,7 @@
       "name": "validate:agent-recommendations",
       "command": "npm run validate:agent-recommendations",
       "owning_lane": "citation-contract",
-      "risk_prevented": "Prevents the complete BHPC agent recommendation set from drifting after implementation, including existing-page fixes, exact-query opportunity pages, and explicit low-relevance skips.",
+      "risk_prevented": "Prevents the complete BHPC agent recommendation set from drifting after implementation, including existing-page fixes, exact-query opportunity pages, and explicit low-relevance skips. Length rule (owner ruling 2 Nov 2026, scripts/lib/word_floor.cjs/.py): over a word/character limit is a note, never a failure; under a floor fails only below 75% of it.",
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-047"
@@ -567,7 +567,7 @@
       "name": "validate:programmatic-admission",
       "command": "npm run validate:programmatic-admission",
       "owning_lane": "content",
-      "risk_prevented": "Prevents thin, duplicate, unsupported, CTA-less, or lane-incomplete programmatic pages from becoming public.",
+      "risk_prevented": "Prevents thin, duplicate, unsupported, CTA-less, or lane-incomplete programmatic pages from becoming public. Length rule (owner ruling 2 Nov 2026, scripts/lib/word_floor.cjs/.py): over a word/character limit is a note, never a failure; under a floor fails only below 75% of it.",
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-055"
@@ -2512,7 +2512,7 @@
       "name": "validate:content-pattern",
       "command": "npm run validate:content-pattern",
       "owning_lane": "citation-contract",
-      "risk_prevented": "Prevents publishing a page that an answer engine cannot quote or that gives a citation nowhere to go: no direct-answer block, an h1 too short to carry the searcher phrasing, a table with empty cells, or no route to purchase.",
+      "risk_prevented": "Prevents publishing a page that an answer engine cannot quote or that gives a citation nowhere to go: no direct-answer block, an h1 too short to carry the searcher phrasing, a table with empty cells, or no route to purchase. Length rule (owner ruling 2 Nov 2026, scripts/lib/word_floor.cjs/.py): over a word/character limit is a note, never a failure; under a floor fails only below 75% of it.",
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-174"
@@ -2722,7 +2722,7 @@
       "name": "validate:amazon-book-landing",
       "command": "npm run validate:amazon-book-landing",
       "owning_lane": "validation-control-plane",
-      "risk_prevented": "Declared validator protection.",
+      "risk_prevented": "Three published books print hard-coded /amazon/<slug>/ URLs that cannot be edited after sale. This fails when a book page or the /amazon/ index is missing, is a template body (under 75% of its word floor), links a product URL with no committed proof it resolves on the seller account, makes a clinical or outcome-guarantee claim about ADHD or executive function, or is indexable. Length rule (owner ruling 2 Nov 2026, scripts/lib/word_floor.cjs): over a word limit is never a failure.",
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-185"
@@ -2977,7 +2977,7 @@
       "name": "validate:release-atom-contract",
       "command": "npm run validate:release-atom-contract",
       "owning_lane": "validation-control-plane",
-      "risk_prevented": "Declared validator protection.",
+      "risk_prevented": "Every page the aplayer phase expansion generates must ship as a complete, unique release atom: no missing contract field, no page absent from the tree or the admission registry, no duplicated unique_atom or primary_query (two pages competing for one search), no unique_atom that collapses to the query once the query is removed, and no public page on an unsafe claim_safety_level. Length rule (owner ruling 2 Nov 2026, scripts/lib/word_floor.cjs): word floors fail only below 75%.",
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-RELEASE-ATOM-CONTRACT"
@@ -3697,7 +3697,7 @@
       "name": "validate:search-snippet-bounds",
       "command": "npm run validate:search-snippet-bounds",
       "owning_lane": "validation-control-plane",
-      "risk_prevented": "Refuses the Bing Webmaster findings of 25 Sep 2026: rule 118 'meta description too short' on 8 billionairehighperformancecoach.com and 24 spryexecutiveos.com pages (41-98 characters, the section and topic hubs from build_navigation_structure.mjs and the insight posts' boilerplate front matter), and Site Scan 'title too long' above 70 characters (1,813 pages, a 37-character brand suffix on long questions). Every indexable page must carry a 30-70 character title and a 110-160 character meta description, each unique; every sitemap URL must map to a page the check examined. Zero pages examined fails.",
+      "risk_prevented": "Refuses the Bing Webmaster findings of 25 Sep 2026: rule 118 'meta description too short' on 8 billionairehighperformancecoach.com and 24 spryexecutiveos.com pages (41-98 characters, the section and topic hubs from build_navigation_structure.mjs and the insight posts' boilerplate front matter), and Site Scan 'title too long' above 70 characters (1,813 pages, a 37-character brand suffix on long questions). Every indexable page must carry a 30-70 character title and a 110-160 character meta description, each unique; every sitemap URL must map to a page the check examined. Zero pages examined fails. Length rule (owner ruling 2 Nov 2026, scripts/lib/word_floor.cjs/.py): over a word/character limit is a note, never a failure; under a floor fails only below 75% of it.",
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-SEARCH-SNIPPET-BOUNDS"
@@ -3877,7 +3877,7 @@
       "name": "validate:demand-families",
       "command": "npm run validate:demand-families",
       "owning_lane": "validation-control-plane",
-      "risk_prevented": "Neither site had a demand pass: titles, definitions and FAQs were not built from the queries Search Console measures, and 32 pages (the homepage among them) carried two or three FAQPage nodes. The check fails when a host's demand_families.json is missing or strengthens anything but 8 measured families, an FAQ target is not a measured query, a strengthened page does not carry the section for the file's current content hash (stale), its title/CTA ref/question H2s/FAQ are missing, the homepage does not link it, or any page carries more than one FAQPage.",
+      "risk_prevented": "Neither site had a demand pass: titles, definitions and FAQs were not built from the queries Search Console measures, and 32 pages (the homepage among them) carried two or three FAQPage nodes. The check fails when a host's demand_families.json is missing or strengthens anything but 8 measured families, an FAQ target is not a measured query, a strengthened page does not carry the section for the file's current content hash (stale), its title/CTA ref/question H2s/FAQ are missing, the homepage does not link it, or any page carries more than one FAQPage. Length rule (owner ruling 2 Nov 2026, scripts/lib/word_floor.cjs/.py): over a word/character limit is a note, never a failure; under a floor fails only below 75% of it.",
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-DEMAND-FAMILIES"
@@ -3937,7 +3937,7 @@
       "name": "validate:aplayermode-pin-drip",
       "command": "npm run validate:aplayermode-pin-drip",
       "owning_lane": "validation-control-plane",
-      "risk_prevented": "aplayermode.com Pinterest daily drip (16 Oct 2026): the dated queue could release more than one pin a day, run one landing-page section two days running, drop a launch item, ship a variant over Pinterest's title/description limits or with a price, Spry or checkout, reuse a design, or point at a missing pin image; the Worker could stop building /pinfeed.xml at request time in America/Chicago, log IPs or crawler hits as Pinterest visits, or BHPC/spryexecutiveos could start serving a pinfeed; the weekly metrics reader could report an unmeasured zero instead of the named stop PINTEREST_METRICS_UNAVAILABLE. node --test fails on each.",
+      "risk_prevented": "aplayermode.com Pinterest daily drip (16 Oct 2026): the dated queue could release more than one pin a day, run one landing-page section two days running, drop a launch item, ship a variant over Pinterest's title/description limits or with a price, Spry or checkout, reuse a design, or point at a missing pin image; the Worker could stop building /pinfeed.xml at request time in America/Chicago, log IPs or crawler hits as Pinterest visits, or BHPC/spryexecutiveos could start serving a pinfeed; the weekly metrics reader could report an unmeasured zero instead of the named stop PINTEREST_METRICS_UNAVAILABLE. node --test fails on each. Length rule (owner ruling 2 Nov 2026, scripts/lib/word_floor.cjs/.py): over a word/character limit is a note, never a failure; under a floor fails only below 75% of it.",
       "current_severity": "HARD_FAIL",
       "matrix_ids": [
         "MX-APLAYERMODE-PIN-DRIP"

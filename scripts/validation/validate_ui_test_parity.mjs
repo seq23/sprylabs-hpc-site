@@ -83,7 +83,9 @@ for (const route of criticalRoutes) {
   }
 }
 
-const exactPaths = new Set([...priority, ...manual].map(page => page.path));
+const rescue = readJson('data/seo/spry_rescue_guides.json').guides;
+if (!rescue.length) errors.push('rescue guide acceptance source is empty');
+const exactPaths = new Set([...priority, ...manual, ...rescue.map(g => ({path: g.route.endsWith('/') ? g.route.slice(1)+'index.html' : g.route.slice(1)+'.html'}))].map(page => page.path));
 for (const source of criticalSources) if (!exactPaths.has(source)) errors.push(`critical route is not governed by an exact acceptance contract: ${source}`);
 
 const test = fs.readFileSync('tests/public-routes.spec.mjs', 'utf8');
