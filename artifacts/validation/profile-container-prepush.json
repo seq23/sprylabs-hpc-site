@@ -1,6 +1,6 @@
 {
   "profile": "container-prepush",
-  "started_at": "2026-11-03T14:10:32.611Z",
+  "started_at": "2026-11-03T14:29:48.714Z",
   "steps": [
     {
       "id": "VAL-ORCHESTRATION-CONTRACT",
@@ -191,8 +191,8 @@
     {
       "id": "validate:agent-run",
       "command": "npm run validate:agent-run",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "VAL-EXTRACTION-FINAL-NORMALIZATION",
@@ -245,8 +245,8 @@
     {
       "id": "validate:citation-strategy",
       "command": "npm run validate:citation-strategy",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "VAL-FULL-PAGE-AUDIT",
@@ -257,8 +257,8 @@
     {
       "id": "validate:retired-route-references",
       "command": "npm run validate:retired-route-references",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "validate:ui-test-parity",
@@ -533,8 +533,8 @@
     {
       "id": "VAL-SITEMAP-LEDGER-FINAL",
       "command": "npm run validate:lastmod-ledger-final",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "VAL-CITATION-SCHEMA-SERIALIZATION",
@@ -677,8 +677,8 @@
     {
       "id": "VAL-ATTESTATION-MATCHES-RECEIPT",
       "command": "npm run validate:attestation-matches-receipt",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "VAL-BUILD-ALL-INTEGRITY",
@@ -767,8 +767,8 @@
     {
       "id": "VAL-DERIVED-ABSORBER-REPRODUCIBILITY",
       "command": "npm run validate:derived-absorber-reproducibility",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "VAL-HEALTH-BOUNDARY-REACH",
@@ -1132,18 +1132,12 @@
     }
   ],
   "status": "FAIL",
-  "failure_count": 9,
+  "failure_count": 3,
   "failures": [
     "VAL-EXTRACTION-SURFACE-GUARD-CHECK",
-    "validate:agent-run",
     "validate:content-release",
-    "validate:citation-strategy",
-    "validate:retired-route-references",
-    "VAL-SITEMAP-LEDGER-FINAL",
-    "VAL-ATTESTATION-MATCHES-RECEIPT",
-    "VAL-MAIN-WRITER-VALIDATION-GATE",
-    "VAL-DERIVED-ABSORBER-REPRODUCIBILITY"
+    "VAL-MAIN-WRITER-VALIDATION-GATE"
   ],
   "stopped_early_at": null,
-  "finished_at": "2026-11-03T14:18:56.270Z"
+  "finished_at": "2026-11-03T14:39:32.964Z"
 }

@@ -174,3 +174,13 @@ test('the replacement edition governs historical actions without discarding thei
     for (const faq of g.faq) assert.ok(visible.includes(faq.question.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll("'", '&#39;')));
   }
 });
+
+test('required internal links follow finite consolidations without accepting absent or unrelated links', () => {
+  const {hasInternalDestination} = require('../scripts/lib/internal_link_destination.cjs');
+  const row = ledger.redirects.find(r => r.from.startsWith('/pillars/'));
+  assert.ok(row, 'no pillar redirect examined');
+  assert.ok(hasInternalDestination(`<a href="${row.to}?ref=guide">Continue</a>`, row.from));
+  assert.equal(hasInternalDestination('', row.from), false);
+  assert.equal(hasInternalDestination('<a href="https://example.com'+new URL(row.to).pathname+'">Wrong host</a>',row.from),false);
+  assert.equal(hasInternalDestination('<a href="/never-published-rescue-test">Unknown</a>',row.from),false);
+});

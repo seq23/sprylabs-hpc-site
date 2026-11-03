@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "status": "FAIL",
+  "status": "PASS",
   "scope": "committed",
   "ledger": "data/sitemap/lastmod_ledger.json",
   "pages_examined": 3478,
@@ -14,59 +14,8 @@
   "rederived_ledger_vs_working_tree": {
     "ran": true,
     "pages_examined": 1739,
-    "mismatched": 218,
-    "examples": [
-      {
-        "file": "answers/phase4/how-can-i-set-up-ai-support-to-keep-context-inside-an-llm.html",
-        "ledger": "c8a295691481bec6b52c7dd9",
-        "disk": "c912f1170db9bedba3d47838"
-      },
-      {
-        "file": "answers/phase4/how-can-i-set-up-ai-support-to-protect-one-priority.html",
-        "ledger": "232c01874597ef3358f116e7",
-        "disk": "293d6900c228345ee6577b9f"
-      },
-      {
-        "file": "answers/phase4/how-can-i-set-up-ai-support-to-separate-urgency-from-pressure.html",
-        "ledger": "abea9c317022cc587ab25de3",
-        "disk": "6c9c494186c0c66989c83666"
-      },
-      {
-        "file": "answers/phase4/how-can-i-set-up-ai-support-to-turn-vague-goals-into-actions.html",
-        "ledger": "6dc5ca98121bf7fa462bb10a",
-        "disk": "cfe0596c861bb2181f9949e7"
-      },
-      {
-        "file": "answers/phase4/how-can-i-set-up-ai-support-to-use-ai-without-generic-advice.html",
-        "ledger": "60ff0b8a9918c269e9563ddd",
-        "disk": "70944b904f086e519cf4366e"
-      },
-      {
-        "file": "answers/phase4/how-can-i-use-a-player-mode-to-keep-context-inside-an-llm.html",
-        "ledger": "8e83e5071cc1dcc5c030468c",
-        "disk": "ccaf0442d9c2b27a173e5662"
-      },
-      {
-        "file": "answers/phase4/how-can-i-use-a-player-mode-to-protect-one-priority.html",
-        "ledger": "f3a399f1bf8fb0b0b3785571",
-        "disk": "070ddf136d81ce834baa13d5"
-      },
-      {
-        "file": "answers/phase4/how-can-i-use-a-player-mode-to-separate-urgency-from-pressure.html",
-        "ledger": "c1c193e79b686a3ed8bd5de2",
-        "disk": "7524e111a728da2d8070be28"
-      },
-      {
-        "file": "answers/phase4/how-can-i-use-a-player-mode-to-turn-vague-goals-into-actions.html",
-        "ledger": "aa43ccb9b5ec27f1f067fba5",
-        "disk": "1c2d9b240a79a34a4b318cd0"
-      },
-      {
-        "file": "answers/phase4/how-can-i-use-a-player-mode-to-use-ai-without-generic-advice.html",
-        "ledger": "07606ddc29a8af7992e337c1",
-        "disk": "92f5d09aba166cb67ddd1396"
-      }
-    ]
+    "mismatched": 0,
+    "examples": []
   },
   "sitemap_coverage": {
     "reference": "the working tree",
@@ -82,7 +31,5 @@
     "offenders": []
   },
   "notes": [],
-  "errors": [
-    "the ledger was re-derived in this run yet already disagrees with the working tree on 218 of 1739 page(s). A stage that mutates page HTML ran after the derivation; move the derivation after it."
-  ]
+  "errors": []
 }

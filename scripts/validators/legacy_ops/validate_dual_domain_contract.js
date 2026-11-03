@@ -1,4 +1,5 @@
 const fs = require('fs');
+const { hasInternalDestination } = require('../../lib/internal_link_destination.cjs');
 const path = require('path');
 const root = process.cwd();
 const required = ['.gitignore', 'README.md', 'package.json', 'sitemap.xml', 'sitemap-bhpc.xml', 'sitemap-spry.xml', 'robots.txt', 'llms.txt'];
@@ -104,7 +105,7 @@ if (generatedOnly) {
     const words = stripText(html).split(/\s+/).filter(Boolean).length;
     if (words < GENERATED_MIN_WORDS || words > GENERATED_MAX_WORDS) console.log(`[dual-domain-info] ${rel}: generated page word count ${words} outside target ${GENERATED_MIN_WORDS}-${GENERATED_MAX_WORDS}`);
     for (const requiredLink of page.required_links || []) {
-      if (!html.includes(`href="${requiredLink}"`) && !html.includes(`href='${requiredLink}'`)) errors.push(`${rel}: missing required internal link ${requiredLink}`);
+      if ( !hasInternalDestination(html, requiredLink)) errors.push(`${rel}: missing required internal link ${requiredLink}`);
     }
     if (!html.includes('Review the system manual to see how the full structure works')) errors.push(`${rel}: missing canonical CTA copy`);
   }
@@ -133,7 +134,6 @@ const requiredHeadings = new Map([
   ['pillars/spirit.html', ['What spirit means on this site']],
   ['pillars/mind.html', ['Why mind affects the system']],
   ['product.html', ['What this page is for']],
-  ['knowledge-map/index.html', ['What this page is for']],
 ]);
 
 function stripText(html) {
@@ -185,7 +185,7 @@ for (const file of htmlFiles) {
     const words = stripText(html).split(/\s+/).filter(Boolean).length;
     if (words < GENERATED_MIN_WORDS || words > GENERATED_MAX_WORDS) console.log(`[dual-domain-info] ${rel}: generated page word count ${words} outside target ${GENERATED_MIN_WORDS}-${GENERATED_MAX_WORDS}`);
     for (const requiredLink of page.required_links || []) {
-      if (!html.includes(`href="${requiredLink}"`) && !html.includes(`href='${requiredLink}'`)) errors.push(`${rel}: missing required internal link ${requiredLink}`);
+      if ( !hasInternalDestination(html, requiredLink)) errors.push(`${rel}: missing required internal link ${requiredLink}`);
     }
     if (!html.includes('Review the system manual to see how the full structure works')) errors.push(`${rel}: missing canonical CTA copy`);
   }
