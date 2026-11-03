@@ -28,6 +28,9 @@ const out = path.join(root, '.pages-output');
 
 const { excluded } = require('./lib/published_surface.cjs');
 
+// Last deploy boundary: even a legacy generator cannot republish retired pages.
+require('./content/build_spry_rescue.cjs').build();
+const { isRetiredFile } = require('./lib/spry_rescue.cjs');
 let copied = 0;
 function copyInto(srcDir, outDir, depth) {
   for (const entry of fs.readdirSync(srcDir, { withFileTypes: true })) {
@@ -38,6 +41,7 @@ function copyInto(srcDir, outDir, depth) {
       fs.mkdirSync(to, { recursive: true });
       copyInto(from, to, depth + 1);
     } else if (entry.isFile()) {
+      if (isRetiredFile(path.relative(root, from))) continue;
       fs.copyFileSync(from, to);
       copied += 1;
     }

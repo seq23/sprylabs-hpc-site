@@ -29,6 +29,7 @@ const DEFAULT_SOCIAL_IMAGE = `${SITE_BASE}/assets/img/bhpc-hero-square.png`;
 // --- utils ---
 function readUtf8(p) { return fs.readFileSync(p, "utf8"); }
 function writeUtf8(p, s) {
+  if (require('./lib/spry_rescue.cjs').isRetiredFile(path.relative(ROOT, p))) return;
   fs.mkdirSync(path.dirname(p), { recursive: true });
   fs.writeFileSync(p, s, "utf8");
 }
