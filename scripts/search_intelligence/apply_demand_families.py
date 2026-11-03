@@ -181,6 +181,12 @@ def branded_titles(fams) -> dict:
 def main() -> int:
     if py_json is not serialize_schema:
         raise SystemExit("[apply-demand-families] FAIL: build_visible_faq_sections no longer serializes through citation_page_schema.serialize_schema")
+    # Rescue editions own their complete page shape, including demand metadata.
+    rescue = json.loads((ROOT / 'data/seo/spry_rescue_guides.json').read_text())
+    rescue_files = {g['route'].lstrip('/') + ('index.html' if g['route'].endswith('/') else '.html') for g in rescue['guides']}
+    if APPLY:
+        import subprocess
+        subprocess.run(['node', 'scripts/content/build_spry_rescue.cjs'], cwd=ROOT, check=True)
     fams = load_families()
     changed, unchanged, hub = [], 0, []
     titles = branded_titles(fams)
@@ -192,6 +198,11 @@ def main() -> int:
         if not path.exists():
             raise SystemExit(f"[apply-demand-families] FAIL: {host} {fam['id']}: primary page {rel} is missing; this pass never creates pages")
         c = fam["content"]
+        if rel in rescue_files:
+            href = '/' + re.sub(r'^https://[^/]+/', '', fam['primary_page']['url'])
+            hub.append((href, c['title']))
+            unchanged += 1
+            continue
         before = path.read_text(encoding="utf-8")
         html = set_title(before, titles[rel])
         seated = seat_section(html, render_section(fam["id"], c))

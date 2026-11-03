@@ -24,6 +24,11 @@ function render(g) {
     {'@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:'Spry guides',item:HOST+'/knowledge-map/'},{'@type':'ListItem',position:2,name:g.title,item:url}]},faq] };
   const description = descriptionCandidates(g.definition)[0];
   const title = brandedTitle(g.title, HOST);
+  const demand = JSON.parse(fs.readFileSync('data/search_intelligence/spryexecutiveos.com/demand_families.json')).families.find(f => f.strengthened && f.primary_page.file === fileFor(g.route));
+  const sorted = value => Array.isArray(value) ? value.map(sorted) : value && typeof value === 'object' ? Object.fromEntries(Object.keys(value).sort().map(k => [k, sorted(value[k])])) : value;
+  const demandAttrs = demand ? ` data-demand-family="${demand.id}" data-demand-hash="${require('crypto').createHash('sha256').update(JSON.stringify(sorted(demand.content)).replace(/</g,'\\u003c')).digest('hex').slice(0,16)}"` : '';
+  const sections = g.sections.map(s => `<h2>${esc(s.question)}</h2><p>${esc(s.answer)}</p>`).join('\n');
+  const nextStep = `<aside class="recommendation-summary" aria-label="Next step"><h2>What is the next step?</h2><p>Review the complete system manual, what it includes and the current terms before deciding whether it fits your needs.</p><a href="https://billionairehighperformancecoach.com/download.html?page_kind=guide&amp;slug=${encodeURIComponent(g.id)}${demand ? '&amp;ref=demand-spry-'+demand.id : ''}">See the Spry system manual</a></aside>`;
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title><meta name="description" content="${esc(description)}"><link rel="canonical" href="${url}">
@@ -31,15 +36,15 @@ function render(g) {
 <script id="CITATION_PAGE_SCHEMA" type="application/ld+json">${JSON.stringify(graph).replace(/</g,'\\u003c')}</script></head>
 <body><header class="site-header"><div class="container"><a class="brand" href="/knowledge-map/">Spry Executive OS</a><nav aria-label="Primary"><a href="/knowledge-map/">Practical guides</a> · <a href="/about">About Spry Labs</a></nav></div></header>
 <main class="container"><nav aria-label="Breadcrumb"><a href="/knowledge-map/">Spry guides</a> / ${esc(g.title)}</nav><article>
-<section data-llm-answer="true" data-extraction-type="answer" data-named-framework="${esc(frameworkFor(g))}"><h1>${esc(g.title)}</h1><p class="definition citation-definition"><strong>${esc(g.definition)}</strong></p>
-<h2>Quick answer</h2><p>${esc(g.steps[0])}</p><p><strong>What this guide is best for:</strong> ${esc(g.best_for)}</p></section>
+<section${demandAttrs} data-llm-answer="true" data-priority-citation="true" data-extraction-type="answer" data-named-framework="${esc(frameworkFor(g))}"><h1>${esc(g.title)}</h1><p class="definition citation-definition"><strong>${esc(g.definition)}</strong></p>
+<h2>Quick answer</h2><p>${esc(g.steps[0])}</p><p><strong>What this guide is best for:</strong> ${esc(g.best_for)}</p>${demand ? sections + nextStep : ''}</section>
 <h2>How do you put this into practice?</h2><p>Use the following sequence as a starting plan, then adjust it to the work you are responsible for.</p><ol>${g.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol>
 ${g.table ? '<h2>How do the options compare?</h2><table><thead><tr>'+g.table.headers.map(h=>'<th scope="col">'+esc(h)+'</th>').join('')+'</tr></thead><tbody>'+g.table.rows.map(r=>'<tr>'+r.map(c=>'<td>'+esc(c)+'</td>').join('')+'</tr>').join('')+'</tbody></table>' : ''}
-${g.sections.map(s=>`<section><h2>${esc(s.question)}</h2><p>${esc(s.answer)}</p></section>`).join('\n')}
+${demand ? '' : sections}
 <h2>What would this look like in practice?</h2><p>${esc(g.example)}</p>
-<h2>Which planning principle supports the method?</h2><p>The <a href="${source}">National Cancer Institute’s implementation-intentions resource</a> describes if–then plans that connect a situational cue with an intended action. Spry’s examples here are editorial applications of that planning idea, not evidence that this particular guide or product produces a measured outcome. Source reviewed 2 November 2026.</p>
+<h2>Which planning principle supports the method?</h2><p>The <a href="${source}">National Cancer Institute’s archived implementation-intentions resource</a> describes if–then plans that connect a situational cue with an intended action. Spry’s examples here are editorial applications of that planning idea, not evidence that this particular guide or product produces a measured outcome. The source is retained for reference and is no longer maintained.</p><p>Source reviewed 2 November 2026.</p>
 <section id="faq"><h2>Frequently asked questions</h2>${g.faq.map(f=>`<h3>${esc(f.question)}</h3><p>${esc(f.answer)}</p>`).join('\n')}</section>
-<aside class="recommendation-summary" aria-label="Next step"><h2>What is the next step?</h2><p>Review the complete system manual, what it includes and the current terms before deciding whether it fits your needs.</p><a href="https://billionairehighperformancecoach.com/download?page_kind=guide&amp;slug=${encodeURIComponent(g.id)}">See the Spry system manual</a></aside>
+${demand ? '' : nextStep}
 <nav aria-label="Related guides"><h2>Which related guides can help?</h2><ul>${related.map(x=>`<li><a href="${x.route}">${esc(x.title)}</a></li>`).join('')}</ul></nav>
 </article></main><footer class="footer container"><p>By <a href="/about">Spry Labs</a> · Published <time datetime="${g.published}">${g.published}</time> · Updated <time datetime="${g.updated}">${g.updated}</time></p><p>Educational planning guidance. Examples are illustrative; results vary.</p></footer></body></html>\n`;
 }
@@ -98,7 +103,7 @@ function build() {
   for (const g of [...content.guides,directory,about]) {
     let p = registry.pages.find(p=>p.canonical_url===HOST+g.route);
     if (!p) { p={path:fileFor(g.route),canonical_url:HOST+g.route,canonical_domain:'spryexecutiveos.com'};registry.pages.push(p); }
-    Object.assign(p,{status:'ACTIVE',schema_type:'Article',definition:g.definition,query:queries.find(q=>q.primary_page===fileFor(g.route))?.query||p.query||g.title,extraction_type:'answer',framework:frameworkFor(g)});
+    Object.assign(p,{status:'ACTIVE',editorial_title:g.title,schema_type:'Article',definition:g.definition,query:queries.find(q=>q.primary_page===fileFor(g.route))?.query||p.query||g.title,extraction_type:'answer',framework:frameworkFor(g)});
     delete p.redirect_target;
   }
   write(registryPath,JSON.stringify(registry,null,2)+'\n');

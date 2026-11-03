@@ -13,7 +13,9 @@ import { bhpcRoutes, render, canonicalHostOf } from '../scripts/build/build_rout
 const require_ = createRequire(import.meta.url);
 const { listIndexablePages } = require_('../scripts/lib/site_pages.js');
 const { routeFor } = require_('../scripts/lib/dual_domain_policy.cjs');
+const { keepers } = require_('../scripts/lib/spry_rescue.cjs');
 const ROOT = process.cwd();
+const sitemapRoutes = host => [...fs.readFileSync(host === SPRY_HOST ? 'sitemap-spry.xml' : 'sitemap-bhpc.xml', 'utf8').matchAll(/<loc>\s*([^<]+)\s*<\/loc>/g)].map(m => new URL(m[1]).pathname);
 const get = (url) => new Request(url);
 
 test('the homepage, the defect this fixes, 301s off the spry host to its owner', () => {
@@ -25,13 +27,18 @@ test('the homepage, the defect this fixes, 301s off the spry host to its owner',
 test('a route the spry host owns is never redirected', () => {
   // Every spry-owned published route must answer where it is asked.
   let checked = 0;
+  const seen = new Set();
   for (const rel of listIndexablePages(ROOT)) {
     const route = routeFor(rel);
     if (BHPC_ROUTES.has(route)) continue;
     assert.equal(routeOwnerRedirect(`https://${SPRY_HOST}${route}`), null, `${route} is spry-owned and must not redirect`);
+    seen.add(route);
     checked += 1;
   }
-  assert.ok(checked > 100, `expected the spry surface, checked ${checked}`);
+  assert.ok(checked > 0, 'examined zero Spry pages');
+  assert.ok(keepers.size > 0, 'kept ledger is empty');
+  assert.deepEqual([...seen].sort(), [...keepers].sort());
+  assert.equal(checked, keepers.size);
 });
 
 test('every BHPC-owned route 301s off the spry host, path intact', () => {
@@ -126,7 +133,12 @@ test('the table agrees with every page\'s own rel=canonical', () => {
     else assert.equal(redirect, null, `${rel} declares ${host} but the edge redirects it away`);
     checked += 1;
   }
-  assert.ok(checked > 2000, `expected the whole published surface, checked ${checked}`);
+  const advertised = new Set([...sitemapRoutes(SPRY_HOST), ...sitemapRoutes(BHPC_HOST), ...keepers]);
+  assert.ok(advertised.size > 0, 'sitemaps and kept ledger are empty');
+  assert.ok(checked > 0, 'examined zero pages');
+  assert.ok(checked >= advertised.size, `checked ${checked}, fewer than ${advertised.size} published routes`);
+  const built = new Set(listIndexablePages(ROOT).map(routeFor));
+  for (const route of advertised) assert.ok(built.has(route), `${route} advertised but never examined`);
 });
 
 // The post-deploy live check (scripts/diagnostics/check_sites_live.mjs) is a

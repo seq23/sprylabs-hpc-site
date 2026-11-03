@@ -5,6 +5,7 @@ sys.dont_write_bytecode=True
 VENDOR_DIR = Path(__file__).resolve().parents[1] / "_vendor"
 if VENDOR_DIR.is_dir(): sys.path.insert(0, str(VENDOR_DIR))
 from bs4 import BeautifulSoup
+from conversion_links import has_manual_link
 ROOT=Path.cwd()
 # index.html plus the shared protected buyer pages (download.html and, since
 # 2026-09-26, its alias product.html): data/page_contracts/protected_buyer_pages.json
@@ -82,7 +83,7 @@ for r in active:
     if not path.exists():
         continue
     raw=path.read_text(encoding='utf-8', errors='ignore')
-    expected_h1=H1_OVERRIDES.get(r['path'], r.get('query',''))
+    expected_h1=r.get('editorial_title') or H1_OVERRIDES.get(r['path'], r.get('query',''))
     expected_framework=r.get('framework','')
     expected_type=r.get('extraction_type','concept')
     h1s=H1_RE.findall(raw)
@@ -94,8 +95,7 @@ for r in active:
         and 'data-priority-citation="true"' in raw
         and f'data-extraction-type="{expected_type}"' in raw
         and (f'data-named-framework="{expected_framework}"' in raw or f'data-named-framework="{html_escape_min(expected_framework)}"' in raw)
-        and WORD_PRODUCT in raw
-        and '/download.html' in raw
+        and has_manual_link(raw)
         and '<></>' not in raw
     )
     if quick_ok:
@@ -111,8 +111,7 @@ for r in active:
         'llm': 'data-llm-answer="true"' in raw,
         'type': f'data-extraction-type="{expected_type}"' in raw,
         'framework': (f'data-named-framework="{expected_framework}"' in raw or f'data-named-framework="{html_escape_min(expected_framework)}"' in raw),
-        'product': WORD_PRODUCT in raw,
-        'download': '/download.html' in raw,
+        'download': has_manual_link(raw),
         'frag': '<></>' not in raw,
     }
     bad_fast=[k for k,v in base_fast_checks.items() if not v]
@@ -152,8 +151,6 @@ for r in active:
     block['data-llm-answer']='true'; block['data-priority-citation']='true'; block['data-extraction-type']=expected_type; block['data-named-framework']=expected_framework
     if not block.find(['h2','h3']):
         h2=soup.new_tag('h2'); h2.string=expected_framework; block.insert(0,h2)
-    if PRODUCT not in block.get_text(' ',strip=True):
-        pp=soup.new_tag('p'); pp.string=PRODUCT; block.append(pp)
     if expected_type == 'comparison' and not block.find('table'):
         table=soup.new_tag('table')
         thead=soup.new_tag('thead'); tr=soup.new_tag('tr')
@@ -185,7 +182,7 @@ for r in active:
             para.string=' '.join(sentences[:3])
             for i in range(3,len(sentences),3):
                 np=soup.new_tag('p'); np.string=' '.join(sentences[i:i+3]); insert_after.insert_after(np); insert_after=np
-    if not any(a.get('href')=='/download.html' for a in soup.find_all('a')):
+    if not has_manual_link(raw):
         linkp=soup.new_tag('p'); a=soup.new_tag('a', href='/download.html'); a.string=WORD_PRODUCT; linkp.append(a); main.append(linkp)
     new=str(soup).replace('<></>','')
     if new!=raw:

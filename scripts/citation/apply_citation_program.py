@@ -18,6 +18,14 @@ from bs4 import BeautifulSoup, Comment, NavigableString, Tag
 from extraction_contract import extract_article_steps, extract_scope_procedure_candidates, extract_scope_steps, validate_extraction
 
 ROOT = Path(__file__).resolve().parents[2]
+# The finite rescue renderer owns these editions. Legacy extraction writers
+# must preserve both their markup and their existing query ownership.
+_rescue = json.loads((ROOT / 'data/seo/spry_rescue_guides.json').read_text())
+def _rescue_file(route):
+    return route.lstrip('/') + ('index.html' if route.endswith('/') else '.html')
+RESCUE_PATHS = {_rescue_file(g['route']) for g in _rescue['guides']} | {'about.html', 'knowledge-map/index.html'}
+RESCUE_RECORDS = {r['path']: r for r in json.loads((ROOT / 'data/citation/citable_pages.json').read_text())['pages'] if r['path'] in RESCUE_PATHS}
+
 
 # download.html is the revenue surface. Its hash is asserted at the
 # revenue_surface tier of the protected baseline, and the postbuild pass
@@ -798,6 +806,8 @@ def ensure_fanout_block(soup: BeautifulSoup, spec: dict):
     target.append(section)
 
 def patch_priority(path: str, spec: dict):
+    if path in RESCUE_PATHS:
+        return
     require_complete_spec(path, spec, "patch_priority caller")
     fp=ROOT/path
     soup=BeautifulSoup(fp.read_text(encoding="utf-8",errors="ignore"),"html.parser")
@@ -1228,6 +1238,8 @@ def is_unadmitted_synthesis_page(path: str) -> bool:
     return path.startswith("synthesis-") and path.endswith(".html") and path not in admitted_public_paths()
 
 def patch_legacy(path: str) -> dict|None:
+    if path in RESCUE_RECORDS:
+        return RESCUE_RECORDS[path]
     if path in EXCLUDED or path.startswith(EXCLUDED_PREFIXES) or is_unadmitted_synthesis_page(path): return None
     fp=ROOT/path
     raw=repair_mojibake(fp.read_text(encoding="utf-8",errors="ignore"))

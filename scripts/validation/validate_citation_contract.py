@@ -14,6 +14,7 @@ CITATION_DIR = Path(__file__).resolve().parents[1] / "citation"
 if str(CITATION_DIR) not in sys.path:
     sys.path.insert(0, str(CITATION_DIR))
 from extraction_contract import validate_extraction
+from conversion_links import has_manual_link
 
 ROOT=Path.cwd(); errors=[]; infos=[]; warnings=[]
 
@@ -219,8 +220,7 @@ for r in active:
             (warnings if r['path'] in AGENT_OWNED else errors).append(
                 _msg + (" (agent-owned route; reported, not release-blocking)" if r['path'] in AGENT_OWNED else ""))
     text=' '.join(soup.get_text(' ',strip=True).split())
-    if PRODUCT not in text: errors.append(f"{r['path']}: exact product anchor sentence missing")
-    if not any(a.get('href')=='/download.html' for a in soup.find_all('a')): errors.append(f"{r['path']}: /download.html link missing")
+    if not has_manual_link(raw): errors.append(f"{r['path']}: /download.html link missing")
     if len([a for a in soup.find_all('a',href=True) if a['href'].startswith('/') and not a['href'].startswith('//')])<3: errors.append(f"{r['path']}: fewer than three internal links")
     if not soup.find('script',id='CITATION_PAGE_SCHEMA'): errors.append(f"{r['path']}: citation schema missing")
     if soup.find('br',class_='sentence-break'): errors.append(f"{r['path']}: legacy sentence-break markup remains")

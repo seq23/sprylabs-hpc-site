@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { spryRescueResponse } from '../functions/_lib/spry_rescue.js';
 import { SPRY_RESCUE_REDIRECTS } from '../functions/_lib/spry_rescue_table.js';
@@ -46,6 +47,7 @@ test('finite publishing policy catches future generated variants and preserves o
 });
 
 test('deploy output contains every keeper, omits retired HTML and advertises no retired URL', () => {
+  execFileSync(process.execPath, ['scripts/assemble_pages_output.js'], { stdio: 'pipe' });
   const sitemap = fs.readFileSync('.pages-output/sitemap-spry.xml','utf8');
   const urls = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map(m=>m[1]);
   assert.deepEqual(urls.sort(),[...keepers].map(r=>HOST+r).sort());
@@ -70,7 +72,8 @@ test('rendered FAQ and article metadata agree with the editorial data without du
     assert.equal(article.author['@id'],org['@id']);
     assert.equal(article.dateModified,g.updated);
     assert.equal(graph.find(n=>n['@type']==='WebPage').url,HOST+g.route);
-    const cta = new URL(html.match(/href="(https:\/\/billionairehighperformancecoach.com\/download\?[^\"]+)"/)[1].replaceAll('&amp;','&'));
+    const cta = new URL(html.match(/href="(https:\/\/billionairehighperformancecoach.com\/download\.html\?[^\"]+)"/)[1].replaceAll('&amp;','&'));
+    assert.equal(cta.pathname,'/download.html');
     assert.equal(cta.searchParams.get('page_kind'),'guide');
     assert.equal(cta.searchParams.get('slug'),g.id);
   }
@@ -88,4 +91,55 @@ test('rebuilding the rescue is idempotent and cannot inflate its redirect or dis
 test('retired directory aliases preserve the existing BHPC destination', () => {
   assert.equal(spryRescueResponse(new Request('https://billionairehighperformancecoach.com/ai-executive-coach')),null);
   assert.equal(spryRescueResponse(new Request('https://spryexecutiveos.com/ai-executive-coach')),null);
+});
+
+test('historical GSC winners remain published, including established sibling ownership', () => {
+  const selection = JSON.parse(fs.readFileSync('data/seo/spry_rescue_selection.json'));
+  assert.ok(selection.measured_routes.length > 0, 'no measured routes examined');
+  assert.deepEqual(selection.kept.map(p => p.route).sort(), [...keepers].sort());
+  // Read the measurements, not just the editorial decision ledger. Discarded
+  // provider rows, historical losses and search-loop GSC signals also count.
+  const observed = new Set();
+  function collect(value) {
+    if (Array.isArray(value)) { value.forEach(collect); return; }
+    if (!value || typeof value !== 'object') return;
+    const positive = Object.entries(value).some(([key, count]) =>
+      (/impression/i.test(key) || ['prev', 'cur', 'delta'].includes(key)) && typeof count === 'number' && count > 0);
+    if (positive) for (const url of Object.values(value)) {
+      if (typeof url === 'string' && url.startsWith(HOST + '/')) observed.add(new URL(url).pathname.replace(/\.html$/, ''));
+    }
+    Object.values(value).forEach(collect);
+  }
+  const sources = new Set(selection.measured_routes.flatMap(row => row.sources));
+  assert.ok(sources.size > 0, 'no GSC evidence files examined');
+  for (const file of sources) collect(JSON.parse(fs.readFileSync(file)));
+  assert.ok(observed.size > 0, 'GSC files contained zero measured pages');
+  const recorded = new Set(selection.measured_routes.map(row => row.route));
+  for (const route of observed) assert.ok(recorded.has(route), `${route}: observation omitted from selection`);
+
+  for (const row of selection.measured_routes) {
+    assert.ok(row.sources.length > 0, `${row.route}: no evidence`);
+    assert.equal(isRetiredRoute(row.route), false, `${row.route}: earned impressions but retired`);
+    assert.ok(fs.existsSync(fileFor(row.route)), `${row.route}: winner not built`);
+    assert.equal(spryRescueResponse(new Request(HOST + row.route)), null);
+    if (row.disposition === 'keep_spry') assert.ok(keepers.has(row.route));
+    else {
+      const html = fs.readFileSync(fileFor(row.route), 'utf8');
+      assert.match(html, /https:\/\/billionairehighperformancecoach.com/);
+    }
+  }
+});
+
+test('citation destination accepts attribution and changed labels, rejects absent or wrong destinations', () => {
+  const result = execFileSync('python3', ['-c', `
+import sys
+sys.path.insert(0, 'scripts/citation')
+from conversion_links import has_manual_link
+for href in ['/download.html', '/download.html?page_kind=guide&amp;slug=x', 'https://billionairehighperformancecoach.com/download.html?page_kind=guide&amp;slug=x']:
+    assert has_manual_link('<a href="' + href + '">Any editorial label</a>'), href
+for raw in ['', '<p>/download.html</p>', '<a href="/download">Manual</a>', '<a href="https://example.com/download.html">Manual</a>', '<a href="https://billionairehighperformancecoach.com.evil.test/download.html">Manual</a>', '<a href="/other?next=/download.html">Manual</a>']:
+    assert not has_manual_link(raw), raw
+print('conversion destination behavior passed')
+`], { encoding: 'utf8' });
+  assert.match(result, /behavior passed/);
 });

@@ -19,6 +19,17 @@ function isRetiredFile(rel) {
 function targetFor(route) {
   const s = route.toLowerCase();
   if (/^\/(?:author|about|citation-methodology)(?:\/|$)/.test(s)) return HOST + '/about';
+  // Prefer a retained article with shared intent words before a broad family.
+  // This sends synthetic variants back to their substantive original guide.
+  const ignored = new Set(['a','an','the','and','or','of','to','for','in','on','with','without','how','what','is','are','i','my','your','you','it','can','do','be','s','spry','executive','os','bhpc','agent','insights','answers','guides','topics','use','system']);
+  const words = value => new Set(value.split(/[^a-z0-9]+/).filter(w => w.length > 1 && !ignored.has(w)));
+  const input = words(s);
+  const matches = content.guides.map(g => {
+    const terms = words(g.route);
+    const shared = [...terms].filter(t => input.has(t)).length;
+    return { g, shared, score: shared / Math.max(terms.size, input.size, 1) };
+  }).filter(m => m.shared >= 2).sort((a,b) => b.score - a.score || b.shared - a.shared || a.g.route.localeCompare(b.g.route));
+  if (matches[0]?.score >= 0.3) return HOST + matches[0].g.route;
   // Specific intent wins before general AI/system vocabulary.
   const order = ['phone-vortex', 'structured-conversations', 'reset-cycle', 'scorecard', 'deep-work', 'coaching-at-scale', 'coaching-prompts'];
   for (const id of order) {
