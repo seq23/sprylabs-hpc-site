@@ -42,11 +42,14 @@ for (const entry of redirects) {
   const source = routeFromSource(entry.source_path);
   if (routeMap.has(source)) errors.push(`duplicate redirect source ${source}`);
   routeMap.set(source, entry.target);
-  const targetFile = entry.target.endsWith('/') ? `${entry.target.slice(1)}index.html` : entry.target.slice(1);
+  const target = new URL(entry.target, 'https://' + (entry.domain || 'spryexecutiveos.com'));
+  if (!['spryexecutiveos.com', 'billionairehighperformancecoach.com'].includes(target.hostname)) errors.push(`${source}: unapproved redirect host ${target.hostname}`);
+  const targetPath = target.pathname;
+  const targetFile = targetPath.endsWith('/') ? `${targetPath.slice(1)}index.html` : targetPath.slice(1);
   if (!fs.existsSync(targetFile) && !fs.existsSync(`${targetFile}.html`)) errors.push(`${source}: redirect target missing ${entry.target}`);
 }
 for (const [source, target] of routeMap) {
-  if (routeMap.has(target)) errors.push(`redirect chain forbidden: ${source} -> ${target} -> ${routeMap.get(target)}`);
+  if (routeMap.has(new URL(target, 'https://spryexecutiveos.com').pathname)) errors.push(`redirect chain forbidden: ${source} -> ${target} -> ${routeMap.get(target)}`);
   if (source === target) errors.push(`redirect loop: ${source}`);
 }
 

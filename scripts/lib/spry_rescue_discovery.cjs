@@ -20,7 +20,7 @@ module.exports = function syncDiscovery(write) {
   const routes = active.slice().sort((a,b) => a.path.localeCompare(b.path)).map((p,i) => ({
     route_id: `ROUTE-${String(i+1).padStart(4,'0')}`, path: routeFor(p.path), source_file: p.path,
     canonical_url: p.canonical_url, canonical_domain: new URL(p.canonical_url).hostname,
-    h1: p.query || '', framework: p.framework || '', safe_controls: ['internal-links'], priority: !!p.priority
+    h1: p.editorial_title || p.query || '', framework: p.framework || '', safe_controls: ['internal-links'], priority: !!p.priority
   }));
   save('data/routes/public_route_manifest.json', { routes });
   const criticalPath = 'data/routes/critical_browser_route_manifest.json';
@@ -38,7 +38,7 @@ module.exports = function syncDiscovery(write) {
     if (!p) throw new Error('Inactive critical browser route: ' + row.source_file);
     row.representative_dimensions = row.representative_dimensions.map(d => d.startsWith('extraction:') ? 'extraction:'+p.extraction_type : d.startsWith('route:') ? (p.path.endsWith('/index.html') ? 'route:directory-index' : 'route:static-html') : d);
     if (keepers.has(routeFor(p.path))) row.representative_dimensions = [...new Set(row.representative_dimensions.filter(d => !d.startsWith('quality:') && !d.startsWith('source:')).concat('source:rescue-guide'))];
-    Object.assign(row, { path: routeFor(p.path), canonical_url: p.canonical_url, canonical_domain: new URL(p.canonical_url).hostname, h1: p.query, framework: p.framework, definition: p.definition, extraction_type: p.extraction_type });
+    Object.assign(row, { path: routeFor(p.path), canonical_url: p.canonical_url, canonical_domain: new URL(p.canonical_url).hostname, h1: p.editorial_title || p.query, framework: p.framework, definition: p.definition, extraction_type: p.extraction_type });
   }
   save(criticalPath, critical);
   const contractPath = 'config/validation/browser_suite_contract.json';
@@ -50,9 +50,18 @@ module.exports = function syncDiscovery(write) {
   const phase = read(phasePath);
   phase.current_active_reference_surfaces = active.length;
   save(phasePath, phase);
+  const submissionPath = 'data/search/search_engine_submission_manifest.json';
+  const submission = read(submissionPath);
+  const priorities = read('data/citation/citation_strategy_contract.json').layers.reference_pages.priority_pages;
+  const priorityUrls = priorities.map(p => byPath.get(p)?.canonical_url).filter(Boolean);
+  for (const key of ['indexnow', 'google_search_console', 'bing_webmaster_tools']) submission[key].priority_urls = priorityUrls;
+  submission.missing_from_sitemap = priorityUrls.filter(url => !active.some(p => p.canonical_url === url));
+  save(submissionPath, submission);
   // A retired archive must never be restored over a newly reviewed edition.
   const frozenPath = 'data/release/frozen_output_registry.json';
   const frozen = read(frozenPath);
   for (const [route, record] of Object.entries(frozen.records)) if (isRetiredFile(record.path)) delete frozen.records[route];
   save(frozenPath, frozen);
+  // Derive dates only after every HTML mutation at this publishing boundary.
+  require('child_process').execFileSync(process.execPath, ['scripts/sitemap_content_lastmod.mjs'], {stdio:'pipe'});
 };

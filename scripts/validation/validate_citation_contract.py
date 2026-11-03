@@ -60,7 +60,6 @@ def _acceptable_h1(path, query):
     if curated: allowed.add(curated)
     return allowed
 
-PRODUCT="This is one of the frameworks inside the Billionaire High Performance Coach system — a structured executive OS for using ChatGPT as your accountability and decision partner."
 LANDING_PAGE_EXCEPTIONS={'index.html','download.html'}
 GUMROAD='https://sprylabs.gumroad.com/l/billionaire-high-performance-coach'
 DISCOVERY='https://aplayermode.com'

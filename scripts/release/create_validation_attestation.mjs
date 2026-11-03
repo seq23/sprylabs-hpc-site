@@ -11,6 +11,12 @@ const buildFingerprint=crypto.createHash('sha256').update(JSON.stringify(buildHa
 const query=JSON.parse(fs.readFileSync('data/citation/query_registry.json','utf8')).queries.filter(x=>x.release_status==='ACTIVE');
 const registry=JSON.parse(fs.readFileSync('data/content/page_admission_registry.json','utf8')).records;
 const latest=fs.existsSync('data/programmatic/latest_run_summary.json')?JSON.parse(fs.readFileSync('data/programmatic/latest_run_summary.json','utf8')):null;
-const att={schema_version:'1.0',generated_at:new Date().toISOString(),commit_sha:commit,source_fingerprint:sourceFingerprint,build_fingerprint:buildFingerprint,build_hashes:buildHashes,governed_pages:query.length,admission_records:registry.length,admitted_new_pages:latest?.accepted?.length||0,rejected_candidates:latest?.rejected?.length||0,actionable_warnings:0,validation_status:'PASS',profile:process.env.VALIDATION_PROFILE||'release:ci-validate', profile_attestation:'explicit'};
+const receiptPath='artifacts/validation/profile-container-prepush.json';
+if (!fs.existsSync(receiptPath)) throw new Error('Cannot attest without '+receiptPath);
+const receipt=JSON.parse(fs.readFileSync(receiptPath,'utf8'));
+if (!receipt.status || !Array.isArray(receipt.steps) || !receipt.steps.length) throw new Error('Cannot attest an empty or invalid validation receipt');
+const failureCount=Number(receipt.failure_count ?? receipt.steps.filter(s=>s.status!=='PASS').length);
+const validationStatus=receipt.status==='PASS' && failureCount>0 ? 'FAIL' : receipt.status;
+const att={schema_version:'1.0',generated_at:new Date().toISOString(),commit_sha:commit,source_fingerprint:sourceFingerprint,build_fingerprint:buildFingerprint,build_hashes:buildHashes,governed_pages:query.length,admission_records:registry.length,admitted_new_pages:latest?.accepted?.length||0,rejected_candidates:latest?.rejected?.length||0,actionable_warnings:failureCount,validation_status:validationStatus,profile:receipt.profile, profile_attestation:receiptPath};
 for(const f of ['reports/validation-attestation.json','.build/validation-attestation.json'])fs.writeFileSync(f,JSON.stringify(att,null,2)+'\n');
-console.log(`[validation-attestation] PASS: commit=${commit} source=${sourceFingerprint.slice(0,12)} build=${buildFingerprint.slice(0,12)}`);
+console.log(`[validation-attestation] ${att.validation_status}: commit=${commit} source=${sourceFingerprint.slice(0,12)} build=${buildFingerprint.slice(0,12)}`);

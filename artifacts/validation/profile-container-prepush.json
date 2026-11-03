@@ -1,6 +1,6 @@
 {
   "profile": "container-prepush",
-  "started_at": "2026-11-03T13:51:56.396Z",
+  "started_at": "2026-11-03T14:10:32.611Z",
   "steps": [
     {
       "id": "VAL-ORCHESTRATION-CONTRACT",
@@ -35,8 +35,8 @@
     {
       "id": "VAL-EXTRACTION-SURFACE-GUARD-SNAPSHOT",
       "command": "npm run validate:extraction-surface-guard:snapshot",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "build:all",
@@ -77,14 +77,14 @@
     {
       "id": "SOCIAL-TAGS",
       "command": "npm run validate:social-tags",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "LLMS-TXT-SHAPE",
       "command": "npm run validate:llms-txt-shape",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "CANONICAL-HOST",
@@ -167,8 +167,8 @@
     {
       "id": "workflow:hostile-review",
       "command": "npm run workflow:hostile-review",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "agent:artifact-shape:self-test",
@@ -191,8 +191,8 @@
     {
       "id": "validate:agent-run",
       "command": "npm run validate:agent-run",
-      "exit_code": 0,
-      "status": "PASS"
+      "exit_code": 1,
+      "status": "FAIL"
     },
     {
       "id": "VAL-EXTRACTION-FINAL-NORMALIZATION",
@@ -251,26 +251,26 @@
     {
       "id": "VAL-FULL-PAGE-AUDIT",
       "command": "npm run validate:full-page-audit",
-      "exit_code": 1,
-      "status": "FAIL"
-    },
-    {
-      "id": "validate:retired-route-references",
-      "command": "npm run validate:retired-route-references",
       "exit_code": 0,
       "status": "PASS"
     },
     {
-      "id": "validate:ui-test-parity",
-      "command": "npm run validate:ui-test-parity",
+      "id": "validate:retired-route-references",
+      "command": "npm run validate:retired-route-references",
       "exit_code": 1,
       "status": "FAIL"
     },
     {
+      "id": "validate:ui-test-parity",
+      "command": "npm run validate:ui-test-parity",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
       "id": "validate:browser-suite-contract",
       "command": "npm run validate:browser-suite-contract",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "validate:traffic-qualified-suite",
@@ -287,14 +287,14 @@
     {
       "id": "validate:batch-f-continuity",
       "command": "npm run validate:batch-f-continuity",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "validate:batch-g-continuity",
       "command": "npm run validate:batch-g-continuity",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "repair:extraction-final-state",
@@ -317,8 +317,8 @@
     {
       "id": "validate:citation-phase-manifest",
       "command": "node scripts/validation/validate_citation_phase_manifest.mjs",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "validate:no-keyword-swap-pages",
@@ -341,8 +341,8 @@
     {
       "id": "validate:llms-full-coverage",
       "command": "node scripts/validation/validate_llms_full_coverage.mjs",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "validate:sitemap-coverage",
@@ -359,14 +359,14 @@
     {
       "id": "validate:search-measurement-truthfulness",
       "command": "npm run validate:search-measurement-truthfulness",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "validate:warnings",
       "command": "npm run validate:warnings",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "VAL-EXTRACTION-CONTRACT-SELF-TEST",
@@ -389,8 +389,8 @@
     {
       "id": "VAL-BHPC-PAGE-SEO",
       "command": "npm run validate:page-seo",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "VAL-SYNTHESIS-DIFFERENTIATION",
@@ -419,8 +419,8 @@
     {
       "id": "validate:content-pattern",
       "command": "npm run validate:content-pattern",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "validate:query-atlas",
@@ -437,8 +437,8 @@
     {
       "id": "validate:knowledge-map-route",
       "command": "npm run validate:knowledge-map-route",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "validate:workflow-yaml-inventory",
@@ -545,14 +545,14 @@
     {
       "id": "VAL-PAGE-SURFACE-COVERAGE",
       "command": "npm run validate:page-surface-coverage",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "VAL-PYTHON-DEPENDENCY-CONTRACT",
       "command": "npm run validate:python-dependency-contract",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "VAL-030",
@@ -587,20 +587,20 @@
     {
       "id": "VAL-CURATED-FRAMEWORK-AUTHORITY",
       "command": "npm run validate:curated-framework-authority",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "VAL-CURATED-DEFINITION-REGISTRY-REACH",
       "command": "npm run validate:curated-definition-registry-reach",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "VAL-FROZEN-OUTPUT-CONTRACT",
       "command": "npm run validate:frozen-output-contract",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "VAL-CITATION-SCHEMA-AUTHORITY-REACH",
@@ -611,14 +611,14 @@
     {
       "id": "VAL-CITATION-SCHEMA-AUTHORITY",
       "command": "npm run validate:citation-schema-authority",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "VAL-CITATION-PHASE-MANIFEST",
       "command": "npm run validate:citation-phase-manifest",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "VAL-INTERNAL-LINK-VELOCITY",
@@ -629,8 +629,8 @@
     {
       "id": "VAL-LLMS-FULL-COVERAGE",
       "command": "npm run validate:llms-full-coverage",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "VAL-RELEASE-ATOM-CONTRACT",
@@ -677,8 +677,8 @@
     {
       "id": "VAL-ATTESTATION-MATCHES-RECEIPT",
       "command": "npm run validate:attestation-matches-receipt",
-      "exit_code": 0,
-      "status": "PASS"
+      "exit_code": 1,
+      "status": "FAIL"
     },
     {
       "id": "VAL-BUILD-ALL-INTEGRITY",
@@ -755,8 +755,8 @@
     {
       "id": "VAL-AGENT-ARTIFACT-ABSORPTION-TRIGGER",
       "command": "npm run validate:agent-artifact-absorption-trigger",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "AGENT-BHPC-ACCEPTANCE-VISIBILITY",
@@ -767,14 +767,14 @@
     {
       "id": "VAL-DERIVED-ABSORBER-REPRODUCIBILITY",
       "command": "npm run validate:derived-absorber-reproducibility",
-      "exit_code": 0,
-      "status": "PASS"
+      "exit_code": 1,
+      "status": "FAIL"
     },
     {
       "id": "VAL-HEALTH-BOUNDARY-REACH",
       "command": "npm run validate:health-boundary-reach",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "VAL-FREEZE-AFTER-CONVERGENCE",
@@ -851,8 +851,8 @@
     {
       "id": "VAL-REPAIR-FIXTURE-CAPABILITY",
       "command": "npm run validate:repair-fixture-capability",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "VAL-PUBLISHED-SURFACE-PAGES-ONLY",
@@ -929,14 +929,14 @@
     {
       "id": "VAL-SEARCH-SNIPPET-BOUNDS",
       "command": "npm run validate:search-snippet-bounds",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "VAL-REDIRECT-AND-LINK-INTEGRITY",
       "command": "npm run validate:redirect-and-link-integrity",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "VAL-AGENT-DROP-OVERLAY",
@@ -953,8 +953,8 @@
     {
       "id": "VAL-FROZEN-OUTPUT-SHRINK",
       "command": "npm run validate:frozen-output-shrink",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "VAL-INTAKE-HOLDS-NONCONFORMING-PAGE",
@@ -965,8 +965,8 @@
     {
       "id": "VAL-AGENT-REPAIR-PAGE-IDENTITY",
       "command": "npm run agent:bhpc:self-test-repair-identity",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "VAL-APLAYERMODE-LANDING",
@@ -1132,45 +1132,18 @@
     }
   ],
   "status": "FAIL",
-  "failure_count": 36,
+  "failure_count": 9,
   "failures": [
-    "VAL-EXTRACTION-SURFACE-GUARD-SNAPSHOT",
     "VAL-EXTRACTION-SURFACE-GUARD-CHECK",
-    "SOCIAL-TAGS",
-    "LLMS-TXT-SHAPE",
-    "workflow:hostile-review",
+    "validate:agent-run",
     "validate:content-release",
     "validate:citation-strategy",
-    "VAL-FULL-PAGE-AUDIT",
-    "validate:ui-test-parity",
-    "validate:browser-suite-contract",
-    "validate:batch-f-continuity",
-    "validate:batch-g-continuity",
-    "validate:citation-phase-manifest",
-    "validate:llms-full-coverage",
-    "validate:search-measurement-truthfulness",
-    "validate:warnings",
-    "VAL-BHPC-PAGE-SEO",
-    "validate:content-pattern",
-    "validate:knowledge-map-route",
+    "validate:retired-route-references",
     "VAL-SITEMAP-LEDGER-FINAL",
-    "VAL-PAGE-SURFACE-COVERAGE",
-    "VAL-PYTHON-DEPENDENCY-CONTRACT",
-    "VAL-CURATED-FRAMEWORK-AUTHORITY",
-    "VAL-CURATED-DEFINITION-REGISTRY-REACH",
-    "VAL-FROZEN-OUTPUT-CONTRACT",
-    "VAL-CITATION-SCHEMA-AUTHORITY",
-    "VAL-CITATION-PHASE-MANIFEST",
-    "VAL-LLMS-FULL-COVERAGE",
+    "VAL-ATTESTATION-MATCHES-RECEIPT",
     "VAL-MAIN-WRITER-VALIDATION-GATE",
-    "VAL-AGENT-ARTIFACT-ABSORPTION-TRIGGER",
-    "VAL-HEALTH-BOUNDARY-REACH",
-    "VAL-REPAIR-FIXTURE-CAPABILITY",
-    "VAL-SEARCH-SNIPPET-BOUNDS",
-    "VAL-REDIRECT-AND-LINK-INTEGRITY",
-    "VAL-FROZEN-OUTPUT-SHRINK",
-    "VAL-AGENT-REPAIR-PAGE-IDENTITY"
+    "VAL-DERIVED-ABSORBER-REPRODUCIBILITY"
   ],
   "stopped_early_at": null,
-  "finished_at": "2026-11-03T13:59:05.275Z"
+  "finished_at": "2026-11-03T14:18:56.270Z"
 }

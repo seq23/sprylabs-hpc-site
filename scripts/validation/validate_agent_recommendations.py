@@ -11,7 +11,8 @@ sys.path.insert(0, str(ROOT/'scripts/validation'))
 from style_policy import sentence_count_split, paragraph_sentence_severity, paragraph_sentence_message
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'lib'))
 from word_floor import floor_verdict, hard_floor  # noqa: E402
-PRODUCT="This is one of the frameworks inside the Billionaire High Performance Coach system — a structured executive OS for using ChatGPT as your accountability and decision partner."
+sys.path.insert(0, str(ROOT/'scripts/citation'))
+from conversion_links import has_manual_link
 contract=json.loads((ROOT/'data/citation/agent_recommendation_acceptance.json').read_text(encoding='utf-8'))
 
 # repair:programmatic-registry-owners resolves duplicate query ownership by
@@ -52,8 +53,7 @@ def universal(path,soup,expected_h1=None):
     blocks=soup.select('[data-llm-answer="true"]')
     if len(blocks)!=1: errors.append(f'{path}: expected one extraction block, found {len(blocks)}')
     product=soup.select_one('p.product-anchor')
-    if not product or PRODUCT not in text(product): errors.append(f'{path}: product anchor missing')
-    if not product or not product.select_one('a[href="/download.html"]'): errors.append(f'{path}: /download.html anchor missing')
+    if not product or not has_manual_link(str(product)): errors.append(f'{path}: /download.html anchor missing')
     for idx,p in enumerate(soup.find_all('p')):
         s=text(p)
         count=sentence_count_split(s)

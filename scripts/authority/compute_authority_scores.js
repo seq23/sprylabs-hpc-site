@@ -12,16 +12,6 @@ const MONEY_TARGETS = [
   "/download.html"
 ];
 
-function walkHtml(dir, out = []) {
-  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-    if ([".git", "node_modules", "_ops", "coverage", "reports", "templates"].includes(entry.name)) continue;
-    const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) walkHtml(full, out);
-    else if (entry.isFile() && entry.name.endsWith(".html")) out.push(full);
-  }
-  return out;
-}
-
 function hrefs(html) {
   return [...html.matchAll(/href=["']([^"']+)["']/g)].map(m => m[1]);
 }
@@ -30,7 +20,7 @@ function rel(file) {
   return "/" + file.replace(/^\.\//, "").replace(/index\.html$/, "").replace(/\/$/, "");
 }
 
-const files = walkHtml(".");
+const files = require("../lib/site_pages.js").listIndexablePages(ROOT);
 const pages = {};
 
 for (const file of files) {

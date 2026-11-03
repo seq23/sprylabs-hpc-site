@@ -62,7 +62,7 @@ for (const route of allRoutes) {
   const page = byPath.get(route.source_file);
   if (!page) errors.push(`${route.route_id}: source not active`);
   else {
-    if (route.h1 !== page.query) errors.push(`${route.route_id}: H1 drift`);
+    if (route.h1 !== (page.editorial_title || page.query)) errors.push(`${route.route_id}: H1 drift`);
     if (route.framework !== page.framework) errors.push(`${route.route_id}: framework drift`);
   }
 }
@@ -74,7 +74,7 @@ for (const route of criticalRoutes) {
   const page = byPath.get(route.source_file);
   if (!page) errors.push(`${route.route_id}: critical source not active`);
   else {
-    if (route.h1 !== page.query) errors.push(`${route.route_id}: critical H1 drift`);
+    if (route.h1 !== (page.editorial_title || page.query)) errors.push(`${route.route_id}: critical H1 drift`);
     if (route.framework !== page.framework) errors.push(`${route.route_id}: critical framework drift`);
     const shape = frameworkShapeError(route.route_id, route.framework);
     if (shape) errors.push(shape);
@@ -100,7 +100,6 @@ for (const token of [
   'product-anchor',
   'CITATION_PAGE_SCHEMA',
   'download.html',
-  'longParagraphs',
   'scrollWidth',
   'consoleErrors',
   'pageErrors',

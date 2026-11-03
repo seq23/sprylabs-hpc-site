@@ -44,7 +44,7 @@ ${renderSchemaScript(graph)}</head>
 ${g.table ? '<h2>How do the options compare?</h2><table><thead><tr>'+g.table.headers.map(h=>'<th scope="col">'+esc(h)+'</th>').join('')+'</tr></thead><tbody>'+g.table.rows.map(r=>'<tr>'+r.map(c=>'<td>'+esc(c)+'</td>').join('')+'</tr>').join('')+'</tbody></table>' : ''}
 ${demand ? '' : sections}
 <h2>What would this look like in practice?</h2><p>${esc(g.example)}</p>
-<h2>Which planning principle supports the method?</h2><p>The <a href="${source}">National Cancer Institute’s archived implementation-intentions resource</a> describes if–then plans that connect a situational cue with an intended action. Spry’s examples here are editorial applications of that planning idea, not evidence that this particular guide or product produces a measured outcome. The source is retained for reference and is no longer maintained.</p><p>Source reviewed 2 November 2026.</p>
+<section class="sources"><h2>Which planning principle supports the method?</h2><p>The <a href="${source}">National Cancer Institute’s archived implementation-intentions resource</a> describes if–then plans that connect a situational cue with an intended action. Spry’s examples here are editorial applications of that planning idea, not evidence that this particular guide or product produces a measured outcome. The source is retained for reference and is no longer maintained.</p><p>Source reviewed 2 November 2026.</p></section>
 <section id="faq"><h2>Frequently asked questions</h2>${g.faq.map(f=>`<h3>${esc(f.question)}</h3><p>${esc(f.answer)}</p>`).join('\n')}</section>
 ${demand ? '' : nextStep}
 <nav aria-label="Related guides"><h2>Which related guides can help?</h2><ul>${related.map(x=>`<li><a href="${x.route}">${esc(x.title)}</a></li>`).join('')}</ul></nav>
