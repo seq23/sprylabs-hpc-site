@@ -9,6 +9,7 @@ const { routeFor: sharedRouteFor, hostFor: sharedHostFor } = requireCjs('../lib/
 const { serializeSchema, mainEntityOfPage } = requireCjs('../lib/citation_page_schema.cjs');
 import {
   loadLibrary, assertMaterialFor, pickConcept, composeArticle, artifactBlock,
+  sayOnce,
   countWords, textOf, titleish, LIBRARY_PATH
 } from './phase4_page_composer.mjs';
 import { selectDemandCandidates } from './demand_backed_atoms.mjs';
@@ -298,7 +299,7 @@ function primaryAxis(kind, key, concept) {
   if (kind === 'state') return {kind, key, data:d, label, lead:[d.signal, `What is actually scarce here: ${lower(d.scarce)}`], firstMove:d.opening, wrongMove:d.do_not, measure:d.after};
   if (kind === 'audience') return {kind, key, data:d, label, lead:[d.context, `The hardest part of the week: ${lower(d.hardest)}`], firstMove:concept.moves[0], wrongMove:`${concept.failure_modes[0].name}. ${concept.failure_modes[0].why}`, measure:concept.evidence};
   if (kind === 'dimension') return {kind, key, data:d, label, lead:[d.question, d.move], firstMove:concept.moves[0], wrongMove:`${concept.failure_modes[0].name}. ${concept.failure_modes[0].why}`, measure:d.evidence};
-  if (kind === 'tool') return {kind, key, data:d, label, lead:[`What ${key} does well: ${lower(d.does_well)}`, `What it does not do: ${lower(d.does_not)}`], firstMove:d.choose_when, wrongMove:`Treating the two as substitutes. ${d.differs}`, measure:`Whether the thing you were missing is now happening, rather than whether you own a new tool.`};
+  if (kind === 'tool') return {kind, key, data:d, label, lead:[`What ${key} does well: ${lower(d.does_well)}`, `What it does not do: ${lower(d.does_not)}`], firstMove:d.choose_when, wrongMove:`Treating the two as substitutes. ${concept.failure_modes[0].name}. ${concept.failure_modes[0].why}`, measure:`Whether the thing you were missing is now happening, rather than whether you own a new tool.`};
   if (kind === 'platform') return {kind, key, data:d, label, lead:[d.context_note, d.caveat], firstMove:d.first_move, wrongMove:d.wrong_move, measure:`Whether the setup still works in a fresh context with no history.`};
   if (kind === 'concept') return {kind, key, data:d, label, lead:[d.trigger, `${d.framework} ${lower(d.value)}.`], firstMove:d.moves[0], wrongMove:`${d.failure_modes[0].name}. ${d.failure_modes[0].why}`, measure:d.evidence};
   if (kind === 'objection') return {kind, key, data:d, label, lead:[d.question, d.answer], firstMove:d.check, wrongMove:`Accepting an outcome promise. Any productivity product that guarantees a specific result is making a claim it cannot support.`, measure:`Whether the answer above was checkable before purchase rather than after.`};
@@ -340,7 +341,7 @@ const BASE_SOURCES = [
 // subject also shares its whole FAQ block, and the FAQ is a fifth of the page.
 function axisFaq(axis) {
   const d = axis.data || {};
-  if (d.first_week && d.mistaken_for) return [{q:`What should a reader do in the first week on ${axis.key}?`, a:`${d.first_week} ${d.mistaken_for}`}];
+  if (d.first_week && d.mistaken_for) return [{q:`What should a reader do in the first week on ${axis.key}?`, a:d.first_week}];
   if (d.failure) return [{q:`How does the ${axis.key} usually fail?`, a:`${d.failure} ${d.first_week}`}];
   return [];
 }
@@ -356,7 +357,12 @@ function makeAtom(opts) {
     : opts.primary;
   const id = `aplayer-phase4-${String(atoms.length + 1).padStart(4, '0')}`;
   const framework = uniqueFrameworkName(`${concept.framework} — ${axisLabel}`, id.slice(-4));
-  const definition = `The ${framework} is a named operating pattern in the Billionaire High Performance Coach system. It applies ${concept.framework}, which ${lower(concept.value)}, to ${axisLabel}.`;
+  // `framework` is "<concept> — <axisLabel>", so naming the axis again in the
+  // next clause said it twice in one paragraph - and on the use-case pages the
+  // axis label is close to the whole h1, which put the same eight words on the
+  // page four times before the reader reached the first section.
+  const appliesTo = framework.includes(axisLabel) ? '' : `, to ${axisLabel}`;
+  const definition = `The ${framework} is a named operating pattern in the Billionaire High Performance Coach system. It applies ${concept.framework}, which ${lower(concept.value)}${appliesTo}.`;
   const atom = {
     id, source: GENERATED_SOURCE,
     path, route: routeFor(path), canonical_url: canonicalFor(path), canonical_domain: domainFor(path),
@@ -394,6 +400,10 @@ function makeAtom(opts) {
     }
   };
   Object.assign(atom, extraFields || {});
+  // One authored sentence, one place on the page. Run before anything reads the
+  // spec, so the rendered article and the FAQPage schema - both built from
+  // atom.compose - cannot disagree about what the page says.
+  sayOnce(atom.compose);
   return atom;
 }
 
@@ -822,9 +832,9 @@ for (const tool of tools) for (const dimension of dimensions) {
     example: {
       title: `choosing between ${aOrAnLocal(tool)} and a written structure for ${dimension}`,
       paragraphs: [
-        `${d.question} ${t.choose_when}`,
-        `${t.does_not} ${t.differs}`,
-        `${concept.moves[0]}`
+        `Where the written structure goes wrong in practice: ${lower(concept.failure_modes[0].name)}. ${concept.failure_modes[0].why}`,
+        `${concept.failure_modes[0].correction} Evidence to record: ${lower(concept.evidence)}`,
+        `A line you can paste: ${concept.prompt}`
       ],
       measure: d.evidence
     },
@@ -864,9 +874,9 @@ for (const conceptRow of concepts) for (const dimension of dimensions) {
     example: {
       title: `${concept.framework} applied to ${dimension}`,
       paragraphs: [
-        `${concept.trigger}`,
-        `${d.question} ${d.move}`,
-        `${concept.moves[0]}`
+        `Where it goes wrong in practice: ${lower(concept.failure_modes[0].name)}. ${concept.failure_modes[0].why}`,
+        `${concept.failure_modes[0].correction} Evidence to record: ${lower(concept.evidence)}`,
+        `A line you can paste: ${concept.prompt}`
       ],
       measure: d.evidence
     },
@@ -955,9 +965,9 @@ for (const platform of platforms) for (const workflow of platformWorkflows) {
     example: {
       title: `the ${workflow} in ${platform}`,
       paragraphs: [
-        `${wf.trigger} ${wf.purpose}`,
-        `${pl.context_note} ${pl.setup_note}`,
-        `${concept.moves[0]}`
+        `Where this goes wrong in practice: ${lower(concept.failure_modes[0].name)}. ${concept.failure_modes[0].why}`,
+        `${concept.failure_modes[0].correction} Evidence to record: ${lower(concept.evidence)}`,
+        `A line you can paste: ${concept.prompt}`
       ],
       measure: wf.output
     },

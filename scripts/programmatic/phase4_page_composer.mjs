@@ -92,18 +92,179 @@ export function pickConcept(lib, kind, key, offset) {
   return { key: conceptKey, ...concept };
 }
 
+// --- say it once ------------------------------------------------------------
+/**
+ * One authored sentence, one place on the page.
+ *
+ * Several slots were wired to the same library field, so a page restated one
+ * sentence five to eight times. On
+ * `/answers/phase4/what-should-a-founder-do-when-behind-on-commitments-and-needs-priority-selection-support`,
+ * `states.behind on commitments.opening` was printed by the TL;DR, by the
+ * extraction block's "Do this first.", by the state artifact table's opening-move
+ * row, by the worked example's second paragraph and by the first FAQ answer -
+ * seven copies in one body. The Monday page-shape sample reads an eight-word
+ * phrase repeated more than three times as template filler, and all five pages
+ * sampled on 3 November 2026 failed on exactly this.
+ *
+ * The slots are not equally entitled to the sentence. The answer up front and
+ * the extraction block are where a reader and an answer engine look for it, and
+ * `extraction_contract.py` requires it in the second, so those two keep it and
+ * are only registered here. Everything downstream - artifact and misreadings
+ * table cells, the worked example, the applied paragraphs, the FAQ answers -
+ * gives up a sentence that has already been said and keeps the rest; an element
+ * left with nothing of its own is dropped rather than rendered empty.
+ *
+ * Run on the compose spec before anything reads it (`sayOnce` in makeAtom), so
+ * the visible page and the FAQPage schema, which are built from the same spec,
+ * cannot disagree.
+ */
+const SENTENCE_SPLIT = /(?<=[.!?])\s+/;
+const normSentence = (s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+
+// The library fields each artifact table prints, in the order artifactBlock
+// prints them. A field not listed here is never stripped.
+const ARTIFACT_FIELDS = {
+  dimension: ['question', 'move', 'unit', 'looks_like_progress', 'evidence', 'boundary_note'],
+  state: ['signal', 'scarce', 'unit', 'looks_like_progress', 'do_not', 'opening', 'after'],
+  audience: ['context', 'week_shape', 'constraint', 'hardest', 'protect', 'advice_that_fails'],
+  workflow: ['purpose', 'trigger', 'output'],
+  tool: ['does_well', 'does_not', 'choose_when', 'differs'],
+  platform: ['seeding', 'state_note', 'caveat'],
+  objection: ['what_it_is_not', 'evidence_to_ask_for', 'check'],
+};
+// The misreadings table, which runs for either axis where the material exists.
+// `mistaken_for` and `failure` are the fields misreadingsBlock gates on, so they
+// are left alone: stripping one would take the whole block, and the rows under
+// it, with it.
+const MISREADING_FIELDS = ['wrong_metric', 'first_week', 'stack'];
+
+// The unit the page-shape sample measures: SLOT_WORDS words in a row, more than
+// SLOT_MAX times in one body. Matching it here is deliberate - a sentence that
+// reuses a phrase the page has already used is the thing being removed, and
+// sentence identity alone missed most of it ("Mark each one running,
+// intermittent, or stopped" and "Then: mark each one running, intermittent, or
+// stopped" are two sentences carrying one phrase).
+function shingles(text, n = QUALITY_SLOT_WORDS) {
+  const w = normSentence(text).split(' ').filter(Boolean);
+  const out = [];
+  for (let i = 0; i + n <= w.length; i++) out.push(w.slice(i, i + n).join(' '));
+  return out;
+}
+export const QUALITY_SLOT_WORDS = 8;
+
+function sentenceFilter() {
+  const sentences = new Set();
+  const phrases = new Set();
+  const register = (text) => {
+    const k = normSentence(text);
+    if (k) sentences.add(k);
+    for (const sh of shingles(text)) phrases.add(sh);
+  };
+  return {
+    /** Register text as said, without changing it. */
+    keep(text) {
+      for (const s of String(text ?? '').split(SENTENCE_SPLIT)) register(s);
+      return text;
+    },
+    /**
+     * Text with its already-said sentences removed; '' when nothing is left.
+     * A sentence goes if it repeats a sentence or reuses an eight-word phrase
+     * the page has already used. A sentence too short to form a phrase is kept
+     * on sentence identity alone.
+     */
+    once(text) {
+      if (text == null || text === '') return text;
+      const out = [];
+      for (const s of String(text).split(SENTENCE_SPLIT)) {
+        const k = normSentence(s);
+        if (!k) continue;
+        if (sentences.has(k)) continue;
+        if (shingles(s).some((sh) => phrases.has(sh))) continue;
+        register(s);
+        out.push(s.trim());
+      }
+      return out.join(' ');
+    },
+  };
+}
+
+/**
+ * Strip repeated sentences from the downstream slots of one compose spec,
+ * in the order the page renders them. Mutates and returns the spec; axis data
+ * is cloned first, because those objects are the shared material library.
+ */
+export function sayOnce(spec) {
+  const f = sentenceFilter();
+  // 1. The answer up front, then the extraction block: both keep what they say.
+  f.keep(spec.directAnswer);
+  for (const t of spec.primary?.lead ?? []) f.keep(t);
+  f.keep(spec.primary?.firstMove);
+  f.keep(spec.primary?.wrongMove);
+  for (const m of spec.concept?.moves ?? []) f.keep(m);
+  // Comparison pages hand the composer a pre-rendered table for the extraction
+  // block, so its text is already on the page before any slot below is weighed.
+  if (spec.extractionTable) f.keep(textOf(spec.extractionTable));
+  // The applied paragraph and the "when this framework is the right one" line sit
+  // in the same block but are not part of the extraction contract, and both were
+  // assembled from fields the answer up front already used.
+  if (spec.secondary) spec.secondary.applied = f.once(spec.secondary.applied);
+  if (spec.concept) spec.concept = { ...spec.concept, trigger: f.once(spec.concept.trigger) };
+  // 2. The worked example: prose a reader actually reads keeps the sentence.
+  if (spec.example) {
+    spec.example.paragraphs = (spec.example.paragraphs ?? []).map((t) => f.once(t)).filter(Boolean);
+    if (!spec.example.paragraphs.length) {
+      throw new Error(
+        `[phase4] refusing: the worked example for ${spec.query} said nothing the page had not already said. ` +
+        `validate:programmatic-admission requires a worked example on every page, so give this lane's example ` +
+        `material of its own rather than reassembling slots the page already prints.`,
+      );
+    }
+    spec.example.measure = f.once(spec.example.measure);
+  }
+  // 3. The artifact and misreadings tables. AFTER the worked example on purpose:
+  //    a method page prints every field its state axis has, so whichever of the
+  //    two went second was left with nothing - and a reference row can be dropped
+  //    (the admission gate wants an artifact, not a particular row) while the
+  //    worked example cannot (it wants `.worked-example` on every page).
+  const seenKind = new Set();
+  for (const axis of [spec.secondary, spec.primary]) {
+    if (!axis || seenKind.has(axis.kind)) continue;
+    seenKind.add(axis.kind);
+    axis.data = { ...(axis.data ?? {}) };
+    for (const field of [...(ARTIFACT_FIELDS[axis.kind] ?? []), ...MISREADING_FIELDS]) {
+      if (typeof axis.data[field] === 'string') axis.data[field] = f.once(axis.data[field]);
+    }
+  }
+  // 4. The page-specific section: the mechanism and the "what this is not" line.
+  if (spec.concept) {
+    spec.concept.mechanism = f.once(spec.concept.mechanism);
+    spec.concept.not_this = f.once(spec.concept.not_this);
+  }
+  // 5. The applied paragraphs in the page-specific section.
+  if (spec.secondary) spec.secondary.extra = (spec.secondary.extra ?? []).map((t) => f.once(t)).filter(Boolean);
+  // 6. The FAQ, last: an answer that only repeats the page is not an answer.
+  spec.faq = (spec.faq ?? []).map((item) => ({ ...item, a: f.once(item.a) })).filter((item) => item.a);
+  return spec;
+}
+
 // --- table renderers --------------------------------------------------------
+// A row whose value slots are all empty was stripped by sayOnce: the page said
+// it already, so the row is dropped rather than rendered blank.
+const withValues = (rows) => rows.filter((r) => r.slice(1).some((c) => String(c ?? '').trim()));
 function table2(rows) {
-  const body = rows.map(([a, b]) => `<tr><th scope="row">${esc(a)}</th><td>${esc(b)}</td></tr>`).join('');
+  const kept = withValues(rows);
+  if (!kept.length) return '';
+  const body = kept.map(([a, b]) => `<tr><th scope="row">${esc(a)}</th><td>${esc(b)}</td></tr>`).join('');
   return `<table class="table"><thead><tr><th scope="col">Element</th><th scope="col">What it is here</th></tr></thead><tbody>${body}</tbody></table>`;
 }
 function table3(headers, rows) {
+  const kept = withValues(rows);
+  if (!kept.length) return '';
   const head = headers.map((h) => `<th scope="col">${esc(h)}</th>`).join('');
-  const body = rows.map((r) => `<tr><th scope="row">${esc(r[0])}</th>${r.slice(1).map((c) => `<td>${esc(c)}</td>`).join('')}</tr>`).join('');
+  const body = kept.map((r) => `<tr><th scope="row">${esc(r[0])}</th>${r.slice(1).map((c) => `<td>${esc(c)}</td>`).join('')}</tr>`).join('');
   return `<table class="table"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`;
 }
 
-const BOUNDARY_FALLBACK = 'Organizational support only. It is not clinical, legal, or financial advice.';
 
 /**
  * The page-artifact block. It is driven by the page's *secondary* axis so that
@@ -113,7 +274,7 @@ export function artifactBlock(axis) {
   const { kind, key, data } = axis;
   if (kind === 'mode') {
     return {
-      title: `${titleish(data.label)}: what to supply and what to expect`,
+      title: `${titleish(headingLabel(data.label))}: what to supply and what to expect`,
       html: table3(['Layer', 'What it means here', 'Why it matters'], data.table_rows),
     };
   }
@@ -126,7 +287,7 @@ export function artifactBlock(axis) {
         ['The unit that matters', data.unit],
         ['What looks like progress and is not', data.looks_like_progress],
         ['Evidence that it is working', data.evidence],
-        ['Where this stops', data.boundary_note || BOUNDARY_FALLBACK],
+        ['Where this stops', data.boundary_note || ''],
       ]),
     };
   }
@@ -168,7 +329,7 @@ export function artifactBlock(axis) {
         ['Purpose', data.purpose],
         ['Trigger', data.trigger],
         ['Output', data.output],
-        ['Where it stops', BOUNDARY_FALLBACK],
+        ['Where it stops', data.boundary_note || ''],
       ]),
     };
   }
@@ -193,7 +354,7 @@ export function artifactBlock(axis) {
         ['Seeding the rules', data.seeding],
         ['What carries between sessions', data.state_note],
         ['What to verify with the provider', data.caveat],
-        ['Where this stops', BOUNDARY_FALLBACK],
+        ['Where this stops', data.boundary_note || ''],
       ]),
     };
   }
@@ -204,11 +365,28 @@ export function artifactBlock(axis) {
         ['What it is not', data.what_it_is_not],
         ['Evidence to ask for', data.evidence_to_ask_for],
         ['What to check first', data.check],
-        ['Where this stops', BOUNDARY_FALLBACK],
+        ['Where this stops', data.boundary_note || ''],
       ]),
     };
   }
   return null;
+}
+
+// A few axis labels run to nine or ten words ("working with a language model as
+// a generic capability"). Four section headings and a cross-reference sentence
+// each carry the label, so a long one printed the same mouthful five times - the
+// page-shape sample counts headings, and it read as template filler. Headings
+// take a short form; the full label still appears where the page introduces it.
+// Short enough that the label alone cannot form a repeatable phrase: measured in
+// the same normalised words the filler test counts, so "the system's" counting as
+// two words there counts as two here.
+export function headingLabel(label = '') {
+  const words = String(label).trim().split(/\s+/).filter(Boolean);
+  const tooLong = (ws) => normSentence(ws.join(' ')).split(' ').filter(Boolean).length >= QUALITY_SLOT_WORDS;
+  if (!tooLong(words)) return String(label);
+  const kept = [...words];
+  while (kept.length > 1 && tooLong(kept)) kept.pop();
+  return kept.join(' ');
 }
 
 export function titleish(s = '') {
@@ -234,14 +412,14 @@ export function misreadingsBlock(axis) {
       ['What to do in the first week', d.first_week],
     ];
     if (d.stack) rows.push(['Using both together', d.stack]);
-    rows.push(['Where this stops', d.escalate || d.boundary || d.boundary_note || BOUNDARY_FALLBACK]);
-    return {title: `Common misreadings: ${axis.label || axis.key}`, html: table2(rows)};
+    rows.push(['Where this stops', d.escalate || d.boundary || d.boundary_note || '']);
+    return {title: `Common misreadings: ${headingLabel(axis.label || axis.key)}`, html: table2(rows)};
   }
   if (d.failure) {
     return {title: `Where the ${axis.key} goes wrong`, html: table2([
       ['How it usually fails', d.failure],
       ['What to do in the first week', d.first_week],
-      ['Where this stops', BOUNDARY_FALLBACK],
+      ['Where this stops', d.boundary_note || ''],
     ])};
   }
   return null;
@@ -272,8 +450,8 @@ export function composeArticle(spec) {
     lead +
     `<p><strong>Do this first.</strong> ${esc(spec.primary.firstMove)}</p>` +
     `<p><strong>Do not do this.</strong> ${esc(spec.primary.wrongMove)}</p>` +
-    `<p>${esc(spec.secondary.applied)}</p>` +
-    `<p><strong>When this framework is the right one.</strong> ${esc(spec.concept.trigger)}</p>` +
+    (spec.secondary.applied ? `<p>${esc(spec.secondary.applied)}</p>` : '') +
+    (spec.concept.trigger ? `<p><strong>When this framework is the right one.</strong> ${esc(spec.concept.trigger)}</p>` : '') +
     // The moves belong in the extraction block: it is the block an answer
     // engine lifts, and the moves are the answer. extraction_contract.py
     // requires them there too - three substantive list items for a concept
@@ -292,7 +470,7 @@ export function composeArticle(spec) {
     if (!axis || seen.has(axis.kind)) continue;
     seen.add(axis.kind);
     for (const block of [axis.inExtraction ? null : artifactBlock(axis), misreadingsBlock(axis)]) {
-      if (block) artifact += `<section class="card page-artifact"><h2>${esc(block.title)}</h2>${block.html}</section>`;
+      if (block && block.html) artifact += `<section class="card page-artifact"><h2>${esc(block.title)}</h2>${block.html}</section>`;
     }
   }
   if (!artifact) throw new Error(`[phase4] refusing: no artifact material for ${spec.query}`);
@@ -300,7 +478,7 @@ export function composeArticle(spec) {
   const example =
     `<section class="card worked-example"><h2>Worked example: ${esc(spec.example.title)}</h2>` +
     spec.example.paragraphs.map(p).join('') +
-    `<p><strong>What to measure.</strong> ${esc(spec.example.measure)}</p>` +
+    (spec.example.measure ? `<p><strong>What to measure.</strong> ${esc(spec.example.measure)}</p>` : '') +
     `</section>`;
 
   // A framework's full body - mechanism, moves, every failure mode, the
@@ -316,13 +494,13 @@ export function composeArticle(spec) {
         .join('') +
       `<p><strong>Evidence to record.</strong> ${esc(spec.concept.evidence)}</p>` +
       `<p><strong>A line you can paste.</strong> ${esc(spec.concept.prompt)}</p>`
-    : `<p>The full set of failure modes for this framework, the evidence to record, and a prompt you can paste are on <a href="${esc(spec.frameworkPageHref)}">its framework page</a>. This page covers the part specific to ${esc(spec.secondary.label)}.</p>`;
+    : `<p>The full set of failure modes for this framework, the evidence to record, and a prompt you can paste are on <a href="${esc(spec.frameworkPageHref)}">its framework page</a>. This page covers the part specific to ${esc(headingLabel(spec.secondary.label))}.</p>`;
   const specific =
-    `<section class="card page-specific-section"><h2>Running ${esc(spec.concept.framework)} for ${esc(spec.secondary.label)}</h2>` +
-    p(spec.concept.mechanism) +
+    `<section class="card page-specific-section"><h2>Running ${esc(spec.concept.framework)} for ${esc(headingLabel(spec.secondary.label))}</h2>` +
+    (spec.concept.mechanism ? p(spec.concept.mechanism) : '') +
     (spec.extractionTable ? `<ol>${spec.concept.moves.map((m) => `<li>${esc(m)}</li>`).join('')}</ol>` : '') +
     failures +
-    `<p><strong>What this is not.</strong> ${esc(spec.concept.not_this)}</p>` +
+    (spec.concept.not_this ? `<p><strong>What this is not.</strong> ${esc(spec.concept.not_this)}</p>` : '') +
     spec.secondary.extra.map(p).join('') +
     `</section>`;
 
@@ -359,7 +537,7 @@ export function composeArticle(spec) {
     `<ul>${spec.sources.map((s) => `<li><a href="${esc(s.href)}"${s.href.startsWith('http') ? ' rel="noopener noreferrer" target="_blank"' : ''}>${esc(s.label)}</a></li>`).join('')}</ul>` +
     `</section>`;
 
-  return (
+  const article = (
     `<article class="content-article citation-page">` +
     `<h1>${esc(spec.query)}</h1>` +
     `<p class="citation-definition"><strong>${esc(spec.definition)}</strong></p>` +
@@ -369,4 +547,38 @@ export function composeArticle(spec) {
     boundaries + productAnchor + related + sources +
     `</article>`
   );
+  assertNoTemplateFiller(article, spec.query);
+  return article;
+}
+
+/**
+ * Refuse a page the Monday page-shape sample would read as template filler.
+ *
+ * The measure is the checklist's own (`page-quality-sample.mjs` in boss-os):
+ * the same eight words in a row, more than three times in one body. This is the
+ * guard for `sayOnce` - it is the one place that can tell whether the slots on
+ * a finished page still restate each other, and the generator refuses rather
+ * than publishing 1,410 pages of it again.
+ */
+export function templateFillerPhrases(articleHtml, { n = QUALITY_SLOT_WORDS, max = 3 } = {}) {
+  const w = normSentence(textOf(articleHtml)).split(' ').filter(Boolean);
+  const counts = new Map();
+  for (let i = 0; i + n <= w.length; i++) {
+    const k = w.slice(i, i + n).join(' ');
+    counts.set(k, (counts.get(k) ?? 0) + 1);
+  }
+  return [...counts].filter(([, c]) => c > max).sort((a, b) => b[1] - a[1]).map(([phrase, times]) => ({ phrase, times }));
+}
+
+export function assertNoTemplateFiller(articleHtml, query = '') {
+  const worst = templateFillerPhrases(articleHtml)[0];
+  if (worst) {
+    // The refusal names the phrase; finding which slots carry it needs the page.
+    if (process.env.PHASE4_FILLER_DUMP) fs.writeFileSync(process.env.PHASE4_FILLER_DUMP, articleHtml);
+    throw new Error(
+      `[phase4] refusing: ${query || 'this page'} repeats "${worst.phrase}" ${worst.times} times, ` +
+      `which the Monday page-shape sample reads as template filler. Give the slot its own material ` +
+      `or let sayOnce drop it.`,
+    );
+  }
 }

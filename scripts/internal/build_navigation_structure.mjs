@@ -12,7 +12,9 @@
  * Deliberately NOT a link dump: no page here carries more than
  * MAX_LINKS_PER_HUB links, hubs are grouped by real topic rather than by
  * alphabet, and nothing is stuffed into a global footer. Anchor text is each
- * target's own h1.
+ * target's own h1, except where a sibling shares this page's generated question
+ * stem: there it is the part that distinguishes it, with the full question kept
+ * as the link's accessible name (`siblingLabel`).
  *
  * Idempotent: every injected block is delimited by a data-internal-nav marker
  * and is replaced, not appended, on re-run.
@@ -20,6 +22,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
+import { siblingGroups } from '../lib/sibling_labels.mjs';
 
 const requireCjs = createRequire(import.meta.url);
 const ROOT = process.cwd();
@@ -555,9 +558,16 @@ for (const pg of pages) {
   const carriedHtml = carried.length
     ? `<p>Also in this area: ${carried.map((c) => `<a href="${esc(c.href)}">${esc(c.text)}</a>`).join(', ')}.</p>`
     : '';
-  const listHtml = picks.length
-    ? `<ul>${picks.map((s) => `<li><a href="${esc(s.route)}">${esc(s.h1)}</a></li>`).join('')}</ul>`
-    : '';
+  // A generated family's siblings share a long question stem with this page and
+  // with each other. `siblingGroups` writes each stem once, as a heading over
+  // the links that share it, so the block names nine destinations without
+  // printing the same fourteen words nine times. The full heading stays as each
+  // link's accessible name wherever the visible text is only the tail.
+  const groups = siblingGroups(pg.h1, picks.map((s) => ({ route: s.route, h1: s.h1 })));
+  const linkHtml = (s) => `<li><a href="${esc(s.route)}"${s.label === s.h1 ? '' : ` aria-label="${esc(s.h1)}"`}>${esc(s.label)}</a></li>`;
+  const listHtml = groups
+    .map((g) => (g.stem ? `<h3>${esc(g.stem)} …</h3>` : '') + `<ul>${g.items.map(linkHtml).join('')}</ul>`)
+    .join('');
   // The same subject as covered by the other parts of the library. Sections
   // used to be parallel silos joined only at the homepage: the sibling window
   // never crossed a section boundary, so a reader on an insights page about
