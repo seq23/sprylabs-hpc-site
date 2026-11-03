@@ -1,10 +1,10 @@
 {
   "schema_version": "1.0",
   "validator": "content-pattern-contract",
-  "generated_at": "2026-11-02T13:31:02.624Z",
+  "generated_at": "2026-11-03T13:31:17.730Z",
   "enforcement": "block",
   "scanned_root": ".",
-  "pages_checked": 2276,
+  "pages_checked": 2279,
   "status": "PASS",
   "blocking_failures": 0,
   "summary": [
@@ -46,14 +46,14 @@
     {
       "id": "comparison_table",
       "blocking": false,
-      "pages_missing": 694,
-      "coverage_pct": 69.5,
+      "pages_missing": 697,
+      "coverage_pct": 69.4,
       "why": "no comparison or cost table (agent request #2, 529 occurrences)"
     },
     {
       "id": "concrete_numbers",
       "blocking": false,
-      "pages_missing": 1888,
+      "pages_missing": 1891,
       "coverage_pct": 17,
       "why": "no concrete cost or timeline figures (agent request #5, 365 occurrences)"
     },
@@ -68,7 +68,7 @@
       "id": "faq",
       "blocking": false,
       "pages_missing": 461,
-      "coverage_pct": 79.7,
+      "coverage_pct": 79.8,
       "why": "no FAQ block or FAQPage schema (agent request #9)"
     },
     {
@@ -102,29 +102,29 @@
     {
       "id": "protocol",
       "blocking": false,
-      "pages_missing": 421,
+      "pages_missing": 422,
       "coverage_pct": 81.5,
       "why": "no ordered protocol (agent requested 305 times) - ordered steps are what gets lifted for \"how do I\""
     },
     {
       "id": "cta_callout",
       "blocking": false,
-      "pages_missing": 1418,
-      "coverage_pct": 37.7,
+      "pages_missing": 1421,
+      "coverage_pct": 37.6,
       "why": "no next-step callout (agent requested 272 times) - the conversion link exists but nothing frames it as the next action"
     },
     {
       "id": "prompt_template",
       "blocking": false,
-      "pages_missing": 2187,
+      "pages_missing": 2190,
       "coverage_pct": 3.9,
       "why": "no copy-ready prompt (agent requested 255 times) - this is the artifact this audience actually reuses"
     },
     {
       "id": "trust_block",
       "blocking": false,
-      "pages_missing": 685,
-      "coverage_pct": 69.9,
+      "pages_missing": 688,
+      "coverage_pct": 69.8,
       "why": "no trust or authorship block (agent requested 215 times) - entity clarity is a citation factor"
     }
   ],
