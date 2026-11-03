@@ -2937,9 +2937,29 @@
       "severity": "HARD_FAIL",
       "release_effect": true,
       "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-AI-MEASUREMENT-SELF-TEST",
+      "validation_id": "VAL-AI-MEASUREMENT-SELF-TEST",
+      "lane": "validation-control-plane",
+      "command": "npm run self-test:ai-measurement",
+      "order": 284,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
+    },
+    {
+      "matrix_id": "MX-AI-MEASUREMENT",
+      "validation_id": "VAL-AI-MEASUREMENT",
+      "lane": "validation-control-plane",
+      "command": "npm run check:ai-measurement",
+      "order": 285,
+      "severity": "HARD_FAIL",
+      "release_effect": true,
+      "status": "ADMITTED"
     }
   ],
-  "entry_count": 293,
+  "entry_count": 295,
   "generated_at": "2026-07-27T17:50:00.000Z",
   "profiles": {
     "container-prepush": {
@@ -3697,6 +3717,10 @@
         {
           "id": "ENTITY-BACKLINK-WATCH-SELF-TEST",
           "command": "npm run self-test:entity-backlink-watch"
+        },
+        {
+          "id": "VAL-AI-MEASUREMENT-SELF-TEST",
+          "command": "npm run self-test:ai-measurement"
         }
       ]
     },
@@ -4118,7 +4142,8 @@
     "MX-VAL-FSA-SELFHEAL": "release-time or generator command, not a per-push check",
     "MX-177": "network measurement that writes an observation file; runs on the daily-citation-intelligence schedule, not per push",
     "MX-184": "regeneration command, not a check: it rewrites artifacts/validation/python-dependency-contract.json. The read-only VAL-PYTHON-DEPENDENCY-CONTRACT is the armed profile step and fails if this has not been run after a Python dependency change.",
-    "MX-RELEASE-CONVERGE-BEFORE-FREEZE": "release-time or generator command, not a per-push check: it runs build:all and the ordered repair stages to a fixed point, which is the release lane's own work and would recurse inside a validation profile. Its ordering is guarded per-push by VAL-FREEZE-AFTER-CONVERGENCE."
+    "MX-RELEASE-CONVERGE-BEFORE-FREEZE": "release-time or generator command, not a per-push check: it runs build:all and the ordered repair stages to a fixed point, which is the release lane's own work and would recurse inside a validation profile. Its ordering is guarded per-push by VAL-FREEZE-AFTER-CONVERGENCE.",
+    "MX-AI-MEASUREMENT": "It judges a lane only a scheduled run can write (the daily Cloudflare read committed to data/search-loop/ai-daily.json) and its --live form needs SEARCH_LOOP_CF_USAGE_TOKEN plus the network; it is armed every week in weekly-outcome-report.yml, whose red site issue is what a reviewer sees, and never in an offline merge-gate profile where an unrelated PR would carry the blame."
   },
   "profile_exclusions_policy": "Admitted entries that are deliberately not profile steps, each with the reason. validate_validation_registry warns only about entries missing from this map, so an unreviewed orphan is visible while a reasoned exclusion is not noise. Entries marked NEEDS TRIAGE are real failures or real environment gaps that should be fixed and then armed - they are not permanent exclusions."
 }
