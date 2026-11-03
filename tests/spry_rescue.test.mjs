@@ -1,15 +1,39 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import { spryRescueResponse } from '../functions/_lib/spry_rescue.js';
 import { SPRY_RESCUE_REDIRECTS } from '../functions/_lib/spry_rescue_table.js';
 import { consolidationResponse } from '../functions/_lib/host_consolidation.js';
 const require = createRequire(import.meta.url);
+const { renderSchemaScript } = require('../scripts/lib/citation_page_schema.cjs');
 const { content, HOST, keepers, isRetiredFile, isRetiredRoute } = require('../scripts/lib/spry_rescue.cjs');
 const { build, render, fileFor } = require('../scripts/content/build_spry_rescue.cjs');
 const ledger = JSON.parse(fs.readFileSync('data/seo/spry_rescue_redirects.json'));
+
+test('manual link normalization preserves historical rescue sources and edge keys', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'spry-redirect-history-'));
+  const source = '/insights/retired-planning';
+  const target = '/guides/planning/';
+  const protectedFiles = ['data/seo/spry_rescue_redirects.json', 'data/seo/spry_rescue_selection.json', 'data/seo/spry_rescue_guides.json', 'functions/_lib/spry_rescue_table.js'];
+  try {
+    fs.mkdirSync(path.join(root, 'data/content'), {recursive:true});
+    fs.writeFileSync(path.join(root, 'data/content/manual_redirects.json'), JSON.stringify({redirects:[{source_path:source.slice(1)+'.html',target}]}));
+    for (const file of protectedFiles) {
+      fs.mkdirSync(path.dirname(path.join(root,file)), {recursive:true});
+      fs.writeFileSync(path.join(root,file), JSON.stringify({from:source,to:target}));
+    }
+    fs.writeFileSync(path.join(root,'article.html'), `<a href="${source}">Continue</a>`);
+    execFileSync(process.execPath, [path.resolve('scripts/content/apply_redirect_map.mjs')], {cwd:root,stdio:'pipe'});
+    assert.equal(fs.readFileSync(path.join(root,'article.html'),'utf8'), `<a href="${target}">Continue</a>`);
+    for (const file of protectedFiles) assert.deepEqual(JSON.parse(fs.readFileSync(path.join(root,file))), {from:source,to:target}, file);
+  } finally {
+    fs.rmSync(root, {recursive:true,force:true});
+  }
+});
 
 test('every retired source and alias permanently redirects on both hosts without a loop', () => {
   assert.ok(ledger.redirects.length > 0);
@@ -62,7 +86,9 @@ test('rendered FAQ and article metadata agree with the editorial data without du
   for (const g of content.guides) {
     const html = render(g);
     assert.equal((html.match(/<h1\b/g)||[]).length,1);
-    const graph = JSON.parse(html.match(/<script id="CITATION_PAGE_SCHEMA" type="application\/ld\+json">(.*?)<\/script>/s)[1])['@graph'];
+    const schema = JSON.parse(html.match(/<script id="CITATION_PAGE_SCHEMA" type="application\/ld\+json">(.*?)<\/script>/s)[1]);
+    assert.ok(html.includes(renderSchemaScript(schema)), 'schema serialization differs from the shared authority');
+    const graph = schema['@graph'];
     const faqs = graph.filter(n=>n['@type']==='FAQPage');
     assert.equal(faqs.length,1);
     assert.equal(faqs[0].mainEntity.length,g.faq.length);

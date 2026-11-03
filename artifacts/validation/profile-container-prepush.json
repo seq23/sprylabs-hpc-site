@@ -1,6 +1,6 @@
 {
   "profile": "container-prepush",
-  "started_at": "2026-11-03T14:53:01.915Z",
+  "started_at": "2026-11-03T18:50:30.412Z",
   "steps": [
     {
       "id": "VAL-ORCHESTRATION-CONTRACT",
@@ -35,8 +35,8 @@
     {
       "id": "VAL-EXTRACTION-SURFACE-GUARD-SNAPSHOT",
       "command": "npm run validate:extraction-surface-guard:snapshot",
-      "exit_code": 0,
-      "status": "PASS"
+      "exit_code": 1,
+      "status": "FAIL"
     },
     {
       "id": "build:all",
@@ -611,8 +611,8 @@
     {
       "id": "VAL-CITATION-SCHEMA-AUTHORITY",
       "command": "npm run validate:citation-schema-authority",
-      "exit_code": 0,
-      "status": "PASS"
+      "exit_code": 1,
+      "status": "FAIL"
     },
     {
       "id": "VAL-CITATION-PHASE-MANIFEST",
@@ -851,8 +851,8 @@
     {
       "id": "VAL-REPAIR-FIXTURE-CAPABILITY",
       "command": "npm run validate:repair-fixture-capability",
-      "exit_code": 0,
-      "status": "PASS"
+      "exit_code": 1,
+      "status": "FAIL"
     },
     {
       "id": "VAL-PUBLISHED-SURFACE-PAGES-ONLY",
@@ -1073,8 +1073,8 @@
     {
       "id": "VAL-BUILD-INPUT-HASH-COVERS-TREE",
       "command": "npm run validate:build-input-hash-covers-tree",
-      "exit_code": 0,
-      "status": "PASS"
+      "exit_code": 128,
+      "status": "INTERNAL_ERROR"
     },
     {
       "id": "ORGANIZATION-NODE",
@@ -1131,12 +1131,16 @@
       "status": "PASS"
     }
   ],
-  "status": "FAIL",
-  "failure_count": 2,
+  "status": "INTERNAL_ERROR",
+  "failure_count": 6,
   "failures": [
+    "VAL-EXTRACTION-SURFACE-GUARD-SNAPSHOT",
     "VAL-EXTRACTION-SURFACE-GUARD-CHECK",
-    "validate:content-release"
+    "validate:content-release",
+    "VAL-CITATION-SCHEMA-AUTHORITY",
+    "VAL-REPAIR-FIXTURE-CAPABILITY",
+    "VAL-BUILD-INPUT-HASH-COVERS-TREE"
   ],
   "stopped_early_at": null,
-  "finished_at": "2026-11-03T15:04:49.929Z"
+  "finished_at": "2026-11-03T18:59:51.540Z"
 }
