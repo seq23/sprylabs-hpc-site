@@ -295,3 +295,18 @@ test('required internal links follow finite consolidations without accepting abs
   assert.equal(hasInternalDestination('<a href="https://example.com'+new URL(row.to).pathname+'">Wrong host</a>',row.from),false);
   assert.equal(hasInternalDestination('<a href="/never-published-rescue-test">Unknown</a>',row.from),false);
 });
+
+// Search Readiness a8: Google retained a repeated-slash alias of a retired page.
+test('repeated slashes on retired routes 301 directly to the retained guide', () => {
+  const route = '/accountability-system/enforce-rules-on-yourself/';
+  const target = SPRY_RESCUE_REDIRECTS.get(route);
+  assert.ok(target);
+  for (const host of ['spryexecutiveos.com', 'billionairehighperformancecoach.com']) {
+    const response = spryRescueResponse(new Request(`https://${host}${route}/?source=search`));
+    assert.equal(response.status, 301);
+    assert.equal(response.headers.get('location'), `${target}?source=search`);
+    assert.equal(spryRescueResponse(new Request(`https://${host}/unknown//`)), null);
+    assert.equal(spryRescueResponse(new Request(`${target}?source=search`)), null);
+  }
+  assert.equal(spryRescueResponse(new Request(`https://preview.pages.dev${route}/`)), null);
+});
