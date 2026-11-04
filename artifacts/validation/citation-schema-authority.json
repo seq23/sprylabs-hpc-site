@@ -1,0 +1,32 @@
+{
+  "status": "PASS",
+  "files_scanned": 651,
+  "emitters_found": 16,
+  "compliant": [
+    "scripts/agent_intake/apply_bhpc_agent_exact_implementation.mjs",
+    "scripts/citation/apply_citation_program.py",
+    "scripts/citation/repair_schema_parity.py",
+    "scripts/content/build_manual_expansion_pages.mjs",
+    "scripts/content/build_spry_rescue.cjs",
+    "scripts/content/build_visible_faq_sections.py",
+    "scripts/internal/build_navigation_structure.mjs",
+    "scripts/programmatic/generate_aplayer_phase_expansion.mjs",
+    "scripts/repair/single_faqpage.py",
+    "scripts/search_intelligence/apply_demand_families.py",
+    "scripts/validation/self_test_extraction_surface_baseline_presence.mjs",
+    "scripts/validation/validate_citation_schema_authority_reach.mjs",
+    "scripts/validation/validate_citation_schema_serialization.mjs",
+    "scripts/validators/validate_repair_fixture_capability.mjs",
+    "tests/spry_rescue.test.mjs"
+  ],
+  "carried_bypass_debt": [],
+  "resolved_bypass_debt": [],
+  "declared_out_of_scope": [
+    {
+      "file": "scripts/build_insights.js",
+      "reason": "emits an unlabeled <script type=\"application/ld+json\"> Article block, a different block from CITATION_PAGE_SCHEMA; its OWN_TAIL_SCRIPTS regex matches only the attribute-free tag so it cannot write the id-bearing block"
+    }
+  ],
+  "stale_declarations": [],
+  "errors": []
+}

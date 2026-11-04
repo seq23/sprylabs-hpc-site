@@ -10,6 +10,12 @@ const redirects = payload.redirects || [];
 const domains = ['spryexecutiveos.com', 'billionairehighperformancecoach.com'];
 const excluded = new Set([
   'data/content/manual_redirects.json',
+  // These record historical source URLs and exact edge keys. Rewriting a
+  // source into its destination erases the redirect we still need to serve.
+  'data/seo/spry_rescue_redirects.json',
+  'data/seo/spry_rescue_selection.json',
+  'data/seo/spry_rescue_guides.json',
+  'functions/_lib/spry_rescue_table.js',
   '_redirects',
   'docs/REDIRECT_MIGRATION_HISTORY.md',
   // A derived index keyed by SOURCE FILE, not by route. Its `source_file` values

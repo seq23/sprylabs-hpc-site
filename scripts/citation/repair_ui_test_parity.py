@@ -26,7 +26,7 @@ for i,rec in enumerate(sorted(pages,key=lambda x:x['path']),1):
         'source_file':rec['path'],
         'canonical_url':canonical_for(rec),
         'canonical_domain':rec.get('canonical_domain') or canonical_for(rec).split('/')[2],
-        'h1':rec.get('query',''),
+        'h1':rec.get('editorial_title') or rec.get('query',''),
         'framework':rec.get('framework',''),
         'safe_controls':['internal-links'],
         'priority':bool(rec.get('priority'))
@@ -39,7 +39,7 @@ for route in crit.get('routes',[]):
     route['path']=route_for(rec['path'])
     route['canonical_url']=canonical_for(rec)
     route['canonical_domain']=rec.get('canonical_domain') or canonical_for(rec).split('/')[2]
-    route['h1']=rec.get('query','')
+    route['h1']=rec.get('editorial_title') or rec.get('query','')
     route['framework']=rec.get('framework','')
     route['definition']=rec.get('definition','')
     route['extraction_type']=rec.get('extraction_type','')

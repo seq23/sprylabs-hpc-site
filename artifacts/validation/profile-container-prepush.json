@@ -1,6 +1,6 @@
 {
   "profile": "container-prepush",
-  "started_at": "2026-09-06T12:53:21.950Z",
+  "started_at": "2026-11-04T00:46:42.176Z",
   "steps": [
     {
       "id": "VAL-ORCHESTRATION-CONTRACT",
@@ -71,6 +71,30 @@
     {
       "id": "VAL-EXTRACTION-SURFACE-GUARD-CHECK",
       "command": "npm run validate:extraction-surface-guard:check",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "SOCIAL-TAGS",
+      "command": "npm run validate:social-tags",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "LLMS-TXT-SHAPE",
+      "command": "npm run validate:llms-txt-shape",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "CANONICAL-HOST",
+      "command": "npm run validate:canonical-host",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "validate:weekly-outcome-report",
+      "command": "npm run validate:weekly-outcome-report",
       "exit_code": 0,
       "status": "PASS"
     },
@@ -811,11 +835,311 @@
       "command": "npm run validate:risk-statement-substance",
       "exit_code": 0,
       "status": "PASS"
+    },
+    {
+      "id": "VAL-EXTRACTION-SURFACE-BASELINE-PRESENCE",
+      "command": "npm run validate:extraction-surface-baseline-presence",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-CONTROL-PLANE-REACHABILITY",
+      "command": "npm run validate:control-plane-reachability",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-REPAIR-FIXTURE-CAPABILITY",
+      "command": "npm run validate:repair-fixture-capability",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-PUBLISHED-SURFACE-PAGES-ONLY",
+      "command": "npm run validate:published-surface-is-pages-only",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-AGENT-BLOCK-SUPPLIERS-RUN-FIRST",
+      "command": "npm run validate:agent-block-suppliers",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-ONE-ACCEPTANCE-SATISFACTION-TEST",
+      "command": "npm run validate:one-acceptance-test",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-NEW-EVIDENCE-PINNED-ON-ABSORB",
+      "command": "npm run validate:new-evidence-pinned",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-CREATED-PAGE-IS-COMPLETE",
+      "command": "npm run validate:created-page-complete",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-MAIN-VALIDATION-COVERAGE-EVIDENCE",
+      "command": "npm run validate:main-validation-coverage-evidence",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-RAW-AGENT-DROP-QUARANTINE",
+      "command": "npm run validate:raw-agent-drop-quarantine",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-AGENT-DROP-GATE",
+      "command": "npm run validate:agent-drop-gate",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-CITATION-SPEC-COMPLETENESS",
+      "command": "npm run validate:citation-spec-completeness",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-AGENT-CREATED-PAGE-ADMISSION-GATE",
+      "command": "npm run validate:agent-created-page-admission-gate",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-AGENT-CREATED-PAGE-DEMAND-GATE",
+      "command": "npm run validate:agent-created-page-demand-gate",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-WORKFLOW-STEP-ENV-CONTRACT",
+      "command": "npm run validate:workflow-step-env-contract",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-SEARCH-SNIPPET-BOUNDS",
+      "command": "npm run validate:search-snippet-bounds",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-REDIRECT-AND-LINK-INTEGRITY",
+      "command": "npm run validate:redirect-and-link-integrity",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-AGENT-DROP-OVERLAY",
+      "command": "npm run validate:agent-drop-overlay",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-ABSORB-CLAIMS-ONLY-IN-ABSORBER",
+      "command": "npm run validate:absorb-claims-only-in-absorber",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-FROZEN-OUTPUT-SHRINK",
+      "command": "npm run validate:frozen-output-shrink",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-INTAKE-HOLDS-NONCONFORMING-PAGE",
+      "command": "npm run validate:intake-holds-nonconforming-page",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-AGENT-REPAIR-PAGE-IDENTITY",
+      "command": "npm run agent:bhpc:self-test-repair-identity",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-APLAYERMODE-LANDING",
+      "command": "npm run validate:aplayermode-landing",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-WORKFLOW-RUN-HANDOFF",
+      "command": "npm run validate:workflow-run-handoff",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-VALIDATED-MAIN-HANDOFF-GATE",
+      "command": "npm run validate:validated-main-handoff-gate",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-PUBLISHED-PAGE-NEVER-RECREATED",
+      "command": "npm run validate:published-page-never-recreated",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-ZERO-PAID-LLM",
+      "command": "npm run validate:zero-paid-llm",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-HOST-CRAWL-SURFACES",
+      "command": "npm run validate:host-crawl-surfaces",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-RETROFIT-GUARD",
+      "command": "npm run validate:retrofit-guard",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-DEMAND-FAMILIES",
+      "command": "npm run validate:demand-families",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-GENERATORS-KEEP-DEMAND-PAGES",
+      "command": "npm run validate:generators-keep-demand-pages",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-APLAYERMODE-PINTEREST",
+      "command": "npm run validate:aplayermode-pinterest",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-VELOCITY-CRITICAL",
+      "command": "npm run validate:velocity-critical",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-ROUTE-UNIQUENESS",
+      "command": "npm run validate:route-uniqueness",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-APLAYERMODE-PIN-DRIP",
+      "command": "npm run validate:aplayermode-pin-drip",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-PRODUCT-OFFERS",
+      "command": "npm run validate:product-offers",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-GENERATED-DIR-SWEEP",
+      "command": "npm run validate:generated-dir-sweep",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-EDGE-CACHE",
+      "command": "npm run validate:edge-cache",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-TITLE-BRAND-MATCHES-HOST",
+      "command": "npm run validate:title-brand-matches-host",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-BUILD-INPUT-HASH-COVERS-TREE",
+      "command": "npm run validate:build-input-hash-covers-tree",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "ORGANIZATION-NODE",
+      "command": "npm run validate:organization-node",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "CLAUDE-MD-COST-RULE",
+      "command": "npm run validate:claude-md-cost-rule",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "SCHEMA-SUPPORTED",
+      "command": "npm run validate:schema-supported",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "ROUTE-OWNER-HOST",
+      "command": "npm run validate:route-owner-host",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-SITEMAP-CANONICAL-ON-OWN-HOST",
+      "command": "npm run validate:sitemap-canonical-on-own-host",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-HOST-CONSOLIDATION",
+      "command": "npm run validate:host-consolidation",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "HOMEPAGE-TRUST-LINKS",
+      "command": "npm run validate:homepage-trust-links",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "ENTITY-GRAPH",
+      "command": "npm run validate:entity-graph",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "ENTITY-BACKLINK-WATCH-SELF-TEST",
+      "command": "npm run self-test:entity-backlink-watch",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "id": "VAL-AI-MEASUREMENT-SELF-TEST",
+      "command": "npm run self-test:ai-measurement",
+      "exit_code": 0,
+      "status": "PASS"
     }
   ],
   "status": "PASS",
   "failure_count": 0,
   "failures": [],
   "stopped_early_at": null,
-  "finished_at": "2026-09-06T12:58:55.889Z"
+  "finished_at": "2026-11-04T00:57:10.428Z"
 }

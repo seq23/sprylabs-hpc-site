@@ -1,7 +1,7 @@
 # Fresh Faux Trace — Every GitHub Workflow
 
 Status: **PASS**
-Workflows: **12**
+Workflows: **14**
 Scenarios: **32**
 
 | Workflow | Scenarios | Status |
@@ -12,8 +12,10 @@ Scenarios: **32**
 | `daily-citation-intelligence.yml` | 3 | PASS |
 | `deploy-aplayermode-worker.yml` | 0 | PASS |
 | `deploy-distribution.yml` | 3 | PASS |
+| `entity-backlink-watch.yml` | 0 | PASS |
 | `main-validation-sentinel.yml` | 0 | PASS |
 | `search-intelligence.yml` | 0 | PASS |
+| `search-loop.yml` | 0 | PASS |
 | `spry-content-release.yml` | 12 | PASS |
 | `spry-full-rebuild.yml` | 1 | PASS |
 | `validate-repo.yml` | 3 | PASS |

@@ -115,7 +115,10 @@ for(const rel of contract.layers.reference_pages.priority_pages){
   else if (Number.isNaN(Date.parse(reviewed[1]))) errors.push(`${rel}: reviewed date ${reviewed[1]} is not a valid date`);
   if(!/id=["']CITATION_PAGE_SCHEMA["']/i.test(html)) errors.push(`${rel}: citation schema missing`);
   if(!/section class=["'][^"']*sources/i.test(html)) errors.push(`${rel}: source basis missing`);
-  if(!/href=["']\/download\.html["']/i.test(html)) errors.push(`${rel}: product bridge missing`);
+  const manualLinks = [...html.matchAll(/href=["']([^"']+)["']/g)].filter(m => {
+    try { const u = new URL(m[1].replaceAll('&amp;', '&'), 'https://billionairehighperformancecoach.com'); return u.origin === 'https://billionairehighperformancecoach.com' && u.pathname === '/download.html'; } catch { return false; }
+  });
+  if (!manualLinks.length) errors.push(`${rel}: product bridge missing`);
   const page=pages.find(x=>x.path===rel); if(!page) errors.push(`${rel}: not active in citable registry`);
   const owners=queries.filter(x=>x.primary_page===rel); if(owners.length!==1) errors.push(`${rel}: expected one primary query owner, found ${owners.length}`);
 }

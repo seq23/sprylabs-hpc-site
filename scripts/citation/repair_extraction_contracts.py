@@ -93,7 +93,7 @@ for row in payload.get('pages',[]):
   if len(chosen)>=3 and (not ok or len(article_steps)>=3 and [x['title'] for x in article_steps]!=[x['title'] for x in steps]):
    for old in list(block.select('[data-generated-extraction-structure="true"]')):old.decompose()
    wrap=soup.new_tag('div',attrs={'data-generated-extraction-structure':'true'})
-   h2=soup.new_tag('h2');h2.string=clean(soup.h1.get_text(' ',strip=True) if soup.h1 else row.get('query') or 'How to apply this method');wrap.append(h2)
+   h2=soup.new_tag('h2');h2.string=clean(block.get('data-named-framework') or row.get('framework') or (soup.h1.get_text(' ',strip=True) if soup.h1 else row.get('query')) or 'How to apply this method');wrap.append(h2)
    for idx,step in enumerate(chosen,1):
     h3=soup.new_tag('h3');h3['id']=f'extraction-step-{idx}';h3.string=f"Step {idx}: {step['title']}";wrap.append(h3)
     p=soup.new_tag('p');p.string=step['description'] or f"Complete step {idx} using the specific instructions documented in the article, then record the observable result.";wrap.append(p)

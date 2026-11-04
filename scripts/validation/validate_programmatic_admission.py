@@ -11,6 +11,8 @@ from bs4 import BeautifulSoup
 from style_policy import sentence_count, paragraph_sentence_severity, paragraph_sentence_message
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'lib'))
 from word_floor import floor_verdict, hard_floor, limit_verdict  # noqa: E402
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'citation'))
+from conversion_links import has_manual_link
 
 ROOT=Path(__file__).resolve().parents[2]
 CONTRACT=json.loads((ROOT/'data/content/programmatic_lane_contracts.json').read_text(encoding='utf-8'))
@@ -18,6 +20,9 @@ LANES=CONTRACT['lanes']
 AXES=CONTRACT.get('programmatic_axes',{})
 REGISTRY=json.loads((ROOT/'data/content/page_admission_registry.json').read_text(encoding='utf-8'))['records']
 HEALTH=json.loads((ROOT/'data/citation/health_adjacent_content_contract.json').read_text(encoding='utf-8'))
+RESCUE=json.loads((ROOT/'data/seo/spry_rescue_guides.json').read_text(encoding='utf-8'))
+RESCUE_PATHS={g['route'].lstrip('/')+('index.html' if g['route'].endswith('/') else '.html') for g in RESCUE['guides']}
+RESCUE_PATHS.update({'knowledge-map/index.html','about.html'})
 # Lanes whose page is an answer to a query. They share the direct-answer length
 # cap and the same-answer duplication check; only question_cluster additionally
 # requires the query to be phrased as a question, because a demand-backed page's
@@ -106,8 +111,12 @@ def inspect(record):
     if record.get('framework') and norm(record['framework'])!=norm(framework): errors.append(f'{path}: framework registry mismatch')
     first60=' '.join(words((soup.find('article') or soup).get_text(' ',strip=True))[:60])
     if framework and norm(framework) not in norm(first60): errors.append(f'{path}: framework not present in first 60 words')
-    body_anchor=next((a for a in soup.select('article a[href="/download.html"]') if a.find_parent(class_='product-anchor')),None)
-    if not body_anchor: errors.append(f'{path}: contextual /download.html product anchor missing')
+    if path in RESCUE_PATHS:
+        boxes=soup.select('article aside.recommendation-summary')
+        if len(boxes)!=1 or not has_manual_link(str(boxes[0])): errors.append(f'{path}: expected one next-step box with download destination')
+    else:
+        body_anchor=next((a for a in soup.select('article a[href="/download.html"]') if a.find_parent(class_='product-anchor')),None)
+        if not body_anchor: errors.append(f'{path}: contextual /download.html product anchor missing')
     if record.get('admission_level')=='full':
         article=soup.find('article') or soup
         wc=len(words(text_of(article)))
@@ -118,8 +127,11 @@ def inspect(record):
         if lane.get('worked_example') and not soup.select_one('.worked-example'): errors.append(f'{path}: worked example missing')
         header_cta=soup.select_one('header a[href="/download.html"], header a[href^="https://sprylabs.gumroad.com/"], .cta-bar a[href="/download.html"], .cta-bar a[href^="https://sprylabs.gumroad.com/"]')
         footer_cta=soup.select_one('footer a[href="/download.html"], footer a[href^="https://sprylabs.gumroad.com/"]')
-        if not header_cta: errors.append(f'{path}: header/top CTA missing')
-        if not footer_cta: errors.append(f'{path}: footer CTA missing')
+        if path in RESCUE_PATHS:
+            if has_manual_link(str(soup.find('header'))) or has_manual_link(str(soup.find('footer'))) or header_cta or footer_cta: errors.append(f'{path}: redundant conversion CTA outside the next-step box')
+        else:
+            if not header_cta: errors.append(f'{path}: header/top CTA missing')
+            if not footer_cta: errors.append(f'{path}: footer CTA missing')
         for idx,p in enumerate(soup.find_all('p')):
             n=sentence_count(text_of(p))
             severity=paragraph_sentence_severity(n)

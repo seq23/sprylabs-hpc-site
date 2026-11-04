@@ -1061,7 +1061,7 @@ function writePages() {
     if (floorVerdict(wc, floor) === 'fail') { thin.push(`${atom.path}: ${wc} words, below ${hardFloor(floor)} (75% of the ${floor}-word floor for lane ${atom.generation_lane})`); continue; }
     const fp = path.join(ROOT, atom.path);
     fs.mkdirSync(path.dirname(fp), {recursive:true});
-    fs.writeFileSync(fp, html);
+    if (!requireCjs('../lib/spry_rescue.cjs').isRetiredFile(atom.path)) fs.writeFileSync(fp, html);
   }
   if (thin.length) {
     console.error(`[aplayer-phase-expansion] refusing to publish ${thin.length} page(s) that compose below their lane floor:`);

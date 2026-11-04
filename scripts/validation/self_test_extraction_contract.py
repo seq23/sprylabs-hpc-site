@@ -4,7 +4,7 @@ import sys, json
 sys.dont_write_bytecode=True
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'citation'))
 from bs4 import BeautifulSoup
-from extraction_contract import validate_extraction,schema_parity
+from extraction_contract import validate_extraction,schema_parity,visible_faq_pairs
 cases=[
 ('valid-howto','<section data-named-framework="X"><h3>Step 1: A</h3><p>do a thing well</p><h3>Step 2: B</h3><p>do another thing</p><h3>Step 3: C</h3><p>finish the work</p></section>','howto',True),
 ('criteria-mislabeled-howto','<section><h2>Key Criteria</h2><ul><li>first item</li><li>second item</li><li>third item</li></ul></section>','howto',False),
@@ -37,6 +37,10 @@ if not ok or schema_ok:errors.append('missing-comparison-schema: expected extrac
 # synchronized criteria reclassification fixture validates as criteria
 b=BeautifulSoup('<section data-named-framework="X"><h2>Decision Criteria</h2><ul><li>one useful item</li><li>two useful item</li><li>three useful item</li></ul></section>','html.parser').section
 if not validate_extraction('reclass',b,'criteria')[0]:errors.append('reclassification fixture should pass as criteria')
+faq=BeautifulSoup('<section id="faq"><h3>First question?</h3><p>First paragraph.</p><p>Remaining answer.</p><h3>Next question?</h3><p>Next answer.</p></section>','html.parser')
+if visible_faq_pairs(faq)!=[('First question?','First paragraph. Remaining answer.'),('Next question?','Next answer.')]:errors.append('FAQ parser must retain all answer paragraphs without crossing the next question')
+empty_faq=BeautifulSoup('<section id="faq"><h3>Unanswered?</h3></section>','html.parser')
+if visible_faq_pairs(empty_faq):errors.append('an unanswered FAQ must not invent an answer')
 if errors:
  print('[validate:extraction-contract:self-test] FAIL');[print(' -',e) for e in errors];raise SystemExit(1)
-print(f'[validate:extraction-contract:self-test] PASS: {len(cases)+4} fixtures')
+print(f'[validate:extraction-contract:self-test] PASS: {len(cases)+6} fixtures')

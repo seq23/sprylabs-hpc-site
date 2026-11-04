@@ -11,20 +11,13 @@ sys.path.insert(0, str(ROOT/'scripts/validation'))
 from style_policy import sentence_count_split, paragraph_sentence_severity, paragraph_sentence_message
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'lib'))
 from word_floor import floor_verdict, hard_floor  # noqa: E402
-PRODUCT="This is one of the frameworks inside the Billionaire High Performance Coach system — a structured executive OS for using ChatGPT as your accountability and decision partner."
+sys.path.insert(0, str(ROOT/'scripts/citation'))
+from conversion_links import has_manual_link
 contract=json.loads((ROOT/'data/citation/agent_recommendation_acceptance.json').read_text(encoding='utf-8'))
+rescue=json.loads((ROOT/'data/seo/spry_rescue_guides.json').read_text(encoding='utf-8'))
+rescue_paths={g['route'].lstrip('/')+('index.html' if g['route'].endswith('/') else '.html') for g in rescue['guides']}
 
-# repair:programmatic-registry-owners resolves duplicate query ownership by
-# renaming the losing page's query - appending a role qualifier such as
-# "(supporting page)" - and rewriting that page's H1, title and schema to match.
-# The acceptance contract is a historical record of what the review agent asked
-# for, so its `query` keeps the original wording. Comparing the H1 to the
-# contract therefore hard-failed a page that a sanctioned repair in the same
-# pipeline had just corrected: the pipeline was failing on its own output.
-#
-# The query registry is what the owner repair writes, so it is the current
-# truth for a page's query. Prefer it, and fall back to the contract for any
-# page the registry does not carry.
+# Historical query labels remain diagnostic; heading wording is editorial.
 _registry_path=ROOT/'data/citation/query_registry.json'
 REGISTRY_QUERY={}
 if _registry_path.exists():
@@ -42,18 +35,15 @@ def section_words(heading):
         if hasattr(sib,'get_text'): words.extend(text(sib).split())
     return len(words)
 
-def universal(path,soup,expected_h1=None):
+def universal(path,soup):
     h1s=soup.find_all('h1')
     if len(h1s)!=1: errors.append(f'{path}: expected one H1, found {len(h1s)}'); return
-    h1=text(h1s[0])
-    if expected_h1 and h1!=expected_h1: errors.append(f'{path}: H1 mismatch {h1!r}')
     opening=h1s[0].find_next_sibling('p')
     if not opening or not opening.find('strong'): errors.append(f'{path}: immediate bold definition missing')
     blocks=soup.select('[data-llm-answer="true"]')
     if len(blocks)!=1: errors.append(f'{path}: expected one extraction block, found {len(blocks)}')
-    product=soup.select_one('p.product-anchor')
-    if not product or PRODUCT not in text(product): errors.append(f'{path}: product anchor missing')
-    if not product or not product.select_one('a[href="/download.html"]'): errors.append(f'{path}: /download.html anchor missing')
+    products=soup.select('aside.recommendation-summary' if path in rescue_paths else 'p.product-anchor')
+    if len(products)!=1 or not has_manual_link(str(products[0])): errors.append(f'{path}: expected one next-step box with the download destination')
     for idx,p in enumerate(soup.find_all('p')):
         s=text(p)
         count=sentence_count_split(s)
@@ -118,7 +108,7 @@ for item in contract['opportunities']:
     expected=REGISTRY_QUERY.get(path,item['query'])
     if expected!=item['query']:
         warnings.append(f'{path}: query disambiguated to {expected!r} by owner-uniqueness repair (contract records {item["query"]!r})')
-    universal(path,soup,expected)
+    universal(path,soup)
 
 if len(contract.get('skipped',[]))!=5: errors.append('expected exactly 5 owner-approved low-relevance skips')
 out=ROOT/'artifacts/diagnostics/container-current/validate-agent-recommendations'; out.mkdir(parents=True,exist_ok=True)

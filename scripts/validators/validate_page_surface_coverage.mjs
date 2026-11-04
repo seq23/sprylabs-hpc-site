@@ -41,7 +41,13 @@ if (validators.length === 0) {
 }
 
 const indexable = listIndexablePages().length;
-const minSurface = Number(cfg.surface?.min_indexable_pages ?? 0);
+const advertised = new Set(['sitemap-bhpc.xml', 'sitemap-spry.xml'].flatMap(file => {
+  const urls = [...fs.readFileSync(file, 'utf8').matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
+  if (!urls.length) errors.push(`${file}: zero advertised pages`);
+  return urls;
+}));
+const minSurface = cfg.surface?.floor_source === 'advertised_routes' ? advertised.size : Number(cfg.surface?.min_indexable_pages ?? 0);
+if (!indexable || !minSurface) errors.push('indexable and advertised page floors must be nonzero');
 if (indexable < minSurface) {
   errors.push(`the indexable page surface itself is ${indexable}, below the recorded floor of ${minSurface}. Either pages were removed, or scripts/lib/site_pages.js stopped seeing them - both change what every validator below is measuring.`);
 }
@@ -66,7 +72,7 @@ for (const v of validators) {
     continue;
   }
   const examined = Number(m[1]);
-  const floor = Number(v.min_pages_examined);
+  const floor = cfg.surface?.floor_source === 'advertised_routes' ? minSurface : Number(v.min_pages_examined);
   rows.push({ label: v.label, examined, floor, indexable, coverage_pct: Number(((100 * examined) / Math.max(1, indexable)).toFixed(2)) });
   if (!Number.isFinite(examined) || examined === 0) {
     errors.push(`${v.label}: examined 0 pages.`);

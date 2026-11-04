@@ -227,7 +227,10 @@ classify_push_failure() {
 push_main_once() {
   local log_file="$1"
   : > "$log_file"
-  git push origin HEAD:main 2> >(tee "$log_file" >&2)
+  local push_status=0
+  git push origin HEAD:main 2> "$log_file" || push_status=$?
+  cat "$log_file" >&2
+  return "$push_status"
 }
 
 fetch_remote_main

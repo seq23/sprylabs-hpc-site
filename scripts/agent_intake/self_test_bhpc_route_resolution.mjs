@@ -174,10 +174,16 @@ expect('delimiter-rich agent instruction yields a clean required heading', deriv
 // Spry Content Release run 36245892727 stopped on.
 const siteRedirects = loadExactSiteRedirects();
 expect('site redirects are read (Rule 0: a resolver with no rules proves nothing)', siteRedirects.size > 100, `rules=${siteRedirects.size}`);
-expect('retired -2 insight resolves through its 301 to the canonical page',
-  repoPathFromIntendedWinnerPage('https://spryexecutiveos.com/insights/how-to-end-the-day-so-tomorrow-starts-fast-2.html') === 'insights/how-to-end-the-day-so-tomorrow-starts-fast.html');
-expect('retired extensionless form resolves the same way',
-  repoPathFromIntendedWinnerPage('https://spryexecutiveos.com/insights/how-to-end-the-day-so-tomorrow-starts-fast-2') === 'insights/how-to-end-the-day-so-tomorrow-starts-fast.html');
+const retiredSource = 'insights/how-to-end-the-day-so-tomorrow-starts-fast-2.html';
+const currentRedirect = siteRedirects.get('/'+retiredSource);
+expect('retired insight has a reviewed redirect destination', !!currentRedirect);
+const currentRoute = new URL(currentRedirect, 'https://spryexecutiveos.com').pathname;
+const currentFile = currentRoute.endsWith('/') ? currentRoute.slice(1)+'index.html' : currentRoute.slice(1)+'.html';
+expect('reviewed redirect destination is built', fs.existsSync(path.join(ROOT, currentFile)));
+for (const source of [retiredSource, retiredSource.replace(/\.html$/, '')]) {
+  expect('retired insight alias resolves directly to the current published destination',
+    repoPathFromIntendedWinnerPage('https://spryexecutiveos.com/'+source) === currentFile, source);
+}
 const fixtureRules = new Map([
   ['/download.html', '/insights/how-to-end-the-day-so-tomorrow-starts-fast'],
   ['/selftest-chain-a.html', '/selftest-chain-b'],

@@ -4,6 +4,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import { createRequire } from 'node:module';
+const require = createRequire(import.meta.url);
+const { keepers } = require('../scripts/lib/spry_rescue.cjs');
+const { isNoindex } = require('../scripts/lib/site_pages.js');
+const { routeOwnerRedirect } = await import('../functions/_lib/route_owner_host.js');
 import { CONSOLIDATED_ROUTES, consolidationRedirect, consolidationResponse } from '../functions/_lib/host_consolidation.js';
 import { onRequest } from '../functions/_middleware.js';
 
@@ -64,9 +69,19 @@ test('no sitemap lists a consolidated route, and each host lists only its own UR
   let urls = 0;
   for (const [host, { child_sitemap: file }] of Object.entries(hosts)) {
     const locs = [...fs.readFileSync(file, 'utf8').matchAll(/<loc>\s*([^<\s]+)\s*<\/loc>/g)].map((m) => new URL(m[1]));
-    assert.ok(locs.length > 100, `${file} lists ${locs.length} URLs`);
+    assert.ok(locs.length > 0, `${file} lists zero URLs`);
+    assert.equal(new Set(locs.map(u => u.href)).size, locs.length, `${file} duplicates a URL`);
+    if (host === SPRY) assert.deepEqual(locs.map(u => u.pathname).sort(), [...keepers].sort());
+    else assert.ok(locs.length > 100, `${file}: product-host population unexpectedly shrank`);
     urls += locs.length;
     for (const u of locs) {
+      const rel = u.pathname === '/' ? 'index.html' : u.pathname.endsWith('/') ? u.pathname.slice(1) + 'index.html' : u.pathname.slice(1) + '.html';
+      assert.ok(fs.existsSync(rel), `${u.href} has no built page`);
+      const html = fs.readFileSync(rel, 'utf8');
+      assert.equal(isNoindex(html), false, `${u.href} is noindex`);
+      assert.equal(html.match(/<link\b(?=[^>]*rel=["']canonical["'])[^>]*href=["']([^"']+)/)?.[1], u.href, `${u.href} canonical differs`);
+      assert.equal(routeOwnerRedirect(u.href), null, `${u.href} redirects off its advertised host`);
+      assert.equal(consolidationRedirect(u.href), null);
       assert.equal(u.hostname, host, `${file} lists ${u.href}, another host's URL`);
       assert.ok(!CONSOLIDATED_ROUTES.has(u.pathname.replace(/\.html$/, '')), `${file} still lists ${u.href}, which 301s`);
     }
