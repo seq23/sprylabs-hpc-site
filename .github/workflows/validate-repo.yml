@@ -80,6 +80,7 @@ jobs:
           node .github/scripts/test_pull_request_profile.mjs
       - name: Unit and workflow contracts
         run: |
+          npm run validation:python-runtime:bootstrap
           node --test tests/*.test.mjs tests/aplayermode/*.test.mjs
           npm run validate:workflow-contract
           npm run validate:workflow-run-handoff
