@@ -10,7 +10,7 @@ import { SPRY_RESCUE_REDIRECTS } from '../functions/_lib/spry_rescue_table.js';
 import { consolidationResponse } from '../functions/_lib/host_consolidation.js';
 const require = createRequire(import.meta.url);
 const { renderSchemaScript } = require('../scripts/lib/citation_page_schema.cjs');
-const { content, HOST, keepers, isRetiredFile, isRetiredRoute } = require('../scripts/lib/spry_rescue.cjs');
+const { admittedEnginePages, enginePages, content, HOST, keepers, isRetiredFile, isRetiredRoute } = require('../scripts/lib/spry_rescue.cjs');
 const { build, render, fileFor } = require('../scripts/content/build_spry_rescue.cjs');
 const ledger = JSON.parse(fs.readFileSync('data/seo/spry_rescue_redirects.json'));
 
@@ -117,7 +117,17 @@ test('finite publishing policy catches future generated variants and preserves o
   assert.equal(isRetiredFile('download.html'),false);
   assert.equal(isRetiredFile('aplayermode/index.html'),false);
   for (const r of keepers) assert.equal(isRetiredFile(fileFor(r)),false,r);
-  assert.equal(JSON.parse(fs.readFileSync('search-loop.config.json')).mode,'off');
+  assert.equal(JSON.parse(fs.readFileSync('search-loop.config.json')).mode,'slow');
+});
+
+test('engine admission preserves retirement and requires a live, sourced publication record', () => {
+  const page = { route:'/questions/a-distinct-question/', rel:'questions/a-distinct-question/index.html', url:HOST+'/questions/a-distinct-question/', status:'live', published_at:'2026-11-04', hash:'a'.repeat(64), facts:['https://one.example/research','https://two.example/research'] };
+  assert.deepEqual(admittedEnginePages({pages:[page]}, []), [page]);
+  assert.deepEqual(admittedEnginePages({pages:[page]}, [{from:page.route}]), []);
+  for (const patch of [{status:'pending_approval'}, {status:'merged'}, {facts:[]}, {hash:''}, {published_at:null}, {rel:'../download.html'}, {url:'https://other.example'+page.route}, {route:'/insights/variant'}]) {
+    assert.deepEqual(admittedEnginePages({pages:[{...page,...patch}]}, []), [], JSON.stringify(patch));
+  }
+  assert.deepEqual(admittedEnginePages({pages:[]}, []), []);
 });
 
 test('deploy output contains every keeper, omits retired HTML and advertises no retired URL', () => {
@@ -129,6 +139,31 @@ test('deploy output contains every keeper, omits retired HTML and advertises no 
   for (const r of ledger.redirects) {
     assert.ok(!fs.existsSync('.pages-output/'+fileFor(r.from)),r.from);
     assert.ok(!urls.includes(HOST+r.from));
+  }
+});
+
+test('a new gated engine page survives the final renderer and deploy assembly', () => {
+  const bookFile = 'data/search-loop/pages.json';
+  const original = fs.readFileSync(bookFile, 'utf8');
+  const snapshots = new Map(['data/seo/spry_rescue_redirects.json','functions/_lib/spry_rescue_table.js','sitemap-spry.xml'].map(f=>[f,fs.readFileSync(f)]));
+  const route = '/questions/fixture-distinct-planning-question/';
+  const rel = fileFor(route);
+  try {
+    fs.mkdirSync(path.dirname(rel), {recursive:true});
+    fs.writeFileSync(rel, render({...content.guides[0], route}));
+    const book = JSON.parse(original);
+    book.pages.push({route,rel,url:HOST+route,status:'live',query:'Fixture distinct planning question',published_at:'2026-11-04',hash:'a'.repeat(64),facts:['https://one.example/research','https://two.example/research']});
+    fs.writeFileSync(bookFile, JSON.stringify(book));
+    execFileSync(process.execPath, ['scripts/assemble_pages_output.js'], {stdio:'pipe'});
+    assert.ok(fs.existsSync('.pages-output/'+rel));
+    assert.ok(fs.readFileSync('.pages-output/sitemap-spry.xml','utf8').includes(HOST+route));
+    assert.ok(fs.readFileSync('.pages-output/knowledge-map/index.html','utf8').includes(route));
+    assert.ok(!JSON.parse(fs.readFileSync('data/seo/spry_rescue_redirects.json')).redirects.some(r=>r.from===route));
+  } finally {
+    fs.writeFileSync(bookFile, original);
+    fs.rmSync(path.dirname(rel), {recursive:true,force:true});
+    for (const [file, bytes] of snapshots) fs.writeFileSync(file, bytes);
+    execFileSync(process.execPath, ['scripts/content/build_spry_rescue.cjs'], {stdio:'pipe'});
   }
 });
 
@@ -172,7 +207,7 @@ test('retired directory aliases preserve the existing BHPC destination', () => {
 test('historical GSC winners remain published, including established sibling ownership', () => {
   const selection = JSON.parse(fs.readFileSync('data/seo/spry_rescue_selection.json'));
   assert.ok(selection.measured_routes.length > 0, 'no measured routes examined');
-  assert.deepEqual(selection.kept.map(p => p.route).sort(), [...keepers].sort());
+  assert.deepEqual(selection.kept.map(p => p.route).sort(), [...keepers].filter(r=>!enginePages.some(p=>p.route===r)).sort());
   // Read the measurements, not just the editorial decision ledger. Discarded
   // provider rows, historical losses and search-loop GSC signals also count.
   const observed = new Set();

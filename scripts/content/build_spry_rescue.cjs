@@ -2,7 +2,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
-const { content, HOST, keepers, isRetiredRoute, isRetiredFile, targetFor } = require('../lib/spry_rescue.cjs');
+const { content, HOST, keepers, enginePages, isRetiredRoute, isRetiredFile, targetFor } = require('../lib/spry_rescue.cjs');
 const { routeFor } = require('../lib/dual_domain_policy.cjs');
 const { listSitePages } = require('../lib/site_pages.js');
 const { brandedTitle, descriptionCandidates } = require('../lib/search_snippet_bounds.cjs');
@@ -73,6 +73,7 @@ function build() {
   // not additional query variants. They use the same factual publisher identity.
   const directory = {...content.guides[0],id:'guides',route:'/knowledge-map/',title:'Spry Executive OS practical planning guides',definition:'Spry Executive OS is a collection of practical planning guides published by Spry Labs. The guides explain how to choose work, maintain a routine, review progress and use AI for structured reflection. Each topic has one primary guide, with examples, boundaries and a route to the publisher’s system manual.',best_for:'readers choosing the guide that matches the work or planning problem in front of them.',steps:content.guides.map(g=>g.title),sections:[],example:'Choose the topic that describes your current question. Use its worked example and steps to make a small plan, then review what happened before adding another tool or routine.',faq:content.guides[0].faq};
   let index = render(directory).replace('<ol>'+directory.steps.map(s=>`<li>${esc(s)}</li>`).join('')+'</ol>','<ul>'+content.guides.map(g=>`<li><a href="${g.route}">${esc(g.title)}</a> — ${esc(g.best_for)}</li>`).join('')+'</ul>');
+  if (enginePages.length) index = index.replace('</article>', '<nav aria-label="New questions"><h2>More planning questions</h2><ul>'+enginePages.map(p=>`<li><a href="${p.route}">${esc(p.query)}</a></li>`).join('')+'</ul></nav></article>');
   write(fileFor(directory.route),index);
   const about = {...directory,id:'about',route:'/about',title:'About Spry Labs and these planning guides',definition:'Spry Labs is the publisher of Spry Executive OS, a collection of educational guides about planning, execution and structured reflection. These pages offer practical methods and illustrative examples. They distinguish editorial recommendations from sourced research and direct readers to the publisher’s main product page for current contents and purchase terms.',steps:['We use the business name Spry Labs as the editorial byline. These guides do not claim an invented individual author or professional credential.','Research references identify their source and the scope of the supporting idea. Our worked examples are illustrative, not customer testimonials.','Publication and update dates change when this editorial source changes. A rebuild alone does not refresh the stated review date.','AI-supported planning remains subject to human review. These guides are not therapy and do not provide medical, legal or investment advice.'],example:'A planning example describes a possible way to use a routine. It is not a report about a customer, a clinical study or a promise that a product will deliver a financial result.',faq:content.guides[0].faq};
   write(fileFor(about.route),render(about));
@@ -89,7 +90,7 @@ function build() {
   // Rewrite discovery at the same boundary as the page generator; no redirect
   // URL is advertised as an indexable article after this stage.
   const lastmods = new Map(JSON.parse(fs.readFileSync('data/sitemap/lastmod_ledger.json')).urls.map(row => [row.url, row.lastmod]));
-  const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+[...keepers].sort().map(r=>`  <url><loc>${HOST+r}</loc><lastmod>${lastmods.get(HOST+r) || content.guides.find(g=>g.route===r)?.updated || content.reviewed_on}</lastmod></url>`).join('\n')+'\n</urlset>\n';
+  const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+[...keepers].sort().map(r=>`  <url><loc>${HOST+r}</loc><lastmod>${lastmods.get(HOST+r) || content.guides.find(g=>g.route===r)?.updated || enginePages.find(p=>p.route===r)?.published_at || content.reviewed_on}</lastmod></url>`).join('\n')+'\n</urlset>\n';
   write('sitemap-spry.xml',sitemap);
   for (const name of ['sitemaps/sitemap-legacy.xml', ...fs.readdirSync('sitemaps').filter(n=>n.endsWith('.xml')).map(n=>'sitemaps/'+n)]) {
     if (!fs.existsSync(name)) continue;

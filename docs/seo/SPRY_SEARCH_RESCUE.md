@@ -20,7 +20,7 @@ The latest query/page export has only 7 raw impressions because it does not incl
 - `data/seo/spry_rescue_redirects.json`: 502 retired source routes, including 493 URLs from the 543-URL live sitemap and nine older source routes. Four of the older routes keep their existing BHPC consolidation destinations.
 - `functions/_lib/spry_rescue_table.js`: exact aliases, including `.html` and directory `index.html`; no broad unknown-URL redirect. Both public hosts return 301, preserve query strings, and terminate at a kept Spry or BHPC page. Existing canonical-host and four-route consolidation rules run first.
 - `scripts/assemble_pages_output.js`: reruns the renderer at the final deploy boundary and omits retired HTML, including any legacy writer's recreated variant. Archive source files remain reversible. This avoids Pages `_redirects` rule limits, following the failure lessons in read-only WPP-llm commits #71–73.
-- Insight and phase-expansion HTML writers skip retired Spry output. `build:all:uncached` finishes with the rescue renderer, and `search-loop.config.json` is off. New topics require an explicit editorial addition to the finite source.
+- Insight and phase-expansion HTML writers skip retired Spry output. `build:all:uncached` finishes with the rescue renderer, and `search-loop.config.json` runs in slow mode (at most three new pages per run). New questions require a live, sourced engine publication record after the shared distinct-intent gates; every retired URL stays retired. The existing 18-page engine cap is retained and moves weekly with measured Google impressions. Unregistered files cannot enter a deploy. Admitted questions join the sitemap and the guide directory.
 
 ## Page contract and verification
 

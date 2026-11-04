@@ -8,6 +8,24 @@ const content = JSON.parse(fs.readFileSync(path.join(root, 'data/seo/spry_rescue
 const HOST = 'https://spryexecutiveos.com';
 const keepers = new Set([...content.guides.map(g => g.route), '/knowledge-map/', '/about']);
 const { routeFor, hostFor } = require('./dual_domain_policy.cjs');
+// The engine admits only distinct, sourced pages under its outcome-gated cap.
+// Its live ledger is publication evidence; a file alone never earns admission.
+// Retired URLs remain permanently retired even if an old engine ledger says live.
+function admittedEnginePages(book, retired) {
+  const blocked = new Set(retired.map(r => r.from));
+  return (book.pages || []).filter(p => p.status === 'live'
+    && /^\/questions\/[a-z0-9-]+\/$/.test(p.route || '')
+    && p.rel === p.route.slice(1) + 'index.html'
+    && p.url === HOST + p.route && !blocked.has(p.route)
+    && /^\d{4}-\d{2}-\d{2}$/.test(p.published_at || '')
+    && /^[a-f0-9]{64}$/.test(p.hash || '')
+    && new Set(p.facts || []).size >= 2);
+}
+const engineBook = JSON.parse(fs.readFileSync(path.join(root, 'data/search-loop/pages.json')));
+const retired = JSON.parse(fs.readFileSync(path.join(root, 'data/seo/spry_rescue_redirects.json'))).redirects;
+const enginePages = admittedEnginePages(engineBook, retired);
+for (const p of enginePages) keepers.add(p.route);
+
 const normalize = r => '/' + String(r).replace(/^\/+/, '').replace(/\/index\.html$/, '/').replace(/\.html$/, '');
 function isRetiredRoute(route) {
   if (/^\/(?:admin|agency|api|cdn-cgi|404)(?:\/|$)/.test(route)) return false;
@@ -38,4 +56,4 @@ function targetFor(route) {
   }
   return HOST + content.guides.find(g => g.id === 'executive-os').route;
 }
-module.exports = { content, HOST, keepers, normalize, isRetiredRoute, isRetiredFile, targetFor };
+module.exports = { admittedEnginePages, enginePages, content, HOST, keepers, normalize, isRetiredRoute, isRetiredFile, targetFor };
