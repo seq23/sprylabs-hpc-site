@@ -23,6 +23,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import os from 'node:os';
 import { execFileSync } from 'node:child_process';
 import { ensureRuntime, managedPython } from './validation/python_runtime.mjs';
 
@@ -170,6 +171,32 @@ if (firstSeen) {
   if (firstSeen[1] !== '2026-01-02') errors.push(`the derived ledger date did not win for a known URL (got ${firstSeen[1]})`);
   if (firstSeen[2] !== '2026-03-04') errors.push(`the existing sitemap date did not win for a URL absent from the ledger (got ${firstSeen[2]})`);
 }
+
+// A real depth-one checkout must not reinterpret markup churn as publication.
+const scratch = fs.mkdtempSync(path.join(os.tmpdir(), 'lastmod-shallow-'));
+try {
+  const source = path.join(scratch, 'source');
+  const clone = path.join(scratch, 'clone');
+  fs.mkdirSync(source);
+  const git = (args, cwd = source, env = {}) => execFileSync('git', args, { cwd, encoding: 'utf8', env: { ...process.env, ...env }, stdio: ['pipe', 'pipe', 'pipe'] });
+  git(['init', '-q']); git(['config', 'user.name', 'Fixture']); git(['config', 'user.email', 'fixture@example.invalid']);
+  fs.mkdirSync(path.join(source, 'scripts/lib'), { recursive: true });
+  for (const file of [GEN, 'scripts/lib/sitemap_ledger.mjs']) fs.copyFileSync(path.join(ROOT, file), path.join(source, file));
+  const page = '<h1>Evidence survives a rebuild</h1>';
+  const url = 'https://example.invalid/';
+  fs.writeFileSync(path.join(source, 'index.html'), page);
+  fs.writeFileSync(path.join(source, 'sitemap.xml'), `<urlset><url><loc>${url}</loc><lastmod>2026-01-02</lastmod></url></urlset>`);
+  fs.mkdirSync(path.join(source, 'data/sitemap'), { recursive: true });
+  fs.writeFileSync(path.join(source, LEDGER), JSON.stringify({ urls: [{ url, source_file: 'index.html', content_sha256: h(page).slice(0, 24), lastmod: '2026-01-02', evidence: 'git_last_visible_content_change' }] }));
+  git(['add', '.']); git(['commit', '-qm', 'Publish'], source, { GIT_AUTHOR_DATE: '2026-01-02T12:00:00Z', GIT_COMMITTER_DATE: '2026-01-02T12:00:00Z' });
+  fs.appendFileSync(path.join(source, 'index.html'), '\n<!-- markup-only rebuild -->');
+  git(['add', '.']); git(['commit', '-qm', 'Reserialize'], source, { GIT_AUTHOR_DATE: '2026-11-03T12:00:00Z', GIT_COMMITTER_DATE: '2026-11-03T12:00:00Z' });
+  git(['clone', '-q', '--depth=1', `file://${source}`, clone]);
+  execFileSync(process.execPath, [GEN], { cwd: clone, stdio: 'pipe' });
+  const derived = JSON.parse(fs.readFileSync(path.join(clone, LEDGER))).urls[0];
+  if (derived.lastmod !== '2026-01-02') errors.push(`shallow checkout replaced the content date with ${derived.lastmod}`);
+} catch (e) { errors.push(`shallow-checkout regression failed: ${e.message}`); }
+finally { fs.rmSync(scratch, { recursive: true, force: true }); }
 
 const report = {
   schema_version: '1.0',

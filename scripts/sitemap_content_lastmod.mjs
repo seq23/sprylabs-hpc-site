@@ -53,8 +53,13 @@ let historyIndex = null;
 function loadHistory() {
   if (historyIndex) return historyIndex;
   historyIndex = new Map();
+  // Pages checks out a shallow tree. Its oldest visible revision is not proof
+  // of publication: a markup-only rebuild can appear to create every page.
+  // Keep the content-hash ledger/existing sitemap evidence until full history
+  // is available; never replace it with a truncated-history date.
   let out;
   try {
+    if (execFileSync('git', ['rev-parse', '--is-shallow-repository'], { cwd: ROOT, encoding: 'utf8' }).trim() === 'true') return historyIndex;
     out = execFileSync('git', ['log', '--no-renames', '--format=__C__ %cs', '--raw', '--diff-filter=AM', '--', '*.html'], { cwd: ROOT, encoding: 'utf8', maxBuffer: 1024 * 1024 * 512 });
   } catch { return historyIndex; }
   let date = '';
