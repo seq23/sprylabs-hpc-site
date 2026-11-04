@@ -28,7 +28,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { managedPython } from './python_runtime.mjs';
+import { ensureRuntime, managedPython } from './python_runtime.mjs';
 // The fixture page carries a real CITATION_PAGE_SCHEMA block, because that block
 // is half of what the guard hashes. It is emitted through the schema authority
 // rather than hand-built here - VAL-CITATION-SCHEMA-AUTHORITY caught the
@@ -38,6 +38,7 @@ import schemaAuthority from '../lib/citation_page_schema.cjs';
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const SCRIPT = path.join(REPO, 'scripts/validation/extraction_surface_guard.py');
 const SNAP = 'artifacts/validation/extraction-surface-snapshot.json';
+ensureRuntime();
 const PY = managedPython();
 
 const failures = [];

@@ -1,8 +1,8 @@
 {
   "schema_version": "1.0",
   "validator": "repair-fixture-capability",
-  "status": "PASS",
-  "generated_at": "2026-11-03T15:03:45.328Z",
+  "status": "FAIL",
+  "generated_at": "2026-11-04T00:09:13.323Z",
   "repairs_registered": 10,
   "distinct_repair_commands": 6,
   "behavioural_pass": 9,
@@ -81,5 +81,7 @@
       "behavioural": "PASS"
     }
   ],
-  "errors": []
+  "errors": [
+    "production_tree_mutated - the working tree changed while this test ran, so a fixture wrote outside its scratch worktree. Every induction must be sandboxed; a guard that leaves the repo dirty is worse than no guard."
+  ]
 }

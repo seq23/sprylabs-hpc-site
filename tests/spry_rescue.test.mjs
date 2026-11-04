@@ -14,6 +14,30 @@ const { content, HOST, keepers, isRetiredFile, isRetiredRoute } = require('../sc
 const { build, render, fileFor } = require('../scripts/content/build_spry_rescue.cjs');
 const ledger = JSON.parse(fs.readFileSync('data/seo/spry_rescue_redirects.json'));
 
+test('admission requires one attributed download box and rejects duplicate or misplaced conversions', () => {
+  execFileSync(process.execPath, ['scripts/validation/python_runtime.mjs', 'run', '-c', `
+import json, pathlib, re, sys, tempfile
+sys.path.insert(0, 'scripts/validation')
+import validate_programmatic_admission as admission
+record=next(r for r in admission.REGISTRY if r['path']=='how-to-plan-your-day/index.html')
+raw=pathlib.Path(record['path']).read_text()
+with tempfile.TemporaryDirectory() as directory:
+    admission.ROOT=pathlib.Path(directory)
+    page=admission.ROOT/record['path']
+    page.parent.mkdir(parents=True)
+    def errors(html):
+        page.write_text(html)
+        return admission.inspect(record)[0]
+    assert not errors(raw), errors(raw)
+    box=re.search(r'<aside class="recommendation-summary"[\\s\\S]*?</aside>',raw).group()
+    assert any('one next-step box' in e for e in errors(raw.replace(box,'')))
+    assert any('one next-step box' in e for e in errors(raw.replace(box,box+box)))
+    assert any('download destination' in e for e in errors(raw.replace('https://billionairehighperformancecoach.com/download.html?', 'https://example.com/download.html?')))
+    extra='<a href="https://billionairehighperformancecoach.com/download.html?ref=footer">Manual</a>'
+    assert any('redundant conversion' in e for e in errors(raw.replace('</footer>',extra+'</footer>')))
+`], {stdio:'pipe'});
+});
+
 test('publisher trust rejects broken attribution, invisible bylines and wrong conversion destinations', () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'spry-publisher-trust-'));
   try {

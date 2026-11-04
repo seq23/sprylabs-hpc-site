@@ -1,6 +1,6 @@
 {
   "profile": "container-prepush",
-  "started_at": "2026-11-03T18:50:30.412Z",
+  "started_at": "2026-11-04T00:02:37.782Z",
   "steps": [
     {
       "id": "VAL-ORCHESTRATION-CONTRACT",
@@ -35,8 +35,8 @@
     {
       "id": "VAL-EXTRACTION-SURFACE-GUARD-SNAPSHOT",
       "command": "npm run validate:extraction-surface-guard:snapshot",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "build:all",
@@ -71,8 +71,8 @@
     {
       "id": "VAL-EXTRACTION-SURFACE-GUARD-CHECK",
       "command": "npm run validate:extraction-surface-guard:check",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "SOCIAL-TAGS",
@@ -611,8 +611,8 @@
     {
       "id": "VAL-CITATION-SCHEMA-AUTHORITY",
       "command": "npm run validate:citation-schema-authority",
-      "exit_code": 1,
-      "status": "FAIL"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "VAL-CITATION-PHASE-MANIFEST",
@@ -773,8 +773,8 @@
     {
       "id": "VAL-HEALTH-BOUNDARY-REACH",
       "command": "npm run validate:health-boundary-reach",
-      "exit_code": 0,
-      "status": "PASS"
+      "exit_code": 1,
+      "status": "FAIL"
     },
     {
       "id": "VAL-FREEZE-AFTER-CONVERGENCE",
@@ -839,8 +839,8 @@
     {
       "id": "VAL-EXTRACTION-SURFACE-BASELINE-PRESENCE",
       "command": "npm run validate:extraction-surface-baseline-presence",
-      "exit_code": 0,
-      "status": "PASS"
+      "exit_code": 1,
+      "status": "FAIL"
     },
     {
       "id": "VAL-CONTROL-PLANE-REACHABILITY",
@@ -1073,8 +1073,8 @@
     {
       "id": "VAL-BUILD-INPUT-HASH-COVERS-TREE",
       "command": "npm run validate:build-input-hash-covers-tree",
-      "exit_code": 128,
-      "status": "INTERNAL_ERROR"
+      "exit_code": 0,
+      "status": "PASS"
     },
     {
       "id": "ORGANIZATION-NODE",
@@ -1129,18 +1129,22 @@
       "command": "npm run self-test:entity-backlink-watch",
       "exit_code": 0,
       "status": "PASS"
+    },
+    {
+      "id": "VAL-AI-MEASUREMENT-SELF-TEST",
+      "command": "npm run self-test:ai-measurement",
+      "exit_code": 0,
+      "status": "PASS"
     }
   ],
-  "status": "INTERNAL_ERROR",
-  "failure_count": 6,
+  "status": "FAIL",
+  "failure_count": 4,
   "failures": [
-    "VAL-EXTRACTION-SURFACE-GUARD-SNAPSHOT",
-    "VAL-EXTRACTION-SURFACE-GUARD-CHECK",
     "validate:content-release",
-    "VAL-CITATION-SCHEMA-AUTHORITY",
-    "VAL-REPAIR-FIXTURE-CAPABILITY",
-    "VAL-BUILD-INPUT-HASH-COVERS-TREE"
+    "VAL-HEALTH-BOUNDARY-REACH",
+    "VAL-EXTRACTION-SURFACE-BASELINE-PRESENCE",
+    "VAL-REPAIR-FIXTURE-CAPABILITY"
   ],
   "stopped_early_at": null,
-  "finished_at": "2026-11-03T18:59:51.540Z"
+  "finished_at": "2026-11-04T00:10:02.320Z"
 }

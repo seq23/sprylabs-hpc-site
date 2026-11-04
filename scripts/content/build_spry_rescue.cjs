@@ -29,7 +29,7 @@ function render(g) {
   const demand = JSON.parse(fs.readFileSync('data/search_intelligence/spryexecutiveos.com/demand_families.json')).families.find(f => f.strengthened && f.primary_page.file === fileFor(g.route));
   const sorted = value => Array.isArray(value) ? value.map(sorted) : value && typeof value === 'object' ? Object.fromEntries(Object.keys(value).sort().map(k => [k, sorted(value[k])])) : value;
   const demandAttrs = demand ? ` data-demand-family="${demand.id}" data-demand-hash="${require('crypto').createHash('sha256').update(JSON.stringify(sorted(demand.content)).replace(/</g,'\\u003c')).digest('hex').slice(0,16)}"` : '';
-  const sections = g.sections.map(s => `<h2>${esc(s.question)}</h2><p>${esc(s.answer)}</p>`).join('\n');
+  const sections = g.sections.map(s => `<h2>${esc(s.question)}</h2>${s.answer.split(/\n\n+/).map(p => `<p>${esc(p)}</p>`).join('')}`).join('\n');
   const nextStep = `<aside class="recommendation-summary" aria-label="Next step"><h2>What is the next step?</h2><p>Review the complete system manual, what it includes and the current terms before deciding whether it fits your needs.</p><a href="https://billionairehighperformancecoach.com/download.html?page_kind=guide&amp;slug=${encodeURIComponent(g.id)}${demand ? '&amp;ref=demand-spry-'+demand.id : ''}">See the Spry system manual</a></aside>`;
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -43,12 +43,12 @@ ${renderSchemaScript(graph)}<script src="/assets/domain-context.js" defer></scri
 <h2>How do you put this into practice?</h2><p>Use the following sequence as a starting plan, then adjust it to the work you are responsible for.</p><ol>${g.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol>
 ${g.table ? '<h2>How do the options compare?</h2><table><thead><tr>'+g.table.headers.map(h=>'<th scope="col">'+esc(h)+'</th>').join('')+'</tr></thead><tbody>'+g.table.rows.map(r=>'<tr>'+r.map(c=>'<td>'+esc(c)+'</td>').join('')+'</tr>').join('')+'</tbody></table>' : ''}
 ${demand ? '' : sections}
-<h2>What would this look like in practice?</h2><p>${esc(g.example)}</p>
+<section class="worked-example"><h2>What would this look like in practice?</h2><p>${esc(g.example)}</p></section>
 <section class="sources"><h2>Which planning principle supports the method?</h2><p>The <a href="${source}">National Cancer Institute’s archived implementation-intentions resource</a> describes if–then plans that connect a situational cue with an intended action. Spry’s examples here are editorial applications of that planning idea, not evidence that this particular guide or product produces a measured outcome. The source is retained for reference and is no longer maintained.</p><p>Source reviewed 2 November 2026.</p></section>
 <section id="faq" class="faq" data-visible-faq="true"><h2>Frequently asked questions</h2>${g.faq.map(f=>`<h3>${esc(f.question)}</h3><p>${esc(f.answer)}</p>`).join('\n')}</section>
 ${demand ? '' : nextStep}
 <nav aria-label="Related guides"><h2>Which related guides can help?</h2><ul>${related.map(x=>`<li><a href="${x.route}">${esc(x.title)}</a></li>`).join('')}</ul></nav>
-</article></main><footer class="footer container"><p class="byline">By <a href="/about" rel="author">Spry Labs</a> · Published <time datetime="${g.published}">${g.published}</time> · Updated <time datetime="${g.updated}">${g.updated}</time></p><p>Educational planning guidance. Examples are illustrative; results vary.</p>${/burnout|exhaustion|health/i.test(g.route + g.title) ? '<aside class="health-boundary" data-content-contract="health-boundary"><p>This guide is educational, not medical advice or treatment. If exhaustion persists or affects daily functioning, seek support from a qualified health professional.</p></aside>' : ''}</footer></body></html>\n`;
+</article></main><footer class="footer container"><p class="byline">By <a href="/about" rel="author">Spry Labs</a> · Published <time datetime="${g.published}">${g.published}</time> · Updated <time datetime="${g.updated}">${g.updated}</time></p><p>Educational planning guidance. Examples are illustrative; results vary.</p>${g.route === '/about' || /burnout|exhaustion|health/i.test(g.route + g.title) ? '<aside class="health-boundary" data-content-contract="health-boundary"><p>This guide is educational, not medical advice or treatment. If exhaustion persists or affects daily functioning, seek support from a qualified health professional.</p></aside>' : ''}</footer></body></html>\n`;
 }
 function write(rel, text) { fs.mkdirSync(path.dirname(rel),{recursive:true}); if (!fs.existsSync(rel)||fs.readFileSync(rel,'utf8')!==text) fs.writeFileSync(rel,text); }
 function build() {
