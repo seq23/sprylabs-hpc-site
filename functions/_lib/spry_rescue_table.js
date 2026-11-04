@@ -2577,6 +2577,22 @@ export const SPRY_RESCUE_REDIRECTS = new Map([
     "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
   ],
   [
+    "/insights/discipline-vs-motivation-high-performance",
+    "https://spryexecutiveos.com/discipline-vs-motivation/"
+  ],
+  [
+    "/insights/discipline-vs-motivation-high-performance.html",
+    "https://spryexecutiveos.com/discipline-vs-motivation/"
+  ],
+  [
+    "/insights/discipline-vs-motivation-the-calm-version-that-works",
+    "https://spryexecutiveos.com/discipline-vs-motivation/"
+  ],
+  [
+    "/insights/discipline-vs-motivation-the-calm-version-that-works.html",
+    "https://spryexecutiveos.com/discipline-vs-motivation/"
+  ],
+  [
     "/insights/faster-decisions-with-decision-memo",
     "https://spryexecutiveos.com/insights/best-chatgpt-prompts-for-executive-coaching-and-leadership-development"
   ],

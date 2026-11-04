@@ -14,6 +14,32 @@ const { content, HOST, keepers, isRetiredFile, isRetiredRoute } = require('../sc
 const { build, render, fileFor } = require('../scripts/content/build_spry_rescue.cjs');
 const ledger = JSON.parse(fs.readFileSync('data/seo/spry_rescue_redirects.json'));
 
+test('publisher trust rejects broken attribution, invisible bylines and wrong conversion destinations', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'spry-publisher-trust-'));
+  try {
+    for (const file of ['data/entities/author_profile.json', 'data/entities/org_profile.json', 'data/entities/entity_registry.json', 'scripts/citation/conversion_links.py', 'author.html', 'download.html']) {
+      fs.mkdirSync(path.dirname(path.join(root, file)), {recursive:true});
+      fs.copyFileSync(file, path.join(root, file));
+    }
+    const original = fs.readFileSync('about.html', 'utf8');
+    const validator = path.resolve('scripts/validators/validate_author_trust.js');
+    const check = html => {
+      fs.writeFileSync(path.join(root, 'about.html'), html);
+      return () => execFileSync(process.execPath, [validator], {cwd:root,stdio:'pipe'});
+    };
+    assert.doesNotThrow(check(original));
+    const schema = JSON.parse(original.match(/<script id="CITATION_PAGE_SCHEMA" type="application\/ld\+json">(.*?)<\/script>/s)[1]);
+    const broken = structuredClone(schema);
+    broken['@graph'].find(n => n['@type'] === 'Article').author = {'@id':'https://example.com/invented-author'};
+    assert.throws(check(original.replace(JSON.stringify(schema), JSON.stringify(broken))));
+    assert.throws(check(original.replace('rel="author"', 'rel="nofollow"')));
+    assert.throws(check(original.replaceAll('https://billionairehighperformancecoach.com/download.html?', 'https://example.com/download.html?')));
+    assert.throws(check(''));
+  } finally {
+    fs.rmSync(root, {recursive:true,force:true});
+  }
+});
+
 test('manual link normalization preserves historical rescue sources and edge keys', () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'spry-redirect-history-'));
   const source = '/insights/retired-planning';

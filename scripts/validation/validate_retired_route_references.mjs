@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fail, pass, writeSummary } from './common.mjs';
+import { SPRY_RESCUE_REDIRECTS } from '../../functions/_lib/spry_rescue_table.js';
 
 const ROOT = process.cwd();
 const config = JSON.parse(fs.readFileSync('data/content/manual_redirects.json', 'utf8'));
@@ -14,6 +15,9 @@ const errors = [];
 if (!redirects.length) fail('[validate:retired-route-references] FAIL: data/content/manual_redirects.json declares no redirects; expected at least one retired route. Scanning the tree against an empty redirect list proves no retired route is unreferenced.');
 const skipDirs = new Set(['.git', '.pages-output', 'node_modules', 'artifacts', 'coverage', 'reports', '.build', 'test-results', 'playwright-report']);
 const allowedFiles = new Set(['data/content/manual_redirects.json', '_redirects', 'docs/REDIRECT_MIGRATION_HISTORY.md', 'scripts/validation/validate_manual_expansion.py']);
+// Historical source keys are required in the edge table. Check their actual
+// destinations below instead of treating those keys as active page links.
+allowedFiles.add('functions/_lib/spry_rescue_table.js');
 const scanExtensions = new Set(['.html', '.xml', '.txt', '.json', '.md', '.js', '.mjs', '.cjs']);
 
 function routeFromSource(sourcePath) {
@@ -49,6 +53,13 @@ for (const entry of redirects) {
   if (!fs.existsSync(targetFile) && !fs.existsSync(`${targetFile}.html`)) errors.push(`${source}: redirect target missing ${entry.target}`);
 }
 for (const [source, target] of routeMap) {
+  for (const alias of [source, source.replace(/\.html$/, '')]) {
+    if (SPRY_RESCUE_REDIRECTS.has(alias)) {
+      const edgeTarget = SPRY_RESCUE_REDIRECTS.get(alias);
+      const expected = new URL(target, 'https://spryexecutiveos.com').href;
+      if (edgeTarget !== expected) errors.push(`edge redirect disagrees with manual destination: ${alias} -> ${edgeTarget}, expected ${expected}`);
+    }
+  }
   if (routeMap.has(new URL(target, 'https://spryexecutiveos.com').pathname)) errors.push(`redirect chain forbidden: ${source} -> ${target} -> ${routeMap.get(target)}`);
   if (source === target) errors.push(`redirect loop: ${source}`);
 }
