@@ -26,8 +26,9 @@
     "https://aplayermode.com",
     "https://sprylabs.gumroad.com"
   ],
-  "mode": "off",
-  "pace": { "start_per_day": 10, "step_per_week": 5, "cap": 30 },
+  "mode": "slow",
+  "cap": { "max_live_pages": null, "start_pages": 20, "min_pages": 10, "grow_share": 0.1, "max_per_day": 3 },
+  "distinct": { "sitemap_files": ["sitemap-spry.xml"] },
   "menu_pages_need_approval": false,
   "health_gate": "none",
   "protected_paths": [
