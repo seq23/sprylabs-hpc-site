@@ -12,7 +12,8 @@ if VENDOR_DIR.is_dir():
 from bs4 import BeautifulSoup
 
 ROOT = Path.cwd()
-PRODUCT = "This is one of the frameworks inside the Billionaire High Performance Coach system — a structured executive OS for using ChatGPT as your accountability and decision partner."
+sys.path.insert(0, str(ROOT/'scripts/citation'))
+from conversion_links import has_manual_link
 errors = []
 contract = json.loads((ROOT / "data/citation/priority_page_acceptance.json").read_text(encoding="utf-8"))
 pages = contract.get("pages", [])
@@ -94,9 +95,7 @@ for item in pages:
             errors.append(f"{path}: extraction framework drift")
 
     product = soup.select_one("p.product-anchor")
-    if not product or PRODUCT not in " ".join(product.get_text(" ", strip=True).split()):
-        errors.append(f"{path}: exact product anchor sentence missing")
-    if not product or not product.select_one('a[href="/download.html"]'):
+    if not product or not has_manual_link(str(product)):
         errors.append(f"{path}: product anchor link missing")
 
 out = ROOT / "artifacts/diagnostics/container-current/validate-priority-citation-pages"

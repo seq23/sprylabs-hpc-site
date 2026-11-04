@@ -75,6 +75,7 @@ function listSitePages(baseDir = ROOT) {
 /** The indexable subset: what a search or answer engine can actually see. */
 function listIndexablePages(baseDir = ROOT) {
   return listSitePages(baseDir).filter((rel) => {
+    if (require('./spry_rescue.cjs').isRetiredFile(rel)) return false;
     try { return !isNoindex(fs.readFileSync(path.join(baseDir, rel), 'utf8')); }
     catch { return false; }
   });

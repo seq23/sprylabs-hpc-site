@@ -1,4 +1,7 @@
 import fs from 'node:fs';
+import { createRequire } from 'node:module';
+const { keepers } = createRequire(import.meta.url)('./spry_rescue.cjs');
+const { routeFor } = createRequire(import.meta.url)('./dual_domain_policy.cjs');
 import path from 'node:path';
 import {slug, ROOT} from '../agent_intake/bhpc_agent_common.mjs';
 import {bhpcCitationDefinitionOf} from './bhpc_public_page_contract.mjs';
@@ -161,11 +164,16 @@ export function buildBhpcAcceptanceEntry(row={},context={}){
   const blockTypes=unique(requiredBlockTypes).filter(type=>!unrenderableTypeSet.has(type));
   const protectedBuyerPage = BHPC_PROTECTED_BUYER_PAGES.includes(route.implementation_path);
   const blocked=Boolean(route.blocked_reason||String(route.status).startsWith('BLOCKED')||row.seo_execution_status==='INVALID'||protectedBuyerPage);
-  const acceptanceStatus=noAction?'NO_ACTION':(blocked?'BLOCKED':'REQUIRED');
+  // The reviewed replacement edition supersedes historical requests to append
+  // blocks to these pages. Preserve the original artifact and requirement data;
+  // the rescue source, renderer and behavior tests now govern the published page.
+  const rescueEdition = route.implementation_path && keepers.has(routeFor(route.implementation_path));
+  const acceptanceStatus=(noAction || rescueEdition)?'NO_ACTION':(blocked?'BLOCKED':'REQUIRED');
   const heading=deriveBhpcRequiredHeading(rawFix,query);
   return {
     id:row.id||`${row.run_date||'unknown'}-${slug(query)}`,
     record_id:row.id||`${row.run_date||'unknown'}-${slug(query)}`,
+    normalized_path:row.normalized_path||'',
     run_date:row.run_date||context.run_date||'',scope:row.scope||context.scope||'bhpc',query,
     source_gap:gap,source_fix_instruction:fix,action_tier:clean(row.action_tier),primary_fix_type:clean(row.primary_fix_type),
     operation:row.operation||(route.page_family==='intended_winner_repair'?'REPAIR_INTENDED_WINNER_PAGE':'CREATE_NEW_TARGET_PAGE'),
@@ -174,7 +182,7 @@ export function buildBhpcAcceptanceEntry(row={},context={}){
     seo_execution_status:row.seo_execution_status||'NOT_PROVIDED',seo_execution:seo,seo_execution_hash:seo?.hash||'',
     intended_winner_page:row.intended_winner_page||'',intended_winner_path:row.intended_winner_path||'',
     implementation_path:route.implementation_path,route_status:route.status,route_resolution:route.route_resolution||null,page_family:route.page_family,
-    acceptance_status:acceptanceStatus,blocked_reason:blocked?(protectedBuyerPage?protectedBuyerPageBlockedReason(route.implementation_path):(route.blocked_reason||row.seo_execution_errors?.join(';')||'invalid_seo_execution')):'',
+    acceptance_status:acceptanceStatus,...(rescueEdition ? {superseded_by:'data/seo/spry_rescue_guides.json', supersession_reason:'Reviewed search-rescue replacement edition; retained artifact is historical, not an instruction to append duplicate blocks.'} : {}),blocked_reason:blocked?(protectedBuyerPage?protectedBuyerPageBlockedReason(route.implementation_path):(route.blocked_reason||row.seo_execution_errors?.join(';')||'invalid_seo_execution')):'',
     required_heading:heading,
     required_block_types:blockTypes,
     // The SAME cleaning the applier writes with, from the SAME module, so a

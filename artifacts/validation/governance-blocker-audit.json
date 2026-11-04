@@ -1,24 +1,24 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-11-03T13:31:23.401Z",
+  "generated_at": "2026-11-04T00:38:55.677Z",
   "purpose": "Inventory existing release-blocking validators before changing severity or repair behavior.",
-  "admitted_hard_fail_count": 280,
+  "admitted_hard_fail_count": 282,
   "reviewed_count": 8,
-  "unreviewed_count": 272,
+  "unreviewed_count": 274,
   "suggested_review_counts": {
     "REVIEW_REQUIRED": 206,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 37,
-    "REVIEW_WARNING_BOUNDARY": 29
+    "REVIEW_WARNING_BOUNDARY": 31
   },
   "unresolved_review_counts": {
     "REVIEW_REQUIRED": 206,
     "EXISTING_REPAIR_AVAILABLE": 8,
     "TRUE_BLOCKER": 37,
-    "REVIEW_WARNING_BOUNDARY": 21
+    "REVIEW_WARNING_BOUNDARY": 23
   },
   "migration_status_counts": {
-    "UNREVIEWED": 272,
+    "UNREVIEWED": 274,
     "REVIEWED_NO_CHANGE": 8
   },
   "rows": [
@@ -4243,6 +4243,36 @@
         "MX-WF-ENTITY-BACKLINK-WATCH"
       ],
       "suggested_review": "REVIEW_REQUIRED",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-AI-MEASUREMENT-SELF-TEST",
+      "name": "self-test:ai-measurement",
+      "command": "npm run self-test:ai-measurement",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Search Readiness f11, 1-3 November 2026: SEARCH_LOOP_CF_USAGE_TOKEN held a Cloudflare token without zone.analytics.read, so the search loop wrote 'not read: ... does not have permission ...' into data/search-loop/ai-daily.json for three days, the weekly search-loop-week report carried no number for AI-referral visits or AI-bot reads, and the Monday audit reported f11 as not measured for spryexecutiveos.com. The honest 'not read' shape meant every lane stayed green. This self-test proves, offline against four fixtures, that the guard calls a credential-blind week a hard failure, an empty ledger a hard failure, and a week of retryable fetch errors a note - so the guard itself cannot be loosened into one that passes while nothing is measured.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-AI-MEASUREMENT-SELF-TEST"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
+      "migration_status": "UNREVIEWED",
+      "decision": null,
+      "evidence": []
+    },
+    {
+      "validation_id": "VAL-AI-MEASUREMENT",
+      "name": "check:ai-measurement",
+      "command": "npm run check:ai-measurement",
+      "owning_lane": "validation-control-plane",
+      "risk_prevented": "Search Readiness f11: nothing in this repository read the search loop's own daily AI ledger, so three days of 'Cloudflare analytics refused the query: ... does not have permission zone.analytics.read' (1-3 November 2026) left AI-referral visits and AI-bot reads unmeasured with every workflow green. This check refuses a seven-day window in which neither number was read for a credential or configuration reason, and its --live form asks Cloudflare the same three questions the engine asks every day (zone bot reads, referral visits or the Web Analytics fallback, Workers AI usage on the same token) so a scope regression is named the week it happens instead of at the next Monday audit.",
+      "current_severity": "HARD_FAIL",
+      "matrix_ids": [
+        "MX-AI-MEASUREMENT"
+      ],
+      "suggested_review": "REVIEW_WARNING_BOUNDARY",
       "migration_status": "UNREVIEWED",
       "decision": null,
       "evidence": []

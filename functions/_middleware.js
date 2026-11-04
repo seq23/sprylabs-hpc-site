@@ -14,6 +14,7 @@ import { serveWithEdgeCache, isPagePath } from './_lib/edge_cache.js';
 import { canonicalHostResponse } from './_lib/canonical_host.js';
 import { routeOwnerResponse } from './_lib/route_owner_host.js';
 import { consolidationResponse } from './_lib/host_consolidation.js';
+import { spryRescueResponse } from './_lib/spry_rescue.js';
 import { BUILD_ID } from './_lib/build_id.js';
 
 export async function onRequest(context) {
@@ -29,6 +30,8 @@ export async function onRequest(context) {
   // the owner rule so a consolidated route takes one hop, not two.
   const consolidated = consolidationResponse(request);
   if (consolidated) return consolidated;
+  const rescued = spryRescueResponse(request);
+  if (rescued) return rescued;
   const owner = routeOwnerResponse(request);
   if (owner) return owner;
   if (!isPagePath(new URL(request.url).pathname)) return context.next();

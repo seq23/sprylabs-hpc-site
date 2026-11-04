@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const { fileForRoute } = require('../lib/route_resolution.cjs');
+const { hasInternalDestination, internalDestination } = require('../lib/internal_link_destination.cjs');
 const ROOT = process.cwd();
 const GRAPH = path.join(ROOT, 'data/internal_authority_graph.json');
 function fail(msg){ console.error(`[validate_internal_authority_graph] FAIL: ${msg}`); process.exit(1); }
@@ -29,10 +30,11 @@ for (const node of graph.nodes || []) {
   const internalCount = [...links].filter(x => x.startsWith('/')).length;
   if (internalCount < 5) fail(`${node.path} has weak internal link count (${internalCount})`);
   for (const link of node.required_links || []) {
-    if (!links.has(link)) fail(`${node.path} missing required graph link ${link}`);
-    if (!fileFor(link)) fail(`${node.path} links to missing target ${link}`);
+    if (!hasInternalDestination(html, link)) fail(`${node.path} missing required graph destination ${link}`);
+    if (!fileFor(internalDestination(link))) fail(`${node.path} links to missing target ${link}`);
   }
   if (!html.includes(`data-fanout-topic="${node.cluster}"`) && !html.includes(`data-fanout-topic='${node.cluster}'`)) fail(`${node.path} missing matching fanout topic for ${node.cluster}`);
   checked += 1;
 }
+if (!checked) fail('graph contains zero nodes to examine');
 console.log(`[validate_internal_authority_graph] OK (${checked} nodes checked)`);

@@ -135,7 +135,7 @@ export function examinePageSeoContract({rel, html, acceptanceEntries = [], activ
         continue;
       }
       const pathname = link.normalized_internal_href || normalizeBhpcInternalLinkHref(link.to_url) || rawPathname;
-      if (!html.includes(`href="${pathname}"`) && !html.includes(`href='${pathname}'`)) failures.push({path: rel, code: 'MISSING_REQUIRED_LINK', detail: pathname});
+      if (![...html.matchAll(/href=["']([^"']+)["']/g)].some(m => normalizeBhpcInternalLinkHref(m[1].replaceAll('&amp;', '&')) === normalizeBhpcInternalLinkHref(pathname))) failures.push({path: rel, code: 'MISSING_REQUIRED_LINK', detail: pathname});
       // Link presence is an invariant; exact anchor wording is a recommendation.
       if (link.anchor_text && !stripTags(html).toLowerCase().includes(String(link.anchor_text).toLowerCase())) warnings.push({path: rel, code: 'ANCHOR_TEXT_MISMATCH', detail: link.anchor_text, record_id: entry.record_id});
     }

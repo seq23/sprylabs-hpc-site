@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "self_test": "named-stop-exit-code",
-  "generated_at": "2026-11-02T14:30:44.296Z",
+  "generated_at": "2026-11-04T00:42:27.119Z",
   "script": ".github/scripts/converge_tree_before_commit.sh",
   "assertions_executed": 8,
   "assertions": [
@@ -43,7 +43,7 @@
     {
       "assertion": "a pending .html is not swallowed by the no-governed stop",
       "passed": true,
-      "detail": "exit 254; output \"[converge] 1 governed surface path(s) pending out of 1 (self-test); converging before commit.\\n::group::convergence pass 1\\nnpm error code ENOENT\\nnpm error syscall open\\nnpm error path /tmp/named-stop-s2ncvV/package.json\\nnpm error errno -2\\nnpm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/tmp/named-stop-s2ncvV/package.json'\\nnpm error enoent This is related to npm not being able to find a file.\\nnpm error enoent\\nnpm error A complete log of this run can be found in: /home/runner/.npm/_logs/2026-11-02T14_30_44_202Z-debug-0.log\\n\""
+      "detail": "exit 254; output \"[converge] 1 governed surface path(s) pending out of 1 (self-test); converging before commit.\\n::group::convergence pass 1\\nnpm error code ENOENT\\nnpm error syscall open\\nnpm error path /private/var/folders/_d/tfpq896n7sx2j9m97sfmjdy00000gn/T/named-stop-y8yn6M/package.json\\nnpm error errno -2\\nnpm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/private/var/folders/_d/tfpq896n7sx2j9m97sfmjdy00000gn/T/named-stop-y8yn6M/package.json'\\nnpm error enoent This is related to npm not being able to find a file.\\nnpm error enoent\\nnpm error Log files were not written due\""
     }
   ],
   "status": "PASS",

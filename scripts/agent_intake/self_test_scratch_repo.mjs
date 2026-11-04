@@ -42,12 +42,14 @@ export function seedDemand(root, queries) {
 export function makeScratch({demand = QUERIES} = {}) {
   const root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'agent-created-page-')));
   const mk = (rel) => fs.mkdirSync(path.join(root, rel), {recursive: true});
-  for (const d of ['scripts/validation', 'data/report_fixes/normalized_agent_runs', 'data/citation', 'data/content', 'data/demand', 'data/page_contracts', 'data/programmatic', 'insights', 'artifacts/validation']) mk(d);
+  for (const d of ['scripts/validation', 'scripts/citation', 'data/seo', 'data/report_fixes/normalized_agent_runs', 'data/citation', 'data/content', 'data/demand', 'data/page_contracts', 'data/programmatic', 'insights', 'artifacts/validation']) mk(d);
   // JS scripts resolve ROOT from cwd, so the real directories can be linked.
   // The Python validator resolves ROOT from its OWN location, so it is copied.
   fs.symlinkSync(path.join(REAL_ROOT, 'scripts/agent_intake'), path.join(root, 'scripts/agent_intake'));
   fs.symlinkSync(path.join(REAL_ROOT, 'scripts/lib'), path.join(root, 'scripts/lib'));
   for (const f of ['validate_programmatic_admission.py', 'style_policy.py']) fs.copyFileSync(path.join(REAL_ROOT, 'scripts/validation', f), path.join(root, 'scripts/validation', f));
+  fs.copyFileSync(path.join(REAL_ROOT, 'scripts/citation/conversion_links.py'), path.join(root, 'scripts/citation/conversion_links.py'));
+  fs.copyFileSync(path.join(REAL_ROOT, 'data/seo/spry_rescue_guides.json'), path.join(root, 'data/seo/spry_rescue_guides.json'));
   // protected_buyer_pages.json: the acceptance parser (reached through the plan
   // builder) reads the shared protected-buyer-page list at import and refuses
   // to load without it, so the scratch tree carries the real list.

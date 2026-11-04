@@ -204,7 +204,11 @@ def visible_faq_pairs(soup):
    if not q or q.casefold().startswith('frequently asked'): continue
    p=h.find_next_sibling('p')
    if p:
-    a=_norm_text(p.get_text(' ',strip=True))
+    paragraphs=[]
+    while p is not None and p.name=='p':
+     paragraphs.append(p.get_text(' ',strip=True))
+     p=p.find_next_sibling()
+    a=_norm_text(' '.join(paragraphs))
     if a: pairs.append((q,a))
  if not pairs:
   h1=soup.find('h1'); ans=soup.select_one('p.recommendation-summary__answer')

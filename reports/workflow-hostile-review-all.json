@@ -1,6 +1,6 @@
 {
   "schema_version": "1.3",
-  "generated_at": "2026-08-29T03:41:10.151Z",
+  "generated_at": "2026-11-04T00:38:55.901Z",
   "status": "PASS_WITH_WARNING",
   "workflow_count": 3,
   "reviewed_count": 2,
@@ -9,17 +9,17 @@
   "fail_count": 0,
   "warning_count": 2,
   "safe_noise_count": 0,
-  "raw_finding_count": 113,
+  "raw_finding_count": 1172,
   "aggregated_finding_count": 2,
   "info_count": 3,
   "governance_fixture_count": 15,
   "governance_blocker_audit": {
-    "admitted_hard_fail_count": 175,
+    "admitted_hard_fail_count": 282,
     "suggested_review_counts": {
-      "REVIEW_REQUIRED": 131,
-      "EXISTING_REPAIR_AVAILABLE": 6,
-      "TRUE_BLOCKER": 27,
-      "REVIEW_WARNING_BOUNDARY": 11
+      "REVIEW_REQUIRED": 206,
+      "EXISTING_REPAIR_AVAILABLE": 8,
+      "TRUE_BLOCKER": 37,
+      "REVIEW_WARNING_BOUNDARY": 31
     }
   },
   "errors": [],
@@ -27,14 +27,14 @@
     {
       "schema_version": "1.4",
       "workflow_id": "spry-content-release",
-      "run_id": "20260828215502-2347",
-      "generated_at": "2026-08-29T03:41:10.134Z",
+      "run_id": "20261102142423-2507",
+      "generated_at": "2026-11-04T00:38:55.883Z",
       "status": "PASS_WITH_WARNING",
-      "changed_file_count": 667,
-      "raw_finding_count": 111,
+      "changed_file_count": 2137,
+      "raw_finding_count": 1171,
       "aggregated_finding_count": 1,
-      "input_count": 729,
-      "output_count": 4220,
+      "input_count": 849,
+      "output_count": 4378,
       "finding_summary": {
         "counts": {
           "SAFE_NOISE": 0,
@@ -54,47 +54,47 @@
         {
           "id": "aggregate:undeclared_generated_output",
           "kind": "undeclared_generated_output",
-          "message": "111 generated output(s) were outside declared workflow patterns",
+          "message": "1171 generated output(s) were outside declared workflow patterns",
           "file": null,
           "material": false,
           "repairable": false,
           "item_scoped": false,
           "evidence": [
             {
-              "occurrence_count": 111,
+              "occurrence_count": 1171,
               "sample_files": [
-                "admin/index.html",
-                "case-studies/athlete-after-injury-routine-reset/index.html",
-                "case-studies/career-switcher-certification-plan/index.html",
-                "case-studies/consultant-client-delivery-chaos/index.html",
-                "case-studies/creative-with-too-many-projects/index.html",
-                "case-studies/executive-new-seat-prioritization/index.html",
-                "case-studies/founder-restarting-after-missed-days/index.html",
-                "case-studies/founder-travel-week-continuity/index.html"
+                ".build-cache/8e4edbea7ec867c9fe4e4ed3595400a0e53c61300711b35e58cf10c8b417d8c3/manifest.json",
+                ".build-cache/8e4edbea7ec867c9fe4e4ed3595400a0e53c61300711b35e58cf10c8b417d8c3/payload.tar",
+                ".build-cache/8e4edbea7ec867c9fe4e4ed3595400a0e53c61300711b35e58cf10c8b417d8c3/removed.txt",
+                ".build-cache/9310236ad4aaa8f022d3d64e2570224764d404d3b7c18abc6dea6b06228f4059/manifest.json",
+                ".build-cache/9310236ad4aaa8f022d3d64e2570224764d404d3b7c18abc6dea6b06228f4059/payload.tar",
+                ".build-cache/9310236ad4aaa8f022d3d64e2570224764d404d3b7c18abc6dea6b06228f4059/removed.txt",
+                ".build-cache/fbe98ef18f20aa199a74dcb987f0166f25594aeb151446ce28dfad517cc67a63/manifest.json",
+                ".build-cache/fbe98ef18f20aa199a74dcb987f0166f25594aeb151446ce28dfad517cc67a63/payload.tar"
               ]
             }
           ],
           "classification": "WARNING",
-          "occurrence_count": 111,
+          "occurrence_count": 1171,
           "sample_files": [
-            "admin/index.html",
-            "case-studies/athlete-after-injury-routine-reset/index.html",
-            "case-studies/career-switcher-certification-plan/index.html",
-            "case-studies/consultant-client-delivery-chaos/index.html",
-            "case-studies/creative-with-too-many-projects/index.html",
-            "case-studies/executive-new-seat-prioritization/index.html",
-            "case-studies/founder-restarting-after-missed-days/index.html",
-            "case-studies/founder-travel-week-continuity/index.html"
+            ".build-cache/8e4edbea7ec867c9fe4e4ed3595400a0e53c61300711b35e58cf10c8b417d8c3/manifest.json",
+            ".build-cache/8e4edbea7ec867c9fe4e4ed3595400a0e53c61300711b35e58cf10c8b417d8c3/payload.tar",
+            ".build-cache/8e4edbea7ec867c9fe4e4ed3595400a0e53c61300711b35e58cf10c8b417d8c3/removed.txt",
+            ".build-cache/9310236ad4aaa8f022d3d64e2570224764d404d3b7c18abc6dea6b06228f4059/manifest.json",
+            ".build-cache/9310236ad4aaa8f022d3d64e2570224764d404d3b7c18abc6dea6b06228f4059/payload.tar",
+            ".build-cache/9310236ad4aaa8f022d3d64e2570224764d404d3b7c18abc6dea6b06228f4059/removed.txt",
+            ".build-cache/fbe98ef18f20aa199a74dcb987f0166f25594aeb151446ce28dfad517cc67a63/manifest.json",
+            ".build-cache/fbe98ef18f20aa199a74dcb987f0166f25594aeb151446ce28dfad517cc67a63/payload.tar"
           ]
         }
       ],
       "errors": [],
       "warnings": [
-        "111 generated output(s) were outside declared workflow patterns"
+        "1171 generated output(s) were outside declared workflow patterns"
       ],
       "safe_noise": [],
       "info": [
-        "programmatic candidate manifest retains 1402 admitted release atom(s) for downstream validation"
+        "programmatic candidate manifest retains 1410 admitted release atom(s) for downstream validation"
       ]
     },
     {
@@ -110,14 +110,14 @@
     {
       "schema_version": "1.4",
       "workflow_id": "search-intelligence",
-      "run_id": "20260828172746-2365",
-      "generated_at": "2026-08-29T03:41:10.150Z",
+      "run_id": "20261103132651-2455",
+      "generated_at": "2026-11-04T00:38:55.901Z",
       "status": "PASS_WITH_WARNING",
       "changed_file_count": 15,
-      "raw_finding_count": 2,
+      "raw_finding_count": 1,
       "aggregated_finding_count": 1,
-      "input_count": 17,
-      "output_count": 15,
+      "input_count": 23,
+      "output_count": 21,
       "finding_summary": {
         "counts": {
           "SAFE_NOISE": 0,
@@ -137,35 +137,33 @@
         {
           "id": "aggregate:undeclared_generated_output",
           "kind": "undeclared_generated_output",
-          "message": "2 generated output(s) were outside declared workflow patterns",
+          "message": "1 generated output(s) were outside declared workflow patterns",
           "file": null,
           "material": false,
           "repairable": false,
           "item_scoped": false,
           "evidence": [
             {
-              "occurrence_count": 2,
+              "occurrence_count": 1,
               "sample_files": [
-                "agency/index.html",
-                "billionaire-high-performance-coach-vs-coaching/index.html"
+                "agency/index.html"
               ]
             }
           ],
           "classification": "WARNING",
-          "occurrence_count": 2,
+          "occurrence_count": 1,
           "sample_files": [
-            "agency/index.html",
-            "billionaire-high-performance-coach-vs-coaching/index.html"
+            "agency/index.html"
           ]
         }
       ],
       "errors": [],
       "warnings": [
-        "2 generated output(s) were outside declared workflow patterns"
+        "1 generated output(s) were outside declared workflow patterns"
       ],
       "safe_noise": [],
       "info": [
-        "programmatic candidate manifest retains 1402 admitted release atom(s) for downstream validation"
+        "programmatic candidate manifest retains 1410 admitted release atom(s) for downstream validation"
       ]
     }
   ]
