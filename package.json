@@ -469,7 +469,9 @@
     "watch:entity-backlinks": "node scripts/entity/entity_backlink_watch.mjs",
     "self-test:entity-backlink-watch": "node scripts/entity/self_test_entity_backlink_watch.mjs",
     "build:spry-rescue": "node scripts/content/build_spry_rescue.cjs",
-    "test:search-rescue": "node --test tests/spry_rescue.test.mjs"
+    "test:search-rescue": "node --test tests/spry_rescue.test.mjs",
+    "check:ai-measurement": "node scripts/diagnostics/check_ai_measurement.mjs",
+    "self-test:ai-measurement": "node scripts/diagnostics/check_ai_measurement.mjs --self-test"
   },
   "engines": {
     "node": ">=24.0.0"
