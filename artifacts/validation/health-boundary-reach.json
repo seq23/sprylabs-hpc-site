@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "validator": "validate:health-boundary-reach",
-  "generated_at": "2026-11-04T00:07:45.236Z",
+  "generated_at": "2026-11-04T00:32:06.974Z",
   "gate": "validate:programmatic-admission",
   "producer": "repair:health-boundary",
   "lanes_examined": 3,
@@ -26,12 +26,8 @@
     }
   ],
   "health_adjacent_pages_examined": 460,
-  "pages_missing_boundary": 1,
-  "pages_missing_boundary_paths": [
-    "about.html"
-  ],
-  "status": "FAIL",
-  "failures": [
-    "1 health-adjacent page(s) in the committed tree carry no boundary block: about.html. Run `npm run repair:health-boundary` and commit the result."
-  ]
+  "pages_missing_boundary": 0,
+  "pages_missing_boundary_paths": [],
+  "status": "PASS",
+  "failures": []
 }
