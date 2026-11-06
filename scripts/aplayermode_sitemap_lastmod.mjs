@@ -20,6 +20,7 @@
  *
  * Guard: scripts/validators/validate_aplayermode_landing.mjs.
  */
+import { CONTENT_PAGES } from '../workers/aplayermode-com/src/index.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import { contentHash } from './lib/sitemap_ledger.mjs';
@@ -32,6 +33,8 @@ export const ORIGIN = 'https://aplayermode.com';
 export const PAGES = Object.freeze([
   { loc: `${ORIGIN}/`, page: process.env.APM_LANDING_PAGE || 'aplayermode/index.html' },
   { loc: `${ORIGIN}/about/`, page: 'aplayermode/about.html' },
+  // The content pages (6 Nov 2026 search decision), in the Worker's CONTENT_PAGES order.
+  ...Object.entries(CONTENT_PAGES).map(([route, file]) => ({ loc: `${ORIGIN}${route}`, page: file.replace(/^\//, '') })),
 ]);
 /** Kept for readers that want the landing page alone. */
 export const PAGE = PAGES[0].page;

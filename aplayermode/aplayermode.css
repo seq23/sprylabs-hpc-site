@@ -380,3 +380,63 @@ a.choice-cta { text-decoration: none; }
 
 /* Founding 100 sell-out: app.js swaps these from the live count; hidden must win over .btn span rules. */
 [data-join-standard][hidden], [data-join-founding][hidden], [data-founding-full][hidden], [data-founding-open][hidden], [data-founding-left][hidden] { display: none !important; }
+
+/* ---------------------------------------------------------------------------
+ * The new logo and header (design system approved 6 Nov 2026,
+ * https://claude.ai/artifact/QewMGNAFFtkKtdLokLmdSd). The mark: a primary
+ * rounded square (22 % corners), an Outfit 700 "A" in on-primary and, under
+ * it, a brass rule cut into five bars, one per role; under 40px the five bars
+ * become one. It flips with the primary pill in dark (ivory square, dark "A").
+ * ------------------------------------------------------------------------- */
+.apm-mark { --s: 32px; position: relative; display: inline-grid; place-items: center; flex: none; width: var(--s); height: var(--s); border-radius: 22%; background: var(--apm-primary); color: var(--apm-on-primary); font: 700 calc(var(--s) * .52)/1 var(--apm-font-display); letter-spacing: -.02em; padding-bottom: calc(var(--s) * .14); }
+.apm-mark::after { content: ""; position: absolute; left: 22%; right: 22%; bottom: 19%; height: max(1px, calc(var(--s) * .035)); background: var(--apm-brass); }
+.apm-mark.five::after { background: repeating-linear-gradient(90deg, var(--apm-brass) 0 14%, transparent 14% 21.5%); }
+.brand { display: inline-flex; align-items: center; gap: 10px; font-size: 18px; }
+.btn-join-top { min-height: 44px; padding: 0 16px; font-size: 15px; white-space: nowrap; }
+/* Phones: logo and Join on the first row, the on-page links scroll on the second. */
+.topbar .wrap { flex-wrap: wrap; row-gap: 0; }
+.topbar .brand { display: inline-flex; order: 1; min-height: 52px; }
+@media (max-width: 559px) { .topbar .wrap { justify-content: space-between; padding: 0 var(--apm-space-md); } }
+.topbar .btn-join-top { order: 2; margin-left: auto; }
+.topbar .toc { order: 3; flex: 1 0 100%; min-width: 0; margin: 0; padding-bottom: 4px; }
+.topbar .toc a { display: inline-flex; align-items: center; min-height: 44px; }
+.topbar .toc a:first-child { padding-left: 0; }
+@media (min-width: 760px) {
+  .topbar .wrap { flex-wrap: nowrap; }
+  .topbar .toc { order: 2; flex: 0 1 auto; margin: 0 0 0 auto; padding-bottom: 0; }
+  .topbar .toc a:first-child { padding-left: var(--apm-space-sm); }
+  .topbar .btn-join-top { order: 3; margin-left: 0; }
+}
+
+/* The line under the H1 and the live Founding 100 count under the hero buttons. */
+.hero-cos { margin: 0 0 var(--apm-space-md); max-width: 34em; font-size: 18px; line-height: 1.5; color: var(--apm-ink); }
+.hero-count { margin: 0 0 var(--apm-space-md); color: var(--apm-ink-muted); }
+.card-more { margin-top: var(--apm-space-sm); }
+.card-more a, .text-link { color: var(--apm-accent); font-weight: 700; text-underline-offset: 3px; }
+.card-more a { display: inline-flex; align-items: center; min-height: 44px; }
+
+/* The content pages (/ai-chief-of-staff/, /founders/, …): one narrow column, answer first. */
+.content-page h1 { margin-bottom: var(--apm-space-md); }
+.content-page .definition { font-size: 18px; line-height: 1.55; color: var(--apm-ink); margin: 0 0 var(--apm-space-lg); }
+.content-page h2 { margin-top: var(--apm-space-xxl); }
+.content-page table { min-width: 0; width: 100%; border-collapse: collapse; margin: var(--apm-space-md) 0; font-size: var(--apm-size-small); }
+.content-page th, .content-page td { text-align: left; vertical-align: top; padding: var(--apm-space-xs) var(--apm-space-sm) var(--apm-space-xs) 0; border-bottom: 1px solid var(--apm-line); }
+.content-page th { font-weight: 700; color: var(--apm-ink); }
+.content-page ol, .content-page ul:not(.arrow-list) { padding-left: 1.2em; }
+.content-page li + li { margin-top: var(--apm-space-xs); }
+.next-step { margin-top: var(--apm-space-xxl); padding: var(--apm-space-lg); border-radius: var(--apm-radius-lg); background: var(--apm-surface); border: 1px solid var(--apm-line); }
+.next-step .btn { width: 100%; margin-top: var(--apm-space-sm); }
+.next-step .btn + .btn { margin-top: var(--apm-space-sm); }
+.byline { margin-top: var(--apm-space-xl); font-size: var(--apm-size-small); color: var(--apm-ink-muted); }
+.crumbs { font-size: var(--apm-size-small); color: var(--apm-ink-muted); margin: 0 0 var(--apm-space-sm); }
+.crumbs a { color: var(--apm-ink-muted); }
+@media (max-width: 480px) {
+  .content-page table.phone-cards, .content-page table.phone-cards tbody { display: block; }
+  .content-page table.phone-cards thead { display: none; }
+  .content-page table.phone-cards tr { display: block; padding: var(--apm-space-sm) 0; border-bottom: 1px solid var(--apm-line); }
+  .content-page table.phone-cards td { display: block; border: 0; padding: 2px 0; }
+  .content-page table.phone-cards td[data-label]::before { content: attr(data-label) ": "; font-weight: 700; color: var(--apm-ink); }
+}
+/* 44px tap targets on phones (found in the 390px review, 6 Nov 2026). */
+.choice-cta { min-height: 44px; }
+.footer nav a { display: inline-flex; align-items: center; min-height: 44px; }

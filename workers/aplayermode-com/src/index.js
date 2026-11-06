@@ -103,6 +103,17 @@ export const ROOT_FILES = Object.freeze({
 // The About page: its own file under aplayermode/, served at the apex root.
 export const ABOUT_PATH = '/about/';
 export const ABOUT_FILE = '/aplayermode/about.html';
+// The content pages (6 Nov 2026, the search decision): generated into aplayermode/pages/ by
+// scripts/aplayermode/build_content_pages.mjs and served at the apex root, like /about/.
+// aplayermode/preview-links.js carries the same map for a pages.dev preview.
+export const CONTENT_PAGES = Object.freeze({
+  '/ai-chief-of-staff/': '/aplayermode/pages/ai-chief-of-staff.html',
+  '/ai-executive-assistant/': '/aplayermode/pages/ai-executive-assistant.html',
+  '/founders/': '/aplayermode/pages/founders.html',
+  '/parents/': '/aplayermode/pages/parents.html',
+  '/life-os/': '/aplayermode/pages/life-os.html',
+  '/questions/what-does-a-chief-of-staff-do/': '/aplayermode/pages/what-does-a-chief-of-staff-do.html',
+});
 // The page served with a 404 status for every path this host does not have.
 export const NOT_FOUND_FILE = '/aplayermode/404.html';
 // Sibling-host paths the outside world links to; they go home rather than 404,
@@ -140,6 +151,10 @@ export function route(pathname) {
   // path that does not exist. The page is noindex either way.
   if (pathname === '/404' || pathname === '/404.html') return { kind: 'asset', upstream: NOT_FOUND_FILE };
   if (pathname === '/about' || pathname === '/about/index.html') return { kind: 'redirect', location: ABOUT_PATH, keepQuery: true };
+  if (Object.prototype.hasOwnProperty.call(CONTENT_PAGES, pathname)) return { kind: 'asset', upstream: CONTENT_PAGES[pathname] };
+  // One URL per page: the bare and /index.html forms 301 to the trailing-slash URL.
+  const slashed = `${pathname.replace(/\/index\.html$/, '').replace(/\/+$/, '')}/`;
+  if (slashed !== pathname && Object.prototype.hasOwnProperty.call(CONTENT_PAGES, slashed)) return { kind: 'redirect', location: slashed, keepQuery: true };
   if (pathname.startsWith(PAGE_PATH) && !pathname.includes('..')) return { kind: 'asset', upstream: pathname };
   if (SHARED_ASSETS.has(pathname)) return { kind: 'asset', upstream: pathname };
   if (Object.prototype.hasOwnProperty.call(ROOT_FILES, pathname)) return { kind: 'asset', upstream: ROOT_FILES[pathname] };

@@ -25,7 +25,8 @@
  *      route in that constant must have exactly one button on the page.
  *   3b. A retired plan name. Plans are Executive Roundtable / Executive Suite /
  *      Autopilot (pinned with a source note). "Life OS" fails anywhere;
- *      "Chief of Staff" fails anywhere except as one of the 5 jobs.
+ *      "Chief of Staff" fails anywhere except as one of the 5 jobs or in the
+ *      category phrase "AI chief of staff" (6 Nov 2026 search decision).
  *   4. A dropped selling point. The page's first section sells the Billionaire
  *      High Performance Coach digital product, and must carry every selling
  *      point on the frozen download.html (read-only here). The points are
@@ -322,7 +323,11 @@ for (const file of [PAGE, ...SCRIPTS]) if (/\blife\s+os\b/i.test(stripTags(read(
 const jobsStripped = stripTags(html
   .replace(/<([a-z0-9]+)\b[^>]*\bdata-job\b[^>]*>[^<]*<\/\1>/gi, ' ')
   .replace(/<([a-z0-9]+)\b[^>]*\bdata-jobs-list\b[^>]*>[\s\S]*?<\/\1>/gi, ' '))
-  .replace(/a chief of staff for sequencing/g, ' ');
+  .replace(/a chief of staff for sequencing/g, ' ')
+  // "AI chief of staff" is the product category the page now leads with (owner-approved search
+  // decision, 6 Nov 2026: https://claude.ai/artifact/SwVYwzu6LEfBiKVaf71zny). It names what A
+  // Player Mode is, never a plan; a plan card naming it still fails the plan-name check above.
+  .replace(/\bAI chief of staff\b/gi, ' ');
 const cosLeft = (jobsStripped.match(/chief\s+of\s+staff/gi) || []).length;
 if (cosLeft) fail(`"Chief of Staff" appears ${cosLeft} time(s) outside the 5 jobs; it is no longer a plan name (now Executive Roundtable)`);
 if (srcDir) {
@@ -669,7 +674,14 @@ for (const stale of [/private beta/i, /payments? (open|opening|coming) soon/i, /
     if (defWords < 40 || defWords > 60) fail(`the definition is ${defWords} words; it must be 40-60`);
     for (const w of ['five-role executive team', 'app', 'Billionaire High Performance Coach OS', 'one-time', 'For founders']) if (!defText.includes(w)) fail(`the definition must say "${w}" (what it is, the app or the one-time OS, who it is for)`);
   }
-  const afterH1 = def ? afterH1Raw.slice(def.index + def[0].length) : afterH1Raw;
+  const afterDef = def ? afterH1Raw.slice(def.index + def[0].length) : afterH1Raw;
+  // Owner-approved search decision, 6 Nov 2026 (https://claude.ai/artifact/SwVYwzu6LEfBiKVaf71zny):
+  // one added line under the h1, after the definition (which keeps the slot directly under the h1),
+  // naming the category the page leads with. Only that exact line may sit there.
+  const COS = 'an ai chief of staff for founders and anyone carrying too much: it plans, follows up and keeps you on track.';
+  const cos = afterDef.match(/^\s*<p\b[^>]*\bdata-hero-cos\b[^>]*>([\s\S]*?)<\/p>/i);
+  if (cos && norm(stripTags(cos[1])) !== COS) fail(`the line under the definition ([data-hero-cos]) must read "An AI chief of staff for founders and anyone carrying too much: it plans, follows up and keeps you on track.", found "${stripTags(cos[1]).trim()}"`);
+  const afterH1 = cos ? afterDef.slice(cos.index + cos[0].length) : afterDef;
   const LEAD_BIG = 'reduce your cognitive load.';
   const LEAD = 'reduce your cognitive load. stop holding every project, role, rule and reset in your head. five roles carry it with you:';
   const lead = afterH1.match(/^\s*<p\b[^>]*\bdata-hero-lead\b[^>]*>(\s*<strong\b[^>]*>([\s\S]*?)<\/strong>[\s\S]*?)<\/p>/i);
