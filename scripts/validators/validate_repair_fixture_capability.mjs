@@ -327,9 +327,35 @@ function porcelain(cwd) {
   return sh('git status --porcelain', cwd).out;
 }
 
+// Every scratch folder is recorded the moment it exists and removed on every way
+// out: success, failure, a throw, and a signal (6 Nov 2026: nine ~500 MB
+// repair-fixture-* folders from killed runs on 3 Nov helped fill her Mac's
+// disk to 1.2 GB free, because a `finally` does not run when SIGTERM/SIGINT
+// ends the process). Guarded by tests/repair_fixture_cleanup.test.mjs.
+const SCRATCH = new Map(); // dir -> scratch worktree path
+
+function removeScratch() {
+  for (const [dir, scratch] of SCRATCH) {
+    sh(`git worktree remove --force ${JSON.stringify(scratch)}`, ROOT);
+    try { fs.rmSync(dir, { recursive: true, force: true }); } catch { /* best effort; the next sweep catches it */ }
+    SCRATCH.delete(dir);
+  }
+  sh('git worktree prune', ROOT);
+}
+
+process.on('exit', () => { if (SCRATCH.size) removeScratch(); });
+for (const [signal, n] of [['SIGINT', 2], ['SIGTERM', 15], ['SIGHUP', 1]]) {
+  process.on(signal, () => {
+    removeScratch();
+    console.error(`NAMED STOP [INTERRUPTED] validate:repair-fixture-capability got ${signal}; scratch worktrees removed, nothing was proven. Rerun it.`);
+    process.exit(128 + n);
+  });
+}
+
 function makeWorktree() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'repair-fixture-'));
   const scratch = path.join(dir, 'tree');
+  SCRATCH.set(dir, scratch);
   const add = sh(`git worktree add --detach ${JSON.stringify(scratch)} HEAD`, ROOT);
   if (add.code !== 0) throw new Error(`could not create a scratch git worktree, so no repair could be exercised off the production tree: ${lastLine(add.out)}`);
   // Dependencies are shared, never copied: `npm ci` per fixture would dominate
@@ -439,11 +465,7 @@ async function main() {
       }
     }));
   } finally {
-    for (const { dir, scratch } of trees) {
-      sh(`git worktree remove --force ${JSON.stringify(scratch)}`, ROOT);
-      fs.rmSync(dir, { recursive: true, force: true });
-    }
-    sh('git worktree prune', ROOT);
+    removeScratch();
   }
   const order = new Map(stepIds.map((id, i) => [id, i]));
   examined.sort((x, y) => order.get(x.id) - order.get(y.id));
