@@ -73,10 +73,18 @@ function idsFor(file) {
   if (!idCache.has(file)) idCache.set(file, extractIds(read(file)));
   return idCache.get(file);
 }
+// Pages under aplayermode/ are served at https://aplayermode.com/ by workers/aplayermode-com, so
+// their root links mean apex routes: the content pages resolve through the same list the Worker
+// routes (config/aplayermode_content_pages.json), not through this repo's root (6 Nov 2026).
+const APM_CONTENT_PAGES = JSON.parse(fs.readFileSync(path.join(ROOT, 'config', 'aplayermode_content_pages.json'), 'utf8')).pages;
 function resolveTarget(fromFile, rawPathPart) {
   let route;
   const clean = (rawPathPart || '').split('?')[0];
   if (!clean) return fromFile;
+  if (rel(fromFile).startsWith('aplayermode/') && Object.prototype.hasOwnProperty.call(APM_CONTENT_PAGES, clean)) {
+    const file = path.join(ROOT, APM_CONTENT_PAGES[clean].replace(/^\//, ''));
+    return fs.existsSync(file) ? file : null;
+  }
   if (clean.startsWith('/')) route = clean;
   else {
     const abs = path.resolve(path.dirname(fromFile), clean);

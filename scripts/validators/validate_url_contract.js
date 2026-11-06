@@ -17,7 +17,12 @@ const skip = new Set(['.git','.pages-output', 'node_modules','dist','coverage','
 // The host's own PAGES, each a path the Worker serves from a committed file: the landing page, the
 // About page (Search Readiness c6) and the error page, which Cloudflare Pages answers at /404 on the
 // shared hosts and the Worker answers the same way here. A JSON-LD @id anchors onto a page URL.
-const OWN_PAGES = ['/', '/about/', '/404'];
+// Plus the content pages (6 Nov 2026), from the same list the Worker routes, each only while its
+// committed file exists.
+const APM_CONTENT_PAGES = JSON.parse(fs.readFileSync(path.join(ROOT, 'config', 'aplayermode_content_pages.json'), 'utf8')).pages;
+const OWN_PAGES = ['/', '/about/', '/404', ...Object.entries(APM_CONTENT_PAGES)
+  .filter(([, file]) => fs.existsSync(path.join(ROOT, file.replace(/^\//, ''))))
+  .map(([route]) => route)];
 function approvedOwnUrl(url){
   if(url.startsWith('https://aplayermode.com/?utm_source=pinterest&')) return true;
   const m = url.match(/^https:\/\/aplayermode\.com(\/[^?]*?)(#[A-Za-z0-9_-]+)?$/);

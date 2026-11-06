@@ -20,7 +20,10 @@ import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 
 // The publisher node comes from the repo's one definition (CLAUDE.md: one definition per contract).
-const { organizationNode } = createRequire(import.meta.url)('../lib/organization_node.cjs');
+const require = createRequire(import.meta.url);
+const { organizationNode } = require('../lib/organization_node.cjs');
+// mainEntityOfPage goes through the schema authority (validate:citation-schema-authority).
+const { mainEntityOfPage } = require('../lib/citation_page_schema.cjs');
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const OUT = path.join(ROOT, 'aplayermode/pages');
@@ -376,7 +379,7 @@ function schema(page) {
         '@id': `${url}#article`,
         headline: page.h1,
         description: page.description,
-        mainEntityOfPage: { '@id': `${url}#webpage` },
+        mainEntityOfPage: mainEntityOfPage(`${url}#webpage`),
         author: { '@type': 'Person', name: 'S.L. Taylor', url: `${SITE}/about/` },
         publisher: { '@id': ORG_ID },
         datePublished: PUBLISHED,
@@ -449,6 +452,7 @@ ${JSON.stringify(schema(page), null, 1)}
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&amp;family=Outfit:wght@600;700&amp;display=swap">
 <link rel="stylesheet" href="/aplayermode/aplayermode.css">
+<script defer src="/assets/domain-context.js"></script>
 <script defer src="/aplayermode/config.js"></script>
 <script defer src="/aplayermode/app.js"></script>
 <script defer src="/aplayermode/preview-links.js"></script>
