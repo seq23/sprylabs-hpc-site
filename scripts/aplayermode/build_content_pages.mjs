@@ -17,6 +17,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
+
+// The publisher node comes from the repo's one definition (CLAUDE.md: one definition per contract).
+const { organizationNode } = createRequire(import.meta.url)('../lib/organization_node.cjs');
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 const OUT = path.join(ROOT, 'aplayermode/pages');
@@ -33,8 +37,8 @@ export const PAGES = [
     file: 'ai-chief-of-staff',
     path: '/ai-chief-of-staff/',
     crumb: 'AI chief of staff',
-    title: 'AI chief of staff: what it does, and build vs buy | A Player Mode',
-    description: 'An AI chief of staff keeps your priorities in order, follows up on what you promised and gets each day ready. How it works, and whether to build one or have it run for you.',
+    title: 'AI chief of staff: what it does, build or buy | A Player Mode',
+    description: 'An AI chief of staff keeps your priorities in order, follows up on what you promised and gets each day ready. How it works, and whether to build or buy one.',
     h1: 'AI chief of staff: what it does, and whether to build or buy one',
     definition: 'An AI chief of staff is software that does for one person what a human chief of staff does for an executive: it keeps priorities in order, follows up on what was promised and gets each day ready, so the plan lives in the system instead of in your head.',
     quick: 'You can build an AI chief of staff yourself in ChatGPT or Claude, or have one run for you. A Player Mode offers both: Billionaire High Performance Coach OS ($49 once) installs the five roles into the AI you already use, and the A Player Mode app runs them for you every day.',
@@ -97,8 +101,8 @@ export const PAGES = [
     file: 'ai-executive-assistant',
     path: '/ai-executive-assistant/',
     crumb: 'AI executive assistant',
-    title: 'AI executive assistant for one person: what it does | A Player Mode',
-    description: 'An AI executive assistant has your agenda ready, catches dropped promises and drafts the replies you owe. What to expect from one, and how A Player Mode does it.',
+    title: 'AI executive assistant for one person | A Player Mode',
+    description: 'An AI executive assistant has your agenda ready, catches dropped promises and drafts the replies you owe. What to expect, and how A Player Mode does it.',
     h1: 'AI executive assistant: what it does for one busy person',
     definition: 'An AI executive assistant is software that handles the daily work a human executive assistant would: it has your agenda ready, keeps track of what you promised, flags the replies you owe and keeps your calendar realistic, for one person rather than a team.',
     quick: 'A good AI executive assistant has your day ready before you ask and catches what you would forget. In A Player Mode, Executive Assistant is one of five roles: your agenda is ready every morning, prioritised, and the Radar catches dropped promises and flags who you owe a reply.',
@@ -150,7 +154,7 @@ export const PAGES = [
     path: '/founders/',
     crumb: 'For founders',
     title: 'Founder coach and AI chief of staff for founders | A Player Mode',
-    description: 'For founders and entrepreneurs: every decision lands on you and follow-ups slip. How A Player Mode gives you one priority a day, catches dropped follow-ups and coaches you through hard weeks.',
+    description: 'For founders: every decision lands on you and follow-ups slip. A Player Mode gives you one priority a day, catches dropped follow-ups and coaches you.',
     h1: 'For founders: a coach and a chief of staff in one app',
     definition: 'A founder coach helps a founder decide what matters, act on it and recover from hard weeks. A Player Mode gives founders that coaching plus the follow-through of a chief of staff: one priority a day, dropped follow-ups caught, and a plan that holds across days.',
     quick: 'For founders, every decision lands on you and follow-ups slip. A Player Mode takes that off your plate: one priority a day, dropped follow-ups caught, and coaching one question at a time, from $9.99/month for the first 100 members.',
@@ -201,8 +205,8 @@ export const PAGES = [
     file: 'what-does-a-chief-of-staff-do',
     path: '/questions/what-does-a-chief-of-staff-do/',
     crumb: 'What does a chief of staff do?',
-    title: 'What does a chief of staff do? (And can AI do it?) | A Player Mode',
-    description: 'A chief of staff turns an executive\'s priorities into action: they manage the agenda, follow up on decisions and keep projects aligned. What the job involves, and the AI version for one person.',
+    title: 'What does a chief of staff do? Can AI do it? | A Player Mode',
+    description: 'A chief of staff turns an executive\'s priorities into action: the agenda, the follow-ups and project alignment. What the job involves, and the AI version.',
     h1: 'What does a chief of staff do?',
     definition: 'A chief of staff is a senior right hand to an executive: they turn the executive\'s priorities into action by running the agenda, following up on decisions, keeping projects aligned with goals and making sure nothing important waits on the executive\'s memory.',
     quick: 'A chief of staff makes sure an executive\'s time goes to what matters and that decisions turn into action. Most people never get one. An AI chief of staff does the routine part of the job for one person: the daily agenda, the follow-ups and keeping projects lined up.',
@@ -248,7 +252,7 @@ export const PAGES = [
     path: '/parents/',
     crumb: 'For parents',
     title: 'The mental load: what it is and what to hand off | A Player Mode',
-    description: 'The mental load is the invisible work of remembering and planning everything a household needs. What it is, why it is tiring, and how A Player Mode takes the logistics off a parent\'s plate.',
+    description: 'The mental load is the invisible work of remembering everything a household needs. What it is, and how A Player Mode takes the logistics off your plate.',
     h1: 'The mental load: what it is, and what a parent can hand off',
     definition: 'The mental load is the invisible work of remembering, planning and keeping track of everything a household needs: the pickups, forms, birthdays, appointments and renewals. It is tiring because it never switches off, and because most of it is noticed only when something is missed.',
     quick: 'Parents carry pickups, forms, birthdays and appointments on top of work. A Player Mode takes the logistics off your plate: family time is booked first, and the dates, forms and renewals are remembered for you, so they stop living in your head.',
@@ -301,7 +305,7 @@ export const PAGES = [
     path: '/life-os/',
     crumb: 'Life OS',
     title: 'Life OS: a life operating system that runs itself | A Player Mode',
-    description: 'A life OS (life operating system) holds your goals, routines and commitments in one system so you stop running your life from memory. How to build one, and the version that runs your day for you.',
+    description: 'A life OS holds your goals, routines and commitments in one system so you stop running your life from memory. How to build one, or have it run for you.',
     h1: 'Life OS: a life operating system that runs your day',
     definition: 'A life OS, or life operating system, is one personal system that holds your goals, routines, commitments and rules, so you run your life from the system instead of from memory. Many people build one as a Notion template; others want one that plans and follows up for them.',
     quick: 'A life OS works when it decides the next step for you and keeps going after a bad day. Templates hold information; A Player Mode runs it: it builds a Mind, Body, Spirit plan from a few easy taps and has your day ready every morning.',
@@ -351,6 +355,7 @@ function schema(page) {
   return {
     '@context': 'https://schema.org',
     '@graph': [
+      organizationNode(),
       {
         '@type': 'WebPage',
         '@id': `${url}#webpage`,
@@ -510,6 +515,13 @@ ${faq}
 if (import.meta.url === `file://${process.argv[1]}`) {
   const check = process.argv.includes('--check');
   if (PAGES.length === 0) { console.error('NAMED STOP [NO_PAGES] the page list is empty'); process.exit(1); }
+  // Search Readiness b1 / b2 (the Monday audit failed them on 6 Nov 2026): refuse to write a page
+  // whose title or description the audit would fail, rather than ship it and wait for Monday.
+  const bad = PAGES.flatMap((p) => [
+    p.title.length > 65 ? `${p.file}: title is ${p.title.length} chars (max 65)` : null,
+    p.description.length < 120 || p.description.length > 160 ? `${p.file}: description is ${p.description.length} chars (120-160)` : null,
+  ].filter(Boolean));
+  if (bad.length) { console.error(`NAMED STOP [SNIPPET_BOUNDS] ${bad.join('; ')}`); process.exit(1); }
   fs.mkdirSync(OUT, { recursive: true });
   let differ = 0;
   for (const page of PAGES) {
