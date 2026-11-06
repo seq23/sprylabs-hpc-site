@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "status": "PASS",
+  "status": "FAIL",
   "scope": "pending",
   "ledger": "data/sitemap/lastmod_ledger.json",
   "pages_examined": 3478,
@@ -8,8 +8,71 @@
     "ran": true,
     "scope": "pending",
     "pages_examined": 1739,
-    "mismatched": 0,
-    "examples": []
+    "mismatched": 195,
+    "examples": [
+      {
+        "file": "ai-accountability-system-vs-habit-tracker.html",
+        "ledger": "b503825eec3a61802c57b1c7",
+        "head": "258e61e79b4c8317123a8fe8",
+        "lastmod": "2026-11-06"
+      },
+      {
+        "file": "ai-business-coach/index.html",
+        "ledger": "e46a8a6efb0a1d9ccdfe05f8",
+        "head": "b36b98ac49f56b56cf8c63c8",
+        "lastmod": "2026-11-06"
+      },
+      {
+        "file": "ai-coach-for-entrepreneurs/index.html",
+        "ledger": "6c6c62f24cac859b30703dfc",
+        "head": "a1f38f2380b7c56c63e79b42",
+        "lastmod": "2026-11-06"
+      },
+      {
+        "file": "ai-coach-vs-human-coach.html",
+        "ledger": "6965cd97bf72e40dfa75ec8f",
+        "head": "6ff6391d9189f56cdcf0bdd4",
+        "lastmod": "2026-11-06"
+      },
+      {
+        "file": "ai-coach-vs-human-coach-for-founders.html",
+        "ledger": "fb35b8085ba7b7c2d7001f85",
+        "head": "d1ff7e442197272e792585bd",
+        "lastmod": "2026-11-06"
+      },
+      {
+        "file": "ai-coach-vs-therapist/index.html",
+        "ledger": "94c0812171339a57ad7c0dfd",
+        "head": "95200777947e6374585f8f44",
+        "lastmod": "2026-11-06"
+      },
+      {
+        "file": "ai-life-coach/index.html",
+        "ledger": "59b1eb4f58b2a4274b28f153",
+        "head": "e8d1b3084cfa260a733a9cbe",
+        "lastmod": "2026-11-06"
+      },
+      {
+        "file": "betterup-alternatives-ai-coaching/index.html",
+        "ledger": "2630f47cf0ec4149eb7c61a2",
+        "head": "6f4af174c66d43a09592f236",
+        "lastmod": "2026-11-06"
+      },
+      {
+        "file": "case-studies/index.html",
+        "ledger": "51dd3960a1be90814114e05f",
+        "head": "c49a43b985c0ce17fe6cf416",
+        "lastmod": "2026-11-06"
+      },
+      {
+        "file": "case-studies/career-switcher-certification-plan/index.html",
+        "ledger": "069de658a9bd4f6c98362fb8",
+        "head": "353ac897c7428cd092c5d9ba",
+        "lastmod": "2026-11-06"
+      }
+    ],
+    "repaired_by_this_run": 98,
+    "carried_forward": 97
   },
   "rederived_ledger_vs_working_tree": {
     "ran": true,
@@ -31,5 +94,7 @@
     "offenders": []
   },
   "notes": [],
-  "errors": []
+  "errors": [
+    "97 of 195 page(s) the committed ledger misdescribes are NOT being rewritten by this run, so the commit about to be made carries those stale records forward. Re-derive with `npm run sitemap:lastmod:content` AFTER the last stage that mutates page HTML."
+  ]
 }
