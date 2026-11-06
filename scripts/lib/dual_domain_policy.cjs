@@ -62,6 +62,11 @@ const EXTERNAL_CANONICALS = new Map([
   ['/aplayermode/', 'https://aplayermode.com/'],
   ['/aplayermode/about', 'https://aplayermode.com/about/'],
   ['/aplayermode/404', 'https://aplayermode.com/404'],
+  // The content pages (config/aplayermode_content_pages.json, the same list the Worker routes):
+  // without them here the repair pass stamped billionairehighperformancecoach.com onto their
+  // canonical and og:url, and main went red after #216 (6 Nov 2026).
+  ...Object.entries(require('../../config/aplayermode_content_pages.json').pages)
+    .map(([route, file]) => [file.replace(/\.html$/, ''), `https://aplayermode.com${route}`]),
 ]);
 
 function canonicalUrlFor(route, publishedHostOverrides = new Map()) {
