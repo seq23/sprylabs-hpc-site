@@ -70,6 +70,7 @@
  * tests/edge_cache.test.mjs.
  */
 import { boardsOf, buildPinfeedXml, chicagoDate } from './pinqueue.js';
+import contentPages from '../../../config/aplayermode_content_pages.json' with { type: 'json' };
 import { serveWithEdgeCache } from '../../../functions/_lib/edge_cache.js';
 
 export const ORIGIN = 'https://sprylabs-hpc-site.pages.dev';
@@ -105,15 +106,9 @@ export const ABOUT_PATH = '/about/';
 export const ABOUT_FILE = '/aplayermode/about.html';
 // The content pages (6 Nov 2026, the search decision): generated into aplayermode/pages/ by
 // scripts/aplayermode/build_content_pages.mjs and served at the apex root, like /about/.
-// aplayermode/preview-links.js carries the same map for a pages.dev preview.
-export const CONTENT_PAGES = Object.freeze({
-  '/ai-chief-of-staff/': '/aplayermode/pages/ai-chief-of-staff.html',
-  '/ai-executive-assistant/': '/aplayermode/pages/ai-executive-assistant.html',
-  '/founders/': '/aplayermode/pages/founders.html',
-  '/parents/': '/aplayermode/pages/parents.html',
-  '/life-os/': '/aplayermode/pages/life-os.html',
-  '/questions/what-does-a-chief-of-staff-do/': '/aplayermode/pages/what-does-a-chief-of-staff-do.html',
-});
+// The list lives in config/aplayermode_content_pages.json, also read by
+// scripts/lib/dual_domain_policy.cjs; aplayermode/preview-links.js mirrors it for a pages.dev preview.
+export const CONTENT_PAGES = Object.freeze({ ...contentPages.pages });
 // The page served with a 404 status for every path this host does not have.
 export const NOT_FOUND_FILE = '/aplayermode/404.html';
 // Sibling-host paths the outside world links to; they go home rather than 404,
