@@ -90,8 +90,11 @@
       .then(function (data) {
         if (!data || typeof data.open !== 'boolean' || typeof data.remaining !== 'number') return;
         if (data.open && data.remaining > 0) {
-          var left = document.querySelector('[data-founding-left]');
-          if (left) { left.textContent = data.remaining + ' of ' + (data.total || 100) + ' places left.'; left.hidden = false; }
+          // Every count on the page (the hero line and the offer card): the true live number only.
+          document.querySelectorAll('[data-founding-left]').forEach(function (left) {
+            left.textContent = data.remaining + ' of ' + (data.total || 100) + ' places left.';
+            left.hidden = false;
+          });
           return;
         }
         document.querySelectorAll('[data-join-founding]').forEach(function (el) { el.hidden = true; });
