@@ -37,6 +37,30 @@ const MAX_LINKS_PER_HUB = 70;
 // teens without turning the block into a dump: every link is inside the page's
 // own topic, and the per-hub cap is unchanged.
 const SIBLINGS_PER_PAGE = 9;
+// The related list may not repeat any 8-word phrase more than PHRASE_MAX times,
+// counting this page's own H1 twice (it is the H1 and the breadcrumb's last crumb).
+// Siblings come from a two-axis grid ("What should a founder do when X and needs Y
+// support?"), and nine neighbours in sort order shared X, which printed one stem
+// nine or ten times (Search Readiness q1, 5 Nov 2026). A sibling that would push a
+// phrase past the limit is skipped for one that adds a different subject; the
+// full, readable H1 stays the label.
+const PHRASE_WORDS = 8;
+const PHRASE_MAX = 3;
+export function phraseCounts(texts) {
+  const counts = new Map();
+  for (const t of texts) {
+    const w = String(t || '').toLowerCase().match(/[a-z0-9][\w'’-]*/g) || [];
+    for (let i = 0; i + PHRASE_WORDS <= w.length; i++) { const k = w.slice(i, i + PHRASE_WORDS).join(' '); counts.set(k, (counts.get(k) || 0) + 1); }
+  }
+  return counts;
+}
+export function addsNoRepeat(ownH1, pickedH1s, candidateH1) {
+  // In reading order the list is one run of text, so a phrase can also form
+  // across two neighbouring links; count the run joined, and the H1 pair joined.
+  const counts = phraseCounts([`${ownH1} ${ownH1}`, [...pickedH1s, candidateH1].join(' ')]);
+  for (const n of counts.values()) if (n > PHRASE_MAX) return false;
+  return true;
+}
 // The same topic, in the other parts of the library that cover it. A page about
 // consistency in insights/ should reach the methods/, answers/ and glossary/
 // treatments of consistency, which nothing previously connected: the sibling
@@ -540,6 +564,7 @@ for (const pg of pages) {
   for (const m of existingBlock.matchAll(/<a\b[^>]*href="([^"]+)"/gi)) {
     const s = byRoute.get(m[1]);
     if (!s || taken.has(s.route) || picks.length >= SIBLINGS_PER_PAGE) continue;
+    if (!addsNoRepeat(pg.h1, picks.map((p) => p.h1), s.h1)) continue;
     taken.add(s.route);
     picks.push(s);
   }
@@ -547,14 +572,20 @@ for (const pg of pages) {
   for (let i = 0; i < pool.length && picks.length < Math.min(SIBLINGS_PER_PAGE, pool.length); i++) {
     const s = pool[(start + i) % pool.length];
     if (taken.has(s.route)) continue;
+    if (!addsNoRepeat(pg.h1, picks.map((p) => p.h1), s.h1)) continue;
     taken.add(s.route);
     picks.push(s);
   }
   if (pool.length) siblingCursor.set(pg.topicId, (start + Math.max(1, Math.floor(pool.length / Math.max(1, info.siblings.length)) || 1) + 1) % pool.length);
   const parent = info.crumbs[info.crumbs.length - 1];
-  const carriedHtml = carried.length
-    ? `<p>Also in this area: ${carried.map((c) => `<a href="${esc(c.href)}">${esc(c.text)}</a>`).join(', ')}.</p>`
+  // Carried links obey the same phrase limit as the picks they follow.
+  const carriedKept = [];
+  for (const c of carried) if (addsNoRepeat(pg.h1, [...picks.map((p) => p.h1), ...carriedKept.map((k) => k.text)], c.text)) carriedKept.push(c);
+  const carriedHtml = carriedKept.length
+    ? `<p>Also in this area: ${carriedKept.map((c) => `<a href="${esc(c.href)}">${esc(c.text)}</a>`).join(', ')}.</p>`
     : '';
+  // Picks above are already limited by addsNoRepeat, so the list carries full
+  // H1s without repeating one stem nine times.
   const listHtml = picks.length
     ? `<ul>${picks.map((s) => `<li><a href="${esc(s.route)}">${esc(s.h1)}</a></li>`).join('')}</ul>`
     : '';

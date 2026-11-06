@@ -316,9 +316,11 @@ export function composeArticle(spec) {
         .join('') +
       `<p><strong>Evidence to record.</strong> ${esc(spec.concept.evidence)}</p>` +
       `<p><strong>A line you can paste.</strong> ${esc(spec.concept.prompt)}</p>`
-    : `<p>The full set of failure modes for this framework, the evidence to record, and a prompt you can paste are on <a href="${esc(spec.frameworkPageHref)}">its framework page</a>. This page covers the part specific to ${esc(spec.secondary.label)}.</p>`;
+    : `<p>The full set of failure modes for this framework, the evidence to record, and a prompt you can paste are on <a href="${esc(spec.frameworkPageHref)}">its framework page</a>. This page covers the part specific to this situation.</p>`;
   const specific =
-    `<section class="card page-specific-section"><h2>Running ${esc(spec.concept.framework)} for ${esc(spec.secondary.label)}</h2>` +
+    // The secondary label already heads the artifact, misreadings and worked
+    // example blocks; a fourth and fifth copy here is what the filler check reads.
+    `<section class="card page-specific-section"><h2>How ${esc(spec.concept.framework)} runs</h2>` +
     p(spec.concept.mechanism) +
     (spec.extractionTable ? `<ol>${spec.concept.moves.map((m) => `<li>${esc(m)}</li>`).join('')}</ol>` : '') +
     failures +
@@ -359,7 +361,7 @@ export function composeArticle(spec) {
     `<ul>${spec.sources.map((s) => `<li><a href="${esc(s.href)}"${s.href.startsWith('http') ? ' rel="noopener noreferrer" target="_blank"' : ''}>${esc(s.label)}</a></li>`).join('')}</ul>` +
     `</section>`;
 
-  return (
+  return dropRepeatedSentences(
     `<article class="content-article citation-page">` +
     `<h1>${esc(spec.query)}</h1>` +
     `<p class="citation-definition"><strong>${esc(spec.definition)}</strong></p>` +
@@ -369,4 +371,70 @@ export function composeArticle(spec) {
     boundaries + productAnchor + related + sources +
     `</article>`
   );
+}
+
+/**
+ * One sentence, said once or twice - not five times.
+ *
+ * The spec reuses its strongest strings on purpose: the first move is the TL;DR,
+ * "Do this first", the first item of the moves list, a worked-example paragraph
+ * and an FAQ answer. Each slot is right on its own, and together they printed
+ * the same sentence five to ten times on one page (Search Readiness q1, 5 Nov
+ * 2026: 5 of 5 sampled pages flagged as template filler, e.g. "running,
+ * intermittent, or stopped, using evidence rather than memory" five times).
+ *
+ * Walks the article in reading order counting every 8-word phrase (the unit the
+ * filler check reads). Lists, headings, the TL;DR and FAQ answers are structure
+ * and always stay. A sentence in any other paragraph or table cell is dropped when
+ * one of its phrases has already been printed REPEAT_LIMIT times, and a paragraph
+ * left empty - including a labelled one ("Do this first.") whose sentence the
+ * TL;DR already gave - is dropped whole; an emptied table cell reads "Covered above."
+ */
+export const PHRASE_WORDS = 8;
+export const REPEAT_LIMIT = 1;
+const phraseWords = (t) => String(t).toLowerCase().replace(/&[a-z]+;|&#\d+;/g, ' ').match(/[a-z0-9][\w'’-]*/g) || [];
+function phrasesOf(text) {
+  const w = phraseWords(text), out = [];
+  for (let i = 0; i + PHRASE_WORDS <= w.length; i++) out.push(w.slice(i, i + PHRASE_WORDS).join(' '));
+  return out;
+}
+/**
+ * The FAQ, without answers the page has already given. "What is the first thing
+ * to do?" and "What should a reader do in the first week?" were often both the
+ * first move, which the TL;DR also states. An entry whose answer repeats an
+ * 8-word phrase of the direct answer or of an earlier answer is dropped; never
+ * below MIN_FAQ entries, so the visible FAQ and its schema keep their shape.
+ */
+export const MIN_FAQ = 3;
+export function distinctFaq(faq, directAnswer = '') {
+  const seen = new Set(phrasesOf(directAnswer));
+  const kept = [], dropped = [];
+  for (const f of faq) {
+    const ph = phrasesOf(f.a);
+    if (ph.some((x) => seen.has(x))) { dropped.push(f); continue; }
+    ph.forEach((x) => seen.add(x));
+    kept.push(f);
+  }
+  while (kept.length < MIN_FAQ && dropped.length) kept.push(dropped.shift());
+  return faq.filter((f) => kept.includes(f));
+}
+
+export function dropRepeatedSentences(html) {
+  const seen = new Map();
+  const count = (text) => { for (const ph of phrasesOf(text)) seen.set(ph, (seen.get(ph) || 0) + 1); };
+  const tooMany = (text) => phrasesOf(text).some((ph) => (seen.get(ph) || 0) >= REPEAT_LIMIT);
+  let inFaq = false;
+  return html.replace(/<section class="card faq">|<\/section>|<(p|li|td|th|h[1-6]|aside)\b([^>]*)>([\s\S]*?)<\/\1>/g, (whole, tag, attrs, inner) => {
+    if (!tag) { inFaq = whole !== '</section>'; return whole; }
+    if (!(tag === 'p' || tag === 'td') || inFaq || /<(?!\/?(strong|em)\b)[a-z]/i.test(inner)) { count(textOf(inner)); return whole; }
+    const label = (inner.match(/^<strong>[^<]*<\/strong>\s*/) || [''])[0];
+    const sentences = inner.slice(label.length).match(/[^.!?]+[.!?]+["')\]]*\s*|[^.!?]+$/g) || [];
+    const kept = sentences.filter((sn) => !tooMany(textOf(sn)));
+    // A table cell cannot be dropped without breaking its row, so a cell whose
+    // every sentence was already said points back instead.
+    const body = kept.join('').trim() || (tag === 'td' ? 'Covered above.' : '');
+    if (!body) return '';
+    count(textOf(label + body));
+    return `<${tag}${attrs}>${label}${body}</${tag}>`;
+  });
 }
