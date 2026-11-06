@@ -389,6 +389,8 @@ a.choice-cta { text-decoration: none; }
  * become one. It flips with the primary pill in dark (ivory square, dark "A").
  * ------------------------------------------------------------------------- */
 .apm-mark { --s: 32px; position: relative; display: inline-grid; place-items: center; flex: none; width: var(--s); height: var(--s); border-radius: 22%; background: var(--apm-primary); color: var(--apm-on-primary); font: 700 calc(var(--s) * .52)/1 var(--apm-font-display); letter-spacing: -.02em; padding-bottom: calc(var(--s) * .14); }
+/* The letter is drawn by CSS, so the logo link's text stays exactly "A Player Mode" (search shape). */
+.apm-mark::before { content: "A"; }
 .apm-mark::after { content: ""; position: absolute; left: 22%; right: 22%; bottom: 19%; height: max(1px, calc(var(--s) * .035)); background: var(--apm-brass); }
 .apm-mark.five::after { background: repeating-linear-gradient(90deg, var(--apm-brass) 0 14%, transparent 14% 21.5%); }
 .brand { display: inline-flex; align-items: center; gap: 10px; font-size: 18px; }

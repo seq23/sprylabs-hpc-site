@@ -452,7 +452,7 @@ ${JSON.stringify(schema(page), null, 1)}
 
 <header class="topbar">
   <div class="wrap">
-    <a class="brand" href="/" aria-label="A Player Mode home"><span class="apm-mark" aria-hidden="true">A</span><span class="brand-word">A Player Mode</span></a>
+    <a class="brand" href="/"><span class="apm-mark" aria-hidden="true"></span><span class="brand-word">A Player Mode</span></a>
     <a class="btn btn-ghost btn-join-top" href="${JOIN}" rel="noopener">Join · $9.99</a>
   </div>
 </header>
