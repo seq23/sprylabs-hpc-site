@@ -391,7 +391,7 @@ a.choice-cta { text-decoration: none; }
 .apm-mark { --s: 32px; position: relative; display: inline-grid; place-items: center; flex: none; width: var(--s); height: var(--s); border-radius: 22%; background: var(--apm-primary); color: var(--apm-on-primary); font: 700 calc(var(--s) * .52)/1 var(--apm-font-display); letter-spacing: -.02em; padding-bottom: calc(var(--s) * .14); }
 /* The letter is drawn by CSS, so the logo link's text stays exactly "A Player Mode" (search shape). */
 .apm-mark::before { content: "A"; }
-.apm-mark::after { content: ""; position: absolute; left: 22%; right: 22%; bottom: 19%; height: max(1px, calc(var(--s) * .035)); background: var(--apm-brass); }
+.apm-mark::after { content: ""; position: absolute; left: 22%; right: 22%; bottom: 19%; height: max(2px, calc(var(--s) * .035)); background: var(--apm-brass); }
 .apm-mark.five::after { background: repeating-linear-gradient(90deg, var(--apm-brass) 0 14%, transparent 14% 21.5%); }
 .brand { display: inline-flex; align-items: center; gap: 10px; font-size: 18px; }
 .btn-join-top { min-height: 44px; padding: 0 16px; font-size: 15px; white-space: nowrap; }
@@ -442,3 +442,20 @@ a.choice-cta { text-decoration: none; }
 /* 44px tap targets on phones (found in the 390px review, 6 Nov 2026). */
 .choice-cta { min-height: 44px; }
 .footer nav a { display: inline-flex; align-items: center; min-height: 44px; }
+
+/* Laptop (coordinator review, 6 Nov 2026): the header mark at 40px shows the five bars, one per
+   role (the design system's rule: five bars from 40px, one below); phones keep the 32px one-bar
+   mark. The hero's empty right half shows the real app start screen, the same capture as the
+   App Store mock-up (design system asset fcbc547e…, identical bytes to img/app-screen.webp). */
+.hero-shot { display: none; margin: 0; }
+@media (min-width: 760px) {
+  .topbar .apm-mark { --s: 40px; }
+  .topbar .apm-mark::after { background: repeating-linear-gradient(90deg, var(--apm-brass) 0 14%, transparent 14% 21.5%); }
+}
+@media (min-width: 960px) {
+  .hero-choose .wrap { display: grid; grid-template-columns: minmax(0, 1fr) 320px; column-gap: 56px; align-items: start; }
+  .hero-choose .wrap > * { grid-column: 1; }
+  .hero-choose .wrap > .roles, .hero-choose .wrap > .chooser, .hero-choose .wrap > .small.muted { grid-column: 1 / -1; }
+  .hero-choose .hero-shot { display: block; grid-column: 2; grid-row: 1 / span 7; align-self: start; }
+  .hero-shot img { display: block; width: 100%; height: auto; border-radius: var(--apm-radius-xl); border: 1px solid var(--apm-line); box-shadow: 0 6px 18px color-mix(in srgb, var(--apm-shadow) 12%, transparent); }
+}
