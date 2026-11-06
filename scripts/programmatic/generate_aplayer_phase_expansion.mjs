@@ -1203,7 +1203,14 @@ function updatePhaseAndStrategyFiles() {
   laneContracts.generated_at = TODAY;
   writeJson('data/content/programmatic_lane_contracts.json', laneContracts);
   const counts = atoms.reduce((acc,a)=>{acc[a.page_type]=(acc[a.page_type]||0)+1; return acc;},{});
-  const citableCount = readJson('data/citation/citable_pages.json',{pages:[]}).pages.filter(p=>p.status==='ACTIVE').length;
+  const citablePages = readJson('data/citation/citable_pages.json',{pages:[]}).pages;
+  const citableCount = citablePages.filter(p=>p.status==='ACTIVE').length;
+  // The coverage floor is every citable page that was not deliberately retired.
+  // It was a fixed 2000 from before the 3 Nov search rescue, which 301'd 493 pages
+  // on purpose; ACTIVE has been 1739 since, and the contract only passed because
+  // its stored count was never refreshed. A page that drops out of ACTIVE without
+  // a recorded retirement (REDIRECTED or EXCLUDED) still fails the floor.
+  const unretiredCount = citablePages.filter(p=>p.status!=='REDIRECTED' && p.status!=='EXCLUDED').length;
   writeJson('data/content/release_profiles.json', {
     schema_version:'1.0', generated_at:TODAY, authority:'Existing content automation system is the only release spine; profiles route into the current admission and build lifecycle.',
     profiles:['daily_insight','manual_expansion','comparison_graph','question_cluster','authority','whitepaper','citation_phase_expansion','brand_defense','refresh','platform_implementation','method_protocol','case_study','glossary'].map(name=>({name, release_spine:'workflow:daily-insight -> content:pipeline -> build:generated-content -> build:postprocess -> validate:all -> release:prepush', admission_registry:'data/content/page_admission_registry.json', atom_contract_required:true}))
@@ -1233,7 +1240,7 @@ function updatePhaseAndStrategyFiles() {
   strategy.no_second_release_system = true;
   strategy.generated_baseline_expansion = {source:GENERATED_SOURCE, new_pages:atoms.length, counts};
   strategy.phases = strategy.phases || {};
-  strategy.phases.phase_2_coverage = {status:citableCount>=2000?'IMPLEMENTED_AT_2000_PLUS_SCALE':'PARTIAL_SCALE_TARGET', minimums:{active_reference_surfaces:2000}, generated_counts:counts};
+  strategy.phases.phase_2_coverage = {status:citableCount>=2000?'IMPLEMENTED_AT_2000_PLUS_SCALE':'PARTIAL_SCALE_TARGET', minimums:{active_reference_surfaces:unretiredCount}, minimum_basis:'every citable page not retired (REDIRECTED/EXCLUDED) is ACTIVE', generated_counts:counts};
   strategy.phases.phase_4_dominance = {status:'RUNWAY_ACTIVE_NOT_COMPLETE', release_mix_policy:'data/content/release_mix_policy.json', external_distribution:'pending_real_world_execution'};
   writeJson('data/citation/citation_strategy_contract.json', strategy);
   writeJson('data/citation/reference_page_inventory.json', {
