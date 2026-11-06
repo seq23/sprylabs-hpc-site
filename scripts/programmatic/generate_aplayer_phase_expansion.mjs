@@ -9,7 +9,7 @@ const { routeFor: sharedRouteFor, hostFor: sharedHostFor } = requireCjs('../lib/
 const { serializeSchema, mainEntityOfPage } = requireCjs('../lib/citation_page_schema.cjs');
 import {
   loadLibrary, assertMaterialFor, pickConcept, composeArticle, artifactBlock,
-  countWords, textOf, titleish, LIBRARY_PATH
+  countWords, textOf, titleish, LIBRARY_PATH, distinctFaq
 } from './phase4_page_composer.mjs';
 import { selectDemandCandidates } from './demand_backed_atoms.mjs';
 import { writeSitemapIndex } from '../lib/sitemap_index.mjs';
@@ -386,7 +386,7 @@ function makeAtom(opts) {
       frameworkPageHref: `/methods/${concept.anchor}/`,
       directAnswer: clampWords(directAnswer, 62),
       primary, secondary, concept, example,
-      faq: faq.concat(axisFaq(primary), axisFaq(secondary), [{q:'Does this page diagnose, treat, or replace professional advice?', a:'No. It is educational and organizational only. It does not diagnose or treat anything, and it is not a substitute for a clinician, a lawyer, or a financial professional. If the situation involves health, safety, legal exposure, or money at stake, that is the moment to use qualified human support.'}]),
+      faq: distinctFaq(faq.concat(axisFaq(primary), axisFaq(secondary)), clampWords(directAnswer, 62)).concat([{q:'Does this page diagnose, treat, or replace professional advice?', a:'No. It is educational and organizational only. It does not diagnose or treat anything, and it is not a substitute for a clinician, a lawyer, or a financial professional. If the situation involves health, safety, legal exposure, or money at stake, that is the moment to use qualified human support.'}]),
       sources: sources || BASE_SOURCES,
       extraSections: extraSections || [],
       reviewedAt: REVIEWED_AT,
