@@ -428,6 +428,10 @@ export function dropRepeatedSentences(html) {
     if (!tag) { inFaq = whole !== '</section>'; return whole; }
     if (!(tag === 'p' || tag === 'td') || inFaq || /<(?!\/?(strong|em)\b)[a-z]/i.test(inner)) { count(textOf(inner)); return whole; }
     const label = (inner.match(/^<strong>[^<]*<\/strong>\s*/) || [''])[0];
+    // A paragraph that is ALL bold (the citation definition) has no body after a
+    // label: keep it whole. Treating it as an empty label dropped every page's
+    // definition and failed Spry Content Release (6 Nov 2026).
+    if (!inner.slice(label.length).trim()) { count(textOf(inner)); return whole; }
     const sentences = inner.slice(label.length).match(/[^.!?]+[.!?]+["')\]]*\s*|[^.!?]+$/g) || [];
     const kept = sentences.filter((sn) => !tooMany(textOf(sn)));
     // A table cell cannot be dropped without breaking its row, so a cell whose
