@@ -110,7 +110,9 @@ if (!patterns.length || patterns.some((p) => !p.startsWith('aplayermode.com/')))
 
 // 2b. Daily drip queue.
 const ids = pageIds;
-const variants = queue.variants || [];
+// Held variants (a `held` block) are never dated or in a feed until released (pinqueue.js isHeld).
+const { isHeld } = await import('../../workers/aplayermode-com/src/pinqueue.js');
+const variants = (queue.variants || []).filter((v) => !isHeld(v));
 if (variants.length < 30) fail(`queue holds ${variants.length} variants; at least 30 required`);
 // Pace: 1 a day until 1 Nov 2026, then 3 (owner-approved 1 Nov 2026; the Growth-playbook
 // stop rule in scripts/aplayermode/pace.mjs may change the format, never the cap).

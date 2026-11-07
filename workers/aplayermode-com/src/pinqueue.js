@@ -30,10 +30,13 @@ export function addDays(isoDate, days) {
   return d.toISOString().slice(0, 10);
 }
 
-/** Variants released on or before `today`, newest first (id breaks ties), at most `max`. */
+/** A held variant (a `held` block) is never dated and never in a feed until it is released (scripts/aplayermode/release_held_pins.mjs). */
+export const isHeld = (v) => Boolean(v && v.held);
+
+/** Variants released on or before `today`, newest first (id breaks ties), at most `max`. Held variants never. */
 export function dueVariants(variants, today, max = 50) {
   return variants
-    .filter((v) => typeof v.release_date === 'string' && v.release_date <= today && v.image)
+    .filter((v) => !isHeld(v) && typeof v.release_date === 'string' && v.release_date <= today && v.image)
     .sort((a, b) => (a.release_date === b.release_date ? (a.id < b.id ? 1 : -1) : a.release_date < b.release_date ? 1 : -1))
     .slice(0, max);
 }
@@ -59,7 +62,7 @@ export function scheduleVariants(variants, { pinsPerDay, firstDay }) {
   const lastDate = dated.reduce((max, v) => (v.release_date > max ? v.release_date : max), '');
   let day = lastDate && addDays(lastDate, 1) > firstDay ? addDays(lastDate, 1) : firstDay;
   let previous = new Set(dated.filter((v) => v.release_date === addDays(day, -1)).map((v) => v.section));
-  const pool = variants.filter((v) => !v.release_date).sort((a, b) => a.seq - b.seq);
+  const pool = variants.filter((v) => !v.release_date && !isHeld(v)).sort((a, b) => a.seq - b.seq);
   while (pool.length) {
     const placed = new Set();
     for (let slot = 0; slot < pinsPerDay; slot += 1) {
