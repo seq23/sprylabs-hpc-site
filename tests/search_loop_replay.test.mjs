@@ -35,8 +35,6 @@ function setup() {
   w(seed, 'index.html', '<h1>home</h1>\n');
   w(seed, 'sitemap.xml', '<urlset>home</urlset>\n');
   w(seed, '.github/scripts/search_loop_replay.sh', fs.readFileSync(REPLAY, 'utf8'));
-  // Stand-in for the real post-build (converge + cadence gate): re-derives the sitemap from the tree.
-  w(seed, '.github/scripts/search_loop_post_build.sh', 'set -e\n{ printf "<urlset>"; find . -name index.html -not -path "./.git/*" | sort | tr "\\n" " "; printf "</urlset>\\n"; } > sitemap.xml\n');
   git(seed, 'add', '-A'); git(seed, 'commit', '-qm', 'seed'); git(seed, 'push', '-q', 'origin', 'HEAD:main');
   return { dir, runner: clone('runner'), other: clone('other') };
 }
@@ -50,7 +48,7 @@ function savePatch(runner, dir) {
   return patch;
 }
 
-test('replay puts this run\'s pages and ledger onto a moved main and re-derives the sitemap', () => {
+test('replay puts this run\'s pages and ledger onto a moved main and keeps main\'s derived files', () => {
   const { dir, runner, other } = setup();
   // The engine run: a new page, the ledger, a related link in home, a sitemap from post-build.
   w(runner, 'questions/how-to-plan/index.html', '<h1>How to plan</h1>\n');
@@ -71,8 +69,8 @@ test('replay puts this run\'s pages and ledger onto a moved main and re-derives 
   assert.match(read(runner, 'data/search-loop/targets.json'), /how to plan/);
   assert.match(read(runner, 'index.html'), /questions\/how-to-plan/);
   assert.equal(read(runner, 'about/index.html'), '<h1>about</h1>\n', 'main\'s new work is kept');
-  const sitemap = read(runner, 'sitemap.xml');
-  assert.match(sitemap, /questions\/how-to-plan/); assert.match(sitemap, /about/);
+  // A derived file both sides rewrote keeps main's version: there is no post-build to re-derive it.
+  assert.equal(read(runner, 'sitemap.xml'), '<urlset>main version</urlset>\n');
 });
 
 test('replay without the saved engine output stops, named', () => {

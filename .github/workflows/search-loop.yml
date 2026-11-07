@@ -37,7 +37,6 @@ jobs:
       stage: ${{ inputs.stage || 'auto' }}
       setup_command: npm ci --ignore-scripts
       node_options: --max-old-space-size=3072
-      post_build_command: bash .github/scripts/search_loop_post_build.sh
       commit_command: ./.github/scripts/search_loop_commit.sh
     secrets:
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}

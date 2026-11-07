@@ -214,7 +214,7 @@ test('weekly refill: due under refill_threshold unreleased; plans new designs, r
   assert.equal(unreleasedCount([{ release_date: null }, { release_date: '2026-10-20' }], '2026-10-20'), 1);
 });
 
-test('weekly step: Mondays CT in the governed daily lane, refill + render + guards + metrics, replayed by the push helper, $0', () => {
+test('weekly step: Mondays CT in its own lane, refill + render + guards + metrics, replayed by the push helper, $0', () => {
   const sh = read('scripts/aplayermode/weekly_pin_drip.sh');
   assert.match(sh, /TZ=America\/Chicago date \+%u\)" != "1"/);
   assert.match(sh, /node scripts\/aplayermode\/pin_queue\.mjs/);
@@ -222,10 +222,10 @@ test('weekly step: Mondays CT in the governed daily lane, refill + render + guar
   assert.match(sh, /validate:aplayermode-pinterest/);
   assert.match(sh, /node scripts\/aplayermode\/collect_pin_metrics\.mjs/);
   assert.ok(fs.statSync(path.join(root, 'scripts/aplayermode/weekly_pin_drip.sh')).mode & 0o111, 'executable');
-  const wf = read('.github/workflows/daily-citation-intelligence.yml');
-  assert.match(wf, /cron:/);
+  const wf = read('.github/workflows/aplayermode-pin-drip.yml');
+  assert.match(wf, /cron: "\d+ \d+ \* \* 1"/, 'scheduled on Mondays');
   assert.match(wf, /run: bash scripts\/aplayermode\/weekly_pin_drip\.sh/);
-  assert.match(wf, /WORKFLOW_ARGV:[\s\S]*bash scripts\/aplayermode\/weekly_pin_drip\.sh &&[\s\S]*commit_and_push_if_changed\.sh/);
+  assert.match(wf, /WORKFLOW_ARGV: bash scripts\/aplayermode\/weekly_pin_drip\.sh\n\s+run: \.\/\.github\/scripts\/commit_and_push_if_changed\.sh/);
   assert.match(wf, /CLOUDFLARE_API_TOKEN: \$\{\{ secrets\.CLOUDFLARE_API_TOKEN \}\}/);
   assert.doesNotMatch(sh, /OPENROUTER|GEMINI|ANTHROPIC|OPENAI/, 'template copy only: no model key');
   assert.equal(queue.config.refill_threshold, 42); // two weeks at 3 a day
