@@ -37,4 +37,4 @@ jobs:
       - name: Commit the queue and metrics
         env:
           WORKFLOW_ARGV: bash scripts/aplayermode/weekly_pin_drip.sh
-        run: ./.github/scripts/commit_and_push_if_changed.sh "aplayermode.com pin drip: weekly refill and metrics" aplayermode-pin-drip
+        run: ./.github/scripts/commit_and_push_if_changed.sh "aplayermode.com pin drip - weekly refill and metrics" aplayermode-pin-drip

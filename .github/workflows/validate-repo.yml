@@ -28,6 +28,10 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci --ignore-scripts
+      - name: Every workflow parses and is well-formed (a file that does not parse runs zero jobs)
+        run: |
+          bash <(curl -fsSL https://raw.githubusercontent.com/rhysd/actionlint/v1.7.7/scripts/download-actionlint.bash) 1.7.7
+          ./actionlint -color
       - name: Syntax check every script
         run: npm run typecheck
       - name: Behaviour unit tests
