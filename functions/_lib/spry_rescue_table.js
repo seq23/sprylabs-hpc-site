@@ -4337,42 +4337,6 @@ export const SPRY_RESCUE_REDIRECTS = new Map([
     "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
   ],
   [
-    "/questions/decision-paralysis-prevention-checklist-for-breaking-tasks-into",
-    "https://spryexecutiveos.com/insights/best-chatgpt-prompts-for-executive-coaching-and-leadership-development"
-  ],
-  [
-    "/questions/decision-paralysis-prevention-checklist-for-breaking-tasks-into/",
-    "https://spryexecutiveos.com/insights/best-chatgpt-prompts-for-executive-coaching-and-leadership-development"
-  ],
-  [
-    "/questions/decision-paralysis-prevention-checklist-for-breaking-tasks-into/index.html",
-    "https://spryexecutiveos.com/insights/best-chatgpt-prompts-for-executive-coaching-and-leadership-development"
-  ],
-  [
-    "/questions/endless-task-paralysis",
-    "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
-  ],
-  [
-    "/questions/endless-task-paralysis/",
-    "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
-  ],
-  [
-    "/questions/endless-task-paralysis/index.html",
-    "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
-  ],
-  [
-    "/questions/what-is-exexutive-os",
-    "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
-  ],
-  [
-    "/questions/what-is-exexutive-os/",
-    "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
-  ],
-  [
-    "/questions/what-is-exexutive-os/index.html",
-    "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
-  ],
-  [
     "/raise-your-standards",
     "https://spryexecutiveos.com/insights/best-chatgpt-prompts-for-executive-coaching-and-leadership-development"
   ],

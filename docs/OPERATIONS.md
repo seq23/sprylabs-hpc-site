@@ -35,9 +35,37 @@ npm run validate    # scripts/validators/run_safety_checks.mjs: the only validat
 
 `npm run validate` holds safety checks only: no credential or personal mailbox address in the
 repo, zero paid LLM, claim safety and Safe Harbor, redirect and link integrity, retired-route
-references, canonical hosts, sitemap coverage, Pages publishes pages only, and no silent zero
-work. A new check goes into that runner only if it protects a live behaviour; page format and
+references, canonical hosts, sitemap coverage and Pages publishes pages only. Rule 0 lives in each live
+lane's own named stops (the old no-silent-zero-work check read files only retired lanes wrote). A new check goes into that runner only if it protects a live behaviour; page format and
 wording are fixed in the writer, never guarded by a blocking validator.
+
+## A Player Mode pins: routine pins, the gate and releasing held pins
+
+- **Every new pin is a routine** (Pinterest assessment, 6-7 Nov 2026): a search-phrase headline
+  and 4 to 6 numbered steps, opening its routine page at `aplayermode.com/routines/<slug>/`, never
+  the home page. Pages and pins come from ONE file, `config/aplayermode_routines.json`:
+  `node scripts/aplayermode/build_routine_pages.mjs` writes the pages, the route list and the
+  apex sitemap; `scripts/aplayermode/routine_pins.mjs` plans one pin per routine and holds the gate.
+- **The gate** (run by `pin_queue.mjs` on every unreleased pin before it writes the queue) refuses
+  "Founding 100", member, join, `$`, Executive Roundtable/Suite, Autopilot and "Cancel any time";
+  titles that do not start with a board search phrase; any two pins alike; old-style pins.
+- **More pins need more routines.** The refill never draws a second pin from one routine. When
+  every routine has its pin and fewer than `refill_threshold` (9) wait, the Monday lane stops with
+  `PINTEREST_QUEUE_EXHAUSTED`: add routines to the config, run the page builder, land.
+- **Held pins** (a `held` block) are never dated or in a feed. While `config.hold_new_pins` is
+  set, refills are planned held too.
+
+### Releasing held A Player Mode pins
+
+One command, from anywhere (no checkout):
+
+```sh
+gh workflow run aplayermode-pin-drip.yml -R seq23/sprylabs-hpc-site -f release_held=yes
+```
+
+The lane runs `scripts/aplayermode/release_held_pins.mjs` (gate again, clear every `held` block
+and `hold_new_pins`), then `pin_queue.mjs` dates them 3 a day from tomorrow (Central), and the
+push helper commits the queue. `NOTHING_HELD` means there was nothing to release.
 
 ## The download page is protected
 - `download.html` is the conversion page behind the portfolio's only two verified real sales

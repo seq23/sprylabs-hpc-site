@@ -19,8 +19,9 @@ const CHECKS = [
   ['sitemap-coverage', 'node scripts/validation/validate_sitemap_coverage.mjs'],
   ['sitemap-canonical-on-own-host', 'node scripts/validators/validate_sitemap_canonical_on_own_host.mjs'],
   ['published-surface-is-pages-only', 'node scripts/validators/validate_published_surface_is_pages_only.mjs'],
-  // named stops: no stage exits 0 having done nothing
-  ['no-silent-zero-work', 'node scripts/validators/validate_no_silent_zero_work.mjs'],
+  // Rule 0 lives in each live lane's own code (named stops in scripts/aplayermode/pin_queue.mjs,
+  // collect_pin_metrics.mjs and the Search Loop engine). The old no-silent-zero-work check read
+  // ten artifacts that only retired lanes wrote, so it passed on stale files; removed 7 Nov 2026.
 ];
 
 if (!CHECKS.length) { console.error('[safety] FAIL: no checks declared'); process.exit(1); }

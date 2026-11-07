@@ -8,8 +8,8 @@
  * refill commit reaches the feed as soon as Pages publishes it (no Worker deploy).
  *
  * The weekly refill (scripts/aplayermode/pin_queue.mjs, run on Mondays by
- * scripts/aplayermode/weekly_pin_drip.sh in the Daily Citation Intelligence lane) uses planRefill() and
- * scheduleVariants(). No I/O here: the Worker, the scripts, the validator and the
+ * scripts/aplayermode/weekly_pin_drip.sh in the aplayermode.com Pinterest drip lane) plans routine
+ * pins (scripts/aplayermode/routine_pins.mjs) and dates them with scheduleVariants(). No I/O here: the Worker, the scripts, the validator and the
  * tests import these same functions (one definition).
  */
 export const PIN_TIMEZONE = 'America/Chicago';
@@ -83,70 +83,10 @@ export function scheduleVariants(variants, { pinsPerDay, firstDay }) {
   return variants;
 }
 
-const designKey = (v) => `${v.headline}|${v.layout}|${v.palette}`.toLowerCase();
-const angleKey = (a) => String(a.headline).toLowerCase().replace(/\s+/g, ' ');
-const offset = (s) => [...s].reduce((sum, c) => sum + c.charCodeAt(0), 0);
-
-/**
- * Plan `count` new variants (copy and design only; images are rendered by
- * scripts/aplayermode/pin_queue.mjs). `angles` is { [section]: [angle, ...] } of
- * template copy written from the landing page. The section with the fewest variants
- * goes first. Each new variant takes the section's next unused angle; once every
- * angle of a section has run, it re-uses the least-used angle in a layout/palette
- * pair that angle has never had, so every pin is a new image and never a repeat.
- * Consecutive variants of a section never share a layout.
- */
-export function planRefill(queue, angles, count) {
-  const { layouts, palettes } = queue.config;
-  const sections = SECTIONS.filter((s) => (angles[s] || []).length);
-  const bySection = new Map(sections.map((s) => [s, queue.variants.filter((v) => v.section === s)]));
-  const designs = new Set(queue.variants.map(designKey));
-  let seq = queue.variants.reduce((max, v) => Math.max(max, v.seq ?? 0), 0);
-  const planned = [];
-  const exhausted = new Set();
-  while (planned.length < count && exhausted.size < sections.length) {
-    const section = sections.filter((s) => !exhausted.has(s))
-      .sort((a, b) => bySection.get(a).length - bySection.get(b).length || SECTIONS.indexOf(a) - SECTIONS.indexOf(b))[0];
-    const existing = bySection.get(section);
-    const n = existing.length + 1;
-    const lastLayout = existing.length ? existing[existing.length - 1].layout : null;
-    const uses = (a) => existing.filter((v) => angleKey(v) === angleKey(a)).length;
-    const ordered = [...angles[section]].sort((a, b) => uses(a) - uses(b));
-    let pick = null;
-    for (const angle of ordered) {
-      for (let k = 0; k < layouts.length * palettes.length && !pick; k += 1) {
-        const layout = layouts[(n - 1 + offset(section) + k) % layouts.length];
-        const palette = palettes[(n - 1 + 2 * offset(section) + Math.floor(k / layouts.length)) % palettes.length];
-        if (layout === lastLayout) continue;
-        if (angle.layouts && !angle.layouts.includes(layout)) continue;
-        if (!designs.has(designKey({ headline: angle.headline, layout, palette }))) pick = { angle, layout, palette };
-      }
-      if (pick) break;
-    }
-    if (!pick) { exhausted.add(section); continue; }
-    seq += 1;
-    const variant = {
-      id: `${section}-${String(n).padStart(2, '0')}`,
-      seq,
-      section,
-      kicker: pick.angle.kicker,
-      headline: pick.angle.headline,
-      body: pick.angle.body,
-      points: pick.angle.points,
-      title: pick.angle.title,
-      description: pick.angle.description,
-      layout: pick.layout,
-      palette: pick.palette,
-      release_date: null,
-    };
-    existing.push(variant);
-    designs.add(designKey(variant));
-    planned.push(variant);
-  }
-  return planned;
-}
-
-export const variantLink = (v) => `${SITE}?${PIN_UTM}&utm_content=${v.id}#${v.section}`;
+// A routine pin (v.page, 7 Nov 2026) opens its routine page; older pins open a home-page section.
+export const variantLink = (v) => (v.page
+  ? `${SITE}${v.page.replace(/^\/+/, '')}?${PIN_UTM}&utm_content=${v.id}`
+  : `${SITE}?${PIN_UTM}&utm_content=${v.id}#${v.section}`);
 export const launchLink = (item) => `${SITE}?${PIN_UTM}&utm_content=${item.slug}#${item.anchor}`;
 export const imageUrl = (rel) => new URL(`/${rel.replace(/^\/+/, '')}`, SITE).toString();
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');

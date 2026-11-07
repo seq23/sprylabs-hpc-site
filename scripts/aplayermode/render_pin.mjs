@@ -114,6 +114,49 @@ h1.huge{line-height:1.0}
 </body></html>`;
 }
 
+// Routine pins (7 Nov 2026, Pinterest assessment): warm pastels, a bold search-phrase
+// headline and 4-6 big numbered steps; the brand is a small line at the foot. No phone
+// screenshot, no product box, no stock photo. Layouts: card (steps on a paper card), steps.
+export const ROUTINE_PALETTES = {
+  peach: { bg: '#F8DCC8', paper: '#FFF7F0', ink: '#2B2420', muted: '#6E5A4E', accent: '#C2603A', dot: '#F2C2A4' },
+  butter: { bg: '#F8ECBE', paper: '#FFFBEC', ink: '#2B2620', muted: '#6B5E42', accent: '#A9792A', dot: '#EFD889' },
+  blush: { bg: '#F5D5D8', paper: '#FFF6F6', ink: '#2C2224', muted: '#735257', accent: '#B5546A', dot: '#EDB5BE' },
+  sage: { bg: '#DCE5D1', paper: '#F8FAF3', ink: '#212A20', muted: '#55624F', accent: '#4F6E46', dot: '#BFD0AF' },
+};
+
+export function routinePinHtml(v, P) {
+  const steps = v.points.map((p, i) => `<li><span class="n">${i + 1}</span><span class="t">${esc(p)}</span></li>`).join('');
+  const hs = v.headline.length > 26 ? 92 : v.headline.length > 20 ? 104 : 116;
+  const squiggle = `<svg class="sq" viewBox="0 0 400 24" preserveAspectRatio="none"><path d="M4 14 C 60 2, 110 24, 170 12 S 280 2, 330 13 S 380 20, 396 9" fill="none" stroke="${P.accent}" stroke-width="7" stroke-linecap="round"/></svg>`;
+  const head = `<h1 style="font-size:${hs}px">${esc(v.headline)}</h1>${squiggle}<p class="sub">${esc(v.sub || '')}</p>`;
+  const list = `<ol class="rs">${steps}</ol>`;
+  const main = v.layout === 'card'
+    ? `${head}<div class="fill"><div class="paper">${list}</div></div>`
+    : `${head}<div class="fill">${list}</div>`;
+  return `<!doctype html><html><head><meta charset="utf-8"><style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@600;700;800&family=Outfit:wght@600;700&display=block');
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:${W}px;height:${H}px}
+body{background:${P.bg};color:${P.ink};font-family:'Nunito Sans',sans-serif;position:relative;overflow:hidden}
+body:before{content:'';position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;background:${P.dot};opacity:.7}
+.wrap{position:absolute;top:0;left:0;right:0;bottom:104px;padding:84px 76px 40px;display:flex;flex-direction:column;overflow:hidden}
+h1{position:relative;font-family:'Outfit',sans-serif;font-weight:700;letter-spacing:-.015em;line-height:1.0;color:${P.ink}}
+.sq{display:block;width:62%;height:26px;margin:14px 0 10px -4px}
+.sub{font-size:46px;font-weight:700;color:${P.accent};margin-bottom:34px}
+.fill{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center}
+.paper{background:${P.paper};border-radius:34px;padding:30px 44px;box-shadow:0 18px 40px rgba(60,40,20,.12);transform:rotate(-1deg)}
+.rs{list-style:none}
+.rs li{display:flex;align-items:center;gap:30px;padding:22px 0;font-size:50px;font-weight:800;line-height:1.14;color:${P.ink}}
+.rs li+li{border-top:3px dashed ${P.dot}}
+.rs .n{flex:none;width:78px;height:78px;border-radius:50%;background:${P.accent};color:${P.paper};font-family:'Outfit',sans-serif;font-weight:700;font-size:46px;display:flex;align-items:center;justify-content:center}
+.foot{position:absolute;left:76px;right:76px;bottom:0;height:104px;display:flex;align-items:center;gap:18px;color:${P.muted};font-size:30px;font-weight:700}
+.mark{display:inline-flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:12px;background:${P.ink};color:${P.bg};font-family:'Outfit',sans-serif;font-weight:600;font-size:24px}
+</style></head><body>
+<div class="wrap">${main}</div>
+<div class="foot"><span class="mark">AP</span><span>aplayermode.com</span></div>
+</body></html>`;
+}
+
 /** Renders `variants` to <root>/<dir>/<id>.png; returns { [id]: bytes }. */
 export async function renderVariants(root, variants, dir) {
   const pal = palettes(root);
@@ -123,16 +166,27 @@ export async function renderVariants(root, variants, dir) {
   const sizes = {};
   try {
     for (const v of variants) {
-      if (!pal[v.palette]) throw new Error(`${v.id}: unknown palette ${v.palette}`);
+      const P = v.routine ? ROUTINE_PALETTES[v.palette] : pal[v.palette];
+      if (!P) throw new Error(`${v.id}: unknown palette ${v.palette}`);
       const page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
-      await page.setContent(pinHtml(v, pal[v.palette], shot), { waitUntil: 'networkidle' });
+      await page.setContent(v.routine ? routinePinHtml(v, P) : pinHtml(v, P, shot), { waitUntil: 'networkidle' });
       await page.evaluate(() => document.fonts.ready);
       const fonts = await page.evaluate(() => [...document.fonts].filter((f) => f.status === 'loaded').map((f) => f.family));
       if (!fonts.some((f) => /Outfit/.test(f))) throw new Error(`${v.id}: Outfit did not load (network?); refusing to ship a fallback font`);
+      // Routine pins: shrink the step text, never below 40px (readable at grid size), until it fits.
+      if (v.routine) {
+        await page.evaluate(() => {
+          const wrap = document.querySelector('.wrap');
+          const fits = () => wrap.scrollHeight <= wrap.clientHeight + 1 && [...wrap.querySelectorAll('li,.paper')].every((el) => el.getBoundingClientRect().bottom <= wrap.getBoundingClientRect().bottom - 40);
+          for (let px = 50; px >= 40 && !fits(); px -= 2) {
+            document.querySelectorAll('.rs li').forEach((li) => { li.style.fontSize = `${px}px`; li.style.paddingTop = li.style.paddingBottom = `${Math.round(px * 0.36)}px`; });
+          }
+        });
+      }
       const overflow = await page.evaluate(() => {
         const wrap = document.querySelector('.wrap');
         const box = wrap.getBoundingClientRect();
-        const out = [...wrap.querySelectorAll('h1,p,li,.card,.chip,.phone')].filter((el) => {
+        const out = [...wrap.querySelectorAll('h1,p,li,.card,.chip,.phone,.paper')].filter((el) => {
           const r = el.getBoundingClientRect();
           return r.bottom > box.bottom - 40 + 1 || r.right > box.right + 1;
         });

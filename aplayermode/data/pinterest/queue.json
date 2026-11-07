@@ -1,12 +1,12 @@
 {
-  "_comment": "aplayermode.com Pinterest daily drip queue (owner-approved 16 Oct 2026). config.pins_per_day is THE release rate. The Worker (workers/aplayermode-com/src/pinqueue.js buildPinfeedXml) serves /pinfeed.xml from this file at request time: the 5 launch items plus every variant whose release_date <= today in America/Chicago, newest config.max_feed_items; no deploy per day. channel + launch are derived from config/aplayermode_pinfeed.json; variants come from config/aplayermode_pin_angles.json via scripts/aplayermode/pin_queue.mjs (weekly: scripts/aplayermode/weekly_pin_drip.sh, Mondays in the Daily Citation Intelligence lane). Guarded by validate:aplayermode-pinterest and tests/aplayermode/pinqueue.test.mjs.",
+  "_comment": "aplayermode.com Pinterest daily drip queue (owner-approved 16 Oct 2026). config.pins_per_day is THE release rate. The Worker (workers/aplayermode-com/src/pinqueue.js buildPinfeedXml) serves /pinfeed.xml from this file at request time: the 5 launch items plus every variant whose release_date <= today in America/Chicago, newest config.max_feed_items; no deploy per day. channel + launch are derived from config/aplayermode_pinfeed.json; variants come from config/aplayermode_routines.json via scripts/aplayermode/pin_queue.mjs (weekly: scripts/aplayermode/weekly_pin_drip.sh, Mondays in the Daily Citation Intelligence lane). Guarded by validate:aplayermode-pinterest and tests/aplayermode/pinqueue.test.mjs.",
   "config": {
     "pins_per_day": 3,
     "timezone": "America/Chicago",
     "launch_date": "2026-10-16",
     "drip_start": "2026-10-17",
-    "refill_threshold": 42,
-    "refill_batch": 42,
+    "refill_threshold": 9,
+    "refill_batch": 21,
     "max_feed_items": 50,
     "layouts": [
       "phone",
@@ -42,10 +42,11 @@
         }
       ]
     },
-    "held_comment": "A variant with a 'held' block is never dated or put in a feed (workers/aplayermode-com/src/pinqueue.js isHeld). Release: docs/OPERATIONS.md, 'Releasing held A Player Mode pins'."
+    "held_comment": "A variant with a 'held' block is never dated or put in a feed (workers/aplayermode-com/src/pinqueue.js isHeld). While hold_new_pins is true, refills are planned held too. Release (one command): docs/OPERATIONS.md, 'Releasing held A Player Mode pins'.",
+    "hold_new_pins": true
   },
   "boards": {
-    "_comment": "Pinterest topic boards (owner-approved 1 Nov 2026). Pinterest auto-publish maps ONE feed to ONE board, so each board has its own feed, served by the aplayermode-com Worker (/pinfeed.xml = the first board, /pinfeed/<slug>.xml the others). A pin's board is its page section. Pins released before split_from all went to the first board and stay there. keywords: Pinterest search suggestions read 1 Nov 2026; a post-split title naming none is led with the first.",
+    "_comment": "Pinterest topic boards (owner-approved 1 Nov 2026). Pinterest auto-publish maps ONE feed to ONE board, so each board has its own feed, served by the aplayermode-com Worker (/pinfeed.xml = the first board, /pinfeed/<slug>.xml the others). A pin's board is its page section. Pins released before split_from all went to the first board and stay there. keywords: Pinterest search suggestions read 1 Nov 2026; a post-split title naming none is led with the first. 7 Nov 2026: routine pins carry their routine page's slug as section (config/aplayermode_routines.json); 'morning routine', 'adhd morning routine', 'weekly planning', 'weekly reset' and 'sunday reset' added as common Pinterest searches (not re-read in the suggest box), so every routine title starts with one of its board's phrases.",
     "split_from": "2026-11-01",
     "list": [
       {
@@ -54,13 +55,17 @@
         "feed": "/pinfeed.xml",
         "sections": [
           "founding-100",
-          "app"
+          "app",
+          "weekly-planning-routine"
         ],
         "keywords": [
           "weekly planner",
           "planner",
           "weekly planner template",
-          "planning app"
+          "planning app",
+          "weekly planning",
+          "weekly reset",
+          "sunday reset"
         ]
       },
       {
@@ -68,14 +73,18 @@
         "name": "Daily Routine & Time Blocking",
         "feed": "/pinfeed/daily-routine.xml",
         "sections": [
-          "how-it-works"
+          "how-it-works",
+          "adhd-morning-routine",
+          "time-blocking-for-busy-days"
         ],
         "keywords": [
           "daily routine",
           "daily routine schedule",
           "daily routine planner",
           "time blocking",
-          "time blocking template"
+          "time blocking template",
+          "morning routine",
+          "adhd morning routine"
         ]
       },
       {
@@ -83,7 +92,9 @@
         "name": "Productivity & Goal Setting",
         "feed": "/pinfeed/productivity-goals.xml",
         "sections": [
-          "modes"
+          "modes",
+          "minimum-day-after-a-bad-day",
+          "founder-daily-routine"
         ],
         "keywords": [
           "productivity",
@@ -98,7 +109,8 @@
         "name": "Faith, Family & Balanced Life Planning",
         "feed": "/pinfeed/faith-family-balance.xml",
         "sections": [
-          "pillars"
+          "pillars",
+          "family-weekly-reset"
         ],
         "keywords": [
           "christian planner",
@@ -931,1415 +943,1554 @@
       }
     },
     {
-      "id": "founding-100-07",
+      "id": "adhd-morning-routine-low-motivation",
       "seq": 31,
-      "section": "founding-100",
-      "kicker": "Executive Roundtable",
-      "headline": "A five-person executive team in one app.",
-      "body": "It plans and coaches you; you do the last step. All five roles, every morning.",
+      "section": "adhd-morning-routine",
+      "routine": "adhd-morning-routine/low-motivation",
+      "page": "/routines/adhd-morning-routine/",
+      "headline": "ADHD Morning Routine",
+      "sub": "for low motivation",
       "points": [
-        "Executive Coach",
-        "Executive Assistant",
-        "Chief of Staff",
-        "Accountability Partner",
-        "Mindset Coach"
+        "Water before your phone",
+        "Clothes laid out last night",
+        "One song to get dressed",
+        "Eat something small",
+        "Write the one must-do",
+        "Start it for 5 minutes"
       ],
-      "title": "A Five-Role Executive Team in One Planning App: Join the Founding 100",
-      "description": "Executive Roundtable puts five roles in one planning app: Executive Coach, Executive Assistant, Chief of Staff, Accountability Partner and Cognitive Behavioral Mindset Coach. Your agenda is ready every morning, prioritised, and coaching comes one question at a time. The first 100 members join as the Founding 100.",
-      "layout": "statement",
-      "palette": "sage",
+      "title": "ADHD Morning Routine for Low Motivation: 6 Steps That Get You Started",
+      "description": "A six-step ADHD morning routine for days when motivation is low: water before your phone, clothes laid out the night before, one song to get dressed, something small to eat, one must-do written down, then five minutes on it. Planning routine, not medical advice.",
+      "layout": "card",
+      "palette": "peach",
       "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "founding-100-07",
       "image": {
-        "path": "aplayermode/img/pins/drip/founding-100-07.png",
-        "length": 81707,
+        "path": "aplayermode/img/pins/drip/adhd-morning-routine-low-motivation.png",
+        "length": 162981,
         "width": 1000,
         "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-07",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
       }
     },
     {
-      "id": "how-it-works-07",
+      "id": "weekly-planning-routine-twenty-minutes",
       "seq": 32,
-      "section": "how-it-works",
-      "kicker": "Nothing is lost",
-      "headline": "Stop any time. Pick up where you left off.",
-      "body": "Setup is easy taps, about 3 minutes, and nothing you answered is lost if you stop.",
+      "section": "weekly-planning-routine",
+      "routine": "weekly-planning-routine/twenty-minutes",
+      "page": "/routines/weekly-planning-routine/",
+      "headline": "Weekly Planning in 20 Minutes",
+      "sub": "6 steps, one page",
       "points": [
-        "Easy-tap questions",
-        "Stop any time",
-        "Nothing is lost",
-        "A working plan in about 3 minutes"
+        "Clear last week's list",
+        "Copy in fixed appointments",
+        "Pick 3 outcomes for the week",
+        "Give each one a day",
+        "One focus block a day",
+        "Leave Friday afternoon open"
       ],
-      "title": "Planner Setup You Can Stop Any Time: Easy Taps, Nothing Lost, About 3 Minutes",
-      "description": "Long planner setups are where good intentions go to die. A Player Mode's setup is easy-tap questions, about 3 minutes to a working plan, and you can stop any time without losing anything. It builds your goals, rules and minimum day, and you approve each piece.",
-      "layout": "quote",
-      "palette": "light",
+      "title": "Weekly Planning Routine in 20 Minutes: 6 Steps",
+      "description": "Plan your week in 20 minutes: clear last week's list, copy in the fixed appointments, pick three outcomes, give each a day, block one focus slot every day and leave Friday afternoon open for what slips.",
+      "layout": "steps",
+      "palette": "butter",
       "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "how-it-works-07",
       "image": {
-        "path": "aplayermode/img/pins/drip/how-it-works-07.png",
-        "length": 94770,
+        "path": "aplayermode/img/pins/drip/weekly-planning-routine-twenty-minutes.png",
+        "length": 120526,
         "width": 1000,
         "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-07",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
       }
     },
     {
-      "id": "app-07",
+      "id": "time-blocking-for-busy-days-busy-days",
       "seq": 33,
-      "section": "app",
-      "kicker": "Healthy habits planner",
-      "headline": "Small daily steps. A safe pace.",
-      "body": "It turns a health goal into one small step a day you can actually do.",
+      "section": "time-blocking-for-busy-days",
+      "routine": "time-blocking-for-busy-days/busy-days",
+      "page": "/routines/time-blocking-for-busy-days/",
+      "headline": "Time Blocking for Busy Days",
+      "sub": "6 blocks",
       "points": [
-        "Walk 10 minutes",
-        "Clothes out the night before",
-        "Log what you eat",
-        "Book a check-up"
+        "Fixed meetings first",
+        "One 90-minute focus block",
+        "30 minutes for admin",
+        "A buffer after every meeting",
+        "Lunch as a real block",
+        "A stop time on the calendar"
       ],
-      "title": "Healthy Habit Planner: One Small Daily Step at a Safe Pace, Picked for You",
-      "description": "Healthy habits stick when the daily step is small. A Player Mode turns a health goal into one step a day at a safe pace, such as a 10-minute walk, workout clothes out the night before, logging what you eat or booking a check-up. Never diet or medical advice.",
-      "layout": "numbered",
-      "palette": "light",
+      "title": "Time Blocking for Busy Days: 6 Blocks That Hold",
+      "description": "Time blocking for busy days: put fixed meetings in first, protect one 90-minute focus block, give admin 30 minutes, add a buffer after every meeting, make lunch a real block and put your stop time on the calendar.",
+      "layout": "card",
+      "palette": "blush",
       "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "app-07",
       "image": {
-        "path": "aplayermode/img/pins/drip/app-07.png",
-        "length": 79753,
+        "path": "aplayermode/img/pins/drip/time-blocking-for-busy-days-busy-days.png",
+        "length": 161697,
         "width": 1000,
         "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-08",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
       }
     },
     {
-      "id": "modes-07",
+      "id": "minimum-day-after-a-bad-day-minimum-day",
       "seq": 34,
-      "section": "modes",
-      "kicker": "ADHD-friendly planning",
-      "headline": "Tap how today is. The plan follows.",
-      "body": "Stuck, overloaded, low, rushed or focused: one tap and the day adjusts.",
+      "section": "minimum-day-after-a-bad-day",
+      "routine": "minimum-day-after-a-bad-day/minimum-day",
+      "page": "/routines/minimum-day-after-a-bad-day/",
+      "headline": "Bad Day Routine",
+      "sub": "the minimum day",
       "points": [
-        "Stuck: High-Pressure",
-        "Overloaded: Executive Review",
-        "Low: Recovery",
-        "Rushed: Sprint",
-        "Focused: Deep Work"
+        "Water and something to eat",
+        "One task that keeps things moving",
+        "One reply you owe",
+        "10 minutes outside",
+        "Skip the catch-up list",
+        "Bed on time"
       ],
-      "title": "ADHD-Friendly Planning: Tap How Today Is and the Plan Adjusts in One Tap",
-      "description": "Some days you are stuck, some days overloaded, some days low. In A Player Mode one tap matches the day: High-Pressure when stuck, Executive Review when your head is full, Recovery when low, Sprint near a deadline, Deep Work to focus. No paragraphs about feelings. A planning app, not medical advice.",
-      "layout": "cards",
+      "title": "Productivity on a Bad Day: The Minimum Day in 6 Steps",
+      "description": "A bad day routine called the minimum day: water and food, one task that keeps things moving, one reply you owe, ten minutes outside, no catch-up list, and bed on time. Tomorrow you go back to the normal plan.",
+      "layout": "steps",
       "palette": "sage",
       "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "modes-07",
       "image": {
-        "path": "aplayermode/img/pins/drip/modes-07.png",
-        "length": 106281,
+        "path": "aplayermode/img/pins/drip/minimum-day-after-a-bad-day-minimum-day.png",
+        "length": 108690,
         "width": 1000,
         "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-07",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
       }
     },
     {
-      "id": "pillars-07",
+      "id": "family-weekly-reset-sunday-reset",
       "seq": 35,
-      "section": "pillars",
-      "kicker": "Self-care planner",
-      "headline": "Self-care that repeats on its own.",
-      "body": "Gratitude, nature, meditation and family time come back each week without you guarding it.",
+      "section": "family-weekly-reset",
+      "routine": "family-weekly-reset/sunday-reset",
+      "page": "/routines/family-weekly-reset/",
+      "headline": "Family Sunday Reset",
+      "sub": "30 minutes",
       "points": [
-        "Repeats on its own",
-        "No guarding the time",
-        "Gratitude and nature",
-        "Family and relationships"
+        "Look at the week together",
+        "Who is where, which day",
+        "Plan 3 easy dinners",
+        "Bags and uniforms ready",
+        "Pick one fun thing",
+        "Set Monday's wake-up time"
       ],
-      "title": "Self-Care Planner That Repeats On Its Own: Gratitude, Nature and Family Time",
-      "description": "Self-care slips when it depends on remembering. In A Player Mode the Spirit pillar makes room for gratitude, nature, meditation, service and family time, and repeats them on their own without you guarding the time. On by default in every plan.",
-      "layout": "checklist",
-      "palette": "light",
+      "title": "Family Routine: Sunday Reset in 30 Minutes",
+      "description": "A 30-minute family Sunday reset: look at the week together, write who is where on which day, plan three easy dinners, get bags and uniforms ready, pick one fun thing and set Monday's wake-up time.",
+      "layout": "card",
+      "palette": "butter",
       "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "pillars-07",
       "image": {
-        "path": "aplayermode/img/pins/drip/pillars-07.png",
-        "length": 99402,
+        "path": "aplayermode/img/pins/drip/family-weekly-reset-sunday-reset.png",
+        "length": 164232,
         "width": 1000,
         "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-08",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
       }
     },
     {
-      "id": "founding-100-08",
+      "id": "founder-daily-routine-daily",
       "seq": 36,
-      "section": "founding-100",
-      "kicker": "Autopilot",
-      "headline": "Recurring things, handled inside your rules.",
-      "body": "It saves money; it never spends it. A daily done-list shows what it did, with undo.",
+      "section": "founder-daily-routine",
+      "routine": "founder-daily-routine/daily",
+      "page": "/routines/founder-daily-routine/",
+      "headline": "Founder Productivity Routine",
+      "sub": "the daily six",
       "points": [
-        "Sends follow-ups",
-        "Moves flexible meetings",
-        "Cancels unused subscriptions",
-        "Daily done-list with undo"
+        "Write today's one outcome",
+        "Build before email",
+        "Inbox at 11 and 4",
+        "Calls in one afternoon block",
+        "Ship something small",
+        "Close with tomorrow's top task"
       ],
-      "title": "Autopilot Planner: Follow-Ups, Flexible Meetings and Unused Subscriptions Handled",
-      "description": "A Player Mode's Autopilot plan handles recurring things on its own, inside standing rules you set: it sends follow-ups, moves flexible meetings, requests appointments by email and cancels unused subscriptions. It saves money and never spends it, and a daily done-list with undo shows what it did.",
-      "layout": "numbered",
-      "palette": "stone",
+      "title": "Productivity Routine for Founders: The Daily Six",
+      "description": "A daily productivity routine for founders: write today's one outcome, build before opening email, check the inbox at 11 and 4, put calls in one afternoon block, ship something small and close with tomorrow's top task.",
+      "layout": "steps",
+      "palette": "blush",
       "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "founding-100-08",
       "image": {
-        "path": "aplayermode/img/pins/drip/founding-100-08.png",
-        "length": 81364,
+        "path": "aplayermode/img/pins/drip/founder-daily-routine-daily.png",
+        "length": 112387,
         "width": 1000,
         "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-09",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
       }
     },
     {
-      "id": "how-it-works-08",
+      "id": "adhd-morning-routine-fifteen-minutes",
       "seq": 37,
-      "section": "how-it-works",
-      "kicker": "On Android",
-      "headline": "Your plan arrives at the time you set.",
-      "body": "On Android it is a notification at your time; on the web it is waiting when you open the app.",
+      "section": "adhd-morning-routine",
+      "routine": "adhd-morning-routine/fifteen-minutes",
+      "page": "/routines/adhd-morning-routine/",
+      "headline": "Morning Routine in 15 Minutes",
+      "sub": "for ADHD adults",
       "points": [
-        "Notification at your time",
-        "Waiting on the web",
-        "One priority first",
-        "Then the day"
+        "Feet on the floor at the alarm",
+        "Lights on, curtains open",
+        "Wash face, brush teeth",
+        "Dress from tonight's pile",
+        "Grab-and-go breakfast",
+        "Leave a 5-minute buffer"
       ],
-      "title": "Daily Plan Notification at the Time You Set: One Priority, Then the Day",
-      "description": "A Player Mode sends your daily plan to you instead of waiting for you to open a planner. On Android it arrives as a notification at the time you set; on the web it is waiting when you open the app. One priority, a short start, then the day.",
-      "layout": "phone",
-      "palette": "dark",
+      "title": "Morning Routine for ADHD Adults in 15 Minutes",
+      "description": "A 15-minute morning routine for ADHD adults: up at the alarm, lights on, face and teeth, clothes from the pile you set out last night, a grab-and-go breakfast and a five-minute buffer before you leave. Planning routine, not medical advice.",
+      "layout": "card",
+      "palette": "sage",
       "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "how-it-works-08",
       "image": {
-        "path": "aplayermode/img/pins/drip/how-it-works-08.png",
-        "length": 242203,
+        "path": "aplayermode/img/pins/drip/adhd-morning-routine-fifteen-minutes.png",
+        "length": 167162,
         "width": 1000,
         "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-09",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
       }
     },
     {
-      "id": "app-08",
+      "id": "weekly-planning-routine-sunday-reset",
       "seq": 38,
-      "section": "app",
-      "kicker": "Real app screen",
-      "headline": "The whole day on one screen.",
-      "body": "Open it and the day is there: one priority first, the rest in order.",
+      "section": "weekly-planning-routine",
+      "routine": "weekly-planning-routine/sunday-reset",
+      "page": "/routines/weekly-planning-routine/",
+      "headline": "Sunday Reset Routine",
+      "sub": "for the week ahead",
       "points": [
-        "One priority first",
-        "Everything else in order",
-        "Ready before you are",
-        "A smaller day on bad days"
+        "Laundry on, dishes done",
+        "Look at the week's calendar",
+        "Plan 3 easy dinners",
+        "Pack Monday's bag",
+        "Choose Monday's first task",
+        "Bed 30 minutes early"
       ],
-      "title": "Daily Planner App: The Whole Day on One Screen, One Priority First",
-      "description": "A Player Mode puts the whole day on one screen when you open it: one priority first, a short start, then everything else in order. It is ready before you are, and on bad days the day is smaller instead of longer. Answer easy taps once to set it up.",
-      "layout": "quote",
-      "palette": "dark",
+      "title": "Sunday Reset Routine for the Week Ahead",
+      "description": "A Sunday reset routine that sets up the week: laundry on and dishes done, a look at the calendar, three easy dinners planned, Monday's bag packed, Monday's first task chosen and bed 30 minutes early.",
+      "layout": "steps",
+      "palette": "peach",
       "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "app-08",
       "image": {
-        "path": "aplayermode/img/pins/drip/app-08.png",
-        "length": 87242,
+        "path": "aplayermode/img/pins/drip/weekly-planning-routine-sunday-reset.png",
+        "length": 114908,
         "width": 1000,
         "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-10",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
       }
     },
     {
-      "id": "modes-08",
+      "id": "time-blocking-for-busy-days-meeting-heavy",
       "seq": 39,
-      "section": "modes",
-      "kicker": "No journaling required",
-      "headline": "No paragraphs about how you feel.",
-      "body": "Pick a mode with one tap. The day and the coaching voice change to match.",
+      "section": "time-blocking-for-busy-days",
+      "routine": "time-blocking-for-busy-days/meeting-heavy",
+      "page": "/routines/time-blocking-for-busy-days/",
+      "headline": "Time Blocking Template",
+      "sub": "for meeting-heavy days",
       "points": [
-        "One tap, any time",
-        "The day adjusts",
-        "The coaching voice adjusts",
-        "Nothing to write"
+        "Focus block before 9",
+        "Meetings back to back after",
+        "15-minute catch-up at noon",
+        "Replies in one 30-minute block",
+        "Prep tomorrow at 4",
+        "Nothing new after 5"
       ],
-      "title": "A Planner That Adapts Without Journaling: One Tap Instead of a Paragraph",
-      "description": "Many planning apps want you to write about your mood before they help. A Player Mode skips it: tap one of five coaching modes and it adjusts the day and how it coaches you. High-Pressure, Executive Review, Recovery, Sprint or Deep Work, any time.",
-      "layout": "statement",
-      "palette": "stone",
+      "title": "Time Blocking Template for a Meeting-Heavy Day",
+      "description": "A time blocking template for a day full of meetings: a focus block before 9, meetings back to back after that, a 15-minute catch-up at noon, replies in one 30-minute block, tomorrow's prep at 4 and nothing new after 5.",
+      "layout": "card",
+      "palette": "blush",
       "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "modes-08",
       "image": {
-        "path": "aplayermode/img/pins/drip/modes-08.png",
-        "length": 79009,
+        "path": "aplayermode/img/pins/drip/time-blocking-for-busy-days-meeting-heavy.png",
+        "length": 165174,
         "width": 1000,
         "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-09",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
       }
     },
     {
-      "id": "pillars-08",
+      "id": "minimum-day-after-a-bad-day-never-miss-twice",
       "seq": 40,
-      "section": "pillars",
-      "kicker": "Health routines",
-      "headline": "Health routines, reminded at a safe pace.",
-      "body": "Movement, food, sleep and weight goals become small reminders you can keep.",
+      "section": "minimum-day-after-a-bad-day",
+      "routine": "minimum-day-after-a-bad-day/never-miss-twice",
+      "page": "/routines/minimum-day-after-a-bad-day/",
+      "headline": "Habit Tracker Rule",
+      "sub": "never miss twice",
       "points": [
-        "Movement",
-        "Food",
-        "Sleep",
-        "Health routines"
+        "Missed yesterday? Fine",
+        "Do the tiny version today",
+        "2 minutes counts",
+        "Tick it done",
+        "No making up missed days",
+        "Normal again tomorrow"
       ],
-      "title": "Health Routine Planner: Movement, Food and Sleep Reminders at a Safe Pace",
-      "description": "A Player Mode's Body pillar turns movement, food, sleep and weight goals into small reminders and a picked workout, at a safe pace, so health routines do not depend on willpower. Never diet or medical advice; a planning app.",
-      "layout": "cards",
-      "palette": "dark",
+      "title": "Habit Tracker Rule: Never Miss Twice",
+      "description": "The never miss twice habit tracker rule: missing yesterday is fine, do the tiny version today, two minutes counts, tick it done, never try to make up missed days and go back to normal tomorrow.",
+      "layout": "steps",
+      "palette": "sage",
       "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "pillars-08",
       "image": {
-        "path": "aplayermode/img/pins/drip/pillars-08.png",
-        "length": 81098,
+        "path": "aplayermode/img/pins/drip/minimum-day-after-a-bad-day-never-miss-twice.png",
+        "length": 103388,
         "width": 1000,
         "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-10",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
       }
     },
     {
-      "id": "founding-100-09",
+      "id": "family-weekly-reset-busy-parents",
       "seq": 41,
-      "section": "founding-100",
-      "kicker": "Founding 100",
-      "headline": "Be one of the first 100 members.",
-      "body": "The Founding 100 get Executive Roundtable at a member rate that holds for as long as they stay subscribed.",
+      "section": "family-weekly-reset",
+      "routine": "family-weekly-reset/busy-parents",
+      "page": "/routines/family-weekly-reset/",
+      "headline": "Family Weekly Planning",
+      "sub": "for busy parents",
       "points": [
-        "All five executive roles",
-        "Agenda ready every morning",
-        "Minimum day after a miss",
-        "Cancel any time"
+        "One shared calendar",
+        "A 15-minute Sunday check-in",
+        "Split pickups by day",
+        "Meals on a whiteboard",
+        "A backup plan for sick days",
+        "Date night on the calendar"
       ],
-      "title": "Founding 100: Join the First 100 Members of a Planning App That Plans Your Day",
-      "description": "A Player Mode is a planning app with a five-role executive team. The first 100 members get Executive Roundtable at a Founding rate that stays the same for as long as they stay subscribed. Your agenda is ready every morning, prioritised, and a missed day becomes a minimum day with no catch-up. Cancel any time.",
-      "layout": "quote",
-      "palette": "light",
+      "title": "Family Weekly Planning for Busy Parents",
+      "description": "Weekly planning for busy parents: one shared calendar, a 15-minute Sunday check-in, pickups split by day, meals on a whiteboard, a backup plan for sick days and date night on the calendar.",
+      "layout": "card",
+      "palette": "peach",
       "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "founding-100-09",
       "image": {
-        "path": "aplayermode/img/pins/drip/founding-100-09.png",
-        "length": 100762,
+        "path": "aplayermode/img/pins/drip/family-weekly-reset-busy-parents.png",
+        "length": 167414,
         "width": 1000,
         "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-11",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
       }
     },
     {
-      "id": "how-it-works-09",
+      "id": "founder-daily-routine-ninety-days",
       "seq": 42,
-      "section": "how-it-works",
-      "kicker": "Weekly planning",
-      "headline": "A working plan in about 3 minutes.",
-      "body": "Answer easy-tap questions. No essays. Stop any time; nothing is lost.",
+      "section": "founder-daily-routine",
+      "routine": "founder-daily-routine/ninety-days",
+      "page": "/routines/founder-daily-routine/",
+      "headline": "90-Day Goal Setting",
+      "sub": "for founders",
       "points": [
-        "Easy taps, no essays",
-        "About 3 minutes",
-        "Stop any time, nothing lost",
-        "You approve each piece"
+        "One goal, one number",
+        "3 bets to move it",
+        "Weekly check, Friday 4pm",
+        "Kill a bet that isn't working",
+        "Keep a wins list",
+        "Review at day 45"
       ],
-      "title": "Weekly Planning in About 3 Minutes: Easy Taps, No Essays, a Working Plan",
-      "description": "Setting up a planner should not take a weekend. A Player Mode asks easy-tap questions, about 3 minutes to a working plan, no essays, and nothing is lost if you stop. It builds your goals, your rules and your minimum day, and you approve each piece. Then every morning the plan is ready.",
-      "layout": "split",
-      "palette": "sage",
+      "title": "Goal Setting for Founders: A 90-Day Plan in 6 Steps",
+      "description": "Ninety-day goal setting for founders: one goal with one number, three bets to move it, a weekly check on Friday at 4, kill a bet that is not working, keep a wins list and review at day 45.",
+      "layout": "steps",
+      "palette": "butter",
       "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "how-it-works-09",
       "image": {
-        "path": "aplayermode/img/pins/drip/how-it-works-09.png",
-        "length": 233955,
+        "path": "aplayermode/img/pins/drip/founder-daily-routine-ninety-days.png",
+        "length": 108794,
         "width": 1000,
         "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-11",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
       }
     },
     {
-      "id": "app-09",
+      "id": "adhd-morning-routine-door-checklist",
       "seq": 43,
-      "section": "app",
-      "kicker": "Morning routine",
-      "headline": "What do I do first this morning?",
-      "body": "Max 5 physical steps, then the one task that matters.",
+      "section": "adhd-morning-routine",
+      "routine": "adhd-morning-routine/door-checklist",
+      "page": "/routines/adhd-morning-routine/",
+      "headline": "ADHD Morning Checklist",
+      "sub": "for the front door",
       "points": [
-        "Feet to the floor (10 seconds)",
-        "1 minute of breathing",
-        "Glass of water",
-        "First task: your highest-leverage step"
+        "Keys, wallet, phone",
+        "Bag packed last night",
+        "Charger in the bag",
+        "Check the first meeting",
+        "Water bottle filled",
+        "Out 5 minutes early"
       ],
-      "title": "ADHD-Friendly Morning Order: Feet to the Floor, Breathe, Water, Then One Task",
-      "description": "When starting is the hard part, a ready order helps. A Player Mode has your morning order ready at the time you set: feet to the floor (10 seconds), 1 minute of breathing, a glass of water, then your highest-leverage step. Max 5 physical steps. A planning app, not medical advice or treatment.",
-      "layout": "phone",
+      "title": "ADHD Morning Routine Checklist for the Front Door",
+      "description": "Tape this by the door: keys, wallet and phone, a bag packed the night before, the charger in it, the day's first meeting checked, a filled water bottle, and out five minutes early. A morning checklist for ADHD brains. Not medical advice.",
+      "layout": "card",
       "palette": "sage",
       "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "app-09",
       "image": {
-        "path": "aplayermode/img/pins/drip/app-09.png",
-        "length": 244482,
+        "path": "aplayermode/img/pins/drip/adhd-morning-routine-door-checklist.png",
+        "length": 157259,
         "width": 1000,
         "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-12",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
       }
     },
     {
-      "id": "modes-09",
+      "id": "weekly-planning-routine-busy-weeks",
       "seq": 44,
-      "section": "modes",
-      "kicker": "Coaching modes",
-      "headline": "One tap changes how it coaches you.",
-      "body": "You never have to say how you're feeling in a paragraph. Tap the mode; it adjusts the day and its voice.",
+      "section": "weekly-planning-routine",
+      "routine": "weekly-planning-routine/busy-weeks",
+      "page": "/routines/weekly-planning-routine/",
+      "headline": "Weekly Planner for Busy Weeks",
+      "sub": "plan around the crunch",
       "points": [
-        "High-Pressure",
-        "Executive Review",
-        "Recovery",
-        "Sprint",
-        "Deep Work"
+        "List every fixed commitment",
+        "Mark the two busiest days",
+        "Move what can wait",
+        "One priority a day",
+        "Errands in one trip",
+        "The week on one page"
       ],
-      "title": "Five One-Tap Coaching Modes: Change the Day Without Explaining How You Feel",
-      "description": "In A Player Mode you never have to say how you are feeling in a paragraph. Tap a mode and it adjusts the day and its voice: High-Pressure when you are stuck, Executive Review when your head is full, Recovery after a bad day, Sprint near a deadline, Deep Work for one hard task.",
-      "layout": "numbered",
-      "palette": "light",
+      "title": "Weekly Planner Method for Busy Weeks",
+      "description": "A weekly planner method for busy weeks: list every fixed commitment, mark the two busiest days, move what can wait, keep one priority per day, batch errands into one trip and fit the whole week on one page.",
+      "layout": "steps",
+      "palette": "peach",
       "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "modes-09",
       "image": {
-        "path": "aplayermode/img/pins/drip/modes-09.png",
-        "length": 82675,
+        "path": "aplayermode/img/pins/drip/weekly-planning-routine-busy-weeks.png",
+        "length": 113573,
         "width": 1000,
         "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-11",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
       }
     },
     {
-      "id": "pillars-09",
+      "id": "time-blocking-for-busy-days-kids-at-home",
       "seq": 45,
-      "section": "pillars",
-      "kicker": "Mind, Body, Spirit",
-      "headline": "Mind. Body. Spirit. Covered by default.",
-      "body": "Every plan starts with all three, so the basics are covered without you deciding to cover them.",
+      "section": "time-blocking-for-busy-days",
+      "routine": "time-blocking-for-busy-days/kids-at-home",
+      "page": "/routines/time-blocking-for-busy-days/",
+      "headline": "Time Blocking With Kids Home",
+      "sub": "a realistic version",
       "points": [
-        "Mind: work, money, learning, focus",
-        "Body: movement, food, sleep",
-        "Spirit: faith, gratitude, family"
+        "Work while they nap or sleep",
+        "Short 45-minute blocks",
+        "Screen time is call time",
+        "Shared calendar with your partner",
+        "Errands in one block",
+        "Plan for interruptions"
       ],
-      "title": "Mind, Body, Spirit Planner: All Three Covered by Default, No Deciding",
-      "description": "A Player Mode starts every plan with Mind, Body and Spirit on, so the basics are covered without you deciding to cover them. Untick any you do not want it to hold for you; anything else you care about is sorted into one of the three automatically.",
-      "layout": "statement",
-      "palette": "sage",
+      "title": "Time Blocking With Kids at Home: A Realistic Schedule",
+      "description": "Time blocking with kids at home: work while they nap or sleep, use short 45-minute blocks, make their screen time your call time, share a calendar with your partner, batch errands and plan for interruptions.",
+      "layout": "card",
+      "palette": "butter",
       "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "pillars-09",
       "image": {
-        "path": "aplayermode/img/pins/drip/pillars-09.png",
-        "length": 85574,
+        "path": "aplayermode/img/pins/drip/time-blocking-for-busy-days-kids-at-home.png",
+        "length": 171710,
         "width": 1000,
         "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-12",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
       }
     },
     {
-      "id": "founding-100-10",
+      "id": "minimum-day-after-a-bad-day-low-energy",
       "seq": 46,
-      "section": "founding-100",
-      "kicker": "Daily planner app",
-      "headline": "Your agenda, ready every morning.",
-      "body": "Executive Roundtable turns a goal into a plan and the plan into daily steps, prioritised before you wake up.",
+      "section": "minimum-day-after-a-bad-day",
+      "routine": "minimum-day-after-a-bad-day/low-energy",
+      "page": "/routines/minimum-day-after-a-bad-day/",
+      "headline": "Low-Energy Day Productivity",
+      "sub": "do less, on purpose",
       "points": [
-        "Goal, then plan, then daily steps",
-        "Prioritised every morning",
-        "One question at a time coaching",
-        "1 calendar and 1 inbox connected"
+        "Pick 1 must-do",
+        "Make it smaller",
+        "Do it first",
+        "Cancel one optional thing",
+        "Easy tasks after lunch",
+        "Stop when it's done"
       ],
-      "title": "Daily Planner App: Your Agenda Ready and Prioritised Every Morning",
-      "description": "Stop rebuilding your to-do list every morning. In A Player Mode's Executive Roundtable plan, your agenda is ready every morning and already prioritised: goal, then plan, then daily steps. It connects one calendar and one inbox, and coaches you one question at a time. Founding 100 places are open on the landing page.",
-      "layout": "phone",
-      "palette": "dark",
+      "title": "Productivity on a Low-Energy Day: 6 Steps",
+      "description": "Productivity for a low-energy day: pick one must-do, make it smaller, do it first, cancel one optional thing, leave easy tasks for after lunch and stop once the must-do is done.",
+      "layout": "steps",
+      "palette": "blush",
       "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "founding-100-10",
       "image": {
-        "path": "aplayermode/img/pins/drip/founding-100-10.png",
-        "length": 247186,
+        "path": "aplayermode/img/pins/drip/minimum-day-after-a-bad-day-low-energy.png",
+        "length": 102913,
         "width": 1000,
         "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-13",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
       }
     },
     {
-      "id": "how-it-works-10",
+      "id": "family-weekly-reset-mornings",
       "seq": 47,
-      "section": "how-it-works",
-      "kicker": "How it works",
-      "headline": "Tap. Approve. Wake up to the plan.",
-      "body": "Three steps, and you never design anything.",
+      "section": "family-weekly-reset",
+      "routine": "family-weekly-reset/mornings",
+      "page": "/routines/family-weekly-reset/",
+      "headline": "Family Morning Routine",
+      "sub": "school-day checklist",
       "points": [
-        "Answer easy-tap questions",
-        "It builds your plan; you approve each piece",
-        "It runs your day, every morning"
-      ],
-      "title": "How to Plan Your Week Without Designing a Planner: Tap, Approve, Done",
-      "description": "Three steps in A Player Mode: answer easy-tap questions (about 3 minutes), let it build your Mind, Body, Spirit plan and Tracks while you approve each piece, then wake up to the day already planned: one priority, a short start, then the day. You never design anything.",
-      "layout": "checklist",
-      "palette": "stone",
-      "release_date": null,
-      "image": {
-        "path": "aplayermode/img/pins/drip/how-it-works-10.png",
-        "length": 94535,
-        "width": 1000,
-        "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-13",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
-      }
-    },
-    {
-      "id": "app-10",
-      "seq": 48,
-      "section": "app",
-      "kicker": "Hard to get out of bed?",
-      "headline": "A 10-minute routine you can do in bed.",
-      "body": "You don't get advice. You get a ready in-bed mobility routine, Pilates-style, no equipment.",
-      "points": [
-        "Belly breathing, knees bent",
-        "Pelvic tilts and knee hugs",
-        "Supine twist and dead bug",
-        "Glute bridges, then stand"
-      ],
-      "title": "10-Minute In-Bed Morning Routine for Days It Is Hard to Get Up (No Equipment)",
-      "description": "\"It's hard to get out of bed.\" A Player Mode does not answer with advice. It gives you a ready 10-minute in-bed mobility routine, Pilates-style with no equipment: belly breathing, pelvic tilts, knee hugs, a supine twist, dead bugs, glute bridges, a figure-4 stretch, then the edge of the bed and stand. A planning app, not medical advice.",
-      "layout": "split",
-      "palette": "stone",
-      "release_date": null,
-      "image": {
-        "path": "aplayermode/img/pins/drip/app-10.png",
-        "length": 242526,
-        "width": 1000,
-        "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-14",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
-      }
-    },
-    {
-      "id": "modes-10",
-      "seq": 49,
-      "section": "modes",
-      "kicker": "Head too full?",
-      "headline": "Head full? Sort the 3 to 7 things.",
-      "body": "Executive Review adds no new ideas and no re-diagnosis. It organizes what you already know.",
-      "points": [
-        "No new ideas",
-        "No re-diagnosis",
-        "The 3 to 7 things you already know",
-        "In order"
-      ],
-      "title": "Brain Dump Too Big? Executive Review Organizes the 3 to 7 Things You Already Know",
-      "description": "When your head is full, more ideas make it worse. A Player Mode's Executive Review mode adds no new ideas and no re-diagnosis: it organizes the 3 to 7 things you already know into an order you can work. One tap, any time. A planning app, not medical advice.",
-      "layout": "quote",
-      "palette": "dark",
-      "release_date": null,
-      "image": {
-        "path": "aplayermode/img/pins/drip/modes-10.png",
-        "length": 88937,
-        "width": 1000,
-        "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-13",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
-      }
-    },
-    {
-      "id": "pillars-10",
-      "seq": 50,
-      "section": "pillars",
-      "kicker": "Body",
-      "headline": "The workout picked. Your sleep protected.",
-      "body": "Movement, food, sleep and health routines, at a safe pace.",
-      "points": [
-        "Picks the workout",
-        "Protects your sleep",
-        "Reminds you of health routines",
-        "At a safe pace"
-      ],
-      "title": "Fitness and Sleep Planner: The Workout Picked and Your Sleep Protected",
-      "description": "Planning workouts and bedtimes by hand every week is a job. In A Player Mode the Body pillar picks the workout, protects your sleep and reminds you of the health routine, at a safe pace. It covers movement, food, sleep, weight and health routines. Never diet or medical advice.",
-      "layout": "numbered",
-      "palette": "stone",
-      "release_date": null,
-      "image": {
-        "path": "aplayermode/img/pins/drip/pillars-10.png",
-        "length": 79182,
-        "width": 1000,
-        "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-14",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
-      }
-    },
-    {
-      "id": "founding-100-11",
-      "seq": 51,
-      "section": "founding-100",
-      "kicker": "Planner for busy people",
-      "headline": "It catches the promises you drop.",
-      "body": "Radar flags who you owe a reply, so nothing you said yes to slips through the week.",
-      "points": [
-        "Radar catches dropped promises",
-        "Flags who you owe a reply",
-        "Agenda ready every morning",
-        "You do the last step"
-      ],
-      "title": "Planner App That Catches Dropped Promises and Flags Who You Owe a Reply",
-      "description": "Weekly planners hold tasks, not promises. A Player Mode's Radar catches the promises you dropped and flags who you owe a reply, alongside an agenda that is ready and prioritised every morning. It plans and coaches; you do the last step. See the plans and the Founding 100 on the A Player Mode page.",
-      "layout": "split",
-      "palette": "sage",
-      "release_date": null,
-      "image": {
-        "path": "aplayermode/img/pins/drip/founding-100-11.png",
-        "length": 241634,
-        "width": 1000,
-        "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-15",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
-      }
-    },
-    {
-      "id": "how-it-works-11",
-      "seq": 52,
-      "section": "how-it-works",
-      "kicker": "Morning routine",
-      "headline": "One priority. A short start. Then the day.",
-      "body": "Every morning your plan is ready. On Android it arrives at the time you set.",
-      "points": [
-        "One priority",
-        "A short start",
-        "Then the rest of the day",
-        "Ready at the time you set"
-      ],
-      "title": "Simple Morning Routine Plan: One Priority, a Short Start, Then the Day",
-      "description": "A Player Mode has your plan ready every morning in the same shape: one priority, a short start, then the day. On Android it arrives as a notification at the time you set; on the web it is waiting when you open the app. Bad days shrink automatically, with no catch-up and no guilt.",
-      "layout": "cards",
-      "palette": "light",
-      "release_date": null,
-      "image": {
-        "path": "aplayermode/img/pins/drip/how-it-works-11.png",
-        "length": 88267,
-        "width": 1000,
-        "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-15",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
-      }
-    },
-    {
-      "id": "app-11",
-      "seq": 53,
-      "section": "app",
-      "kicker": "Goal to daily steps",
-      "headline": "One step a day toward a big goal.",
-      "body": "You pick the goal. It writes the 90-day plan and turns it into one step a day, at a safe pace.",
-      "points": [
-        "Walk 10 minutes today",
-        "Put workout clothes out tonight",
-        "Log what I eat today",
-        "Book a check-up"
-      ],
-      "title": "Turn a Big Goal Into One Step a Day: A 90-Day Plan Written for You",
-      "description": "Big goals stall on the first step. In A Player Mode you pick the goal, for example losing 20 lb, and it writes the 90-day plan and turns it into one step a day at a safe pace: walk 10 minutes today, put workout clothes out tonight, log what you eat, book a check-up. Never diet or medical advice.",
-      "layout": "checklist",
-      "palette": "light",
-      "release_date": null,
-      "image": {
-        "path": "aplayermode/img/pins/drip/app-11.png",
-        "length": 103254,
-        "width": 1000,
-        "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-16",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
-      }
-    },
-    {
-      "id": "modes-11",
-      "seq": 54,
-      "section": "modes",
-      "kicker": "Stuck or avoiding?",
-      "headline": "Stuck? Get one stabilizing directive.",
-      "body": "High-Pressure mode cuts through the noise and ends with one thing to do now.",
-      "points": [
-        "Cuts through the noise",
-        "No long pep talk",
-        "Ends with one directive",
-        "One tap, any time"
-      ],
-      "title": "Stuck or Procrastinating? High-Pressure Mode Ends With One Stabilizing Directive",
-      "description": "When you are stuck or avoiding something, a long list does not help. A Player Mode's High-Pressure coaching mode cuts through the noise and ends with one stabilizing directive: the one thing to do now. Tap it any time; you never have to explain how you feel.",
-      "layout": "phone",
-      "palette": "sage",
-      "release_date": null,
-      "image": {
-        "path": "aplayermode/img/pins/drip/modes-11.png",
-        "length": 254662,
-        "width": 1000,
-        "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-15",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
-      }
-    },
-    {
-      "id": "pillars-11",
-      "seq": 55,
-      "section": "pillars",
-      "kicker": "Spirit",
-      "headline": "Room for faith, family and gratitude.",
-      "body": "It makes room for them and repeats them on their own, without you guarding the time.",
-      "points": [
-        "Faith and meditation",
-        "Gratitude and nature",
-        "Service",
-        "Family and relationships"
-      ],
-      "title": "Planner With Time for Faith, Family and Gratitude Built In and Protected",
-      "description": "The things that matter most are the first to fall off a busy week. A Player Mode's Spirit pillar makes room for faith, meditation, gratitude, nature, service, family and relationships, and repeats them on their own without you guarding the time.",
-      "layout": "quote",
-      "palette": "light",
-      "release_date": null,
-      "image": {
-        "path": "aplayermode/img/pins/drip/pillars-11.png",
-        "length": 85289,
-        "width": 1000,
-        "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-16",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
-      }
-    },
-    {
-      "id": "founding-100-12",
-      "seq": 56,
-      "section": "founding-100",
-      "kicker": "Missed a day?",
-      "headline": "Missed yesterday? Get a minimum day.",
-      "body": "No catch-up list, no guilt. The plan shrinks to what still matters and you start again today.",
-      "points": [
-        "No catch-up list",
-        "No guilt",
-        "Just what still matters today",
-        "Back on plan tomorrow"
-      ],
-      "title": "Missed a Day of Your Routine? A Planner That Gives You a Minimum Day, Not Catch-Up",
-      "description": "Most planners punish a missed day with a longer list. In A Player Mode, missing yesterday gets you a minimum day: no catch-up, no guilt, just what still matters today. It is part of every plan, including the Executive Roundtable plan the Founding 100 join. A planning app, not medical advice.",
-      "layout": "checklist",
-      "palette": "stone",
-      "release_date": null,
-      "image": {
-        "path": "aplayermode/img/pins/drip/founding-100-12.png",
-        "length": 100308,
-        "width": 1000,
-        "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-17",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
-      }
-    },
-    {
-      "id": "how-it-works-12",
-      "seq": 57,
-      "section": "how-it-works",
-      "kicker": "Stop overplanning",
-      "headline": "Stop designing planners. Start the day.",
-      "body": "You answer a few easy taps. It builds the plan and then carries the day.",
-      "points": [
-        "No templates to set up",
-        "No essays to write",
-        "No catch-up after bad days",
-        "One priority every morning"
-      ],
-      "title": "Stop Overplanning: A Planner That Builds the Plan So You Just Start the Day",
-      "description": "If you spend more time designing planners than using them, A Player Mode flips it: you answer a few easy taps and it builds the plan, then carries the day. Every morning: one priority, a short start, then the day. Bad days shrink automatically. You never design anything.",
-      "layout": "statement",
-      "palette": "dark",
-      "release_date": null,
-      "image": {
-        "path": "aplayermode/img/pins/drip/how-it-works-12.png",
-        "length": 77026,
-        "width": 1000,
-        "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-17",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
-      }
-    },
-    {
-      "id": "app-12",
-      "seq": 58,
-      "section": "app",
-      "kicker": "ADHD routine help",
-      "headline": "Starting is the hard part. So it's done for you.",
-      "body": "Your morning order is ready at the time you set, so the first step is already decided.",
-      "points": [
-        "The first step is decided",
-        "Max 5 physical steps",
-        "Then the one task that matters",
-        "Bad days shrink automatically"
-      ],
-      "title": "ADHD Routine Help When Starting Is the Hard Part: Your First Step Already Decided",
-      "description": "If deciding what to do first eats your morning, A Player Mode decides it for you. Your morning order is ready at the time you set: max 5 physical steps, then the one task that matters. Bad days shrink automatically with no catch-up. A planning app, not medical advice or treatment.",
-      "layout": "cards",
-      "palette": "dark",
-      "release_date": null,
-      "image": {
-        "path": "aplayermode/img/pins/drip/app-12.png",
-        "length": 100619,
-        "width": 1000,
-        "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-18",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
-      }
-    },
-    {
-      "id": "modes-12",
-      "seq": 59,
-      "section": "modes",
-      "kicker": "Deadline close?",
-      "headline": "A short, declared push on one thing.",
-      "body": "Sprint mode is for when a deadline is close: one thing only, for a declared stretch.",
-      "points": [
-        "One thing only",
-        "A declared, short push",
-        "Everything else waits",
-        "Back to normal after"
-      ],
-      "title": "Deadline Close? Sprint Mode Gives You a Short, Declared Push on One Thing Only",
-      "description": "Close to a deadline, the plan should get narrower, not longer. A Player Mode's Sprint mode is a short, declared push on one thing only, and everything else waits until it is done. One tap, any time, and the day and the coaching voice change with it.",
-      "layout": "split",
-      "palette": "stone",
-      "release_date": null,
-      "image": {
-        "path": "aplayermode/img/pins/drip/modes-12.png",
-        "length": 229221,
-        "width": 1000,
-        "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-17",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
-      }
-    },
-    {
-      "id": "pillars-12",
-      "seq": 60,
-      "section": "pillars",
-      "kicker": "Mind",
-      "headline": "Keep the agenda on what moves the needle.",
-      "body": "The Mind pillar picks the next thing to learn and keeps work to what matters.",
-      "points": [
-        "Work, business and career",
-        "Money",
-        "Learning and focus",
-        "Mental health"
-      ],
-      "title": "Work Planner That Keeps Your Agenda on Work That Moves the Needle",
-      "description": "Busy is not the same as moving forward. A Player Mode's Mind pillar keeps your agenda to work that moves the needle and picks the next thing to learn. It covers work, business and career, money, learning, focus and mental health. A planning app, not medical advice.",
-      "layout": "phone",
-      "palette": "dark",
-      "release_date": null,
-      "image": {
-        "path": "aplayermode/img/pins/drip/pillars-12.png",
-        "length": 242201,
-        "width": 1000,
-        "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-18",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
-      }
-    },
-    {
-      "id": "founding-100-13",
-      "seq": 61,
-      "section": "founding-100",
-      "kicker": "Three plans, five jobs",
-      "headline": "Who does the last step? You choose.",
-      "body": "Every plan does all five jobs. The only difference is who does the last step.",
-      "points": [
-        "Executive Roundtable: you do it",
-        "Executive Suite: you tap yes",
-        "Autopilot: it does it, inside your rules"
-      ],
-      "title": "Planning App With Three Plans: You Do It, You Tap Yes, or It Runs Inside Your Rules",
-      "description": "A Player Mode has three plans and each does all five executive jobs. The difference is who does the last step: in Executive Roundtable you do, in Executive Suite you tap yes and it does it, in Autopilot it handles recurring things on its own inside rules you set and you read the done-list. Founding 100 places are on the page.",
-      "layout": "cards",
-      "palette": "light",
-      "release_date": null,
-      "image": {
-        "path": "aplayermode/img/pins/drip/founding-100-13.png",
-        "length": 99696,
-        "width": 1000,
-        "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-19",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
-      }
-    },
-    {
-      "id": "how-it-works-13",
-      "seq": 62,
-      "section": "how-it-works",
-      "kicker": "Plan your week",
-      "headline": "Your goals, your rules, your minimum day.",
-      "body": "It builds all three from your taps. You approve each piece before it runs.",
-      "points": [
-        "Your goals",
-        "Your rules",
-        "Your minimum day",
-        "You approve each piece"
-      ],
-      "title": "Weekly Plan Builder: Goals, Rules and a Minimum Day You Approve Piece by Piece",
-      "description": "A weekly plan that survives real life needs three things: goals, rules and a minimum day for when things go wrong. A Player Mode builds all three from a few easy taps, about 3 minutes, and you approve each piece before it runs. Then it has the day ready every morning.",
-      "layout": "numbered",
-      "palette": "sage",
-      "release_date": null,
-      "image": {
-        "path": "aplayermode/img/pins/drip/how-it-works-13.png",
-        "length": 72862,
-        "width": 1000,
-        "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-19",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
-      }
-    },
-    {
-      "id": "app-13",
-      "seq": 63,
-      "section": "app",
-      "kicker": "The app that runs your day",
-      "headline": "It runs your day. You just start.",
-      "body": "You answer a few easy taps. It builds the plan and then carries the day.",
-      "points": [
-        "Builds the plan for you",
-        "Ready every morning",
-        "Picks the moves and the order",
-        "Bad days shrink"
-      ],
-      "title": "The Planning App That Runs Your Day: Easy Taps Once, Then Just Start",
-      "description": "A Player Mode is the app that runs your day for you. You answer a few easy taps, it builds the plan, then it carries the day: your morning order, the one task that matters, and a smaller day when things go wrong. You never design anything.",
-      "layout": "statement",
-      "palette": "sage",
-      "release_date": null,
-      "image": {
-        "path": "aplayermode/img/pins/drip/app-13.png",
-        "length": 69672,
-        "width": 1000,
-        "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-20",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
-      }
-    },
-    {
-      "id": "modes-13",
-      "seq": 64,
-      "section": "modes",
-      "kicker": "Focus block",
-      "headline": "Protect one block for one hard task.",
-      "body": "Deep Work mode protects one uninterrupted focus block for the task that matters.",
-      "points": [
-        "One hard task",
-        "One uninterrupted block",
-        "The rest of the day around it",
-        "One tap to turn on"
-      ],
-      "title": "Deep Work Planner: Protect One Uninterrupted Focus Block for One Hard Task",
-      "description": "A focus block only works if the rest of the day respects it. A Player Mode's Deep Work mode protects one uninterrupted focus block for one hard task and plans the rest of the day around it. Tap it on any time.",
-      "layout": "checklist",
-      "palette": "light",
-      "release_date": null,
-      "image": {
-        "path": "aplayermode/img/pins/drip/modes-13.png",
-        "length": 97488,
-        "width": 1000,
-        "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-19",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
-      }
-    },
-    {
-      "id": "pillars-13",
-      "seq": 65,
-      "section": "pillars",
-      "kicker": "Whole-life planner",
-      "headline": "Everything you care about, in three places.",
-      "body": "Anything else you care about is sorted into Mind, Body or Spirit automatically.",
-      "points": [
-        "Sorted automatically",
-        "Untick any pillar",
-        "Nothing to categorize",
-        "One plan for all of it"
-      ],
-      "title": "Whole-Life Planner: Everything You Care About Sorted Into Mind, Body or Spirit",
-      "description": "Life planners fall apart when every goal needs its own page. A Player Mode sorts anything you care about into Mind, Body or Spirit automatically, so one plan holds all of it. All three are on by default; untick any you do not want it to hold for you.",
-      "layout": "split",
-      "palette": "sage",
-      "release_date": null,
-      "image": {
-        "path": "aplayermode/img/pins/drip/pillars-13.png",
-        "length": 233593,
-        "width": 1000,
-        "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-20",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
-      }
-    },
-    {
-      "id": "founding-100-14",
-      "seq": 66,
-      "section": "founding-100",
-      "kicker": "Life admin planner",
-      "headline": "Bills, birthdays, renewals: handled.",
-      "body": "Executive Suite tracks them and prepares each one for a one-tap approve.",
-      "points": [
-        "Birthdays and appointments tracked",
-        "Bills and renewals prepared",
-        "Drafts the replies you owe",
-        "Flags subscriptions you waste money on"
-      ],
-      "title": "Life Admin Planner: Birthdays, Bills, Renewals and Appointments Ready to Approve",
-      "description": "Executive Suite in A Player Mode runs the life admin a paper planner only lists: birthdays, bills, renewals and appointments are tracked and prepared for a one-tap approve. It drafts the replies you owe, proposes the calendar fix and flags subscriptions you are wasting money on. It acts when you tap yes.",
-      "layout": "statement",
-      "palette": "dark",
-      "release_date": null,
-      "image": {
-        "path": "aplayermode/img/pins/drip/founding-100-14.png",
-        "length": 77732,
-        "width": 1000,
-        "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-21",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
-      }
-    },
-    {
-      "id": "how-it-works-14",
-      "seq": 67,
-      "section": "how-it-works",
-      "kicker": "Planning for bad weeks",
-      "headline": "Bad days shrink automatically.",
-      "body": "No catch-up, no guilt. The plan gets smaller instead of you falling behind.",
-      "points": [
-        "The day shrinks, not you",
-        "No catch-up list",
-        "No guilt",
-        "Tomorrow starts clean"
-      ],
-      "title": "A Weekly Planner for Real Life: Bad Days Shrink Automatically, No Catch-Up",
-      "description": "Plans break when one bad day turns into a pile of catch-up. In A Player Mode, bad days shrink automatically: no catch-up, no guilt, and tomorrow's plan is still ready in the morning. Answer easy taps once, about 3 minutes, and it carries the days after that.",
-      "layout": "quote",
-      "palette": "stone",
-      "release_date": null,
-      "image": {
-        "path": "aplayermode/img/pins/drip/how-it-works-14.png",
-        "length": 88174,
-        "width": 1000,
-        "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-21",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
-      }
-    },
-    {
-      "id": "app-14",
-      "seq": 68,
-      "section": "app",
-      "kicker": "No more decision fatigue",
-      "headline": "You don't get advice. You get the plan.",
-      "body": "Ask for help and it hands you the ready routine, with the moves and the order picked.",
-      "points": [
-        "The routine, not tips",
-        "The order already picked",
-        "Sized for today",
-        "At a safe pace"
-      ],
-      "title": "Less Decision Fatigue: A Planner That Hands You the Ready Routine, Not Tips",
-      "description": "Advice is one more thing to decide about. When something is hard, A Player Mode hands you the ready routine with the moves and the order already picked, like a 10-minute in-bed mobility routine on a hard morning, or one safe step a day toward a 90-day goal. A planning app, not medical advice.",
-      "layout": "numbered",
-      "palette": "stone",
-      "release_date": null,
-      "image": {
-        "path": "aplayermode/img/pins/drip/app-14.png",
-        "length": 78292,
-        "width": 1000,
-        "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-22",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
-      }
-    },
-    {
-      "id": "modes-14",
-      "seq": 69,
-      "section": "modes",
-      "kicker": "Low season",
-      "headline": "Low season? A minimum day, no guilt.",
-      "body": "Recovery mode is for after a bad day or a low season: a minimum day, no catch-up.",
-      "points": [
-        "A minimum day",
-        "No catch-up",
-        "No guilt",
-        "One tap, any time"
-      ],
-      "title": "Routine for Low-Energy Seasons: Recovery Mode Gives a Minimum Day, No Guilt",
-      "description": "Routines collapse in low seasons because they expect your best days. A Player Mode's Recovery mode gives you a minimum day after a bad day or in a low season: no catch-up, no guilt. One tap, no paragraph about how you feel. A planning app, not medical advice or treatment.",
-      "layout": "cards",
-      "palette": "dark",
-      "release_date": null,
-      "image": {
-        "path": "aplayermode/img/pins/drip/modes-14.png",
-        "length": 88976,
-        "width": 1000,
-        "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-21",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
-      }
-    },
-    {
-      "id": "pillars-14",
-      "seq": 70,
-      "section": "pillars",
-      "kicker": "Weekly balance",
-      "headline": "A balanced week without the spreadsheet.",
-      "body": "Work, workouts, sleep, faith and family all get a place in the plan.",
-      "points": [
-        "Work that moves the needle",
-        "Workout and sleep",
-        "Faith and family time",
-        "No balancing by hand"
-      ],
-      "title": "Balanced Weekly Plan Without the Spreadsheet: Work, Body and Family Covered",
-      "description": "Balancing work, workouts, sleep, faith and family by hand every week is exhausting. A Player Mode covers Mind, Body and Spirit by default: it keeps work to what moves the needle, picks the workout, protects your sleep and makes room for family and faith.",
-      "layout": "checklist",
-      "palette": "stone",
-      "release_date": null,
-      "image": {
-        "path": "aplayermode/img/pins/drip/pillars-14.png",
-        "length": 99074,
-        "width": 1000,
-        "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-22",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
-      }
-    },
-    {
-      "id": "founding-100-15",
-      "seq": 71,
-      "section": "founding-100",
-      "kicker": "Executive Roundtable",
-      "headline": "A five-person executive team in one app.",
-      "body": "It plans and coaches you; you do the last step. All five roles, every morning.",
-      "points": [
-        "Executive Coach",
-        "Executive Assistant",
-        "Chief of Staff",
-        "Accountability Partner",
-        "Mindset Coach"
-      ],
-      "title": "A Five-Role Executive Team in One Planning App: Join the Founding 100",
-      "description": "Executive Roundtable puts five roles in one planning app: Executive Coach, Executive Assistant, Chief of Staff, Accountability Partner and Cognitive Behavioral Mindset Coach. Your agenda is ready every morning, prioritised, and coaching comes one question at a time. The first 100 members join as the Founding 100.",
-      "layout": "numbered",
-      "palette": "sage",
-      "release_date": null,
-      "image": {
-        "path": "aplayermode/img/pins/drip/founding-100-15.png",
-        "length": 87707,
-        "width": 1000,
-        "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-23",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
-      }
-    },
-    {
-      "id": "how-it-works-15",
-      "seq": 72,
-      "section": "how-it-works",
-      "kicker": "Nothing is lost",
-      "headline": "Stop any time. Pick up where you left off.",
-      "body": "Setup is easy taps, about 3 minutes, and nothing you answered is lost if you stop.",
-      "points": [
-        "Easy-tap questions",
-        "Stop any time",
-        "Nothing is lost",
-        "A working plan in about 3 minutes"
-      ],
-      "title": "Planner Setup You Can Stop Any Time: Easy Taps, Nothing Lost, About 3 Minutes",
-      "description": "Long planner setups are where good intentions go to die. A Player Mode's setup is easy-tap questions, about 3 minutes to a working plan, and you can stop any time without losing anything. It builds your goals, rules and minimum day, and you approve each piece.",
-      "layout": "phone",
-      "palette": "light",
-      "release_date": null,
-      "image": {
-        "path": "aplayermode/img/pins/drip/how-it-works-15.png",
-        "length": 254307,
-        "width": 1000,
-        "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-23",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
-      }
-    },
-    {
-      "id": "app-15",
-      "seq": 73,
-      "section": "app",
-      "kicker": "Healthy habits planner",
-      "headline": "Small daily steps. A safe pace.",
-      "body": "It turns a health goal into one small step a day you can actually do.",
-      "points": [
-        "Walk 10 minutes",
         "Clothes out the night before",
-        "Log what you eat",
-        "Book a check-up"
+        "Same breakfast on school days",
+        "A picture list for each kid",
+        "Shoes and bags by the door",
+        "One leave-time alarm",
+        "A five-minute buffer"
       ],
-      "title": "Healthy Habit Planner: One Small Daily Step at a Safe Pace, Picked for You",
-      "description": "Healthy habits stick when the daily step is small. A Player Mode turns a health goal into one step a day at a safe pace, such as a 10-minute walk, workout clothes out the night before, logging what you eat or booking a check-up. Never diet or medical advice.",
-      "layout": "quote",
-      "palette": "light",
+      "title": "Family Morning Routine Checklist for School Days",
+      "description": "A family morning routine for school days: clothes out the night before, the same breakfast every school day, a picture list for each child, shoes and bags by the door, one leave-time alarm and a five-minute buffer.",
+      "layout": "card",
+      "palette": "peach",
       "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "how-it-works-10",
       "image": {
-        "path": "aplayermode/img/pins/drip/app-15.png",
-        "length": 90027,
+        "path": "aplayermode/img/pins/drip/family-weekly-reset-mornings.png",
+        "length": 173225,
         "width": 1000,
         "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-24",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
       }
     },
     {
-      "id": "modes-15",
-      "seq": 74,
-      "section": "modes",
-      "kicker": "ADHD-friendly planning",
-      "headline": "Tap how today is. The plan follows.",
-      "body": "Stuck, overloaded, low, rushed or focused: one tap and the day adjusts.",
+      "id": "founder-daily-routine-morning",
+      "seq": 48,
+      "section": "founder-daily-routine",
+      "routine": "founder-daily-routine/morning",
+      "page": "/routines/founder-daily-routine/",
+      "headline": "Founder Morning Routine",
+      "sub": "build before inbox",
       "points": [
-        "Stuck: High-Pressure",
-        "Overloaded: Executive Review",
-        "Low: Recovery",
-        "Rushed: Sprint",
-        "Focused: Deep Work"
+        "Up, water, no inbox",
+        "20 minutes of planning",
+        "90 minutes on the hardest thing",
+        "Then the team check-in",
+        "Messages after 11",
+        "Lunch away from the laptop"
       ],
-      "title": "ADHD-Friendly Planning: Tap How Today Is and the Plan Adjusts in One Tap",
-      "description": "Some days you are stuck, some days overloaded, some days low. In A Player Mode one tap matches the day: High-Pressure when stuck, Executive Review when your head is full, Recovery when low, Sprint near a deadline, Deep Work to focus. No paragraphs about feelings. A planning app, not medical advice.",
-      "layout": "statement",
+      "title": "Productivity Morning Routine for Founders",
+      "description": "A founder morning routine: up, water and no inbox, 20 minutes of planning, 90 minutes on the hardest thing, then the team check-in, messages after 11 and lunch away from the laptop.",
+      "layout": "steps",
+      "palette": "butter",
+      "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "app-10",
+      "image": {
+        "path": "aplayermode/img/pins/drip/founder-daily-routine-morning.png",
+        "length": 112111,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "adhd-morning-routine-woke-up-late",
+      "seq": 49,
+      "section": "adhd-morning-routine",
+      "routine": "adhd-morning-routine/woke-up-late",
+      "page": "/routines/adhd-morning-routine/",
+      "headline": "Morning Routine, Woke Up Late",
+      "sub": "what to keep",
+      "points": [
+        "Skip the catch-up",
+        "Dress, teeth, water",
+        "Read only the first task",
+        "Send one running-late text",
+        "Eat on the way",
+        "Start at step one"
+      ],
+      "title": "Morning Routine When You Wake Up Late: What to Skip and What to Keep",
+      "description": "Woke up late? Skip the catch-up. Dress, teeth and water, read only the day's first task, send one running-late text, eat on the way and start the day at step one. The full late-start routine is on the page.",
+      "layout": "card",
+      "palette": "blush",
+      "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "modes-10",
+      "image": {
+        "path": "aplayermode/img/pins/drip/adhd-morning-routine-woke-up-late.png",
+        "length": 152745,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "weekly-planning-routine-reset-checklist",
+      "seq": 50,
+      "section": "weekly-planning-routine",
+      "routine": "weekly-planning-routine/reset-checklist",
+      "page": "/routines/weekly-planning-routine/",
+      "headline": "Weekly Reset Checklist",
+      "sub": "15 minutes",
+      "points": [
+        "Empty your bag and desk",
+        "Inbox down to 10",
+        "Pay or schedule bills",
+        "Delete finished tasks",
+        "Check next week's deadlines",
+        "Set Monday's first task"
+      ],
+      "title": "Weekly Reset Checklist You Can Finish in 15 Minutes",
+      "description": "A 15-minute weekly reset checklist: empty your bag and desk, get the inbox under ten, pay or schedule the bills, delete finished tasks, check next week's deadlines and set Monday's first task.",
+      "layout": "steps",
       "palette": "sage",
       "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "pillars-10",
       "image": {
-        "path": "aplayermode/img/pins/drip/modes-15.png",
-        "length": 77656,
+        "path": "aplayermode/img/pins/drip/weekly-planning-routine-reset-checklist.png",
+        "length": 114902,
         "width": 1000,
         "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-23",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
       }
     },
     {
-      "id": "pillars-15",
+      "id": "time-blocking-for-busy-days-nine-to-five",
+      "seq": 51,
+      "section": "time-blocking-for-busy-days",
+      "routine": "time-blocking-for-busy-days/nine-to-five",
+      "page": "/routines/time-blocking-for-busy-days/",
+      "headline": "Daily Routine for a 9 to 5",
+      "sub": "a simple schedule",
+      "points": [
+        "6:30 up, water, dressed",
+        "7:30 one personal task",
+        "9:00 hardest work first",
+        "12:30 walk and lunch",
+        "3:00 admin and replies",
+        "5:00 shutdown list"
+      ],
+      "title": "Daily Routine Schedule for a 9 to 5 Job",
+      "description": "A daily routine schedule for a 9 to 5: up at 6:30, one personal task at 7:30, the hardest work at 9, a walk and lunch at 12:30, admin and replies at 3 and a shutdown list at 5.",
+      "layout": "card",
+      "palette": "butter",
+      "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "founding-100-11",
+      "image": {
+        "path": "aplayermode/img/pins/drip/time-blocking-for-busy-days-nine-to-five.png",
+        "length": 163777,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "minimum-day-after-a-bad-day-ten-minute-reset",
+      "seq": 52,
+      "section": "minimum-day-after-a-bad-day",
+      "routine": "minimum-day-after-a-bad-day/ten-minute-reset",
+      "page": "/routines/minimum-day-after-a-bad-day/",
+      "headline": "Bad Day Reset",
+      "sub": "10 minutes",
+      "points": [
+        "Stand up, drink water",
+        "Write what's bothering you",
+        "Circle what you control",
+        "Pick one small next step",
+        "Do it now",
+        "Tell one person"
+      ],
+      "title": "Productivity Reset After a Bad Day: 10 Minutes",
+      "description": "A ten-minute bad day reset: stand up and drink water, write down what is bothering you, circle the parts you control, pick one small next step, do it now and tell one person how the day is going.",
+      "layout": "steps",
+      "palette": "blush",
+      "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "how-it-works-11",
+      "image": {
+        "path": "aplayermode/img/pins/drip/minimum-day-after-a-bad-day-ten-minute-reset.png",
+        "length": 101846,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "family-weekly-reset-evenings",
+      "seq": 53,
+      "section": "family-weekly-reset",
+      "routine": "family-weekly-reset/evenings",
+      "page": "/routines/family-weekly-reset/",
+      "headline": "Family Evening Routine",
+      "sub": "sets up tomorrow",
+      "points": [
+        "Dinner at a set time",
+        "Bags packed for tomorrow",
+        "Screens off an hour before bed",
+        "Bath, book, bed",
+        "Parents check tomorrow",
+        "10-minute tidy together"
+      ],
+      "title": "Family Evening Routine That Sets Up Tomorrow",
+      "description": "A family evening routine that sets up the next day: dinner at a set time, bags packed, screens off an hour before bed, bath, book, bed, parents check tomorrow, and a ten-minute tidy together.",
+      "layout": "card",
+      "palette": "sage",
+      "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "app-11",
+      "image": {
+        "path": "aplayermode/img/pins/drip/family-weekly-reset-evenings.png",
+        "length": 162583,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "founder-daily-routine-solo-system",
+      "seq": 54,
+      "section": "founder-daily-routine",
+      "routine": "founder-daily-routine/solo-system",
+      "page": "/routines/founder-daily-routine/",
+      "headline": "Solo Founder System",
+      "sub": "6 parts, one list",
+      "points": [
+        "One list for everything",
+        "One calendar",
+        "A daily top 3",
+        "A weekly review",
+        "A monthly numbers check",
+        "A quarterly goal reset"
+      ],
+      "title": "Productivity System for a Solo Founder",
+      "description": "A simple productivity system for a solo founder: one list for everything, one calendar, a daily top three, a weekly review, a monthly numbers check and a quarterly goal reset.",
+      "layout": "steps",
+      "palette": "peach",
+      "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "modes-11",
+      "image": {
+        "path": "aplayermode/img/pins/drip/founder-daily-routine-solo-system.png",
+        "length": 106648,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "adhd-morning-routine-no-phone",
+      "seq": 55,
+      "section": "adhd-morning-routine",
+      "routine": "adhd-morning-routine/no-phone",
+      "page": "/routines/adhd-morning-routine/",
+      "headline": "Morning Routine, No Phone",
+      "sub": "for ADHD focus",
+      "points": [
+        "Phone charges outside the bedroom",
+        "Paper list on the nightstand",
+        "Music, not feeds",
+        "Phone after you're dressed",
+        "Messages after the first task",
+        "Social apps after lunch"
+      ],
+      "title": "ADHD Morning Routine Without Your Phone: 6 Steps",
+      "description": "An ADHD morning routine that keeps the phone out of the first hour: it charges outside the bedroom, a paper list waits on the nightstand, music instead of feeds, the phone after you are dressed, messages after the first task and social apps after lunch.",
+      "layout": "card",
+      "palette": "blush",
+      "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "pillars-11",
+      "image": {
+        "path": "aplayermode/img/pins/drip/adhd-morning-routine-no-phone.png",
+        "length": 173543,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "weekly-planning-routine-founders",
+      "seq": 56,
+      "section": "weekly-planning-routine",
+      "routine": "weekly-planning-routine/founders",
+      "page": "/routines/weekly-planning-routine/",
+      "headline": "Weekly Planning for Founders",
+      "sub": "a Monday routine",
+      "points": [
+        "Review last week's numbers",
+        "Pick the one number that matters",
+        "Three outcomes, no more",
+        "Two deep-work mornings",
+        "Meetings on two days",
+        "Book the Friday review"
+      ],
+      "title": "Weekly Planning for Founders: A 6-Step Monday Routine",
+      "description": "A weekly planning routine for founders: review last week's numbers, pick the one number that matters this week, choose three outcomes, block two deep-work mornings, batch meetings onto two days and book the Friday review.",
+      "layout": "steps",
+      "palette": "sage",
+      "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "founding-100-12",
+      "image": {
+        "path": "aplayermode/img/pins/drip/weekly-planning-routine-founders.png",
+        "length": 122849,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "time-blocking-for-busy-days-founders",
+      "seq": 57,
+      "section": "time-blocking-for-busy-days",
+      "routine": "time-blocking-for-busy-days/founders",
+      "page": "/routines/time-blocking-for-busy-days/",
+      "headline": "Time Blocking for Founders",
+      "sub": "build, sell, lead",
+      "points": [
+        "Mornings for building",
+        "Sales calls after 1",
+        "Team time on Tuesdays",
+        "Inbox twice a day",
+        "No meetings Wednesday morning",
+        "Review Friday at 4"
+      ],
+      "title": "Time Blocking for Founders: Build, Sell, Lead",
+      "description": "Time blocking for founders: mornings for building, sales calls after 1, team time on Tuesdays, the inbox twice a day, no meetings on Wednesday morning and a weekly review on Friday at 4.",
+      "layout": "card",
+      "palette": "peach",
+      "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "how-it-works-12",
+      "image": {
+        "path": "aplayermode/img/pins/drip/time-blocking-for-busy-days-founders.png",
+        "length": 161850,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "minimum-day-after-a-bad-day-off-track",
+      "seq": 58,
+      "section": "minimum-day-after-a-bad-day",
+      "routine": "minimum-day-after-a-bad-day/off-track",
+      "page": "/routines/minimum-day-after-a-bad-day/",
+      "headline": "Goal Setting, Off Track",
+      "sub": "restart small",
+      "points": [
+        "Don't restart from zero",
+        "Keep the goal, shrink the step",
+        "Set a 7-day minimum",
+        "Track yes or no only",
+        "Review on day 8",
+        "Then add one step"
+      ],
+      "title": "Goal Setting After Falling Off Track",
+      "description": "Goal setting after you fall off track: do not restart from zero, keep the goal and shrink the step, set a seven-day minimum, track only yes or no, review on day eight and only then add one step.",
+      "layout": "steps",
+      "palette": "butter",
+      "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "app-12",
+      "image": {
+        "path": "aplayermode/img/pins/drip/minimum-day-after-a-bad-day-off-track.png",
+        "length": 106070,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "family-weekly-reset-balanced-life",
+      "seq": 59,
+      "section": "family-weekly-reset",
+      "routine": "family-weekly-reset/balanced-life",
+      "page": "/routines/family-weekly-reset/",
+      "headline": "Balanced Life Weekly Check",
+      "sub": "6 questions",
+      "points": [
+        "Work: focus time protected?",
+        "Body: moved 3 times?",
+        "Family: one-on-one time?",
+        "Home: one admin job done?",
+        "Rest: one slow evening?",
+        "Next week: one change"
+      ],
+      "title": "Balanced Life Weekly Check: 6 Questions",
+      "description": "A balanced life weekly check in six questions: was focus time protected, did you move three times, did everyone get one-on-one time, was one home admin job done, was there one slow evening, and what is the one change for next week.",
+      "layout": "card",
+      "palette": "sage",
+      "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "modes-12",
+      "image": {
+        "path": "aplayermode/img/pins/drip/family-weekly-reset-balanced-life.png",
+        "length": 175093,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "founder-daily-routine-scorecard",
+      "seq": 60,
+      "section": "founder-daily-routine",
+      "routine": "founder-daily-routine/scorecard",
+      "page": "/routines/founder-daily-routine/",
+      "headline": "Weekly Founder Scorecard",
+      "sub": "6 lines on Friday",
+      "points": [
+        "This week's key number",
+        "One thing shipped",
+        "Talks with customers",
+        "The biggest blocker",
+        "What I'll stop doing",
+        "Next week's one outcome"
+      ],
+      "title": "Goal Setting: A Weekly Founder Scorecard",
+      "description": "A weekly founder scorecard for goal setting: this week's key number, one thing shipped, conversations with customers, the biggest blocker, what you will stop doing and next week's one outcome.",
+      "layout": "steps",
+      "palette": "peach",
+      "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "pillars-12",
+      "image": {
+        "path": "aplayermode/img/pins/drip/founder-daily-routine-scorecard.png",
+        "length": 116687,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "adhd-morning-routine-time-blindness",
+      "seq": 61,
+      "section": "adhd-morning-routine",
+      "routine": "adhd-morning-routine/time-blindness",
+      "page": "/routines/adhd-morning-routine/",
+      "headline": "Time Blindness Morning Routine",
+      "sub": "clocks, not willpower",
+      "points": [
+        "A clock you can see in every room",
+        "Timer on the shower",
+        "Alarm for shoes on",
+        "Alarm for leave now",
+        "Same order every day",
+        "Count back from leave time"
+      ],
+      "title": "Morning Routine for Time Blindness: Clocks, Timers and a Leave Alarm",
+      "description": "A morning routine for time blindness: a visible clock in every room, a timer on the shower, one alarm for shoes on and one for leave now, the same order every day, and the plan counted back from the time you have to leave. Not medical advice.",
+      "layout": "card",
+      "palette": "butter",
+      "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "founding-100-13",
+      "image": {
+        "path": "aplayermode/img/pins/drip/adhd-morning-routine-time-blindness.png",
+        "length": 165554,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "weekly-planning-routine-review-questions",
+      "seq": 62,
+      "section": "weekly-planning-routine",
+      "routine": "weekly-planning-routine/review-questions",
+      "page": "/routines/weekly-planning-routine/",
+      "headline": "Weekly Review Questions",
+      "sub": "10 minutes",
+      "points": [
+        "What got done?",
+        "What slipped, and why?",
+        "What did I promise people?",
+        "What can I drop?",
+        "Next week's 3 outcomes?",
+        "When is my first focus block?"
+      ],
+      "title": "Weekly Planning Review: 6 Questions in 10 Minutes",
+      "description": "Six weekly review questions that take ten minutes: what got done, what slipped and why, what you promised people, what you can drop, next week's three outcomes and when your first focus block is.",
+      "layout": "steps",
+      "palette": "blush",
+      "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "how-it-works-13",
+      "image": {
+        "path": "aplayermode/img/pins/drip/weekly-planning-routine-review-questions.png",
+        "length": 118473,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "time-blocking-for-busy-days-every-day-different",
+      "seq": 63,
+      "section": "time-blocking-for-busy-days",
+      "routine": "time-blocking-for-busy-days/every-day-different",
+      "page": "/routines/time-blocking-for-busy-days/",
+      "headline": "Time Blocking, Changing Days",
+      "sub": "plan tonight",
+      "points": [
+        "Plan tomorrow tonight",
+        "Place fixed things first",
+        "Pick 1 must-do",
+        "Fit it in the biggest gap",
+        "Everything else on a list",
+        "Re-plan once, at lunch"
+      ],
+      "title": "Time Blocking When Every Day Is Different",
+      "description": "Time blocking when no two days look alike: plan tomorrow the night before, place the fixed things first, pick one must-do, fit it into the biggest gap, keep everything else on a list and re-plan once at lunch.",
+      "layout": "card",
+      "palette": "peach",
+      "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "app-13",
+      "image": {
+        "path": "aplayermode/img/pins/drip/time-blocking-for-busy-days-every-day-different.png",
+        "length": 159365,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "minimum-day-after-a-bad-day-checklist",
+      "seq": 64,
+      "section": "minimum-day-after-a-bad-day",
+      "routine": "minimum-day-after-a-bad-day/checklist",
+      "page": "/routines/minimum-day-after-a-bad-day/",
+      "headline": "Minimum Viable Day Checklist",
+      "sub": "productivity on bad days",
+      "points": [
+        "Food, water, sleep",
+        "One work task",
+        "One home task",
+        "One kind word to someone",
+        "No new commitments",
+        "Done is done"
+      ],
+      "title": "Productivity Checklist for a Minimum Viable Day",
+      "description": "A minimum viable day checklist: food, water and sleep, one work task, one home task, one kind word to someone, no new commitments, and when those are done the day is done.",
+      "layout": "steps",
+      "palette": "butter",
+      "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "modes-13",
+      "image": {
+        "path": "aplayermode/img/pins/drip/minimum-day-after-a-bad-day-checklist.png",
+        "length": 107770,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "family-weekly-reset-gratitude",
+      "seq": 65,
+      "section": "family-weekly-reset",
+      "routine": "family-weekly-reset/gratitude",
+      "page": "/routines/family-weekly-reset/",
+      "headline": "Family Gratitude Routine",
+      "sub": "2 minutes a day",
+      "points": [
+        "Dinner question: best part?",
+        "One thank-you note a week",
+        "A gratitude jar on the counter",
+        "Name one thing at bedtime",
+        "Share it, don't fix it",
+        "Keep it under 2 minutes"
+      ],
+      "title": "Gratitude Routine for Families That Takes 2 Minutes",
+      "description": "A family gratitude routine that takes two minutes: ask for the best part of the day at dinner, write one thank-you note a week, keep a gratitude jar on the counter, name one thing at bedtime, listen without fixing and keep it short.",
+      "layout": "card",
+      "palette": "blush",
+      "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "pillars-13",
+      "image": {
+        "path": "aplayermode/img/pins/drip/family-weekly-reset-gratitude.png",
+        "length": 165944,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "founder-daily-routine-shutdown",
+      "seq": 66,
+      "section": "founder-daily-routine",
+      "routine": "founder-daily-routine/shutdown",
+      "page": "/routines/founder-daily-routine/",
+      "headline": "End-of-Day Shutdown",
+      "sub": "6 steps, 10 minutes",
+      "points": [
+        "Write what got done",
+        "Move unfinished tasks",
+        "Pick tomorrow's first task",
+        "Clear the desk",
+        "Close every tab",
+        "Say done for today"
+      ],
+      "title": "Productivity: An End-of-Day Shutdown Routine",
+      "description": "A ten-minute end-of-day shutdown routine: write what got done, move unfinished tasks, pick tomorrow's first task, clear the desk, close every tab and say done for today.",
+      "layout": "steps",
+      "palette": "sage",
+      "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "founding-100-14",
+      "image": {
+        "path": "aplayermode/img/pins/drip/founder-daily-routine-shutdown.png",
+        "length": 109080,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "adhd-morning-routine-work-from-home",
+      "seq": 67,
+      "section": "adhd-morning-routine",
+      "routine": "adhd-morning-routine/work-from-home",
+      "page": "/routines/adhd-morning-routine/",
+      "headline": "Work-From-Home Morning Routine",
+      "sub": "ADHD friendly",
+      "points": [
+        "Get dressed for outside",
+        "Desk cleared last night",
+        "Coffee, then one hard task",
+        "Messages after 45 minutes",
+        "Stand up at 10",
+        "Lunch away from the desk"
+      ],
+      "title": "ADHD Morning Routine for Working From Home",
+      "description": "An ADHD-friendly work-from-home morning: dressed for outside, a desk cleared the night before, coffee then one hard task, messages only after 45 minutes, a stand-up break at 10 and lunch away from the desk.",
+      "layout": "card",
+      "palette": "butter",
+      "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "how-it-works-14",
+      "image": {
+        "path": "aplayermode/img/pins/drip/adhd-morning-routine-work-from-home.png",
+        "length": 166156,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "weekly-planning-routine-no-overplanning",
+      "seq": 68,
+      "section": "weekly-planning-routine",
+      "routine": "weekly-planning-routine/no-overplanning",
+      "page": "/routines/weekly-planning-routine/",
+      "headline": "Weekly Planner, No Overplanning",
+      "sub": "stop at 20 minutes",
+      "points": [
+        "One page, not a spread",
+        "Three outcomes only",
+        "Fixed things first",
+        "Empty space every day",
+        "Only a top task each day",
+        "Stop after 20 minutes"
+      ],
+      "title": "Weekly Planner Routine Without Overplanning",
+      "description": "Plan the week without overplanning: one page instead of a planner spread, three outcomes only, fixed things first, empty space every day, just a top task for each day, and stop after 20 minutes.",
+      "layout": "steps",
+      "palette": "blush",
+      "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "app-14",
+      "image": {
+        "path": "aplayermode/img/pins/drip/weekly-planning-routine-no-overplanning.png",
+        "length": 115242,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "time-blocking-for-busy-days-deep-work",
+      "seq": 69,
+      "section": "time-blocking-for-busy-days",
+      "routine": "time-blocking-for-busy-days/deep-work",
+      "page": "/routines/time-blocking-for-busy-days/",
+      "headline": "Time Blocking for Deep Work",
+      "sub": "6 rules",
+      "points": [
+        "Phone in another room",
+        "One task per block",
+        "90 minutes, then a break",
+        "Same time each day",
+        "Status set to busy",
+        "Note where you stopped"
+      ],
+      "title": "Time Blocking for Deep Work: 6 Rules",
+      "description": "Six rules for deep-work time blocks: the phone in another room, one task per block, 90 minutes then a break, the same time each day, your status set to busy and a note of where you stopped.",
+      "layout": "card",
+      "palette": "sage",
+      "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "modes-14",
+      "image": {
+        "path": "aplayermode/img/pins/drip/time-blocking-for-busy-days-deep-work.png",
+        "length": 158331,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "minimum-day-after-a-bad-day-tired-day",
+      "seq": 70,
+      "section": "minimum-day-after-a-bad-day",
+      "routine": "minimum-day-after-a-bad-day/tired-day",
+      "page": "/routines/minimum-day-after-a-bad-day/",
+      "headline": "Tired Day Productivity",
+      "sub": "move, keep, stop",
+      "points": [
+        "Hardest thing before noon",
+        "Move one meeting",
+        "Short tasks after lunch",
+        "10-minute walk outside",
+        "No big decisions today",
+        "Early night"
+      ],
+      "title": "Productivity on a Tired Day: What to Move and What to Keep",
+      "description": "Productivity on a tired day: the hardest thing before noon, move one meeting, short tasks after lunch, a ten-minute walk outside, no big decisions today and an early night.",
+      "layout": "steps",
+      "palette": "peach",
+      "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "pillars-14",
+      "image": {
+        "path": "aplayermode/img/pins/drip/minimum-day-after-a-bad-day-tired-day.png",
+        "length": 106222,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "family-weekly-reset-mental-load",
+      "seq": 71,
+      "section": "family-weekly-reset",
+      "routine": "family-weekly-reset/mental-load",
+      "page": "/routines/family-weekly-reset/",
+      "headline": "Family Mental Load Routine",
+      "sub": "share it out",
+      "points": [
+        "Write every open loop down",
+        "Split the list in two",
+        "Each owns tasks start to end",
+        "The calendar holds reminders",
+        "A 10-minute Sunday sync",
+        "Swap one job a month"
+      ],
+      "title": "Family Routine for Sharing the Mental Load",
+      "description": "A family routine for sharing the mental load: write every open loop down, split the list in two, each person owns tasks from start to finish, the calendar holds the reminders, sync for ten minutes on Sunday and swap one job a month.",
+      "layout": "card",
+      "palette": "blush",
+      "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "founding-100-15",
+      "image": {
+        "path": "aplayermode/img/pins/drip/family-weekly-reset-mental-load.png",
+        "length": 164091,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "founder-daily-routine-follow-ups",
+      "seq": 72,
+      "section": "founder-daily-routine",
+      "routine": "founder-daily-routine/follow-ups",
+      "page": "/routines/founder-daily-routine/",
+      "headline": "Founder Follow-Up Routine",
+      "sub": "nothing waits on memory",
+      "points": [
+        "List who you owe a reply",
+        "Answer 3 before noon",
+        "Calendar every promise",
+        "Two-line answers are fine",
+        "Friday: clear the rest",
+        "Nothing waits on memory"
+      ],
+      "title": "Productivity: A Follow-Up Routine for Busy Founders",
+      "description": "A follow-up routine for busy founders: list who you owe a reply, answer three before noon, put every promise on the calendar, keep answers to two lines, clear the rest on Friday so nothing waits on memory.",
+      "layout": "steps",
+      "palette": "sage",
+      "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "how-it-works-15",
+      "image": {
+        "path": "aplayermode/img/pins/drip/founder-daily-routine-follow-ups.png",
+        "length": 118668,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "adhd-morning-routine-with-kids",
+      "seq": 73,
+      "section": "adhd-morning-routine",
+      "routine": "adhd-morning-routine/with-kids",
+      "page": "/routines/adhd-morning-routine/",
+      "headline": "Morning Routine With Kids",
+      "sub": "for ADHD parents",
+      "points": [
+        "Lunches packed the night before",
+        "Shoes and bags by the door",
+        "Picture checklist for each kid",
+        "Your coffee before their breakfast",
+        "One leave-time alarm for all",
+        "Two calm minutes in the car"
+      ],
+      "title": "Morning Routine With Kids When You Have ADHD",
+      "description": "A morning routine for ADHD parents: lunches packed the night before, shoes and bags by the door, a picture checklist for each child, your coffee before their breakfast, one leave-time alarm for everyone and two calm minutes in the car.",
+      "layout": "card",
+      "palette": "peach",
+      "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "app-15",
+      "image": {
+        "path": "aplayermode/img/pins/drip/adhd-morning-routine-with-kids.png",
+        "length": 180901,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "weekly-planning-routine-monday-morning",
+      "seq": 74,
+      "section": "weekly-planning-routine",
+      "routine": "weekly-planning-routine/monday-morning",
+      "page": "/routines/weekly-planning-routine/",
+      "headline": "Monday Weekly Planning",
+      "sub": "before the inbox",
+      "points": [
+        "Calendar before the inbox",
+        "Note what changed since Friday",
+        "Pick this week's 3 outcomes",
+        "Book them into real slots",
+        "Tell people what you'll deliver",
+        "Start outcome one"
+      ],
+      "title": "Weekly Planning on Monday Morning in 15 Minutes",
+      "description": "A Monday morning weekly planning routine that takes 15 minutes: open the calendar before the inbox, note what changed since Friday, pick three outcomes, book them into real slots, tell people what you will deliver and start outcome one.",
+      "layout": "steps",
+      "palette": "butter",
+      "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "modes-15",
+      "image": {
+        "path": "aplayermode/img/pins/drip/weekly-planning-routine-monday-morning.png",
+        "length": 121142,
+        "width": 1000,
+        "height": 1500
+      }
+    },
+    {
+      "id": "time-blocking-for-busy-days-chaotic-day",
       "seq": 75,
-      "section": "pillars",
-      "kicker": "Self-care planner",
-      "headline": "Self-care that repeats on its own.",
-      "body": "Gratitude, nature, meditation and family time come back each week without you guarding it.",
+      "section": "time-blocking-for-busy-days",
+      "routine": "time-blocking-for-busy-days/chaotic-day",
+      "page": "/routines/time-blocking-for-busy-days/",
+      "headline": "Daily Routine, Chaotic Day",
+      "sub": "keep one thing moving",
       "points": [
-        "Repeats on its own",
-        "No guarding the time",
-        "Gratitude and nature",
-        "Family and relationships"
+        "Write the 3 fixed things",
+        "Pick 1 thing that must move",
+        "Do it before noon",
+        "Batch every small task",
+        "Say no to one request",
+        "End with tomorrow's first step"
       ],
-      "title": "Self-Care Planner That Repeats On Its Own: Gratitude, Nature and Family Time",
-      "description": "Self-care slips when it depends on remembering. In A Player Mode the Spirit pillar makes room for gratitude, nature, meditation, service and family time, and repeats them on their own without you guarding the time. On by default in every plan.",
-      "layout": "cards",
-      "palette": "light",
+      "title": "Daily Routine for a Chaotic Day: Keep One Thing Moving",
+      "description": "A daily routine for chaotic days: write down the three fixed things, pick one thing that must move, do it before noon, batch the small tasks, say no to one request and end with tomorrow's first step.",
+      "layout": "card",
+      "palette": "sage",
       "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "pillars-15",
       "image": {
-        "path": "aplayermode/img/pins/drip/pillars-15.png",
-        "length": 94659,
+        "path": "aplayermode/img/pins/drip/time-blocking-for-busy-days-chaotic-day.png",
+        "length": 172422,
         "width": 1000,
         "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-24",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
       }
     },
     {
-      "id": "founding-100-16",
+      "id": "minimum-day-after-a-bad-day-restart-habits",
       "seq": 76,
-      "section": "founding-100",
-      "kicker": "Autopilot",
-      "headline": "Recurring things, handled inside your rules.",
-      "body": "It saves money; it never spends it. A daily done-list shows what it did, with undo.",
+      "section": "minimum-day-after-a-bad-day",
+      "routine": "minimum-day-after-a-bad-day/restart-habits",
+      "page": "/routines/minimum-day-after-a-bad-day/",
+      "headline": "Habit Tracker for Restarting",
+      "sub": "2 habits, not 10",
       "points": [
-        "Sends follow-ups",
-        "Moves flexible meetings",
-        "Cancels unused subscriptions",
-        "Daily done-list with undo"
+        "Choose 2 habits, not 10",
+        "The smallest version of each",
+        "Same time every day",
+        "Tick a box, no streak score",
+        "Missed one? Never twice",
+        "Review each Sunday"
       ],
-      "title": "Autopilot Planner: Follow-Ups, Flexible Meetings and Unused Subscriptions Handled",
-      "description": "A Player Mode's Autopilot plan handles recurring things on its own, inside standing rules you set: it sends follow-ups, moves flexible meetings, requests appointments by email and cancels unused subscriptions. It saves money and never spends it, and a daily done-list with undo shows what it did.",
-      "layout": "quote",
-      "palette": "stone",
+      "title": "Habit Tracker for Restarting: 2 Habits, Not 10",
+      "description": "A habit tracker for restarting: choose two habits instead of ten, use the smallest version of each, do them at the same time every day, tick a box without a streak score, never miss twice and review on Sundays.",
+      "layout": "steps",
+      "palette": "peach",
       "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "founding-100-16",
       "image": {
-        "path": "aplayermode/img/pins/drip/founding-100-16.png",
-        "length": 96562,
+        "path": "aplayermode/img/pins/drip/minimum-day-after-a-bad-day-restart-habits.png",
+        "length": 115893,
         "width": 1000,
         "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-25",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
       }
     },
     {
-      "id": "how-it-works-16",
+      "id": "family-weekly-reset-monthly-admin",
       "seq": 77,
-      "section": "how-it-works",
-      "kicker": "On Android",
-      "headline": "Your plan arrives at the time you set.",
-      "body": "On Android it is a notification at your time; on the web it is waiting when you open the app.",
+      "section": "family-weekly-reset",
+      "routine": "family-weekly-reset/monthly-admin",
+      "page": "/routines/family-weekly-reset/",
+      "headline": "Family Admin Routine",
+      "sub": "30 minutes a month",
       "points": [
-        "Notification at your time",
-        "Waiting on the web",
-        "One priority first",
-        "Then the day"
+        "Bills and renewals check",
+        "Birthdays coming up",
+        "Appointments to book",
+        "School forms and dates",
+        "Subscriptions to cancel",
+        "First Sunday, 30 minutes"
       ],
-      "title": "Daily Plan Notification at the Time You Set: One Priority, Then the Day",
-      "description": "A Player Mode sends your daily plan to you instead of waiting for you to open a planner. On Android it arrives as a notification at the time you set; on the web it is waiting when you open the app. One priority, a short start, then the day.",
-      "layout": "split",
-      "palette": "dark",
+      "title": "Family Admin Routine: 30 Minutes a Month",
+      "description": "A monthly family admin routine: check bills and renewals, list upcoming birthdays, book appointments, collect school forms and dates, cancel unused subscriptions, all in 30 minutes on the first Sunday of the month.",
+      "layout": "card",
+      "palette": "butter",
       "release_date": null,
+      "held": {
+        "since": "2026-11-07",
+        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
+      },
+      "replaces": "how-it-works-16",
       "image": {
-        "path": "aplayermode/img/pins/drip/how-it-works-16.png",
-        "length": 221478,
+        "path": "aplayermode/img/pins/drip/family-weekly-reset-monthly-admin.png",
+        "length": 162986,
         "width": 1000,
         "height": 1500
-      },
-      "held": {
-        "since": "2026-11-06",
-        "was_release_date": "2026-11-25",
-        "why": "old-style pin (slogan about the app, small text, lands on the sales page): Pinterest assessment 6 Nov 2026; redrawn as a routine pin and released only on her approval"
       }
     }
   ]

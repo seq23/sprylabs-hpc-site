@@ -146,7 +146,7 @@ export function route(pathname) {
   // path that does not exist. The page is noindex either way.
   if (pathname === '/404' || pathname === '/404.html') return { kind: 'asset', upstream: NOT_FOUND_FILE };
   if (pathname === '/about' || pathname === '/about/index.html') return { kind: 'redirect', location: ABOUT_PATH, keepQuery: true };
-  if (Object.prototype.hasOwnProperty.call(CONTENT_PAGES, pathname)) return { kind: 'asset', upstream: CONTENT_PAGES[pathname] };
+  if (Object.prototype.hasOwnProperty.call(CONTENT_PAGES, pathname)) return { kind: 'asset', upstream: CONTENT_PAGES[pathname], content: true };
   // One URL per page: the bare and /index.html forms 301 to the trailing-slash URL.
   const slashed = `${pathname.replace(/\/index\.html$/, '').replace(/\/+$/, '')}/`;
   if (slashed !== pathname && Object.prototype.hasOwnProperty.call(CONTENT_PAGES, slashed)) return { kind: 'redirect', location: slashed, keepQuery: true };
@@ -226,7 +226,8 @@ export default {
     }
     if (r.kind === 'notfound') return serveNotFound(request, r.upstream);
     if (r.kind === 'feed') return serveFeed(request, r.upstream, r.feed);
-    if (r.kind === 'page' && env.PIN_VISITS) {
+    // Pin visits count on the home page and on every content page a pin can open (routine pins, 7 Nov 2026).
+    if ((r.kind === 'page' || r.content) && env.PIN_VISITS) {
       const point = pinVisitPoint(url, request.headers.get('user-agent'));
       if (point) { try { env.PIN_VISITS.writeDataPoint(point); } catch { /* measurement never breaks the page */ } }
     }

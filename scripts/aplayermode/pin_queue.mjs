@@ -4,7 +4,7 @@
  * stocked and dated (owner-approved 16 Oct 2026).
  *
  *   node scripts/aplayermode/pin_queue.mjs             weekly: refill if low, render, date
- *   node scripts/aplayermode/pin_queue.mjs --seed 7    add 7 variants per section now
+ *   node scripts/aplayermode/pin_queue.mjs --seed 7    add 7 routine pins now
  *   options: --today YYYY-MM-DD (default: today in America/Chicago)
  *
  * 1. Launch block: the five #136 items and the channel are re-derived from
@@ -12,8 +12,8 @@
  * 2. A section whose id left aplayermode/index.html loses its UNRELEASED variants
  *    (a pin never links a fragment the page lacks).
  * 3. Refill: when fewer than config.refill_threshold variants are unreleased, plan
- *    config.refill_batch more (workers/aplayermode-com/src/pinqueue.js planRefill)
- *    from config/aplayermode_pin_angles.json ($0, template copy, no model call) and
+ *    config.refill_batch more routine pins (scripts/aplayermode/routine_pins.mjs) from
+ *    config/aplayermode_routines.json ($0, no model call), gate every unreleased pin and
  *    render their 1000x1500 PNGs (scripts/aplayermode/render_pin.mjs).
  * 4. Dates: config.pins_per_day a day from tomorrow, never one section two days running.
  * 0. Stop rule (scripts/aplayermode/pace.mjs, Growth playbook): 0 visits at 4 measured
@@ -27,7 +27,9 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { addDays, boardForSection, boardsOf, chicagoDate, needsRefill, planRefill, scheduleVariants, unreleasedCount } from '../../workers/aplayermode-com/src/pinqueue.js';
+import { addDays, boardForSection, boardsOf, chicagoDate, isHeld, needsRefill, scheduleVariants, unreleasedCount } from '../../workers/aplayermode-com/src/pinqueue.js';
+import { CONTENT_PAGES } from '../../workers/aplayermode-com/src/index.js';
+import { gatePins, planRoutinePins } from './routine_pins.mjs';
 import { applyFallback, applyPause, decidePace } from './pace.mjs';
 import { DRIP_DIR, PIN_HEIGHT, PIN_WIDTH, QUEUE_FILE, launchBlock, pageIds } from './pinfeed_lib.mjs';
 import { renderVariants } from './render_pin.mjs';
@@ -41,7 +43,8 @@ const seed = opt('--seed') ? Number(opt('--seed')) : 0;
 
 const queuePath = path.join(root, QUEUE_FILE);
 const queue = JSON.parse(fs.readFileSync(queuePath, 'utf8'));
-const angles = JSON.parse(fs.readFileSync(path.join(root, 'config/aplayermode_pin_angles.json'), 'utf8')).sections;
+const routines = JSON.parse(fs.readFileSync(path.join(root, 'config/aplayermode_routines.json'), 'utf8'));
+const routes = new Set(Object.keys(CONTENT_PAGES));
 const log = [];
 
 // 1. Launch block from its one definition.
@@ -63,20 +66,33 @@ if (redate && !paused) for (const v of queue.variants) if (v.release_date && v.r
 // 2. Sections the page still has.
 const ids = pageIds(root);
 const before = queue.variants.length;
-queue.variants = queue.variants.filter((v) => (v.release_date && v.release_date <= today) || ids.has(v.section));
-if (queue.variants.length !== before) log.push(`DROPPED ${before - queue.variants.length} unreleased variant(s) whose section left the page`);
-const live = Object.fromEntries(Object.entries(angles).filter(([s]) => ids.has(s)));
+const released = (v) => !isHeld(v) && v.release_date && v.release_date <= today;
+queue.variants = queue.variants.filter((v) => released(v) || (v.page ? routes.has(v.page) : ids.has(v.section)));
+if (queue.variants.length !== before) log.push(`DROPPED ${before - queue.variants.length} unreleased variant(s) whose page or section left the site`);
 
 // 3. Refill.
 // --no-refill: date only (no renderer needed); the Monday run refills and renders.
 const due = !paused && !args.includes('--no-refill') && (seed > 0 || needsRefill(queue, today));
-const count = seed > 0 ? seed * Object.keys(live).length : queue.config.refill_batch;
-const planned = due ? planRefill(queue, live, count) : [];
+// Routine pins only (7 Nov 2026): one pin per routine in config/aplayermode_routines.json,
+// never a second pin of the same routine. While queue.config.hold_new_pins is set, new pins
+// are planned held (never dated, never in a feed) until the release command clears it.
+const count = seed > 0 ? seed : queue.config.refill_batch;
+const hold = queue.config.hold_new_pins ? { since: today, why: 'new routine pin: released with scripts/aplayermode/release_held_pins.mjs after the owner approves the sample' } : null;
+const planned = due ? planRoutinePins(queue, routines, count, { held: hold }) : [];
 if (due && !planned.length) {
-  console.error(`NAMED STOP: PINTEREST_QUEUE_EXHAUSTED - ${unreleasedCount(queue.variants, today)} unreleased (threshold ${queue.config.refill_threshold}) and every angle x layout x palette is used; add angles to config/aplayermode_pin_angles.json.`);
+  console.error(`NAMED STOP: PINTEREST_QUEUE_EXHAUSTED - ${unreleasedCount(queue.variants, today)} unreleased (threshold ${queue.config.refill_threshold}) and every routine in config/aplayermode_routines.json already has its pin; add routines there (one pin per routine, never two alike).`);
   process.exit(1);
 }
 queue.variants.push(...planned);
+
+// Gate: every pin not yet released must be a routine pin that passes (scripts/aplayermode/routine_pins.mjs).
+const pending = queue.variants.filter((v) => !released(v));
+const refused = gatePins(pending, queue, routes);
+for (const v of pending) if (!v.routine) refused.push(`${v.id}: an old-style pin (not a routine) may not be queued`);
+if (refused.length) {
+  console.error(`NAMED STOP: PIN_GATE_REFUSED - ${refused.length} problem(s); nothing written:\n  ${refused.slice(0, 30).join('\n  ')}`);
+  process.exit(1);
+}
 
 const missing = queue.variants.filter((v) => !v.image || !fs.existsSync(path.join(root, v.image.path)));
 const sizes = missing.length ? await renderVariants(root, missing, DRIP_DIR) : {};
