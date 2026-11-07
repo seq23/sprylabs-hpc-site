@@ -25,6 +25,7 @@ if ! git apply --3way --whitespace=nowarn "$patch"; then
   done <<< "$conflicted"
 fi
 git reset -q
-# No post-build (7 Nov 2026): the in-repo engine that re-derived sitemaps and
-# heads is retired; files outside questions/ and data/search-loop/ keep main's
-# version.
+# Files outside questions/ and data/search-loop/ keep main's version; the
+# post-build then re-derives the sitemaps and route table from the replayed
+# pages, so a page replayed onto a moved main is still admitted.
+bash .github/scripts/search_loop_post_build.sh

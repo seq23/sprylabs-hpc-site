@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-04T00:56:47.015Z",
+  "checked_at": "2026-11-07T12:36:17.423Z",
   "free_models": [
     "nvidia/nemotron-3.5-lightning:free",
     "nvidia/nemotron-3-ultra-550b-a55b:free",
@@ -8,24 +8,16 @@
     "dots-studio/dots-3-note-preview:free"
   ],
   "model_callers": [
-    "scripts/llm_citation_probe.mjs",
-    "scripts/search_intelligence/observe_live_search.mjs"
+    "scripts/llm_citation_probe.mjs"
   ],
-  "workflows_scanned": 14,
+  "workflows_scanned": 6,
   "scheduled_workflows": [
-    ".github/workflows/daily-citation-intelligence.yml",
-    ".github/workflows/entity-backlink-watch.yml",
-    ".github/workflows/main-validation-sentinel.yml",
-    ".github/workflows/search-intelligence.yml",
+    ".github/workflows/aplayermode-pin-drip.yml",
     ".github/workflows/search-loop.yml",
-    ".github/workflows/spry-content-release.yml",
+    ".github/workflows/search-measurements.yml",
     ".github/workflows/weekly-outcome-report.yml"
   ],
   "provider_secret_refs": [
-    ".github/workflows/daily-citation-intelligence.yml:96",
-    ".github/workflows/daily-citation-intelligence.yml:112",
-    ".github/workflows/search-intelligence.yml:76",
-    ".github/workflows/search-intelligence.yml:91",
     ".github/workflows/search-loop.yml:43"
   ],
   "free_routed_scheduled": [

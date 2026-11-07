@@ -36,6 +36,7 @@ jobs:
       engine_ref: v1
       stage: ${{ inputs.stage || 'auto' }}
       setup_command: npm ci --ignore-scripts
+      post_build_command: bash .github/scripts/search_loop_post_build.sh
       node_options: --max-old-space-size=3072
       commit_command: ./.github/scripts/search_loop_commit.sh
     secrets:
