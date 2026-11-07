@@ -31,7 +31,7 @@ A paid lane runs only when a human ticks `confirm_paid` on a manual workflow dis
 The page engine is Search Loop (`search-loop.yml`). The in-repo content engine and its ~250
 page-format, citation and governance validators were retired on 7 Nov 2026 (owner ruling: "cull
 down the validation to only what is needed"); the published pages are static files and nothing
-regenerates them. The six workflows, the merge gate (`npm run typecheck && npm test && npm run
+regenerates them. The seven workflows, the merge gate (`npm run typecheck && npm test && npm run
 validate`, about a minute) and what each lane does are in [`docs/OPERATIONS.md`](docs/OPERATIONS.md).
 
 - **`npm run validate` holds safety checks only** (`scripts/validators/run_safety_checks.mjs`):
