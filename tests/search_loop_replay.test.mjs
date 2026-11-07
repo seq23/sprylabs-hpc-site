@@ -35,6 +35,8 @@ function setup() {
   w(seed, 'index.html', '<h1>home</h1>\n');
   w(seed, 'sitemap.xml', '<urlset>home</urlset>\n');
   w(seed, '.github/scripts/search_loop_replay.sh', fs.readFileSync(REPLAY, 'utf8'));
+  // Stand-in post-build: derives the sitemap from the pages on disk, as the real one admits /questions/ pages.
+  w(seed, '.github/scripts/search_loop_post_build.sh', 'set -e\n{ printf "<urlset>"; find questions -name index.html 2>/dev/null | sort | tr "\\n" " "; printf "</urlset>\\n"; } > sitemap.xml\n');
   git(seed, 'add', '-A'); git(seed, 'commit', '-qm', 'seed'); git(seed, 'push', '-q', 'origin', 'HEAD:main');
   return { dir, runner: clone('runner'), other: clone('other') };
 }
@@ -48,7 +50,7 @@ function savePatch(runner, dir) {
   return patch;
 }
 
-test('replay puts this run\'s pages and ledger onto a moved main and keeps main\'s derived files', () => {
+test('replay puts this run\'s pages and ledger onto a moved main, keeps main\'s work and re-derives the sitemap', () => {
   const { dir, runner, other } = setup();
   // The engine run: a new page, the ledger, a related link in home, a sitemap from post-build.
   w(runner, 'questions/how-to-plan/index.html', '<h1>How to plan</h1>\n');
@@ -69,8 +71,8 @@ test('replay puts this run\'s pages and ledger onto a moved main and keeps main\
   assert.match(read(runner, 'data/search-loop/targets.json'), /how to plan/);
   assert.match(read(runner, 'index.html'), /questions\/how-to-plan/);
   assert.equal(read(runner, 'about/index.html'), '<h1>about</h1>\n', 'main\'s new work is kept');
-  // A derived file both sides rewrote keeps main's version: there is no post-build to re-derive it.
-  assert.equal(read(runner, 'sitemap.xml'), '<urlset>main version</urlset>\n');
+  // A derived file both sides rewrote is re-derived by the post-build from the replayed tree, so the replayed page is admitted.
+  assert.equal(read(runner, 'sitemap.xml'), '<urlset>questions/how-to-plan/index.html </urlset>\n');
 });
 
 test('replay without the saved engine output stops, named', () => {
