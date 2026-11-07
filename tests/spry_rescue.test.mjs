@@ -106,6 +106,22 @@ test('engine admission preserves retirement and requires a live, sourced publica
   assert.deepEqual(admittedEnginePages({pages:[]}, []), []);
 });
 
+// The 3 Nov rescue (#202) retired the engine's first three question pages before #207 restored
+// engine admission, so they 301ed and sat outside sitemap-spry.xml while the engine counted them
+// live. Every page Search Loop lists live with its file present is in the spry sitemap and 200s.
+test('every live Search Loop question page is admitted, in sitemap-spry.xml and not redirected', () => {
+  const book = JSON.parse(fs.readFileSync('data/search-loop/pages.json'));
+  const live = book.pages.filter(p => p.status === 'live' && fs.existsSync(p.rel));
+  assert.ok(live.length > 0, 'the engine ledger lists no live page with its file: nothing to check');
+  const sitemap = fs.readFileSync('sitemap-spry.xml', 'utf8');
+  for (const p of live) {
+    assert.ok(enginePages.some(e => e.route === p.route), `${p.route}: live in the engine but not admitted`);
+    assert.ok(sitemap.includes(`<loc>${HOST}${p.route}</loc>`), `${p.route}: missing from sitemap-spry.xml`);
+    assert.ok(!ledger.redirects.some(r => r.from === p.route), `${p.route}: live in the engine but retired by the rescue ledger`);
+    assert.ok(!SPRY_RESCUE_REDIRECTS.has(p.route), `${p.route}: 301s at the edge`);
+  }
+});
+
 test('deploy output contains every keeper, omits retired HTML and advertises no retired URL', () => {
   execFileSync(process.execPath, ['scripts/assemble_pages_output.js'], { stdio: 'pipe' });
   const sitemap = fs.readFileSync('.pages-output/sitemap-spry.xml','utf8');

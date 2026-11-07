@@ -11,46 +11,20 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import {
-  SECTIONS, addDays, buildPinfeedXml, chicagoDate, dueVariants, isHeld, needsRefill, planRefill, scheduleVariants, unreleasedCount,
+  SECTIONS, addDays, buildPinfeedXml, chicagoDate, dueVariants, isHeld, needsRefill, scheduleVariants, unreleasedCount, variantLink,
 } from '../../workers/aplayermode-com/src/pinqueue.js';
-import worker, { pinVisitPoint, route } from '../../workers/aplayermode-com/src/index.js';
+import worker, { CONTENT_PAGES, pinVisitPoint, route } from '../../workers/aplayermode-com/src/index.js';
 import { QUEUE_FILE, launchBlock, pageIds, pngSize } from '../../scripts/aplayermode/pinfeed_lib.mjs';
-import { createRequire } from 'node:module';
-// Section sizes are a floor with the 25% cushion; over the target is a note (owner ruling 2 Nov 2026).
-const { floorVerdict } = createRequire(import.meta.url)('../../scripts/lib/word_floor.cjs');
+import { ALIKE_OVERLAP, allRoutines, gatePins, planRoutinePins, stepOverlap } from '../../scripts/aplayermode/routine_pins.mjs';
+import { releaseHeld } from '../../scripts/aplayermode/release_held_pins.mjs';
 import { collect, SECRET } from '../../scripts/aplayermode/collect_pin_metrics.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const read = (rel) => fs.readFileSync(path.join(root, rel), 'utf8');
 const queue = JSON.parse(read(QUEUE_FILE));
-const angles = JSON.parse(read('config/aplayermode_pin_angles.json')).sections;
+const routines = JSON.parse(read('config/aplayermode_routines.json'));
+const routes = new Set(Object.keys(CONTENT_PAGES));
 const clone = (x) => JSON.parse(JSON.stringify(x));
-
-/**
- * The shape planRefill keeps a queue in, refill after refill: every section has
- * at least 75% of 6 variants (fewest section is refilled first; a section over the
- * target is a note, owner ruling 2 Nov 2026);
- * within a section no design (headline x layout x palette) repeats, no layout runs
- * back to back, every headline is one of the section's angles, and no angle runs a
- * second time before every angle has run once (uses differ by at most one).
- */
-function assertSectionShape(variants, label) {
-  const counts = SECTIONS.map((s) => variants.filter((v) => v.section === s).length);
-  for (const [i, s] of SECTIONS.entries()) assert.notEqual(floorVerdict(counts[i], 6), 'fail', `${label} ${s}: ${counts[i]} variants, under 75% of 6`);
-  if (Math.max(...counts) - Math.min(...counts) > 1) console.log(`[pinqueue note] ${label}: section sizes ${counts.join('/')} (a section over the target is a note, not a failure)`);
-  for (const s of SECTIONS) {
-    const vs = variants.filter((v) => v.section === s).sort((a, b) => a.seq - b.seq);
-    const designs = vs.map((v) => `${v.headline}|${v.layout}|${v.palette}`.toLowerCase());
-    assert.equal(new Set(designs).size, vs.length, `${label} ${s}: repeated design`);
-    for (let i = 1; i < vs.length; i += 1) assert.notEqual(vs[i].layout, vs[i - 1].layout, `${label} ${s}: same layout back to back`);
-    const headlines = angles[s].map((a) => a.headline);
-    for (const v of vs) assert.ok(headlines.includes(v.headline), `${label} ${v.id}: headline not in its section's angles`);
-    const uses = headlines.map((h) => vs.filter((v) => v.headline === h).length);
-    // planRefill already picks the least-used angle that still has an unused design; a repeat before
-    // every angle ran only happens when the rest are exhausted, so it is a note.
-    if (Math.max(...uses) - Math.min(...uses) > 1) console.log(`[pinqueue note] ${label} ${s}: headline uses ${uses.join(',')}`);
-  }
-}
 
 /** Run the real Worker against the committed tree as its Pages origin. */
 async function viaWorker(url, { env = {}, ua = 'Mozilla/5.0', method = 'GET', now } = {}) {
@@ -60,6 +34,7 @@ async function viaWorker(url, { env = {}, ua = 'Mozilla/5.0', method = 'GET', no
     const u = new URL(typeof input === 'string' ? input : input.url);
     let rel = decodeURIComponent(u.pathname).replace(/^\/+/, '');
     if (rel === '' || rel.endsWith('/')) rel += 'index.html';
+    if (!fs.existsSync(path.join(root, rel)) && fs.existsSync(path.join(root, `${rel}.html`))) rel += '.html'; // Pages serves /x for x.html
     const file = path.join(root, rel);
     if (!fs.existsSync(file) || !fs.statSync(file).isFile()) return new Response('not found', { status: 404 });
     return new Response(fs.readFileSync(file), { status: 200 });
@@ -81,13 +56,12 @@ test('chicagoDate follows America/Chicago, not UTC', () => {
   assert.equal(chicagoDate(new Date('2026-12-01T05:59:00Z')), '2026-11-30'); // 23:59 CST
 });
 
-test('committed queue: >=30 variants, sections balanced, 1 a day from 17 Oct then up to 3 from 1 Nov, no section two days running, launch 5 kept', () => {
+test('committed queue: >=30 variants, 1 a day from 17 Oct then up to 3 from 1 Nov, no section two days running, launch 5 kept', () => {
   assert.equal(queue.config.pins_per_day, 3);
   assert.equal(queue.config.pace.since, '2026-11-01');
   assert.equal(queue.config.drip_start, '2026-10-17');
   assert.equal(queue.config.timezone, 'America/Chicago');
   assert.ok(queue.variants.length >= 30, `${queue.variants.length} variants`);
-  assertSectionShape(queue.variants, 'committed');
   assert.deepEqual(queue.launch.map((i) => i.slug), ['founding-100', 'weekly-planning', 'adhd-morning-routine', 'adhd-routine-bad-days', 'mind-body-spirit-planner']);
   assert.deepEqual({ channel: queue.channel, launch: queue.launch }, launchBlock(root));
   const dated = queue.variants.filter((v) => !isHeld(v));
@@ -106,7 +80,7 @@ test('committed queue: >=30 variants, sections balanced, 1 a day from 17 Oct the
 test('every variant: truthful limits, its own 1000x1500 PNG, distinct design within its section', () => {
   const ids = pageIds(root);
   for (const v of queue.variants) {
-    assert.ok(ids.has(v.section), `${v.id}: #${v.section} not on the page`);
+    assert.ok(v.page ? CONTENT_PAGES[v.page] : ids.has(v.section), `${v.id}: ${v.page || `#${v.section}`} not on the site`);
     assert.ok(v.title.length <= 100, `${v.id} title ${v.title.length}`);
     assert.ok(v.description.length <= 500, `${v.id} description ${v.description.length}`);
     assert.doesNotMatch([v.title, v.description, v.headline, v.body, ...v.points].join(' '), /\$\s?\d|\bspry\b|pay\.rev\.cat|gumroad|free trial/i, v.id);
@@ -189,42 +163,94 @@ test('scheduleVariants: pins_per_day, firstDay, never a section on consecutive d
   assert.deepEqual(lone.map((v) => v.release_date), ['2026-10-17', null]);
 });
 
-test('the Monday refill keeps the queue shape: two full refill_batch refills of the committed queue', () => {
-  const q = clone(queue);
-  for (const round of [1, 2]) {
-    const planned = planRefill(q, angles, q.config.refill_batch);
-    assert.equal(planned.length, q.config.refill_batch, `refill ${round}: ${planned.length} planned`);
-    // The builder fills the smallest section first (the balance the old shape check pinned).
-    const size = (s) => q.variants.filter((v) => v.section === s).length;
-    const fewest = [...SECTIONS].sort((a, b) => size(a) - size(b) || SECTIONS.indexOf(a) - SECTIONS.indexOf(b))[0];
-    assert.equal(planned[0].section, fewest, `refill ${round}: first planned pin went to ${planned[0].section}, not the smallest section ${fewest}`);
-    q.variants.push(...planned);
-    assertSectionShape(q.variants, `refill ${round}`);
-  }
-});
-
-test('weekly refill: due under refill_threshold unreleased; plans new designs, recycles angles in unused designs, never repeats one', () => {
+test('weekly refill: due under refill_threshold; one pin per unused routine, pages in turn, held while hold_new_pins, then the named stop', () => {
   const q = clone(queue);
   const left = (d) => q.variants.filter((v) => !v.release_date || v.release_date > d).length;
-  assert.equal(needsRefill({ ...q, config: { ...q.config, refill_threshold: left('2026-10-16') } }, '2026-10-16'), false);
   assert.equal(needsRefill(q, '2026-11-08'), left('2026-11-08') < q.config.refill_threshold);
-  assert.equal(needsRefill({ ...q, config: { ...q.config, refill_threshold: left('2026-11-01') + 1 } }, '2026-11-01'), true);
-  const planned = planRefill(q, angles, 21);
-  assert.equal(planned.length, 21);
+  const used = new Set(q.variants.map((v) => v.routine).filter(Boolean));
+  const unused = allRoutines(routines).filter((x) => !used.has(x.key));
+  const planned = planRoutinePins(q, routines, 10, { held: { since: '2026-11-09' } });
+  assert.equal(planned.length, unused.length, 'plans only routines no pin has used');
+  for (const v of planned) { assert.ok(v.held, `${v.id} planned held`); assert.equal(v.release_date, null); }
   q.variants.push(...planned);
-  const key = (v) => `${v.headline}|${v.layout}|${v.palette}`;
-  assert.equal(new Set(q.variants.map(key)).size, q.variants.length, 'a design repeated');
-  for (const s of SECTIONS) {
-    const vs = q.variants.filter((v) => v.section === s);
-    for (let i = 1; i < vs.length; i += 1) assert.notEqual(vs[i].layout, vs[i - 1].layout, `${s}: same layout back to back`);
-  }
-  // Far beyond the angles: still new designs (angle x layout x palette), then Rule 0 stop (planRefill returns []).
-  const many = planRefill(q, angles, 2000);
-  assert.ok(many.length > 500);
-  q.variants.push(...many);
-  assert.equal(new Set(q.variants.map(key)).size, q.variants.length);
-  assert.deepEqual(planRefill(q, angles, 5), []);
+  assert.deepEqual(planRoutinePins(q, routines, 5), [], 'every routine has its pin: nothing more to plan (pin_queue.mjs names PINTEREST_QUEUE_EXHAUSTED)');
+  // From an empty queue: pages take turns, so the first pins are one per page.
+  const fresh = planRoutinePins({ ...q, variants: [] }, routines, routines.pages.length);
+  assert.deepEqual(fresh.map((v) => v.section), routines.pages.map((p) => p.slug));
+  assert.deepEqual(gatePins(fresh, q, routes), []);
   assert.equal(unreleasedCount([{ release_date: null }, { release_date: '2026-10-20' }], '2026-10-20'), 1);
+});
+
+test('pin gate: refuses sales words, a title off its board phrases, the home page, unreadable steps, old-style designs and two pins alike', () => {
+  const good = planRoutinePins({ ...queue, variants: [] }, routines, 1)[0];
+  assert.deepEqual(gatePins([good], queue, routes), []);
+  const refused = (patch) => gatePins([{ ...good, ...patch }], queue, routes);
+  for (const word of ['Join the Founding 100', 'member rate', 'Join today', '$9.99/month', 'Executive Roundtable', 'Executive Suite', 'Autopilot', 'Cancel any time']) {
+    assert.ok(refused({ description: `${good.description} ${word}` }).some((e) => /refused word/.test(e)), word);
+    assert.ok(refused({ points: [...good.points.slice(0, 5), word.slice(0, 30)] }).some((e) => /refused word/.test(e)), `${word} on the image`);
+  }
+  assert.ok(refused({ title: 'It runs your day. You just start.' }).some((e) => /does not start with/.test(e)));
+  assert.ok(refused({ page: '/' }).some((e) => /home page/.test(e)));
+  assert.ok(refused({ page: '/routines/not-a-page/' }).some((e) => /not a page/.test(e)));
+  assert.ok(refused({ points: good.points.slice(0, 3) }).some((e) => /3 steps/.test(e)));
+  assert.ok(refused({ points: [...good.points.slice(0, 5), 'A step far too long to read at Pinterest grid size'] }).some((e) => /unreadable/.test(e)));
+  assert.ok(refused({ layout: 'phone', palette: 'dark' }).some((e) => /not a routine design/.test(e)));
+  // Alike: the same routine twice, the same title, or steps that mostly overlap.
+  const twin = { ...good, id: 'twin' };
+  assert.ok(gatePins([good, twin], queue, routes).some((e) => /alike: same routine/.test(e)));
+  assert.ok(gatePins([good, { ...twin, routine: 'x/y', title: good.title.toUpperCase() }], queue, routes).some((e) => /alike: same title/.test(e)));
+  assert.ok(gatePins([good, { ...twin, routine: 'x/y', title: `${good.title} again`, headline: 'Other', points: [...good.points.slice(0, 5), 'Something new'] }], queue, routes).some((e) => /alike: steps/.test(e)));
+  assert.ok(stepOverlap(good, { points: ['Feed the cat', 'Water the plants', 'Read a chapter', 'Call a friend'] }) < ALIKE_OVERLAP);
+});
+
+test('committed queue: every pin not yet released is a held routine pin that passes the gate and opens its routine page (200 through the Worker)', async () => {
+  const pending = queue.variants.filter((v) => isHeld(v) || !v.release_date || v.release_date > chicagoDate());
+  assert.ok(pending.length >= 47, `${pending.length} pending pins`);
+  assert.deepEqual(gatePins(pending, queue, routes), []);
+  for (const v of pending) {
+    assert.ok(v.routine && isHeld(v), `${v.id}: pending pins are held routine pins until released`);
+    const r = routines.pages.find((p) => p.slug === v.section).routines.find((x) => `${v.section}/${x.id}` === v.routine);
+    assert.deepEqual(v.points, r.steps, `${v.id}: the pin shows its page's steps`);
+    const link = variantLink(v);
+    assert.ok(link.startsWith(`https://aplayermode.com${v.page}?`) && !link.includes('#'), link);
+  }
+  for (const page of new Set(pending.map((v) => v.page))) {
+    const res = await viaWorker(`https://aplayermode.com${page}?utm_source=pinterest&utm_content=probe`);
+    assert.equal(res.status, 200, page);
+    const html = await res.text();
+    for (const v of pending.filter((x) => x.page === page)) for (const s of v.points) assert.ok(html.includes(s.replace(/'/g, '&#39;')) || html.includes(s), `${page} lacks "${s}"`);
+  }
+  assert.equal(execFileSync(process.execPath, ['scripts/aplayermode/build_routine_pages.mjs', '--check'], { cwd: root, encoding: 'utf8' }).includes('OK'), true, 'routine pages match their config');
+});
+
+test('release: one command clears every hold after the gate; the scheduler then dates them; releasing twice is a named stop', () => {
+  const q = clone(queue);
+  const held = q.variants.filter(isHeld).length;
+  assert.ok(held > 0);
+  assert.deepEqual(releaseHeld(q, '2026-11-08'), { released: held });
+  assert.equal(q.variants.filter(isHeld).length, 0);
+  assert.equal(q.config.hold_new_pins, undefined);
+  scheduleVariants(q.variants, { pinsPerDay: 3, firstDay: '2026-11-09' });
+  const dated = q.variants.filter((v) => v.released_from_hold);
+  assert.ok(dated.every((v) => v.release_date >= '2026-11-09'), 'released pins start tomorrow, never in the past');
+  assert.match(releaseHeld(q, '2026-11-08').error, /^NOTHING_HELD/);
+  const bad = clone(queue);
+  bad.variants.find(isHeld).title = 'Join the Founding 100';
+  assert.match(releaseHeld(bad, '2026-11-08').error, /^PIN_GATE_REFUSED/);
+  const wf = read('.github/workflows/aplayermode-pin-drip.yml');
+  assert.match(wf, /release_held:/);
+  assert.match(wf, /RELEASE_HELD: \$\{\{ inputs\.release_held \}\}/);
+  assert.match(read('scripts/aplayermode/weekly_pin_drip.sh'), /RELEASE_HELD:-\}" = "yes" \]; then node scripts\/aplayermode\/release_held_pins\.mjs/);
+});
+
+test('edge log: a pin visit to a routine page is counted, like one to the home page', async () => {
+  const points = [];
+  const env = { PIN_VISITS: { writeDataPoint: (p) => points.push(p) } };
+  const page = Object.keys(CONTENT_PAGES).find((r) => r.startsWith('/routines/'));
+  assert.ok(page, 'a routine page is routed');
+  await viaWorker(`https://aplayermode.com${page}?utm_source=pinterest&utm_medium=organic&utm_campaign=pinfeed&utm_content=r-1`, { env });
+  await viaWorker(`https://aplayermode.com${page}`, { env });
+  assert.deepEqual(points.map((p) => p.indexes[0]), ['r-1']);
 });
 
 test('weekly step: Mondays CT in its own lane, refill + render + guards + metrics, replayed by the push helper, $0', () => {
@@ -241,7 +267,7 @@ test('weekly step: Mondays CT in its own lane, refill + render + guards + metric
   assert.match(wf, /WORKFLOW_ARGV: bash scripts\/aplayermode\/weekly_pin_drip\.sh\n\s+run: \.\/\.github\/scripts\/commit_and_push_if_changed\.sh/);
   assert.match(wf, /CLOUDFLARE_API_TOKEN: \$\{\{ secrets\.CLOUDFLARE_API_TOKEN \}\}/);
   assert.doesNotMatch(sh, /OPENROUTER|GEMINI|ANTHROPIC|OPENAI/, 'template copy only: no model key');
-  assert.equal(queue.config.refill_threshold, 42); // two weeks at 3 a day
+  assert.equal(queue.config.refill_threshold, 9); // three days at 3 a day: routines run out, never repeat
 });
 
 test('edge log: a data point per Pinterest page view, utm values only, never IP/UA, never crawlers', async () => {
@@ -271,7 +297,7 @@ test('weekly metrics: NAMED STOP PINTEREST_METRICS_UNAVAILABLE naming the secret
   const denied = await collect({ env: { [SECRET]: 't' }, fetchImpl: async () => new Response('{}', { status: 403 }) });
   assert.equal(denied.stop, 'PINTEREST_METRICS_UNAVAILABLE');
   let sent;
-  const ok = await collect({ env: { [SECRET]: 't' }, fetchImpl: async (url, init) => { sent = { url, init }; return Response.json({ data: [{ variant: 'modes-03', visits: 4 }, { variant: 'founding-100', visits: 2 }] }); } });
+  const ok = await collect({ env: { [SECRET]: 't' }, history: [], fetchImpl: async (url, init) => { sent = { url, init }; return Response.json({ data: [{ variant: 'modes-03', visits: 4 }, { variant: 'founding-100', visits: 2 }] }); } });
   assert.equal(ok.status, 'MEASURED');
   assert.equal(ok.total, 6);
   assert.deepEqual(ok.by_variant, { 'modes-03': 4, 'founding-100': 2 });
@@ -279,6 +305,27 @@ test('weekly metrics: NAMED STOP PINTEREST_METRICS_UNAVAILABLE naming the secret
   assert.match(sent.init.body, /FROM aplayermode_pin_visits/);
   assert.match(sent.init.body, /blob1 NOT IN \('verify-probe'\)/, 'live-verification test visits must be excluded from the weekly count');
   assert.equal(sent.init.headers.Authorization, 'Bearer t');
+});
+
+test('weekly metrics: each count covers every day since the last MEASURED count, never a fixed 7 days', async () => {
+  const now = new Date('2026-11-09T13:40:00Z');
+  const run = async (history) => {
+    let body;
+    const r = await collect({ env: { [SECRET]: 't' }, now, history, fetchImpl: async (url, init) => { body = init.body; return Response.json({ data: [] }); } });
+    return { r, body };
+  };
+  // Last count 10 days ago (a lane moved weekday); a later named stop counted nothing and does not move the start.
+  const gap = await run([
+    { generated_at: '2026-10-26T15:09:17.783Z', status: 'MEASURED' },
+    { generated_at: '2026-10-30T15:00:00.000Z', status: 'MEASURED' },
+    { generated_at: '2026-11-02T15:00:00.000Z', status: 'NAMED_STOP' },
+  ]);
+  assert.match(gap.body, /timestamp > toDateTime\('2026-10-30 15:00:00'\)/);
+  assert.equal(gap.r.window_start, '2026-10-30T15:00:00.000Z');
+  assert.doesNotMatch(gap.body, /INTERVAL '7' DAY/);
+  // First count ever: the last 7 days. A count older than the 90-day retention: capped at 90 days.
+  assert.match((await run([])).body, /toDateTime\('2026-11-02 13:40:00'\)/);
+  assert.match((await run([{ generated_at: '2026-01-01T00:00:00Z', status: 'MEASURED' }])).body, /toDateTime\('2026-08-11 13:40:00'\)/);
 });
 
 test('topic boards: each pin in exactly one board feed; topic feeds carry no pin released before the split', async () => {

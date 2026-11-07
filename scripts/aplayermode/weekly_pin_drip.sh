@@ -22,6 +22,8 @@ if [ "$(TZ=America/Chicago date +%u)" != "1" ] && [ "${PIN_DRIP_FORCE:-0}" != "1
   exit 0
 fi
 npx playwright install --with-deps chromium >/dev/null
+# The owner's release of held pins (workflow input release_held=yes): docs/OPERATIONS.md.
+if [ "${RELEASE_HELD:-}" = "yes" ]; then node scripts/aplayermode/release_held_pins.mjs; fi
 node scripts/aplayermode/pin_queue.mjs
 npm run -s validate:aplayermode-pin-drip
 npm run -s validate:aplayermode-pinterest

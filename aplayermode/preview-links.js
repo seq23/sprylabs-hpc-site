@@ -15,7 +15,13 @@
     '/founders/': '/aplayermode/pages/founders',
     '/parents/': '/aplayermode/pages/parents',
     '/life-os/': '/aplayermode/pages/life-os',
-    '/questions/what-does-a-chief-of-staff-do/': '/aplayermode/pages/what-does-a-chief-of-staff-do'
+    '/questions/what-does-a-chief-of-staff-do/': '/aplayermode/pages/what-does-a-chief-of-staff-do',
+    '/routines/adhd-morning-routine/': '/aplayermode/pages/routines-adhd-morning-routine',
+    '/routines/weekly-planning-routine/': '/aplayermode/pages/routines-weekly-planning-routine',
+    '/routines/time-blocking-for-busy-days/': '/aplayermode/pages/routines-time-blocking-for-busy-days',
+    '/routines/minimum-day-after-a-bad-day/': '/aplayermode/pages/routines-minimum-day-after-a-bad-day',
+    '/routines/family-weekly-reset/': '/aplayermode/pages/routines-family-weekly-reset',
+    '/routines/founder-daily-routine/': '/aplayermode/pages/routines-founder-daily-routine'
   };
   document.querySelectorAll('a[href^="/"]').forEach(function (a) {
     var href = a.getAttribute('href'); var hash = '';

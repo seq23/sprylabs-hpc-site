@@ -36,7 +36,7 @@ validate`, about a minute) and what each lane does are in [`docs/OPERATIONS.md`]
 
 - **`npm run validate` holds safety checks only** (`scripts/validators/run_safety_checks.mjs`):
   secrets and personal mailbox addresses, zero paid LLM, claim safety, deploy safety (redirects,
-  links, canonical hosts, sitemaps, what Pages publishes) and no silent zero work. Do not add a
+  links, canonical hosts, sitemaps, what Pages publishes). Rule 0 (no stage exits 0 having done nothing) lives in each live lane's own named stops. Do not add a
   page-format or wording validator: fix the page, or the writer, instead.
 - **Edge contracts, one definition each:** canonical host `functions/_lib/canonical_host.js`; one
   200 per route across hosts `functions/_lib/route_owner_host.js` (table: `npm run

@@ -54,6 +54,8 @@ globalThis.fetch = async (input) => {
   const u = new URL(typeof input === 'string' ? input : input.url);
   let rel = decodeURIComponent(u.pathname).replace(/^\/+/, '');
   if (rel === '' || rel.endsWith('/')) rel += 'index.html';
+  // Pages serves /x for x.html (the Worker asks for the extensionless form, originPath).
+  if (!fs.existsSync(path.join(root, rel)) && fs.existsSync(path.join(root, `${rel}.html`))) rel += '.html';
   const file = path.join(root, rel);
   if (!file.startsWith(root + path.sep) || !fs.existsSync(file) || !fs.statSync(file).isFile()) return new Response('not found', { status: 404 });
   const type = rel.endsWith('.html') ? 'text/html; charset=utf-8' : rel.endsWith('.json') ? 'application/json' : rel.endsWith('.xml') ? 'application/xml' : rel.endsWith('.png') ? 'image/png' : 'application/octet-stream';
@@ -113,6 +115,12 @@ const ids = pageIds;
 // Held variants (a `held` block) are never dated or in a feed until released (pinqueue.js isHeld).
 const { isHeld } = await import('../../workers/aplayermode-com/src/pinqueue.js');
 const variants = (queue.variants || []).filter((v) => !isHeld(v));
+// Every pin not yet released (held or dated ahead) passes the routine-pin gate (scripts/aplayermode/routine_pins.mjs).
+const { CONTENT_PAGES } = await import('../../workers/aplayermode-com/src/index.js');
+const { gatePins } = await import('../aplayermode/routine_pins.mjs');
+const pending = (queue.variants || []).filter((v) => isHeld(v) || !v.release_date || v.release_date > today);
+for (const e of gatePins(pending, queue, new Set(Object.keys(CONTENT_PAGES)))) fail(`pin gate: ${e}`);
+for (const v of pending) if (!v.routine) fail(`${v.id}: an old-style pin (not a routine) is queued`);
 if (variants.length < 30) fail(`queue holds ${variants.length} variants; at least 30 required`);
 // Pace: 1 a day until 1 Nov 2026, then 3 (owner-approved 1 Nov 2026; the Growth-playbook
 // stop rule in scripts/aplayermode/pace.mjs may change the format, never the cap).
@@ -122,7 +130,7 @@ const byDate = new Map();
 for (const v of variants) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(v.release_date || '')) { fail(`${v.id}: no release_date`); continue; }
   if (v.release_date < queue.config.drip_start) fail(`${v.id}: release ${v.release_date} before drip_start ${queue.config.drip_start}`);
-  if (!ids.has(v.section)) fail(`${v.id}: section #${v.section} is not an id on the aplayermode.com page`);
+  if (v.page ? !CONTENT_PAGES[v.page] : !ids.has(v.section)) fail(`${v.id}: ${v.page ? `page ${v.page} is not served by aplayermode.com` : `section #${v.section} is not an id on the aplayermode.com page`}`);
   if (/\$\s?\d|\bspry\b|pay\.rev\.cat|gumroad/i.test([v.title, v.description, v.headline, v.body, ...(v.points || [])].join(' '))) fail(`${v.id}: copy carries a price, Spry or a checkout`);
   byDate.set(v.release_date, [...(byDate.get(v.release_date) || []), v.section]);
 }

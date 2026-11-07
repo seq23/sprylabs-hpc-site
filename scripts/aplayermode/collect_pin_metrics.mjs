@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Weekly measurement for the aplayermode.com Pinterest drip: Pinterest-referred page
- * views (utm_source=pinterest) per pin (utm_content) over the last 7 days, from the
+ * views (utm_source=pinterest) per pin (utm_content) since the last MEASURED count, from the
  * edge log the aplayermode-com Worker writes (Workers Analytics Engine dataset
  * aplayermode_pin_visits, binding PIN_VISITS: utm values only, no IP, UA or cookie;
  * $0 within the Workers Paid allowance).
@@ -26,7 +26,28 @@ export const DEFAULT_ACCOUNT_ID = '8d147e242033699dd37c6f5a451f48d2';
 export const SECRET = 'CLOUDFLARE_API_TOKEN';
 // Test visits logged by live verification (PR #138) are not Pinterest traffic.
 export const EXCLUDED_VARIANTS = ['verify-probe'];
-export const SQL = `SELECT blob1 AS variant, SUM(_sample_interval) AS visits FROM ${DATASET} WHERE timestamp > NOW() - INTERVAL '7' DAY AND blob1 NOT IN (${EXCLUDED_VARIANTS.map((v) => `'${v}'`).join(', ')}) GROUP BY variant ORDER BY visits DESC FORMAT JSON`;
+// Analytics Engine keeps 90 days; a first count (no earlier MEASURED row) covers the last 7.
+export const MAX_WINDOW_DAYS = 90;
+export const FIRST_WINDOW_DAYS = 7;
+
+/**
+ * Where this count starts: the moment the last MEASURED count was taken, so every day since
+ * then is counted exactly once (the 1 Nov move to another weekday left 27-30 Oct outside every
+ * fixed 7-day window). A named stop counted nothing, so it never moves the start. Capped at
+ * the dataset's 90-day retention.
+ */
+export function windowStart(history, now = new Date()) {
+  const floor = new Date(now.getTime() - MAX_WINDOW_DAYS * 86400000);
+  const last = (history ?? []).filter((r) => r?.status === 'MEASURED' && !Number.isNaN(Date.parse(r.generated_at)))
+    .map((r) => new Date(r.generated_at)).filter((d) => d < now).sort((a, b) => b - a)[0];
+  if (!last) return new Date(now.getTime() - FIRST_WINDOW_DAYS * 86400000);
+  return last < floor ? floor : last;
+}
+
+const sqlTime = (d) => d.toISOString().replace('T', ' ').replace(/\.\d+Z$/, '');
+export function sqlFor(since) {
+  return `SELECT blob1 AS variant, SUM(_sample_interval) AS visits FROM ${DATASET} WHERE timestamp > toDateTime('${sqlTime(since)}') AND blob1 NOT IN (${EXCLUDED_VARIANTS.map((v) => `'${v}'`).join(', ')}) GROUP BY variant ORDER BY visits DESC FORMAT JSON`;
+}
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const OUT_DIR = path.join(root, 'reports/pinterest');
@@ -46,13 +67,17 @@ function write(result) {
   if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, `### aplayermode.com Pinterest drip metrics\n\n${line}\n`);
 }
 
-export async function collect({ env = process.env, fetchImpl = fetch, now = new Date() } = {}) {
+const readHistory = () => (fs.existsSync(HISTORY) ? JSON.parse(fs.readFileSync(HISTORY, 'utf8')) : []);
+
+export async function collect({ env = process.env, fetchImpl = fetch, now = new Date(), history = readHistory() } = {}) {
   const generated_at = now.toISOString();
+  const since = windowStart(history, now);
+  const window = `since ${since.toISOString()}`;
   const stop = (reason) => ({ generated_at, status: 'NAMED_STOP', stop: 'PINTEREST_METRICS_UNAVAILABLE', secret: SECRET, reason });
   const token = env[SECRET];
   if (!token) return stop(`${SECRET} is not set in this repo's Actions secrets; reading the Analytics Engine dataset ${DATASET} needs a Cloudflare API token with Account Analytics: Read.`);
   const account = env.CLOUDFLARE_ACCOUNT_ID || DEFAULT_ACCOUNT_ID;
-  const res = await fetchImpl(`https://api.cloudflare.com/client/v4/accounts/${account}/analytics_engine/sql`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: SQL });
+  const res = await fetchImpl(`https://api.cloudflare.com/client/v4/accounts/${account}/analytics_engine/sql`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: sqlFor(since) });
   if (res.status === 401 || res.status === 403) return stop(`Cloudflare answered ${res.status}: ${SECRET} lacks Account Analytics: Read on account ${account}.`);
   if (!res.ok) return stop(`Analytics Engine SQL API answered ${res.status}; nothing was measured.`);
   const body = await res.json();
@@ -70,7 +95,8 @@ export async function collect({ env = process.env, fetchImpl = fetch, now = new 
     generated_at,
     status: 'MEASURED',
     source: `Workers Analytics Engine dataset ${DATASET} (aplayermode-com Worker edge log)`,
-    window: 'last 7 days',
+    window,
+    window_start: since.toISOString(),
     total,
     by_variant: byVariant,
     unknown_variants: Object.keys(byVariant).filter((id) => !known.has(id)),
