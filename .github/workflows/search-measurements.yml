@@ -38,4 +38,4 @@ jobs:
       - name: Commit the measurements
         env:
           WORKFLOW_ARGV: bash .github/scripts/collect_search_measurements.sh
-        run: ./.github/scripts/commit_and_push_if_changed.sh "search measurements: Search Console truth and index coverage" search-measurements
+        run: ./.github/scripts/commit_and_push_if_changed.sh "search measurements - Search Console truth and index coverage" search-measurements
