@@ -1,10 +1,8 @@
-# Repo Documentation Index
+# Docs
 
-Read these first:
+1. [OPERATIONS.md](OPERATIONS.md): the shape of this repo, its workflows, the merge gate, the protected download page, Search Loop.
+2. [cost/zero-paid-llm.md](cost/zero-paid-llm.md): nothing paid.
+3. [REDIRECT_MIGRATION_HISTORY.md](REDIRECT_MIGRATION_HISTORY.md): why the redirect map looks the way it does.
 
-1. OPERATIONS.md
-2. SYSTEM_CAPABILITIES.md
-3. AUTOMATION_MAP.md
-4. VALIDATOR_INVENTORY.md
-5. VA_RUNBOOK.md
-6. NEXT_EXECUTION_BACKLOG.md
+The retired content engine's runbooks, validator inventory and receipts were removed on
+7 Nov 2026; they are in git history before that date.

@@ -2,7 +2,7 @@
 
 Owner, 11 Oct 2026: "nothing should be paid … cut the probes and make them free."
 Policy lives in code: `config/llm_routing.json` (read by `scripts/lib/free_llm_router.mjs`),
-guarded by `npm run validate:zero-paid-llm` (HARD_FAIL, container-prepush).
+guarded by the `zero-paid-llm` check in `npm run validate` (the merge gate).
 
 ## What was paid (inventory taken 11 Oct 2026)
 
@@ -13,7 +13,7 @@ guarded by `npm run validate:zero-paid-llm` (HARD_FAIL, container-prepush).
 | Gemini path in `llm_citation_probe.mjs` | none (no key in CI) | `gemini-3.6-flash` | knowledge/grounded fallback | **Removed** |
 
 Already free, verified by reading the code: Spry Content Release, Agent Drop Intake and the
-zero-dollar autonomous gap fill (`release:zero-dollar-autonomous`) make no model calls at all.
+zero-dollar autonomous gap fill (`release:zero-dollar-autonomous`) made no model calls at all (all three retired 7 Nov 2026).
 
 ## The free router
 
@@ -27,11 +27,11 @@ zero-dollar autonomous gap fill (`release:zero-dollar-autonomous`) make no model
 ## Running a paid lane on purpose
 
 Actions → the workflow → Run workflow → tick `confirm_paid`. Nothing scheduled can reach a
-model-provider secret; `validate:zero-paid-llm` fails the build if that changes.
+model-provider secret; the `zero-paid-llm` check fails the build if that changes.
 
 **One scheduled exception (1 Nov 2026):** the shared search loop (`.github/workflows/search-loop.yml`,
 owner ruling "writing model: each site's existing $0 model route") writes its daily pages with the free
-router. `validate:zero-paid-llm` allows it only in this exact shape: the job calls the pinned
+router. The `zero-paid-llm` check allows it only in this exact shape: the job calls the pinned
 `seq23/search-loop/.github/workflows/search-loop.yml@v1`, `OPENROUTER_API_KEY` is the only provider secret
 and is passed only in that call's `secrets:` block, and `search-loop.config.json` routes through
 `config/llm_routing.json` ($0/$0 `:free` models, `max_cost_usd: 0`, no paid fallback). The engine fails
