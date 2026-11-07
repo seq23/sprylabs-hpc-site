@@ -298,7 +298,11 @@ function sh(command, cwd) {
 // worktree changes nothing it proves; results are re-ordered to REPAIRS order.
 function shAsync(command, cwd) {
   return new Promise((resolve) => {
-    const child = spawn('sh', ['-c', command], { cwd, stdio: ['ignore', 'pipe', 'pipe'] });
+    // detached: its own process group, so an interrupt can stop the whole validator tree
+    // before the scratch folder is deleted under it (see removeScratch).
+    const child = spawn('sh', ['-c', command], { cwd, stdio: ['ignore', 'pipe', 'pipe'], detached: true });
+    CHILDREN.add(child);
+    child.on('close', () => CHILDREN.delete(child));
     let out = '';
     child.stdout.on('data', (d) => { out += d; });
     child.stderr.on('data', (d) => { out += d; });
@@ -333,11 +337,16 @@ function porcelain(cwd) {
 // disk to 1.2 GB free, because a `finally` does not run when SIGTERM/SIGINT
 // ends the process). Guarded by tests/repair_fixture_cleanup.test.mjs.
 const SCRATCH = new Map(); // dir -> scratch worktree path
+const CHILDREN = new Set(); // running fixture commands (shAsync)
 
 function removeScratch() {
+  // A fixture still running writes into its tree while it is deleted, and rmSync then fails
+  // (seen in CI on #221). Stop every child process group first.
+  for (const child of CHILDREN) { try { process.kill(-child.pid, 'SIGKILL'); } catch { /* already gone */ } }
+  CHILDREN.clear();
   for (const [dir, scratch] of SCRATCH) {
     sh(`git worktree remove --force ${JSON.stringify(scratch)}`, ROOT);
-    try { fs.rmSync(dir, { recursive: true, force: true }); } catch { /* best effort; the next sweep catches it */ }
+    try { fs.rmSync(dir, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 }); } catch (e) { console.error(`NAMED STOP [SCRATCH_NOT_REMOVED] ${dir}: ${e.message}. ~/bin/disk-sweep.sh removes it after 24 h.`); }
     SCRATCH.delete(dir);
   }
   sh('git worktree prune', ROOT);

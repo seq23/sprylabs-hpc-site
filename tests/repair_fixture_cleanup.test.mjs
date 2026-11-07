@@ -37,10 +37,14 @@ test('a SIGTERM mid-run removes every repair-fixture-* folder and scratch worktr
     }
     assert.ok(seen.length > 0, `the validator never created a scratch worktree, so cleanup was not exercised (exit ${child.exitCode}): ${stderr.slice(-400)}`);
 
+    // Let the fixture commands start inside the scratch trees: a running child writing into its
+    // tree while it is deleted is how #221's cleanup still leaked in CI.
+    await sleep(6000);
+    assert.equal(child.exitCode, null, 'the validator finished before it could be interrupted');
     child.kill('SIGTERM');
     await exited;
 
-    assert.deepEqual(fixtures(tmp), [], 'repair-fixture-* folders were left behind after SIGTERM');
+    assert.deepEqual(fixtures(tmp), [], `repair-fixture-* folders were left behind after SIGTERM. Validator stderr: ${stderr.slice(-800)}`);
     const list = spawnSync('git', ['worktree', 'list', '--porcelain'], { cwd: ROOT, encoding: 'utf8' }).stdout;
     assert.ok(!list.includes(tmp), `a scratch worktree under ${tmp} is still registered after SIGTERM`);
   } finally {
