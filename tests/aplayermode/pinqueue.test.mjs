@@ -25,6 +25,23 @@ const queue = JSON.parse(read(QUEUE_FILE));
 const routines = JSON.parse(read('config/aplayermode_routines.json'));
 const routes = new Set(Object.keys(CONTENT_PAGES));
 const clone = (x) => JSON.parse(JSON.stringify(x));
+/**
+ * A copy of the queue as it stood before the owner's release: every pin released from hold is held
+ * again and undated. The release tests run on this, so they hold whether main still carries the held
+ * pins or already carries their release (the 47 routine pins approved 7 Nov 2026).
+ */
+function preRelease(q) {
+  const c = clone(q);
+  for (const v of c.variants) {
+    if (!v.released_from_hold) continue;
+    v.held = { since: v.released_from_hold.held_since };
+    v.release_date = null;
+    delete v.released_from_hold;
+  }
+  if (c.variants.some(isHeld)) c.config.hold_new_pins = true;
+  return c;
+}
+const HELD_FOR_SAMPLE = 47;
 
 /** Run the real Worker against the committed tree as its Pages origin. */
 async function viaWorker(url, { env = {}, ua = 'Mozilla/5.0', method = 'GET', now } = {}) {
@@ -97,9 +114,9 @@ test('held pins: never in a feed and never dated by the scheduler, whatever thei
   assert.deepEqual(dueVariants(vs, '2026-12-01').map((v) => v.id), ['a']);
   scheduleVariants(vs, { pinsPerDay: 3, firstDay: '2026-11-07' });
   assert.equal(vs[2].release_date, null);
-  const q = clone(queue);
+  const q = preRelease(queue);
   const heldIds = new Set(q.variants.filter(isHeld).map((v) => v.id));
-  assert.ok(heldIds.size > 0, 'the committed queue holds the old-style pins');
+  assert.ok(heldIds.size >= HELD_FOR_SAMPLE, `${heldIds.size} pins held before the release`);
   for (const board of q.boards.list) for (const id of heldIds) assert.ok(!buildPinfeedXml(q, '2027-06-01', board).includes(`aplayermode-pin-${id}<`), `${id} in ${board.slug}`);
 });
 
@@ -203,38 +220,45 @@ test('pin gate: refuses sales words, a title off its board phrases, the home pag
   assert.ok(stepOverlap(good, { points: ['Feed the cat', 'Water the plants', 'Read a chapter', 'Call a friend'] }) < ALIKE_OVERLAP);
 });
 
-test('committed queue: every pin not yet released is a held routine pin that passes the gate and opens its routine page (200 through the Worker)', async () => {
+test('committed queue: every pending or released-from-hold pin is a routine pin, held undated or dated after its release, that passes the gate and opens its routine page (200 through the Worker)', async () => {
   const pending = queue.variants.filter((v) => isHeld(v) || !v.release_date || v.release_date > chicagoDate());
-  assert.ok(pending.length >= 47, `${pending.length} pending pins`);
-  assert.deepEqual(gatePins(pending, queue, routes), []);
-  for (const v of pending) {
-    assert.ok(v.routine && isHeld(v), `${v.id}: pending pins are held routine pins until released`);
+  const sample = queue.variants.filter((v) => isHeld(v) || v.released_from_hold);
+  assert.ok(sample.length >= HELD_FOR_SAMPLE, `${sample.length} pins held or released from hold`);
+  const checked = [...new Map([...pending, ...sample].map((v) => [v.id, v])).values()];
+  assert.deepEqual(gatePins(checked, queue, routes), []);
+  for (const v of checked) {
+    assert.ok(v.routine, `${v.id}: every pending or released-from-hold pin is a routine pin`);
+    if (isHeld(v)) assert.equal(v.release_date, null, `${v.id}: a held pin waits undated`);
+    else assert.ok(v.release_date, `${v.id}: a pin not held is dated by the scheduler`);
+    if (v.released_from_hold) assert.ok(v.release_date > v.released_from_hold.at, `${v.id}: released ${v.released_from_hold.at}, dated ${v.release_date}: never on or before its release day`);
     const r = routines.pages.find((p) => p.slug === v.section).routines.find((x) => `${v.section}/${x.id}` === v.routine);
     assert.deepEqual(v.points, r.steps, `${v.id}: the pin shows its page's steps`);
     const link = variantLink(v);
     assert.ok(link.startsWith(`https://aplayermode.com${v.page}?`) && !link.includes('#'), link);
   }
-  for (const page of new Set(pending.map((v) => v.page))) {
+  for (const page of new Set(checked.map((v) => v.page))) {
     const res = await viaWorker(`https://aplayermode.com${page}?utm_source=pinterest&utm_content=probe`);
     assert.equal(res.status, 200, page);
     const html = await res.text();
-    for (const v of pending.filter((x) => x.page === page)) for (const s of v.points) assert.ok(html.includes(s.replace(/'/g, '&#39;')) || html.includes(s), `${page} lacks "${s}"`);
+    for (const v of checked.filter((x) => x.page === page)) for (const s of v.points) assert.ok(html.includes(s.replace(/'/g, '&#39;')) || html.includes(s), `${page} lacks "${s}"`);
   }
   assert.equal(execFileSync(process.execPath, ['scripts/aplayermode/build_routine_pages.mjs', '--check'], { cwd: root, encoding: 'utf8' }).includes('OK'), true, 'routine pages match their config');
 });
 
 test('release: one command clears every hold after the gate; the scheduler then dates them; releasing twice is a named stop', () => {
-  const q = clone(queue);
+  const q = preRelease(queue);
   const held = q.variants.filter(isHeld).length;
-  assert.ok(held > 0);
+  assert.ok(held >= HELD_FOR_SAMPLE, `${held} pins held before the release`);
   assert.deepEqual(releaseHeld(q, '2026-11-08'), { released: held });
   assert.equal(q.variants.filter(isHeld).length, 0);
   assert.equal(q.config.hold_new_pins, undefined);
   scheduleVariants(q.variants, { pinsPerDay: 3, firstDay: '2026-11-09' });
   const dated = q.variants.filter((v) => v.released_from_hold);
+  assert.equal(dated.length, held, 'every released pin keeps its release record');
+  assert.ok(dated.every((v) => v.release_date), 'the scheduler dates every released pin');
   assert.ok(dated.every((v) => v.release_date >= '2026-11-09'), 'released pins start tomorrow, never in the past');
   assert.match(releaseHeld(q, '2026-11-08').error, /^NOTHING_HELD/);
-  const bad = clone(queue);
+  const bad = preRelease(queue);
   bad.variants.find(isHeld).title = 'Join the Founding 100';
   assert.match(releaseHeld(bad, '2026-11-08').error, /^PIN_GATE_REFUSED/);
   const wf = read('.github/workflows/aplayermode-pin-drip.yml');
