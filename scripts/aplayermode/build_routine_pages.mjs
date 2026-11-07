@@ -28,7 +28,7 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
 const day = (iso) => new Date(`${iso}T12:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
 export const fileFor = (page) => `aplayermode/pages/routines-${page.slug}.html`;
 
-const HEAD_TAIL = "<meta name=\"color-scheme\" content=\"light dark\">\n<meta name=\"theme-color\" content=\"#E9E5DE\" media=\"(prefers-color-scheme: light)\">\n<meta name=\"theme-color\" content=\"#1B1916\" media=\"(prefers-color-scheme: dark)\">\n<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n<link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&amp;family=Outfit:wght@600;700&amp;display=swap\">\n<link rel=\"stylesheet\" href=\"/aplayermode/aplayermode.css\">\n<script defer src=\"/assets/domain-context.js\"></script>\n<script defer src=\"/aplayermode/config.js\"></script>\n<script defer src=\"/aplayermode/app.js\"></script>\n<script defer src=\"/aplayermode/preview-links.js\"></script>\n<script data-clarity-loader>(function(w,d,m){var h=(w.location.hostname||\"\").toLowerCase().replace(/^www\\./,\"\");var id=m[h];if(!id)return;w.clarity=w.clarity||function(){(w.clarity.q=w.clarity.q||[]).push(arguments)};var s=d.createElement(\"script\");s.async=1;s.src=\"https://www.clarity.ms/tag/\"+id;var f=d.getElementsByTagName(\"script\")[0];f.parentNode.insertBefore(s,f)})(window,document,{\"spryexecutiveos.com\":\"y7kuhznig9\",\"billionairehighperformancecoach.com\":\"y7knv03yfx\",\"aplayermode.com\":\"yvtytxiv27\"})</script>\n";
+const HEAD_TAIL = "<meta name=\"color-scheme\" content=\"light dark\">\n<meta name=\"theme-color\" content=\"#E9E5DE\" media=\"(prefers-color-scheme: light)\">\n<meta name=\"theme-color\" content=\"#1B1916\" media=\"(prefers-color-scheme: dark)\">\n<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n<link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&amp;family=Outfit:wght@600;700&amp;display=swap\">\n<link rel=\"stylesheet\" href=\"/aplayermode/aplayermode.css\">\n<script defer src=\"/assets/domain-context.js\"></script>\n<script defer src=\"/aplayermode/config.js\"></script>\n<script defer src=\"/aplayermode/app.js\"></script>\n<script defer src=\"/aplayermode/preview-links.js\"></script>\n";
 const HEADER = "<header class=\"topbar\">\n  <div class=\"wrap\">\n    <a class=\"brand\" href=\"/\"><span class=\"apm-mark\" aria-hidden=\"true\"></span><span class=\"brand-word\">A Player Mode</span></a>\n    <a class=\"btn btn-ghost btn-join-top\" href=\"https://app.aplayermode.com/join\" rel=\"noopener\">Join \u00b7 $9.99</a>\n  </div>\n</header>";
 const FOOTER = "<footer class=\"footer\">\n  <div class=\"wrap\">\n    <p><b>A Player Mode</b> and <b>Billionaire High Performance Coach</b> are products of Spry Labs. Developed by S.L. Taylor through Spry Labs. <a href=\"/about/\">About Spry Labs and A Player Mode</a>.</p>\n    <p>A Player Mode does not provide medical, psychological, legal, financial or therapeutic advice. Results are examples, not guarantees.</p>\n    <p>&copy; 2026 Spry Labs. All rights reserved.</p>\n  </div>\n</footer>";
 
@@ -41,7 +41,7 @@ export function render(page, all) {
     '@context': 'https://schema.org',
     '@graph': [
       { '@type': 'Organization', name: 'Spry Labs', url: 'https://billionairehighperformancecoach.com/spry-labs', logo: { '@type': 'ImageObject', url: 'https://billionairehighperformancecoach.com/assets/spry-logo.png', width: 420, height: 96 }, sameAs: ['https://sprylabs.gumroad.com/'], '@id': ORG },
-      { '@type': 'WebPage', '@id': `${url}#webpage`, url, name: `${page.h1} | A Player Mode`, description: page.meta, inLanguage: 'en', isPartOf: { '@id': `${SITE}/#website` }, publisher: { '@id': ORG }, datePublished: date, dateModified: date, breadcrumb: { '@id': `${url}#breadcrumb` }, speakable: { '@type': 'SpeakableSpecification', cssSelector: ['.definition', '.quick-answer', '.faq-answer'] } },
+      { '@type': 'WebPage', '@id': `${url}#webpage`, url, name: page.title, description: page.meta, inLanguage: 'en', isPartOf: { '@id': `${SITE}/#website` }, publisher: { '@id': ORG }, datePublished: date, dateModified: date, breadcrumb: { '@id': `${url}#breadcrumb` }, speakable: { '@type': 'SpeakableSpecification', cssSelector: ['.definition', '.quick-answer', '.faq-answer'] } },
       { '@type': 'Article', '@id': `${url}#article`, headline: page.h1, description: page.meta, mainEntityOfPage: { '@id': `${url}#webpage` }, author: { '@type': 'Person', name: 'S.L. Taylor', url: `${SITE}/about/` }, publisher: { '@id': ORG }, datePublished: date, dateModified: date, image: `${SITE}/aplayermode/img/og.png` },
       { '@type': 'HowTo', '@id': `${url}#howto`, name: main.title, step: main.steps.map((s, i) => ({ '@type': 'HowToStep', position: i + 1, name: s, text: s })) },
       { '@type': 'BreadcrumbList', '@id': `${url}#breadcrumb`, itemListElement: [{ '@type': 'ListItem', position: 1, name: 'A Player Mode', item: `${SITE}/` }, { '@type': 'ListItem', position: 2, name: page.h1, item: url }] },
@@ -59,7 +59,7 @@ export function render(page, all) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${esc(page.h1)} | A Player Mode</title>
+<title>${esc(page.title)}</title>
 <meta name="description" content="${esc(page.meta)}">
 <!-- Generated by scripts/aplayermode/build_routine_pages.mjs from config/aplayermode_routines.json; edit there, not here.
      Served at ${url} by workers/aplayermode-com (CONTENT_PAGES). -->
@@ -144,6 +144,16 @@ function main() {
     if (!check) { fs.mkdirSync(path.dirname(abs), { recursive: true }); fs.writeFileSync(abs, text); }
   };
   for (const page of cfg.pages) put(fileFor(page), render(page, cfg.pages));
+  // Item b7 (no orphans): the homepage links every routine page, so each is one click deep.
+  const homeRel = 'aplayermode/index.html';
+  const home = fs.readFileSync(path.join(root, homeRel), 'utf8');
+  const START = '<!-- routines:start (written by scripts/aplayermode/build_routine_pages.mjs) -->';
+  const END = '<!-- routines:end -->';
+  const a = home.indexOf(START);
+  const b = home.indexOf(END);
+  if (a < 0 || b < a) { console.error(`[routine-pages] FAIL: ${homeRel} lost its routines markers`); process.exit(1); }
+  const nav = `\n    <nav class="routines-nav" aria-label="Routines"><p><b>Routines:</b> ${cfg.pages.map((p) => `<a href="${routeFor(p)}">${esc(p.h1.split(':')[0])}</a>`).join(' · ')}</p></nav>\n    `;
+  put(homeRel, home.slice(0, a + START.length) + nav + home.slice(b));
   const listRel = 'config/aplayermode_content_pages.json';
   const list = JSON.parse(fs.readFileSync(path.join(root, listRel), 'utf8'));
   const pages = Object.fromEntries(Object.entries(list.pages).filter(([r]) => !r.startsWith('/routines/')));
