@@ -55,6 +55,11 @@ function gate(root) { return admitCreatedPages({root, runtimeRoot: REAL_ROOT, ru
 // seeds them), so this test judges QUALITY; the demand gate that precedes it is
 // proved by self_test_agent_created_page_demand_gate.mjs.
 const scratch = makeScratch();
+// A manifest the phase-expansion lane left behind. The gate borrows the file and
+// must hand it back: Spry Content Release went red when it reset it to empty.
+const PRIOR_MANIFEST_TEXT = JSON.stringify({schema_version: '1.0', lane: 'aplayer_phase_expansion', run_id: 'aplayer-phase4-2000-baseline', candidates: [{path: 'answers/phase4/x.html', source: 'aplayer_phase_expansion_2000_baseline', unique_atom: 'self-test'}]}, null, 2) + '\n';
+fs.mkdirSync(path.join(scratch, 'data/content'), {recursive: true});
+fs.writeFileSync(path.join(scratch, 'data/content/programmatic_candidate_manifest.json'), PRIOR_MANIFEST_TEXT);
 try {
   // ── 1. NEGATIVE: the incident pair is rejected before commit ────────────────
   let p = plan(scratch);
@@ -70,7 +75,7 @@ try {
   const ledger = readQuarantine(scratch);
   check(ledger.rows.length === 2 && PAGES.every((rel) => ledger.rows.some((r) => r.path === rel)), `quarantine ledger must hold both rejected pages, holds ${ledger.rows.length}`);
   check(readJson(path.join(scratch, REJECTION_BACKLOG_PATH)).rejections.filter((r) => r.lane === 'agent_exact_implementation').length === 2, 'rejection backlog must record both rejections under the agent_exact_implementation lane');
-  check(readJson(path.join(scratch, 'data/content/programmatic_candidate_manifest.json')).candidates.length === 0, 'candidate manifest must be reset to empty after the gate');
+  check(fs.readFileSync(path.join(scratch, 'data/content/programmatic_candidate_manifest.json'), 'utf8') === PRIOR_MANIFEST_TEXT, 'the candidate manifest must be restored byte for byte after the gate (it carries the phase-expansion rows other validators read)');
   const artifact = readJson(path.join(scratch, ARTIFACT_PATH));
   check(artifact.stop_reason?.code && artifact.stop_reason?.message, 'the lane artifact must carry a named stop_reason {code,message} when nothing was admitted');
 
