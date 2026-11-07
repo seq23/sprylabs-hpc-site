@@ -471,7 +471,10 @@
     "build:spry-rescue": "node scripts/content/build_spry_rescue.cjs",
     "test:search-rescue": "node --test tests/spry_rescue.test.mjs",
     "check:ai-measurement": "node scripts/diagnostics/check_ai_measurement.mjs",
-    "self-test:ai-measurement": "node scripts/diagnostics/check_ai_measurement.mjs --self-test"
+    "self-test:ai-measurement": "node scripts/diagnostics/check_ai_measurement.mjs --self-test",
+    "typecheck": "git ls-files -z -- \"*.js\" \"*.mjs\" \"*.cjs\" \":!:assets/**\" \":!:public/**\" \":!:fixtures/**\" | xargs -0 -P8 -n1 node --check",
+    "test": "node --test tests/canonical_host.test.mjs tests/edge_cache.test.mjs tests/free_llm_router.test.mjs tests/homepage_trust_links.test.mjs tests/host_consolidation.test.mjs tests/route_owner_host.test.mjs tests/search_loop_replay.test.mjs tests/spry_rescue.test.mjs tests/aplayermode/pinqueue.test.mjs",
+    "validate": "node scripts/validators/run_safety_checks.mjs"
   },
   "engines": {
     "node": ">=24.0.0"
