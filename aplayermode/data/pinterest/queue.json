@@ -42,8 +42,7 @@
         }
       ]
     },
-    "held_comment": "A variant with a 'held' block is never dated or put in a feed (workers/aplayermode-com/src/pinqueue.js isHeld). While hold_new_pins is true, refills are planned held too. Release (one command): docs/OPERATIONS.md, 'Releasing held A Player Mode pins'.",
-    "hold_new_pins": true
+    "held_comment": "A variant with a 'held' block is never dated or put in a feed (workers/aplayermode-com/src/pinqueue.js isHeld). While hold_new_pins is true, refills are planned held too. Release (one command): docs/OPERATIONS.md, 'Releasing held A Player Mode pins'."
   },
   "boards": {
     "_comment": "Pinterest topic boards (owner-approved 1 Nov 2026). Pinterest auto-publish maps ONE feed to ONE board, so each board has its own feed, served by the aplayermode-com Worker (/pinfeed.xml = the first board, /pinfeed/<slug>.xml the others). A pin's board is its page section. Pins released before split_from all went to the first board and stay there. keywords: Pinterest search suggestions read 1 Nov 2026; a post-split title naming none is led with the first. 7 Nov 2026: routine pins carry their routine page's slug as section (config/aplayermode_routines.json); 'morning routine', 'adhd morning routine', 'weekly planning', 'weekly reset' and 'sunday reset' added as common Pinterest searches (not re-read in the suggest box), so every routine title starts with one of its board's phrases.",
@@ -962,17 +961,17 @@
       "description": "A six-step ADHD morning routine for days when motivation is low: water before your phone, clothes laid out the night before, one song to get dressed, something small to eat, one must-do written down, then five minutes on it. Planning routine, not medical advice.",
       "layout": "card",
       "palette": "peach",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-08",
       "replaces": "founding-100-07",
       "image": {
         "path": "aplayermode/img/pins/drip/adhd-morning-routine-low-motivation.png",
         "length": 162981,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -995,17 +994,17 @@
       "description": "Plan your week in 20 minutes: clear last week's list, copy in the fixed appointments, pick three outcomes, give each a day, block one focus slot every day and leave Friday afternoon open for what slips.",
       "layout": "steps",
       "palette": "butter",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-08",
       "replaces": "how-it-works-07",
       "image": {
         "path": "aplayermode/img/pins/drip/weekly-planning-routine-twenty-minutes.png",
         "length": 120526,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1028,17 +1027,17 @@
       "description": "Time blocking for busy days: put fixed meetings in first, protect one 90-minute focus block, give admin 30 minutes, add a buffer after every meeting, make lunch a real block and put your stop time on the calendar.",
       "layout": "card",
       "palette": "blush",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-08",
       "replaces": "app-07",
       "image": {
         "path": "aplayermode/img/pins/drip/time-blocking-for-busy-days-busy-days.png",
         "length": 161697,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1061,17 +1060,17 @@
       "description": "A bad day routine called the minimum day: water and food, one task that keeps things moving, one reply you owe, ten minutes outside, no catch-up list, and bed on time. Tomorrow you go back to the normal plan.",
       "layout": "steps",
       "palette": "sage",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-09",
       "replaces": "modes-07",
       "image": {
         "path": "aplayermode/img/pins/drip/minimum-day-after-a-bad-day-minimum-day.png",
         "length": 108690,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1094,17 +1093,17 @@
       "description": "A 30-minute family Sunday reset: look at the week together, write who is where on which day, plan three easy dinners, get bags and uniforms ready, pick one fun thing and set Monday's wake-up time.",
       "layout": "card",
       "palette": "butter",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-09",
       "replaces": "pillars-07",
       "image": {
         "path": "aplayermode/img/pins/drip/family-weekly-reset-sunday-reset.png",
         "length": 164232,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1127,17 +1126,17 @@
       "description": "A daily productivity routine for founders: write today's one outcome, build before opening email, check the inbox at 11 and 4, put calls in one afternoon block, ship something small and close with tomorrow's top task.",
       "layout": "steps",
       "palette": "blush",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-09",
       "replaces": "founding-100-08",
       "image": {
         "path": "aplayermode/img/pins/drip/founder-daily-routine-daily.png",
         "length": 112387,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1160,17 +1159,17 @@
       "description": "A 15-minute morning routine for ADHD adults: up at the alarm, lights on, face and teeth, clothes from the pile you set out last night, a grab-and-go breakfast and a five-minute buffer before you leave. Planning routine, not medical advice.",
       "layout": "card",
       "palette": "sage",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-10",
       "replaces": "how-it-works-08",
       "image": {
         "path": "aplayermode/img/pins/drip/adhd-morning-routine-fifteen-minutes.png",
         "length": 167162,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1193,17 +1192,17 @@
       "description": "A Sunday reset routine that sets up the week: laundry on and dishes done, a look at the calendar, three easy dinners planned, Monday's bag packed, Monday's first task chosen and bed 30 minutes early.",
       "layout": "steps",
       "palette": "peach",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-10",
       "replaces": "app-08",
       "image": {
         "path": "aplayermode/img/pins/drip/weekly-planning-routine-sunday-reset.png",
         "length": 114908,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1226,17 +1225,17 @@
       "description": "A time blocking template for a day full of meetings: a focus block before 9, meetings back to back after that, a 15-minute catch-up at noon, replies in one 30-minute block, tomorrow's prep at 4 and nothing new after 5.",
       "layout": "card",
       "palette": "blush",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-10",
       "replaces": "modes-08",
       "image": {
         "path": "aplayermode/img/pins/drip/time-blocking-for-busy-days-meeting-heavy.png",
         "length": 165174,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1259,17 +1258,17 @@
       "description": "The never miss twice habit tracker rule: missing yesterday is fine, do the tiny version today, two minutes counts, tick it done, never try to make up missed days and go back to normal tomorrow.",
       "layout": "steps",
       "palette": "sage",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-11",
       "replaces": "pillars-08",
       "image": {
         "path": "aplayermode/img/pins/drip/minimum-day-after-a-bad-day-never-miss-twice.png",
         "length": 103388,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1292,17 +1291,17 @@
       "description": "Weekly planning for busy parents: one shared calendar, a 15-minute Sunday check-in, pickups split by day, meals on a whiteboard, a backup plan for sick days and date night on the calendar.",
       "layout": "card",
       "palette": "peach",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-11",
       "replaces": "founding-100-09",
       "image": {
         "path": "aplayermode/img/pins/drip/family-weekly-reset-busy-parents.png",
         "length": 167414,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1325,17 +1324,17 @@
       "description": "Ninety-day goal setting for founders: one goal with one number, three bets to move it, a weekly check on Friday at 4, kill a bet that is not working, keep a wins list and review at day 45.",
       "layout": "steps",
       "palette": "butter",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-11",
       "replaces": "how-it-works-09",
       "image": {
         "path": "aplayermode/img/pins/drip/founder-daily-routine-ninety-days.png",
         "length": 108794,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1358,17 +1357,17 @@
       "description": "Tape this by the door: keys, wallet and phone, a bag packed the night before, the charger in it, the day's first meeting checked, a filled water bottle, and out five minutes early. A morning checklist for ADHD brains. Not medical advice.",
       "layout": "card",
       "palette": "sage",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-12",
       "replaces": "app-09",
       "image": {
         "path": "aplayermode/img/pins/drip/adhd-morning-routine-door-checklist.png",
         "length": 157259,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1391,17 +1390,17 @@
       "description": "A weekly planner method for busy weeks: list every fixed commitment, mark the two busiest days, move what can wait, keep one priority per day, batch errands into one trip and fit the whole week on one page.",
       "layout": "steps",
       "palette": "peach",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-12",
       "replaces": "modes-09",
       "image": {
         "path": "aplayermode/img/pins/drip/weekly-planning-routine-busy-weeks.png",
         "length": 113573,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1424,17 +1423,17 @@
       "description": "Time blocking with kids at home: work while they nap or sleep, use short 45-minute blocks, make their screen time your call time, share a calendar with your partner, batch errands and plan for interruptions.",
       "layout": "card",
       "palette": "butter",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-12",
       "replaces": "pillars-09",
       "image": {
         "path": "aplayermode/img/pins/drip/time-blocking-for-busy-days-kids-at-home.png",
         "length": 171710,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1457,17 +1456,17 @@
       "description": "Productivity for a low-energy day: pick one must-do, make it smaller, do it first, cancel one optional thing, leave easy tasks for after lunch and stop once the must-do is done.",
       "layout": "steps",
       "palette": "blush",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-13",
       "replaces": "founding-100-10",
       "image": {
         "path": "aplayermode/img/pins/drip/minimum-day-after-a-bad-day-low-energy.png",
         "length": 102913,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1490,17 +1489,17 @@
       "description": "A family morning routine for school days: clothes out the night before, the same breakfast every school day, a picture list for each child, shoes and bags by the door, one leave-time alarm and a five-minute buffer.",
       "layout": "card",
       "palette": "peach",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-13",
       "replaces": "how-it-works-10",
       "image": {
         "path": "aplayermode/img/pins/drip/family-weekly-reset-mornings.png",
         "length": 173225,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1523,17 +1522,17 @@
       "description": "A founder morning routine: up, water and no inbox, 20 minutes of planning, 90 minutes on the hardest thing, then the team check-in, messages after 11 and lunch away from the laptop.",
       "layout": "steps",
       "palette": "butter",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-13",
       "replaces": "app-10",
       "image": {
         "path": "aplayermode/img/pins/drip/founder-daily-routine-morning.png",
         "length": 112111,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1556,17 +1555,17 @@
       "description": "Woke up late? Skip the catch-up. Dress, teeth and water, read only the day's first task, send one running-late text, eat on the way and start the day at step one. The full late-start routine is on the page.",
       "layout": "card",
       "palette": "blush",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-14",
       "replaces": "modes-10",
       "image": {
         "path": "aplayermode/img/pins/drip/adhd-morning-routine-woke-up-late.png",
         "length": 152745,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1589,17 +1588,17 @@
       "description": "A 15-minute weekly reset checklist: empty your bag and desk, get the inbox under ten, pay or schedule the bills, delete finished tasks, check next week's deadlines and set Monday's first task.",
       "layout": "steps",
       "palette": "sage",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-14",
       "replaces": "pillars-10",
       "image": {
         "path": "aplayermode/img/pins/drip/weekly-planning-routine-reset-checklist.png",
         "length": 114902,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1622,17 +1621,17 @@
       "description": "A daily routine schedule for a 9 to 5: up at 6:30, one personal task at 7:30, the hardest work at 9, a walk and lunch at 12:30, admin and replies at 3 and a shutdown list at 5.",
       "layout": "card",
       "palette": "butter",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-14",
       "replaces": "founding-100-11",
       "image": {
         "path": "aplayermode/img/pins/drip/time-blocking-for-busy-days-nine-to-five.png",
         "length": 163777,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1655,17 +1654,17 @@
       "description": "A ten-minute bad day reset: stand up and drink water, write down what is bothering you, circle the parts you control, pick one small next step, do it now and tell one person how the day is going.",
       "layout": "steps",
       "palette": "blush",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-15",
       "replaces": "how-it-works-11",
       "image": {
         "path": "aplayermode/img/pins/drip/minimum-day-after-a-bad-day-ten-minute-reset.png",
         "length": 101846,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1688,17 +1687,17 @@
       "description": "A family evening routine that sets up the next day: dinner at a set time, bags packed, screens off an hour before bed, bath, book, bed, parents check tomorrow, and a ten-minute tidy together.",
       "layout": "card",
       "palette": "sage",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-15",
       "replaces": "app-11",
       "image": {
         "path": "aplayermode/img/pins/drip/family-weekly-reset-evenings.png",
         "length": 162583,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1721,17 +1720,17 @@
       "description": "A simple productivity system for a solo founder: one list for everything, one calendar, a daily top three, a weekly review, a monthly numbers check and a quarterly goal reset.",
       "layout": "steps",
       "palette": "peach",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-15",
       "replaces": "modes-11",
       "image": {
         "path": "aplayermode/img/pins/drip/founder-daily-routine-solo-system.png",
         "length": 106648,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1754,17 +1753,17 @@
       "description": "An ADHD morning routine that keeps the phone out of the first hour: it charges outside the bedroom, a paper list waits on the nightstand, music instead of feeds, the phone after you are dressed, messages after the first task and social apps after lunch.",
       "layout": "card",
       "palette": "blush",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-16",
       "replaces": "pillars-11",
       "image": {
         "path": "aplayermode/img/pins/drip/adhd-morning-routine-no-phone.png",
         "length": 173543,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1787,17 +1786,17 @@
       "description": "A weekly planning routine for founders: review last week's numbers, pick the one number that matters this week, choose three outcomes, block two deep-work mornings, batch meetings onto two days and book the Friday review.",
       "layout": "steps",
       "palette": "sage",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-16",
       "replaces": "founding-100-12",
       "image": {
         "path": "aplayermode/img/pins/drip/weekly-planning-routine-founders.png",
         "length": 122849,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1820,17 +1819,17 @@
       "description": "Time blocking for founders: mornings for building, sales calls after 1, team time on Tuesdays, the inbox twice a day, no meetings on Wednesday morning and a weekly review on Friday at 4.",
       "layout": "card",
       "palette": "peach",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-16",
       "replaces": "how-it-works-12",
       "image": {
         "path": "aplayermode/img/pins/drip/time-blocking-for-busy-days-founders.png",
         "length": 161850,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1853,17 +1852,17 @@
       "description": "Goal setting after you fall off track: do not restart from zero, keep the goal and shrink the step, set a seven-day minimum, track only yes or no, review on day eight and only then add one step.",
       "layout": "steps",
       "palette": "butter",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-17",
       "replaces": "app-12",
       "image": {
         "path": "aplayermode/img/pins/drip/minimum-day-after-a-bad-day-off-track.png",
         "length": 106070,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1886,17 +1885,17 @@
       "description": "A balanced life weekly check in six questions: was focus time protected, did you move three times, did everyone get one-on-one time, was one home admin job done, was there one slow evening, and what is the one change for next week.",
       "layout": "card",
       "palette": "sage",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-17",
       "replaces": "modes-12",
       "image": {
         "path": "aplayermode/img/pins/drip/family-weekly-reset-balanced-life.png",
         "length": 175093,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1919,17 +1918,17 @@
       "description": "A weekly founder scorecard for goal setting: this week's key number, one thing shipped, conversations with customers, the biggest blocker, what you will stop doing and next week's one outcome.",
       "layout": "steps",
       "palette": "peach",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-17",
       "replaces": "pillars-12",
       "image": {
         "path": "aplayermode/img/pins/drip/founder-daily-routine-scorecard.png",
         "length": 116687,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1952,17 +1951,17 @@
       "description": "A morning routine for time blindness: a visible clock in every room, a timer on the shower, one alarm for shoes on and one for leave now, the same order every day, and the plan counted back from the time you have to leave. Not medical advice.",
       "layout": "card",
       "palette": "butter",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-18",
       "replaces": "founding-100-13",
       "image": {
         "path": "aplayermode/img/pins/drip/adhd-morning-routine-time-blindness.png",
         "length": 165554,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -1985,17 +1984,17 @@
       "description": "Six weekly review questions that take ten minutes: what got done, what slipped and why, what you promised people, what you can drop, next week's three outcomes and when your first focus block is.",
       "layout": "steps",
       "palette": "blush",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-18",
       "replaces": "how-it-works-13",
       "image": {
         "path": "aplayermode/img/pins/drip/weekly-planning-routine-review-questions.png",
         "length": 118473,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -2018,17 +2017,17 @@
       "description": "Time blocking when no two days look alike: plan tomorrow the night before, place the fixed things first, pick one must-do, fit it into the biggest gap, keep everything else on a list and re-plan once at lunch.",
       "layout": "card",
       "palette": "peach",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-18",
       "replaces": "app-13",
       "image": {
         "path": "aplayermode/img/pins/drip/time-blocking-for-busy-days-every-day-different.png",
         "length": 159365,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -2051,17 +2050,17 @@
       "description": "A minimum viable day checklist: food, water and sleep, one work task, one home task, one kind word to someone, no new commitments, and when those are done the day is done.",
       "layout": "steps",
       "palette": "butter",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-19",
       "replaces": "modes-13",
       "image": {
         "path": "aplayermode/img/pins/drip/minimum-day-after-a-bad-day-checklist.png",
         "length": 107770,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -2084,17 +2083,17 @@
       "description": "A family gratitude routine that takes two minutes: ask for the best part of the day at dinner, write one thank-you note a week, keep a gratitude jar on the counter, name one thing at bedtime, listen without fixing and keep it short.",
       "layout": "card",
       "palette": "blush",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-19",
       "replaces": "pillars-13",
       "image": {
         "path": "aplayermode/img/pins/drip/family-weekly-reset-gratitude.png",
         "length": 165944,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -2117,17 +2116,17 @@
       "description": "A ten-minute end-of-day shutdown routine: write what got done, move unfinished tasks, pick tomorrow's first task, clear the desk, close every tab and say done for today.",
       "layout": "steps",
       "palette": "sage",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-19",
       "replaces": "founding-100-14",
       "image": {
         "path": "aplayermode/img/pins/drip/founder-daily-routine-shutdown.png",
         "length": 109080,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -2150,17 +2149,17 @@
       "description": "An ADHD-friendly work-from-home morning: dressed for outside, a desk cleared the night before, coffee then one hard task, messages only after 45 minutes, a stand-up break at 10 and lunch away from the desk.",
       "layout": "card",
       "palette": "butter",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-20",
       "replaces": "how-it-works-14",
       "image": {
         "path": "aplayermode/img/pins/drip/adhd-morning-routine-work-from-home.png",
         "length": 166156,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -2183,17 +2182,17 @@
       "description": "Plan the week without overplanning: one page instead of a planner spread, three outcomes only, fixed things first, empty space every day, just a top task for each day, and stop after 20 minutes.",
       "layout": "steps",
       "palette": "blush",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-20",
       "replaces": "app-14",
       "image": {
         "path": "aplayermode/img/pins/drip/weekly-planning-routine-no-overplanning.png",
         "length": 115242,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -2216,17 +2215,17 @@
       "description": "Six rules for deep-work time blocks: the phone in another room, one task per block, 90 minutes then a break, the same time each day, your status set to busy and a note of where you stopped.",
       "layout": "card",
       "palette": "sage",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-20",
       "replaces": "modes-14",
       "image": {
         "path": "aplayermode/img/pins/drip/time-blocking-for-busy-days-deep-work.png",
         "length": 158331,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -2249,17 +2248,17 @@
       "description": "Productivity on a tired day: the hardest thing before noon, move one meeting, short tasks after lunch, a ten-minute walk outside, no big decisions today and an early night.",
       "layout": "steps",
       "palette": "peach",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-21",
       "replaces": "pillars-14",
       "image": {
         "path": "aplayermode/img/pins/drip/minimum-day-after-a-bad-day-tired-day.png",
         "length": 106222,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -2282,17 +2281,17 @@
       "description": "A family routine for sharing the mental load: write every open loop down, split the list in two, each person owns tasks from start to finish, the calendar holds the reminders, sync for ten minutes on Sunday and swap one job a month.",
       "layout": "card",
       "palette": "blush",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-21",
       "replaces": "founding-100-15",
       "image": {
         "path": "aplayermode/img/pins/drip/family-weekly-reset-mental-load.png",
         "length": 164091,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -2315,17 +2314,17 @@
       "description": "A follow-up routine for busy founders: list who you owe a reply, answer three before noon, put every promise on the calendar, keep answers to two lines, clear the rest on Friday so nothing waits on memory.",
       "layout": "steps",
       "palette": "sage",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-21",
       "replaces": "how-it-works-15",
       "image": {
         "path": "aplayermode/img/pins/drip/founder-daily-routine-follow-ups.png",
         "length": 118668,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -2348,17 +2347,17 @@
       "description": "A morning routine for ADHD parents: lunches packed the night before, shoes and bags by the door, a picture checklist for each child, your coffee before their breakfast, one leave-time alarm for everyone and two calm minutes in the car.",
       "layout": "card",
       "palette": "peach",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-22",
       "replaces": "app-15",
       "image": {
         "path": "aplayermode/img/pins/drip/adhd-morning-routine-with-kids.png",
         "length": 180901,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -2381,17 +2380,17 @@
       "description": "A Monday morning weekly planning routine that takes 15 minutes: open the calendar before the inbox, note what changed since Friday, pick three outcomes, book them into real slots, tell people what you will deliver and start outcome one.",
       "layout": "steps",
       "palette": "butter",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-22",
       "replaces": "modes-15",
       "image": {
         "path": "aplayermode/img/pins/drip/weekly-planning-routine-monday-morning.png",
         "length": 121142,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -2414,17 +2413,17 @@
       "description": "A daily routine for chaotic days: write down the three fixed things, pick one thing that must move, do it before noon, batch the small tasks, say no to one request and end with tomorrow's first step.",
       "layout": "card",
       "palette": "sage",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-22",
       "replaces": "pillars-15",
       "image": {
         "path": "aplayermode/img/pins/drip/time-blocking-for-busy-days-chaotic-day.png",
         "length": 172422,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -2447,17 +2446,17 @@
       "description": "A habit tracker for restarting: choose two habits instead of ten, use the smallest version of each, do them at the same time every day, tick a box without a streak score, never miss twice and review on Sundays.",
       "layout": "steps",
       "palette": "peach",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-23",
       "replaces": "founding-100-16",
       "image": {
         "path": "aplayermode/img/pins/drip/minimum-day-after-a-bad-day-restart-habits.png",
         "length": 115893,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     },
     {
@@ -2480,17 +2479,17 @@
       "description": "A monthly family admin routine: check bills and renewals, list upcoming birthdays, book appointments, collect school forms and dates, cancel unused subscriptions, all in 30 minutes on the first Sunday of the month.",
       "layout": "card",
       "palette": "butter",
-      "release_date": null,
-      "held": {
-        "since": "2026-11-07",
-        "why": "redrawn as a routine pin (Pinterest assessment, 6 Nov 2026); released only on the owner's approval of the sample"
-      },
+      "release_date": "2026-11-23",
       "replaces": "how-it-works-16",
       "image": {
         "path": "aplayermode/img/pins/drip/family-weekly-reset-monthly-admin.png",
         "length": 162986,
         "width": 1000,
         "height": 1500
+      },
+      "released_from_hold": {
+        "at": "2026-11-07",
+        "held_since": "2026-11-07"
       }
     }
   ]
