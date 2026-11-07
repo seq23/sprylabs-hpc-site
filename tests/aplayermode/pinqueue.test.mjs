@@ -11,7 +11,7 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import {
-  SECTIONS, addDays, buildPinfeedXml, chicagoDate, dueVariants, needsRefill, planRefill, scheduleVariants, unreleasedCount,
+  SECTIONS, addDays, buildPinfeedXml, chicagoDate, dueVariants, isHeld, needsRefill, planRefill, scheduleVariants, unreleasedCount,
 } from '../../workers/aplayermode-com/src/pinqueue.js';
 import worker, { pinVisitPoint, route } from '../../workers/aplayermode-com/src/index.js';
 import { QUEUE_FILE, launchBlock, pageIds, pngSize } from '../../scripts/aplayermode/pinfeed_lib.mjs';
@@ -90,10 +90,12 @@ test('committed queue: >=30 variants, sections balanced, 1 a day from 17 Oct the
   assertSectionShape(queue.variants, 'committed');
   assert.deepEqual(queue.launch.map((i) => i.slug), ['founding-100', 'weekly-planning', 'adhd-morning-routine', 'adhd-routine-bad-days', 'mind-body-spirit-planner']);
   assert.deepEqual({ channel: queue.channel, launch: queue.launch }, launchBlock(root));
-  const dates = queue.variants.map((v) => v.release_date).sort();
+  const dated = queue.variants.filter((v) => !isHeld(v));
+  for (const v of queue.variants.filter(isHeld)) assert.equal(v.release_date, null, `${v.id}: a held pin carries no date`);
+  const dates = dated.map((v) => v.release_date).sort();
   assert.equal(dates[0], '2026-10-17');
   const byDate = new Map();
-  for (const v of queue.variants) byDate.set(v.release_date, [...(byDate.get(v.release_date) ?? []), v.section]);
+  for (const v of dated) byDate.set(v.release_date, [...(byDate.get(v.release_date) ?? []), v.section]);
   for (const [d, list] of byDate) {
     assert.ok(list.length <= (d < queue.config.pace.since ? 1 : queue.config.pins_per_day), `${d}: ${list.length} pins`);
     assert.equal(new Set(list).size, list.length, `${d}: one section twice`);
@@ -114,6 +116,17 @@ test('every variant: truthful limits, its own 1000x1500 PNG, distinct design wit
   }
   const images = queue.variants.map((v) => v.image.path);
   assert.equal(new Set(images).size, images.length, 'each variant has its own image');
+});
+
+test('held pins: never in a feed and never dated by the scheduler, whatever their date', () => {
+  const vs = [{ id: 'a', seq: 1, section: 'app', release_date: '2026-10-17', image: {} }, { id: 'h', seq: 2, section: 'modes', release_date: '2026-10-17', image: {}, held: { since: '2026-11-06' } }, { id: 'u', seq: 3, section: 'pillars', release_date: null, held: { since: '2026-11-06' } }];
+  assert.deepEqual(dueVariants(vs, '2026-12-01').map((v) => v.id), ['a']);
+  scheduleVariants(vs, { pinsPerDay: 3, firstDay: '2026-11-07' });
+  assert.equal(vs[2].release_date, null);
+  const q = clone(queue);
+  const heldIds = new Set(q.variants.filter(isHeld).map((v) => v.id));
+  assert.ok(heldIds.size > 0, 'the committed queue holds the old-style pins');
+  for (const board of q.boards.list) for (const id of heldIds) assert.ok(!buildPinfeedXml(q, '2027-06-01', board).includes(`aplayermode-pin-${id}<`), `${id} in ${board.slug}`);
 });
 
 test('dueVariants: release_date <= today only, newest first, capped', () => {
