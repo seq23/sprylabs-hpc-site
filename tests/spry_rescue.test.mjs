@@ -11,7 +11,9 @@ import { consolidationResponse } from '../functions/_lib/host_consolidation.js';
 const require = createRequire(import.meta.url);
 const { renderSchemaScript } = require('../scripts/lib/citation_page_schema.cjs');
 const { admittedEnginePages, enginePages, content, HOST, keepers, isRetiredFile, isRetiredRoute } = require('../scripts/lib/spry_rescue.cjs');
-const { build, render, fileFor } = require('../scripts/content/build_spry_rescue.cjs');
+const { build, render, fileFor, partsFor } = require('../scripts/content/build_spry_rescue.cjs');
+const { sharedSentences } = require('../scripts/lib/spry_say_once.cjs');
+const pageParts = g => partsFor(g).parts;
 const ledger = JSON.parse(fs.readFileSync('data/seo/spry_rescue_redirects.json'));
 
 test('publisher trust rejects broken attribution, invisible bylines and wrong conversion destinations', () => {
@@ -166,10 +168,16 @@ test('rendered FAQ and article metadata agree with the editorial data without du
     const schema = JSON.parse(html.match(/<script id="CITATION_PAGE_SCHEMA" type="application\/ld\+json">(.*?)<\/script>/s)[1]);
     assert.ok(html.includes(renderSchemaScript(schema)), 'schema serialization differs from the shared authority');
     const graph = schema['@graph'];
+    // The FAQ prints only answers the page has not already given (spry_say_once):
+    // schema, visible questions and the kept list agree exactly, and no FAQ means no FAQPage.
+    const kept = pageParts(g).faq;
     const faqs = graph.filter(n=>n['@type']==='FAQPage');
-    assert.equal(faqs.length,1);
-    assert.equal(faqs[0].mainEntity.length,g.faq.length);
-    assert.equal((html.match(/<h3>/g)||[]).length,g.faq.length);
+    assert.equal(faqs.length, kept.length ? 1 : 0);
+    if (kept.length) assert.deepEqual(faqs[0].mainEntity.map(q=>q.name), kept.map(f=>f.question));
+    assert.equal((html.match(/<h3>/g)||[]).length,kept.length);
+    assert.equal(html.includes('id="faq"'), kept.length > 0);
+    const speak = graph.find(n=>n['@type']==='WebPage').speakable.cssSelector;
+    assert.equal(speak.includes('#faq'), kept.length > 0);
     const article = graph.find(n=>n['@type']==='Article');
     const org = graph.find(n=>n['@type']==='Organization');
     assert.equal(article.author['@id'],org['@id']);
@@ -274,7 +282,7 @@ test('the replacement edition governs historical actions without discarding thei
     assert.ok(html.includes('<ol>') && html.includes('rel="author"'));
     assert.ok(g.sections.length > 0 && g.steps.length > 0 && g.faq.length > 0);
     const visible = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, '');
-    for (const faq of g.faq) assert.ok(visible.includes(faq.question.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll("'", '&#39;')));
+    for (const faq of pageParts(g).faq) assert.ok(visible.includes(faq.question.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll("'", '&#39;')));
   }
 });
 
@@ -301,4 +309,29 @@ test('repeated slashes on retired routes 301 directly to the retained guide', ()
     assert.equal(spryRescueResponse(new Request(`${target}?source=search`)), null);
   }
   assert.equal(spryRescueResponse(new Request(`https://preview.pages.dev${route}/`)), null);
+});
+
+// Search Readiness q1 (7 Nov 2026): 39 of 48 guides printed one sentence up to six
+// times and shared ten stock sentences with 39 other guides. The checklist's own
+// rule: an 8-word phrase more than three times in one body is template filler.
+function fillerPhrases(html) {
+  const body = (html.match(/<main\b[\s\S]*?<\/main>/) || [html])[0].replace(/<script\b[\s\S]*?<\/script>/g,' ').replace(/<[^>]+>/g,' ').replace(/&#39;|&amp;|&quot;/g,' ');
+  const w = body.toLowerCase().match(/[a-z0-9][\w'’-]*/g) || [];
+  const seen = new Map();
+  for (let i = 0; i + 8 <= w.length; i++) { const k = w.slice(i, i + 8).join(' '); seen.set(k, (seen.get(k) || 0) + 1); }
+  return [...seen].filter(([, n]) => n > 3);
+}
+test('no rescue guide repeats a phrase more than three times, and stock sentences are not printed', () => {
+  assert.ok(content.guides.length >= 40, 'too few guides examined');
+  const shared = sharedSentences(content.guides);
+  assert.ok(shared.size > 0, 'the stock-sentence detector found nothing to prove itself on');
+  for (const g of content.guides) {
+    const html = render(g);
+    assert.deepEqual(fillerPhrases(html), [], g.route);
+    const text = html.replace(/<[^>]+>/g, ' ');
+    for (const s of shared) assert.ok(!text.toLowerCase().replace(/[^a-z0-9]+/g,' ').includes(' ' + s + ' '), `${g.route} prints a stock sentence: ${s}`);
+  }
+  // Negative proof: the detector catches the old shape, one step printed six times.
+  const step = content.guides.find(g => g.best_for.startsWith('readers who need')).steps[0];
+  assert.ok(fillerPhrases('<main>' + Array(6).fill(`<p>${step}</p>`).join('') + '</main>').length > 0);
 });
