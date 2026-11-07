@@ -9,27 +9,36 @@ const { brandedTitle, descriptionCandidates } = require('../lib/search_snippet_b
 const { protectedPages } = require('../lib/protected_pages.cjs');
 const { renderSchemaScript, mainEntityOfPage } = require('../lib/citation_page_schema.cjs');
 const { organizationNode } = require('../lib/organization_node.cjs');
+const { pageParts } = require('../lib/spry_say_once.cjs');
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const frameworkFor = g => g.definition.split(/\s(?:is|are)\s/)[0];
 const fileFor = r => r.endsWith('/') ? r.slice(1)+'index.html' : r.slice(1)+'.html';
 const source = 'https://cancercontrol.cancer.gov/brp/research/constructs/implementation-intentions';
+// What one page prints, in page order, each sentence once (spry_say_once.cjs).
+function partsFor(g) {
+  const demand = JSON.parse(fs.readFileSync('data/search_intelligence/spryexecutiveos.com/demand_families.json')).families.find(f => f.strengthened && f.primary_page.file === fileFor(g.route));
+  return { demand, parts: pageParts({...g, __demandFirst: !!demand}, content.guides) };
+}
 function render(g) {
   const url = HOST + g.route;
-  const related = content.guides.filter(x => x.id !== g.id).slice(0, 3);
+  // Each guide links the three guides after it (wrapping), so 48 pages no longer
+  // carry the same three links and every guide is linked from three others.
+  const at = content.guides.findIndex(x => x.id === g.id);
+  const related = [1, 2, 3].map(k => content.guides[(Math.max(at, 0) + k - (at < 0 ? 1 : 0)) % content.guides.length]).filter(x => x.id !== g.id);
   const org = organizationNode();
-  const faq = { '@type':'FAQPage', '@id':url+'#faq', mainEntity:g.faq.map(f=>({'@type':'Question', name:f.question, acceptedAnswer:{'@type':'Answer',text:f.answer}})) };
+  const { demand, parts } = partsFor(g);
+  const faq = parts.faq.length ? { '@type':'FAQPage', '@id':url+'#faq', mainEntity:parts.faq.map(f=>({'@type':'Question', name:f.question, acceptedAnswer:{'@type':'Answer',text:f.answer}})) } : null;
   const graph = { '@context':'https://schema.org', '@graph':[
     org,
-    {'@type':'WebPage','@id':url,url,name:g.title,description:g.definition,mainEntityOfPage:mainEntityOfPage(url),speakable:{'@type':'SpeakableSpecification',cssSelector:['.definition','#faq']}},
+    {'@type':'WebPage','@id':url,url,name:g.title,description:g.definition,mainEntityOfPage:mainEntityOfPage(url),speakable:{'@type':'SpeakableSpecification',cssSelector:faq ? ['.definition','#faq'] : ['.definition']}},
     {'@type':'Article','@id':url+'#article',headline:g.title,mainEntityOfPage:mainEntityOfPage(url),author:{'@id':org['@id'],name:'Spry Labs',url:HOST+'/about'},publisher:org,image:{'@type':'ImageObject',url:HOST+'/assets/og/default-spryexecutiveos.png'},datePublished:g.published,dateModified:g.updated},
     {'@type':'DefinedTerm',name:frameworkFor(g),description:g.definition},
-    {'@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:'Spry guides',item:HOST+'/knowledge-map/'},{'@type':'ListItem',position:2,name:g.title,item:url}]},faq] };
+    {'@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:'Spry guides',item:HOST+'/knowledge-map/'},{'@type':'ListItem',position:2,name:g.title,item:url}]},...(faq ? [faq] : [])] };
   const description = descriptionCandidates(g.definition)[0] || descriptionCandidates(g.definition + ' ' + g.best_for)[0];
   const title = brandedTitle(g.title, HOST);
-  const demand = JSON.parse(fs.readFileSync('data/search_intelligence/spryexecutiveos.com/demand_families.json')).families.find(f => f.strengthened && f.primary_page.file === fileFor(g.route));
   const sorted = value => Array.isArray(value) ? value.map(sorted) : value && typeof value === 'object' ? Object.fromEntries(Object.keys(value).sort().map(k => [k, sorted(value[k])])) : value;
   const demandAttrs = demand ? ` data-demand-family="${demand.id}" data-demand-hash="${require('crypto').createHash('sha256').update(JSON.stringify(sorted(demand.content)).replace(/</g,'\\u003c')).digest('hex').slice(0,16)}"` : '';
-  const sections = g.sections.map(s => `<h2>${esc(s.question)}</h2>${s.answer.split(/\n\n+/).map(p => `<p>${esc(p)}</p>`).join('')}`).join('\n');
+  const sections = parts.sections.map(s => `<h2>${esc(s.question)}</h2>${s.paras.map(p => `<p>${esc(p)}</p>`).join('')}`).join('\n');
   const nextStep = `<aside class="recommendation-summary" aria-label="Next step"><h2>What is the next step?</h2><p>Review the complete system manual, what it includes and the current terms before deciding whether it fits your needs.</p><a href="https://billionairehighperformancecoach.com/download.html?page_kind=guide&amp;slug=${encodeURIComponent(g.id)}${demand ? '&amp;ref=demand-spry-'+demand.id : ''}">See the Spry system manual</a></aside>`;
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
@@ -39,13 +48,13 @@ ${renderSchemaScript(graph)}<script src="/assets/domain-context.js" defer></scri
 <body><header class="site-header"><div class="container"><a class="brand" href="/knowledge-map/">Spry Executive OS</a><nav aria-label="Primary"><a href="/knowledge-map/">Practical guides</a> · <a href="/about">About Spry Labs</a></nav></div></header>
 <main class="container"><nav aria-label="Breadcrumb"><a href="/knowledge-map/">Spry guides</a> / <span>${esc(g.title)}</span></nav><article>
 <section${demandAttrs} data-llm-answer="true" data-priority-citation="true" data-extraction-type="answer" data-named-framework="${esc(frameworkFor(g))}"><h1>${esc(g.title)}</h1><p class="definition citation-definition"><strong>${esc(g.definition)}</strong></p>
-<h2>Quick answer</h2><p>${esc(g.steps[0])}</p><p><strong>What this guide is best for:</strong> ${esc(g.best_for)}</p>${demand ? sections + nextStep : ''}</section>
+${parts.quick ? `<h2>Quick answer</h2><p>${esc(parts.quick)}</p>` : ''}<p><strong>What this guide is best for:</strong> ${esc(g.best_for)}</p>${demand ? sections + nextStep : ''}</section>
 <h2>How do you put this into practice?</h2><p>Use the following sequence as a starting plan, then adjust it to the work you are responsible for.</p><ol>${g.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol>
-${g.table ? '<h2>How do the options compare?</h2><table><thead><tr>'+g.table.headers.map(h=>'<th scope="col">'+esc(h)+'</th>').join('')+'</tr></thead><tbody>'+g.table.rows.map(r=>'<tr>'+r.map(c=>'<td>'+esc(c)+'</td>').join('')+'</tr>').join('')+'</tbody></table>' : ''}
+${parts.table ? '<h2>How do the options compare?</h2><table><thead><tr>'+parts.table.headers.map(h=>'<th scope="col">'+esc(h)+'</th>').join('')+'</tr></thead><tbody>'+parts.table.rows.map(r=>'<tr>'+r.map(c=>'<td>'+esc(c)+'</td>').join('')+'</tr>').join('')+'</tbody></table>' : ''}
 ${demand ? '' : sections}
 <section class="worked-example"><h2>What would this look like in practice?</h2><p>${esc(g.example)}</p></section>
 <section class="sources"><h2>Which planning principle supports the method?</h2><p>The <a href="${source}">National Cancer Institute’s archived implementation-intentions resource</a> describes if–then plans that connect a situational cue with an intended action. Spry’s examples here are editorial applications of that planning idea, not evidence that this particular guide or product produces a measured outcome. The source is retained for reference and is no longer maintained.</p><p>Source reviewed 2 November 2026.</p></section>
-<section id="faq" class="faq" data-visible-faq="true"><h2>Frequently asked questions</h2>${g.faq.map(f=>`<h3>${esc(f.question)}</h3><p>${esc(f.answer)}</p>`).join('\n')}</section>
+${parts.faq.length ? `<section id="faq" class="faq" data-visible-faq="true"><h2>Frequently asked questions</h2>${parts.faq.map(f=>`<h3>${esc(f.question)}</h3><p>${esc(f.answer)}</p>`).join('\n')}</section>` : ''}
 ${demand ? '' : nextStep}
 <nav aria-label="Related guides"><h2>Which related guides can help?</h2><ul>${related.map(x=>`<li><a href="${x.route}">${esc(x.title)}</a></li>`).join('')}</ul></nav>
 </article></main><footer class="footer container"><p class="byline">By <a href="/about" rel="author">Spry Labs</a> · Published <time datetime="${g.published}">${g.published}</time> · Updated <time datetime="${g.updated}">${g.updated}</time></p><p>Educational planning guidance. Examples are illustrative; results vary.</p>${g.route === '/about' || /burnout|exhaustion|health/i.test(g.route + g.title) ? '<aside class="health-boundary" data-content-contract="health-boundary"><p>This guide is educational, not medical advice or treatment. If exhaustion persists or affects daily functioning, seek support from a qualified health professional.</p></aside>' : ''}</footer></body></html>\n`;
@@ -143,4 +152,4 @@ function build() {
   return {kept:keepers.size,redirected:redirects.length};
 }
 if (require.main === module) build();
-module.exports={build,render,fileFor};
+module.exports={build,render,fileFor,partsFor};
