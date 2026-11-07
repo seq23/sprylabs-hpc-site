@@ -1,0 +1,40 @@
+name: aplayermode.com Pinterest drip
+# Weekly refill of the dated pin queue ($0 template copy) and Pinterest-referred
+# visits per pin (owner-approved 16 Oct 2026). Moved out of the retired Daily
+# Citation Intelligence lane on 7 Nov 2026; the daily release itself happens in
+# the aplayermode.com Worker at request time. Mondays 08:37 Central.
+on:
+  schedule:
+    - cron: "37 13 * * 1"
+  workflow_dispatch:
+env:
+  PUSH_RETRY_ATTEMPTS: 5
+  GITHUB_TOKEN: ${{ github.token }}
+  PIN_DRIP_FORCE: '1'
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: main-automation
+  cancel-in-progress: false
+jobs:
+  pin-drip:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # Read by the metrics step. Absent -> the named stop
+    # PINTEREST_METRICS_UNAVAILABLE, never an unmeasured zero.
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v7
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v7
+        with: {node-version: 24, cache: npm}
+      - run: npm ci --ignore-scripts
+      - name: Refill the pin queue and measure
+        run: bash scripts/aplayermode/weekly_pin_drip.sh
+      - name: Commit the queue and metrics
+        env:
+          WORKFLOW_ARGV: bash scripts/aplayermode/weekly_pin_drip.sh
+        run: ./.github/scripts/commit_and_push_if_changed.sh "aplayermode.com pin drip: weekly refill and metrics" aplayermode-pin-drip

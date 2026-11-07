@@ -1,0 +1,41 @@
+name: Search Measurements
+# Daily Search Console measurement for both hosts (replaces the Search
+# Intelligence Cycle, 7 Nov 2026). Writes gsc_truth.json and index coverage,
+# which the Weekly Outcome Report and Boss OS's "Spry Labs weekly" read. It
+# changes no page: Search Loop owns pages.
+on:
+  schedule:
+    - cron: "23 13 * * *"
+  workflow_dispatch:
+env:
+  PUSH_RETRY_ATTEMPTS: 5
+  GITHUB_TOKEN: ${{ github.token }}
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: main-automation
+  cancel-in-progress: false
+jobs:
+  measure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
+      GSC_SITE_URL_SPRY: ${{ secrets.GSC_SITE_URL_SPRY }}
+      GSC_SITE_URL_BHPC: ${{ secrets.GSC_SITE_URL_BHPC }}
+    steps:
+      - uses: actions/checkout@v7
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v7
+        with: {node-version: 24, cache: npm}
+      - run: npm ci --ignore-scripts
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - run: python -m pip install --disable-pip-version-check google-api-python-client google-auth google-auth-httplib2 >/dev/null
+      - name: Collect Search Console measurements
+        run: bash .github/scripts/collect_search_measurements.sh
+      - name: Commit the measurements
+        env:
+          WORKFLOW_ARGV: bash .github/scripts/collect_search_measurements.sh
+        run: ./.github/scripts/commit_and_push_if_changed.sh "search measurements: Search Console truth and index coverage" search-measurements

@@ -1,11 +1,10 @@
 #!/usr/bin/env bash
 # aplayermode.com Pinterest drip: the weekly half (owner-approved 16 Oct 2026).
 #
-# Runs inside the Daily Citation Intelligence lane (.github/workflows/
-# daily-citation-intelligence.yml, which commits through the shared push helper) so
-# the repo's governed workflow topology stays as reviewed. It acts on Mondays in
-# America/Chicago, or any day when PIN_DRIP_FORCE=1 (the lane's pin_drip dispatch
-# input); other days it prints a named skip and exits 0.
+# Runs in its own lane (.github/workflows/aplayermode-pin-drip.yml, scheduled
+# on Mondays, committing through the shared push helper). It acts on Mondays in
+# America/Chicago, or any day when PIN_DRIP_FORCE=1 (the lane sets it); other
+# days it prints a named skip and exits 0.
 #
 # The daily release needs nothing here: the aplayermode-com Worker builds
 # https://aplayermode.com/pinfeed.xml at request time from

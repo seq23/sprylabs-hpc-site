@@ -116,81 +116,10 @@ regenerate_after_remote_advance() {
   run_governed_workflow_again
 }
 
-# CONVERGE BEFORE COMMITTING, AT THE CHOKE POINT.
-#
-# The convergence loop was originally added inline to spry-content-release.yml
-# by #46. That fixed one lane. On 2026-09-01 the identical defect returned
-# through daily-citation-intelligence.yml, which rewrote 2,018 page HTML files
-# and pushed them with no convergence and no ledger re-derivation - turning
-# Validate Repo, Spry Content Release and the Main Validation Sentinel red at
-# once.
-#
-# The argument this script already makes for validation dispatch applies without
-# change to convergence: every main-writing workflow routes its push through
-# here, so converging here covers all present writers and any future one for
-# free, and there is no per-workflow step an author can forget to add.
-#
-# It runs inside commit_generated_changes so it also covers the replay path -
-# regenerate_after_remote_advance re-runs the lane and comes back through here.
-#
-# A convergence failure must never be swallowed: an unconverged tree is exactly
-# what this exists to stop reaching main.
-converge_before_commit() {
-  local script
-  script="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/converge_tree_before_commit.sh"
-  if [ ! -x "$script" ]; then
-    echo "CONVERGENCE UNAVAILABLE for ${workflow_id}: ${script} is missing or not executable, so the tree about to be committed cannot be proved to be the generators' fixed point." >&2
-    return 1
-  fi
-  bash "$script" "$workflow_id"
-}
-
 commit_generated_changes() {
-  if ! converge_before_commit; then
-    echo "Refusing to commit for ${workflow_id}: the tree did not converge, so publishing it would land pages the downstream generators disagree with." >&2
-    exit 1
-  fi
-  # VALIDATE THE CONVERGED TREE BEFORE IT CAN REACH MAIN.
-  #
-  # c0a62f0e1 (daily-citation-intelligence, 26 Oct 2026) pushed a homepage that
-  # authority:scale:restore had reverted to a frozen blob without the About,
-  # author and methodology links, and Validate Repo run 40347544796 only found it
-  # AFTER it was on main. Every main-writing lane funnels through this helper, so
-  # the release contracts a lane can break are checked here, on the exact tree
-  # about to be committed, and a failure refuses the commit rather than pushing
-  # red. Guard: tests/homepage_trust_links.test.mjs pins this call's place.
-  for pre_push_validator in validate:citation-strategy; do
-    if ! npm run "$pre_push_validator"; then
-      echo "Refusing to commit for ${workflow_id}: ${pre_push_validator} fails on the converged tree, so pushing it would turn main red." >&2
-      exit 1
-    fi
-  done
-  # STAGE THE RELEASE, NOT THE RUN'S ATTESTATIONS ABOUT ITSELF.
-  #
-  # This was a bare `git add -A`. It is the single choke point every
-  # main-writing lane funnels through, so whatever a lane happens to leave in
-  # the working tree lands on main - including per-run evidence that the next
-  # run then reads back as if it were its own. That is how
-  # artifacts/validation/lastmod-derivation-receipt.json reached main at
-  # 93977956f and turned Spry Content Release red every scheduled day: run
-  # 33767079923 read a receipt a different run had written and concluded it had
-  # re-derived the sitemap ledger itself.
-  #
-  # THE EXCLUSION IS DELIBERATELY NARROW, and the width was measured rather than
-  # guessed. Most of artifacts/validation/ IS consumed across runs and must keep
-  # being staged - validate_content_ownership_boundaries.mjs reads
-  # pre-implementation-protected-hashes.json with no fallback,
-  # validate_workflow_artifacts.mjs and validate_workflow_runtime_mutations.mjs
-  # read workflow-yaml-inventory.json, trace_traffic_qualified_pipeline.mjs reads
-  # daily-citation-release-plan.json, build_navigation_structure.mjs reads
-  # internal-navigation-structure.json. Excluding the directory wholesale would
-  # freeze inputs that validators read, which is a worse defect than the one
-  # being fixed, and it would let this step publish nothing while exiting 0.
-  #
-  # Receipts are the one shape in there that is never an input. A receipt is an
-  # assertion about the process that wrote it, so a receipt outliving that
-  # process can only mislead the next reader. Nothing consults one across a run
-  # boundary, by construction.
+  # 7 Nov 2026: no convergence pass and no pre-push page validator. The in-repo
+  # content engine they re-ran (build:all) is retired; a lane commits exactly what
+  # it wrote, and Validate Repo (lean safety gate) runs on the pushed commit.
   git add -A -- . ':(exclude)artifacts/validation/*receipt*.json'
 
   # SELF-PROVING, because a rule that silently does nothing is how this class of
