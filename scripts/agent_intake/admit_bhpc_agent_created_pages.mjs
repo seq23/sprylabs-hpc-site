@@ -173,7 +173,7 @@ export function admitCreatedPages({root = process.cwd(), runtimeRoot = root, reb
 
   // Candidate manifest -> the repo's own admission validator, candidate mode.
   const manifestAbs = path.join(root, CANDIDATE_MANIFEST_PATH);
-  const priorManifest = readJson(manifestAbs, null);
+  const priorManifestText = fs.existsSync(manifestAbs) ? fs.readFileSync(manifestAbs, 'utf8') : null;
   writeJson(manifestAbs, {schema_version: '1.0', generated_at: new Date().toISOString(), lane: QUARANTINE_LANE, run_id: runId, candidates: candidates.map((c) => c.record)});
   const resultPath = path.join(root, 'artifacts', 'validation', `agent-created-page-admission-${runId}.result.json`);
   let result;
@@ -185,12 +185,15 @@ export function admitCreatedPages({root = process.cwd(), runtimeRoot = root, reb
     result = JSON.parse(fs.readFileSync(resultPath, 'utf8'));
   } finally {
     fs.rmSync(resultPath, {force: true});
-    // Leave the manifest as run_lane.mjs leaves it: empty, so a corpus run that
-    // follows cannot mistake stale candidates for live ones.
-    writeJson(manifestAbs, {schema_version: '1.0', generated_at: new Date().toISOString(), lane: null, run_id: runId, candidates: []});
-    if (priorManifest && Array.isArray(priorManifest.candidates) && priorManifest.candidates.length) {
-      console.log(`${TAG} note: ${CANDIDATE_MANIFEST_PATH} held ${priorManifest.candidates.length} stale candidate(s) from ${priorManifest.lane || 'an unknown lane'}; reset to empty`);
-    }
+    // The manifest is borrowed only to feed the candidate-mode validator, so it is
+    // put back byte for byte. It is not stale: build:aplayer-phase-expansion writes
+    // its 1,410 generated pages there, and validate:no-keyword-swap-pages,
+    // claim-safety, release-atom-contract and internal-link-velocity read that tag.
+    // Resetting it to empty here failed Spry Content Release on 6 Nov 2026 the
+    // first run the exact-agent lane created a page (run 42320613112). Corpus-mode
+    // validate:programmatic-admission does not read this file.
+    if (priorManifestText !== null) fs.writeFileSync(manifestAbs, priorManifestText);
+    else writeJson(manifestAbs, {schema_version: '1.0', generated_at: new Date().toISOString(), lane: null, run_id: runId, candidates: []});
   }
   const verdicts = new Map((result.results || []).map((item) => [item.path, item]));
   if (candidates.some((c) => !verdicts.has(c.record.path))) {

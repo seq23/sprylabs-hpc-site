@@ -197,10 +197,26 @@ function directForm(text) {
 }
 
 /** Keep the snippet inside the span an answer engine will lift. */
+// Cut at the last whole sentence inside the span. Cutting at the word limit
+// left fragments such as "...to choose the first." on phase-4 summaries
+// (6 Nov 2026), which read as broken when quoted. Only when no whole sentence
+// fits is the word cut kept.
 function clipWords(text, max = 60) {
   const parts = String(text || '').trim().split(/\s+/).filter(Boolean);
   if (parts.length <= max) return String(text).trim().replace(/\s+([,.;:])/g, '$1');
-  return `${parts.slice(0, max).join(' ').replace(/[,;:]?$/, '')}.`;
+  const head = parts.slice(0, max);
+  for (let i = head.length - 1; i >= 0; i--) {
+    if (/[.!?]$/.test(head[i])) return head.slice(0, i + 1).join(' ');
+  }
+  return `${head.join(' ').replace(/[,;:]?$/, '')}.`;
+}
+
+// A paragraph is several sentences; topUp compares and appends them one at a
+// time. Comparing the whole paragraph let the definition paragraph past the
+// similarity check against its own first sentence, so the summary carried that
+// sentence twice (298 pages on 6 Nov 2026).
+function sentences(text) {
+  return String(text || '').split(/(?<=[.!?])\s+(?=[A-Z0-9"\u201c])/).map((x) => x.trim()).filter(Boolean);
 }
 
 /**
@@ -285,11 +301,12 @@ function topUp(text, html, title) {
   const afterH1 = (html.split(/<\/h1>/i)[1] || '').split(/<section\b/i)[0];
   const paras = [...afterH1.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/gi)].map((m) => strip(m[1]));
   for (const p of paras) {
-    if (len() >= 40) break;
-    const s = cleanSentence(p);
-    if (!s || !informative(s, title)) continue;
-    if (tooSimilar(s, out)) continue;
-    out += ` ${s.replace(/\.?$/, '.')}`;
+    for (const s of sentences(cleanSentence(p))) {
+      if (len() >= 40) break;
+      if (!s || !informative(s, title)) continue;
+      if (out.includes(s.replace(/\.$/, '')) || tooSimilar(s, out)) continue;
+      out += ` ${s.replace(/\.?$/, '.')}`;
+    }
   }
   return out;
 }
