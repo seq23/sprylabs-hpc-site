@@ -64,6 +64,32 @@ export function pinterestLine(metrics, queue, now = Date.now()) {
   return `A Player Mode Pinterest (week to ${day(at)}): ${plural(pins, 'new pin')}, ${plural(Number(metrics.total), 'visit')} from pins; sales not read here (checkout runs in the app).`;
 }
 
+/**
+ * BHPC sales by source (8 Nov 2026, docs/operations/link-tracking.md): counts only, never a name or
+ * address. Source = the sale's utm_source/utm_medium/utm_campaign when Gumroad returns them (the
+ * Sales API in Gumroad's code carries them; the live API did not yet on 8 Nov), else the referrer
+ * host, else "direct or unknown". "kindle" (printed in the published books) counts as kdp.
+ * Unread = { status: 'not read', reason }, never 0.
+ */
+export const BHPC_PRODUCT = /billionaire high performance coach/i;
+export function sourceOf(s) {
+  const src = String(s.utm_source ?? '').toLowerCase();
+  if (src) return [src === 'kindle' ? 'kdp' : src, s.utm_medium, s.utm_campaign].filter(Boolean).join(' / ');
+  return host(s.referrer) ?? 'direct or unknown';
+}
+export function bhpcSourceCounts(read, week = null) {
+  if (!read || read.error) return { status: 'not read', reason: read?.error ?? 'nothing was asked', week };
+  const sales = (read.sales ?? []).filter((s) => !s.refunded && !s.chargedback && BHPC_PRODUCT.test(s.product_name ?? ''));
+  const by_source = {};
+  for (const s of sales) { const k = sourceOf(s); by_source[k] = (by_source[k] ?? 0) + 1; }
+  return { status: 'read', week, sales: sales.length, by_source };
+}
+export function sourceLine(counts) {
+  if (counts.status !== 'read') return `BHPC sales by source: not read: ${counts.reason}.`;
+  if (!counts.sales) return 'BHPC sales by source: 0 BHPC sales this week.';
+  return `BHPC sales by source: ${Object.entries(counts.by_source).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${k} ${n}`).join(', ')}.`;
+}
+
 export function summarise(report, runUrl = null, { sales = null, growth = null, pinterest = null } = {}) {
   const sites = (report?.sites ?? []).map((s) => ({
     host: s.site,
@@ -78,7 +104,8 @@ export function summarise(report, runUrl = null, { sales = null, growth = null, 
   return {
     schema: 'spry-weekly-summary-v1', business: 'Spry Labs site', week: report.week,
     generated_at: report.generated_at ?? new Date().toISOString(), run_url: runUrl, sites,
-    notes: [salesLine(sales), growthLine(growth), ...(pinterest ? [pinterest] : [])],
+    bhpc_sales_by_source: bhpcSourceCounts(sales, report.week),
+    notes: [salesLine(sales), sourceLine(bhpcSourceCounts(sales, report.week)), growthLine(growth), ...(pinterest ? [pinterest] : [])],
   };
 }
 
@@ -94,7 +121,7 @@ export async function readGumroadSales(now = Date.now(), fetchImpl = fetch, toke
     try { res = await fetchImpl(url, { headers: { Authorization: `Bearer ${token}` } }); body = await res.json().catch(() => ({})); }
     catch (e) { return { error: `Gumroad could not be reached (${String(e?.message ?? e).slice(0, 80)})` }; }
     if (!res.ok || !body.success) return { error: `Gumroad answered ${res.status}` };
-    for (const s of body.sales ?? []) if (Date.parse(s.created_at) >= now - 7 * DAY) sales.push({ price: s.price, referrer: s.referrer, refunded: !!s.refunded, chargedback: !!s.chargedback });
+    for (const s of body.sales ?? []) if (Date.parse(s.created_at) >= now - 7 * DAY) sales.push({ price: s.price, referrer: s.referrer, refunded: !!s.refunded, chargedback: !!s.chargedback, product_name: s.product_name, utm_source: s.utm_source, utm_medium: s.utm_medium, utm_campaign: s.utm_campaign });
     if (!body.next_page_key) break;
     page = body.next_page_key;
   }
@@ -124,6 +151,18 @@ export async function selfCheck() {
   };
   const read = await readGumroadSales(now, fake, 't');
   if (salesLine(read) !== 'Sales (Gumroad): 2 sales this week ($148.00); came from direct or unknown 1, spryexecutiveos.com 1.') throw new Error(`self-check: paging or the 7-day window is wrong: ${salesLine(read)}`);
+  // BHPC by source: utm first, referrer host next, kindle counts as kdp, other products and refunds out, unread never 0.
+  const counts = bhpcSourceCounts({ sales: [
+    { product_name: 'Billionaire High Performance Coach Operating System', utm_source: 'kindle', utm_medium: 'book', utm_campaign: 'task-paralysis' },
+    { product_name: 'Billionaire High Performance Coach Operating System', utm_source: 'kdp', utm_medium: 'book', utm_campaign: 'task-paralysis' },
+    { product_name: 'Billionaire High Performance Coach Operating System', referrer: 'https://www.pinterest.com/pin/1' },
+    { product_name: 'Billionaire High Performance Coach Operating System', referrer: 'https://x.example', refunded: true },
+    { product_name: 'Some other product', utm_source: 'kdp', utm_medium: 'book', utm_campaign: 'x' },
+  ] }, '2026-W45');
+  if (JSON.stringify(counts.by_source) !== JSON.stringify({ 'kdp / book / task-paralysis': 2, 'pinterest.com': 1 }) || counts.sales !== 3) throw new Error(`self-check: BHPC by-source counts are wrong: ${JSON.stringify(counts)}`);
+  if (JSON.stringify(counts).match(/@|full_name|email/)) throw new Error('self-check: a buyer detail reached the counts');
+  const unread = bhpcSourceCounts({ error: 'Gumroad answered 401' });
+  if (unread.status !== 'not read' || 'sales' in unread || /\b0\b/.test(sourceLine(unread))) throw new Error('self-check: unread BHPC sources became a zero');
   if (!/NAMED STOP \[GUMROAD_SETUP\]/.test(growthLine({ series: [1, 2], live: { a: null } }))) throw new Error('self-check: a Gumroad setup gap was not a named stop');
   const pnow = Date.parse('2026-11-04T13:00:00Z');
   const q = { variants: [{ release_date: '2026-11-01' }, { release_date: '2026-11-02' }, { release_date: '2026-10-20' }, { release_date: null }] };

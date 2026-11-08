@@ -80,6 +80,9 @@ push helper commits the queue. `NOTHING_HELD` means there was nothing to release
   it SERVES the landing page at aplayermode.com (address bar stays), never a 301 to another domain.
   Browsers cache 301s, so test routing changes with `curl` or a private window.
 
+## Link tracking
+- BHPC buy links, the utm scheme, her share link, page analytics and the weekly sales-by-source count: [`docs/operations/link-tracking.md`](operations/link-tracking.md).
+
 ## Search loop (shared engine, from 1 Nov 2026)
 - **What:** `.github/workflows/search-loop.yml` calls the shared engine `seq23/search-loop@v1` daily (11:41 UTC, `main-automation` group). It finds easy searches weekly, publishes gated pages under `/questions/` on billionairehighperformancecoach.com (since 8 Nov 2026; spryexecutiveos.com is sunset and its old `/questions/` addresses 301 to the product host), checks each at 2/4/8 weeks and 90 days (strengthen with automatic undo, merge with a 301 into `data/content/manual_redirects.json`), and uploads the `search-loop-week` report artifact. Config: `search-loop.config.json`. Ledger: `data/search-loop/`. How the engine works and the config keys: https://github.com/seq23/search-loop#readme
 - **Throttle:** `gh variable set SEARCH_LOOP_MODE --body slow -R seq23/search-loop` (normal | slow | off) — no change here needed. `mode` in `search-loop.config.json` can only lower it.

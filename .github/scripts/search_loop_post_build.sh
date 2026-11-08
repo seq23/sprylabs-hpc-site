@@ -13,3 +13,6 @@ node -e "require('./scripts/content/build_spry_rescue.cjs').build()"
 npm run -s build:route-owner-table
 # 3. The two-week blitz ends itself: past blitz.ends_on the config drops back to slow.
 node scripts/search_loop_blitz.mjs auto
+# 4. Buy links name the page and button, and every page loads the Web Analytics beacon
+#    (docs/operations/link-tracking.md; guarded by tests/buy_link_tags.test.mjs).
+node scripts/tracking/tag_buy_links.mjs

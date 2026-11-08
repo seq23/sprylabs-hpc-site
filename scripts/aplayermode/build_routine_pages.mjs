@@ -18,6 +18,7 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { routeFor } from './routine_pins.mjs';
+import { tagHtml, addBeacon } from '../tracking/tag_buy_links.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const SITE = 'https://aplayermode.com';
@@ -143,7 +144,8 @@ function main() {
     changed.push(rel);
     if (!check) { fs.mkdirSync(path.dirname(abs), { recursive: true }); fs.writeFileSync(abs, text); }
   };
-  for (const page of cfg.pages) put(fileFor(page), render(page, cfg.pages));
+  // Buy links name the page and button, and the page loads the Web Analytics beacon (docs/operations/link-tracking.md).
+  for (const page of cfg.pages) put(fileFor(page), addBeacon(tagHtml(render(page, cfg.pages), fileFor(page)), 'aplayermode.com'));
   // Item b7 (no orphans): the homepage links every routine page, so each is one click deep.
   const homeRel = 'aplayermode/index.html';
   const home = fs.readFileSync(path.join(root, homeRel), 'utf8');
