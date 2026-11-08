@@ -19,6 +19,9 @@
  * Guarded by tests/host_consolidation.test.mjs (npm run validate:host-consolidation).
  */
 import { routeKeyFor } from './route_owner_host.js';
+// Pages folded into a hub on 8 Nov 2026 (zero Search Console impressions in 90 days):
+// generated from data/content/manual_redirects.json by scripts/content/build_fold_table.mjs.
+import { FOLDED_ROUTES } from './fold_table.js';
 
 export const CONSOLIDATION_HOSTS = Object.freeze(['billionairehighperformancecoach.com', 'spryexecutiveos.com']);
 const BHPC = 'https://billionairehighperformancecoach.com';
@@ -35,7 +38,8 @@ export function consolidationRedirect(url) {
   let parsed;
   try { parsed = new URL(url); } catch { return null; }
   if (!CONSOLIDATION_HOSTS.includes(parsed.hostname.toLowerCase())) return null;
-  const target = CONSOLIDATED_ROUTES.get(routeKeyFor(parsed.pathname));
+  const key = routeKeyFor(parsed.pathname);
+  const target = CONSOLIDATED_ROUTES.get(key) || FOLDED_ROUTES.get(key);
   if (!target) return null;
   const out = new URL(target);
   out.search = parsed.search;

@@ -19,6 +19,7 @@ test('every BHPC buy link on every served page names the page and button, and ev
       links += 1;
       const u = new URL(href.replace(/&amp;/g, '&'));
       for (const k of ['utm_source', 'utm_medium', 'utm_campaign']) assert.match(u.searchParams.get(k) || '', SAFE, `${rel}: ${k} missing or not Gumroad-safe in ${href}`);
+      assert.equal(u.searchParams.get('wanted'), 'true', `${rel}: buy link does not open checkout in ${href}`);
       assert.ok(['site', 'book', 'social', 'share'].includes(u.searchParams.get('utm_medium')), `${rel}: utm_medium outside the scheme in ${href}`);
     }
     if (/<\/body>/i.test(html)) assert.ok(html.includes(`"token": "${BEACON[hostFor(rel, html)]}"`), `${rel}: no Web Analytics beacon for its host`);

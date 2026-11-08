@@ -59,7 +59,12 @@ export function tagHtml(html, rel) {
   const re = new RegExp(`href=(["'])(${PRODUCT.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')})(\\?[^"']*)?\\1`, 'g');
   return html.replace(re, (all, q, base, query, offset) => {
     const params = new URLSearchParams((query || '').slice(1).replace(/&amp;/g, '&'));
-    if (params.get('utm_source')) return all;
+    // Every buy button opens Gumroad's checkout straight away (her yes 8 Nov 2026; help article 270: wanted=true).
+    if (params.get('utm_source')) {
+      if (params.get('wanted') === 'true') return all;
+      params.set('wanted', 'true');
+      return `href=${q}${base}?${params.toString().replace(/&/g, '&amp;')}${q}`;
+    }
     const before = html.slice(Math.max(0, offset - 20000), offset);
     const ids = [...before.matchAll(/\bid=["']([^"']+)["']/g)];
     const tagStart = before.lastIndexOf('<a');
@@ -67,7 +72,7 @@ export function tagHtml(html, rel) {
     let name = gumroadSafe(ids.length ? ids[ids.length - 1][1] : (cls ? cls.split(/\s+/).pop() : 'link')) || 'link';
     const n = (seen.get(name) || 0) + 1; seen.set(name, n);
     if (n > 1) name = `${name}-${n}`;
-    for (const [k, v] of [['utm_source', source], ['utm_medium', 'site'], ['utm_campaign', gumroadSafe(`${campaign}-${name}`)]]) params.set(k, v);
+    for (const [k, v] of [['wanted', 'true'], ['utm_source', source], ['utm_medium', 'site'], ['utm_campaign', gumroadSafe(`${campaign}-${name}`)]]) params.set(k, v);
     return `href=${q}${base}?${params.toString().replace(/&/g, '&amp;')}${q}`;
   });
 }

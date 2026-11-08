@@ -48,7 +48,8 @@ test('every BHPC-owned route 301s off the spry host, path intact', () => {
     assert.equal(routeOwnerRedirect(`https://${SPRY_HOST}${route}`), `https://${BHPC_HOST}${route}`, route);
     checked += 1;
   }
-  assert.ok(checked > 1000, `expected the product surface, checked ${checked}`);
+  // 8 Nov 2026 fold: ~570 product routes remain (1,173 near-duplicates 301 to hubs); a near-empty table still fails.
+  assert.ok(checked > 500, `expected the product surface, checked ${checked}`);
 });
 
 test('the query string survives, and the redirect is a cacheable 301 with no body', async () => {
@@ -115,7 +116,7 @@ test('the committed table is exactly what the generator derives from the canonic
   const want = render(data);
   const have = fs.readFileSync(path.join(ROOT, 'functions/_lib/route_owner_table.js'), 'utf8');
   assert.equal(have, want, 'functions/_lib/route_owner_table.js is stale; run npm run build:route-owner-table');
-  assert.ok(data.routes.length > 1000, `expected the product surface, derived ${data.routes.length}`);
+  assert.ok(data.routes.length > 500, `expected the product surface, derived ${data.routes.length}`);
 });
 
 test('the table agrees with every page\'s own rel=canonical', () => {
