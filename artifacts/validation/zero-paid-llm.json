@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-11-07T12:36:17.423Z",
+  "checked_at": "2026-11-08T23:14:19.490Z",
   "free_models": [
     "nvidia/nemotron-3.5-lightning:free",
     "nvidia/nemotron-3-ultra-550b-a55b:free",
@@ -10,18 +10,19 @@
   "model_callers": [
     "scripts/llm_citation_probe.mjs"
   ],
-  "workflows_scanned": 6,
+  "workflows_scanned": 7,
   "scheduled_workflows": [
     ".github/workflows/aplayermode-pin-drip.yml",
+    ".github/workflows/entity-backlink-watch.yml",
     ".github/workflows/search-loop.yml",
     ".github/workflows/search-measurements.yml",
     ".github/workflows/weekly-outcome-report.yml"
   ],
   "provider_secret_refs": [
-    ".github/workflows/search-loop.yml:43"
+    ".github/workflows/search-loop.yml:44"
   ],
   "free_routed_scheduled": [
-    ".github/workflows/search-loop.yml:43"
+    ".github/workflows/search-loop.yml:44"
   ],
   "errors": [],
   "status": "PASS"
