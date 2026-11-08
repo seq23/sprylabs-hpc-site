@@ -39,13 +39,13 @@
     "https://aplayermode.com",
     "https://sprylabs.gumroad.com"
   ],
-  "mode": "slow",
+  "mode": "normal",
   "cap": {
-    "max_live_pages": null,
+    "max_live_pages": 160,
     "start_pages": 20,
     "min_pages": 10,
     "grow_share": 0.1,
-    "max_per_day": 3
+    "max_per_day": 10
   },
   "distinct": {
     "sitemap_files": [
@@ -150,10 +150,10 @@
   "ledger_dir": "data/search-loop",
   "site_words": "Billionaire High Performance Coach",
   "blitz": {
-    "status": "ready, not on (Claude switches it on when the BHPC redesign lands)",
+    "status": "on since 2026-11-08",
     "how": "node scripts/search_loop_blitz.mjs on | off | status (docs/OPERATIONS.md, Search Loop blitz)",
     "days": 14,
-    "ends_on": null,
+    "ends_on": "2026-11-22",
     "on": {
       "mode": "normal",
       "cap": {
