@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fail, pass, writeSummary } from './common.mjs';
 import { SPRY_RESCUE_REDIRECTS } from '../../functions/_lib/spry_rescue_table.js';
+import { consolidationRedirect } from '../../functions/_lib/host_consolidation.js';
 
 const ROOT = process.cwd();
 const config = JSON.parse(fs.readFileSync('data/content/manual_redirects.json', 'utf8'));
@@ -18,6 +19,8 @@ const allowedFiles = new Set(['data/content/manual_redirects.json', '_redirects'
 // Historical source keys are required in the edge table. Check their actual
 // destinations below instead of treating those keys as active page links.
 allowedFiles.add('functions/_lib/spry_rescue_table.js');
+// The fold table's keys are the folded sources by definition; their 301s are checked above.
+allowedFiles.add('functions/_lib/fold_table.js');
 const scanExtensions = new Set(['.html', '.xml', '.txt', '.json', '.md', '.js', '.mjs', '.cjs']);
 
 function routeFromSource(sourcePath) {
@@ -68,7 +71,14 @@ const redirectText = fs.existsSync('_redirects') ? fs.readFileSync('_redirects',
 const redirectLines = new Set(redirectText.split(/\r?\n/).map((line) => line.trim()));
 for (const entry of redirects) {
   const source = routeFromSource(entry.source_path);
-  if (!redirectLines.has(`${source} ${entry.target} 301`)) {
+  // Folded pages (served_by "edge") are answered by functions/_lib/host_consolidation.js, because
+  // Pages' static _redirects stops at 2,000 rules: the edge must 301 them on both hosts instead.
+  if (entry.served_by === 'edge') {
+    for (const host of ['billionairehighperformancecoach.com', 'spryexecutiveos.com']) {
+      const got = consolidationRedirect(`https://${host}${source}`);
+      if (got !== new URL(entry.target, `https://${entry.domain}`).href) errors.push(`edge does not 301 ${host}${source} to ${entry.target} (got ${got})`);
+    }
+  } else if (!redirectLines.has(`${source} ${entry.target} 301`)) {
     errors.push(`_redirects missing exact mapping: ${source} ${entry.target} 301`);
   }
 }

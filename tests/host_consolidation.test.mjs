@@ -98,3 +98,33 @@ test('the edge table is exactly config/host_consolidations.json, and none of its
     assert.equal(rows.get(r.source_file)?.status, 'EXCLUDED', `${r.source_file} is still a citable page, so a sitemap writer will list it again`);
   }
 });
+
+// 8 Nov 2026 fold: every page folded into a hub (manual_redirects.json, served_by "edge") is gone
+// from the tree and every sitemap, and 301s in every request form on both hosts, in one hop, to a
+// page that is still published and is not itself redirected.
+test('every folded page 301s to a live hub page on both hosts, in one hop, and is listed nowhere', async () => {
+  const { FOLDED_ROUTES } = await import('../functions/_lib/fold_table.js');
+  const { foldPairs } = await import('../scripts/content/build_fold_table.mjs');
+  const folded = JSON.parse(fs.readFileSync('data/content/manual_redirects.json', 'utf8')).redirects.filter((r) => r.served_by === 'edge');
+  assert.ok(folded.length > 0, 'no folded page in manual_redirects.json: nothing to check');
+  assert.deepEqual([...FOLDED_ROUTES], foldPairs(folded), 'functions/_lib/fold_table.js is out of date');
+  const maps = [fs.readFileSync('sitemap-bhpc.xml', 'utf8'), fs.readFileSync('sitemap-spry.xml', 'utf8')].join('\n');
+  for (const r0 of folded) {
+    const r = { ...r0, target: new URL(r0.target, `https://${r0.domain}`).href };
+    assert.equal(r0.domain, BHPC, `${r0.source_path}: folded onto another host`);
+    assert.ok(!fs.existsSync(r.source_path), `${r.source_path}: still in the tree`);
+    const t = new URL(r.target);
+    const file = t.pathname === '/' ? 'index.html' : t.pathname.endsWith('/') ? `${t.pathname.slice(1)}index.html` : `${t.pathname.slice(1)}.html`;
+    assert.ok(fs.existsSync(file) || fs.existsSync(t.pathname.slice(1) + '/index.html'), `${r.source_path}: target ${r.target} has no page`);
+    assert.equal(consolidationRedirect(r.target), null, `${r.target}: the target itself redirects (a chain)`);
+    const p = '/' + r.source_path;
+    const forms = p.endsWith('/index.html') ? [p.slice(0, -10), p.slice(0, -11), p] : [p, p.replace(/\.html$/, '')];
+    for (const host of [BHPC, SPRY]) for (const f of forms) {
+      const res = consolidationResponse(new Request(`https://${host}${f}?utm_source=x`));
+      assert.ok(res, `${host}${f} must redirect`);
+      assert.equal(res.status, 301);
+      assert.equal(res.headers.get('location'), `${r.target}?utm_source=x`);
+    }
+    assert.ok(!maps.includes(`<loc>https://${BHPC}/${r.source_path.replace(/index\.html$/, '').replace(/\.html$/, '')}</loc>`), `${r.source_path}: still in a sitemap`);
+  }
+});

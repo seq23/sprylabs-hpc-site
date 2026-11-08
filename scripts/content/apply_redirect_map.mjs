@@ -16,6 +16,8 @@ const excluded = new Set([
   'data/seo/spry_rescue_selection.json',
   'data/seo/spry_rescue_guides.json',
   'functions/_lib/spry_rescue_table.js',
+  // The fold table's keys ARE the retired sources (scripts/content/build_fold_table.mjs).
+  'functions/_lib/fold_table.js',
   '_redirects',
   'docs/REDIRECT_MIGRATION_HISTORY.md',
   // A derived index keyed by SOURCE FILE, not by route. Its `source_file` values
