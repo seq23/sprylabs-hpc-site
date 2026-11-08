@@ -15,7 +15,14 @@ test('the About, author and methodology pages are all defined', () => {
   assert.deepEqual(links.map((l) => l.route), ['/about', author.canonical_author_page || '/author', author.methodology_url || '/citation-methodology']);
 });
 
-test('the committed homepage links every trust page', () => {
+// The approved redesign (8 Nov 2026) keeps three footer links (About, Legal, Privacy & Terms):
+// the homepage links /about, and /about links the author page, the methodology, Spry Labs and
+// S. L. Taylor, so every trust page is one click from the homepage's About link.
+test('every trust page is reachable from the homepage: directly, or through its About page', () => {
   const home = read('index.html');
-  for (const l of links) assert.ok(linksRoute(home, l.route), `index.html does not link ${l.route}`);
+  const about = read('about.html');
+  assert.ok(linksRoute(home, '/about'), 'index.html does not link /about');
+  const abs = (r) => [r, `https://billionairehighperformancecoach.com${r}`];
+  for (const l of links) assert.ok(abs(l.route).some((r) => linksRoute(home, r) || linksRoute(about, r)), `neither index.html nor /about links ${l.route}`);
+  for (const r of ['/spry-labs', '/sequoia-taylor']) assert.ok(abs(r).some((x) => linksRoute(about, x)), `/about does not link ${r}`);
 });

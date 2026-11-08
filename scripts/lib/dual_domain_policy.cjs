@@ -29,7 +29,7 @@ function routeFor(rel) {
   return '/' + p.replace(/\.html$/, '');
 }
 
-const REVIVED_ON_PRODUCT_HOST = new Set(["/how-to-stop-procrastinating/", "/executive-dysfunction-adhd/", "/how-to-stop-overthinking/", "/how-to-build-discipline/", "/task-paralysis/", "/ai-accountability-partner/", "/alternatives-to-hiring", "/minimum-viable-day/", "/never-miss-twice-rule/", "/author"]);
+const REVIVED_ON_PRODUCT_HOST = new Set(["/how-to-stop-procrastinating/", "/executive-dysfunction-adhd/", "/how-to-stop-overthinking/", "/how-to-build-discipline/", "/task-paralysis/", "/ai-accountability-partner/", "/alternatives-to-hiring", "/minimum-viable-day/", "/never-miss-twice-rule/", "/author", "/library/"]);
 
 function hostFor(route, publishedHostOverrides = new Map()) {
   if (publishedHostOverrides.has(route)) return publishedHostOverrides.get(route);
