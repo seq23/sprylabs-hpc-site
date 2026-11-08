@@ -1,25 +1,38 @@
 {
   "schema": "search-loop-config-v1",
-  "site": "spryexecutiveos.com",
-  "base_url": "https://spryexecutiveos.com",
-  "site_name": "Spry Executive OS",
-  "publisher": { "name": "Spry Labs", "url": "https://billionairehighperformancecoach.com/spry-labs" },
+  "site": "billionairehighperformancecoach.com",
+  "base_url": "https://billionairehighperformancecoach.com",
+  "site_name": "Billionaire High Performance Coach",
+  "publisher": {
+    "name": "Spry Labs",
+    "url": "https://billionairehighperformancecoach.com/spry-labs"
+  },
   "audience": "founders, operators and high performers who want structure, accountability and follow-through, often using ChatGPT or another AI as a coach",
   "voice": "plain, direct and calm; short sentences; practical systems over motivation; no hype, no income claims, no health or weight-loss promises; results are examples, not guarantees",
   "topics": [
-    "ai accountability coach",
-    "chatgpt accountability partner",
-    "executive coach alternative",
-    "daily planning system",
-    "weekly review",
-    "how to stay consistent",
-    "decision fatigue",
-    "adhd productivity system",
+    "executive dysfunction",
+    "overwhelmed mental load",
     "how to stop procrastinating",
-    "how to be an a player"
+    "task paralysis",
+    "founder mental health",
+    "founder burnout",
+    "chief of staff for one person",
+    "chatgpt as accountability partner",
+    "ai executive coach",
+    "never miss twice",
+    "minimum viable day"
   ],
-  "find": { "exclude_words": ["free download", "torrent", "betterup login"] },
-  "action": { "label": "See what the complete Spry Executive OS includes", "url": "https://billionairehighperformancecoach.com/download" },
+  "find": {
+    "exclude_words": [
+      "free download",
+      "torrent",
+      "betterup login"
+    ]
+  },
+  "action": {
+    "label": "See Billionaire High Performance Coach, the flagship mode of A Player Mode",
+    "url": "https://billionairehighperformancecoach.com/download"
+  },
   "allowed_link_targets": [
     "https://spryexecutiveos.com",
     "https://billionairehighperformancecoach.com",
@@ -27,8 +40,19 @@
     "https://sprylabs.gumroad.com"
   ],
   "mode": "slow",
-  "cap": { "max_live_pages": null, "start_pages": 20, "min_pages": 10, "grow_share": 0.1, "max_per_day": 3 },
-  "distinct": { "sitemap_files": ["sitemap-spry.xml"] },
+  "cap": {
+    "max_live_pages": null,
+    "start_pages": 20,
+    "min_pages": 10,
+    "grow_share": 0.1,
+    "max_per_day": 3
+  },
+  "distinct": {
+    "sitemap_files": [
+      "sitemap-bhpc.xml",
+      "sitemap-spry.xml"
+    ]
+  },
   "menu_pages_need_approval": false,
   "health_gate": "none",
   "protected_paths": [
@@ -53,30 +77,102 @@
       "source_field": "source_path",
       "source_form": "rel",
       "target_field": "target",
-      "extra": { "domain": "spryexecutiveos.com" },
+      "extra": {
+        "domain": "billionairehighperformancecoach.com"
+      },
       "count_key": "redirect_count"
     }
   },
   "template": {
     "section_name": "Questions",
-    "stylesheets": ["/assets/styles.css"],
-    "og_image": { "url": "https://spryexecutiveos.com/assets/og/default-spryexecutiveos.png", "width": 1200, "height": 630 },
-    "header_html": "<script defer=\"\" src=\"/assets/domain-context.js\"></script><header class=\"site-header\"><div class=\"container\"><a class=\"brand\" href=\"/\">Spry Executive OS</a><nav aria-label=\"Primary\"><a href=\"/ai-execution-atlas/\">Atlas</a><a href=\"/download.html\">System Manual</a></nav></div></header>",
-    "footer_html": "<footer class=\"footer\"><div class=\"container\"><p><a href=\"/download.html\">Review the system manual</a></p><p>Educational and organizational content from Spry Labs. Results vary. Consequential decisions remain under human authority.</p></div></footer>"
+    "stylesheets": [
+      "/assets/styles.css"
+    ],
+    "og_image": {
+      "url": "https://billionairehighperformancecoach.com/assets/og/default-billionairehighperformancecoach.png",
+      "width": 1200,
+      "height": 630
+    },
+    "header_html": "<script defer=\"\" src=\"/assets/domain-context.js\"></script><header class=\"site-header\"><div class=\"container\"><a class=\"brand\" href=\"/\">Billionaire High Performance Coach · the flagship mode of A Player Mode</a><nav aria-label=\"Primary\"><a href=\"/download\">See what it includes</a><a href=\"https://aplayermode.com/\">A Player Mode app</a></nav></div></header>",
+    "footer_html": "<footer class=\"footer\"><div class=\"container\"><p>Billionaire High Performance Coach · the flagship mode of A Player Mode. <a href=\"/download\">See what it includes</a> · <a href=\"https://aplayermode.com/\">The A Player Mode app</a></p><p>Educational and organizational content from Spry Labs. Results vary. Consequential decisions remain under human authority.</p></div></footer>"
   },
   "related": {
     "max_pages_per_new_page": 2,
-    "scan_dirs": ["."],
-    "skip_dirs": ["admin", "agency", "artifacts", "reports", "fixtures", "test-results", "tests", "templates", "aplayermode", "dist", "public", "content", "data", "docs", "scripts", "functions", "workers", "LICENSES", "seo", "models", "node_modules", "site", ".search-loop-engine", "knowledge-map"]
+    "scan_dirs": [
+      "."
+    ],
+    "skip_dirs": [
+      "admin",
+      "agency",
+      "artifacts",
+      "reports",
+      "fixtures",
+      "test-results",
+      "tests",
+      "templates",
+      "aplayermode",
+      "dist",
+      "public",
+      "content",
+      "data",
+      "docs",
+      "scripts",
+      "functions",
+      "workers",
+      "LICENSES",
+      "seo",
+      "models",
+      "node_modules",
+      "site",
+      ".search-loop-engine",
+      "knowledge-map"
+    ]
   },
-  "gsc": { "site_url_env": "GSC_SITE_URL" },
-  "llm": { "routing_file": "config/llm_routing.json" },
+  "gsc": {
+    "site_url_env": "GSC_SITE_URL"
+  },
+  "llm": {
+    "routing_file": "config/llm_routing.json"
+  },
   "indexnow": {
     "key": "200dca426298c70aabc048344605cccae8dabc0b460f1b3e21eb6e857ef83af1",
-    "key_location": "https://spryexecutiveos.com/200dca426298c70aabc048344605cccae8dabc0b460f1b3e21eb6e857ef83af1.txt"
+    "key_location": "https://billionairehighperformancecoach.com/200dca426298c70aabc048344605cccae8dabc0b460f1b3e21eb6e857ef83af1.txt"
   },
-  "analytics": { "ai_referrals": "cloudflare", "ai_bot_hits": "cloudflare", "zone": "spryexecutiveos.com" },
-  "conversions": { "source": "none" },
+  "analytics": {
+    "ai_referrals": "cloudflare",
+    "ai_bot_hits": "cloudflare",
+    "zone": "billionairehighperformancecoach.com"
+  },
+  "conversions": {
+    "source": "none"
+  },
   "shares_audience_with": [],
-  "ledger_dir": "data/search-loop"
+  "ledger_dir": "data/search-loop",
+  "site_words": "Billionaire High Performance Coach",
+  "blitz": {
+    "status": "ready, not on (Claude switches it on when the BHPC redesign lands)",
+    "how": "node scripts/search_loop_blitz.mjs on | off | status (docs/OPERATIONS.md, Search Loop blitz)",
+    "days": 14,
+    "ends_on": null,
+    "on": {
+      "mode": "normal",
+      "cap": {
+        "max_live_pages": 160,
+        "start_pages": 20,
+        "min_pages": 10,
+        "grow_share": 0.1,
+        "max_per_day": 10
+      }
+    },
+    "off": {
+      "mode": "slow",
+      "cap": {
+        "max_live_pages": null,
+        "start_pages": 20,
+        "min_pages": 10,
+        "grow_share": 0.1,
+        "max_per_day": 3
+      }
+    }
+  }
 }

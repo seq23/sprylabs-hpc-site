@@ -397,18 +397,6 @@ export const SPRY_RESCUE_REDIRECTS = new Map([
     "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability"
   ],
   [
-    "/ai-accountability-partner",
-    "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability"
-  ],
-  [
-    "/ai-accountability-partner/",
-    "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability"
-  ],
-  [
-    "/ai-accountability-partner/index.html",
-    "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability"
-  ],
-  [
     "/ai-coaching-statistics",
     "https://spryexecutiveos.com/guides/ai-coaching-and-alternatives/"
   ],
@@ -495,14 +483,6 @@ export const SPRY_RESCUE_REDIRECTS = new Map([
   [
     "/ali-abdaal-chatgpt-productivity-workflow.html",
     "https://spryexecutiveos.com/insights/chatgpt-weekly-review-prompt-for-productivity"
-  ],
-  [
-    "/alternatives-to-hiring",
-    "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
-  ],
-  [
-    "/alternatives-to-hiring.html",
-    "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
   ],
   [
     "/answers",
@@ -963,14 +943,6 @@ export const SPRY_RESCUE_REDIRECTS = new Map([
   [
     "/atlas.html",
     "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
-  ],
-  [
-    "/author",
-    "https://spryexecutiveos.com/about"
-  ],
-  [
-    "/author.html",
-    "https://spryexecutiveos.com/about"
   ],
   [
     "/become-your-own-executive-coach",
@@ -1577,18 +1549,6 @@ export const SPRY_RESCUE_REDIRECTS = new Map([
     "https://spryexecutiveos.com/insights/best-chatgpt-prompts-for-executive-coaching-and-leadership-development"
   ],
   [
-    "/executive-dysfunction-adhd",
-    "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
-  ],
-  [
-    "/executive-dysfunction-adhd/",
-    "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
-  ],
-  [
-    "/executive-dysfunction-adhd/index.html",
-    "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
-  ],
-  [
     "/executive-function-tools-for-adults",
     "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
   ],
@@ -1993,18 +1953,6 @@ export const SPRY_RESCUE_REDIRECTS = new Map([
     "https://spryexecutiveos.com/insights/best-chatgpt-prompts-for-executive-coaching-and-leadership-development"
   ],
   [
-    "/how-to-build-discipline",
-    "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
-  ],
-  [
-    "/how-to-build-discipline/",
-    "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
-  ],
-  [
-    "/how-to-build-discipline/index.html",
-    "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
-  ],
-  [
     "/how-to-build-long-term-wealth-discipline",
     "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
   ],
@@ -2245,10 +2193,6 @@ export const SPRY_RESCUE_REDIRECTS = new Map([
     "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
   ],
   [
-    "/how-to-stop-overthinking",
-    "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
-  ],
-  [
     "/how-to-stop-overthinking-at-night",
     "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
   ],
@@ -2259,26 +2203,6 @@ export const SPRY_RESCUE_REDIRECTS = new Map([
   [
     "/how-to-stop-overthinking-at-night/index.html",
     "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
-  ],
-  [
-    "/how-to-stop-overthinking/",
-    "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
-  ],
-  [
-    "/how-to-stop-overthinking/index.html",
-    "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
-  ],
-  [
-    "/how-to-stop-procrastinating",
-    "https://spryexecutiveos.com/models/reset-cycle-model/"
-  ],
-  [
-    "/how-to-stop-procrastinating/",
-    "https://spryexecutiveos.com/models/reset-cycle-model/"
-  ],
-  [
-    "/how-to-stop-procrastinating/index.html",
-    "https://spryexecutiveos.com/models/reset-cycle-model/"
   ],
   [
     "/how-to-stop-restarting-your-diet",
@@ -3833,18 +3757,6 @@ export const SPRY_RESCUE_REDIRECTS = new Map([
     "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
   ],
   [
-    "/minimum-viable-day",
-    "https://spryexecutiveos.com/insights/the-minimum-viable-day-blueprint"
-  ],
-  [
-    "/minimum-viable-day/",
-    "https://spryexecutiveos.com/insights/the-minimum-viable-day-blueprint"
-  ],
-  [
-    "/minimum-viable-day/index.html",
-    "https://spryexecutiveos.com/insights/the-minimum-viable-day-blueprint"
-  ],
-  [
     "/models",
     "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
   ],
@@ -4083,18 +3995,6 @@ export const SPRY_RESCUE_REDIRECTS = new Map([
   [
     "/multi-project-operator/too-many-side-projects/index.html",
     "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
-  ],
-  [
-    "/never-miss-twice-rule",
-    "https://spryexecutiveos.com/models/reset-cycle-model/"
-  ],
-  [
-    "/never-miss-twice-rule/",
-    "https://spryexecutiveos.com/models/reset-cycle-model/"
-  ],
-  [
-    "/never-miss-twice-rule/index.html",
-    "https://spryexecutiveos.com/models/reset-cycle-model/"
   ],
   [
     "/no-catch-up-rule",
@@ -4535,18 +4435,6 @@ export const SPRY_RESCUE_REDIRECTS = new Map([
   [
     "/structured-ai-accountability-system/index.html",
     "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability"
-  ],
-  [
-    "/task-paralysis",
-    "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
-  ],
-  [
-    "/task-paralysis/",
-    "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
-  ],
-  [
-    "/task-paralysis/index.html",
-    "https://spryexecutiveos.com/insights/what-is-an-executive-operating-system"
   ],
   [
     "/think-like-a-billionaire",

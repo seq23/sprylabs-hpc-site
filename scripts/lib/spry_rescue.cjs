@@ -11,12 +11,15 @@ const { routeFor, hostFor } = require('./dual_domain_policy.cjs');
 // The engine admits only distinct, sourced pages under its outcome-gated cap.
 // Its live ledger is publication evidence; a file alone never earns admission.
 // Retired URLs remain permanently retired even if an old engine ledger says live.
+// Search Loop pages live on billionairehighperformancecoach.com since 8 Nov 2026
+// (spryexecutiveos.com is sunset): nothing new is published under the sunset host.
+const QUESTIONS_HOST = 'https://billionairehighperformancecoach.com';
 function admittedEnginePages(book, retired) {
   const blocked = new Set(retired.map(r => r.from));
   return (book.pages || []).filter(p => p.status === 'live'
     && /^\/questions\/[a-z0-9-]+\/$/.test(p.route || '')
     && p.rel === p.route.slice(1) + 'index.html'
-    && p.url === HOST + p.route && !blocked.has(p.route)
+    && p.url === QUESTIONS_HOST + p.route && !blocked.has(p.route)
     && /^\d{4}-\d{2}-\d{2}$/.test(p.published_at || '')
     && /^[a-f0-9]{64}$/.test(p.hash || '')
     && new Set(p.facts || []).size >= 2);
@@ -24,11 +27,13 @@ function admittedEnginePages(book, retired) {
 const engineBook = JSON.parse(fs.readFileSync(path.join(root, 'data/search-loop/pages.json')));
 const retired = JSON.parse(fs.readFileSync(path.join(root, 'data/seo/spry_rescue_redirects.json'))).redirects;
 const enginePages = admittedEnginePages(engineBook, retired);
-for (const p of enginePages) keepers.add(p.route);
+const engineRoutes = new Set(enginePages.map(p => p.route));
 
 const normalize = r => '/' + String(r).replace(/^\/+/, '').replace(/\/index\.html$/, '/').replace(/\.html$/, '');
 function isRetiredRoute(route) {
   if (/^\/(?:admin|agency|api|cdn-cgi|404)(?:\/|$)/.test(route)) return false;
+  // A /questions/ file the engine ledger does not list live is never published, on either host.
+  if (route.startsWith('/questions/')) return !engineRoutes.has(route);
   return hostFor(route) === HOST && !keepers.has(route);
 }
 function isRetiredFile(rel) {
@@ -56,4 +61,4 @@ function targetFor(route) {
   }
   return HOST + content.guides.find(g => g.id === 'executive-os').route;
 }
-module.exports = { admittedEnginePages, enginePages, content, HOST, keepers, normalize, isRetiredRoute, isRetiredFile, targetFor };
+module.exports = { admittedEnginePages, enginePages, engineRoutes, QUESTIONS_HOST, content, HOST, keepers, normalize, isRetiredRoute, isRetiredFile, targetFor };

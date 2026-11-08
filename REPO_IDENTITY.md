@@ -24,7 +24,7 @@
 
 ## Runtime model (7 Nov 2026)
 - Sales route: `/download` (protected, see `docs/OPERATIONS.md`); checkout: Gumroad
-- New pages: Search Loop only, under `/questions/` on spryexecutiveos.com
+- New pages: Search Loop only, under `/questions/` on billionairehighperformancecoach.com (spryexecutiveos.com is sunset, 8 Nov 2026)
 - Measurement: `search-measurements.yml` (Search Console), read by `weekly-outcome-report.yml` and Boss OS
 - Merge gate: `validate-repo.yml` (syntax, behaviour tests, safety checks)
 

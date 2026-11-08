@@ -8,9 +8,10 @@ import { createRequire } from 'node:module';
 import { spryRescueResponse } from '../functions/_lib/spry_rescue.js';
 import { SPRY_RESCUE_REDIRECTS } from '../functions/_lib/spry_rescue_table.js';
 import { consolidationResponse } from '../functions/_lib/host_consolidation.js';
+import { routeOwnerRedirect } from '../functions/_lib/route_owner_host.js';
 const require = createRequire(import.meta.url);
 const { renderSchemaScript } = require('../scripts/lib/citation_page_schema.cjs');
-const { admittedEnginePages, enginePages, content, HOST, keepers, isRetiredFile, isRetiredRoute } = require('../scripts/lib/spry_rescue.cjs');
+const { admittedEnginePages, enginePages, QUESTIONS_HOST, content, HOST, keepers, isRetiredFile, isRetiredRoute } = require('../scripts/lib/spry_rescue.cjs');
 const { build, render, fileFor, partsFor } = require('../scripts/content/build_spry_rescue.cjs');
 const { sharedSentences } = require('../scripts/lib/spry_say_once.cjs');
 const pageParts = g => partsFor(g).parts;
@@ -99,26 +100,33 @@ test('finite publishing policy catches future generated variants and preserves o
 });
 
 test('engine admission preserves retirement and requires a live, sourced publication record', () => {
-  const page = { route:'/questions/a-distinct-question/', rel:'questions/a-distinct-question/index.html', url:HOST+'/questions/a-distinct-question/', status:'live', published_at:'2026-11-04', hash:'a'.repeat(64), facts:['https://one.example/research','https://two.example/research'] };
+  const page = { route:'/questions/a-distinct-question/', rel:'questions/a-distinct-question/index.html', url:QUESTIONS_HOST+'/questions/a-distinct-question/', status:'live', published_at:'2026-11-04', hash:'a'.repeat(64), facts:['https://one.example/research','https://two.example/research'] };
   assert.deepEqual(admittedEnginePages({pages:[page]}, []), [page]);
   assert.deepEqual(admittedEnginePages({pages:[page]}, [{from:page.route}]), []);
-  for (const patch of [{status:'pending_approval'}, {status:'merged'}, {facts:[]}, {hash:''}, {published_at:null}, {rel:'../download.html'}, {url:'https://other.example'+page.route}, {route:'/insights/variant'}]) {
+  for (const patch of [{status:'pending_approval'}, {status:'merged'}, {facts:[]}, {hash:''}, {published_at:null}, {rel:'../download.html'}, {url:'https://other.example'+page.route}, {url:HOST+page.route}, {route:'/insights/variant'}]) {
     assert.deepEqual(admittedEnginePages({pages:[{...page,...patch}]}, []), [], JSON.stringify(patch));
   }
   assert.deepEqual(admittedEnginePages({pages:[]}, []), []);
 });
 
 // The 3 Nov rescue (#202) retired the engine's first three question pages before #207 restored
-// engine admission, so they 301ed and sat outside sitemap-spry.xml while the engine counted them
-// live. Every page Search Loop lists live with its file present is in the spry sitemap and 200s.
-test('every live Search Loop question page is admitted, in sitemap-spry.xml and not redirected', () => {
+// engine admission, so they 301ed and sat outside the sitemap while the engine counted them
+// live. Since 8 Nov 2026 the pages live on the product host (spryexecutiveos.com is sunset):
+// every page Search Loop lists live with its file present is in sitemap-bhpc.xml, carries the
+// product host's canonical, answers there, and its old spry address 301s to it.
+test('every live Search Loop question page is admitted on the product host, in sitemap-bhpc.xml and not redirected', () => {
   const book = JSON.parse(fs.readFileSync('data/search-loop/pages.json'));
   const live = book.pages.filter(p => p.status === 'live' && fs.existsSync(p.rel));
   assert.ok(live.length > 0, 'the engine ledger lists no live page with its file: nothing to check');
-  const sitemap = fs.readFileSync('sitemap-spry.xml', 'utf8');
+  const sitemap = fs.readFileSync('sitemap-bhpc.xml', 'utf8');
+  const spryMap = fs.readFileSync('sitemap-spry.xml', 'utf8');
   for (const p of live) {
     assert.ok(enginePages.some(e => e.route === p.route), `${p.route}: live in the engine but not admitted`);
-    assert.ok(sitemap.includes(`<loc>${HOST}${p.route}</loc>`), `${p.route}: missing from sitemap-spry.xml`);
+    assert.ok(sitemap.includes(`<loc>${QUESTIONS_HOST}${p.route}</loc>`), `${p.route}: missing from sitemap-bhpc.xml`);
+    assert.ok(!spryMap.includes(p.route), `${p.route}: still listed under the sunset host`);
+    assert.ok(fs.readFileSync(p.rel, 'utf8').includes(`rel="canonical"`) && fs.readFileSync(p.rel, 'utf8').includes(`href="${QUESTIONS_HOST}${p.route}"`), `${p.route}: canonical is not on the product host`);
+    assert.equal(routeOwnerRedirect(HOST + p.route), QUESTIONS_HOST + p.route, `${p.route}: the sunset host does not 301 to the product host`);
+    assert.equal(routeOwnerRedirect(QUESTIONS_HOST + p.route), null, `${p.route}: the product host must answer, not redirect`);
     assert.ok(!ledger.redirects.some(r => r.from === p.route), `${p.route}: live in the engine but retired by the rescue ledger`);
     assert.ok(!SPRY_RESCUE_REDIRECTS.has(p.route), `${p.route}: 301s at the edge`);
   }
@@ -139,18 +147,19 @@ test('deploy output contains every keeper, omits retired HTML and advertises no 
 test('a new gated engine page survives the final renderer and deploy assembly', () => {
   const bookFile = 'data/search-loop/pages.json';
   const original = fs.readFileSync(bookFile, 'utf8');
-  const snapshots = new Map(['data/seo/spry_rescue_redirects.json','functions/_lib/spry_rescue_table.js','sitemap-spry.xml'].map(f=>[f,fs.readFileSync(f)]));
+  const snapshots = new Map(['data/seo/spry_rescue_redirects.json','functions/_lib/spry_rescue_table.js','sitemap-spry.xml','sitemap-bhpc.xml','knowledge-map/index.html','data/sitemap/lastmod_ledger.json'].map(f=>[f,fs.readFileSync(f)]));
   const route = '/questions/fixture-distinct-planning-question/';
   const rel = fileFor(route);
   try {
     fs.mkdirSync(path.dirname(rel), {recursive:true});
     fs.writeFileSync(rel, render({...content.guides[0], route}));
     const book = JSON.parse(original);
-    book.pages.push({route,rel,url:HOST+route,status:'live',query:'Fixture distinct planning question',published_at:'2026-11-04',hash:'a'.repeat(64),facts:['https://one.example/research','https://two.example/research']});
+    book.pages.push({route,rel,url:QUESTIONS_HOST+route,status:'live',query:'Fixture distinct planning question',published_at:'2026-11-04',hash:'a'.repeat(64),facts:['https://one.example/research','https://two.example/research']});
     fs.writeFileSync(bookFile, JSON.stringify(book));
     execFileSync(process.execPath, ['scripts/assemble_pages_output.js'], {stdio:'pipe'});
     assert.ok(fs.existsSync('.pages-output/'+rel));
-    assert.ok(fs.readFileSync('.pages-output/sitemap-spry.xml','utf8').includes(HOST+route));
+    assert.ok(fs.readFileSync('.pages-output/sitemap-bhpc.xml','utf8').includes(QUESTIONS_HOST+route));
+    assert.ok(!fs.readFileSync('.pages-output/sitemap-spry.xml','utf8').includes(route), 'a new engine page is listed under the sunset host');
     assert.ok(fs.readFileSync('.pages-output/knowledge-map/index.html','utf8').includes(route));
     assert.ok(!JSON.parse(fs.readFileSync('data/seo/spry_rescue_redirects.json')).redirects.some(r=>r.from===route));
   } finally {
@@ -191,7 +200,7 @@ test('rendered FAQ and article metadata agree with the editorial data without du
 });
 
 test('rebuilding the rescue is idempotent and cannot inflate its redirect or discovery ledgers', () => {
-  const files = ['data/seo/spry_rescue_redirects.json','functions/_lib/spry_rescue_table.js','data/citation/citable_pages.json','sitemap-spry.xml','llms.txt','llms-full.txt',...keepers].map(f=>f.startsWith('/')?fileFor(f):f);
+  const files = ['data/seo/spry_rescue_redirects.json','functions/_lib/spry_rescue_table.js','data/citation/citable_pages.json','sitemap-spry.xml','sitemap-bhpc.xml','llms.txt','llms-full.txt',...keepers].map(f=>f.startsWith('/')?fileFor(f):f);
   build();
   const before = files.map(f=>fs.readFileSync(f,'utf8'));
   build();
@@ -334,4 +343,24 @@ test('no rescue guide repeats a phrase more than three times, and stock sentence
   // Negative proof: the detector catches the old shape, one step printed six times.
   const step = content.guides.find(g => g.best_for.startsWith('readers who need')).steps[0];
   assert.ok(fillerPhrases('<main>' + Array(6).fill(`<p>${step}</p>`).join('') + '</main>').length > 0);
+});
+
+// 8 Nov 2026: the BHPC sales page links these pages, which the 3 Nov rescue had retired. They are
+// back on the product host: each file is published, its canonical names the product host, it is in
+// sitemap-bhpc.xml, no rescue alias redirects it, and the sunset host 301s it to the product host.
+test('pages the sales page links are live on the product host, not retired', () => {
+  const { REVIVED_ON_PRODUCT_HOST } = require('../scripts/lib/dual_domain_policy.cjs');
+  assert.ok(REVIVED_ON_PRODUCT_HOST.size >= 10, 'the revived list is empty');
+  const sitemap = fs.readFileSync('sitemap-bhpc.xml', 'utf8');
+  for (const route of REVIVED_ON_PRODUCT_HOST) {
+    const file = fileFor(route);
+    assert.ok(fs.existsSync(file), `${route}: no file`);
+    assert.equal(isRetiredFile(file), false, `${route}: still retired`);
+    assert.ok(fs.readFileSync(file, 'utf8').includes(`href="${QUESTIONS_HOST}${route}"`), `${route}: canonical is not on the product host`);
+    assert.ok(sitemap.includes(`<loc>${QUESTIONS_HOST}${route}</loc>`), `${route}: missing from sitemap-bhpc.xml`);
+    for (const form of [route, route.endsWith('/') ? route.slice(0, -1) : route + '.html']) assert.ok(!SPRY_RESCUE_REDIRECTS.has(form), `${form}: still 301s at the edge`);
+    assert.equal(spryRescueResponse(new Request(QUESTIONS_HOST + route)), null, `${route}: product host redirects it`);
+    assert.equal(routeOwnerRedirect(HOST + route), QUESTIONS_HOST + route, `${route}: sunset host does not 301 to the product host`);
+    assert.ok(!/Spry Executive OS/.test(fs.readFileSync(file, 'utf8').match(/<title>([^<]*)/)[1]), `${route}: still titled Spry Executive OS`);
+  }
 });
