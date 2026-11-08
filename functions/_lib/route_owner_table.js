@@ -7,7 +7,7 @@
  * passed through, never redirected, so unknown paths still 404 where they were
  * asked for.
  *
- * 1722 BHPC-owned routes, 55 spryexecutiveos.com-owned, 0 canonical elsewhere.
+ * 1737 BHPC-owned routes, 50 spryexecutiveos.com-owned, 0 canonical elsewhere.
  * Rules: functions/_lib/route_owner_host.js. Guard: npm run validate:route-owner-host.
  */
 export const BHPC_HOST = 'billionairehighperformancecoach.com';
@@ -16,6 +16,7 @@ export const SPRY_HOST = 'spryexecutiveos.com';
 /** Newline-joined rather than an array literal: same routes, a smaller module. */
 const BHPC_ROUTE_LIST = `/
 /ai-accountability-coach-for-founders
+/ai-accountability-partner/
 /ai-accountability-system-for-entrepreneurs
 /ai-accountability-system-vs-habit-tracker
 /ai-business-coach/
@@ -29,6 +30,7 @@ const BHPC_ROUTE_LIST = `/
 /ai-life-coach/
 /ai-vs-human-executive-coach-pros-cons-for-entrepreneurs
 /ai-workflow-for-founders
+/alternatives-to-hiring
 /answers/phase4/demand/ai-coach-for-founders-and-consultants
 /answers/phase4/demand/ai-coach-for-high-achievers
 /answers/phase4/demand/ai-coach-for-workflow-planning
@@ -639,6 +641,7 @@ const BHPC_ROUTE_LIST = `/
 /answers/phase4/what-should-a-founder-do-when-working-without-a-chief-of-staff-and-needs-system-drift-support
 /answers/phase4/what-should-a-founder-do-when-working-without-a-chief-of-staff-and-needs-task-sequencing-support
 /answers/phase4/what-should-a-founder-do-when-working-without-a-chief-of-staff-and-needs-weekly-planning-support
+/author
 /best-ai-coaching-tools
 /best-chatgpt-prompts-for-founders-to-stay-accountable
 /best-chatgpt-prompts-for-productivity
@@ -742,6 +745,7 @@ const BHPC_ROUTE_LIST = `/
 /editorial-policy
 /executive-coach-alternative/
 /executive-coach-cost/
+/executive-dysfunction-adhd/
 /faq
 /glossary/
 /glossary/a-player-mode/
@@ -969,11 +973,14 @@ const BHPC_ROUTE_LIST = `/
 /how-to-build-a-daily-execution-loop
 /how-to-build-a-performance-system-with-ai
 /how-to-build-an-accountability-system-with-ai
+/how-to-build-discipline/
 /how-to-evaluate-an-ai-execution-system
 /how-to-recover-after-missing-a-day
 /how-to-run-a-weekly-review-with-ai
 /how-to-stay-consistent-when-energy-is-low
 /how-to-stop-overplanning-with-ai
+/how-to-stop-overthinking/
+/how-to-stop-procrastinating/
 /how-to-use-ai-for-prioritization
 /how-to-use-ai-like-a-chief-of-staff
 /how-to-use-chatgpt-as-a-productivity-coach
@@ -1103,6 +1110,8 @@ const BHPC_ROUTE_LIST = `/
 /methods/topics/systems-and-frameworks/
 /methods/topics/tools-and-comparisons/
 /methods/topics/weekly-and-long-range-planning/
+/minimum-viable-day/
+/never-miss-twice-rule/
 /personal-development-plan-template/
 /platforms/phase4/how-to-use-billionaire-high-performance-coach-with-chatgpt-for-context-reset-recovery
 /platforms/phase4/how-to-use-billionaire-high-performance-coach-with-chatgpt-for-daily-agenda-trigger
@@ -1155,6 +1164,11 @@ const BHPC_ROUTE_LIST = `/
 /platforms/phase4/how-to-use-billionaire-high-performance-coach-with-perplexity-for-three-chat-setup
 /platforms/phase4/how-to-use-billionaire-high-performance-coach-with-perplexity-for-weekly-review-protocol
 /prompt-library-vs-operating-system
+/questions/critical-actions-owners-deadlines/
+/questions/decision-paralysis-prevention-checklist-for-breaking-tasks-into/
+/questions/endless-task-paralysis/
+/questions/is-there-ai-for-personal-coaching/
+/questions/what-is-exexutive-os/
 /sequoia-taylor
 /spry-labs
 /start-here
@@ -1194,6 +1208,7 @@ const BHPC_ROUTE_LIST = `/
 /synthesis-the-arbitration-engine-how-to-decide-what-actual
 /synthesis-the-i-ll-start-in-5-minutes-loop-is-actually-des
 /synthesis-what-is-readme-spry-executive-os-the-intended-wi
+/task-paralysis/
 /use-cases/phase4/a-player-mode-for-a-agency-owner-who-is-avoiding-the-hard-task
 /use-cases/phase4/a-player-mode-for-a-agency-owner-who-is-behind-on-commitments
 /use-cases/phase4/a-player-mode-for-a-agency-owner-who-is-closing-a-chaotic-week

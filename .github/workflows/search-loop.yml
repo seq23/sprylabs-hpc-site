@@ -2,7 +2,7 @@ name: Search Loop
 
 # The shared search growth engine (seq23/search-loop), owner ruling 1 Nov 2026:
 # find easy searches weekly, publish one gated page per search daily under
-# /questions/ on spryexecutiveos.com, check every page at 2/4/8 weeks,
+# /questions/ on billionairehighperformancecoach.com (spryexecutiveos.com is sunset), check every page at 2/4/8 weeks,
 # strengthen / undo / merge, and upload the weekly report artifact
 # "search-loop-week". The global switch SEARCH_LOOP_MODE on seq23/search-loop
 # (normal | slow | off) throttles it without touching this repo.
@@ -43,7 +43,7 @@ jobs:
       BOSS_OPEN_LOOPS_TOKEN: ${{ secrets.BOSS_OPEN_LOOPS_TOKEN }}  # named stops -> Boss OS Open Loops (search-loop v1.7.0)
       OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
       GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
-      GSC_SITE_URL: ${{ secrets.GSC_SITE_URL_SPRY }}
+      GSC_SITE_URL: ${{ secrets.GSC_SITE_URL_BHPC }}
       BING_WEBMASTER_API_KEY: ${{ secrets.BING_WEBMASTER_API_KEY }}
       INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
       # $0 model lanes (engine v1.2.3): Gemini free tier (no-billing project), metered Workers AI

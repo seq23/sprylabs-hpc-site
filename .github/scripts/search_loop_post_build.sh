@@ -11,3 +11,5 @@
 set -Eeuo pipefail
 node -e "require('./scripts/content/build_spry_rescue.cjs').build()"
 npm run -s build:route-owner-table
+# 3. The two-week blitz ends itself: past blitz.ends_on the config drops back to slow.
+node scripts/search_loop_blitz.mjs auto
