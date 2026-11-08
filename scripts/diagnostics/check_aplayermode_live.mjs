@@ -77,6 +77,13 @@ for (const p of [`/no-such-page-${Date.now().toString(36)}/`, '/about.html', '/a
   if (bare.status !== 301 || bare.headers.get('location') !== `${HOST}/about/`) fail(`/about must 301 to ${HOST}/about/, got ${bare.status} ${bare.headers.get('location')}`);
   if (!/href="\/about\/"/.test(html)) fail('/ does not link the About page');
 }
+// Kindle book companions: the URL printed in the book, its bare form and the utm-tagged form all answer the page.
+for (const p of ['/amazon/executive-dysfunction/', '/amazon/executive-dysfunction', '/amazon/executive-dysfunction/?utm_source=kindle&utm_medium=book&utm_campaign=executive-dysfunction']) {
+  const r = await get(p); checked += 1;
+  const t = r.status === 200 ? await r.text() : '';
+  if (r.status !== 200) fail(`${p} must answer 200, got ${r.status}${r.headers.get('location') ? ` -> ${r.headers.get('location')}` : ''}`);
+  else if (!t.includes('<link rel="canonical" href="https://aplayermode.com/amazon/executive-dysfunction/">')) fail(`${p} is not the Executive Dysfunction companion page`);
+}
 if (failures.length) { for (const f of failures) console.error(`${LABEL} FAIL ${f}`); console.error(`${LABEL} FAIL (${failures.length}) - ${checked} URLs`); process.exit(1); }
 console.log(`${LABEL} PASS - ${checked} URLs on ${HOST}`);
 process.exit(0);
