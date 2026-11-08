@@ -7,7 +7,7 @@
  * passed through, never redirected, so unknown paths still 404 where they were
  * asked for.
  *
- * 573 BHPC-owned routes, 50 spryexecutiveos.com-owned, 0 canonical elsewhere.
+ * 574 BHPC-owned routes, 50 spryexecutiveos.com-owned, 0 canonical elsewhere.
  * Rules: functions/_lib/route_owner_host.js. Guard: npm run validate:route-owner-host.
  */
 export const BHPC_HOST = 'billionairehighperformancecoach.com';
@@ -308,6 +308,7 @@ const BHPC_ROUTE_LIST = `/
 /how-to-use-chatgpt-for-better-decision-making-as-a-founder
 /is-ai-coaching-effective
 /legal
+/library/
 /methods/
 /methods/arbitration-engine/
 /methods/executive-review-mode/

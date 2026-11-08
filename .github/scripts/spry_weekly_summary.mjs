@@ -40,6 +40,7 @@ export function salesLine(read) {
 /** Free sample / upsell / review ask line from data/sales/gumroad_growth.json. Pure. */
 export function growthLine(growth) {
   if (!growth) return `Free sample series: not read: ${GROWTH_FILE} is missing.`;
+  if (growth.retired) return `Free sample series: retired (${growth.retired.split('.')[0]}); review ask ${Object.values(growth.live ?? {}).every(Boolean) ? 'live' : 'NAMED STOP [GUMROAD_SETUP] not set up'} on Gumroad.`;
   const waiting = Object.entries(growth.live ?? {}).filter(([, v]) => !v).map(([k]) => k);
   if (!waiting.length) return `Free sample series and review ask: live on Gumroad (${plural(growth.series?.length ?? 0, 'email')}).`;
   return `Free sample series: NAMED STOP [GUMROAD_SETUP] written (${plural(growth.series?.length ?? 0, 'email')}), not live until set up in her Gumroad account: ${waiting.join(', ')}.`;
