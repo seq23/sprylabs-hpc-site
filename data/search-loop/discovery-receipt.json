@@ -1,8 +1,8 @@
 {
   "schema": "search-loop-discovery-v1",
-  "site": "spryexecutiveos.com",
+  "site": "billionairehighperformancecoach.com",
   "week": "2026-W45",
-  "generated_at": "2026-11-02T11:44:28.511Z",
+  "generated_at": "2026-11-08T22:20:46.722Z",
   "paid_calls": 0,
   "cost_usd": 0,
   "hosts": {
@@ -19,33 +19,55 @@
       "cost_usd": 0
     },
     "suggestqueries.google.com": {
-      "calls": 40,
-      "ok": 40,
-      "failed": 0,
+      "calls": 17,
+      "ok": 14,
+      "failed": 3,
       "cost_usd": 0
     },
     "api.bing.com": {
-      "calls": 40,
-      "ok": 40,
+      "calls": 63,
+      "ok": 63,
+      "failed": 0,
+      "cost_usd": 0
+    },
+    "api.search.brave.com": {
+      "calls": 15,
+      "ok": 15,
       "failed": 0,
       "cost_usd": 0
     }
   },
   "sources": {
-    "search_console": "ok: 6 rows",
-    "bing_webmaster": "ok: 112 rows",
-    "suggestqueries.google.com": "ok",
+    "search_console": "ok: 125 rows",
+    "bing_webmaster": "ok: 35 rows",
+    "easy_wins": "ok: 3 easy win(s) in Search Console",
+    "suggestqueries.google.com": "not read: unavailable after 3 failures (last http 400)",
     "api.bing.com": "ok",
-    "relevance_screen": "ok: kept 13 of 40 (free model)"
+    "relevance_screen": "ok: kept 36 of 141 (free model)",
+    "top10": "ok: 15 top-10 read(s) via brave"
   },
-  "competition": "not read: no free, ToS-safe competition signal (SERP scraping is not used)",
   "notes": [
     "autocomplete stopped at its budget of 80 calls"
   ],
+  "competition": "ok: 15 top-10 read(s) via brave",
+  "lanes": {
+    "ratio": {
+      "can_be_one": 2,
+      "striking": 1
+    },
+    "can_be_one": 19,
+    "striking": 17,
+    "weights": {
+      "neighbour": 35,
+      "unanswered": 30,
+      "weak_top10": 40,
+      "demand": 10
+    }
+  },
   "counts": {
-    "candidates": 48,
-    "targets": 13,
-    "strengthen_candidates": 8,
+    "candidates": 157,
+    "targets": 36,
+    "strengthen_candidates": 15,
     "dropped_shared_audience": 0
   }
 }
