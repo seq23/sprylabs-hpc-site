@@ -38,6 +38,7 @@
  *                             Who publishes this and who built it, so an answer
  *                             engine has an author to cite (Search Readiness c6).
  *   /aplayermode/          -> 301 to / (one URL per page)
+ *   /amazon/<book>/        -> a Kindle companion in CONTENT_PAGES: served here, slash or not
  *   /amazon/*              -> 301 to billionairehighperformancecoach.com/amazon/*
  *                             (zone Redirect Rule b4d8a48c answers first; this
  *                             mirrors it so the contract holds without the rule)
@@ -137,6 +138,10 @@ export function route(pathname) {
   if (pathname === FEED_PATH) return { kind: 'feed', upstream: QUEUE_PATH };
   // One feed per Pinterest topic board (queue.boards.list); an unknown board answers 404 in serveFeed.
   if (/^\/pinfeed\/[a-z0-9-]+\.xml$/.test(pathname)) return { kind: 'feed', upstream: QUEUE_PATH, feed: pathname };
+  // A Kindle companion page in CONTENT_PAGES (its URL is printed inside a book) is served here, with
+  // or without the slash, because a reader types it by hand; every other /amazon/* path goes to BHPC.
+  const book = `${pathname.replace(/\/+$/, '')}/`;
+  if (book.startsWith('/amazon/') && Object.prototype.hasOwnProperty.call(CONTENT_PAGES, book)) return { kind: 'asset', upstream: CONTENT_PAGES[book], content: true };
   if (pathname === '/amazon' || pathname.startsWith('/amazon/')) return { kind: 'redirect', location: BHPC + pathname, keepQuery: true };
   if (pathname === '/pinfeed' || pathname === '/pinfeed/') return { kind: 'redirect', location: FEED_PATH, keepQuery: false };
   if (pathname === '/aplayermode' || pathname === PAGE_PATH || pathname === `${PAGE_PATH}index.html`) return { kind: 'redirect', location: '/', keepQuery: true };
