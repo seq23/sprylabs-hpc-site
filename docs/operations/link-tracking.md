@@ -48,12 +48,18 @@ Swap `sequoia` for a word naming the person or group when it helps (`utm_campaig
 
 ## Free page analytics
 
-- **Cloudflare Web Analytics** (free) is switched on for all three hosts in the dashboard, but the beacon
-  never reached the pages (Pages Functions responses were not auto-injected; 0 page loads recorded). The
-  beacon is now on every page in its own host's site token, and in the Search Loop page template
-  (`search-loop.config.json` → `template.header_html`). It shows visits per page and referrer.
-- **Microsoft Clarity** (free, already on both shared hosts and aplayermode.com) shows the UTM source,
-  medium and campaign and the referrer per page.
+- **Microsoft Clarity** (free, on both shared hosts and aplayermode.com) is the page analytics: visits per
+  page with the UTM source, medium and campaign and the referrer.
+- **Cloudflare Web Analytics: NAMED STOP [WEB_ANALYTICS_AUTO_SETUP].** The three Web Analytics sites
+  (billionairehighperformancecoach.com, spryexecutiveos.com, aplayermode.com) are "automatic setup" sites.
+  Cloudflare never injects their beacon into these Pages responses (0 page loads recorded), and their
+  tokens refuse a manual beacon (HTTP 404 from `cdn-cgi/rum`, which shows as a CORS error in every visitor's
+  console; checked 8 Nov 2026). No vault token may change a Web Analytics site, so no page carries the
+  beacon (`scripts/tracking/tag_buy_links.mjs` strips it; `tests/buy_link_tags.test.mjs` guards it).
+  The fix needs her Cloudflare sign-in: Cloudflare dashboard › Analytics & Logs › Web Analytics › each of
+  the three sites › Manage site › switch from automatic setup to the JS snippet. Then put the snippet's
+  token back on the pages (a one-line change in the tagger). Until then the search loop's AI-referral
+  numbers read "not read".
 
 ## The weekly count
 

@@ -11,7 +11,7 @@ const { listEveryServedPage } = require('../scripts/lib/site_pages.js');
 const SAFE = /^[a-z0-9\-_]{1,200}$/;
 const linkRe = /href=["'](https:\/\/sprylabs\.gumroad\.com\/l\/billionaire-high-performance-coach[^"']*)["']/g;
 
-test('every BHPC buy link on every served page names the page and button, and every page loads the beacon', () => {
+test('every BHPC buy link on every served page names the page and button, and no page carries a refused beacon', () => {
   let links = 0;
   for (const rel of listEveryServedPage().filter((r) => r.endsWith('.html'))) {
     const html = fs.readFileSync(rel, 'utf8');
@@ -22,7 +22,9 @@ test('every BHPC buy link on every served page names the page and button, and ev
       assert.equal(u.searchParams.get('wanted'), 'true', `${rel}: buy link does not open checkout in ${href}`);
       assert.ok(['site', 'book', 'social', 'share'].includes(u.searchParams.get('utm_medium')), `${rel}: utm_medium outside the scheme in ${href}`);
     }
-    if (/<\/body>/i.test(html)) assert.ok(html.includes(`"token": "${BEACON[hostFor(rel, html)]}"`), `${rel}: no Web Analytics beacon for its host`);
+    // The Web Analytics sites are automatic-setup sites whose tokens refuse a manual beacon
+    // (404 and a CORS error in every visitor's console, 8 Nov 2026): no page may carry one.
+    assert.ok(!html.includes('static.cloudflareinsights.com/beacon.min.js'), `${rel}: carries a manual beacon the account refuses`);
   }
   assert.ok(links > 100, `only ${links} buy links found: the scan saw nothing`);
 });
@@ -35,6 +37,6 @@ test('the tagger tags an untagged link, numbers repeated buttons, keeps inbound 
     [['billionairehighperformancecoach', 'site', 'amazon-task-paralysis-pricing'], ['billionairehighperformancecoach', 'site', 'amazon-task-paralysis-pricing-2'], ['kindle', 'book', 'x']]);
   assert.equal(tagHtml(out, 'amazon/task-paralysis/index.html'), out);
   assert.equal(new URL([...tagHtml(page, 'aplayermode/index.html').matchAll(linkRe)][0][1].replace(/&amp;/g, '&')).searchParams.get('utm_source'), 'aplayermode');
-  const b = addBeacon(out, 'aplayermode.com');
-  assert.ok(b.includes(BEACON['aplayermode.com']) && addBeacon(b, 'aplayermode.com') === b);
+  const withBeacon = out.replace('</body>', `<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "${BEACON['aplayermode.com']}"}'></script></body>`);
+  assert.equal(addBeacon(withBeacon), out, 'the refused beacon is not stripped');
 });
