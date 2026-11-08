@@ -96,7 +96,9 @@ test('finite publishing policy catches future generated variants and preserves o
   assert.equal(isRetiredFile('download.html'),false);
   assert.equal(isRetiredFile('aplayermode/index.html'),false);
   for (const r of keepers) assert.equal(isRetiredFile(fileFor(r)),false,r);
-  assert.equal(JSON.parse(fs.readFileSync('search-loop.config.json')).mode,'slow');
+  const loop = JSON.parse(fs.readFileSync('search-loop.config.json'));
+  // slow, or the two-week blitz with its end date set (tests/search_loop_blitz.test.mjs)
+  assert.ok(loop.mode === 'slow' || (loop.mode === 'normal' && /^\d{4}-\d{2}-\d{2}$/.test(loop.blitz?.ends_on || '')), loop.mode);
 });
 
 test('engine admission preserves retirement and requires a live, sourced publication record', () => {
