@@ -17,8 +17,10 @@
  * A link that already carries utm_source (the Kindle companion pages) keeps its own tags.
  * assets/domain-context.js and aplayermode/app.js swap in a visitor's inbound tags at click time.
  *
- * It also puts the free Cloudflare Web Analytics beacon on every page (per host), which was
- * switched on in the dashboard but never served: the Pages Functions responses were not injected.
+ * It also keeps the Cloudflare Web Analytics beacon OFF every page: the three Web Analytics sites
+ * are "automatic setup" sites, whose tokens refuse a manual beacon (404, and a CORS error in every
+ * visitor's console; measured live 8 Nov 2026). Turning them to manual setup needs her
+ * Cloudflare sign-in (docs/operations/link-tracking.md). Clarity carries page analytics meanwhile.
  *
  *   node scripts/tracking/tag_buy_links.mjs          rewrite the pages (idempotent)
  *   node scripts/tracking/tag_buy_links.mjs --check  exit 1 naming any untagged link or missing beacon
@@ -80,10 +82,10 @@ export function tagHtml(html, rel) {
 export function beaconTag(host) {
   return `<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "${BEACON[host]}"}'></script>`;
 }
-export function addBeacon(html, host) {
-  if (html.includes('static.cloudflareinsights.com/beacon.min.js')) return html;
-  if (!/<\/body>/i.test(html)) return html;
-  return html.replace(/<\/body>(?![\s\S]*<\/body>)/i, `${beaconTag(host)}</body>`);
+export const BEACON_RE = /<script defer src="https:\/\/static\.cloudflareinsights\.com\/beacon\.min\.js" data-cf-beacon='\{"token": "[0-9a-f]{32}"\}'><\/script>/g;
+/** Removes the manual beacon (see the header: the account refuses it). Name kept for its callers. */
+export function addBeacon(html) {
+  return html.replace(BEACON_RE, '');
 }
 
 function pages() {
