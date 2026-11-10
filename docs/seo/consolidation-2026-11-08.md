@@ -66,20 +66,30 @@ The brief's "about 450 pages remain" was an undercount: 1,796 indexable pages we
 - `/what-reddit-keeps-asking-about-founder-workflows` (8 paragraphs found on no other page)
 - `/what-reddit-keeps-asking-about-overplanning` (7 paragraphs found on no other page)
 - `/what-reddit-keeps-asking-about-structured-ai-systems` (8 paragraphs found on no other page)
-- `/whitepapers/state-of-ai-coaching-athlete` (5 paragraphs found on no other page)
-- `/whitepapers/state-of-ai-coaching-executive` (5 paragraphs found on no other page)
-- `/whitepapers/state-of-comparison-founder` (5 paragraphs found on no other page)
-- `/whitepapers/state-of-discipline-athlete` (5 paragraphs found on no other page)
-- `/whitepapers/state-of-discipline-executive` (5 paragraphs found on no other page)
-- `/whitepapers/state-of-discipline-founder` (5 paragraphs found on no other page)
-- `/whitepapers/state-of-execution-athlete` (5 paragraphs found on no other page)
-- `/whitepapers/state-of-execution-executive` (5 paragraphs found on no other page)
-- `/whitepapers/state-of-execution-founder` (5 paragraphs found on no other page)
-- `/whitepapers/state-of-overplanning-and-reset` (5 paragraphs found on no other page)
-- `/whitepapers/state-of-recovery-athlete` (5 paragraphs found on no other page)
+- `/whitepapers/` (5 paragraphs found on no other page)
+- `/whitepapers/` (5 paragraphs found on no other page)
+- `/whitepapers/` (5 paragraphs found on no other page)
+- `/whitepapers/` (5 paragraphs found on no other page)
+- `/whitepapers/` (5 paragraphs found on no other page)
+- `/whitepapers/` (5 paragraphs found on no other page)
+- `/whitepapers/` (5 paragraphs found on no other page)
+- `/whitepapers/` (5 paragraphs found on no other page)
+- `/whitepapers/` (5 paragraphs found on no other page)
+- `/whitepapers/` (5 paragraphs found on no other page)
+- `/whitepapers/` (5 paragraphs found on no other page)
 - `/why-most-ai-productivity-tools-feel-generic` (8 paragraphs found on no other page)
 - `/why-productivity-systems-collapse-after-missed-days` (6 paragraphs found on no other page)
 
 ## Kept: address collision
 
 - `/vs/topics/ai-coaching-and-alternatives/`
+
+## Addendum, 10 Nov 2026: the white papers fold into one (Search Readiness q1)
+
+The 22 `/whitepapers/state-of-*` pages were one essay published 22 times with the topic name
+swapped (bodies 64-93% identical, measured with the q1 checker's own 5-word shingles). Each had 1-3
+Search Console impressions in 90 days (read 10 Nov 2026, both properties), so they were kept on 8 Nov;
+the weekly quality sample then failed one for template filler and no named author. The essay now
+lives once on `/whitepapers/` with a byline and date; the 22 URLs 301 there in one hop at the edge
+(`manual_redirects.json`, `served_by: "edge"`), and five older redirects that ended on a paper now
+end on the hub. Removed from `sitemap-bhpc.xml`, `llms-full.txt` and every internal link.

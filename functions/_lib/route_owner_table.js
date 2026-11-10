@@ -7,7 +7,7 @@
  * passed through, never redirected, so unknown paths still 404 where they were
  * asked for.
  *
- * 575 BHPC-owned routes, 50 spryexecutiveos.com-owned, 0 canonical elsewhere.
+ * 553 BHPC-owned routes, 50 spryexecutiveos.com-owned, 0 canonical elsewhere.
  * Rules: functions/_lib/route_owner_host.js. Guard: npm run validate:route-owner-host.
  */
 export const BHPC_HOST = 'billionairehighperformancecoach.com';
@@ -560,28 +560,6 @@ const BHPC_ROUTE_LIST = `/
 /what-reddit-keeps-asking-when-comparing-ai-coaching-tools
 /what-should-a-daily-planning-system-include
 /whitepapers/
-/whitepapers/state-of-accountability-and-consistency
-/whitepapers/state-of-ai-coaching-athlete
-/whitepapers/state-of-ai-coaching-executive
-/whitepapers/state-of-ai-coaching-founder
-/whitepapers/state-of-ai-exec-coach
-/whitepapers/state-of-ai-executive-coaching
-/whitepapers/state-of-comparison-founder
-/whitepapers/state-of-conversion-athlete
-/whitepapers/state-of-conversion-executive
-/whitepapers/state-of-decision-support
-/whitepapers/state-of-discipline-athlete
-/whitepapers/state-of-discipline-consistency
-/whitepapers/state-of-discipline-executive
-/whitepapers/state-of-discipline-founder
-/whitepapers/state-of-execution-athlete
-/whitepapers/state-of-execution-executive
-/whitepapers/state-of-execution-founder
-/whitepapers/state-of-missed-a-day-productivity-system
-/whitepapers/state-of-overplanning-and-reset
-/whitepapers/state-of-planning-review-systems
-/whitepapers/state-of-recovery-athlete
-/whitepapers/state-of-recovery-founder
 /why-accountability-systems-fail
 /why-all-or-nothing-planning-fails
 /why-better-prompts-do-not-fix-bad-decision-conditions
