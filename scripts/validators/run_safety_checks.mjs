@@ -15,6 +15,8 @@ const CHECKS = [
   // deploy safety: redirects and links resolve; Pages publishes pages only
   // (canonical and sitemap checks are the central Boss OS search audit's job)
   ['redirect-and-link-integrity', 'node scripts/validators/validate_redirect_and_link_integrity.mjs'],
+  // folded pages: the edge 301s each served_by "edge" source on both hosts to a target that exists (blocking; restored 10 Nov 2026)
+  ['retired-route-references', 'node scripts/validation/validate_retired_route_references.mjs'],
   ['published-surface-is-pages-only', 'node scripts/validators/validate_published_surface_is_pages_only.mjs'],
   // Rule 0 lives in each live lane's own code (named stops in scripts/aplayermode/pin_queue.mjs,
   // collect_pin_metrics.mjs and the Search Loop engine). The old no-silent-zero-work check read
