@@ -36,7 +36,8 @@ npm run validate    # scripts/validators/run_safety_checks.mjs: the only validat
 
 `npm run validate` holds safety checks only: no credential or personal mailbox address in the
 repo, zero paid LLM, claim safety and Safe Harbor, redirect and link integrity, retired-route
-references, canonical hosts, sitemap coverage and Pages publishes pages only. Rule 0 lives in each live
+references (the edge 301s every folded `served_by: "edge"` page on both hosts to a target that
+exists) and Pages publishes pages only. All of them are blocking (hard-fail). Rule 0 lives in each live
 lane's own named stops (the old no-silent-zero-work check read files only retired lanes wrote). A new check goes into that runner only if it protects a live behaviour; page format and
 wording are fixed in the writer, never guarded by a blocking validator.
 
