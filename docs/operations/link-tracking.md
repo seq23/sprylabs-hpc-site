@@ -50,6 +50,8 @@ Swap `sequoia` for a word naming the person or group when it helps (`utm_campaig
 
 - **Microsoft Clarity** (free, on both shared hosts and aplayermode.com) is the page analytics: visits per
   page with the UTM source, medium and campaign and the referrer.
+  On aplayermode.com it records only a page with a form marked `data-session-recording` (today the
+  home page launch-updates form; risk R-PRV-03), proved by `tests/aplayermode/clarity_forms_only.test.mjs`.
 - **Cloudflare Web Analytics: NAMED STOP [WEB_ANALYTICS_AUTO_SETUP].** The three Web Analytics sites
   (billionairehighperformancecoach.com, spryexecutiveos.com, aplayermode.com) are "automatic setup" sites.
   Cloudflare never injects their beacon into these Pages responses (0 page loads recorded), and their
