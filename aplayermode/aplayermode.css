@@ -145,7 +145,7 @@ ol > li::marker { color: var(--apm-ink-muted); font-weight: 700; }
 .callout { background: var(--apm-accent-soft); color: var(--apm-ink); border-radius: var(--apm-radius-lg); padding: var(--apm-space-lg) var(--apm-space-xl); margin: var(--apm-space-lg) 0; }
 
 /* Top bar and in-page navigation: Paper glass over a brass hairline */
-.topbar { position: sticky; top: 0; z-index: 10; background: var(--apm-bg); border-bottom: 1px solid var(--apm-brass); }
+.topbar { position: sticky; top: 0; z-index: 10; background: var(--apm-surface); border-bottom: 1px solid var(--apm-line); }
 @supports (backdrop-filter: blur(8px)) {
   .topbar { background: color-mix(in srgb, var(--apm-bg) 88%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
 }
@@ -334,10 +334,10 @@ table.compare { min-width: 0; }
 .hero-lead { margin: 0 0 var(--apm-space-sm); max-width: 36em; color: var(--apm-ink-muted); }
 .hero-lead-big { display: block; font-family: var(--apm-font-display); font-size: 26px; line-height: 1.2; font-weight: 600; letter-spacing: -0.01em; color: var(--apm-ink); margin-bottom: var(--apm-space-xxs); }
 .hero-sub { font-size: 18px; line-height: 1.35; font-weight: 600; color: var(--apm-ink); margin: 0 0 var(--apm-space-sm); max-width: 32em; }
-.hero-ctas { margin: 0 0 var(--apm-space-xl); }
+.hero-ctas { margin: 0 0 var(--apm-space-sm); }
 .hero-ctas .btn { min-height: 48px; }
 .role-chips { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 0 0 var(--apm-space-md); list-style: none; }
-.role-chips li { margin: 0; padding: 5px 11px; border: 1px solid var(--apm-line); border-radius: var(--apm-radius-pill); background: var(--apm-surface); font-size: var(--apm-size-small); font-weight: 700; line-height: 18px; }
+.role-chips li { margin: 0; padding: 5px 11px; border: 1px solid var(--apm-line); border-radius: var(--apm-radius-pill); background: var(--apm-accent-soft); font-size: var(--apm-size-small); font-weight: 700; line-height: 18px; }
 .roles-list { font-size: var(--apm-size-small); color: var(--apm-ink-muted); }
 .choice-col { display: flex; flex-direction: column; gap: var(--apm-space-xs); min-width: 0; }
 .choice-col .choice { flex: 1; }
@@ -412,7 +412,8 @@ a.choice-cta { text-decoration: none; }
 
 /* The line under the H1 and the live Founding 100 count under the hero buttons. */
 .hero-cos { margin: 0 0 var(--apm-space-md); max-width: 34em; font-size: 18px; line-height: 1.5; color: var(--apm-ink); }
-.hero-count { margin: 0 0 var(--apm-space-md); color: var(--apm-ink-muted); }
+.hero-count { margin: 0 0 var(--apm-space-xs); color: var(--apm-ink-muted); }
+.hero-count + .roles, .hero-count + div { margin-top: var(--apm-space-md); }
 .card-more { margin-top: var(--apm-space-sm); }
 .card-more a, .text-link { color: var(--apm-accent); font-weight: 700; text-underline-offset: 3px; }
 .card-more a { display: inline-flex; align-items: center; min-height: 44px; }

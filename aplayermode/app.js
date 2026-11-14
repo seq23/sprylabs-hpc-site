@@ -92,7 +92,7 @@
         if (data.open && data.remaining > 0) {
           // Every count on the page (the hero line and the offer card): the true live number only.
           document.querySelectorAll('[data-founding-left]').forEach(function (left) {
-            left.textContent = data.remaining + ' of ' + (data.total || 100) + ' places left.';
+            left.textContent = data.remaining + ' of ' + (data.total || 100) + ' spots left' + (left.parentElement && left.parentElement.classList.contains('hero-count') ? ' · ' : '');
             left.hidden = false;
           });
           return;
@@ -107,15 +107,16 @@
       .catch(function () { /* unchanged */ });
   }
 
-  // "Get launch updates": shown only once the endpoint answers this page (a probe that stores
-  // nothing: an empty body is refused 400 by a live endpoint, and blocked by CORS before it exists).
+  // "Get launch updates": shown when the endpoint is configured. It used to probe the endpoint
+  // with an empty POST and show the form on its 400, which put a console error on every home
+  // visit; a sign-up that fails still says so in the form ("That didn't work…").
   var lSection = document.querySelector('[data-launch-updates]');
   var form = document.querySelector('[data-launch-form]');
   if (lSection && form && isLive(links.launchUpdates) && typeof fetch === 'function') {
     var post = function (body) {
       return fetch(links.launchUpdates, { method: 'POST', mode: 'cors', credentials: 'omit', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
     };
-    post({}).then(function (r) { if (r.status === 400) lSection.hidden = false; }).catch(function () { /* stays hidden */ });
+    lSection.hidden = false;
     var status = form.querySelector('[data-launch-status]');
     form.addEventListener('submit', function (event) {
       event.preventDefault();
