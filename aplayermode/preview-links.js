@@ -14,6 +14,7 @@
     '/ai-executive-assistant/': '/aplayermode/pages/ai-executive-assistant',
     '/founders/': '/aplayermode/pages/founders',
     '/parents/': '/aplayermode/pages/parents',
+    '/roundtable/': '/aplayermode/pages/roundtable',
     '/life-os/': '/aplayermode/pages/life-os',
     '/questions/what-does-a-chief-of-staff-do/': '/aplayermode/pages/what-does-a-chief-of-staff-do',
     '/routines/adhd-morning-routine/': '/aplayermode/pages/routines-adhd-morning-routine',
