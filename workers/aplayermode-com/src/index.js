@@ -42,6 +42,9 @@
  *   /amazon/*              -> 301 to billionairehighperformancecoach.com/amazon/*
  *                             (zone Redirect Rule b4d8a48c answers first; this
  *                             mirrors it so the contract holds without the rule)
+ *   /terms, /privacy       -> 301 to app.aplayermode.com/terms and /privacy (LEGAL_REDIRECTS):
+ *                             the app repo holds the ONE copy of each policy; the
+ *                             Disclaimer is a content page here (/disclaimer/).
  *   REDIRECT_HOME          -> 301 to /: the handful of sibling-host paths the
  *                             outside world links (/download, /guides/,
  *                             /sitemap-bhpc.xml, /llms-full.txt, /index.xml), so
@@ -114,6 +117,11 @@ export const CONTENT_PAGES = Object.freeze({ ...contentPages.pages });
 export const NOT_FOUND_FILE = '/aplayermode/404.html';
 // Sibling-host paths the outside world links to; they go home rather than 404,
 // because a real page of that name exists on billionairehighperformancecoach.com.
+// The Terms and Privacy Policy have ONE source, the app (seq23/aplayer-mode apps/mobile/public/),
+// served at app.aplayermode.com; the apex answers their short URLs with a 301 there (13 Nov 2026,
+// legal check: aplayermode.com/terms and /privacy were 404s).
+export const APP_ORIGIN = 'https://app.aplayermode.com';
+export const LEGAL_REDIRECTS = Object.freeze({ '/terms': `${APP_ORIGIN}/terms`, '/privacy': `${APP_ORIGIN}/privacy`, '/privacy/consumer-health': `${APP_ORIGIN}/privacy/consumer-health` });
 export const REDIRECT_HOME = Object.freeze(['/download', '/guides', '/sitemap-bhpc.xml', '/llms-full.txt', '/index.xml']);
 
 // route() names the COMMITTED FILE it serves (so the validator can check the file
@@ -145,6 +153,8 @@ export function route(pathname) {
   if (pathname === '/amazon' || pathname.startsWith('/amazon/')) return { kind: 'redirect', location: BHPC + pathname, keepQuery: true };
   if (pathname === '/pinfeed' || pathname === '/pinfeed/') return { kind: 'redirect', location: FEED_PATH, keepQuery: false };
   if (pathname === '/aplayermode' || pathname === PAGE_PATH || pathname === `${PAGE_PATH}index.html`) return { kind: 'redirect', location: '/', keepQuery: true };
+  const legal = pathname.replace(/\/index\.html$/, '').replace(/\/+$/, '');
+  if (Object.prototype.hasOwnProperty.call(LEGAL_REDIRECTS, legal)) return { kind: 'redirect', location: LEGAL_REDIRECTS[legal], keepQuery: false };
   if (pathname === ABOUT_PATH) return { kind: 'asset', upstream: ABOUT_FILE };
   // Cloudflare Pages answers 404.html at /404 on the shared hosts; the error page's canonical names
   // that URL, so this host answers it the same way rather than leaving the canonical pointing at a

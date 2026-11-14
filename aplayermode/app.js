@@ -27,18 +27,6 @@
     el.replaceWith(a);
   });
 
-  var footer = document.querySelector('[data-legal-links]');
-  if (footer) {
-    [['terms', 'Terms of Service'], ['privacy', 'Privacy Policy']].forEach(function (pair) {
-      var url = links.legal && links.legal[pair[0]];
-      if (!isLive(url)) return;
-      var a = document.createElement('a');
-      a.href = url;
-      a.textContent = pair[1];
-      footer.appendChild(a);
-    });
-  }
-
   // Desktop QR code: points a phone at this page's #get-the-app section, where
   // the phone picks its own route. Shown only when at least one route is live.
   var qr = document.querySelector('[data-qr]');
