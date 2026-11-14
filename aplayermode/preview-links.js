@@ -15,6 +15,7 @@
     '/founders/': '/aplayermode/pages/founders',
     '/parents/': '/aplayermode/pages/parents',
     '/roundtable/': '/aplayermode/pages/roundtable',
+    '/disclaimer/': '/aplayermode/pages/disclaimer',
     '/life-os/': '/aplayermode/pages/life-os',
     '/questions/what-does-a-chief-of-staff-do/': '/aplayermode/pages/what-does-a-chief-of-staff-do',
     '/routines/adhd-morning-routine/': '/aplayermode/pages/routines-adhd-morning-routine',
