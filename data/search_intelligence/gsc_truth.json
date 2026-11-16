@@ -1,46 +1,46 @@
 {
   "schema_version": "1.2",
-  "generated_at": "2026-11-15T13:29:51.641Z",
+  "generated_at": "2026-11-16T13:50:18.274Z",
   "provider_state": "OK",
   "overall_status": "OK",
   "data_state": "HEALTHY",
   "status_is_healthy": true,
-  "raw_row_count": 137,
-  "raw_impressions": 926,
+  "raw_row_count": 139,
+  "raw_impressions": 938,
   "raw_clicks": 0,
-  "row_count": 89,
+  "row_count": 102,
   "target_query_filter": {
     "target_query_count": 120,
-    "rows_in": 137,
-    "rows_matched": 89,
-    "rows_discarded": 48,
-    "discard_ratio": 0.35036496350364965,
-    "targets_with_rows": 69,
+    "rows_in": 139,
+    "rows_matched": 102,
+    "rows_discarded": 37,
+    "discard_ratio": 0.26618705035971224,
+    "targets_with_rows": 80,
     "filter_discarded_every_row": false
   },
   "exports": [
     {
       "path": "data/search_intelligence/provider_inputs/gsc_bhpc.json",
       "site_url": "sc-domain:billionairehighperformancecoach.com",
-      "start_date": "2026-10-17",
-      "end_date": "2026-11-13",
-      "collected_at": "2026-11-15",
-      "raw_row_count": 135,
-      "raw_distinct_query_count": 123,
-      "raw_impressions": 923,
+      "start_date": "2026-10-18",
+      "end_date": "2026-11-14",
+      "collected_at": "2026-11-16",
+      "raw_row_count": 137,
+      "raw_distinct_query_count": 125,
+      "raw_impressions": 935,
       "raw_clicks": 0,
-      "row_count": 87,
-      "rows_discarded_by_target_filter": 48,
-      "discarded_impressions": 63,
+      "row_count": 100,
+      "rows_discarded_by_target_filter": 37,
+      "discarded_impressions": 38,
       "discarded_clicks": 0,
       "data_state": "HEALTHY"
     },
     {
       "path": "data/search_intelligence/provider_inputs/gsc_spry.json",
       "site_url": "sc-domain:spryexecutiveos.com",
-      "start_date": "2026-10-17",
-      "end_date": "2026-11-13",
-      "collected_at": "2026-11-15",
+      "start_date": "2026-10-18",
+      "end_date": "2026-11-14",
+      "collected_at": "2026-11-16",
       "raw_row_count": 2,
       "raw_distinct_query_count": 1,
       "raw_impressions": 3,
@@ -142,9 +142,9 @@
       "truth_state": "GSC_ROW_PRESENT",
       "query_metrics": {
         "clicks": 0,
-        "impressions": 26,
+        "impressions": 25,
         "ctr": 0,
-        "gsc_average_position": 29.384615384615383,
+        "gsc_average_position": 29.4,
         "pages": [
           "https://billionairehighperformancecoach.com/ai-coach-vs-human-coach"
         ]
@@ -165,6 +165,14 @@
           "https://billionairehighperformancecoach.com/executive-coach-cost/"
         ]
       }
+    },
+    {
+      "target_id": "si_ea2d1391a23ea398",
+      "query": "human matched executive coaching",
+      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
+      "truth_source": "google_search_console",
+      "truth_state": "NO_GSC_ROW",
+      "query_metrics": null
     },
     {
       "target_id": "si_f492dab3df3c7b7c",
@@ -199,14 +207,6 @@
       }
     },
     {
-      "target_id": "si_ea2d1391a23ea398",
-      "query": "human matched executive coaching",
-      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
-      "truth_source": "google_search_console",
-      "truth_state": "NO_GSC_ROW",
-      "query_metrics": null
-    },
-    {
       "target_id": "si_098cc1c8b27728f4",
       "query": "human touch in coaching",
       "expected_owned_url": "https://billionairehighperformancecoach.com/answers/phase4/demand/human-coaching",
@@ -214,11 +214,27 @@
       "truth_state": "GSC_ROW_PRESENT",
       "query_metrics": {
         "clicks": 0,
-        "impressions": 19,
+        "impressions": 18,
         "ctr": 0,
-        "gsc_average_position": 29.473684210526315,
+        "gsc_average_position": 29.77777777777778,
         "pages": [
           "https://billionairehighperformancecoach.com/ai-coach-vs-human-coach"
+        ]
+      }
+    },
+    {
+      "target_id": "si_8d0012718794e80c",
+      "query": "executive ai coaching",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/synthesis-ai-executive-coaching",
+      "truth_source": "google_search_console",
+      "truth_state": "GSC_ROW_PRESENT",
+      "query_metrics": {
+        "clicks": 0,
+        "impressions": 24,
+        "ctr": 0,
+        "gsc_average_position": 21.541666666666668,
+        "pages": [
+          "https://billionairehighperformancecoach.com/ai-executive-coach"
         ]
       }
     },
@@ -246,11 +262,43 @@
       "truth_state": "GSC_ROW_PRESENT",
       "query_metrics": {
         "clicks": 0,
-        "impressions": 17,
+        "impressions": 16,
         "ctr": 0,
-        "gsc_average_position": 28.647058823529413,
+        "gsc_average_position": 29.375,
         "pages": [
           "https://billionairehighperformancecoach.com/betterup-alternatives-ai-coaching/",
+          "https://billionairehighperformancecoach.com/comparisons/bhpc-vs-betterup"
+        ]
+      }
+    },
+    {
+      "target_id": "si_52e2e64233a4bd7c",
+      "query": "ai executive coaching",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/synthesis-ai-executive-coaching",
+      "truth_source": "google_search_console",
+      "truth_state": "GSC_ROW_PRESENT",
+      "query_metrics": {
+        "clicks": 0,
+        "impressions": 18,
+        "ctr": 0,
+        "gsc_average_position": 20.055555555555557,
+        "pages": [
+          "https://billionairehighperformancecoach.com/ai-executive-coach"
+        ]
+      }
+    },
+    {
+      "target_id": "si_bf73058abe9eb520",
+      "query": "betterup alternative",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/betterup-alternatives-ai-coaching/",
+      "truth_source": "google_search_console",
+      "truth_state": "GSC_ROW_PRESENT",
+      "query_metrics": {
+        "clicks": 0,
+        "impressions": 18,
+        "ctr": 0,
+        "gsc_average_position": 34,
+        "pages": [
           "https://billionairehighperformancecoach.com/comparisons/bhpc-vs-betterup"
         ]
       }
@@ -279,27 +327,28 @@
       "truth_state": "GSC_ROW_PRESENT",
       "query_metrics": {
         "clicks": 0,
-        "impressions": 15,
+        "impressions": 14,
         "ctr": 0,
-        "gsc_average_position": 25.866666666666667,
+        "gsc_average_position": 25.357142857142858,
         "pages": [
           "https://billionairehighperformancecoach.com/ai-coach-vs-human-coach"
         ]
       }
     },
     {
-      "target_id": "si_bf73058abe9eb520",
-      "query": "betterup alternative",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/betterup-alternatives-ai-coaching/",
+      "target_id": "si_6220f966f0c301b1",
+      "query": "betterup vs coachhub",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/comparisons/bhpc-vs-coachhub",
       "truth_source": "google_search_console",
       "truth_state": "GSC_ROW_PRESENT",
       "query_metrics": {
         "clicks": 0,
-        "impressions": 17,
+        "impressions": 15,
         "ctr": 0,
-        "gsc_average_position": 34,
+        "gsc_average_position": 24.466666666666665,
         "pages": [
-          "https://billionairehighperformancecoach.com/comparisons/bhpc-vs-betterup"
+          "https://billionairehighperformancecoach.com/comparisons/bhpc-vs-betterup",
+          "https://billionairehighperformancecoach.com/comparisons/bhpc-vs-coachhub"
         ]
       }
     },
@@ -319,45 +368,13 @@
       "truth_state": "GSC_ROW_PRESENT",
       "query_metrics": {
         "clicks": 0,
-        "impressions": 12,
+        "impressions": 13,
         "ctr": 0,
-        "gsc_average_position": 22.833333333333332,
+        "gsc_average_position": 23.53846153846154,
         "pages": [
           "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-daily-planning",
           "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-private-journaling-boundaries",
           "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-weekly-planning"
-        ]
-      }
-    },
-    {
-      "target_id": "si_8d0012718794e80c",
-      "query": "executive ai coaching",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/synthesis-ai-executive-coaching",
-      "truth_source": "google_search_console",
-      "truth_state": "GSC_ROW_PRESENT",
-      "query_metrics": {
-        "clicks": 0,
-        "impressions": 18,
-        "ctr": 0,
-        "gsc_average_position": 21.055555555555557,
-        "pages": [
-          "https://billionairehighperformancecoach.com/ai-executive-coach"
-        ]
-      }
-    },
-    {
-      "target_id": "si_52e2e64233a4bd7c",
-      "query": "ai executive coaching",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/synthesis-ai-executive-coaching",
-      "truth_source": "google_search_console",
-      "truth_state": "GSC_ROW_PRESENT",
-      "query_metrics": {
-        "clicks": 0,
-        "impressions": 17,
-        "ctr": 0,
-        "gsc_average_position": 20.58823529411765,
-        "pages": [
-          "https://billionairehighperformancecoach.com/ai-executive-coach"
         ]
       }
     },
@@ -378,6 +395,23 @@
       }
     },
     {
+      "target_id": "si_b0a97cbc28851a01",
+      "query": "adhd coaching promises accountability but is it just an expensive habit tracker",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-habit-tracker-for-private-journaling-boundaries",
+      "truth_source": "google_search_console",
+      "truth_state": "GSC_ROW_PRESENT",
+      "query_metrics": {
+        "clicks": 0,
+        "impressions": 9,
+        "ctr": 0,
+        "gsc_average_position": 26.22222222222222,
+        "pages": [
+          "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-habit-tracker-for-accountability",
+          "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-habit-tracker-for-private-journaling-boundaries"
+        ]
+      }
+    },
+    {
       "target_id": "si_f78a990580a6711e",
       "query": "ai coach for high achievers",
       "expected_owned_url": "https://billionairehighperformancecoach.com/answers/phase4/demand/ai-coach-for-high-achievers",
@@ -385,9 +419,25 @@
       "truth_state": "GSC_ROW_PRESENT",
       "query_metrics": {
         "clicks": 0,
-        "impressions": 9,
+        "impressions": 8,
         "ctr": 0,
         "gsc_average_position": 7,
+        "pages": [
+          "https://billionairehighperformancecoach.com/ai-coach-vs-human-coach"
+        ]
+      }
+    },
+    {
+      "target_id": "si_8e95b3f1d9d1bd9c",
+      "query": "ai coaching cost vs benefit",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/coaching-retainer/",
+      "truth_source": "google_search_console",
+      "truth_state": "GSC_ROW_PRESENT",
+      "query_metrics": {
+        "clicks": 0,
+        "impressions": 9,
+        "ctr": 0,
+        "gsc_average_position": 24.666666666666668,
         "pages": [
           "https://billionairehighperformancecoach.com/ai-coach-vs-human-coach"
         ]
@@ -410,52 +460,18 @@
       }
     },
     {
-      "target_id": "si_af9f31ff80f4a7d1",
-      "query": "when is human coaching worth the cost compared with an ai coach?",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/answers/phase4/demand/human-coaching",
+      "target_id": "si_596970c293edf409",
+      "query": "how does betterup's ai coaching compare with ai-first coaching platforms?",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/betterup-alternatives-ai-coaching/",
       "truth_source": "google_search_console",
       "truth_state": "GSC_ROW_PRESENT",
       "query_metrics": {
         "clicks": 0,
         "impressions": 9,
         "ctr": 0,
-        "gsc_average_position": 8.555555555555555,
+        "gsc_average_position": 6.888888888888889,
         "pages": [
-          "https://billionairehighperformancecoach.com/ai-coach-vs-human-coach"
-        ]
-      }
-    },
-    {
-      "target_id": "si_b0a97cbc28851a01",
-      "query": "adhd coaching promises accountability but is it just an expensive habit tracker",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-habit-tracker-for-accountability",
-      "truth_source": "google_search_console",
-      "truth_state": "GSC_ROW_PRESENT",
-      "query_metrics": {
-        "clicks": 0,
-        "impressions": 9,
-        "ctr": 0,
-        "gsc_average_position": 26.22222222222222,
-        "pages": [
-          "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-habit-tracker-for-accountability",
-          "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-habit-tracker-for-private-journaling-boundaries"
-        ]
-      }
-    },
-    {
-      "target_id": "si_6220f966f0c301b1",
-      "query": "betterup vs coachhub",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/betterup/",
-      "truth_source": "google_search_console",
-      "truth_state": "GSC_ROW_PRESENT",
-      "query_metrics": {
-        "clicks": 0,
-        "impressions": 15,
-        "ctr": 0,
-        "gsc_average_position": 24.466666666666665,
-        "pages": [
-          "https://billionairehighperformancecoach.com/comparisons/bhpc-vs-betterup",
-          "https://billionairehighperformancecoach.com/comparisons/bhpc-vs-coachhub"
+          "https://billionairehighperformancecoach.com/comparisons/bhpc-vs-betterup"
         ]
       }
     },
@@ -475,6 +491,22 @@
           "https://billionairehighperformancecoach.com/faq",
           "https://billionairehighperformancecoach.com/spry-labs",
           "https://www.billionairehighperformancecoach.com/how-tracks-work"
+        ]
+      }
+    },
+    {
+      "target_id": "si_af9f31ff80f4a7d1",
+      "query": "when is human coaching worth the cost compared with an ai coach?",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/answers/phase4/demand/human-coaching",
+      "truth_source": "google_search_console",
+      "truth_state": "GSC_ROW_PRESENT",
+      "query_metrics": {
+        "clicks": 0,
+        "impressions": 9,
+        "ctr": 0,
+        "gsc_average_position": 8.555555555555555,
+        "pages": [
+          "https://billionairehighperformancecoach.com/ai-coach-vs-human-coach"
         ]
       }
     },
@@ -559,6 +591,22 @@
       }
     },
     {
+      "target_id": "si_279bea1eca607bee",
+      "query": "torch coaching alternative",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/betterup-alternatives-ai-coaching/",
+      "truth_source": "google_search_console",
+      "truth_state": "GSC_ROW_PRESENT",
+      "query_metrics": {
+        "clicks": 0,
+        "impressions": 7,
+        "ctr": 0,
+        "gsc_average_position": 13.714285714285714,
+        "pages": [
+          "https://billionairehighperformancecoach.com/comparisons/bhpc-vs-torch"
+        ]
+      }
+    },
+    {
       "target_id": "si_f0cfa7e30b9d11bf",
       "query": "ai coaching vs simulation",
       "expected_owned_url": "https://billionairehighperformancecoach.com/vs/coaching-retainer/",
@@ -571,6 +619,70 @@
         "gsc_average_position": 26.166666666666668,
         "pages": [
           "https://billionairehighperformancecoach.com/ai-coach-vs-human-coach"
+        ]
+      }
+    },
+    {
+      "target_id": "si_aee413c46e1d1659",
+      "query": "enable leaders vs. coachhub",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/comparisons/bhpc-vs-coachhub",
+      "truth_source": "google_search_console",
+      "truth_state": "GSC_ROW_PRESENT",
+      "query_metrics": {
+        "clicks": 0,
+        "impressions": 6,
+        "ctr": 0,
+        "gsc_average_position": 43,
+        "pages": [
+          "https://billionairehighperformancecoach.com/comparisons/bhpc-vs-coachhub"
+        ]
+      }
+    },
+    {
+      "target_id": "si_e1f1849d0d9aaba3",
+      "query": "how much does betterup cost for companies",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/betterup/",
+      "truth_source": "google_search_console",
+      "truth_state": "GSC_ROW_PRESENT",
+      "query_metrics": {
+        "clicks": 0,
+        "impressions": 6,
+        "ctr": 0,
+        "gsc_average_position": 55,
+        "pages": [
+          "https://billionairehighperformancecoach.com/comparisons/bhpc-vs-betterup"
+        ]
+      }
+    },
+    {
+      "target_id": "si_7bc413dd1c3f0fae",
+      "query": "ai coach matching",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/coach-me/",
+      "truth_source": "google_search_console",
+      "truth_state": "GSC_ROW_PRESENT",
+      "query_metrics": {
+        "clicks": 0,
+        "impressions": 5,
+        "ctr": 0,
+        "gsc_average_position": 11,
+        "pages": [
+          "https://billionairehighperformancecoach.com/ai-coach-vs-human-coach"
+        ]
+      }
+    },
+    {
+      "target_id": "si_0e0324dec2da6a48",
+      "query": "ai executive coach",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/chatgpt-vs-executive-coach",
+      "truth_source": "google_search_console",
+      "truth_state": "GSC_ROW_PRESENT",
+      "query_metrics": {
+        "clicks": 0,
+        "impressions": 5,
+        "ctr": 0,
+        "gsc_average_position": 14.6,
+        "pages": [
+          "https://billionairehighperformancecoach.com/ai-executive-coach"
         ]
       }
     },
@@ -592,66 +704,18 @@
       }
     },
     {
-      "target_id": "si_aee413c46e1d1659",
-      "query": "enable leaders vs. coachhub",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/comparisons/bhpc-vs-coachhub",
-      "truth_source": "google_search_console",
-      "truth_state": "GSC_ROW_PRESENT",
-      "query_metrics": {
-        "clicks": 0,
-        "impressions": 6,
-        "ctr": 0,
-        "gsc_average_position": 43,
-        "pages": [
-          "https://billionairehighperformancecoach.com/comparisons/bhpc-vs-coachhub"
-        ]
-      }
-    },
-    {
-      "target_id": "si_596970c293edf409",
-      "query": "how does betterup's ai coaching compare with ai-first coaching platforms?",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/betterup-alternatives-ai-coaching/",
-      "truth_source": "google_search_console",
-      "truth_state": "GSC_ROW_PRESENT",
-      "query_metrics": {
-        "clicks": 0,
-        "impressions": 9,
-        "ctr": 0,
-        "gsc_average_position": 6.888888888888889,
-        "pages": [
-          "https://billionairehighperformancecoach.com/comparisons/bhpc-vs-betterup"
-        ]
-      }
-    },
-    {
-      "target_id": "si_279bea1eca607bee",
-      "query": "torch coaching alternative",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/betterup-alternatives-ai-coaching/",
-      "truth_source": "google_search_console",
-      "truth_state": "GSC_ROW_PRESENT",
-      "query_metrics": {
-        "clicks": 0,
-        "impressions": 7,
-        "ctr": 0,
-        "gsc_average_position": 13.714285714285714,
-        "pages": [
-          "https://billionairehighperformancecoach.com/comparisons/bhpc-vs-torch"
-        ]
-      }
-    },
-    {
-      "target_id": "si_5a5581f88d3dc3fb",
-      "query": "ai tools for team coaching",
+      "target_id": "si_cec591c947fdd4c9",
+      "query": "coaching tool for managers that works inside existing tools",
       "expected_owned_url": "https://billionairehighperformancecoach.com/answers/phase4/demand/ai-driven-manager-coaching-tools",
       "truth_source": "google_search_console",
       "truth_state": "GSC_ROW_PRESENT",
       "query_metrics": {
         "clicks": 0,
-        "impressions": 4,
+        "impressions": 5,
         "ctr": 0,
-        "gsc_average_position": 55.75,
+        "gsc_average_position": 50,
         "pages": [
-          "https://billionairehighperformancecoach.com/best-ai-coaching-tools"
+          "https://billionairehighperformancecoach.com/answers/phase4/demand/ai-driven-manager-coaching-tools"
         ]
       }
     },
@@ -668,22 +732,6 @@
         "gsc_average_position": 94.6,
         "pages": [
           "https://billionairehighperformancecoach.com/executive-coach-cost/"
-        ]
-      }
-    },
-    {
-      "target_id": "si_e1f1849d0d9aaba3",
-      "query": "how much does betterup cost for companies",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/betterup/",
-      "truth_source": "google_search_console",
-      "truth_state": "GSC_ROW_PRESENT",
-      "query_metrics": {
-        "clicks": 0,
-        "impressions": 6,
-        "ctr": 0,
-        "gsc_average_position": 55,
-        "pages": [
-          "https://billionairehighperformancecoach.com/comparisons/bhpc-vs-betterup"
         ]
       }
     },
@@ -720,34 +768,34 @@
       }
     },
     {
-      "target_id": "si_7bc413dd1c3f0fae",
-      "query": "ai coach matching",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/coach-me/",
+      "target_id": "si_5a5581f88d3dc3fb",
+      "query": "ai tools for team coaching",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/answers/phase4/demand/ai-driven-manager-coaching-tools",
       "truth_source": "google_search_console",
       "truth_state": "GSC_ROW_PRESENT",
       "query_metrics": {
         "clicks": 0,
-        "impressions": 5,
+        "impressions": 4,
         "ctr": 0,
-        "gsc_average_position": 11,
+        "gsc_average_position": 55.75,
         "pages": [
-          "https://billionairehighperformancecoach.com/ai-coach-vs-human-coach"
+          "https://billionairehighperformancecoach.com/best-ai-coaching-tools"
         ]
       }
     },
     {
-      "target_id": "si_8e95b3f1d9d1bd9c",
-      "query": "ai coaching cost vs benefit",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/coaching-retainer/",
+      "target_id": "si_9e72c5620aca5fa2",
+      "query": "betterup alternatives",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/betterup-alternatives-ai-coaching/",
       "truth_source": "google_search_console",
       "truth_state": "GSC_ROW_PRESENT",
       "query_metrics": {
         "clicks": 0,
-        "impressions": 9,
+        "impressions": 8,
         "ctr": 0,
-        "gsc_average_position": 24.666666666666668,
+        "gsc_average_position": 34.625,
         "pages": [
-          "https://billionairehighperformancecoach.com/ai-coach-vs-human-coach"
+          "https://billionairehighperformancecoach.com/comparisons/bhpc-vs-betterup"
         ]
       }
     },
@@ -765,22 +813,6 @@
         "pages": [
           "https://billionairehighperformancecoach.com/comparisons/bhpc-vs-betterup",
           "https://billionairehighperformancecoach.com/comparisons/bhpc-vs-coachhub"
-        ]
-      }
-    },
-    {
-      "target_id": "si_cec591c947fdd4c9",
-      "query": "coaching tool for managers that works inside existing tools",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/answers/phase4/demand/ai-driven-manager-coaching-tools",
-      "truth_source": "google_search_console",
-      "truth_state": "GSC_ROW_PRESENT",
-      "query_metrics": {
-        "clicks": 0,
-        "impressions": 5,
-        "ctr": 0,
-        "gsc_average_position": 50,
-        "pages": [
-          "https://billionairehighperformancecoach.com/answers/phase4/demand/ai-driven-manager-coaching-tools"
         ]
       }
     },
@@ -817,14 +849,6 @@
       }
     },
     {
-      "target_id": "si_338ee9e2898f6b03",
-      "query": "how can ai help prioritize without deciding for the user?",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/how-to-use-ai-for-prioritization",
-      "truth_source": "google_search_console",
-      "truth_state": "NO_GSC_ROW",
-      "query_metrics": null
-    },
-    {
       "target_id": "si_a215bcf4819cba19",
       "query": "human coach",
       "expected_owned_url": "https://billionairehighperformancecoach.com/answers/phase4/demand/human-coaching",
@@ -832,11 +856,27 @@
       "truth_state": "GSC_ROW_PRESENT",
       "query_metrics": {
         "clicks": 0,
-        "impressions": 4,
+        "impressions": 3,
         "ctr": 0,
-        "gsc_average_position": 14.75,
+        "gsc_average_position": 16.333333333333336,
         "pages": [
           "https://billionairehighperformancecoach.com/ai-coach-vs-human-coach"
+        ]
+      }
+    },
+    {
+      "target_id": "si_7c32451218e96be3",
+      "query": "staylor spry.vc",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/sequoia-taylor",
+      "truth_source": "google_search_console",
+      "truth_state": "GSC_ROW_PRESENT",
+      "query_metrics": {
+        "clicks": 0,
+        "impressions": 4,
+        "ctr": 0,
+        "gsc_average_position": 9.25,
+        "pages": [
+          "https://billionairehighperformancecoach.com/sequoia-taylor"
         ]
       }
     },
@@ -864,9 +904,33 @@
       "truth_state": "GSC_ROW_PRESENT",
       "query_metrics": {
         "clicks": 0,
-        "impressions": 4,
+        "impressions": 5,
         "ctr": 0,
-        "gsc_average_position": 43,
+        "gsc_average_position": 41.4,
+        "pages": [
+          "https://billionairehighperformancecoach.com/ai-coach-vs-human-coach"
+        ]
+      }
+    },
+    {
+      "target_id": "si_57b0247052edafb9",
+      "query": "ai coaching for executives",
+      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
+      "truth_source": "google_search_console",
+      "truth_state": "NO_GSC_ROW",
+      "query_metrics": null
+    },
+    {
+      "target_id": "si_0cf461ca2e19d355",
+      "query": "ai speech coach vs human coach",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/answers/phase4/demand/human-coaching",
+      "truth_source": "google_search_console",
+      "truth_state": "GSC_ROW_PRESENT",
+      "query_metrics": {
+        "clicks": 0,
+        "impressions": 3,
+        "ctr": 0,
+        "gsc_average_position": 35,
         "pages": [
           "https://billionairehighperformancecoach.com/ai-coach-vs-human-coach"
         ]
@@ -885,22 +949,6 @@
         "gsc_average_position": 82.66666666666667,
         "pages": [
           "https://billionairehighperformancecoach.com/executive-coach-cost/"
-        ]
-      }
-    },
-    {
-      "target_id": "si_9e72c5620aca5fa2",
-      "query": "betterup alternatives",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/betterup-alternatives-ai-coaching/",
-      "truth_source": "google_search_console",
-      "truth_state": "GSC_ROW_PRESENT",
-      "query_metrics": {
-        "clicks": 0,
-        "impressions": 4,
-        "ctr": 0,
-        "gsc_average_position": 36.5,
-        "pages": [
-          "https://billionairehighperformancecoach.com/comparisons/bhpc-vs-betterup"
         ]
       }
     },
@@ -984,11 +1032,27 @@
       "truth_state": "GSC_ROW_PRESENT",
       "query_metrics": {
         "clicks": 0,
-        "impressions": 3,
+        "impressions": 2,
         "ctr": 0,
-        "gsc_average_position": 28,
+        "gsc_average_position": 28.5,
         "pages": [
           "https://billionairehighperformancecoach.com/case-studies/freelancer-scope-creep/"
+        ]
+      }
+    },
+    {
+      "target_id": "si_f276be329b466c27",
+      "query": "executive ai coach",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/chatgpt-vs-executive-coach",
+      "truth_source": "google_search_console",
+      "truth_state": "GSC_ROW_PRESENT",
+      "query_metrics": {
+        "clicks": 0,
+        "impressions": 3,
+        "ctr": 0,
+        "gsc_average_position": 9.666666666666666,
+        "pages": [
+          "https://billionairehighperformancecoach.com/ai-executive-coach"
         ]
       }
     },
@@ -1057,26 +1121,50 @@
       "query_metrics": null
     },
     {
-      "target_id": "si_57b0247052edafb9",
-      "query": "ai coaching for executives",
-      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
-      "truth_source": "google_search_console",
-      "truth_state": "NO_GSC_ROW",
-      "query_metrics": null
-    },
-    {
-      "target_id": "si_0e0324dec2da6a48",
-      "query": "ai executive coach",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/chatgpt-vs-executive-coach",
+      "target_id": "si_e6c44bd2c9bec8c4",
+      "query": "ai accountability partner",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/accountability-partner/",
       "truth_source": "google_search_console",
       "truth_state": "GSC_ROW_PRESENT",
       "query_metrics": {
         "clicks": 0,
-        "impressions": 5,
+        "impressions": 2,
         "ctr": 0,
-        "gsc_average_position": 14.6,
+        "gsc_average_position": 37,
+        "pages": [
+          "https://billionairehighperformancecoach.com/ai-accountability-partner/"
+        ]
+      }
+    },
+    {
+      "target_id": "si_a881b375b890c01e",
+      "query": "ai act coach",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/coach-me/",
+      "truth_source": "google_search_console",
+      "truth_state": "GSC_ROW_PRESENT",
+      "query_metrics": {
+        "clicks": 0,
+        "impressions": 2,
+        "ctr": 0,
+        "gsc_average_position": 26,
         "pages": [
           "https://billionairehighperformancecoach.com/ai-executive-coach"
+        ]
+      }
+    },
+    {
+      "target_id": "si_fbebe36e22a24211",
+      "query": "ai powered coach matching",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/coach-me/",
+      "truth_source": "google_search_console",
+      "truth_state": "GSC_ROW_PRESENT",
+      "query_metrics": {
+        "clicks": 0,
+        "impressions": 2,
+        "ctr": 0,
+        "gsc_average_position": 18.5,
+        "pages": [
+          "https://billionairehighperformancecoach.com/ai-coach-vs-human-coach"
         ]
       }
     },
@@ -1161,6 +1249,63 @@
       }
     },
     {
+      "target_id": "si_b9b60cef720d6523",
+      "query": "every one of these coaching websites repeats the same three lines about accountability and executive function and not one of them will tell me what actually happens in a session. my husband thinks we are about to spend four figures on a weekly phone call. what does a good one do that an aunt or a family friend could not do for free?",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-private-journaling-boundaries",
+      "truth_source": "google_search_console",
+      "truth_state": "GSC_ROW_PRESENT",
+      "query_metrics": {
+        "clicks": 0,
+        "impressions": 2,
+        "ctr": 0,
+        "gsc_average_position": 26.5,
+        "pages": [
+          "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-private-journaling-boundaries"
+        ]
+      }
+    },
+    {
+      "target_id": "si_b2384e181b86dea8",
+      "query": "exec ai excitement the right way to bring your ai ambitions to focus",
+      "expected_owned_url": "https://spryexecutiveos.com/insights/the-five-minute-boundary-script-that-protects-your-day",
+      "truth_source": "google_search_console",
+      "truth_state": "NO_GSC_ROW",
+      "query_metrics": null
+    },
+    {
+      "target_id": "si_4be1bc6b97d582a4",
+      "query": "executive coaching ai",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/synthesis-ai-executive-coaching",
+      "truth_source": "google_search_console",
+      "truth_state": "GSC_ROW_PRESENT",
+      "query_metrics": {
+        "clicks": 0,
+        "impressions": 2,
+        "ctr": 0,
+        "gsc_average_position": 24.5,
+        "pages": [
+          "https://billionairehighperformancecoach.com/ai-executive-coach"
+        ]
+      }
+    },
+    {
+      "target_id": "si_8e52f493030c2147",
+      "query": "executive coaching ai disruption",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/synthesis-ai-executive-coaching",
+      "truth_source": "google_search_console",
+      "truth_state": "GSC_ROW_PRESENT",
+      "query_metrics": {
+        "clicks": 0,
+        "impressions": 2,
+        "ctr": 0,
+        "gsc_average_position": 50.5,
+        "pages": [
+          "https://billionairehighperformancecoach.com/ai-executive-coach",
+          "https://billionairehighperformancecoach.com/synthesis-ai-exec-coach"
+        ]
+      }
+    },
+    {
       "target_id": "si_a9e9d0e7c95a0f91",
       "query": "executive coaching prices",
       "expected_owned_url": "https://billionairehighperformancecoach.com/synthesis-ai-executive-coaching",
@@ -1189,6 +1334,38 @@
         "gsc_average_position": 26,
         "pages": [
           "https://billionairehighperformancecoach.com/betterup-alternatives-ai-coaching/"
+        ]
+      }
+    },
+    {
+      "target_id": "si_aa7cff7050083c87",
+      "query": "human performance coaching",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/answers/phase4/demand/human-coaching",
+      "truth_source": "google_search_console",
+      "truth_state": "GSC_ROW_PRESENT",
+      "query_metrics": {
+        "clicks": 0,
+        "impressions": 2,
+        "ctr": 0,
+        "gsc_average_position": 33.5,
+        "pages": [
+          "https://billionairehighperformancecoach.com/ai-coach-vs-human-coach"
+        ]
+      }
+    },
+    {
+      "target_id": "si_d8aecabbaf8d63bb",
+      "query": "is culture amp's ai coach enough, or do we need a separate coaching platform?",
+      "expected_owned_url": "https://billionairehighperformancecoach.com/comparisons/bhpc-vs-culture-amp",
+      "truth_source": "google_search_console",
+      "truth_state": "GSC_ROW_PRESENT",
+      "query_metrics": {
+        "clicks": 0,
+        "impressions": 2,
+        "ctr": 0,
+        "gsc_average_position": 7.5,
+        "pages": [
+          "https://billionairehighperformancecoach.com/comparisons/bhpc-vs-culture-amp"
         ]
       }
     },
@@ -1483,94 +1660,6 @@
     {
       "target_id": "si_8b24330d41a274e1",
       "query": "accountability partner vs traditional coaching for students and early-career professionals",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery",
-      "truth_source": "google_search_console",
-      "truth_state": "NO_GSC_ROW",
-      "query_metrics": null
-    },
-    {
-      "target_id": "si_44cfb54349dd64d5",
-      "query": "AI accountability system for athletes and multi-project management",
-      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
-      "truth_source": "google_search_console",
-      "truth_state": "NO_GSC_ROW",
-      "query_metrics": null
-    },
-    {
-      "target_id": "si_2e0494b22586f025",
-      "query": "AI accountability system for entrepreneurs and performance routines",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
-      "truth_source": "google_search_console",
-      "truth_state": "NO_GSC_ROW",
-      "query_metrics": null
-    },
-    {
-      "target_id": "si_e7ee975fdc793033",
-      "query": "AI accountability system for consistency strugglers and workout execution",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/synthesis-accountability-and-consistency",
-      "truth_source": "google_search_console",
-      "truth_state": "NO_GSC_ROW",
-      "query_metrics": null
-    },
-    {
-      "target_id": "si_01a19f2474bb7e8e",
-      "query": "AI accountability system for body goal users and behavior reframing",
-      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
-      "truth_source": "google_search_console",
-      "truth_state": "NO_GSC_ROW",
-      "query_metrics": null
-    },
-    {
-      "target_id": "si_3be2d769919e35d4",
-      "query": "AI accountability system for athletes and delegation",
-      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
-      "truth_source": "google_search_console",
-      "truth_state": "NO_GSC_ROW",
-      "query_metrics": null
-    },
-    {
-      "target_id": "si_7c62fff05d1cb9fe",
-      "query": "AI accountability system for decision-fatigue users and fitness consistency",
-      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
-      "truth_source": "google_search_console",
-      "truth_state": "NO_GSC_ROW",
-      "query_metrics": null
-    },
-    {
-      "target_id": "si_9049f7cc0725cffe",
-      "query": "AI accountability system for founders and performance routines",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-behavioral-follow-through",
-      "truth_source": "google_search_console",
-      "truth_state": "NO_GSC_ROW",
-      "query_metrics": null
-    },
-    {
-      "target_id": "si_839405db00d5a42a",
-      "query": "AI accountability system for decision-fatigue users and workout execution",
-      "expected_owned_url": "https://billionairehighperformancecoach.com/answers/phase4/how-can-i-install-an-execution-system-to-reduce-decision-fatigue",
-      "truth_source": "google_search_console",
-      "truth_state": "NO_GSC_ROW",
-      "query_metrics": null
-    },
-    {
-      "target_id": "si_8cbe2eed91c5800b",
-      "query": "AI accountability system for body goal users and emotional reset",
-      "expected_owned_url": "https://spryexecutiveos.com/how-to-use-ai-for-executive-coaching-and-accountability",
-      "truth_source": "google_search_console",
-      "truth_state": "NO_GSC_ROW",
-      "query_metrics": null
-    },
-    {
-      "target_id": "si_58fc6e627be4746e",
-      "query": "AI accountability system for body goal users and goal tracking",
-      "expected_owned_url": "https://spryexecutiveos.com/insights/how-chatgpt-can-improve-personal-accountability-and-goal-tracking",
-      "truth_source": "google_search_console",
-      "truth_state": "NO_GSC_ROW",
-      "query_metrics": null
-    },
-    {
-      "target_id": "si_0ca0b0a2bebfa8d2",
-      "query": "AI accountability system for athletes and missed-day recovery",
       "expected_owned_url": "https://billionairehighperformancecoach.com/vs/phase4/billionaire-high-performance-coach-vs-accountability-app-for-missed-day-recovery",
       "truth_source": "google_search_console",
       "truth_state": "NO_GSC_ROW",
