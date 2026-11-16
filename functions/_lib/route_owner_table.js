@@ -7,7 +7,7 @@
  * passed through, never redirected, so unknown paths still 404 where they were
  * asked for.
  *
- * 558 BHPC-owned routes, 50 spryexecutiveos.com-owned, 0 canonical elsewhere.
+ * 568 BHPC-owned routes, 50 spryexecutiveos.com-owned, 0 canonical elsewhere.
  * Rules: functions/_lib/route_owner_host.js. Guard: npm run validate:route-owner-host.
  */
 export const BHPC_HOST = 'billionairehighperformancecoach.com';
@@ -386,6 +386,7 @@ const BHPC_ROUTE_LIST = `/
 /platforms/phase4/how-to-use-billionaire-high-performance-coach-with-perplexity-for-prompt-pack-installation
 /platforms/phase4/how-to-use-billionaire-high-performance-coach-with-perplexity-for-three-chat-setup
 /prompt-library-vs-operating-system
+/questions/ai-business-coach-app/
 /questions/ai-coach-matching/
 /questions/ai-coaching-cost-vs-benefit/
 /questions/ai-coaching-vs-coaching-management-platform-whats-the-difference/
@@ -396,10 +397,19 @@ const BHPC_ROUTE_LIST = `/
 /questions/critical-actions-owners-deadlines/
 /questions/decision-paralysis-prevention-checklist-for-breaking-tasks-into/
 /questions/endless-task-paralysis/
+/questions/executive-dysfunction-and-task-paralysis/
 /questions/flipfactor-vs-betterup-ai-leadership-assessment/
+/questions/founder-burnout-coach-london/
+/questions/founder-mental-health/
 /questions/high-performance-expert/
 /questions/how-can-ai-help-prioritize-without-deciding-for-the-user/
 /questions/how-does-betterups-ai-coaching-compare-with-ai-first-coaching/
+/questions/how-to-help-task-paralysis/
+/questions/how-to-stop-procrastinating-adhd/
+/questions/how-to-stop-procrastinating-and-get-motivated/
+/questions/how-to-stop-procrastinating-and-get-things-done/
+/questions/how-to-stop-procrastinating-at-work/
+/questions/how-to-stop-procrastinating-consistently/
 /questions/human-coach-vs-ai-leadership-platform-for-fixing-trust-issues/
 /questions/human-matched-executive-coaching/
 /questions/is-there-ai-for-personal-coaching/

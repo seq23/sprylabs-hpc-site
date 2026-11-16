@@ -1,8 +1,8 @@
 {
   "schema": "search-loop-discovery-v1",
   "site": "billionairehighperformancecoach.com",
-  "week": "2026-W46",
-  "generated_at": "2026-11-09T11:45:03.865Z",
+  "week": "2026-W47",
+  "generated_at": "2026-11-16T11:46:28.007Z",
   "paid_calls": 0,
   "cost_usd": 0,
   "hosts": {
@@ -19,14 +19,14 @@
       "cost_usd": 0
     },
     "suggestqueries.google.com": {
-      "calls": 10,
-      "ok": 7,
-      "failed": 3,
+      "calls": 40,
+      "ok": 40,
+      "failed": 0,
       "cost_usd": 0
     },
     "api.bing.com": {
-      "calls": 70,
-      "ok": 70,
+      "calls": 40,
+      "ok": 40,
       "failed": 0,
       "cost_usd": 0
     },
@@ -38,16 +38,24 @@
     }
   },
   "sources": {
-    "search_console": "ok: 126 rows",
-    "bing_webmaster": "ok: 35 rows",
-    "easy_wins": "ok: 2 easy win(s) in Search Console",
-    "suggestqueries.google.com": "not read: unavailable after 3 failures (last http 400)",
+    "search_console": "ok: 136 rows",
+    "bing_webmaster": "ok: 38 rows",
+    "easy_wins": "ok: 1 easy win(s) in Search Console",
+    "suggestqueries.google.com": "ok",
     "api.bing.com": "ok",
-    "relevance_screen": "ok: kept 22 of 106 (free model)",
+    "relevance_screen": "ok: kept 38 of 150 (free model)",
     "top10": "ok: 15 top-10 read(s) via brave"
   },
+  "seeds": {
+    "planned": 156,
+    "asked": 40,
+    "topics": 11,
+    "topics_asked": 11,
+    "priority_topics": 0,
+    "priority_targets": 0
+  },
   "notes": [
-    "autocomplete stopped at its budget of 80 calls"
+    "autocomplete stopped at its budget of 80 calls (40 of 156 planned questions asked)"
   ],
   "competition": "ok: 15 top-10 read(s) via brave",
   "lanes": {
@@ -56,7 +64,7 @@
       "striking": 1
     },
     "can_be_one": 8,
-    "striking": 14,
+    "striking": 30,
     "weights": {
       "neighbour": 35,
       "unanswered": 30,
@@ -65,9 +73,9 @@
     }
   },
   "counts": {
-    "candidates": 128,
-    "targets": 22,
-    "strengthen_candidates": 14,
+    "candidates": 254,
+    "targets": 38,
+    "strengthen_candidates": 32,
     "dropped_shared_audience": 0
   }
 }

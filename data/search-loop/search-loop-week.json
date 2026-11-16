@@ -1,14 +1,14 @@
 {
   "schema": "search-loop-week-v1",
-  "week": "2026-W46",
+  "week": "2026-W47",
   "site": "billionairehighperformancecoach.com",
-  "generated_at": "2026-11-15T11:44:49.069Z",
+  "generated_at": "2026-11-16T11:46:28.007Z",
   "state": "running",
-  "published": 6,
-  "indexed": "not read: no page old enough to inspect yet (14 days)",
+  "published": 15,
+  "indexed": 0,
   "pace": 10,
   "ai_visitors": 1,
-  "ai_bot_hits": 4189,
+  "ai_bot_hits": 3753,
   "conversions": "not read: no conversion source configured for this site (form fills / checkouts)",
   "wins": 0,
   "undone": 0,
@@ -16,32 +16,29 @@
   "held_by_cap": 0,
   "redirected": [
     {
-      "query": "which coaching human",
-      "strengthen": "https://billionairehighperformancecoach.com/answers/phase4/demand/human-coaching",
-      "matched_by": "high token overlap (0.67 >= 0.6)",
-      "at": "2026-11-09"
-    },
-    {
-      "query": "human performance coaching",
-      "strengthen": "https://billionairehighperformancecoach.com/answers/phase4/demand/human-coaching",
-      "matched_by": "same wording",
-      "at": "2026-11-09"
-    },
-    {
       "query": "evaluate the enterprise ai coaching hr technology company hrider on enterprise performance management platform",
       "strengthen": "https://billionairehighperformancecoach.com/questions/ai-coaching-vs-coaching-management-platform-whats-the-difference/",
       "matched_by": "same 3 intent words plus modifiers",
       "at": "2026-11-11"
+    },
+    {
+      "query": "never miss twice in a row",
+      "strengthen": "https://billionairehighperformancecoach.com/methods/never-miss-twice/",
+      "matched_by": "high token overlap (0.60 >= 0.6)",
+      "at": "2026-11-16"
     }
   ],
   "cap": {
-    "max_live_pages": 129,
-    "live": 20,
-    "room": 109,
-    "why": "down from 144 to 129: Google impressions fell to 1437 in the last 28 days from 1708 in the 28 before"
+    "max_live_pages": 142,
+    "live": 30,
+    "room": 112,
+    "why": "up from 129 to 142: Google impressions 1575 in the last 28 days beat 1559 in the 28 before"
   },
   "notes": [
-    "BUILD published 0 of quota 10: 0 draft(s) failed the gate and were dropped; 0 got no answer from the free model and stay queued"
+    "cap: up from 129 to 142: Google impressions 1575 in the last 28 days beat 1559 in the 28 before",
+    "BUILD distinct gate: 1 search(es) had the same intent as an existing page and became strengthen briefs, not new pages (pages.json \"redirected\")",
+    "BUILD gate notes (not blocking): 7 published page(s) are outside a length or style aim; each is listed under gate_notes in pages.json",
+    "IndexNow: 10 new page(s) not live yet; submitted when they answer 200"
   ],
   "lanes": {
     "ratio": {
@@ -49,16 +46,16 @@
       "striking": 1
     },
     "can_be_one": {
-      "pages": 6,
+      "pages": 9,
       "measured": 0,
       "top3": 0,
       "hit_rate": "not read: no page in this lane has reached its 2-week check yet"
     },
     "striking": {
-      "pages": 14,
-      "measured": 0,
+      "pages": 21,
+      "measured": 3,
       "top3": 0,
-      "hit_rate": "not read: no page in this lane has reached its 2-week check yet"
+      "hit_rate": 0
     },
     "weights": {
       "neighbour": 35,
@@ -69,5 +66,5 @@
     "weight_changes": [],
     "competition": "ok: 15 top-10 read(s) via brave"
   },
-  "run_url": "https://github.com/seq23/sprylabs-hpc-site/actions/runs/43710347738"
+  "run_url": "https://github.com/seq23/sprylabs-hpc-site/actions/runs/43860570441"
 }
