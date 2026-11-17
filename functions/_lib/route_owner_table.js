@@ -7,7 +7,7 @@
  * passed through, never redirected, so unknown paths still 404 where they were
  * asked for.
  *
- * 568 BHPC-owned routes, 50 spryexecutiveos.com-owned, 0 canonical elsewhere.
+ * 573 BHPC-owned routes, 50 spryexecutiveos.com-owned, 0 canonical elsewhere.
  * Rules: functions/_lib/route_owner_host.js. Guard: npm run validate:route-owner-host.
  */
 export const BHPC_HOST = 'billionairehighperformancecoach.com';
@@ -405,14 +405,19 @@ const BHPC_ROUTE_LIST = `/
 /questions/how-can-ai-help-prioritize-without-deciding-for-the-user/
 /questions/how-does-betterups-ai-coaching-compare-with-ai-first-coaching/
 /questions/how-to-help-task-paralysis/
+/questions/how-to-stop-being-overwhelmed-so-easily/
+/questions/how-to-stop-being-overwhelmed/
 /questions/how-to-stop-procrastinating-adhd/
 /questions/how-to-stop-procrastinating-and-get-motivated/
 /questions/how-to-stop-procrastinating-and-get-things-done/
 /questions/how-to-stop-procrastinating-at-work/
 /questions/how-to-stop-procrastinating-consistently/
+/questions/how-to-work-through-burnout/
 /questions/human-coach-vs-ai-leadership-platform-for-fixing-trust-issues/
 /questions/human-matched-executive-coaching/
 /questions/is-there-ai-for-personal-coaching/
+/questions/task-paralysis-coping-skills/
+/questions/task-paralysis-vs-procrastination/
 /questions/what-are-the-best-alternatives-to-tony-robbins-coaching/
 /questions/what-is-exexutive-os/
 /questions/why-pay-for-an-accountability-coach-when-i-could-just-use-a-planner/
