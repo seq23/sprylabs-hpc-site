@@ -448,7 +448,9 @@ for workflow in "${writer_workflows[@]}"; do
     fi
     cat "$repo_root/$helper" >> "$path"
   done
-  if ! grep -Eq '^[[:space:]]*group:[[:space:]]*main-automation[[:space:]]*$' "$path"; then
+  # A pull request's config check (search-loop stage validate, never writes) may take its own group;
+  # every writing run still takes main-automation.
+  if ! grep -Eq '^[[:space:]]*group:[[:space:]]*(main-automation|\$\{\{ github\.event_name == .pull_request. && .*\|\| .main-automation. \}\})[[:space:]]*$' "$path"; then
     echo "writer coordination: $workflow is not serialized on main-automation" >&2
     exit 1
   fi
