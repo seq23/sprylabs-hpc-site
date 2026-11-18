@@ -10,6 +10,14 @@ name: Search Loop
 on:
   schedule:
     - cron: "41 11 * * *"
+  # A change to the engine's config or routing is checked on the PR (search-loop v1.12.0
+  # stage validate: config + model-routing checks only, no network, no model call; peace-be-still
+  # 18 Nov 2026 failed every scheduled run on a routing file nothing checked before merge).
+  pull_request:
+    paths:
+      - search-loop.config.json
+      - config/llm_routing.json
+      - .github/workflows/search-loop.yml
   workflow_dispatch:
     inputs:
       stage:
@@ -26,7 +34,7 @@ permissions:
   actions: write
 
 concurrency:
-  group: main-automation
+  group: ${{ github.event_name == 'pull_request' && format('main-automation-pr-{0}', github.ref) || 'main-automation' }}
   cancel-in-progress: false
 
 jobs:
@@ -34,7 +42,7 @@ jobs:
     uses: seq23/search-loop/.github/workflows/search-loop.yml@v1
     with:
       engine_ref: v1
-      stage: ${{ inputs.stage || 'auto' }}
+      stage: ${{ github.event_name == 'pull_request' && 'validate' || inputs.stage || 'auto' }}
       setup_command: npm ci --ignore-scripts
       post_build_command: bash .github/scripts/search_loop_post_build.sh
       node_options: --max-old-space-size=3072
