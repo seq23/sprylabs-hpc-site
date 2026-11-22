@@ -78,6 +78,13 @@ import contentPages from '../../../config/aplayermode_content_pages.json' with {
 import { serveWithEdgeCache } from '../../../functions/_lib/edge_cache.js';
 
 export const ORIGIN = 'https://sprylabs-hpc-site.pages.dev';
+// The CI render (ship-ready.json, 22 Nov 2026) runs this Worker under `wrangler dev` against a local
+// `wrangler pages dev` of the pull request's own files, so the baseline judges what the PR would put
+// on aplayermode.com rather than what is live. APM_ORIGIN names that local origin; it is honoured
+// ONLY for a loopback http address, so a stray or hostile value can never point the live Worker at
+// another site. Production sets no APM_ORIGIN and reads ORIGIN.
+const LOOPBACK_ORIGIN = /^http:\/\/(?:127\.0\.0\.1|localhost):\d{2,5}$/;
+export const originOf = (env) => (env && typeof env.APM_ORIGIN === 'string' && LOOPBACK_ORIGIN.test(env.APM_ORIGIN) ? env.APM_ORIGIN : ORIGIN);
 export const PAGE_PATH = '/aplayermode/';
 export const BHPC = 'https://billionairehighperformancecoach.com';
 // Site-wide files the landing page loads from outside /aplayermode/.
@@ -184,8 +191,8 @@ export function pinVisitPoint(url, userAgent) {
 }
 
 /** The apex's own 404 page, answered with a 404 status (never a 200, never a redirect home). */
-async function serveNotFound(request, upstreamPath) {
-  const upstream = await fetch(ORIGIN + originPath(upstreamPath), { headers: { accept: 'text/html' }, redirect: 'manual', cf: { cacheTtl: 300 } });
+async function serveNotFound(request, upstreamPath, origin = ORIGIN) {
+  const upstream = await fetch(origin + originPath(upstreamPath), { headers: { accept: 'text/html' }, redirect: 'manual', cf: { cacheTtl: 300 } });
   const html = upstream.status === 200 ? await upstream.text() : '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Not found | A Player Mode</title></head><body><h1>Not found</h1><p><a href="/">Go to A Player Mode</a></p></body></html>';
   return new Response(request.method === 'HEAD' ? null : html, {
     status: 404,
@@ -193,8 +200,8 @@ async function serveNotFound(request, upstreamPath) {
   });
 }
 
-async function serveFeed(request, upstreamPath, feedPath = FEED_PATH) {
-  const upstream = await fetch(ORIGIN + originPath(upstreamPath), { headers: { accept: 'application/json' }, redirect: 'manual', cf: { cacheTtl: 300 } });
+async function serveFeed(request, upstreamPath, feedPath = FEED_PATH, origin = ORIGIN) {
+  const upstream = await fetch(origin + originPath(upstreamPath), { headers: { accept: 'application/json' }, redirect: 'manual', cf: { cacheTtl: 300 } });
   if (upstream.status !== 200) return new Response(`pin queue unavailable (origin ${upstream.status})`, { status: 502 });
   const queue = await upstream.json();
   const board = boardsOf(queue).list.find((b) => b.feed === feedPath);
@@ -209,14 +216,14 @@ export const BUILD_ID_KEY = 'https://edge-cache.invalid/aplayermode/pages-build-
 let memoBuild = { id: '', at: 0 };
 
 /** The Pages build id, from memory, then the edge cache, then the origin (max BUILD_ID_TTL_SECONDS old). '' = unknown = no caching. */
-export async function pagesBuildId(cache, now = Date.now()) {
+export async function pagesBuildId(cache, now = Date.now(), origin = ORIGIN) {
   if (memoBuild.id && now - memoBuild.at < BUILD_ID_TTL_SECONDS * 1000) return memoBuild.id;
   try {
     const cached = cache ? await cache.match(BUILD_ID_KEY) : null;
     if (cached) { memoBuild = { id: (await cached.text()).trim(), at: now }; return memoBuild.id; }
   } catch { /* fall through to the origin */ }
   try {
-    const res = await fetch(ORIGIN + BUILD_ID_PATH, { redirect: 'manual' });
+    const res = await fetch(origin + BUILD_ID_PATH, { redirect: 'manual' });
     const id = res.status === 200 ? (await res.text()).trim() : '';
     if (!/^[\w.-]{4,80}$/.test(id)) return '';
     memoBuild = { id, at: now };
@@ -230,6 +237,7 @@ const FORWARD_HEADERS = ['accept', 'accept-encoding', 'accept-language', 'if-non
 export default {
   async fetch(request, env = {}, ctx = {}) {
     const url = new URL(request.url);
+    const origin = originOf(env);
     if (request.method !== 'GET' && request.method !== 'HEAD') {
       return new Response('Method Not Allowed', { status: 405, headers: { Allow: 'GET, HEAD' } });
     }
@@ -239,8 +247,8 @@ export default {
       if (r.keepQuery) target.search = url.search;
       return new Response(null, { status: 301, headers: { Location: target.toString(), 'Cache-Control': 'public, max-age=3600' } });
     }
-    if (r.kind === 'notfound') return serveNotFound(request, r.upstream);
-    if (r.kind === 'feed') return serveFeed(request, r.upstream, r.feed);
+    if (r.kind === 'notfound') return serveNotFound(request, r.upstream, origin);
+    if (r.kind === 'feed') return serveFeed(request, r.upstream, r.feed, origin);
     // Pin visits count on the home page and on every content page a pin can open (routine pins, 7 Nov 2026).
     if ((r.kind === 'page' || r.content) && env.PIN_VISITS) {
       const point = pinVisitPoint(url, request.headers.get('user-agent'));
@@ -249,7 +257,7 @@ export default {
     const fetchOrigin = async () => {
       const headers = new Headers();
       for (const h of FORWARD_HEADERS) { const v = request.headers.get(h); if (v) headers.set(h, v); }
-      const upstream = await fetch(ORIGIN + originPath(r.upstream) + url.search, { method: request.method, headers, redirect: 'manual' });
+      const upstream = await fetch(origin + originPath(r.upstream) + url.search, { method: request.method, headers, redirect: 'manual' });
       if (upstream.status >= 300 && upstream.status < 400 && upstream.status !== 304) {
         return new Response(`origin redirected ${r.upstream} (status ${upstream.status}); refusing to follow`, { status: 502 });
       }
@@ -258,7 +266,7 @@ export default {
       return out;
     };
     const cache = typeof caches !== 'undefined' ? caches.default : null;
-    const pagesBuild = request.method === 'GET' ? await pagesBuildId(cache) : '';
+    const pagesBuild = request.method === 'GET' ? await pagesBuildId(cache, Date.now(), origin) : '';
     const workerVersion = (env.CF_VERSION_METADATA && env.CF_VERSION_METADATA.id) || 'v0';
     return serveWithEdgeCache({
       request,

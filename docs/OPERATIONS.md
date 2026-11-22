@@ -80,6 +80,10 @@ push helper commits the queue. `NOTHING_HELD` means there was nothing to release
 - `aplayermode.com` is served by the Worker `aplayermode-com` (source `workers/aplayermode-com`):
   it SERVES the landing page at aplayermode.com (address bar stays), never a 301 to another domain.
   Browsers cache 301s, so test routing changes with `curl` or a private window.
+  To see the PR's own aplayermode.com locally (or in the ship-ready baseline, `ship-ready.json`):
+  `node scripts/assemble_pages_output.js && bash scripts/aplayermode/serve_through_worker.sh`, then
+  http://127.0.0.1:4173. It runs `wrangler pages dev` of `.pages-output` plus `wrangler dev` of the
+  Worker with `APM_ORIGIN` (loopback only) pointing at it; nothing is deployed.
 
 ## Link tracking
 - BHPC buy links, the utm scheme, her share link, page analytics and the weekly sales-by-source count: [`docs/operations/link-tracking.md`](operations/link-tracking.md).
