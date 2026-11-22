@@ -1,1 +1,1 @@
-[{ "kind": "site", "serve": "." }, { "kind": "site", "not_yet": "aplayermode.com is served by its own Worker routing (workers/aplayermode-com) that a static serve cannot reproduce: its pages link /students/ at the domain root (Open Loops row, 20 Nov 2026)" }]
+[{ "kind": "site", "serve": "." }, { "kind": "site", "build": "node scripts/assemble_pages_output.js", "serve": "bash scripts/aplayermode/serve_through_worker.sh", "base_url": "http://127.0.0.1:4173" }]
