@@ -16,6 +16,10 @@ cd "$(dirname "$0")/../.."
 [ -f .pages-output/aplayermode/index.html ] || { echo "NAMED STOP [APM_RENDER_NO_BUILD] .pages-output is missing; run node scripts/assemble_pages_output.js first" >&2; exit 2; }
 export WRANGLER_SEND_METRICS=false CI=1
 WRANGLER="npx --yes wrangler@4.158.0"
+# Install wrangler ONCE before the two servers start. Two parallel `npx --yes` installs of the same
+# package race in one npx cache folder and one dies with "spawn sh ENOENT" (main run 45244186690,
+# 23 Nov 2026), so the baseline never got an answer on :4173.
+$WRANGLER --version >/dev/null || { echo "NAMED STOP [APM_RENDER_NO_WRANGLER] could not install wrangler" >&2; exit 2; }
 pids=()
 trap 'kill "${pids[@]}" 2>/dev/null || true' EXIT INT TERM
 (cd .pages-output && exec $WRANGLER pages dev . --ip 127.0.0.1 --port 8788 --inspector-port 9231 --compatibility-date 2026-08-26) & pids+=($!)
