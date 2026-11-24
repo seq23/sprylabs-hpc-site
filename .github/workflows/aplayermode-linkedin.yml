@@ -10,8 +10,7 @@ name: aplayermode LinkedIn posts
 # Logic and proof: scripts/aplayermode/linkedin_poster.mjs, tests/aplayermode/linkedin_poster.test.mjs.
 on:
   schedule:
-    - cron: "20 9 * * 1-5"  # weekdays 09:20 CT
-      timezone: America/Chicago
+    - cron: "20 15 * * 1-5"  # weekdays 09:20 CST (10:20 in summer); UTC like every workflow here
   workflow_dispatch:
 env:
   PUSH_RETRY_ATTEMPTS: 5
