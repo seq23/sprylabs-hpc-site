@@ -1,0 +1,43 @@
+name: aplayermode LinkedIn posts
+# A Player Mode's LinkedIn page (urn:li:organization:147023183): one banked post each weekday, 09:20 CT,
+# through LinkedIn's own Posts API. Her words 24 Nov 2026: "make sure noelle is in charge of linkedin also
+# for the apps that have a linkedin page". Noelle (Boss OS) banks the posts in
+# aplayermode/data/linkedin/posts.json. Dormant until aplayermode/data/linkedin/posted.json says
+# "access": "granted" (LinkedIn's Community Management API): until then every run prints
+# NAMED STOP [LINKEDIN_NO_ACCESS], posts nothing and exits 0. Named stops (red):
+# SECRET_MISSING_LINKEDIN_APLAYERMODE_ACCESS_TOKEN, LINKEDIN_TOKEN_REFUSED, LINKEDIN_POST_REFUSED,
+# LINKEDIN_PHRASE_BLOCKED, LINKEDIN_BANK_EMPTY. Every run prints `OUTPUT: posted N, waiting M`.
+# Logic and proof: scripts/aplayermode/linkedin_poster.mjs, tests/aplayermode/linkedin_poster.test.mjs.
+on:
+  schedule:
+    - cron: "20 9 * * 1-5"  # weekdays 09:20 CT
+      timezone: America/Chicago
+  workflow_dispatch:
+env:
+  PUSH_RETRY_ATTEMPTS: 5
+  GITHUB_TOKEN: ${{ github.token }}
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: main-automation
+  cancel-in-progress: false
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v7
+        with: {node-version: 24, cache: npm}
+      - name: Post today's LinkedIn post
+        timeout-minutes: 5
+        env:
+          LINKEDIN_APLAYERMODE_ACCESS_TOKEN: ${{ secrets.LINKEDIN_APLAYERMODE_ACCESS_TOKEN }}
+        run: node scripts/aplayermode/linkedin_poster.mjs
+      - name: Record what was posted
+        if: always()
+        env:
+          WORKFLOW_ARGV: node scripts/aplayermode/linkedin_poster.mjs
+        run: ./.github/scripts/commit_and_push_if_changed.sh "aplayermode.com LinkedIn - posted ledger" aplayermode-linkedin
