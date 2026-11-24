@@ -19,6 +19,7 @@
 | `search-measurements.yml` | Search Console truth and index coverage for both hosts (`.github/scripts/collect_search_measurements.sh`); changes no page | daily 13:23 UTC |
 | `weekly-outcome-report.yml` | Week-over-week report from those measurements; uploads `spry-weekly-summary`, which Boss OS sends as "Spry Labs weekly" | Wednesdays |
 | `aplayermode-pin-drip.yml` | Pinterest queue refill and per-pin visits (`scripts/aplayermode/weekly_pin_drip.sh`) | Mondays 13:37 UTC |
+| `aplayermode-linkedin.yml` | One banked post a weekday on the A Player Mode LinkedIn page (`scripts/aplayermode/linkedin_poster.mjs`; dormant until `aplayermode/data/linkedin/posted.json` reads `"access": "granted"`) | Weekdays 09:20 Central |
 | `deploy-aplayermode-worker.yml` | Deploys the aplayermode.com Worker and proves the live apex | push to `main` touching `workers/aplayermode-com/**` or `aplayermode/**` |
 | `entity-backlink-watch.yml` | Search Readiness k6: fetches every sameAs and pending profile in `config/entity.json`, checks the link-back, lands `reports/entity/backlink_watch.json`; a dead or promotable profile stops red with the exact sameAs change (`scripts/entity/entity_backlink_watch.mjs`) | Wednesdays 14:17 UTC |
 
