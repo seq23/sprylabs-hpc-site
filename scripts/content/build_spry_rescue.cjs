@@ -102,7 +102,7 @@ function build() {
   const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+[...keepers].sort().map(r=>`  <url><loc>${HOST+r}</loc><lastmod>${lastmods.get(HOST+r) || content.guides.find(g=>g.route===r)?.updated || content.reviewed_on}</lastmod></url>`).join('\n')+'\n</urlset>\n';
   write('sitemap-spry.xml',sitemap);
   // Search Loop pages are listed in the product host's sitemap (their canonical host).
-  const bhpcMap = fs.readFileSync('sitemap-bhpc.xml','utf8').replace(new RegExp('[ \\t]*<url><loc>'+QUESTIONS_HOST.replace(/[.]/g,'\\.')+'/questions/[^<]*</loc>.*?</url>\\r?\\n','g'),'');
+  const bhpcMap = fs.readFileSync('sitemap-bhpc.xml','utf8').replace(new RegExp('[ \\t]*<url><loc>'+QUESTIONS_HOST.replace(/[.*+?^${}()|[\]\\/]/g,'\\$&')+'/questions/[^<]*</loc>.*?</url>\\r?\\n','g'),'');
   write('sitemap-bhpc.xml',bhpcMap.replace('</urlset>',enginePages.slice().sort((a,b)=>a.route.localeCompare(b.route)).map(p=>`  <url><loc>${QUESTIONS_HOST+p.route}</loc><lastmod>${lastmods.get(QUESTIONS_HOST+p.route) || p.published_at}</lastmod></url>\n`).join('')+'</urlset>'));
   for (const name of ['sitemaps/sitemap-legacy.xml', ...fs.readdirSync('sitemaps').filter(n=>n.endsWith('.xml')).map(n=>'sitemaps/'+n)]) {
     if (!fs.existsSync(name)) continue;

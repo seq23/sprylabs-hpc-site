@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
+import { removeElements, stripTags } from '../scripts/lib/html_text.mjs';
 import { createRequire } from 'node:module';
 import { spryRescueResponse } from '../functions/_lib/spry_rescue.js';
 import { SPRY_RESCUE_REDIRECTS } from '../functions/_lib/spry_rescue_table.js';
@@ -292,7 +293,7 @@ test('the replacement edition governs historical actions without discarding thei
     assert.ok(html.includes(`<link rel="canonical" href="${HOST + g.route}">`));
     assert.ok(html.includes('<ol>') && html.includes('rel="author"'));
     assert.ok(g.sections.length > 0 && g.steps.length > 0 && g.faq.length > 0);
-    const visible = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, '');
+    const visible = removeElements(html, 'script');
     for (const faq of pageParts(g).faq) assert.ok(visible.includes(faq.question.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll("'", '&#39;')));
   }
 });
@@ -326,7 +327,7 @@ test('repeated slashes on retired routes 301 directly to the retained guide', ()
 // times and shared ten stock sentences with 39 other guides. The checklist's own
 // rule: an 8-word phrase more than three times in one body is template filler.
 function fillerPhrases(html) {
-  const body = (html.match(/<main\b[\s\S]*?<\/main>/) || [html])[0].replace(/<script\b[\s\S]*?<\/script>/g,' ').replace(/<[^>]+>/g,' ').replace(/&#39;|&amp;|&quot;/g,' ');
+  const body = stripTags(removeElements((html.match(/<main\b[\s\S]*?<\/main>/) || [html])[0], 'script')).replace(/&#39;|&amp;|&quot;/g,' ');
   const w = body.toLowerCase().match(/[a-z0-9][\w'’-]*/g) || [];
   const seen = new Map();
   for (let i = 0; i + 8 <= w.length; i++) { const k = w.slice(i, i + 8).join(' '); seen.set(k, (seen.get(k) || 0) + 1); }

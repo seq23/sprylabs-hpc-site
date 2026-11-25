@@ -86,7 +86,7 @@ const ORG_DESCRIPTION = CONFIG.description;
  * @ids for one organization are two entities that each earn half the citations.
  */
 const OWN_HOSTS = Object.freeze([...CONFIG.own_hosts]);
-const LEGACY_ORG_ID_RE = new RegExp(`^https://(?:www\\.)?(?:${OWN_HOSTS.map((h) => h.replace(/\./g, '\\.')).join('|')})(?:/[a-z0-9-]*)?#organization$`);
+const LEGACY_ORG_ID_RE = new RegExp(`^https://(?:www\\.)?(?:${OWN_HOSTS.map((h) => h.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')).join('|')})(?:/[a-z0-9-]*)?#organization$`);
 function isOwnOrgId(id) {
   return typeof id === 'string' && (id === ORG_ID || LEGACY_ORG_ID_RE.test(id));
 }

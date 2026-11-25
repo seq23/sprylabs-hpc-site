@@ -6,6 +6,8 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+permissions:
+  contents: read
 jobs:
   ship-ready-baseline:
     uses: seq23/seq-bin/.github/workflows/ship-ready-baseline.yml@v1
