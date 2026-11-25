@@ -43,11 +43,15 @@ test('Clarity loads only on A Player Mode pages with a form marked data-session-
     }
     withLoader += 1;
     const marked = /<form\b[^>]*\bdata-session-recording\b/.test(html);
-    if (marked) { recorded += 1; assert.deepEqual(requests, ['https://www.clarity.ms/tag/yvtytxiv27'], `${f}: form page records`); }
-    else assert.deepEqual(requests, [], `${f}: no marked form, so no recording`);
-    assert.deepEqual(clarityRequests(html, { readyState: 'complete' }), marked ? ['https://www.clarity.ms/tag/yvtytxiv27'] : [], `${f}: same answer after load`);
+    // Search Readiness e9 (24 Nov 2026): a page with no recorded form does not ship the loader
+    // at all, so the clarity.ms tag never reaches a page where it could not run.
+    assert.ok(marked, `${f}: no form marked data-session-recording, so the Clarity loader must not be on the page`);
+    recorded += 1;
+    assert.deepEqual(requests, ['https://www.clarity.ms/tag/yvtytxiv27'], `${f}: form page records`);
+    assert.deepEqual(clarityRequests(html, { readyState: 'complete' }), ['https://www.clarity.ms/tag/yvtytxiv27'], `${f}: same answer after load`);
   }
-  assert.ok(withLoader >= 10, `saw the pages (${withLoader})`);
+  assert.ok(files.length >= 10, `saw the pages (${files.length})`);
+  assert.equal(withLoader, 1, 'the loader ships only on the home page');
   assert.equal(recorded, 1, 'only the home page (launch-updates form) is recorded');
 });
 
