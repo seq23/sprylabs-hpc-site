@@ -18,6 +18,8 @@ concurrency:
   cancel-in-progress: false
 jobs:
   measure:
+    if: github.ref == 'refs/heads/main'
+    environment: reviewed-main
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
