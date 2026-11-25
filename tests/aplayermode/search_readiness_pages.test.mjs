@@ -8,7 +8,9 @@ import { readFileSync } from 'node:fs';
 
 const ROOT = new URL('../../', import.meta.url);
 const read = (rel) => readFileSync(new URL(rel.replace(/^\//, ''), ROOT), 'utf8');
-const decode = (s) => s.replace(/&#x27;|&#39;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+// One pass, so a decoded "&" is never decoded again (no double unescaping).
+const ENTITIES = { '&#x27;': "'", '&#39;': "'", '&quot;': '"', '&lt;': '<', '&gt;': '>', '&amp;': '&' };
+const decode = (s) => s.replace(/&#x27;|&#39;|&quot;|&lt;|&gt;|&amp;/g, (e) => ENTITIES[e]);
 const { pages } = JSON.parse(read('config/aplayermode_content_pages.json'));
 const routes = { '/': '/aplayermode/index.html', '/about/': '/aplayermode/about.html', ...pages };
 const indexable = (html) => !/<meta name="robots" content="[^"]*noindex/i.test(html);
