@@ -46,6 +46,8 @@ concurrency:
 
 jobs:
   deploy:
+    if: github.ref == 'refs/heads/main'
+    environment: reviewed-main
     runs-on: ubuntu-latest
     # Normal end to end is well under 3 minutes. A fault detector, not a budget.
     timeout-minutes: 12

@@ -24,6 +24,8 @@ concurrency:
   cancel-in-progress: false
 jobs:
   pin-drip:
+    if: github.ref == 'refs/heads/main'
+    environment: reviewed-main
     runs-on: ubuntu-latest
     timeout-minutes: 20
     # Read by the metrics step. Absent -> the named stop
