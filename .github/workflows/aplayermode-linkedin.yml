@@ -42,3 +42,11 @@ jobs:
         env:
           WORKFLOW_ARGV: node scripts/aplayermode/linkedin_poster.mjs
         run: ./.github/scripts/commit_and_push_if_changed.sh "aplayermode.com LinkedIn - posted ledger" aplayermode-linkedin
+      - name: Send confirmed receipts to the growth ledger
+        if: ${{ always() && !cancelled() }}
+        uses: seq23/boss-os/.github/actions/ledger-rows@ef7270e2e758acb8dd166db4143e93c3563e228a
+        with:
+          business: a-player-mode
+          file: aplayermode/data/linkedin/posted.json
+          channel: linkedin
+          token: ${{ secrets.BOSS_OPEN_LOOPS_TOKEN }}
