@@ -32,6 +32,8 @@ const require = createRequire(import.meta.url);
 const { listEveryServedPage } = require('../lib/site_pages.js');
 
 export const PRODUCT = 'https://sprylabs.gumroad.com/l/billionaire-high-performance-coach';
+// PRODUCT as a literal, fully escaped pattern (a test pins it to PRODUCT, so they cannot drift).
+export const PRODUCT_HREF_RE = /href=(["'])(https:\/\/sprylabs\.gumroad\.com\/l\/billionaire-high-performance-coach)(\?[^"']*)?\1/;
 // Cloudflare Web Analytics site tokens: public by design (every page that loads the beacon prints it).
 export const BEACON = {
   'billionairehighperformancecoach.com': 'f065ce22dcb04182b19db9a806f1044f',
@@ -58,7 +60,7 @@ export function tagHtml(html, rel) {
   const campaign = pageSlug(rel);
   const source = siteFor(rel);
   const seen = new Map();
-  const re = new RegExp(`href=(["'])(${PRODUCT.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&')})(\\?[^"']*)?\\1`, 'g');
+  const re = new RegExp(PRODUCT_HREF_RE.source, 'g');
   return html.replace(re, (all, q, base, query, offset) => {
     const params = new URLSearchParams((query || '').slice(1).replace(/&amp;/g, '&'));
     // Every buy button opens Gumroad's checkout straight away (her yes 8 Nov 2026; help article 270: wanted=true).

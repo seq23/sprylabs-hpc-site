@@ -78,7 +78,7 @@ export async function collect({ env = process.env, fetchImpl = fetch, now = new 
   if (!token) return stop(`${SECRET} is not set in this repo's Actions secrets; reading the Analytics Engine dataset ${DATASET} needs a Cloudflare API token with Account Analytics: Read.`);
   const account = env.CLOUDFLARE_ACCOUNT_ID || DEFAULT_ACCOUNT_ID;
   const res = await fetchImpl(`https://api.cloudflare.com/client/v4/accounts/${account}/analytics_engine/sql`, { method: 'POST', headers: { Authorization: `Bearer ${token}` }, body: sqlFor(since) });
-  if (res.status === 401 || res.status === 403) return stop(`Cloudflare answered ${res.status}: ${SECRET} lacks Account Analytics: Read on account ${account}.`);
+  if (res.status === 401 || res.status === 403) return stop(`Cloudflare answered ${res.status}: ${SECRET} lacks Account Analytics: Read on the account in CLOUDFLARE_ACCOUNT_ID (or the default account; the id is not printed because this repo's logs and reports are public).`);
   if (!res.ok) return stop(`Analytics Engine SQL API answered ${res.status}; nothing was measured.`);
   const body = await res.json();
   if (!Array.isArray(body.data)) return stop('Analytics Engine SQL API returned no data array; nothing was measured.');

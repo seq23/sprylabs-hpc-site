@@ -6,6 +6,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
+import { removeElements, stripTags } from '../scripts/lib/html_text.mjs';
 
 const ROOT = new URL('../', import.meta.url);
 const PEOPLE = ['Ali Abdaal', 'Tiago Forte', 'Andrew Huberman', 'Cal Newport', 'Tony Robbins', 'James Clear', 'Tim Ferriss', 'Alex Hormozi', 'Mel Robbins'];
@@ -15,7 +16,7 @@ test('pages titled after a real creator say "not affiliated" and never brand the
   let checked = 0;
   for (const f of files) {
     const html = readFileSync(new URL(f, ROOT), 'utf8');
-    const h1 = (html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/)?.[1] ?? '').replace(/<[^>]+>/g, '');
+    const h1 = stripTags(html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/)?.[1] ?? '', '');
     const person = PEOPLE.find((p) => h1.toLowerCase().includes(p.toLowerCase()));
     if (!person) continue;
     if (/http-equiv="refresh"/i.test(html)) continue; // a redirect stub is not a page anyone reads
