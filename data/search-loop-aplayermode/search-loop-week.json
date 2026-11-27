@@ -1,0 +1,102 @@
+{
+  "schema": "search-loop-week-v1",
+  "week": "2026-W48",
+  "site": "aplayermode.com",
+  "generated_at": "2026-11-27T20:56:48.283Z",
+  "state": "running",
+  "published": 0,
+  "indexed": 0,
+  "pace": 10,
+  "ai_visitors": 0,
+  "ai_bot_hits": 50,
+  "conversions": "not read: no conversion source configured for this site (form fills / checkouts)",
+  "wins": 0,
+  "undone": 0,
+  "merged": 0,
+  "held_by_cap": 0,
+  "redirected": [],
+  "cap": {
+    "max_live_pages": 22,
+    "live": 0,
+    "room": 22,
+    "why": "up from 20 to 22: Google impressions 343 in the last 28 days beat 93 in the 28 before"
+  },
+  "notes": [
+    "cap: up from 20 to 22: Google impressions 343 in the last 28 days beat 93 in the 28 before",
+    "BUILD: \"goal tracker app free\" not written: product-claim check: the free model did not return {\"claims\":[{sentence, supported}]}; it stays queued for the next run",
+    "BUILD published 0 of quota 10: 21 draft(s) failed the gate and were dropped; 1 got no answer from the free model and stay queued"
+  ],
+  "lanes": {
+    "ratio": {
+      "can_be_one": 2,
+      "striking": 1
+    },
+    "can_be_one": {
+      "pages": 0,
+      "measured": 0,
+      "top3": 0,
+      "hit_rate": "not read: no page in this lane has reached its 2-week check yet"
+    },
+    "striking": {
+      "pages": 0,
+      "measured": 0,
+      "top3": 0,
+      "hit_rate": "not read: no page in this lane has reached its 2-week check yet"
+    },
+    "weights": {
+      "neighbour": 35,
+      "unanswered": 30,
+      "weak_top10": 40,
+      "demand": 10
+    },
+    "weight_changes": [],
+    "competition": "ok: 15 top-10 read(s) via brave"
+  },
+  "ai_misses": {
+    "read": "ok",
+    "week": "2026-W48",
+    "misses": 0,
+    "strengthened": [],
+    "new_candidates": [],
+    "skipped": [],
+    "rejected": [],
+    "could_not_tell": 0
+  },
+  "comparison": {
+    "pulled": "ok: 0 row(s)",
+    "candidates": 0,
+    "confirmed": 0,
+    "queued": []
+  },
+  "seeds": {
+    "configured": 5,
+    "built": [],
+    "strengthened": [],
+    "answered_by": [],
+    "refused": [
+      {
+        "query": "ai assistant app that never sends emails or spends money on its own",
+        "reason": "the free-model relevance screen kept it off this site's list (not this audience, or someone else's brand)"
+      }
+    ],
+    "queued": [
+      {
+        "query": "ai life coach app for goals and accountability",
+        "reason": "dropped by the page gate, tried again later: b5 FAQ answer is 22 words (aim 40-60): \"Does A Player Mode offer a free trial?\""
+      },
+      {
+        "query": "app that turns big goals into a daily plan",
+        "reason": "dropped by the page gate, tried again later: off-audience: This site offers a specific subscription app from Spry Labs, so general search comparisons with third-party rivals are o"
+      },
+      {
+        "query": "high performance coaching app for ambitious people",
+        "reason": "dropped by the page gate, tried again later: facts: needs at least 2 distinct sources whose URLs answered 200 (found 0); these failed the check, replace each with a page that exists: https://www.consumerfinance.gov/about-us/newsroom/cfpb-issues-"
+      },
+      {
+        "query": "ai planner app that plans your whole day automatically",
+        "reason": "dropped by the page gate, tried again later: off-audience: temporarily unavailable"
+      }
+    ]
+  },
+  "run_url": "https://github.com/seq23/sprylabs-hpc-site/actions/runs/46062564556"
+}
