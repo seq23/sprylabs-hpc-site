@@ -92,20 +92,24 @@ const indentOf = (l) => l.match(/^\s*/)[0].length;
 //    moving tag; boss-os #574 pins callers this way). Any other repo, path or branch fails;
 //  - the key is passed only in that call's `secrets:` block, and it is the only
 //    model-provider secret the file names;
-//  - search-loop.config.json routes the engine through THIS repo's $0 file
+//  - search-loop.config.json, and every other config a job passes as `config:`, routes the engine through THIS repo's $0 file
 //    (config/llm_routing.json, checked above: $0/$0 ":free" models,
 //    max_cost_usd 0, no paid fallback). The engine refuses a non-zero usage.cost.
 // Any other scheduled exposure still fails. docs/cost/zero-paid-llm.md says the same.
 const FREE_ROUTED_CALLER = { file: 'search-loop.yml', uses: /^uses: seq23\/search-loop\/\.github\/workflows\/search-loop\.yml@(?:v1|[0-9a-f]{40})$/, secret: 'OPENROUTER_API_KEY', config: 'search-loop.config.json' };
 function freeRoutedCallerAllows(wf, lines, i) {
   if (wf !== FREE_ROUTED_CALLER.file) return false;
-  if (!lines.some((l) => FREE_ROUTED_CALLER.uses.test(l.trim()))) return false;
+  // Every job in the file calls the engine (two since 27 Nov 2026): one good `uses:` never covers another.
+  const uses = lines.filter((l) => /^\s+uses:/.test(l));
+  if (!uses.length || !uses.every((l) => FREE_ROUTED_CALLER.uses.test(l.trim()))) return false;
   const names = lines.filter((l) => SECRET.test(l) && !/^\s*#/.test(l)).map((l) => l.match(SECRET)[0]);
   if (names.some((n) => n !== `secrets.${FREE_ROUTED_CALLER.secret}`)) return false;
   let j = i - 1; while (j >= 0 && (!lines[j].trim() || indentOf(lines[j]) >= indentOf(lines[i]))) j--;
   if (j < 0 || lines[j].trim() !== 'secrets:') return false;
-  let cfg; try { cfg = JSON.parse(rd(FREE_ROUTED_CALLER.config)); } catch { return false; }
-  return cfg?.llm?.routing_file === ROUTING;
+  // Every site config the caller runs the engine with (the default one, plus each job's `config:`
+  // input: aplayermode.com joined on 27 Nov 2026) must route through THIS repo's $0 file.
+  const configs = [FREE_ROUTED_CALLER.config, ...lines.map((l) => l.match(/^\s+config:\s*["']?([^"'\s#]+)["']?\s*(?:#.*)?$/)?.[1]).filter(Boolean)];
+  return configs.every((file) => { try { return JSON.parse(rd(file))?.llm?.routing_file === ROUTING; } catch { return false; } });
 }
 for (const wf of workflows) {
   const rel = `${wfDir}/${wf}`;

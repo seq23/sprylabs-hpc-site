@@ -20,7 +20,7 @@
  *
  * Guard: scripts/validators/validate_aplayermode_landing.mjs.
  */
-import { CONTENT_PAGES } from '../workers/aplayermode-com/src/index.js';
+import { CONTENT_PAGES, QUESTION_SLUG_RE } from '../workers/aplayermode-com/src/index.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import { contentHash } from './lib/sitemap_ledger.mjs';
@@ -36,6 +36,23 @@ export const PAGES = Object.freeze([
   // The content pages (6 Nov 2026 search decision), in the Worker's CONTENT_PAGES order.
   ...Object.entries(CONTENT_PAGES).map(([route, file]) => ({ loc: `${ORIGIN}${route}`, page: file.replace(/^\//, '') })),
 ]);
+/**
+ * The Search Loop question pages (search-loop.aplayermode.config.json writes them; 27 Nov 2026):
+ * the /questions/ index, then every committed aplayermode/questions/<slug>/index.html whose slug the
+ * Worker routes, by slug. Read from disk at each run, so a page the engine adds or removes joins or
+ * leaves the sitemap on the post-build that follows.
+ */
+export function questionPages(root = process.cwd()) {
+  const dir = path.join(root, 'aplayermode/questions');
+  if (!fs.existsSync(path.join(dir, 'index.html'))) return [];
+  const slugs = fs.readdirSync(dir, { withFileTypes: true })
+    .filter((d) => d.isDirectory() && QUESTION_SLUG_RE.test(d.name) && fs.existsSync(path.join(dir, d.name, 'index.html')))
+    .map((d) => d.name).sort();
+  return [
+    { loc: `${ORIGIN}/questions/`, page: 'aplayermode/questions/index.html' },
+    ...slugs.map((slug) => ({ loc: `${ORIGIN}/questions/${slug}/`, page: `aplayermode/questions/${slug}/index.html` })),
+  ];
+}
 /** Kept for readers that want the landing page alone. */
 export const PAGE = PAGES[0].page;
 
@@ -65,7 +82,7 @@ export const entriesOf = (rec) => {
 export function derive(root = process.cwd(), today = new Date().toISOString().slice(0, 10)) {
   let rec = null; try { rec = JSON.parse(fs.readFileSync(path.join(root, RECORD), 'utf8')); } catch { /* first run */ }
   const previous = entriesOf(rec);
-  const pages = PAGES.map((p) => entryFor(previous, p, pageContentHash(fs.readFileSync(path.join(root, p.page), 'utf8')), today));
+  const pages = [...PAGES, ...questionPages(root)].map((p) => entryFor(previous, p, pageContentHash(fs.readFileSync(path.join(root, p.page), 'utf8')), today));
   const record = { pages };
   const sitemapBefore = fs.readFileSync(path.join(root, SITEMAP), 'utf8');
   return { record, recordChanged: JSON.stringify(rec) !== JSON.stringify(record), sitemap: buildSitemap(pages), sitemapBefore };

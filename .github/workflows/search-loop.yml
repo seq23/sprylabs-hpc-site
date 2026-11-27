@@ -7,6 +7,11 @@ name: Search Loop
 # "search-loop-week". The global switch SEARCH_LOOP_MODE on seq23/search-loop
 # (normal | slow | off) throttles it without touching this repo.
 # download.html (the protected sales page) is in protected_paths and is never edited.
+# Second job (27 Nov 2026, her yes: "yes turn those searches into pages"): the same engine for
+# aplayermode.com, from search-loop.aplayermode.config.json, writing aplayermode/questions/ and its
+# own ledger data/search-loop-aplayermode/. It runs after the BHPC job in the same run, so the two
+# sites never share the free model lanes at once or push at the same time, and each skips the
+# other's searches (shares_audience_with).
 on:
   schedule:
     - cron: "41 11 * * *"
@@ -16,6 +21,7 @@ on:
   pull_request:
     paths:
       - search-loop.config.json
+      - search-loop.aplayermode.config.json
       - config/llm_routing.json
       - .github/workflows/search-loop.yml
   workflow_dispatch:
@@ -55,6 +61,35 @@ jobs:
       GSC_SITE_URL: ${{ secrets.GSC_SITE_URL_BHPC }}
       BING_WEBMASTER_API_KEY: ${{ secrets.BING_WEBMASTER_API_KEY }}
       INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.SEARCH_LOOP_CF_USAGE_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.SEARCH_LOOP_CF_ACCOUNT_ID }}
+      CLOUDFLARE_WORKERS_AI_TOKEN: ${{ secrets.SEARCH_LOOP_CF_WORKERS_AI_TOKEN }}
+      GEMINI_API_KEY: ${{ secrets.SEARCH_LOOP_GEMINI_API_KEY }}
+      BRAVE_SEARCH_API_KEY: ${{ secrets.BRAVE_SEARCH_API_KEY }}
+
+  search-loop-aplayermode:
+    needs: search-loop
+    # Runs when the BHPC job failed too: one site's red run never stops the other's pages.
+    if: ${{ !cancelled() }}
+    uses: seq23/search-loop/.github/workflows/search-loop.yml@56a1b11eb0262dd00dd4c379db7ff45dfebde4b6
+    with:
+      config: search-loop.aplayermode.config.json
+      engine_ref: v1
+      stage: ${{ github.event_name == 'pull_request' && 'validate' || inputs.stage || 'auto' }}
+      setup_command: npm ci --ignore-scripts
+      post_build_command: bash .github/scripts/search_loop_aplayermode_post_build.sh
+      node_options: --max-old-space-size=3072
+      commit_command: ./.github/scripts/search_loop_commit.sh .github/scripts/search_loop_aplayermode_post_build.sh "aplayermode/questions/ data/search-loop-aplayermode/" search-loop-aplayermode
+      commit_message: "search loop: aplayermode.com daily pages, checks and ledger"
+      gsc_site_secret: GSC_SITE_URL_APM
+    # The BHPC job's block, with this site's Search Console property (sc-domain:aplayermode.com). The
+    # config carries its own IndexNow key (indexnow.key wins in the engine), so INDEXNOW_KEY is not passed.
+    secrets:
+      BOSS_OPEN_LOOPS_TOKEN: ${{ secrets.BOSS_OPEN_LOOPS_TOKEN }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+      GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
+      GSC_SITE_URL: ${{ secrets.GSC_SITE_URL_APM }}
+      BING_WEBMASTER_API_KEY: ${{ secrets.BING_WEBMASTER_API_KEY }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.SEARCH_LOOP_CF_USAGE_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.SEARCH_LOOP_CF_ACCOUNT_ID }}
       CLOUDFLARE_WORKERS_AI_TOKEN: ${{ secrets.SEARCH_LOOP_CF_WORKERS_AI_TOKEN }}

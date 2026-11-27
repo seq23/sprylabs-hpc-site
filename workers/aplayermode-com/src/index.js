@@ -34,6 +34,14 @@
  *                             medium; no IP, no user agent, no cookie), skipping
  *                             crawlers. Read weekly by
  *                             scripts/aplayermode/collect_pin_metrics.mjs.
+ *   /questions/<slug>/     -> a Search Loop question page (aplayermode/questions/<slug>/index.html,
+ *                             written by the engine, seq23/search-loop, from
+ *                             search-loop.aplayermode.config.json); /questions/ is their index
+ *                             (scripts/aplayermode/build_questions_index.mjs). A prefix, not a
+ *                             list, so a page the engine commits is live on the next Pages build
+ *                             with no Worker deploy; a slug with no committed page answers the
+ *                             apex 404 (route().missing). Hand-built pages under /questions/ stay
+ *                             in CONTENT_PAGES and win.
  *   /about/                -> the About page (aplayermode/about.html); /about 301s to it.
  *                             Who publishes this and who built it, so an answer
  *                             engine has an author to cite (Search Readiness c6).
@@ -139,7 +147,18 @@ export const REDIRECT_HOME = Object.freeze(['/download', '/guides', '/sitemap-bh
 // a9, b1, c2; the pages landed 25 Oct 2026 and were unreachable until 26 Oct).
 // One definition, used at every origin fetch below and read by
 // scripts/validators/validate_aplayermode_landing.mjs.
-export const originPath = (file) => (file.endsWith('.html') ? file.slice(0, -'.html'.length) : file);
+// A directory page (x/index.html) is answered at x/ and its /index.html form 308s there.
+export const originPath = (file) => {
+  if (file.endsWith('/index.html')) return file.slice(0, -'index.html'.length);
+  return file.endsWith('.html') ? file.slice(0, -'.html'.length) : file;
+};
+
+// Search Loop question pages (27 Nov 2026, her yes: "yes turn those searches into pages"): the engine
+// writes aplayermode/questions/<slug>/index.html and the index aplayermode/questions/index.html.
+export const QUESTIONS_PATH = '/questions/';
+export const QUESTIONS_DIR = '/aplayermode/questions/';
+export const QUESTION_SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const QUESTION_SLUG = /^\/questions\/([a-z0-9]+(?:-[a-z0-9]+)*)\/$/;
 
 export const FEED_PATH = '/pinfeed.xml';
 export const QUEUE_PATH = '/aplayermode/data/pinterest/queue.json';
@@ -169,6 +188,12 @@ export function route(pathname) {
   if (pathname === '/404' || pathname === '/404.html') return { kind: 'asset', upstream: NOT_FOUND_FILE };
   if (pathname === '/about' || pathname === '/about/index.html') return { kind: 'redirect', location: ABOUT_PATH, keepQuery: true };
   if (Object.prototype.hasOwnProperty.call(CONTENT_PAGES, pathname)) return { kind: 'asset', upstream: CONTENT_PAGES[pathname], content: true };
+  if (pathname === QUESTIONS_PATH) return { kind: 'asset', upstream: `${QUESTIONS_DIR}index.html`, content: true, missing: 'notfound' };
+  const question = pathname.match(QUESTION_SLUG);
+  if (question) return { kind: 'asset', upstream: `${QUESTIONS_DIR}${question[1]}/index.html`, content: true, missing: 'notfound' };
+  if (pathname === '/questions' || pathname === '/questions/index.html') return { kind: 'redirect', location: QUESTIONS_PATH, keepQuery: true };
+  const questionForm = pathname.match(/^\/questions\/([a-z0-9]+(?:-[a-z0-9]+)*)(?:\/index\.html)?$/);
+  if (questionForm) return { kind: 'redirect', location: `${QUESTIONS_PATH}${questionForm[1]}/`, keepQuery: true };
   // One URL per page: the bare and /index.html forms 301 to the trailing-slash URL.
   const slashed = `${pathname.replace(/\/index\.html$/, '').replace(/\/+$/, '')}/`;
   if (slashed !== pathname && Object.prototype.hasOwnProperty.call(CONTENT_PAGES, slashed)) return { kind: 'redirect', location: slashed, keepQuery: true };
@@ -188,6 +213,26 @@ export function pinVisitPoint(url, userAgent) {
   const clip = (v) => String(v || '').slice(0, 96);
   const content = clip(url.searchParams.get('utm_content')) || '(none)';
   return { indexes: [content], blobs: [content, clip(url.searchParams.get('utm_campaign')), clip(url.searchParams.get('utm_medium'))], doubles: [1] };
+}
+
+// When the engine merges a question page into another (90 days with no impressions), it removes the
+// page and writes { source, target } to this file (search-loop.aplayermode.config.json
+// output.redirects). Read from the Pages origin at request time, like the pin queue, so a merge is
+// live on the next Pages build with no Worker deploy.
+export const QUESTION_REDIRECTS = '/aplayermode/questions/redirects.json';
+
+/** The same-site path a removed question page 301s to, or null. Only a local path is ever a target. */
+export function questionRedirectTarget(list, pathname) {
+  const hit = (Array.isArray(list?.redirects) ? list.redirects : []).find((x) => x && x.source === pathname);
+  const target = hit && typeof hit.target === 'string' ? hit.target : '';
+  return /^\/(?![\/\\])[^\s]*$/.test(target) && target !== pathname ? target : null;
+}
+
+async function questionRedirect(pathname, origin = ORIGIN) {
+  try {
+    const res = await fetch(origin + QUESTION_REDIRECTS, { headers: { accept: 'application/json' }, redirect: 'manual', cf: { cacheTtl: 300 } });
+    return res.status === 200 ? questionRedirectTarget(await res.json(), pathname) : null;
+  } catch { return null; }
 }
 
 /** The apex's own 404 page, answered with a 404 status (never a 200, never a redirect home). */
@@ -260,6 +305,13 @@ export default {
       const upstream = await fetch(origin + originPath(r.upstream) + url.search, { method: request.method, headers, redirect: 'manual' });
       if (upstream.status >= 300 && upstream.status < 400 && upstream.status !== 304) {
         return new Response(`origin redirected ${r.upstream} (status ${upstream.status}); refusing to follow`, { status: 502 });
+      }
+      // A question slug with no committed page: a page the engine merged answers its 301 (QUESTION_REDIRECTS),
+      // anything else the apex 404, never the Pages project's own 404 page.
+      if (r.missing === 'notfound' && upstream.status === 404) {
+        const target = await questionRedirect(url.pathname, origin);
+        if (target) return new Response(null, { status: 301, headers: { Location: new URL(target, url).toString(), 'Cache-Control': 'public, max-age=3600' } });
+        return serveNotFound(request, NOT_FOUND_FILE, origin);
       }
       const out = new Response(upstream.body, upstream);
       out.headers.delete('location');

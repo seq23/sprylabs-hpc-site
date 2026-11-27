@@ -1,0 +1,25 @@
+/* aplayermode.com/questions/: the Search Loop question pages (seq23/search-loop render(): <main><article
+   class="search-loop-page">) and their index, in the A Player Mode look. Loaded after aplayermode.css and
+   built only from its tokens, so light and dark follow the same palette as every other page. */
+.search-loop-page { max-width: calc(var(--apm-narrow) + 2 * var(--apm-gutter)); margin: 0 auto; padding: var(--apm-section-pad) var(--apm-gutter); overflow-wrap: anywhere; }
+.search-loop-page h1 { margin-bottom: var(--apm-space-md); }
+.search-loop-page h2 { margin-top: var(--apm-space-xxl); }
+.search-loop-page h3 { margin-top: var(--apm-space-lg); font-size: 18px; }
+.search-loop-page .breadcrumb { font-size: var(--apm-size-small); color: var(--apm-ink-muted); margin: 0 0 var(--apm-space-sm); }
+.search-loop-page .breadcrumb a { color: var(--apm-ink-muted); }
+.search-loop-page .direct-answer { font-size: 18px; line-height: 1.55; color: var(--apm-ink); margin: 0 0 var(--apm-space-md); }
+.search-loop-page .page-dates { font-size: var(--apm-size-small); color: var(--apm-ink-muted); margin: 0 0 var(--apm-space-lg); }
+.search-loop-page ol, .search-loop-page ul { padding-left: 1.2em; }
+.search-loop-page li + li { margin-top: var(--apm-space-xs); }
+.search-loop-page .table-scroll { margin: var(--apm-space-md) 0; }
+.search-loop-page table { width: 100%; border-collapse: collapse; font-size: var(--apm-size-small); }
+.search-loop-page th, .search-loop-page td { text-align: left; vertical-align: top; padding: var(--apm-space-xs) var(--apm-space-sm) var(--apm-space-xs) 0; border-bottom: 1px solid var(--apm-line); }
+.search-loop-page th { font-weight: 700; color: var(--apm-ink); }
+.search-loop-page .site-action { margin: var(--apm-space-xxl) 0 0; }
+/* The one action: the ink pill (ivory in dark), the same as .btn.btn-primary. */
+.search-loop-page .site-action .button { display: inline-flex; align-items: center; justify-content: center; min-height: var(--apm-tap-primary, 48px); padding: 14px 28px; border-radius: var(--apm-radius-pill); background: var(--apm-primary); color: var(--apm-on-primary); font-family: var(--apm-font-display); font-weight: 600; font-size: var(--apm-size-button); line-height: 22px; text-decoration: none; text-align: center; }
+@media (max-width: 480px) { .search-loop-page .site-action .button { width: 100%; } }
+.question-list { list-style: none; padding: 0; margin: var(--apm-space-lg) 0 0; }
+.question-list li { border-top: 1px solid var(--apm-line); }
+.question-list li:last-child { border-bottom: 1px solid var(--apm-line); }
+.question-list a { display: block; padding: var(--apm-space-sm) 0; min-height: 44px; font-family: var(--apm-font-display); font-weight: 600; font-size: 18px; text-decoration: none; }
