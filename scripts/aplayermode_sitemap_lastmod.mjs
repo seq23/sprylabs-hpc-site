@@ -20,7 +20,8 @@
  *
  * Guard: scripts/validators/validate_aplayermode_landing.mjs.
  */
-import { CONTENT_PAGES, QUESTION_SLUG_RE } from '../workers/aplayermode-com/src/index.js';
+import { CONTENT_PAGES } from '../workers/aplayermode-com/src/index.js';
+import { questionEntries } from './aplayermode/build_questions_index.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { contentHash } from './lib/sitemap_ledger.mjs';
@@ -38,19 +39,16 @@ export const PAGES = Object.freeze([
 ]);
 /**
  * The Search Loop question pages (search-loop.aplayermode.config.json writes them; 27 Nov 2026):
- * the /questions/ index, then every committed aplayermode/questions/<slug>/index.html whose slug the
- * Worker routes, by slug. Read from disk at each run, so a page the engine adds or removes joins or
- * leaves the sitemap on the post-build that follows.
+ * the /questions/ index, then every engine page the index lists (one definition of which pages
+ * exist: scripts/aplayermode/build_questions_index.mjs questionEntries, routed slugs, indexable,
+ * with an H1). Read from disk at each run, so a page the engine adds or removes joins or leaves the
+ * sitemap on the post-build that follows. Hand-built /questions/ pages are already in CONTENT_PAGES.
  */
 export function questionPages(root = process.cwd()) {
-  const dir = path.join(root, 'aplayermode/questions');
-  if (!fs.existsSync(path.join(dir, 'index.html'))) return [];
-  const slugs = fs.readdirSync(dir, { withFileTypes: true })
-    .filter((d) => d.isDirectory() && QUESTION_SLUG_RE.test(d.name) && fs.existsSync(path.join(dir, d.name, 'index.html')))
-    .map((d) => d.name).sort();
+  if (!fs.existsSync(path.join(root, 'aplayermode/questions/index.html'))) return [];
   return [
     { loc: `${ORIGIN}/questions/`, page: 'aplayermode/questions/index.html' },
-    ...slugs.map((slug) => ({ loc: `${ORIGIN}/questions/${slug}/`, page: `aplayermode/questions/${slug}/index.html` })),
+    ...questionEntries(root).filter((e) => !Object.prototype.hasOwnProperty.call(CONTENT_PAGES, e.route)).map((e) => ({ loc: `${ORIGIN}${e.route}`, page: e.file })),
   ];
 }
 /** Kept for readers that want the landing page alone. */

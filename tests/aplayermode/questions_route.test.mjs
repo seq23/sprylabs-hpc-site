@@ -114,15 +114,13 @@ test('an engine page joins the index and the sitemap; a page the Worker would no
   assert.deepEqual(entries.map((e) => e.route), ['/questions/what-does-a-chief-of-staff-do/', '/questions/ai-planner-app/']);
   assert.match(render(entries), /<a href="\/questions\/ai-planner-app\/">Is there an AI planner app that plans your whole day\?<\/a>/);
   const locs = questionPages(dir).map((p) => p.loc);
-  assert.ok(locs.includes('https://aplayermode.com/questions/'), 'the index is in the sitemap');
-  assert.ok(locs.includes('https://aplayermode.com/questions/ai-planner-app/'));
-  assert.ok(!locs.some((l) => /Bad_Slug|empty-dir/.test(l)), 'only routed slugs with a page');
+  assert.deepEqual(locs, ['https://aplayermode.com/questions/', 'https://aplayermode.com/questions/ai-planner-app/'], 'the index and only routed, indexable slugs with a page');
   fs.rmSync(dir, { recursive: true, force: true });
 });
 
 test('the sitemap the post-build writes, and the committed one, list /questions/ and every question page', () => {
   const locs = questionPages(ROOT).map((p) => p.loc);
-  assert.ok(locs.includes('https://aplayermode.com/questions/'), 'saw the index');
+  assert.equal(locs[0], 'https://aplayermode.com/questions/', 'saw the index');
   const written = derive(ROOT).sitemap;
   const committed = read('aplayermode/sitemap.xml');
   for (const loc of locs) {

@@ -20,6 +20,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { CONTENT_PAGES, QUESTION_SLUG_RE } from '../../workers/aplayermode-com/src/index.js';
+import { stripTags } from '../lib/html_text.mjs';
 
 export const OUT = 'aplayermode/questions/index.html';
 const ORIGIN = 'https://aplayermode.com';
@@ -31,7 +32,8 @@ const LEAD = 'Each page answers one question people ask about AI coaching, plann
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const ENTITIES = { '&#x27;': "'", '&#39;': "'", '&quot;': '"', '&lt;': '<', '&gt;': '>', '&amp;': '&' };
 const decode = (s) => s.replace(/&#x27;|&#39;|&quot;|&lt;|&gt;|&amp;/g, (e) => ENTITIES[e]);
-const text = (html) => decode(String(html).replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim());
+// Tags stripped until none is left (scripts/lib/html_text.mjs), then decoded once; render() escapes it again.
+const text = (html) => decode(stripTags(html, '')).replace(/\s+/g, ' ').trim();
 const h1Of = (html) => text(html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1] ?? '');
 const noindex = (html) => /<meta[^>]+(?:name="robots"[^>]+content="[^"]*noindex|content="[^"]*noindex[^"]*"[^>]+name="robots")/i.test(html);
 
