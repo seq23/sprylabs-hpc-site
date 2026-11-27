@@ -1,4 +1,5 @@
 import { createSession, json } from '../../_runtime/admin.js';
+import { takeLoginTry } from '../../_runtime/login_limit.js';
 
 // Authenticates the admin surface.
 //
@@ -14,13 +15,19 @@ import { createSession, json } from '../../_runtime/admin.js';
 // no profile, so it never ran.
 //
 // Fails closed: with no ADMIN_PASSWORD or APP_SESSION_SECRET configured, login
-// is unavailable rather than open.
+// is unavailable rather than open. With them configured, every try is first taken
+// from the caller's own per-network limit (functions/_runtime/login_limit.js), before
+// the password is read; no limit store bound, or the store down, is a 503, never a
+// sign-in.
 export async function onRequestPost({ request, env }) {
   const secret = env.APP_SESSION_SECRET;
   const expected = env.ADMIN_PASSWORD;
   if (!secret || !expected) {
-    return json({ error: 'Admin login is not configured. Set ADMIN_PASSWORD and APP_SESSION_SECRET in Cloudflare.' }, 503);
+    return json({ error: 'Admin login is not configured. Set ADMIN_PASSWORD and APP_SESSION_SECRET in Cloudflare, and bind the ADMIN_DB D1 database (config/d1-migrations).' }, 503);
   }
+
+  const refused = await takeLoginTry(request, env);
+  if (refused) return json({ error: refused.error }, refused.status);
 
   let supplied = '';
   try { supplied = String((await request.json())?.password ?? ''); } catch { supplied = ''; }
