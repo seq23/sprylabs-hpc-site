@@ -1,0 +1,234 @@
+{
+  "schema": "search-loop-config-v1",
+  "site": "aplayermode.com",
+  "base_url": "https://aplayermode.com",
+  "site_name": "A Player Mode",
+  "site_words": "A Player Mode",
+  "publisher": {
+    "name": "Spry Labs",
+    "url": "https://billionairehighperformancecoach.com/spry-labs"
+  },
+  "author": {
+    "name": "S.L. Taylor",
+    "url": "https://aplayermode.com/about/"
+  },
+  "audience": "founders, operators, parents, athletes, students and anyone carrying too many projects, roles and promises in their head, choosing an app to plan their day, coach them and follow up for them",
+  "voice": "calm, direct and specific; short sentences; plain answers first; no hype; never an income, health or weight-loss promise; results are examples, not guarantees; prices always with their terms",
+  "topics": [
+    "ai chief of staff app",
+    "ai life coach app",
+    "ai planner app",
+    "goal planner app",
+    "accountability app",
+    "life operating system app",
+    "personal assistant app",
+    "mental load",
+    "daily routine app",
+    "high performance coaching app"
+  ],
+  "find": {
+    "exclude_words": [
+      "login",
+      "log in",
+      "apk download",
+      "free download",
+      "torrent",
+      "betterup login",
+      "west peek",
+      "weight loss",
+      "diet plan",
+      "therapist near me",
+      "make money",
+      "get rich"
+    ]
+  },
+  "action": {
+    "label": "See the A Player Mode plans",
+    "url": "https://aplayermode.com/#plans"
+  },
+  "allowed_link_targets": [
+    "https://aplayermode.com",
+    "https://app.aplayermode.com",
+    "https://billionairehighperformancecoach.com"
+  ],
+  "mode": "normal",
+  "menu_pages_need_approval": true,
+  "menu_pages": [
+    "/",
+    "/about/"
+  ],
+  "health_gate": "none",
+  "protected_paths": [
+    "aplayermode/index.html",
+    "aplayermode/about.html",
+    "aplayermode/404.html",
+    "aplayermode/pages",
+    "aplayermode/questions/index.html",
+    "aplayermode/data",
+    "aplayermode/vendor",
+    "aplayermode/img"
+  ],
+  "output": {
+    "dir": "aplayermode/questions",
+    "format": "dir-index",
+    "url_prefix": "/questions/",
+    "redirects": {
+      "file": "aplayermode/questions/redirects.json",
+      "format": "json-list",
+      "list_key": "redirects",
+      "source_field": "source",
+      "source_form": "route",
+      "target_field": "target"
+    }
+  },
+  "template": {
+    "section_name": "Questions",
+    "stylesheets": [
+      "https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&family=Outfit:wght@600;700&display=swap",
+      "/aplayermode/aplayermode.css",
+      "/aplayermode/questions.css"
+    ],
+    "og_image": {
+      "url": "https://aplayermode.com/aplayermode/img/og.png",
+      "width": 1200,
+      "height": 630
+    },
+    "header_html": "<header class=\"topbar\">\n  <div class=\"wrap\">\n    <a class=\"brand\" href=\"/\"><span class=\"apm-mark\" aria-hidden=\"true\"></span><span class=\"brand-word\">A Player Mode</span></a>\n    <a class=\"btn btn-ghost btn-join-top\" href=\"/#plans\">See the plans</a>\n  </div>\n</header>",
+    "footer_html": "<footer class=\"footer\">\n  <div class=\"wrap\">\n    <p><b>A Player Mode</b> and <b>Billionaire High Performance Coach</b> are products of Spry Labs. Developed by S.L. Taylor through Spry Labs. <a href=\"/about/\">About Spry Labs and A Player Mode</a>. <a href=\"/questions/\">More questions</a>.</p>\n    <p>A Player Mode does not provide medical, psychological, legal, financial or therapeutic advice. Results are examples, not guarantees.</p>\n    <nav aria-label=\"Legal\" class=\"legal-links\"><a href=\"https://app.aplayermode.com/terms\">Terms of Service</a><a href=\"https://app.aplayermode.com/privacy\">Privacy Policy</a><a href=\"/disclaimer/\">Disclaimer</a></nav>\n    <p>&copy; 2026 Spry Labs. All rights reserved.</p>\n  </div>\n</footer>"
+  },
+  "related": {
+    "max_pages_per_new_page": 2,
+    "scan_dirs": [
+      "aplayermode"
+    ],
+    "skip_dirs": [
+      "data",
+      "vendor",
+      "img"
+    ]
+  },
+  "distinct": {
+    "sitemap_files": [
+      "aplayermode/sitemap.xml"
+    ]
+  },
+  "gsc": {
+    "site_url_env": "GSC_SITE_URL"
+  },
+  "llm": {
+    "routing_file": "config/llm_routing.json"
+  },
+  "indexnow": {
+    "key": "1cf2f6839abec33933cb3e6ea81027b8",
+    "key_location": "https://aplayermode.com/1cf2f6839abec33933cb3e6ea81027b8.txt"
+  },
+  "analytics": {
+    "ai_referrals": "cloudflare",
+    "ai_bot_hits": "cloudflare",
+    "zone": "aplayermode.com"
+  },
+  "conversions": {
+    "source": "none"
+  },
+  "shares_audience_with": [
+    {
+      "site": "billionairehighperformancecoach.com",
+      "ledger_path": "data/search-loop"
+    }
+  ],
+  "ledger_dir": "data/search-loop-aplayermode",
+  "gate": {
+    "banned_patterns": [
+      "\\b(?:make|earn)\\s+\\$\\s?\\d",
+      "\\blose\\s+\\d+\\s*(?:lb|lbs|pounds|kg)\\b",
+      "\\b(?:cures?|treats?)\\s+(?:adhd|anxiety|depression)\\b",
+      "\\bguaranteed\\s+(?:results|income)\\b"
+    ],
+    "own_prices": [
+      "$9.99",
+      "$24.99",
+      "$39.99",
+      "$79.99",
+      "$249.99",
+      "$399.99",
+      "$799.99"
+    ],
+    "why": "A Player Mode never promises income, health or weight-loss results and never claims to treat a condition (~/Brains/spry.md Voice; aplayermode.com/disclaimer/)."
+  },
+  "seeds_from": "ChatGPT's own searches before it recommends an app in this category, captured 27 Nov 2026 (her yes: \"yes turn those searches into pages\"), with our brand and rival names taken out",
+  "seeds": [
+    {
+      "query": "ai life coach app for goals and accountability",
+      "wants": [
+        "goals",
+        "accountability",
+        "daily agenda"
+      ]
+    },
+    {
+      "query": "app that turns big goals into a daily plan",
+      "wants": [
+        "breaks goals into daily tasks",
+        "accountability",
+        "coach"
+      ]
+    },
+    {
+      "query": "high performance coaching app for ambitious people",
+      "wants": [
+        "daily habits",
+        "coaching",
+        "accountability"
+      ]
+    },
+    {
+      "query": "ai planner app that plans your whole day automatically",
+      "wants": [
+        "automatic day plan",
+        "routines",
+        "habits"
+      ]
+    },
+    {
+      "query": "ai assistant app that never sends emails or spends money on its own",
+      "wants": [
+        "asks before it acts",
+        "no purchases",
+        "iphone"
+      ]
+    }
+  ],
+  "product": {
+    "checked_at": "2026-11-27 from https://aplayermode.com/llms.txt, aplayermode/index.html, https://aplayermode.com/disclaimer/ and ~/Brains/spry.md",
+    "facts": [
+      "A Player Mode is a subscription app from Spry Labs that plays five roles for one person: Executive Coach, Executive Assistant, Chief of Staff, Accountability Partner and Cognitive Behavioral Mindset Coach.",
+      "The five roles are software made with AI, not people, and AI can be wrong, so you check anything important.",
+      "The A Player Mode web app at app.aplayermode.com works in any phone or computer browser today.",
+      "The iPhone app is waiting for App Store approval and the Google Play listing is coming soon.",
+      "Setup is about 3 minutes of easy-tap questions; it builds a Mind, Body, Spirit plan with your goals, your rules and your minimum day, and you approve each piece.",
+      "Every morning your plan is ready: one priority, a short start, then the day.",
+      "It turns a goal into a plan and the plan into one step a day.",
+      "After a missed day it gives you a minimum day with no catch-up, instead of piling the missed work onto tomorrow.",
+      "Radar catches promises you made and flags who you owe a reply.",
+      "Coaching comes one question at a time, with five one-tap coaching modes: High-Pressure, Executive Review, Recovery, Sprint and Deep Work.",
+      "Tracks are background filters that shape every plan, such as Operator Discipline, Strategic Patience and Resilience; the app suggests them and you approve them or switch them off.",
+      "It connects Google Calendar, Outlook calendar and mail, and the phone's own calendars; Gmail mail is planned and not connected yet.",
+      "Executive Roundtable costs $24.99 a month or $249.99 a year: all five roles plan and coach you, you do the last step, and it connects 1 calendar and 1 inbox.",
+      "The first 100 members (the Founding 100) pay $9.99 a month for as long as they stay subscribed; after that, Executive Roundtable is $9.99 a month for the first 3 months, then $24.99 a month.",
+      "Executive Suite costs $39.99 a month or $399.99 a year: it tracks birthdays, bills, renewals and appointments, drafts the replies you owe and proposes calendar fixes, and acts only when you tap yes.",
+      "Autopilot costs $79.99 a month or $799.99 a year: it carries out standing rules you set (sending follow-ups, moving flexible meetings, cancelling unused subscriptions), connects several calendars and inboxes, and keeps a daily done-list with undo.",
+      "It shows you every draft email or calendar change before it goes out, unless you turned on Autopilot for that kind of task, and buying a plan never switches a permission on: you turn each one on yourself.",
+      "It never spends your money: Autopilot can cancel a subscription you set a rule for, but it never buys, pays or transfers.",
+      "There is no free trial; plans renew until you cancel in the app's settings.",
+      "A Player Mode is not medical, mental-health, financial or legal advice, and it promises no income and no results."
+    ],
+    "lacks": [
+      "A Player Mode is not in the App Store or on Google Play yet.",
+      "A Player Mode does not read or send Gmail yet.",
+      "A Player Mode never buys anything, pays a bill or moves money, and it gives no investment, diet or medical advice.",
+      "A Player Mode is not a person: no human coach, assistant or therapist reads or replies, and there are no coaching sessions or calls.",
+      "A Player Mode has no free trial and no free plan.",
+      "A Player Mode does not diagnose or treat any condition, including ADHD, anxiety or depression, and the Cognitive Behavioral Mindset Coach is not therapy."
+    ]
+  }
+}

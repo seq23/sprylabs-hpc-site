@@ -77,8 +77,15 @@ const EXTERNAL_CANONICALS = new Map([
     .map(([route, file]) => [file.replace(/\.html$/, ''), `https://aplayermode.com${route}`]),
 ]);
 
+// The Search Loop question pages for aplayermode.com (search-loop.aplayermode.config.json, 27 Nov 2026):
+// aplayermode/questions/<slug>/index.html is served at https://aplayermode.com/questions/<slug>/ by the
+// Worker's /questions/ prefix route, so every file under it, now or added later by the engine, has
+// its canonical there (a list here would miss each page the engine adds).
+const APLAYERMODE_QUESTIONS = '/aplayermode/questions/';
+
 function canonicalUrlFor(route, publishedHostOverrides = new Map()) {
   if (EXTERNAL_CANONICALS.has(route)) return EXTERNAL_CANONICALS.get(route);
+  if (route.startsWith(APLAYERMODE_QUESTIONS)) return `https://aplayermode.com${route.slice('/aplayermode'.length)}`;
   return hostFor(route, publishedHostOverrides) + route;
 }
 

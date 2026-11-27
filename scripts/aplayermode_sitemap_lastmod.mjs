@@ -21,6 +21,7 @@
  * Guard: scripts/validators/validate_aplayermode_landing.mjs.
  */
 import { CONTENT_PAGES } from '../workers/aplayermode-com/src/index.js';
+import { questionEntries } from './aplayermode/build_questions_index.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { contentHash } from './lib/sitemap_ledger.mjs';
@@ -36,6 +37,20 @@ export const PAGES = Object.freeze([
   // The content pages (6 Nov 2026 search decision), in the Worker's CONTENT_PAGES order.
   ...Object.entries(CONTENT_PAGES).map(([route, file]) => ({ loc: `${ORIGIN}${route}`, page: file.replace(/^\//, '') })),
 ]);
+/**
+ * The Search Loop question pages (search-loop.aplayermode.config.json writes them; 27 Nov 2026):
+ * the /questions/ index, then every engine page the index lists (one definition of which pages
+ * exist: scripts/aplayermode/build_questions_index.mjs questionEntries, routed slugs, indexable,
+ * with an H1). Read from disk at each run, so a page the engine adds or removes joins or leaves the
+ * sitemap on the post-build that follows. Hand-built /questions/ pages are already in CONTENT_PAGES.
+ */
+export function questionPages(root = process.cwd()) {
+  if (!fs.existsSync(path.join(root, 'aplayermode/questions/index.html'))) return [];
+  return [
+    { loc: `${ORIGIN}/questions/`, page: 'aplayermode/questions/index.html' },
+    ...questionEntries(root).filter((e) => !Object.prototype.hasOwnProperty.call(CONTENT_PAGES, e.route)).map((e) => ({ loc: `${ORIGIN}${e.route}`, page: e.file })),
+  ];
+}
 /** Kept for readers that want the landing page alone. */
 export const PAGE = PAGES[0].page;
 
@@ -65,7 +80,7 @@ export const entriesOf = (rec) => {
 export function derive(root = process.cwd(), today = new Date().toISOString().slice(0, 10)) {
   let rec = null; try { rec = JSON.parse(fs.readFileSync(path.join(root, RECORD), 'utf8')); } catch { /* first run */ }
   const previous = entriesOf(rec);
-  const pages = PAGES.map((p) => entryFor(previous, p, pageContentHash(fs.readFileSync(path.join(root, p.page), 'utf8')), today));
+  const pages = [...PAGES, ...questionPages(root)].map((p) => entryFor(previous, p, pageContentHash(fs.readFileSync(path.join(root, p.page), 'utf8')), today));
   const record = { pages };
   const sitemapBefore = fs.readFileSync(path.join(root, SITEMAP), 'utf8');
   return { record, recordChanged: JSON.stringify(rec) !== JSON.stringify(record), sitemap: buildSitemap(pages), sitemapBefore };

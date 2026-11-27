@@ -59,7 +59,8 @@ for (const p of ['/download', '/guides/', '/sitemap-bhpc.xml', '/llms-full.txt']
 }
 // A REAL 404 for a path this host does not have. It used to 301 home, so every typo and every dead
 // inbound link looked like the homepage to Google (Search Readiness a9, 25 Oct 2026).
-for (const p of [`/no-such-page-${Date.now().toString(36)}/`, '/about.html', '/admin.html']) {
+// A question slug with no page (27 Nov 2026, /questions/ route): the apex 404, never the Pages project's own.
+for (const p of [`/no-such-page-${Date.now().toString(36)}/`, '/about.html', '/admin.html', `/questions/no-such-question-${Date.now().toString(36)}/`]) {
   const r = await get(p); checked += 1;
   if (r.status !== 404) fail(`${p} must answer 404, got ${r.status}${r.headers.get('location') ? ` -> ${r.headers.get('location')}` : ''}`);
   else {

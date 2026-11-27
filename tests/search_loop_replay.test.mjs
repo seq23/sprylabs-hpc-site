@@ -81,3 +81,35 @@ test('replay without the saved engine output stops, named', () => {
   assert.equal(r.ok, false);
   assert.match(r.out, /NAMED STOP \[SEARCH_LOOP_REPLAY_EMPTY\]/);
 });
+
+// aplayermode.com (27 Nov 2026): the same replay for the second site, given its own post-build and
+// owned paths by search_loop_commit.sh. On a conflict its ledger (data/search-loop-aplayermode/) keeps
+// this run's version, which the BHPC default (questions/ data/search-loop/) would have thrown away.
+test('replay for aplayermode.com keeps its own ledger on a conflict and runs its own post-build', () => {
+  const { dir, runner, other } = setup();
+  // Both sites' post-builds and a shared ledger file on main first.
+  for (const c of [other]) {
+    w(c, '.github/scripts/apm_post_build.sh', 'set -e\n{ printf "<urlset>"; find aplayermode/questions -name index.html 2>/dev/null | sort | tr "\\n" " "; printf "</urlset>\\n"; } > aplayermode/sitemap.xml\n');
+    w(c, 'data/search-loop-aplayermode/pages.json', '{"pages":[]}\n');
+    w(c, 'aplayermode/sitemap.xml', '<urlset></urlset>\n');
+    git(c, 'add', '-A'); git(c, 'commit', '-qm', 'apm setup'); git(c, 'push', '-q', 'origin', 'HEAD:main');
+  }
+  git(runner, 'pull', '-q', 'origin', 'main');
+  w(runner, 'aplayermode/questions/ai-planner-app/index.html', '<h1>AI planner app</h1>\n');
+  w(runner, 'data/search-loop-aplayermode/pages.json', '{"pages":[{"slug":"ai-planner-app"}]}\n');
+  const patch = savePatch(runner, dir);
+  // Meanwhile main moved and wrote the same ledger file differently.
+  w(other, 'data/search-loop-aplayermode/pages.json', '{"pages":[{"slug":"from-main"}]}\n');
+  git(other, 'add', '-A'); git(other, 'commit', '-qm', 'other job'); git(other, 'push', '-q', 'origin', 'HEAD:main');
+  git(runner, 'fetch', '-q', 'origin', 'main'); git(runner, 'reset', '-q', '--hard', 'origin/main'); git(runner, 'clean', '-qfd');
+  const r = run(runner, 'bash', ['.github/scripts/search_loop_replay.sh'], {
+    SEARCH_LOOP_PATCH: patch,
+    SEARCH_LOOP_POST_BUILD: '.github/scripts/apm_post_build.sh',
+    SEARCH_LOOP_OWN_PATHS: 'aplayermode/questions/ data/search-loop-aplayermode/',
+  });
+  assert.ok(r.ok, r.out);
+  assert.match(read(runner, 'data/search-loop-aplayermode/pages.json'), /ai-planner-app/, 'this run\'s ledger wins on a conflict');
+  assert.equal(read(runner, 'aplayermode/questions/ai-planner-app/index.html'), '<h1>AI planner app</h1>\n');
+  assert.equal(read(runner, 'aplayermode/sitemap.xml'), '<urlset>aplayermode/questions/ai-planner-app/index.html </urlset>\n', 'its own post-build ran');
+  assert.equal(read(runner, 'sitemap.xml'), '<urlset>home</urlset>\n', 'the BHPC post-build did not run');
+});
