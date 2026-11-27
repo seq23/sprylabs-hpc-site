@@ -45,7 +45,7 @@ concurrency:
 
 jobs:
   search-loop:
-    uses: seq23/search-loop/.github/workflows/search-loop.yml@56a1b11eb0262dd00dd4c379db7ff45dfebde4b6
+    uses: seq23/search-loop/.github/workflows/search-loop.yml@00894c9ac41385d33297eee905a6ced10b32acc7
     with:
       engine_ref: v1
       stage: ${{ github.event_name == 'pull_request' && 'validate' || inputs.stage || 'auto' }}
@@ -71,7 +71,7 @@ jobs:
     needs: search-loop
     # Runs when the BHPC job failed too: one site's red run never stops the other's pages.
     if: ${{ !cancelled() }}
-    uses: seq23/search-loop/.github/workflows/search-loop.yml@56a1b11eb0262dd00dd4c379db7ff45dfebde4b6
+    uses: seq23/search-loop/.github/workflows/search-loop.yml@00894c9ac41385d33297eee905a6ced10b32acc7
     with:
       config: search-loop.aplayermode.config.json
       engine_ref: v1
