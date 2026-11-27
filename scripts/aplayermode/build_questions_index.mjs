@@ -26,7 +26,7 @@ const ORIGIN = 'https://aplayermode.com';
 const TITLE = 'Questions about AI coaching and day planning | A Player Mode';
 const DESCRIPTION = 'Plain answers to what people ask before they pick an AI coach, planner or chief of staff app, and what A Player Mode does and does not do for each one.';
 const H1 = 'Questions people ask before they choose';
-const LEAD = 'Each page answers one question people ask about AI coaching, planning and follow-through apps, says plainly what A Player Mode does and does not do for it, and lists its sources.';
+const LEAD = 'Each page answers one question people ask about AI coaching, planning and follow-through apps, in plain words.';
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const ENTITIES = { '&#x27;': "'", '&#39;': "'", '&quot;': '"', '&lt;': '<', '&gt;': '>', '&amp;': '&' };
