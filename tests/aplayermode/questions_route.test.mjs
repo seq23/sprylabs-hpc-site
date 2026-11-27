@@ -11,7 +11,7 @@ import path from 'node:path';
 import { createRequire } from 'node:module';
 import worker, { route, originPath, CONTENT_PAGES, questionRedirectTarget } from '../../workers/aplayermode-com/src/index.js';
 import { questionEntries, render, HEADER_HTML, FOOTER_HTML, OUT } from '../../scripts/aplayermode/build_questions_index.mjs';
-import { questionPages, ORIGIN as SITEMAP_ORIGIN } from '../../scripts/aplayermode_sitemap_lastmod.mjs';
+import { questionPages, derive, ORIGIN as SITEMAP_ORIGIN } from '../../scripts/aplayermode_sitemap_lastmod.mjs';
 
 const ROOT = new URL('../../', import.meta.url).pathname;
 const read = (rel) => fs.readFileSync(path.join(ROOT, rel), 'utf8');
@@ -118,6 +118,17 @@ test('an engine page joins the index and the sitemap; a page the Worker would no
   assert.ok(locs.includes('https://aplayermode.com/questions/ai-planner-app/'));
   assert.ok(!locs.some((l) => /Bad_Slug|empty-dir/.test(l)), 'only routed slugs with a page');
   fs.rmSync(dir, { recursive: true, force: true });
+});
+
+test('the sitemap the post-build writes, and the committed one, list /questions/ and every question page', () => {
+  const locs = questionPages(ROOT).map((p) => p.loc);
+  assert.ok(locs.includes('https://aplayermode.com/questions/'), 'saw the index');
+  const written = derive(ROOT).sitemap;
+  const committed = read('aplayermode/sitemap.xml');
+  for (const loc of locs) {
+    assert.ok(written.includes(`<loc>${loc}</loc>`), `post-build sitemap lists ${loc}`);
+    assert.ok(committed.includes(`<loc>${loc}</loc>`), `committed sitemap lists ${loc}`);
+  }
 });
 
 test('an engine page with no H1 stops the index instead of listing an empty link', () => {
