@@ -87,17 +87,19 @@ const indentOf = (l) => l.match(/^\s*/)[0].length;
 // The ONE scheduled lane allowed the OpenRouter key: the shared search loop
 // (owner ruling 1 Nov 2026: daily pages, "writing model: each site's existing $0
 // model route"). It is allowed only in this exact shape, every part checked:
-//  - the job calls the pinned engine seq23/search-loop/.github/workflows/search-loop.yml@v1;
+//  - the job calls the engine seq23/search-loop/.github/workflows/search-loop.yml at @v1 or
+//    pinned to a full 40-character commit sha of that same repo and path (stricter than the
+//    moving tag; boss-os #574 pins callers this way). Any other repo, path or branch fails;
 //  - the key is passed only in that call's `secrets:` block, and it is the only
 //    model-provider secret the file names;
 //  - search-loop.config.json routes the engine through THIS repo's $0 file
 //    (config/llm_routing.json, checked above: $0/$0 ":free" models,
 //    max_cost_usd 0, no paid fallback). The engine refuses a non-zero usage.cost.
 // Any other scheduled exposure still fails. docs/cost/zero-paid-llm.md says the same.
-const FREE_ROUTED_CALLER = { file: 'search-loop.yml', uses: 'uses: seq23/search-loop/.github/workflows/search-loop.yml@v1', secret: 'OPENROUTER_API_KEY', config: 'search-loop.config.json' };
+const FREE_ROUTED_CALLER = { file: 'search-loop.yml', uses: /^uses: seq23\/search-loop\/\.github\/workflows\/search-loop\.yml@(?:v1|[0-9a-f]{40})$/, secret: 'OPENROUTER_API_KEY', config: 'search-loop.config.json' };
 function freeRoutedCallerAllows(wf, lines, i) {
   if (wf !== FREE_ROUTED_CALLER.file) return false;
-  if (!lines.some((l) => l.trim() === FREE_ROUTED_CALLER.uses)) return false;
+  if (!lines.some((l) => FREE_ROUTED_CALLER.uses.test(l.trim()))) return false;
   const names = lines.filter((l) => SECRET.test(l) && !/^\s*#/.test(l)).map((l) => l.match(SECRET)[0]);
   if (names.some((n) => n !== `secrets.${FREE_ROUTED_CALLER.secret}`)) return false;
   let j = i - 1; while (j >= 0 && (!lines[j].trim() || indentOf(lines[j]) >= indentOf(lines[i]))) j--;
