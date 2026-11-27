@@ -2,13 +2,13 @@
   "schema": "search-loop-week-v1",
   "week": "2026-W48",
   "site": "billionairehighperformancecoach.com",
-  "generated_at": "2026-11-26T20:32:33.166Z",
-  "state": "stopped",
-  "published": 1,
+  "generated_at": "2026-11-27T18:27:22.666Z",
+  "state": "slow",
+  "published": 2,
   "indexed": 0,
   "pace": 3,
   "ai_visitors": 0,
-  "ai_bot_hits": 1157,
+  "ai_bot_hits": 1182,
   "conversions": "not read: no conversion source configured for this site (form fills / checkouts)",
   "wins": 0,
   "undone": 0,
@@ -56,19 +56,27 @@
       "strengthen": "https://billionairehighperformancecoach.com/minimum-viable-day/",
       "matched_by": "high token overlap (0.75 >= 0.6)",
       "at": "2026-11-23"
+    },
+    {
+      "query": "ai business coach free",
+      "strengthen": "https://billionairehighperformancecoach.com/questions/ai-business-coach-app/",
+      "matched_by": "high token overlap (0.67 >= 0.6)",
+      "at": "2026-11-27"
     }
   ],
   "cap": {
     "max_live_pages": 41,
-    "live": 37,
-    "room": 4,
+    "live": 38,
+    "room": 3,
     "why": "up from 37 to 41: Google impressions 1567 in the last 28 days beat 1419 in the 28 before"
   },
   "notes": [
     "site config lowers the mode to slow",
-    "not read: AI answer misses (no BOSS_OPEN_LOOPS_TOKEN in this run (pass it in the caller's secrets: block)); could not tell this run",
-    "NAMED STOP [FREE_MODEL_KEY_MISSING] no free model lane has a credential (GEMINI_API_KEY, OPENROUTER_API_KEY, CLOUDFLARE_*); BUILD wrote nothing, CHECK and the report still run",
-    "CHECK runs weekly in mode=slow; last ran 2026-11-23"
+    "not read: AI answer misses (Boss OS does not know billionairehighperformancecoach.com (HTTP 404)); could not tell this run",
+    "BUILD distinct gate: 1 search(es) had the same intent as an existing page and became strengthen briefs, not new pages (pages.json \"redirected\")",
+    "BUILD gate notes (not blocking): 1 published page(s) are outside a length or style aim; each is listed under gate_notes in pages.json",
+    "CHECK runs weekly in mode=slow; last ran 2026-11-23",
+    "IndexNow: 1 new page(s) not live yet; submitted when they answer 200"
   ],
   "lanes": {
     "ratio": {
@@ -82,7 +90,7 @@
       "hit_rate": 0
     },
     "striking": {
-      "pages": 28,
+      "pages": 29,
       "measured": 11,
       "top3": 0,
       "hit_rate": 0
@@ -97,14 +105,16 @@
     "competition": "ok: 5 top-10 read(s) via brave"
   },
   "ai_misses": {
-    "read": "not read: no BOSS_OPEN_LOOPS_TOKEN in this run (pass it in the caller's secrets: block)",
+    "read": "not read: Boss OS does not know billionairehighperformancecoach.com (HTTP 404)",
     "week": null,
     "misses": 0,
     "strengthened": [],
     "new_candidates": [],
     "skipped": [],
     "rejected": [],
-    "could_not_tell": 4
+    "could_not_tell": 5
   },
-  "run_url": "https://github.com/seq23/sprylabs-hpc-site/actions/runs/45891645843"
+  "comparison": "not read: FIND has not run since v1.16.0",
+  "seeds": "not read: this site has no seeds in its config",
+  "run_url": "https://github.com/seq23/sprylabs-hpc-site/actions/runs/46049510721"
 }
