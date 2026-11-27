@@ -45,6 +45,8 @@ concurrency:
 
 jobs:
   report:
+    if: github.ref == 'refs/heads/main'
+    environment: reviewed-main
     runs-on: ubuntu-latest
     steps:
       - name: Guard Wednesday 07:33 Chicago

@@ -13,6 +13,7 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
+import { removeElements, stripTags } from './html_text.mjs';
 
 export const ROOT = process.cwd();
 // Top-level directories that are not pages of the shared sites (config/index_exclusions.json).
@@ -29,11 +30,8 @@ export const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 /** The visible text of a page. Markup, scripts and styles are excluded on
  *  purpose: a reserialization is not a content change. */
 export function visibleText(html) {
-  return String(html || '')
-    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, ' ')
-    .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, ' ')
-    .replace(/<!--[\s\S]*?-->/g, ' ')
-    .replace(/<[^>]+>/g, ' ')
+  return stripTags(removeElements(html || '', 'script', 'style')
+    .replace(/<!--[\s\S]*?-->/g, ' '))
     .replace(/&[a-z0-9#]+;/gi, ' ')
     .replace(/\s+/g, ' ')
     .trim();

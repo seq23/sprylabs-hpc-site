@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { removeElements, stripTags } from '../../lib/html_text.mjs';
 
 export const ROOT = process.cwd();
 // The public site is the repository root.
@@ -42,7 +43,7 @@ export function canonicalFromHtml(html, fallbackRoute = '/') {
   return m?.[1] || `https://billionairehighperformancecoach.com${fallbackRoute}`;
 }
 export function stripHtml(html) {
-  return String(html || '').replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, ' ').replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/&[a-z0-9#]+;/gi, ' ').replace(/\s+/g, ' ').trim();
+  return stripTags(removeElements(html || '', 'script', 'style')).replace(/&[a-z0-9#]+;/gi, ' ').replace(/\s+/g, ' ').trim();
 }
 export function tokenize(s) {
   const stop = new Set(['with','from','that','this','what','when','where','which','your','about','into','using','used','best','system','should','would','could','have','does','need','ways','help','make','more','than','through','without','people','their']);

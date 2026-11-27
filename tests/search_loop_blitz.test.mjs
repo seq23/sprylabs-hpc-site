@@ -9,7 +9,7 @@ const cfg = JSON.parse(fs.readFileSync('search-loop.config.json', 'utf8'));
 // days away from when it was switched on; never "normal" with no end.
 test('the committed config points at the product host and is slow, or a blitz that ends', () => {
   assert.equal(cfg.base_url, 'https://billionairehighperformancecoach.com');
-  assert.ok(!JSON.stringify({ ...cfg, blitz: undefined, allowed_link_targets: undefined }).includes('spryexecutiveos.com'), 'config still targets the sunset host');
+  assert.ok(!JSON.stringify({ ...cfg, blitz: undefined, allowed_link_targets: undefined }).match(/spryexecutiveos\.com/), 'config still targets the sunset host');
   if (cfg.mode === 'slow') {
     assert.deepEqual(cfg.cap, cfg.blitz.off.cap);
     assert.ok(apply(cfg, 'status').line.startsWith('blitz off'));

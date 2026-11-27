@@ -3,10 +3,11 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { removeElements, stripTags } from '../../scripts/lib/html_text.mjs';
 
 const ROOT = new URL('../../', import.meta.url);
 const { pages } = JSON.parse(readFileSync(new URL('config/aplayermode_content_pages.json', ROOT), 'utf8'));
-const visible = (html) => html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/gi, ' ').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+const visible = (html) => stripTags(removeElements(html, 'script', 'style')).replace(/\s+/g, ' ');
 
 test('every content page has a visible named byline matching its schema author', () => {
   const entries = Object.entries(pages);
